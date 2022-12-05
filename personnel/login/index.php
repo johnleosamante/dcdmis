@@ -57,9 +57,6 @@ $page = 'Personnel Login';
 
 include_once('../../_includes_/layout/header.php');
 ?>
-
-<link href="<?php echo GetSiteURL(); ?>/assets/css/custom.css" rel="stylesheet">
-<script src="<?php echo GetSiteURL(); ?>/assets/vendor/jquery/jquery.min.js"></script>
 </head>
 
 <body class="background-cover">
