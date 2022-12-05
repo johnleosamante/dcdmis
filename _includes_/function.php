@@ -151,3 +151,10 @@ function GetImageFileUploadStatus($name, $target_file, $uploadlimit=5) {
 
   return $upload;
 }
+
+function GetPageURL() {
+  foreach ($_GET as $key => $data) {
+    $url = $_GET[$key] = GetDecoding($data);
+  }
+  return $url;
+}
