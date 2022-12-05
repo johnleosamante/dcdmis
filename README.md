@@ -1,2 +1,2 @@
-# dmis
-Data Management Information System
+# DCDMIS
+DepEd Dipolog City Data Management Information System
