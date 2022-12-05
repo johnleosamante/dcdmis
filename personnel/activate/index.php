@@ -13,9 +13,6 @@ include_once('../../_includes_/database/database.php');
 include_once('../../_includes_/layout/header.php');
 include_once('../../_includes_/layout/components.php');
 ?>
-
-<link href="<?php echo GetSiteURL(); ?>/assets/css/custom.css" rel="stylesheet">
-<script src="<?php echo GetSiteURL(); ?>/assets/vendor/jquery/jquery.min.js"></script>
 </head>
 
 <body class="background-cover">
