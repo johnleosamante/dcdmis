@@ -8,7 +8,6 @@ include_once('../../_includes_/layout/header.php');
 include_once('../../_includes_/layout/components.php');
 ?>
 
-<link href="<?php echo GetSiteURL(); ?>/assets/css/custom.css" rel="stylesheet">
 </head>
 
 <body class="background-cover">
