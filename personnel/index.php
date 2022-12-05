@@ -46,7 +46,6 @@ if ($row['SchoolLogo'] === NULL) {
 ?>
 
 <link href="<?php echo GetSiteURL(); ?>/assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-<script src="<?php echo GetSiteURL(); ?>/assets/vendor/jquery/jquery.min.js"></script>
 </head>
 
 <body id="page-top">
