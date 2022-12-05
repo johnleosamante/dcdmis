@@ -14,4 +14,8 @@ function ToName($lname, $fname, $mname='', $ext='', $fnamefirst=false, $fullmnam
   $mname = ToString($mname, ' ', $suffix, !$fullmname);
   return !$fnamefirst ? $lname . ToString($fname, ', ') . ToString($ext, ' ') . $mname : $fname . ToString($mname, ' ') . ToString($lname, ' ') . ToString($ext, ', ');
 }
+
+function ToAddress($lot, $street, $subdivision, $barangay, $city, $province='') {
+  return ToString($lot, '', ', ') . ToString($street, '', ', ') . ToString($subdivision, '', ', ') . ToString($barangay, '', ', ') . ToString($city) . ToString($province, ', ');
+}
 ?>
