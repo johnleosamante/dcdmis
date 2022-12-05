@@ -122,20 +122,16 @@ function GetImageFileUploadStatus($name, $target_file, $uploadlimit=5) {
   $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
   $message = '';
 
-  // Check if file already exists
   if (file_exists($target_file)) {
     $message = "File already exists.";
     $uploadOk = 0;
   }
 
-  // Check file size
   if ($_FILES[$name]["size"] > $uploadlimit * 1024 * 1024) {
-    $message =
-    "The selected file exceeds the allowable upload size limit ($uploadlimit MB).";
+    $message = "The selected file exceeds the allowable upload size limit ($uploadlimit MB).";
     $uploadOk = 0;
   }
 
-  // Allow certain file formats
   if (
     $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
     && $imageFileType != "gif"
