@@ -9,12 +9,12 @@ if (isset($_SESSION['uid'])) {
   header('location:' . GetHashURL($_SESSION['portal'], 'dashboard'));
 }
 
-$school_year = DBQuery("SELECT * FROM tbl_school_year_assign LIMIT 1");
-$rowschoolyear = DBFetchAssoc($school_year);
-$_SESSION['Sem'] = $rowschoolyear['Semester'];
-$_SESSION['sy'] = $rowschoolyear['SchoolYear'] . "-" . $rowschoolyear['SchoolYear'] + 1;
-$_SESSION['year'] = $rowschoolyear['SchoolYear'];
-$_SESSION['Quarter'] = $rowschoolyear['SchoolQuarter'];
+// $school_year = DBQuery("SELECT * FROM tbl_school_year_assign LIMIT 1");
+// $rowschoolyear = DBFetchAssoc($school_year);
+// $_SESSION['Sem'] = $rowschoolyear['Semester'];
+// $_SESSION['sy'] = $rowschoolyear['SchoolYear'] . "-" . $rowschoolyear['SchoolYear'] + 1;
+// $_SESSION['year'] = $rowschoolyear['SchoolYear'];
+// $_SESSION['Quarter'] = $rowschoolyear['SchoolQuarter'];
 
 DBNonQuery("UPDATE tbl_number_of_visitors SET No_of_visitors = No_of_visitors + 1 LIMIT 1");
 
