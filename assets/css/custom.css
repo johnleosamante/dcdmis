@@ -26,3 +26,13 @@
   height: 414px;
   overflow-y: scroll;
 }
+
+@media only screen and (max-width: 991px) {
+  #layoutAuthentication_content .row {
+    flex-direction: column-reverse;
+  }
+
+  #layoutAuthentication_content .row .col-lg-8 .card {
+    margin-top: 0 !important;
+  }
+}
