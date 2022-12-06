@@ -13,7 +13,6 @@ foreach ($_GET as $key => $data) {
 include_once('../_includes_/layout/header.php');
 include_once('../_includes_/layout/components.php');
 ?>
-
 </head>
 
 <body class="background-cover">
