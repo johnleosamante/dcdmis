@@ -152,7 +152,7 @@ function Card($title, $link, $icon, $color = 'primary', $counter = false, $numbe
     <div class="card border-left-' . $color . ' shadow h-100">
       <div class="card-body">
         <div class="row no-gutters align-items-center">
-          <div class="col mr-2">';
+          <div class="col mr-2">
             <div class="font-weight-bold text-' . $color . ' text-uppercase mb-1"><?php echo $title; ?></div>
 
             <?php if ($counter) { ?>
@@ -161,7 +161,7 @@ function Card($title, $link, $icon, $color = 'primary', $counter = false, $numbe
           </div>
 
           <div class="col-auto">
-            <i class="fas <?php echo $icon; ?> fa-3x text-<?php echo $color ; ?>" aria="hidden"></i>
+            <i class="fas <?php echo $icon; ?> fa-3x text-<?php echo $color; ?>" aria="hidden"></i>
           </div>
         </div>
       </div>
