@@ -33,6 +33,7 @@ if (isset($_POST['login'])) {
       $_SESSION['school_id'] = $rec['Station'];
       $_SESSION['portal'] = $rec['Link'];
       $_SESSION['last_login_timestamp'] = time();
+
       setcookie('administrator_email', $userinfo, time() + 60 * 60 * 7);
       DBNonQuery("UPDATE tbl_user SET Last_login='$dateposted', Current_Status='Online' WHERE usercode='" . $_SESSION['uid'] . "' LIMIT 1;");
 
@@ -55,10 +56,11 @@ $page = 'Administrator Login';
 include_once('../_includes_/layout/header.php');
 ?>
 </head>
+
 <body class="background-cover">
   <div id="layoutAuthentication">
     <div id="layoutAuthentication_content" class="container">
-      <div class="row justify-content-center">
+      <div id="login_page" class="row justify-content-center">
         <div class="col-lg-8">
           <?php include_once('online-services.php'); ?>
         </div>
