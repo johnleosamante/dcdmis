@@ -6,7 +6,6 @@
 	<div class="card shadow-lg border-0 rounded-lg my-5">
 		<div class="card-header">
 			<?php SiteLogo(120, 120); ?>
-
 			<h3 class="text-center">Register Account</h3>
 		</div><!-- .card-header -->
 
@@ -19,7 +18,7 @@
 			if (isset($_POST['create_account'])) {
 				$dateposted = GetDateTime();
 				$age = "";
-				$employeeID = date('ymdHis');
+				$employeeID = date('YmdHis');
 				$empLName = str_replace("'", "\'", $_POST['LName']);
 				$empFName = str_replace("'", "\'", $_POST['FName']);
 				$empMName =  str_replace("'", "\'", $_POST['MName']);
