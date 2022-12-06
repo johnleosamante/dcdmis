@@ -28,11 +28,15 @@
 }
 
 @media only screen and (max-width: 991px) {
-  #layoutAuthentication_content .row {
+  #login_page {
     flex-direction: column-reverse;
   }
 
-  #layoutAuthentication_content .row .col-lg-8 .card {
+  #login_page .col-lg-8 .card {
     margin-top: 0 !important;
+  }
+
+  #login_page .col-lg-4 .card {
+    margin-bottom: 2rem !important;
   }
 }
