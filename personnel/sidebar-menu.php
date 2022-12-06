@@ -12,11 +12,11 @@
 
 	<hr class="sidebar-divider my-0">
 
-	<li class="nav-item active"><a class="nav-link" href="<?php echo GetSiteURL(); ?>/personnel"><i class="fas fa-fw fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+	<li class="nav-item<?php echo SetActiveNavigationItem(!isset($link) || $link === 'Dashboard'); ?>"><a class="nav-link" href="<?php echo GetSiteURL(); ?>/personnel"><i class="fas fa-fw fa-tachometer-alt"></i><span>Dashboard</span></a></li>
 
 	<hr class="sidebar-divider my-0">
 
-	<li class="nav-item">
+	<li class="nav-item<?php echo SetActiveNavigationItem($page === 'Certificates'); ?>">
 		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCertificates" aria-expanded="true" aria-controls="collapseCertificates">
 			<i class="fas fa-certificate fa-fw"></i><span>Certificates</span>
 		</a>
@@ -30,9 +30,9 @@
 		</div><!-- #collapseCertificates -->
 	</li>
 
-	<li class="nav-item"><a class="nav-link" href="<?php echo GetHashURL('personnel', 'Payslip'); ?>"><i class="fas fa-money-check fa-fw"></i><span>Payslip</span></a></li>
+	<li class="nav-item<?php echo SetActiveNavigationItem($page === 'Payslip'); ?>"><a class="nav-link" href="<?php echo GetHashURL('personnel', 'Payslip'); ?>"><i class="fas fa-money-check fa-fw"></i><span>Payslip</span></a></li>
 
-	<li class="nav-item"><a class="nav-link" href="<?php echo GetHashURL('personnel', 'Trainings'); ?>"><i class="fas fa-chalkboard-teacher fa-fw"></i><span>Training</span></a></li>
+	<li class="nav-item<?php echo SetActiveNavigationItem($page === 'Trainings'); ?>"><a class="nav-link" href="<?php echo GetHashURL('personnel', 'Trainings'); ?>"><i class="fas fa-chalkboard-teacher fa-fw"></i><span>Trainings</span></a></li>
 
 	<hr class="sidebar-divider d-none d-md-block">
 

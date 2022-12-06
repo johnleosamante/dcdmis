@@ -104,6 +104,10 @@ function SetOptionSelected($reference, $value) {
   return strtolower($reference) === strtolower($value) ? ' selected' : '';
 }
 
+function SetActiveNavigationItem($condition) {
+  return $condition ? ' active' : '';
+}
+
 function GetHRMOHead() {
   return HRMO_HEAD;
 }

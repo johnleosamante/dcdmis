@@ -173,16 +173,4 @@ function Card($title, $link, $icon, $color = 'primary', $counter = false, $numbe
   </div>
 <?php
 }
-
-function NavigationItem($condition, $link, $title, $icon='') {
-  $class = $condition ? ' active' : '';
-?>
-  <li class="nav-item<?php echo $class; ?>">
-    <a class="nav-link" href="<?php echo $link; ?>">
-      <i class="fas fa-fw <?php echo $icon; ?>"></i>
-      <span><?php echo $title; ?></span>
-    </a>
-  </li>
-<?php
-}
 ?>

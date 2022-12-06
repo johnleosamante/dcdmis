@@ -141,7 +141,7 @@ if ($row['SchoolLogo'] === NULL) {
               include("require/video_materials.php");
             } elseif ($link == 'view_activity') {
               include("view_activity.php");
-            } elseif ($link == 'application_form_for_steps') {
+            } elseif ($link == 'Step Increment Application') {
               include("application_form_for_steps.php");
             } else {
               include('dashboard.php');
