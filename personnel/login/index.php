@@ -13,15 +13,6 @@ if (isset($_SESSION['EmpID'])) {
   header('location:' . GetSiteURL() . '/personnel');
 }
 
-$school_year = DBQuery("SELECT * FROM tbl_school_year_assign;");
-$rowschoolyear = DBFetchAssoc($school_year);
-$_SESSION['Sem'] = $rowschoolyear['Semester'];
-$_SESSION['sy'] = $rowschoolyear['SchoolYear'] . "-" . $rowschoolyear['SchoolYear'] + 1;
-$_SESSION['year'] = $rowschoolyear['SchoolYear'];
-$_SESSION['Quarter'] = $rowschoolyear['SchoolQuarter'];
-
-DBNonQuery("UPDATE tbl_number_of_visitors SET No_of_visitors = No_of_visitors + 1 LIMIT 1;");
-
 $Err = false;
 
 if (isset($_POST['login'])) {
@@ -62,7 +53,7 @@ include_once('../../_includes_/layout/header.php');
 <body class="background-cover">
   <div id="layoutAuthentication">
     <div id="layoutAuthentication_content" class="container">
-      <div class="row">
+      <div id="login_page" class="row justify-content-center">
         <div class="col-lg-8">
           <?php include_once('../../login/online-services.php'); ?>
         </div>
