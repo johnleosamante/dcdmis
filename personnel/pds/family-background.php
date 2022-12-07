@@ -1,106 +1,117 @@
-<div class="tab-pane fade" id="family-background">
-  <a href="#myfb" data-toggle="modal" style="float:right" class="btn btn-primary">Add</a>
-  <h4>II. Family Background</h4>
-  <div style="overflow-x:auto;width:100%;">
-    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-      <thead>
-        <tr>
-          <th width="20%">Family Name</th>
-          <th width="20%">First Name</th>
-          <th width="20%">Middle Name</th>
-          <th width="10%">Birthdate</th>
-          <th width="10%">Relation</th>
-          <th width="10%"></th>
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) &&$_SESSION['pdstab'] === 'family-background'); ?>" id="family-background">
+  <div class="d-sm-flex align-items=center justify-content-between">
+    <h3 class="h4 mb-0">Family Background</h3>
+    <a href="#AddFamilyMemberModal" data-toggle="modal" class="btn btn-primary btn-icon-split btn-sm"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
+  </div><!-- .d-sm-flex -->
 
-        </tr>
+  <div class="row mt-3">
+    <div class="col table-responsive">
+      <table width="100%" class="table table-striped table-bordered table-hover mb-2" cellspacing="0">
+        <thead>
+          <tr>
+            <th class="text-center" width="20%">Last Name</th>
+            <th class="text-center" width="20%">First Name</th>
+            <th class="text-center" width="20%">Middle Name</th>
+            <th class="text-center" width="15%">Date of Birth</th>
+            <th class="text-center" width="15%">Relationship</th>
+            <th class="text-center" width="10%">Actions</th>
+          </tr>
+        </thead>
 
-      </thead>
-      <tbody>
-        <?php
-        $result1 = mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
-        while ($row1 = mysqli_fetch_array($result1)) {
-          echo '<tr><td style="text-align:center;">' . $row1['Family_Name'] . '</td>
-													  <td style="text-align:center;">' . $row1['First_Name'] . '</td>
-													  <td style="text-align:center;">' . $row1['Middle_Name'] . '</td>
-													  <td style="text-align:center;">' . $row1['Birthdate'] . '</td>
-													  <td style="text-align:center;">' . $row1['Relation'] . '</td>
-														<td style="text-align:center;">
-															
-																	<a href="my_family.php?id=' . urlencode(base64_encode($row1['No'])) . '" data-toggle="modal" data-target="#myfamily">Edit</a><br/>
-																
-																	<a style="cursor:pointer;" id="' . $row1['No'] . '" onclick="delete_option(this.id)">Remove</a>
-															
-													  </td>
-												  </tr>';
+        <tbody>
+          <?php
+          $result1 = mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+
+          if (mysqli_num_rows($result1) > 0) {
+            while ($row1 = mysqli_fetch_array($result1)) { ?>
+              <tr>
+                <td class="text-center align-middle"><?php echo $row1['Family_Name']; ?></td>
+                <td class="text-center align-middle"><?php echo $row1['First_Name']; ?></td>
+                <td class="text-center align-middle"><?php echo $row1['Middle_Name']; ?></td>
+                <td class="text-center align-middle"><?php echo $row1['Birthdate']; ?></td>
+                <td class="text-center align-middle"><?php echo $row1['Relation']; ?></td>
+                <td class="text-center align-middle">
+                  <a class="btn btn-success my-1" href="my_family.php?id=<?php echo GetDecoding($row1['No']); ?>" data-toggle="modal" data-target="#UpdateFamilyMemberModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" id="<?php echo $row1['No']; ?>" onclick="delete_option(this.id)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                </td>
+              </tr>
+            <?php
+            }
+          } else { ?>
+            <tr>
+              <td class="text-center align-middle">-</td>
+              <td class="text-center align-middle">-</td>
+              <td class="text-center align-middle">-</td>
+              <td class="text-center align-middle">-</td>
+              <td class="text-center align-middle">-</td>
+              <td class="text-center align-middle">-</td>
+            </tr>
+          <?php
+          }
+          ?>
+        </tbody>
+      </table>
+
+      <script>
+        function delete_option(id) {
+          if (confirm("Are you sure you want to deleted this row?")) {
+            window.location.href = 'delete_fam.php?id=' + id;
+          }
         }
-
-        ?>
-      </tbody>
-    </table>
+      </script>
+    </div>
   </div>
-</div>
 
+  <div class="modal fade" id="AddFamilyMemberModal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Family Member</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+        </div><!-- .modal-header -->
 
-<script>
-  function delete_option(id) {
-    if (confirm("Are you sure you want to deleted this row?")) {
-
-      window.location.href = 'delete_fam.php?id=' + id;
-    }
-  }
-</script>
-
-<!-- Modal for Family BACKGROUND-->
-<div class="modal fade" id="myfb" role="dialog" data-backdrop="static" data-keyboard="false">
-  <div class="loginbox">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">II. FAMILY BACKGROUND </h4>
-      </div>
-      <div class="modal-body">
-        <div style="overflow-x:auto;">
-          <form enctype="multipart/form-data" method="post" role="form" action="">
+        <form enctype="multipart/form-data" method="post" role="form" action="">
+          <div class="modal-body">
             <div class="form-group">
-              <table width="100%" class="table table-bordered">
-                <tr>
-                  <th>Family Name</th>
-                  <th>First Name</th>
-                  <th>Middle Name</th>
-                  <th>Birthdate</th>
-                  <th>Relation</th>
-                </tr>
-                <tr>
-                  <td><input type="text" name="Lname" class="form-control" required></td>
-                  <td><input type="text" name="Fname" class="form-control" required></td>
-                  <td><input type="text" name="Mname" class="form-control" required></td>
-                  <td><input type="date" name="Birthdate" class="form-control" required></td>
-                  <td><input type="text" name="Relation" class="form-control" required></td>
-                </tr>
-
-              </table>
+              <label for="LastName">Last Name:</label>
+              <input id="LastName" type="text" name="Lname" class="form-control" placeholder="Last Name" required>
             </div>
-        </div>
-        <input type="submit" class="btn btn-primary" name="save_fam" value="SAVE">
+
+            <div class="form-group">
+              <label for="FirstName">First Name:</label>
+              <input id="FirstName" type="text" name="Fname" class="form-control" placeholder="First Name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="MiddleName">Middle Name:</label>
+              <input id="MiddleName" type="text" name="Mname" class="form-control" placeholder="Middle Name">
+            </div>
+
+            <div class="form-group">
+              <label for="DateOfBirth">Date of Birth:</label>
+              <input id="DateOfBirth" type="date" name="Birthdate" class="form-control" required>
+            </div>
+
+            <div class="form-group mb-0">
+              <label for="Relationship">Relationship:</label>
+              <input id="Relationship" type="text" name="Relation" class="form-control" placeholder="Relationship" required>
+            </div>
+          </div><!-- .modal-body -->
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <input type="submit" class="btn btn-primary" name="AddFamilyMember" value="Save">
+          </div><!-- .modal-footer -->
         </form>
+      </div><!-- .modal-content -->
+    </div><!-- .modal-dialog -->
+  </div><!-- .modal -->
+
+  <div class="modal fade" id="UpdateFamilyMemberModal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
       </div>
     </div>
   </div>
 </div>
-
-<!-- Modal for update Volunter-->
-<div class="modal fade" id="myfamily" role="dialog" data-backdrop="static" data-keyboard="false">
-  <div class="loginbox">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-
-
-
-
-    </div>
-  </div>
-</div>
-<!--Update Other-->
