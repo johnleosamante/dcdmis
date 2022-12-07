@@ -8,31 +8,31 @@
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-2" cellspacing="0">
         <thead>
-          <tr>
-            <th class="text-center" width="20%">Last Name</th>
-            <th class="text-center" width="20%">First Name</th>
-            <th class="text-center" width="20%">Middle Name</th>
-            <th class="text-center" width="15%">Date of Birth</th>
-            <th class="text-center" width="15%">Relationship</th>
-            <th class="text-center" width="10%">Actions</th>
+          <tr class="text-center">
+            <th width="20%">Last Name</th>
+            <th width="20%">First Name</th>
+            <th width="20%">Middle Name</th>
+            <th width="15%">Date of Birth</th>
+            <th width="15%">Relationship</th>
+            <th width="10%">Actions</th>
           </tr>
         </thead>
 
         <tbody>
           <?php
-          $result1 = mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          $familyMembers = mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
 
-          if (mysqli_num_rows($result1) > 0) {
-            while ($row1 = mysqli_fetch_array($result1)) { ?>
+          if (mysqli_num_rows($familyMembers) > 0) {
+            while ($member = mysqli_fetch_array($familyMembers)) { ?>
               <tr>
-                <td class="text-center align-middle"><?php echo $row1['Family_Name']; ?></td>
-                <td class="text-center align-middle"><?php echo $row1['First_Name']; ?></td>
-                <td class="text-center align-middle"><?php echo $row1['Middle_Name']; ?></td>
-                <td class="text-center align-middle"><?php echo $row1['Birthdate']; ?></td>
-                <td class="text-center align-middle"><?php echo $row1['Relation']; ?></td>
+                <td class="text-center align-middle"><?php echo $member['Family_Name']; ?></td>
+                <td class="text-center align-middle"><?php echo $member['First_Name']; ?></td>
+                <td class="text-center align-middle"><?php echo $member['Middle_Name']; ?></td>
+                <td class="text-center align-middle"><?php echo $member['Birthdate']; ?></td>
+                <td class="text-center align-middle"><?php echo $member['Relation']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_family.php?id=<?php echo GetDecoding($row1['No']); ?>" data-toggle="modal" data-target="#UpdateFamilyMemberModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" id="<?php echo $row1['No']; ?>" onclick="delete_option(this.id)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" href="my_family.php?id=<?php echo GetDecoding($member['No']); ?>" data-toggle="modal" data-target="#UpdateFamilyMemberModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" id="<?php echo $member['No']; ?>" onclick="delete_option(this.id)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php
