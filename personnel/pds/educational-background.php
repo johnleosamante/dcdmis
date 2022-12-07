@@ -1,29 +1,33 @@
-<div class="tab-pane fade" id="educational-background">
-  <a href="#myeb" class="btn btn-primary" data-toggle="modal" style="float:right">Add</a>
-  <h4>III. Educational Background</h4>
-  <div style="overflow-x:auto;width:100%;">
-    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-      <thead>
-        <tr>
-          <th width="10%" rowspan="2">Level</th>
-          <th width="20%" rowspan="2">Name of School <br /> (Write in Full)</th>
-          <th width="20%" rowspan="2">Basic Education / Degree / Course <br /> (Write in Full)</th>
-          <th width="15%" colspan="2">Period of Attendance</th>
-          <th width="10%" rowspan="2">Highest Level / Units Earned <br /> (If not Graduated)</th>
-          <th width="10%" rowspan="2">Year Graduated</th>
-          <th width="10%" rowspan="2">SCHOLARSHIP/ ACADEMIC HONORS RECEIVED</th>
-          <th width="7%" rowspan="2"></th>
-        </tr>
-        <tr>
-          <th>From</th>
-          <th>To</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        $result2 = mysqli_query($con, "SELECT * FROM educational_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
-        while ($row2 = mysqli_fetch_array($result2)) {
-          echo '<tr><td style="text-align:center;">' . $row2['Level'] . '</td>
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'educational-background'); ?>" id="educational-background">
+  <div class="d-sm-flex align-items-center justify-content-between">
+    <h3 class="h4 mb-0">Educational Background</h3>
+    <a href="#AddEducationModal" data-toggle="modal" class="btn btn-primary btn-icon-split btn-sm"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
+  </div><!-- .d-sm-flex -->
+
+  <div class="row mt-3">
+    <div class="col table-responsive">
+      <table width="100%" class="table table-striped table-bordered table-hover mb-2" cellspacing="0">
+        <thead>
+          <tr class="text-center">
+            <th class="align-middle" width="10%" rowspan="2">Level</th>
+            <th class="align-middle" width="20%" rowspan="2">Name of School<br>(Write in Full)</th>
+            <th class="align-middle" width="20%" rowspan="2">Basic Education / Degree / Course<br>(Write in Full)</th>
+            <th class="align-middle" width="15%" colspan="2">Period of Attendance</th>
+            <th class="align-middle" width="10%" rowspan="2">Highest Level / Units Earned<br>(If not Graduated)</th>
+            <th class="align-middle" width="10%" rowspan="2">Year Graduated</th>
+            <th class="align-middle" width="10%" rowspan="2">Scholarship / Academic Honors Received</th>
+            <th class="align-middle" width="7%" rowspan="2">Action</th>
+          </tr>
+          <tr class="text-center">
+            <th class="align-middle">From</th>
+            <th class="align-middle">To</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $result2 = mysqli_query($con, "SELECT * FROM educational_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          while ($row2 = mysqli_fetch_array($result2)) {
+            echo '<tr><td style="text-align:center;">' . $row2['Level'] . '</td>
 													  <td style="text-align:center;">' . $row2['Name_of_School'] . '</td>
 													  <td style="text-align:center;">' . $row2['Course'] . '</td>
 													  <td style="text-align:center;">' . $row2['From'] . '</td>
@@ -39,11 +43,12 @@
 													  </td>
 													  
 												  </tr>';
-        }
-        ?>
+          }
+          ?>
 
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -57,7 +62,7 @@
 </script>
 
 <!-- Modal for Educational Background-->
-<div class="modal fade" id="myeb" role="dialog" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="AddEducationModal" role="dialog" data-backdrop="static" data-keyboard="false">
   <div class="loginbox">
 
     <!-- Modal content-->
