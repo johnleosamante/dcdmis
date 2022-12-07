@@ -61,12 +61,12 @@ if ($row['SchoolLogo'] === NULL) {
           if (!isset($link)) {
             include("dashboard.php");
           } else {
-            if ($link == 'Personal Data Sheet') {
+            if ($link == 'Service Record') {
+              include("service-record.php");
+            } elseif ($link == 'Personal Data Sheet') {
               include("pds.php");
             } elseif ($link == 'Daily Time Record') {
               include("my_dtr.php");
-            } elseif ($link == 'Service Record') {
-              include("service_record.php");
             } elseif ($link == 'Locator') {
               include("locator.php");
             } elseif ($link == 'Payslip') {
