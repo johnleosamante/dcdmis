@@ -22,7 +22,7 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 					$file = $_FILES["uploadCertificate"]["name"];
 					$temp = $_FILES["uploadCertificate"]["tmp_name"];
 					$ext = pathinfo($file, PATHINFO_EXTENSION);
-					$target_dir = '../uploads/certificate/' . $_SESSION['EmpID'] . '/';
+					$target_dir = '../uploads/certificate/' . $_SESSION['EmpID'];
 					$target_file = $target_dir . '/' . $_SESSION['EmpID'] . date("YmdHis") . '.' . $ext;;
 					$uploadOk = 1;
 					$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -35,7 +35,7 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 					}
 
 					// Check file size
-					if ($_FILES["uploadCertificate"]["size"] > 500000) {
+					if ($_FILES["uploadCertificate"]["size"] > 5000000) {
 						$message = "The selected file is too large.";
 						$uploadOk = 0;
 					}
