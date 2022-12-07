@@ -28,7 +28,7 @@
 					
 						          <div class="panel panel-default">
                                     <div class="panel-heading">
-									<a href="" class="btn btn-success" target="_blank" style="float:right;padding:10px;maring:10px;">Print Preview</a>
+									<a href="" class="btn btn-success" target="_blank" style="float:right;padding:10px;margin:10px;">Print Preview</a>
 									<h4>INDIVIDUAL PERFORMANCE COMMITMENT AND REVIEW FORM (IPCRF)</h4>				 
                                      </div>
 								<div class="panel-body">									
