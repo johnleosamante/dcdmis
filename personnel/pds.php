@@ -1,100 +1,75 @@
 <?php
 # personnel/pds.php
+$success = true;
+$message = '';
+$showPrompt = false;
 
 if (!is_dir('../uploads/images/' . $_SESSION['EmpID'])) {
 	mkdir('../uploads/images/' . $_SESSION['EmpID'], 0777, true);
 }
-?>
 
-<script>
-	var loadFile = function(event) {
-		var output = document.getElementById('pic');
-		output.src = URL.createObjectURL(event.target.files[0]);
-	};
-</script>
-
-<?php
-$Err = "";
-
-//Update Contact Number
-if (isset($_POST['CellNo'])) {
-	mysqli_query($con, "UPDATE tbl_employee SET Emp_Cell_No='" . $_POST['Cell'] . "'WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-	if (mysqli_affected_rows($con) == 1) {
-?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
-}
-//Update Employee Profile
-elseif (isset($_POST['save_infor'])) {
+/* PERSONAL INFORMATION */
+if (isset($_POST['UpdatePersonalInformation'])) {
 	$age = date("Y") - $_POST['Year'];
 
-	mysqli_query($con, "UPDATE tbl_employee SET Emp_LName='" . $_POST['LName'] . "',Emp_FName='" . $_POST['FName'] . "',Emp_MName='" . $_POST['MName'] . "',Emp_Month='" . $_POST['Month'] . "',Emp_Day='" . $_POST['Day'] . "',Emp_Year='" . $_POST['Year'] . "',Emp_Sex='" . $_POST['gender'] . "',Emp_CS='" . $_POST['CS'] . "',Emp_place_of_birth='" . $_POST['PLB'] . "',Emp_Citizen='" . $_POST['citizen'] . "',Emp_Address='" . $_POST['address'] . "',Emp_Height='" . $_POST['height'] . "',Emp_Weight='" . $_POST['weight'] . "',Emp_Blood_type='" . $_POST['blood'] . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-	//mysqli_query($con,"UPDATE tbl_employee SET Emp_place_of_birth='".$_POST['PLB']."',Emp_Citizen='".$_POST['citizen']."',Emp_Address='".$_POST['address']."',Emp_Height='".$_POST['height']."',Emp_Weight='".$_POST['weight']."',Emp_Blood_type='".$_POST['blood']."' WHERE Emp_ID='".$_SESSION['EmpID']."' LIMIT 1")or die ("Update PDS Error..");
+	mysqli_query($con, "UPDATE tbl_employee SET Emp_LName='" . $_POST['LName'] . "',Emp_FName='" . $_POST['FName'] . "',Emp_MName='" . $_POST['MName'] . "', Emp_Extension='" . $_POST['Extension'] . "', Emp_Month='" . $_POST['Month'] . "',Emp_Day='" . $_POST['Day'] . "',Emp_Year='" . $_POST['Year'] . "',Emp_Sex='" . $_POST['gender'] . "',Emp_CS='" . $_POST['CS'] . "',Emp_place_of_birth='" . $_POST['PLB'] . "',Emp_Citizen='" . $_POST['citizen'] . "',Emp_Address='" . $_POST['address'] . "',Emp_Height='" . $_POST['height'] . "',Emp_Weight='" . $_POST['weight'] . "',Emp_Blood_type='" . $_POST['blood'] . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
 	mysqli_query($con, "UPDATE tbl_station SET Emp_age='$age' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Personal Information has been updated successfully!';
+		$showPrompt = true;
 	}
+
+	$_SESSION['pdstab'] = 'personal-information';
 }
-//Update EMployee Picture
-elseif (isset($_POST['Save'])) {
+
+if (isset($_POST['ChangeProfilePicture'])) {
 	$myfile = $_FILES['image']['name'];
-	//$myfile = preg_replace("/[^a-zA-Z0-9-.]/", "", $myfile);
 	$temp = $_FILES['image']['tmp_name'];
 	$type = $_FILES['image']['type'];
 	$ext = pathinfo($myfile, PATHINFO_EXTENSION);
-	$mynewimage = '../' . $_SESSION['EmpID'] . '/' . $_SESSION['EmpID'] . '.' . $ext;
-	$myimage = '../' . $_SESSION['EmpID'] . '/' . $_SESSION['EmpID'] . '.' . $ext;
-
-	move_uploaded_file($temp, $mynewimage);
+	$myimage = 'uploads/images/' . $_SESSION['EmpID'] . '/' . $_SESSION['EmpID'] . '.' . $ext;
+	
+	move_uploaded_file($temp, '../' . $myimage);
 	mysqli_query($con, "UPDATE tbl_employee SET Picture='" . $myimage . "' WHERE Emp_ID = '" . $_SESSION['EmpID'] . "' LIMIT 1");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Profile picture has been updated successfully!';
+		$showPrompt = true;
 	}
+
+	$_SESSION['pdstab'] = 'personal-information';
 }
-//Add Family Data
-elseif (isset($_POST['save_fam'])) {
+
+if (isset($_POST['UpdateContactNo'])) {
+	mysqli_query($con, "UPDATE tbl_employee SET Emp_Cell_No='" . $_POST['Cell'] . "'WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Contact number has been updated successfully!';
+		$showPrompt = true;
+	}
+
+	$_SESSION['pdstab'] = 'personal-information';
+}
+
+/* FAMILY BACKGROUND */
+if (isset($_POST['AddFamilyMember'])) {
 	mysqli_query($con, "INSERT INTO family_background VALUES (NULL,'" . $_POST['Lname'] . "','" . $_POST['Fname'] . "','" . $_POST['Mname'] . "','" . $_POST['Birthdate'] . "','" . $_POST['Relation'] . "','" . $_SESSION['EmpID'] . "')");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Family member has been added successfully!';
+		$showPrompt = true;
 	}
+
+	$_SESSION['pdstab'] = 'family-background';
 }
+
 //Add Educational Record
-elseif (isset($_POST['sub_educ'])) {
+if (isset($_POST['sub_educ'])) {
 	mysqli_query($con, "INSERT INTO educational_background VALUES (NULL,'" . $_POST['level'] . "','" . $_POST['school'] . "','" . $_POST['education'] . "','" . $_POST['from'] . "','" . $_POST['to'] . "','" . $_POST['unit'] . "','" . $_POST['year'] . "','" . $_POST['honor'] . "','" . $_SESSION['EmpID'] . "')");
 
 	if (mysqli_affected_rows($con) == 1) {
@@ -679,43 +654,49 @@ $_SESSION['Year'] = $row['Emp_Year'];
 			</div><!-- .card-header -->
 
 			<div class="card-body">
-				<ul class="nav nav-tabs">
+				<ul class="nav nav-tabs mb-3">
 					<li class="nav-item">
-						<a class="nav-link active text-secondary" href="#personal-information" data-toggle="tab">Personal Information</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(!isset($_SESSION['pdstab']) || $_SESSION['pdstab'] === 'personal-information'); ?>" href="#personal-information" data-toggle="tab">Personal Information</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary" href="#family-background" data-toggle="tab">Family Background</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'family-background'); ?>" href="#family-background" data-toggle="tab">Family Background</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary" href="#educational-background" data-toggle="tab">Educational Background</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'educational-background'); ?>" href="#educational-background" data-toggle="tab">Educational Background</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary" href="#eligibility" data-toggle="tab">Civil Service Eligibility</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'eligibility'); ?>" href="#eligibility" data-toggle="tab">Civil Service Eligibility</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary" href="#work-experience" data-toggle="tab">Work Experience</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'work-experience'); ?>" href="#work-experience" data-toggle="tab">Work Experience</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary" href="#voluntary-work" data-toggle="tab">Voluntary Work</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'voluntary-work'); ?>" href="#voluntary-work" data-toggle="tab">Voluntary Work</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary" href="#learning-development" data-toggle="tab">Learning and Development</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'learning-development'); ?>" href="#learning-development" data-toggle="tab">Learning and Development</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary" href="#other-information" data-toggle="tab">Other Information</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'other-information'); ?>" href="#other-information" data-toggle="tab">Other Information</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary" href="#questionnaires" data-toggle="tab">Questionnaires</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'questionnaires'); ?>" href="#questionnaires" data-toggle="tab">Questionnaires</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary" href="#references" data-toggle="tab">References</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'references'); ?>" href="#references" data-toggle="tab">References</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary" href="#psipop" data-toggle="tab">PSIPOP</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'psipop'); ?>" href="#psipop" data-toggle="tab">PSIPOP</a>
 					</li>
 				</ul>
 
-				<div class="tab-content pt-3 px-2">
+				<?php
+				if ($showPrompt) {
+					AlertBox($message, $success ? 'success' : 'danger', 'left');
+				}
+				?>
+
+				<div class="tab-content mt-2 px-2">
 					<?php
 					include_once('pds/personal-information.php');
 					include_once('pds/family-background.php');
