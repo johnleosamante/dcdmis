@@ -11,7 +11,7 @@
 
 			<div class="card-body">
 				<?php
-				if (isset($_POST['save_position'])) {
+				if (isset($_POST['UpdatePosition'])) {
 					DBNonQuery("UPDATE tbl_station SET Emp_Position='" . $_POST['position'] . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
 
 					if (DBAffectedRows($con) === 1) {
@@ -19,7 +19,7 @@
 					}
 				}
 
-				if (isset($_POST['save_tin'])) {
+				if (isset($_POST['UpdateTIN'])) {
 					DBNonQuery("UPDATE tbl_employee SET Emp_TIN='" . $_POST['myTIN'] . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
 
 					if (DBAffectedRows($con) === 1) {
@@ -27,8 +27,7 @@
 					}
 				}
 
-
-				if (isset($_POST['update'])) {
+				if (isset($_POST['UpdatePassword'])) {
 					if ($_POST['password'] <> $_POST['confirm']) {
 						AlertBox('Password do not match! Try again.', 'danger', 'left');
 					} else {
@@ -130,7 +129,7 @@
 
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-											<input type="submit" class="btn btn-primary" name="save_position" value="Update">
+											<input type="submit" class="btn btn-primary" name="UpdatePosition" value="Update">
 										</div>
 									</form>
 								</div>
@@ -154,7 +153,7 @@
 
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-											<input type="submit" class="btn btn-primary" name="save_tin" value="Update">
+											<input type="submit" class="btn btn-primary" name="UpdateTIN" value="Update">
 										</div>
 									</form>
 								</div>
@@ -201,9 +200,9 @@
 
 							<div class="row">
 								<div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
-									<input type="submit" name="update" value="Change" class="btn btn-primary btn-block btn-lg">
+									<input type="submit" name="UpdatePassword" value="Change" class="btn btn-primary btn-block btn-lg">
 								</div>
-							</div>
+							</div><!-- .col-sm-12 -->
 						</form>
 					</div><!-- .tab-content -->
 				</div><!-- .card-body -->
