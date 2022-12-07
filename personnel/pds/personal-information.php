@@ -1,7 +1,8 @@
-<div class="tab-pane fade show active" id="personal-information">
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(!isset($_SESSION['pdstab']) || $_SESSION['pdstab'] === 'personal-information'); ?>" id="personal-information">
+
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h4 mb-0">Personal Information</h3>
-    <a href="#Birthdate" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-edit fa-fw"></i></span><span class="text">Edit</span></a>
+    <a href="#PersonalInformationModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-edit fa-fw"></i></span><span class="text">Edit</span></a>
   </div><!-- .d-sm-flex -->
 
   <div class="row mt-3">
@@ -12,16 +13,40 @@
       } else {
         $image = "../" . $_SESSION['Picture'];
       } ?>
-      <img src="<?php echo $image; ?>" width="100%" class="my-3" id="pic">
+      <img src="<?php echo $image; ?>" width="100%" class="my-3" id="employeePhoto">
 
       <form action="" method="POST" enctype="multipart/form-data">
         <div class="custom-file">
-          <input id="imageUpload" type="file" name="image" class="custom-file-input" onchange="loadFile(event)" required>
+          <input id="imageUpload" type="file" name="image" class="custom-file-input" required>
           <label id="imageUploadLabel" class="custom-file-label" for="imageUpload">Choose file</label>
         </div>
 
-        <input type="submit" name="Save" value="Save" class="btn btn-primary btn-block my-3">
+        <input type="submit" name="ChangeProfilePicture" value="Save" class="btn btn-primary btn-block my-3">
       </form>
+
+      <script>
+        document.getElementById('imageUpload').addEventListener('change', (event) => {
+          var preview = document.getElementById('employeePhoto');
+          const file = event.target.files[0];
+          const name = file.name;
+          const lastDot = name.lastIndexOf('.');
+          const ext = name.substring(lastDot + 1);
+          var label = document.getElementById('imageUploadLabel');
+          label.innerText = name;
+
+          switch (ext) {
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+            case 'gif':
+              preview.src = URL.createObjectURL(event.target.files[0]);
+              break;
+            default:
+              preview.src = '<?php echo GetSiteURL(); ?>/assets/img/nopreview.png';
+              break;
+          }
+        });
+      </script>
     </div><!-- .col-md-6 -->
 
     <div class="col-md-6 col-lg-8 col-xl-10">
@@ -81,17 +106,17 @@
         <tr>
           <th class="py-2">Contact No.:</th>
           <td class="py-2 px-3"><?php echo $_SESSION['Cell_No']; ?></td>
-          <td class="py-2 px-3"><span class="small"><a class="text-decoration-none" href="#MyCell" data-toggle="modal"><i class="fas fa-edit fa-fw"></i> Edit</a></span></td>
+          <td class="py-2 px-3"><span class="small"><a class="text-decoration-none" href="#ContactNoModal" data-toggle="modal"><i class="fas fa-edit fa-fw"></i> Edit</a></span></td>
         </tr>
       </table>
     </div><!-- .col-md-6 -->
   </div><!-- .row -->
 
-  <div class="modal fade show" id="Birthdate" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal fade" id="PersonalInformationModal" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Update Information</h5>
+          <h5 class="modal-title">Update Personal Information</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
         </div><!-- .modal-header -->
 
@@ -135,7 +160,7 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <select name="month" class="form-control" id="inputBMonth" required>
+                  <select name="Month" class="form-control" id="inputBMonth" required>
                     <option value="" <?php echo SetOptionSelected('', $_SESSION['Month']); ?>>Birth Month</option>
                     <option value="01" <?php echo SetOptionSelected('01', $_SESSION['Month']); ?>>January</option>
                     <option value="02" <?php echo SetOptionSelected('02', $_SESSION['Month']); ?>>February</option>
@@ -155,13 +180,13 @@
 
               <div class="col-md-4">
                 <div class="form-group">
-                  <input class="form-control" id="inputBDay" name="day" type="text" placeholder="Birth day" value="<?php echo $_SESSION['Day']; ?>" required>
+                  <input class="form-control" id="inputBDay" name="Day" type="text" placeholder="Birth day" value="<?php echo $_SESSION['Day']; ?>" required>
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
 
               <div class="col-md-4">
                 <div class="form-group">
-                  <select name="year" class="form-control" id="inputBYear" required>
+                  <select name="Year" class="form-control" id="inputBYear" required>
                     <option value="" <?php echo SetOptionSelected('', $_SESSION['Year']); ?>>Birth Year</option>
                     <?php
                     $age = 0;
@@ -238,38 +263,34 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" name="save_infor">Update</button>
+            <button type="submit" class="btn btn-primary" name="UpdatePersonalInformation">Update</button>
           </div><!-- .modal-footer -->
         </form>
       </div><!-- .modal-content -->
     </div><!-- .modal-dialog -->
   </div><!-- .modal -->
 
-  <!-- Modal for update Cell_No-->
-  <div class="modal fade" id="MyCell" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal fade" id="ContactNoModal" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
-      <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Update Contact Number</h4>
-        </div>
-        <div class="modal-body">
-          <form enctype="multipart/form-data" method="post" role="form" action="">
-            <div class="form-group">
-              <table>
-                <tr>
-                  <th>Cell Number:</th>
-                  <th style="padding:4px;"><input type="text" name="Cell" class="form-control" value="<?php echo $_SESSION['Cell_No']; ?>"></th>
-                </tr>
-              </table>
-            </div>
-            <button type="submit" class="btn btn-primary" name="CellNo" value="SAVE">UPDATE</button>
-          </form>
+          <h5 class="modal-title">Update Contact Number</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+        </div><!-- .modal-header -->
 
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--Update Cell No-->
-</div><!-- .tab-pane -->
+        <form enctype="multipart/form-data" method="post" role="form" action="">
+          <div class="modal-body">
+            <div class="form-group mb-0">
+              <input type="text" name="Cell" class="form-control" value="<?php echo $_SESSION['Cell_No']; ?>" placeholder="Contact Number">
+            </div><!-- .form-group -->
+          </div><!-- .modal-body -->
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" name="UpdateContactNo" value="SAVE">Update</button>
+          </div><!-- .modal-footer -->
+        </form>
+      </div><!-- .modal-content -->
+    </div><!-- .modal-dialog -->
+  </div><!-- .modal -->
+</div>
