@@ -3,3 +3,4 @@ temp/
 picture/
 __secondary__/
 pcdmis/
+_includes_/PHPQRCode/temp*-errors.txt
