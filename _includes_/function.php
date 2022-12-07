@@ -108,6 +108,10 @@ function SetActiveNavigationItem($condition) {
   return $condition ? ' active' : '';
 }
 
+function SetActiveNavigationTab($condition) {
+  return $condition ? ' show active' : '';
+}
+
 function GetHRMOHead() {
   return HRMO_HEAD;
 }
