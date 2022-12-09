@@ -81,37 +81,30 @@ if (isset($_POST['AddEducation'])) {
 	$_SESSION['pdstab'] = 'educational-background';
 }
 
-//Add Civil Service Record
-elseif (isset($_POST['save_CS'])) {
+/* CIVIL SERVICE ELIGIBILITY */
+if (isset($_POST['AddEligibility'])) {
 	mysqli_query($con, "INSERT INTO civil_service VALUES (NULL,'" . $_POST['Carrer'] . "','" . $_POST['rating'] . "','" . $_POST['date_exam'] . "','" . $_POST['Place'] . "','" . $_POST['license_number'] . "','" . $_POST['year'] . "','" . $_SESSION['EmpID'] . "')");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Civil Service Eligibility has been added successfully!';
+		$showPrompt = true;
 	}
+
+	$_SESSION['pdstab'] = 'eligibility';
 }
-//Add Work Experience
-elseif (isset($_POST['save_work'])) {
+
+/* WORK EXPERIENCE */
+if (isset($_POST['AddExperience'])) {
 	mysqli_query($con, "INSERT INTO work_experience VALUES (NULL,'" . $_POST['from'] . "','" . $_POST['to'] . "','" . $_POST['position'] . "','" . $_POST['organization'] . "','" . $_POST['monthly'] . "','" . $_POST['step'] . "','" . $_POST['status'] . "','" . $_POST['government'] . "','" . $_SESSION['EmpID'] . "')");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Work Experience has been added successfully!';
+		$showPrompt = true;
 	}
+
+	$_SESSION['pdstab'] = 'work-experience';
 }
 //Add Voluntary Work
 elseif (isset($_POST['volwork'])) {
@@ -693,7 +686,7 @@ $_SESSION['Year'] = $row['Emp_Year'];
 				}
 				?>
 
-				<div class="tab-content mt-2 px-2">
+				<div class="tab-content mt-2">
 					<?php
 					include_once('pds/personal-information.php');
 					include_once('pds/family-background.php');

@@ -39,12 +39,7 @@
             }
           } else { ?>
             <tr>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
+              <td class="text-center align-middle" colspan="6">No data available in data.</td>
             </tr>
           <?php
           }
@@ -74,17 +69,17 @@
           <div class="modal-body">
             <div class="form-group">
               <label for="LastName" class="mb-0">Last Name:</label>
-              <input id="LastName" type="text" name="Lname" class="form-control" placeholder="Last Name" required>
+              <input id="LastName" type="text" name="Lname" class="form-control" required>
             </div>
 
             <div class="form-group">
               <label for="FirstName" class="mb-0">First Name:</label>
-              <input id="FirstName" type="text" name="Fname" class="form-control" placeholder="First Name" required>
+              <input id="FirstName" type="text" name="Fname" class="form-control" required>
             </div>
 
             <div class="form-group">
               <label for="MiddleName" class="mb-0">Middle Name:</label>
-              <input id="MiddleName" type="text" name="Mname" class="form-control" placeholder="Middle Name">
+              <input id="MiddleName" type="text" name="Mname" class="form-control">
             </div>
 
             <div class="form-group">
@@ -94,7 +89,7 @@
 
             <div class="form-group mb-0">
               <label for="Relationship" class="mb-0">Relationship:</label>
-              <input id="Relationship" type="text" name="Relation" class="form-control" placeholder="Relationship" required>
+              <input id="Relationship" type="text" name="Relation" class="form-control" required>
             </div>
           </div><!-- .modal-body -->
 

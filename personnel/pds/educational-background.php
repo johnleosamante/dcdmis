@@ -39,7 +39,7 @@
                 <td class="text-center align-middle"><?php echo $row2['Year_Graduated']; ?></td>
                 <td class="text-center align-middle"><?php echo $row2['Honor_Recieved']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_educate.php?id='<?php echo urlencode(base64_encode($row2['No'])); ?>" data-toggle="modal" data-target="#myfamily" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-success my-1" href="my_educate.php?id='<?php echo urlencode(base64_encode($row2['No'])); ?>" data-toggle="modal" data-target="#UpdateEducationModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
                   <a class="btn btn-danger my-1" id="<?php echo $row2['No']; ?>" onclick="delete_educ(this.id)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
@@ -47,15 +47,7 @@
             }
           } else { ?>
             <tr>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
-              <td class="text-center align-middle">-</td>
+              <td class="text-center align-middle" colspan="9">No data available in table</td>
             </tr>
           <?php
           }
@@ -77,7 +69,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Add Education</h4>
+          <h5 class="modal-title">Add Education</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
         </div><!-- .modal-header -->
 
@@ -98,26 +90,26 @@
 
             <div class="form-group">
               <label for="school" class="mb-0">Name of School (Write in full):</label>
-              <input id="school" type="text" name="school" class="form-control" placeholder="Name of School" required>
+              <input id="school" type="text" name="school" class="form-control" required>
             </div>
 
             <div class="form-group">
               <label for="education" class="mb-0">Basic Education / Degree / Course (Write in full):</label>
-              <input id="education" type="text" name="education" class="form-control" placeholder="Basic Education / Degree / Course" required>
+              <input id="education" type="text" name="education" class="form-control" required>
             </div>
 
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="from" class="mb-0">Attendance from:</label>
-                  <input id="from" type="text" name="from" class="form-control" placeholder="Attendance from" required>
+                  <input id="from" type="text" name="from" class="form-control" required>
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="to" class="mb-0">Attendance to:</label>
-                  <input id="to" type="text" name="to" class="form-control" placeholder="Attendance to" required>
+                  <input id="to" type="text" name="to" class="form-control" required>
                 </div>
               </div>
             </div>
@@ -125,7 +117,7 @@
             <div class="form-group">
               <label for="unit" class="mb-0">Highest Level / Units Earned (if not graduated)</label>
               <select id="unit" name="unit" class="form-control" required>
-                <Option value="">Highest Level / Units Earned</option>
+                <Option value="0">0</option>
                 <Option value="3">3</option>
                 <Option value="6">6</option>
                 <Option value="9">9</option>
@@ -142,12 +134,12 @@
 
             <div class="form-group">
               <label for="year" class="mb-0">Year Graduated:</label>
-              <input type="text" name="year" class="form-control" placeholder="Year Graduated" required>
+              <input type="text" name="year" class="form-control" required>
             </div>
 
             <div class="form-group mb-0">
               <label for="honor" class="mb-0">Scholarship / Academic Honors Received:</label>
-              <input type="text" name="honor" class="form-control" placeholder="Scholarship / Academic Honors Received" required>
+              <input type="text" name="honor" class="form-control" required>
             </div>
           </div><!-- .modal-body -->
 
@@ -160,7 +152,7 @@
     </div><!-- .modal-dialog -->
   </div><!-- .modal -->
 
-  <div class="modal fade" id="myeduc" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal fade" id="UpdateEducationModal" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
       </div>
