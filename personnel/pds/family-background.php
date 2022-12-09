@@ -1,4 +1,4 @@
-<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) &&$_SESSION['pdstab'] === 'family-background'); ?>" id="family-background">
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'family-background'); ?>" id="family-background">
   <div class="d-sm-flex align-items=center justify-content-between">
     <h3 class="h4 mb-0">Family Background</h3>
     <a href="#AddFamilyMemberModal" data-toggle="modal" class="btn btn-primary btn-icon-split btn-sm"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
@@ -14,7 +14,7 @@
             <th width="20%">Middle Name</th>
             <th width="15%">Date of Birth</th>
             <th width="15%">Relationship</th>
-            <th width="10%">Actions</th>
+            <th width="10%">Action</th>
           </tr>
         </thead>
 
@@ -73,27 +73,27 @@
         <form enctype="multipart/form-data" method="post" role="form" action="">
           <div class="modal-body">
             <div class="form-group">
-              <label for="LastName">Last Name:</label>
+              <label for="LastName" class="mb-0">Last Name:</label>
               <input id="LastName" type="text" name="Lname" class="form-control" placeholder="Last Name" required>
             </div>
 
             <div class="form-group">
-              <label for="FirstName">First Name:</label>
+              <label for="FirstName" class="mb-0">First Name:</label>
               <input id="FirstName" type="text" name="Fname" class="form-control" placeholder="First Name" required>
             </div>
 
             <div class="form-group">
-              <label for="MiddleName">Middle Name:</label>
+              <label for="MiddleName" class="mb-0">Middle Name:</label>
               <input id="MiddleName" type="text" name="Mname" class="form-control" placeholder="Middle Name">
             </div>
 
             <div class="form-group">
-              <label for="DateOfBirth">Date of Birth:</label>
+              <label for="DateOfBirth" class="mb-0">Date of Birth:</label>
               <input id="DateOfBirth" type="date" name="Birthdate" class="form-control" required>
             </div>
 
             <div class="form-group mb-0">
-              <label for="Relationship">Relationship:</label>
+              <label for="Relationship" class="mb-0">Relationship:</label>
               <input id="Relationship" type="text" name="Relation" class="form-control" placeholder="Relationship" required>
             </div>
           </div><!-- .modal-body -->
