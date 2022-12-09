@@ -55,7 +55,6 @@
       <script>
         function delete_service(id) {
           if (confirm("Are you sure you want to deleted this row?")) {
-
             window.location.href = 'delete_service.php?id=' + id;
           }
         }
