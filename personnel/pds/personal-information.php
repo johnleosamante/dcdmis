@@ -2,7 +2,7 @@
 
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h4 mb-0">Personal Information</h3>
-    <a href="#PersonalInformationModal" class="btn btn-primary btn-icon-split" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-edit fa-fw"></i></span><span class="text">Edit</span></a>
+    <a href="#PersonalInformationModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-edit fa-fw"></i></span><span class="text">Edit</span></a>
   </div><!-- .d-sm-flex -->
 
   <div class="row mt-3">
