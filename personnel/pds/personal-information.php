@@ -2,7 +2,7 @@
 
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h4 mb-0">Personal Information</h3>
-    <a href="#PersonalInformationModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-edit fa-fw"></i></span><span class="text">Edit</span></a>
+    <a href="#PersonalInformationModal" class="btn btn-primary btn-icon-split" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-edit fa-fw"></i></span><span class="text">Edit</span></a>
   </div><!-- .d-sm-flex -->
 
   <div class="row mt-3">
@@ -125,12 +125,14 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <input type="text" name="LName" value="<?php echo $_SESSION['Last_Name']; ?>" class="form-control" placeholder="Last name">
+                  <label for="LName" class="mb-0">Last Name:</label>
+                  <input id="LName" type="text" name="LName" value="<?php echo $_SESSION['Last_Name']; ?>" class="form-control" placeholder="Last name">
                 </div><!-- .form-group -->
               </div><!-- .col-md-6 -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <input type="text" name="FName" value="<?php echo $_SESSION['First_Name']; ?>" class="form-control" placeholder="First name">
+                  <label for="FName" class="mb-0">First Name:</label>
+                  <input id="FName" type="text" name="FName" value="<?php echo $_SESSION['First_Name']; ?>" class="form-control" placeholder="First name">
                 </div><!-- .form-group -->
               </div><!-- .col-md-6 -->
             </div><!-- .row -->
@@ -138,17 +140,20 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <input type="text" name="MName" value="<?php echo $_SESSION['Middle_Name']; ?>" class="form-control" placeholder="Middle name">
+                  <label for="MName" class="mb-0">Middle Name:</label>
+                  <input id="MName" type="text" name="MName" value="<?php echo $_SESSION['Middle_Name']; ?>" class="form-control" placeholder="Middle name">
                 </div><!-- .form-group -->
               </div><!-- .col-md-6 -->
               <div class="col-md-3">
                 <div class="form-group">
-                  <input type="text" name="Extension" value="<?php echo $_SESSION['Extension']; ?>" class="form-control" placeholder="Extension">
+                  <label for="Extension" class="mb-0">Extension:</label>
+                  <input id="Extension" type="text" name="Extension" value="<?php echo $_SESSION['Extension']; ?>" class="form-control" placeholder="Extension">
                 </div><!-- .form-group -->
               </div><!-- .col-md-3 -->
               <div class="col-md-3">
                 <div class="form-group">
-                  <select name="gender" class="form-control">
+                  <label for="gender" class="mb-0">Sex:</label>
+                  <select id="gender" name="gender" class="form-control">
                     <option value="<?php echo $_SESSION['Gender']; ?>"><?php echo $_SESSION['Gender']; ?></option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -160,6 +165,7 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
+                  <label for="inputBMonth" class="mb-0">Month:</label>
                   <select name="Month" class="form-control" id="inputBMonth" required>
                     <option value="" <?php echo SetOptionSelected('', $_SESSION['Month']); ?>>Birth Month</option>
                     <option value="01" <?php echo SetOptionSelected('01', $_SESSION['Month']); ?>>January</option>
@@ -180,12 +186,14 @@
 
               <div class="col-md-4">
                 <div class="form-group">
+                  <label for="inputBDay" class="mb-0">Day:</label>
                   <input class="form-control" id="inputBDay" name="Day" type="text" placeholder="Birth day" value="<?php echo $_SESSION['Day']; ?>" required>
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
 
               <div class="col-md-4">
                 <div class="form-group">
+                  <label for="inputBYear" class="mb-0">Year:</label>
                   <select name="Year" class="form-control" id="inputBYear" required>
                     <option value="" <?php echo SetOptionSelected('', $_SESSION['Year']); ?>>Birth Year</option>
                     <?php
@@ -207,7 +215,8 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <input type="text" name="PLB" value="<?php echo $_SESSION['Place_of_Birth']; ?>" class="form-control" placeholder="Place of Birth">
+                  <label for="PLB" class="mb-0">Place of Birth:</label>
+                  <input id="PLB" type="text" name="PLB" value="<?php echo $_SESSION['Place_of_Birth']; ?>" class="form-control" placeholder="Place of Birth">
                 </div><!-- .form-group -->
               </div><!-- .col-md-12 -->
             </div><!-- .row -->
@@ -215,12 +224,14 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <input type="text" name="citizen" value="<?php echo $_SESSION['Citizen']; ?>" class="form-control" placeholder="Citizenship">
+                  <label for="citizen" class="mb-0">Citizenship:</label>
+                  <input id="citizen" type="text" name="citizen" value="<?php echo $_SESSION['Citizen']; ?>" class="form-control" placeholder="Citizenship">
                 </div><!-- .form-group -->
               </div><!-- .col-md-6 -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <select name="CS" class="form-control">
+                  <label for="CS" class="mb-0">Civil Status:</label>
+                  <select id="CS" name="CS" class="form-control">
                     <option value="<?php echo $_SESSION['Civil_Status']; ?>"><?php echo $_SESSION['Civil_Status']; ?></option>
                     <option value="Single">Single</option>
                     <option value="Married">Married</option>
@@ -235,19 +246,22 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <input type="text" name="height" value="<?php echo $_SESSION['Height']; ?>" class="form-control" placeholder="Height (m)">
+                  <label for="height" class="mb-0">Height (m):</label>
+                  <input id="height" type="text" name="height" value="<?php echo $_SESSION['Height']; ?>" class="form-control" placeholder="Height">
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
 
               <div class="col-md-4">
                 <div class="form-group">
-                  <input type="text" name="weight" value="<?php echo $_SESSION['Weight']; ?>" class="form-control" placeholder="Weight (kg)">
+                  <label for="weight" class="mb-0">Weight (kg):</label>
+                  <input id="weight" type="text" name="weight" value="<?php echo $_SESSION['Weight']; ?>" class="form-control" placeholder="Weight">
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
 
               <div class="col-md-4">
                 <div class="form-group">
-                  <input type="text" name="blood" value="<?php echo $_SESSION['Blood']; ?>" class="form-control" placeholder="Blood Type">
+                  <label for="blood" class="mb-0">Blood Type:</label>
+                  <input id="blood" type="text" name="blood" value="<?php echo $_SESSION['Blood']; ?>" class="form-control" placeholder="Blood Type">
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
             </div><!-- .row -->
@@ -255,7 +269,8 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group mb-0">
-                  <input type="text" name="address" value="<?php echo $_SESSION['Address']; ?>" class="form-control" placeholder="Residential Address">
+                  <label for="address" class="mb-0">Residential Addres:</label>
+                  <input id="address" type="text" name="address" value="<?php echo $_SESSION['Address']; ?>" class="form-control" placeholder="Residential Address">
                 </div><!-- .form-group -->
               </div><!-- .col-md-12 -->
             </div><!-- .row -->
@@ -274,14 +289,15 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Update Contact Number</h5>
+          <h5 class="modal-title">Edit</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
         </div><!-- .modal-header -->
 
         <form enctype="multipart/form-data" method="post" role="form" action="">
           <div class="modal-body">
             <div class="form-group mb-0">
-              <input type="text" name="Cell" class="form-control" value="<?php echo $_SESSION['Cell_No']; ?>" placeholder="Contact Number">
+              <label for="Cell" class="mb-0">Contact Number:</label>
+              <input id="Cell" type="text" name="Cell" class="form-control" value="<?php echo $_SESSION['Cell_No']; ?>" placeholder="Contact Number">
             </div><!-- .form-group -->
           </div><!-- .modal-body -->
 
