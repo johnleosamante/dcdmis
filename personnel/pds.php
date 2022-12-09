@@ -68,22 +68,19 @@ if (isset($_POST['AddFamilyMember'])) {
 	$_SESSION['pdstab'] = 'family-background';
 }
 
-//Add Educational Record
-if (isset($_POST['sub_educ'])) {
+/* EDUCATIONAL BACKGROUND */
+if (isset($_POST['AddEducation'])) {
 	mysqli_query($con, "INSERT INTO educational_background VALUES (NULL,'" . $_POST['level'] . "','" . $_POST['school'] . "','" . $_POST['education'] . "','" . $_POST['from'] . "','" . $_POST['to'] . "','" . $_POST['unit'] . "','" . $_POST['year'] . "','" . $_POST['honor'] . "','" . $_SESSION['EmpID'] . "')");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Education has been added successfully!';
+		$showPrompt = true;
 	}
+
+	$_SESSION['pdstab'] = 'educational-background';
 }
+
 //Add Civil Service Record
 elseif (isset($_POST['save_CS'])) {
 	mysqli_query($con, "INSERT INTO civil_service VALUES (NULL,'" . $_POST['Carrer'] . "','" . $_POST['rating'] . "','" . $_POST['date_exam'] . "','" . $_POST['Place'] . "','" . $_POST['license_number'] . "','" . $_POST['year'] . "','" . $_SESSION['EmpID'] . "')");

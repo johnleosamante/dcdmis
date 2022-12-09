@@ -1,27 +1,31 @@
-<div class="tab-pane fade" id="eligibility">
-  <a href="#myelegibility" class="btn btn-primary" data-toggle="modal" style="float:right">Add</a>
-  <h4>IV. Civil Service Eligibility </h4>
-  <div style="overflow-x:auto;width:100%;">
-    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-      <thead>
-        <tr>
-          <th width="25%" rowspan="2">Career Services / RA 1080 (BOARD / BAR) Underspecial Laws / CES / CSEE Barangay Eligibility/ Drivers License</th>
-          <th width="15%" rowspan="2">Rating (if Applicable)</th>
-          <th width="15%" rowspan="2">Date of Examinition Conferment</th>
-          <th width="15%" rowspan="2">Place of Examinition / Conferment</th>
-          <th width="20%" colspan="2">License(if Applicable)</th>
-          <th colspan="2" width="7%"></th>
-        </tr>
-        <tr>
-          <th>Number</th>
-          <th>Date of Validity</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        $result3 = mysqli_query($con, "SELECT * FROM civil_service WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
-        while ($row3 = mysqli_fetch_array($result3)) {
-          echo '<tr>
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'eligibility'); ?>" id="eligibility">
+  <div class="d-sm-flex align-items-center justify-content-between">
+    <h3 class="h4 mb-0">Civil Service Eligibility</h3>
+    <a href="#AddEligibility" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
+  </div><!-- .d-sm-flex -->
+
+  <div class="row mt-3">
+    <div class="col table-responsive">
+      <table width="100%" class="table table-striped table-bordered table-hover mb-2" cellspacing="0">
+        <thead>
+          <tr class="text-center">
+            <th class="align-middle" width="25%" rowspan="2">Career Services / RA 1080 (BOARD / BAR) Underspecial Laws / CES / CSEE Barangay Eligibility/ Drivers License</th>
+            <th class="align-middle" width="15%" rowspan="2">Rating (if Applicable)</th>
+            <th class="align-middle" width="15%" rowspan="2">Date of Examinition Conferment</th>
+            <th class="align-middle" width="15%" rowspan="2">Place of Examinition / Conferment</th>
+            <th class="align-middle" width="20%" colspan="2">License(if Applicable)</th>
+            <th class="align-middle" colspan="2" width="10%">Action</th>
+          </tr>
+          <tr class="text-center">
+            <th class="align-middle">Number</th>
+            <th class="align-middle">Date of Validity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $result3 = mysqli_query($con, "SELECT * FROM civil_service WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          while ($row3 = mysqli_fetch_array($result3)) {
+            echo '<tr>
 												<td style="text-align:center;">' . $row3['Carrer_Service'] . '</td>
 												<td style="text-align:center;">' . $row3['Rating'] . '</td>
 												<td style="text-align:center;">' . $row3['Date_of_Examination'] . '</td>
@@ -36,11 +40,12 @@
 													  </td>
 											
 											</tr>';
-        }
-        ?>
+          }
+          ?>
 
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -54,7 +59,7 @@
 </script>
 
 <!-- Modal for Civil SERVICE-->
-<div class="modal fade" id="myelegibility" role="dialog" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="AddEligibility" role="dialog" data-backdrop="static" data-keyboard="false">
   <div class="loginbox">
 
     <!-- Modal content-->

@@ -110,7 +110,6 @@
   <div class="modal fade" id="UpdateFamilyMemberModal" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
-
       </div>
     </div>
   </div>
