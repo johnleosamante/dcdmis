@@ -67,15 +67,6 @@ if (!is_dir('../uploads/payslip/' . $_SESSION['EmpID'])) {
 							}
 							?>
 						</tbody>
-
-						<thead>
-							<tr class="text-center align-middle">
-								<th>#</th>
-								<th>Date</th>
-								<th>Descriptions</th>
-								<th></th>
-							</tr>
-						</thead>
 					</table>
 				</div><!-- .table-responsive -->
 			</div><!-- .card-body -->

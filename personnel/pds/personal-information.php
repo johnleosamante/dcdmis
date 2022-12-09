@@ -13,7 +13,7 @@
       } else {
         $image = "../" . $_SESSION['Picture'];
       } ?>
-      <img src="<?php echo $image; ?>" width="100%" class="my-3" id="employeePhoto">
+      <img src="<?php echo $image; ?>" width="100%" class="mb-3 border rounded" id="employeePhoto">
 
       <form action="" method="POST" enctype="multipart/form-data">
         <div class="custom-file">

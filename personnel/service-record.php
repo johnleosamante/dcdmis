@@ -17,7 +17,7 @@
 					<table width="100%" class="table table-striped table-bordered table-hover" id="dataTable" cellspacing="0">
 						<thead>
 							<tr>
-								<th class="text-center align-middle" colspan="2">Service Record</th>
+								<th class="text-center align-middle" colspan="2">Inclusive Dates</th>
 								<th class="text-center align-middle" colspan="3">Record of Appointment</th>
 								<th class="text-center align-middle" colspan="2">Office Entity/Division</th>
 								<th class="text-center align-middle" rowspan="2">V/L Absences w/o Pay</th>
@@ -55,20 +55,6 @@
 
 							?>
 						</tbody>
-
-						<thead>
-							<tr>
-								<th class="text-center align-middle">From</th>
-								<th class="text-center align-middle">To</th>
-								<th class="text-center align-middle">Designation</th>
-								<th class="text-center align-middle">Status</th>
-								<th class="text-center align-middle">Salary</th>
-								<th class="text-center align-middle">Station/Place of Assignment</th>
-								<th class="text-center align-middle">Branch</th>
-								<th class="text-center align-middle">V/L Absences w/o Pay</th>
-								<th class="text-center align-middle">Separation</th>
-							</tr>
-						</thead>
 					</table>
 				</div>
 			</div>

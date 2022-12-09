@@ -10,7 +10,7 @@
         <thead>
           <tr class="text-center">
             <th class="align-middle" width="25%" rowspan="2">Career Services / RA 1080 (BOARD / BAR) Underspecial Laws / CES / CSEE Barangay Eligibility/ Drivers License</th>
-            <th class="align-middle" width="15%" rowspan="2">Rating (if Applicable)</th>
+            <th class="align-middle" width="15%" rowspan="2">Rating<br>(if Applicable)</th>
             <th class="align-middle" width="15%" rowspan="2">Date of Examinition Conferment</th>
             <th class="align-middle" width="15%" rowspan="2">Place of Examination / Conferment</th>
             <th class="align-middle" width="20%" colspan="2">License (if Applicable)</th>

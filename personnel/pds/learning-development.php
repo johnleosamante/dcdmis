@@ -1,118 +1,127 @@
-<div class="tab-pane fade" id="learning-development">
-  <a href="#Mylearning" class="btn btn-primary" data-toggle="modal" style="float:right">Add</a>
-  <h4>VII. Learning and Development (L&D)Interventions/ Training programs attended</h4>
-  <div style="overflow-x:auto;width:100%;">
-    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-      <thead>
-        <tr>
-          <th width="30%" rowspan="2">Title Learning and Development Interventions / Training programs <br />(write in full)</th>
-          <th width="10%" colspan="2">Inclusive Dates <br />(mm/dd/yyyy)</th>
-          <th width="10%" rowspan="2">Number of hours</th>
-          <th width="25%" rowspan="2">Type of LD (Managerial / Supervisor / Technical / etc)</th>
-          <th width="25%" rowspan="2">Conducted / Sponsored by<br />(Write in Full) </th>
-          <th rowspan="2" width="7%"></th>
-        </tr>
-        <tr>
-          <th>From</th>
-          <th>To</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        $result6 = mysqli_query($con, "SELECT * FROM learning_and_development WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY No Asc");
-        while ($row6 = mysqli_fetch_array($result6)) {
-          echo  '<tr>
-															<td style="text-align:center;">' . $row6['Title_of_Training'] . '</td>
-															<td style="text-align:center;">' . $row6['From'] . '</td>
-															<td style="text-align:center;">' . $row6['To'] . '</td>
-															<td style="text-align:center;">' . $row6['Number_of_Hours'] . '</td>
-															<td style="text-align:center;">' . $row6['Managerial'] . '</td>
-															<td style="text-align:center;">' . $row6['Conducted'] . '</td>
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'learning-development'); ?>" id="learning-development">
+  <div class="d-sm-flex align-items-center justify-content-between">
+    <h3 class="h4 mb-0">Learning &amp; Development (L&D) Interventions / Training Programs</h3>
+    <a href="#AddTrainingModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
+  </div>
 
-														 <td style="text-align:center;">
-															
-																	<a href="my_training.php?id=' . urlencode(base64_encode($row6['No'])) . '" data-toggle="modal" data-target="#myfamily"> Edit</a><br/>
-																	<a style="cursor:pointer;" onclick="delete_LD(this.id)" id="' . $row6['No'] . '">Remove</a>
-													
-													  </td>
+  <div class="row mt-3">
+    <div class="col table-responsive">
+      <table width="100%" class="table table-striped table-bordered table-hover mb-2" cellspacing="0">
+        <thead>
+          <tr class="text-center">
+            <th class="align-middle" width="30%" rowspan="2">Title Learning and Development Interventions / Training Programs</th>
+            <th class="align-middle" width="10%" colspan="2">Inclusive Dates</th>
+            <th class="align-middle" width="10%" rowspan="2">Number of Hours</th>
+            <th class="align-middle" width="10%" rowspan="2">Type of Learning &amp; Development</th>
+            <th class="align-middle" width="30%" rowspan="2">Conducted / Sponsored by</th>
+            <th class="align-middle" rowspan="2" width="10%">Action</th>
+          </tr>
+          <tr class="text-center">
+            <th class="align-middle" width="5%">From</th>
+            <th class="align-middle" width="5%">To</th>
+          </tr>
+        </thead>
 
-														
-														</tr>';
+        <tbody>
+          <?php
+          $training = mysqli_query($con, "SELECT * FROM learning_and_development WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY No Asc");
+
+          if (mysqli_num_rows($training) > 0) {
+            while ($row6 = mysqli_fetch_array($training)) { ?>
+              <tr>
+                <td class="text-center align-middle"><?php echo $row6['Title_of_Training']; ?></td>
+                <td class="text-center align-middle"><?php echo $row6['From']; ?></td>
+                <td class="text-center align-middle"><?php echo $row6['To']; ?></td>
+                <td class="text-center align-middle"><?php echo $row6['Number_of_Hours']; ?></td>
+                <td class="text-center align-middle"><?php echo $row6['Managerial']; ?></td>
+                <td class="text-center align-middle"><?php echo $row6['Conducted']; ?></td>
+                <td class="text-center align-middle">
+                  <a class="btn btn-success my-1" href="my_training.php?id=<?php echo urlencode(base64_encode($row6['No'])); ?>" data-toggle="modal" data-target="#UpdateTrainingModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" onclick="delete_LD(this.id)" id="<?php echo $row6['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                </td>
+              </tr>
+            <?php
+            }
+          } else { ?>
+            <tr>
+              <td class="text-center align-middle" colspan="7">No data available in table</td>
+            </tr>
+          <?php
+          }
+          ?>
+        </tbody>
+      </table>
+
+      <script>
+        function delete_LD(id) {
+          if (confirm("Are you sure you want to deleted this row?")) {
+            window.location.href = 'delete_LD.php?id=' + id;
+          }
         }
+      </script>
+    </div><!-- .col -->
+  </div><!-- .row -->
 
-        ?>
-      </tbody>
-    </table>
-  </div>
-</div>
+  <div class="modal fade" id="AddTrainingModal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Learning &amp; Development Intervention</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
 
-<script>
-  function delete_LD(id) {
-    if (confirm("Are you sure you want to deleted this row?")) {
-
-      window.location.href = 'delete_LD.php?id=' + id;
-    }
-  }
-</script>
-
-<!-- Modal for Leraning Work-->
-<div class="modal fade" id="Mylearning" role="dialog" data-backdrop="static" data-keyboard="false">
-  <div class="loginbox">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">VII. learning and development (L&D)interventions/ training programs attended
-          (Start from the most recent L & D training program and include only the relevant L&D/training taken for the five(5)years for the Division Chief/Executive Managerial positions)
-      </div>
-      <div class="modal-body">
         <form enctype="multipart/form-data" method="post" role="form" action="">
-          <div class="form-group" style="overflow-x:auto;">
-            <table width="100%" class="table table-bordered">
-              <tr>
-                <th style="text-align:center;" rowspan="2">Title Learning and development interventions / training programs <br /> (write in full)</th>
-                <th style="text-align:center;" colspan="2">Inclusive date <br />(mm/dd/yyyy)</th>
-                <th style="text-align:center;" rowspan="2">Number of hours</th>
-                <th style="text-align:center;" rowspan="2">Type of LD (Managerial / Supervisor / Technical / etc)</th>
-                <th style="text-align:center;" rowspan="2">Conducted / Sponsored by <br />(Write in Full) </th>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="Title_learning" class="mb-0">Learning &amp; Development Interventions / Training programs (Write in full):</label>
+              <th><input id="Title_learning" type="text" name="Title_learning" class="form-control" required></th>
+            </div>
 
-              </tr>
-              <tr>
-                <th style="text-align:center;">From</th>
-                <th style="text-align:center;">To</th>
-              </tr>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="From" class="mb-0">Inclusive Date From:</label>
+                  <input id="From" type="date" name="From" class="form-control" required>
+                </div>
+              </div>
 
-              <tr>
-                <th><input type="text" name="Title_learning" class="form-control" required></th>
-                <th><input type="date" name="From" class="form-control" required></th>
-                <th><input type="date" name="To" class="form-control" required></th>
-                <th><input type="text" name="No_of_hours" class="form-control" required></th>
-                <th><input type="text" name="Position" class="form-control" required></th>
-                <th><input type="text" name="Conducted" class="form-control" required></th>
-              </tr>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="To" class="mb-0">Inclusive Date To:</label>
+                  <input id="To" type="date" name="To" class="form-control" required>
+                </div>
+              </div>
+            </div>
 
-            </table>
-          </div>
-          <button type="submit" class="btn btn-primary" name="learning_dev" value="SAVE">ADD</button>
+            <div class="form-group">
+              <label for="No_of_hours" class="mb-0">Number of Hours:</label>
+              <input id="No_of_hours" type="text" name="No_of_hours" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label for="TrainingType" class="mb-0">Type of LD (Managerial / Supervisor / Technical / etc):</label>
+              <input id="TrainingType" type="text" name="TrainingType" class="form-control" required>
+            </div>
+
+            <div class="form-group mb-0">
+              <label for="Conducted" class="mb-0">Conducted / Sponsored by (Write in Full) </label>
+              <input id="Conducted" type="text" name="Conducted" class="form-control" required>
+            </div>
+          </div><!-- .modal-body -->
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" name="AddTraining">Save</button>
+          </div><!-- .modal-footer -->
         </form>
+      </div><!-- .modal-content -->
+    </div><!-- .modal-dialog -->
+  </div><!-- .modal -->
 
+  <div class="modal fade" id="UpdateTrainingModal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal for update Cell_No-->
-<div class="modal fade" id="mytraining" role="dialog" data-backdrop="static" data-keyboard="false">
-  <div class="loginbox">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-
-
-
-
-    </div>
-  </div>
-</div>
-<!--Update Other-->
+    </div><!-- .modal-dialog -->
+  </div><!-- .modal -->
+</div><!-- .tab-pane -->

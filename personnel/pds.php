@@ -106,38 +106,33 @@ if (isset($_POST['AddExperience'])) {
 
 	$_SESSION['pdstab'] = 'work-experience';
 }
-//Add Voluntary Work
-elseif (isset($_POST['volwork'])) {
+
+/* VOLUNTARY WORK */
+if (isset($_POST['AddVoluntaryWork'])) {
 	mysqli_query($con, "INSERT INTO voluntary_work VALUES (NULL,'" . $_POST['Organization'] . "','" . $_POST['From'] . "','" . $_POST['To'] . "','" . $_POST['Hours'] . "','" . $_POST['Position'] . "','" . $_SESSION['EmpID'] . "')");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Voluntary work has been added successfully!';
+		$showPrompt = true;
 	}
-}
-//Add Trainings
-elseif (isset($_POST['learning_dev'])) {
-	mysqli_query($con, "INSERT INTO learning_and_development VALUES (NULL,'" . $_POST['Title_learning'] . "','" . $_POST['From'] . "','" . $_POST['To'] . "','" . $_POST['No_of_hours'] . "','" . $_POST['Position'] . "','" . $_POST['Conducted'] . "','" . $_SESSION['EmpID'] . "')");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
+	$_SESSION['pdstab'] = 'voluntary-work';
 }
+
+/* LEARNING & DEVELOPMENT */
+if (isset($_POST['AddTraining'])) {
+	mysqli_query($con, "INSERT INTO learning_and_development VALUES (NULL,'" . $_POST['Title_learning'] . "','" . $_POST['From'] . "','" . $_POST['To'] . "','" . $_POST['No_of_hours'] . "','" . $_POST['TrainingType'] . "','" . $_POST['Conducted'] . "','" . $_SESSION['EmpID'] . "')");
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Learning &amp; Development (L&amp;D) Intervention has been added successfully!';
+		$showPrompt = true;
+	}
+
+	$_SESSION['pdstab'] = 'learning-development';
+}
+
 //Add Others Records
 elseif (isset($_POST['save_other'])) {
 	mysqli_query($con, "INSERT INTO other_information VALUES(NULL,'" . $_POST['skills'] . "','" . $_POST['awards'] . "','" . $_POST['member'] . "','" . $_SESSION['EmpID'] . "')");

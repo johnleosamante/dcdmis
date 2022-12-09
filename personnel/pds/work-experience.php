@@ -11,12 +11,11 @@
           <tr class="text-center">
             <th class="align-middle" width="10%" colspan="2">Inclusive Dates</th>
             <th class="align-middle" width="15%" rowspan="2">Position Title</th>
-            <th class="align-middle" width="25%" rowspan="2">Department / Agency / Office / Company <br />
-              (Write in full do not abbreviate)</th>
+            <th class="align-middle" width="25%" rowspan="2">Department / Agency / Office / Company</th>
             <th class="align-middle" width="10%" rowspan="2">Monthly Salary</th>
-            <th class="align-middle" width="10%" rowspan="2">Salary / job / Pay Grade (if applicable) &amp; Step Increment (Format "00-0")</th>
+            <th class="align-middle" width="10%" rowspan="2">Salary / Job / Pay Grade &amp; Step Increment</th>
             <th class="align-middle" width="10%" rowspan="2">Status of Appointment</th>
-            <th class="align-middle" width="10%" rowspan="2">Government Service<br>(Y/N)</th>
+            <th class="align-middle" width="10%" rowspan="2">Government Service</th>
             <th class="align-middle" width="10%" rowspan="2">Action</th>
           </tr>
           <tr class="text-center">
@@ -40,7 +39,6 @@
                 <td class="text-center align-middle"><?php echo $row4['Salary_Grade']; ?></td>
                 <td class="text-center align-middle"><?php echo $row4['Job_Status']; ?></td>
                 <td class="text-center align-middle"><?php echo $row4['Goverment']; ?></td>
-
                 <td class="text-center align-middle">
                   <a class="btn btn-success my-1" href="my_experience.php?id=<?php echo urlencode(base64_encode($row4['No'])); ?>" data-toggle="modal" data-target="#UpdateExperienceModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
                   <a class="btn btn-danger my-1" onclick="delete_work(this.id)" id="<?php echo $row4['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>

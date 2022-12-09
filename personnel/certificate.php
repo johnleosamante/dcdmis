@@ -94,15 +94,6 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 							}
 							?>
 						</tbody>
-
-						<tfoot>
-							<tr class="text-center align-middle">
-								<th>#</th>
-								<th>Descriptions</th>
-								<th>Category</th>
-								<th width="100px"></th>
-							</tr>
-						</tfoot>
 					</table>
 				</div><!-- .table-responsive -->
 			</div><!-- .card-body -->

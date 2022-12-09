@@ -166,6 +166,9 @@ if ($row['SchoolLogo'] === NULL) {
   <script src="<?php echo GetSiteURL(); ?>/assets/vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="<?php echo GetSiteURL(); ?>/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
   <script src="<?php echo GetSiteURL(); ?>/assets/js/demo/datatables-demo.js"></script>
+  <script>
+    if (window.history.replaceState) window.history.replaceState(null, null, window.location.href);
+  </script>
 </body>
 
 </html>

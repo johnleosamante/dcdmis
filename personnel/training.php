@@ -41,16 +41,6 @@
 							?>
 							</tr>
 						</tbody>
-						<tfoot>
-							<tr>
-								<th class="text-center align-middle">#</th>
-								<th class="text-center align-middle">Title of Training</th>
-								<th class="text-center align-middle">From</th>
-								<th class="text-center align-middle">To</th>
-								<th class="text-center align-middle">Venue</th>
-								<th></th>
-							</tr>
-						</tfoot>
 					</table>
 				</div>
 			</div>
