@@ -47,7 +47,7 @@
       <script>
         function delete_other(id) {
           if (confirm("Are you sure you want to deleted this row?")) {
-            window.location.href = 'delete_other.php?id=' + id;
+            window.location.href = 'delete-other-information.php?id=' + id;
           }
         }
       </script>

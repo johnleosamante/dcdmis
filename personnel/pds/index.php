@@ -133,24 +133,20 @@ if (isset($_POST['AddTraining'])) {
 	$_SESSION['pdstab'] = 'learning-development';
 }
 
-//Add Others Records
-elseif (isset($_POST['save_other'])) {
+/* OTHER INFORMATION */
+if (isset($_POST['AddOtherInformation'])) {
 	mysqli_query($con, "INSERT INTO other_information VALUES(NULL,'" . $_POST['skills'] . "','" . $_POST['awards'] . "','" . $_POST['member'] . "','" . $_SESSION['EmpID'] . "')");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Other Information has been added successfully!';
+		$showPrompt = true;
 	}
+
+	$_SESSION['pdstab'] = 'other-information';
 }
-//Update Question and Answer
-elseif (isset($_POST['save_question'])) {
+
+if (isset($_POST['save_question'])) {
 	//first data entry
 	$result_one = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='one' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
 	if (mysqli_num_rows($result_one) == 1) {
@@ -505,8 +501,9 @@ elseif (isset($_POST['update_reference'])) {
 	<?php
 	}
 }
-//Remove Reference Records
-elseif (isset($_GET['Remove_reference'])) {
+
+/* REFERENCES */
+if (isset($_GET['Remove_reference'])) {
 	mysqli_query($con, "DELETE FROM reference WHERE reference.Emp_ID='" . $_SESSION['EmpID'] . "' AND reference.No ='" . $_GET['Remove_reference'] . "' LIMIT 1");
 
 	if (mysqli_affected_rows($con) == 1) {
@@ -520,7 +517,10 @@ elseif (isset($_GET['Remove_reference'])) {
 		</script>
 	<?php
 	}
-} elseif (isset($_POST['save_psipop'])) {
+}
+
+/* PSIPOP */
+if (isset($_POST['save_psipop'])) {
 	$query = mysqli_query($con, "SELECT * FROM psipop WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
 
 	if (mysqli_num_rows($query) == 0) {
@@ -540,54 +540,6 @@ elseif (isset($_GET['Remove_reference'])) {
 <?php
 	}
 }
-
-$result = mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID ='" . $_SESSION['EmpID'] . "' LIMIT 1");
-$row = mysqli_fetch_assoc($result);
-
-if ($row['Emp_Month'] == "1") {
-	$month = 'Jan';
-} elseif ($row['Emp_Month'] == "2") {
-	$month = 'Feb';
-} elseif ($row['Emp_Month'] == "3") {
-	$month = 'March';
-} elseif ($row['Emp_Month'] == "4") {
-	$month = 'April';
-} elseif ($row['Emp_Month'] == "5") {
-	$month = 'May';
-} elseif ($row['Emp_Month'] == "6") {
-	$month = 'June';
-} elseif ($row['Emp_Month'] == "7") {
-	$month = 'July';
-} elseif ($row['Emp_Month'] == "8") {
-	$month = 'Aug';
-} elseif ($row['Emp_Month'] == "9") {
-	$month = 'Sept';
-} elseif ($row['Emp_Month'] == "10") {
-	$month = 'Oct';
-} elseif ($row['Emp_Month'] == "11") {
-	$month = 'Nov';
-} elseif ($row['Emp_Month'] == "12") {
-	$month = 'Dec';
-}
-
-$_SESSION['Last_Name'] = $row['Emp_LName'];
-$_SESSION['First_Name'] = $row['Emp_FName'];
-$_SESSION['Middle_Name'] = $row['Emp_MName'];
-$_SESSION['Extension'] = $row['Emp_Extension'];
-$_SESSION['Birthdate'] = $month . ' ' . $row['Emp_Day'] . ', ' . $row['Emp_Year'];
-$_SESSION['Place_of_Birth'] = $row['Emp_place_of_birth'];
-$_SESSION['Citizen'] = $row['Emp_Citizen'];
-$_SESSION['Civil_Status'] = $row['Emp_CS'];
-$_SESSION['Gender'] = $row['Emp_Sex'];
-$_SESSION['Address'] = $row['Emp_Address'];
-$_SESSION['Height'] = $row['Emp_Height'];
-$_SESSION['Weight'] = $row['Emp_Weight'];
-$_SESSION['Blood'] = $row['Emp_Blood_type'];
-$_SESSION['Picture'] = $row['Picture'];
-$_SESSION['Cell_No'] = $row['Emp_Cell_No'];
-$_SESSION['Month'] = $row['Emp_Month'];
-$_SESSION['Day'] = $row['Emp_Day'];
-$_SESSION['Year'] = $row['Emp_Year'];
 ?>
 
 <div class="row mt-4 mb-4">
@@ -598,41 +550,57 @@ $_SESSION['Year'] = $row['Emp_Year'];
 				$total = $fam = $educ = $civil = $work = $volun = $learn = $other = $ref = 0;
 
 				$family_data = mysqli_query($con, "SELECT * FROM family_background WHERE family_background.Emp_ID='" . $_SESSION['EmpID'] . "'");
+				
 				if (mysqli_num_rows($family_data) <> 0) {
 					$fam = 10;
 				}
+
 				$educ_data = mysqli_query($con, "SELECT * FROM educational_background WHERE educational_background.Emp_ID='" . $_SESSION['EmpID'] . "'");
+				
 				if (mysqli_num_rows($educ_data) <> 0) {
 					$educ = 15;
 				}
+
 				$civil_data = mysqli_query($con, "SELECT * FROM civil_service WHERE civil_service.Emp_ID='" . $_SESSION['EmpID'] . "'");
+				
 				if (mysqli_num_rows($civil_data) <> 0) {
 					$civil = 15;
 				}
+
 				$work_data = mysqli_query($con, "SELECT * FROM work_experience WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "'");
+				
 				if (mysqli_num_rows($work_data) <> 0) {
 					$work = 5;
 				}
+
 				$voluntary_data = mysqli_query($con, "SELECT * FROM voluntary_work WHERE voluntary_work.Emp_ID='" . $_SESSION['EmpID'] . "'");
+				
 				if (mysqli_num_rows($voluntary_data) <> 0) {
 					$volun = 5;
 				}
+
 				$learning_data = mysqli_query($con, "SELECT * FROM learning_and_development WHERE learning_and_development.Emp_ID='" . $_SESSION['EmpID'] . "'");
+				
 				if (mysqli_num_rows($learning_data) <> 0) {
 					$learn = 20;
 				}
+
 				$other_data = mysqli_query($con, "SELECT * FROM other_information WHERE other_information.Emp_ID='" . $_SESSION['EmpID'] . "'");
+				
 				if (mysqli_num_rows($other_data) <> 0) {
 					$other = 10;
 				}
+
 				$reference_data = mysqli_query($con, "SELECT * FROM reference WHERE reference.Emp_ID='" . $_SESSION['EmpID'] . "'");
+				
 				if (mysqli_num_rows($reference_data) <> 0) {
 					$ref = 20;
 				}
+
 				$total = $fam + $educ + $civil + $work + $volun + $learn + $other + $ref;
 				?>
 
-				<h3 class="h4 mb-2">Personal Data Sheet<span class="float-right"><?php echo $total; ?>% Complete</span></h3>
+				<h3 class="h4 mb-2">Personal Data Sheet (<?php echo $total; ?>% Complete)</h3>
 				<div class="progress">
 					<div class="progress-bar bg-success" role="progressbar" aria-valuenow="<?php echo $total; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total; ?>%"></div>
 				</div><!-- .progress -->
@@ -670,9 +638,6 @@ $_SESSION['Year'] = $row['Emp_Year'];
 					<li class="nav-item">
 						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'references'); ?>" href="#references" data-toggle="tab">References</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'psipop'); ?>" href="#psipop" data-toggle="tab">PSIPOP</a>
-					</li>
 				</ul>
 
 				<?php
@@ -692,8 +657,7 @@ $_SESSION['Year'] = $row['Emp_Year'];
 					include_once('pds/learning-development.php');
 					include_once('pds/other-information.php');
 					include_once('pds/questionnaires.php');
-					include_once('pds/references.php');
-					include_once('pds/psipop.php');
+					include_once('pds/reference.php');
 					?>
 				</div>
 			</div><!-- .card-body -->

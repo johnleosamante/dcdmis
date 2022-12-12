@@ -13,7 +13,7 @@
             <th class="align-middle" width="20%" rowspan="2">Name of School</th>
             <th class="align-middle" width="20%" rowspan="2">Basic Education / Degree / Course</th>
             <th class="align-middle" width="10%" colspan="2">Period of Attendance</th>
-            <th class="align-middle" width="10%" rowspan="2">Highest Level / Units Earned<br>(If not Graduated)</th>
+            <th class="align-middle" width="10%" rowspan="2">Highest Level / Units Earned</th>
             <th class="align-middle" width="5%" rowspan="2">Year Graduated</th>
             <th class="align-middle" width="15%" rowspan="2">Scholarship / Academic Honors Received</th>
             <th class="align-middle" width="10%" rowspan="2">Action</th>
@@ -58,7 +58,7 @@
       <script>
         function delete_educ(id) {
           if (confirm("Are you sure you want to deleted this row?")) {
-            window.location.href = 'delete_educ.php?id=' + id;
+            window.location.href = 'delete-education.php?id=' + id;
           }
         }
       </script>

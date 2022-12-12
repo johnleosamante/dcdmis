@@ -53,7 +53,7 @@
       <script>
         function delete_volunter(id) {
           if (confirm("Are you sure you want to deleted this row?")) {
-            window.location.href = 'delete_volunter.php?id=' + id;
+            window.location.href = 'delete-voluntary-work.php?id=' + id;
           }
         }
       </script>

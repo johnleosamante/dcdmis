@@ -9,11 +9,11 @@
       <table width="100%" class="table table-striped table-bordered table-hover mb-2" cellspacing="0">
         <thead>
           <tr class="text-center">
-            <th class="align-middle" width="25%" rowspan="2">Career Services / RA 1080 (BOARD / BAR) Underspecial Laws / CES / CSEE Barangay Eligibility/ Drivers License</th>
-            <th class="align-middle" width="15%" rowspan="2">Rating<br>(if Applicable)</th>
+            <th class="align-middle" width="25%" rowspan="2">Career Services / RA 1080 (Board / Bar) Underspecial Laws / CES / CSEE Barangay Eligibility/ Drivers License</th>
+            <th class="align-middle" width="15%" rowspan="2">Rating</th>
             <th class="align-middle" width="15%" rowspan="2">Date of Examinition Conferment</th>
             <th class="align-middle" width="15%" rowspan="2">Place of Examination / Conferment</th>
-            <th class="align-middle" width="20%" colspan="2">License (if Applicable)</th>
+            <th class="align-middle" width="20%" colspan="2">License</th>
             <th class="align-middle" rowspan="2" width="10%">Action</th>
           </tr>
           <tr class="text-center">
@@ -55,7 +55,7 @@
       <script>
         function delete_service(id) {
           if (confirm("Are you sure you want to deleted this row?")) {
-            window.location.href = 'delete_service.php?id=' + id;
+            window.location.href = 'delete-eligibility.php?id=' + id;
           }
         }
       </script>

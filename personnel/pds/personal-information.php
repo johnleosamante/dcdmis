@@ -1,3 +1,55 @@
+<?php
+# personnel/pds/personal-information.php
+
+$result = mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID ='" . $_SESSION['EmpID'] . "' LIMIT 1");
+$row = mysqli_fetch_assoc($result);
+
+if ($row['Emp_Month'] == "1") {
+  $month = 'Jan';
+} elseif ($row['Emp_Month'] == "2") {
+  $month = 'Feb';
+} elseif ($row['Emp_Month'] == "3") {
+  $month = 'March';
+} elseif ($row['Emp_Month'] == "4") {
+  $month = 'April';
+} elseif ($row['Emp_Month'] == "5") {
+  $month = 'May';
+} elseif ($row['Emp_Month'] == "6") {
+  $month = 'June';
+} elseif ($row['Emp_Month'] == "7") {
+  $month = 'July';
+} elseif ($row['Emp_Month'] == "8") {
+  $month = 'Aug';
+} elseif ($row['Emp_Month'] == "9") {
+  $month = 'Sept';
+} elseif ($row['Emp_Month'] == "10") {
+  $month = 'Oct';
+} elseif ($row['Emp_Month'] == "11") {
+  $month = 'Nov';
+} elseif ($row['Emp_Month'] == "12") {
+  $month = 'Dec';
+}
+
+$_SESSION['Last_Name'] = $row['Emp_LName'];
+$_SESSION['First_Name'] = $row['Emp_FName'];
+$_SESSION['Middle_Name'] = $row['Emp_MName'];
+$_SESSION['Extension'] = $row['Emp_Extension'];
+$_SESSION['Birthdate'] = $month . ' ' . $row['Emp_Day'] . ', ' . $row['Emp_Year'];
+$_SESSION['Place_of_Birth'] = $row['Emp_place_of_birth'];
+$_SESSION['Citizen'] = $row['Emp_Citizen'];
+$_SESSION['Civil_Status'] = $row['Emp_CS'];
+$_SESSION['Gender'] = $row['Emp_Sex'];
+$_SESSION['Address'] = $row['Emp_Address'];
+$_SESSION['Height'] = $row['Emp_Height'];
+$_SESSION['Weight'] = $row['Emp_Weight'];
+$_SESSION['Blood'] = $row['Emp_Blood_type'];
+$_SESSION['Picture'] = $row['Picture'];
+$_SESSION['Cell_No'] = $row['Emp_Cell_No'];
+$_SESSION['Month'] = $row['Emp_Month'];
+$_SESSION['Day'] = $row['Emp_Day'];
+$_SESSION['Year'] = $row['Emp_Year'];
+?>
+
 <div class="tab-pane fade<?php echo SetActiveNavigationTab(!isset($_SESSION['pdstab']) || $_SESSION['pdstab'] === 'personal-information'); ?>" id="personal-information">
 
   <div class="d-sm-flex align-items-center justify-content-between">

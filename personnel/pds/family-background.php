@@ -50,7 +50,7 @@
       <script>
         function delete_option(id) {
           if (confirm("Are you sure you want to deleted this row?")) {
-            window.location.href = 'delete_fam.php?id=' + id;
+            window.location.href = 'delete-family-member.php?id=' + id;
           }
         }
       </script>
