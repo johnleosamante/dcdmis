@@ -133,7 +133,7 @@ if (isset($_POST['AddTraining'])) {
 	$_SESSION['pdstab'] = 'learning-development';
 }
 
-/* OTHER INFORMATION */
+/* OTHER INFORMATION TO CHANGE */
 if (isset($_POST['AddOtherInformation'])) {
 	mysqli_query($con, "INSERT INTO other_information VALUES(NULL,'" . $_POST['skills'] . "','" . $_POST['awards'] . "','" . $_POST['member'] . "','" . $_SESSION['EmpID'] . "')");
 
@@ -146,7 +146,8 @@ if (isset($_POST['AddOtherInformation'])) {
 	$_SESSION['pdstab'] = 'other-information';
 }
 
-if (isset($_POST['save_question'])) {
+/* QUESTIONNAIRES TO CHANGE */ 
+if (isset($_POST['SaveAnswers'])) {
 	//first data entry
 	$result_one = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='one' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
 	if (mysqli_num_rows($result_one) == 1) {
@@ -267,18 +268,18 @@ if (isset($_POST['save_question'])) {
 			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'ten','" . $_POST['ten'] . "','-','" . $_SESSION['EmpID'] . "')");
 		}
 	}
-	?>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#access').modal({
-				show: 'true'
-			});
-		});
-	</script>
-	<?php
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Civil Service Eligibility has been added successfully!';
+		$showPrompt = true;
+	}
+
+	$_SESSION['pdstab'] = 'questionnaires';
 }
-//Add Refernce Number
-elseif (isset($_POST['save_reference'])) {
+
+/* REFERENCE */
+if (isset($_POST['AddReference'])) {
 	mysqli_query($con, "INSERT INTO reference VALUES (NULL,'" . $_POST['Ref_Name'] . "','" . $_POST['Address'] . "','" . $_POST['Cell'] . "','" . $_SESSION['EmpID'] . "')");
 
 	if (mysqli_affected_rows($con) == 1) {
@@ -293,8 +294,9 @@ elseif (isset($_POST['save_reference'])) {
 	<?php
 	}
 }
-//Update Family Records
-elseif (isset($_POST['update_family'])) {
+
+
+if (isset($_POST['update_family'])) {
 	mysqli_query($con, "UPDATE family_background SET family_background.Family_Name='" . $_POST['Lname'] . "',family_background.First_Name='" . $_POST['Fname'] . "',family_background.Middle_Name='" . $_POST['Mname'] . "',family_background.Birthdate='" . $_POST['Bdate'] . "',family_background.Relation='" . $_POST['Relate'] . "' WHERE family_background.Emp_ID='" . $_SESSION['EmpID'] . "' AND family_background.No='" . $_SESSION['No'] . "'");
 
 	if (mysqli_affected_rows($con) == 1) {

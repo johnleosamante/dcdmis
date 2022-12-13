@@ -59,7 +59,7 @@
       <script>
         function delete_work(id) {
           if (confirm("Are you sure you want to deleted this row?")) {
-            window.location.href = 'delete-work-experience.php?id=' + id;
+            window.location.href = 'pds/delete/delete-work-experience.php?id=' + id;
           }
         }
       </script>

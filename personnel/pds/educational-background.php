@@ -58,7 +58,7 @@
       <script>
         function delete_educ(id) {
           if (confirm("Are you sure you want to deleted this row?")) {
-            window.location.href = 'delete-education.php?id=' + id;
+            window.location.href = 'pds/delete/delete-education.php?id=' + id;
           }
         }
       </script>

@@ -112,6 +112,10 @@ function SetActiveNavigationTab($condition) {
   return $condition ? ' show active' : '';
 }
 
+function SetRadioButtonChecked($condition) {
+  return $condition ? ' checked' : '';
+}
+
 function GetHRMOHead() {
   return HRMO_HEAD;
 }

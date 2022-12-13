@@ -47,7 +47,7 @@
       <script>
         function delete_other(id) {
           if (confirm("Are you sure you want to deleted this row?")) {
-            window.location.href = 'delete-other-information.php?id=' + id;
+            window.location.href = 'pds/delete/delete-other-information.php?id=' + id;
           }
         }
       </script>
@@ -62,31 +62,33 @@
         <div class="modal-header">
           <h5 class="modal-title">Add Other Information</h5>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        
-        <div class="modal-body">
-          <form enctype="multipart/form-data" method="post" role="form" action="">
-            <div class="form-group" style="overflow-x:auto;">
-              <table width="100%" class="table table-bordered">
-                <tr>
-                  <th>SPECIAL SKILLS and HOBBIES</th>
-                  <th>NON-ACADEMIC DISTINCTIONS / RECOGNITION (Write in full)</th>
-                  <th>MEMBERSHIP IN ASSOCIATION/ORGANIZATION (Write in full)</th>
-                </tr>
-                <tr>
-                  <td><input type="text" name="skills" class="form-control" required></td>
-                  <td><input type="text" name="awards" class="form-control" required></td>
-                  <td><input type="text" name="member" class="form-control" required></td>
+        </div><!-- .modal-header -->
 
-                </tr>
-
-              </table>
+        <form enctype="multipart/form-data" method="post" role="form" action="">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="skills" class="mb-0">Special Skills &amp; Hobbies:</label>
+              <input id="skills" type="text" name="skills" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-primary" name="save_other" value="SAVE">SUBMIT</button>
-          </form>
-        </div>
-      </div>
-    </div>
+
+            <div class="form-group">
+              <label for="awards" class="mb-0">Non-Academic Distinctions / Recognition (Write in full):</label>
+              <input id="awards" type="text" name="awards" class="form-control" required>
+            </div>
+
+            <div class="form-group mb-0">
+              <label for="member" class="mb-0">Membership in Association / Organization (Write in full):</label>
+              <input id="member" type="text" name="member" class="form-control" required>
+            </div>
+          </div><!-- .modal-body -->
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" name="AddOtherInformation">Save</button>
+          </div>
+        </form>
+      </div><!-- .modal-content -->
+    </div><!-- modal-dialog -->
   </div><!-- .modal -->
 
   <div class="modal fade" id="UpdateOtherInformationModal" role="dialog" data-backdrop="static" data-keyboard="false">
