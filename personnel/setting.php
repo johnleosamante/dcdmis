@@ -166,7 +166,8 @@
 							<div class="row">
 								<div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
 									<div class="form-group">
-										<input type="email" value="<?php echo $row_record['Emp_Email']; ?>" class="form-control" disabled>
+										<label for="inputEmail" class="mb-0">DepEd Email Address:</label>
+										<input id="inputEmail" type="email" value="<?php echo $row_record['Emp_Email']; ?>" class="form-control" disabled>
 									</div>
 								</div>
 							</div>
@@ -174,7 +175,8 @@
 							<div class="row">
 								<div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
 									<div class="form-group">
-										<input type="password" id="inputPassword" name="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" Placeholder="Password" class="form-control" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers" required>
+										<label for="inputPassword" class="mb-0">New Password:</label>
+										<input type="password" id="inputPassword" name="password" class="form-control" required>
 									</div>
 								</div>
 							</div>
@@ -182,7 +184,8 @@
 							<div class="row">
 								<div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
 									<div class="form-group">
-										<input type="password" id="inputRetypePassword" name="confirm" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" Placeholder="Confirm" class="form-control" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers" required>
+										<label for="inputRetypePassword" class="mb-0">Retype New Password:</label>
+										<input type="password" id="inputRetypePassword" name="confirm" class="form-control" required>
 									</div>
 								</div>
 							</div>

@@ -2,12 +2,13 @@
 # login/index.php
 
 include_once('../_includes_/function.php');
-include_once('../_includes_/database/database.php');
-include_once('../_includes_/layout/components.php');
 
 if (isset($_SESSION['uid'])) {
   header('location:' . GetHashURL($_SESSION['portal'], 'dashboard'));
 }
+
+include_once('../_includes_/database/database.php');
+include_once('../_includes_/layout/components.php');
 
 $Err = false;
 

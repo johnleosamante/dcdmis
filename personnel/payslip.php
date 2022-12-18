@@ -45,7 +45,7 @@ if (!is_dir('../uploads/payslip/' . $_SESSION['EmpID'])) {
 								<th>#</th>
 								<th>Date</th>
 								<th>Descriptions</th>
-								<th width="100px"></th>
+								<th class="text-center align-middle" width="100px">Action</th>
 							</tr>
 						</thead>
 
@@ -124,7 +124,7 @@ if (!is_dir('../uploads/payslip/' . $_SESSION['EmpID'])) {
 
 					<img src="../assets/img/upload.jpg" id="uploadPreview" style="width:100%">
 				</div>
-				
+
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 					<input type="submit" name="upload" value="Upload" class="btn btn-primary">

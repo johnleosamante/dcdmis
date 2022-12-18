@@ -32,8 +32,6 @@
 				$empPosition = $_POST['position'];
 				$empSchool = $_POST['School'];
 				$empImage = "assets/img/user.png";
-				$emapData20 = "";
-				$emapData21 = "Registered";
 				$start = date('Y');
 
 				if ($_POST['password'] === $_POST['repass']) {
@@ -66,9 +64,9 @@
 				$empFName = '';
 				$empMName =  '';
 				$empExt = '';
-				$empBMonth = '';
-				$empBDay = '';
-				$empBYear = '';
+				$empBMonth = strtolower(date('m'));
+				$empBDay = strtolower(date('d'));
+				$empBYear = strtolower(date('Y'));
 				$empSex = '';
 				$empContact = '';
 				$empEmail = '';
