@@ -41,8 +41,10 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 					}
 
 					// Allow certain file formats
-					if ($ext != "jpg" && $ext != "png" && $ext != "jpeg"
-						&& $ext != "gif") {
+					if (
+						$ext != "jpg" && $ext != "png" && $ext != "jpeg"
+						&& $ext != "gif"
+					) {
 						$message = "Only JPG, JPEG, PNG & GIF file formats are allowed.";
 						$uploadOk = 0;
 					}
@@ -72,7 +74,7 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 								<th>#</th>
 								<th>Descriptions</th>
 								<th>Category</th>
-								<th width="100px"></th>
+								<th class="text-center align-middle" width="100px">Action</th>
 							</tr>
 						</thead>
 

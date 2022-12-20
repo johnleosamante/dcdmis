@@ -18,7 +18,7 @@
 							<th class="text-center align-middle">From</th>
 							<th class="text-center align-middle">To</th>
 							<th class="text-center align-middle">Venue</th>
-							<th width="100px"></th>
+							<th class="text-center align-middle" width="100px">Action</th>
 						</thead>
 						<tbody>
 							<?php

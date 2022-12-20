@@ -6,13 +6,15 @@
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
-        <input class="form-control" id="inputLastName" type="text" name="LName" placeholder="Last name" value="<?php echo $empLName; ?>" required>
+        <label for="LName" class="mb-0">Last Name:</label>
+        <input class="form-control" id="LName" type="text" name="LName" value="<?php echo $empLName; ?>" required>
       </div><!-- .form-group -->
     </div><!-- .col-md-6 -->
 
     <div class="col-md-6">
       <div class="form-group">
-        <input class="form-control" id="inputFirstName" name="FName" type="text" placeholder="First name" value="<?php echo $empFName; ?>" required>
+        <label for="inputFirstName" class="mb-0">First Name:</label>
+        <input class="form-control" id="inputFirstName" name="FName" type="text" value="<?php echo $empFName; ?>" required>
       </div><!-- .form-group -->
     </div><!-- .col-md-6 -->
   </div><!-- .row -->
@@ -20,20 +22,22 @@
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
-        <input class="form-control" id="inputMiddleName" type="text" name="MName" placeholder="Middle name" value="<?php echo $empMName; ?>">
+        <label for="inputMiddleName" class="mb-0">Middle Name:</label>
+        <input class="form-control" id="inputMiddleName" type="text" name="MName" value="<?php echo $empMName; ?>">
       </div><!-- .form-group -->
     </div><!-- .col-md-6 -->
 
     <div class="col-md-3">
       <div class="form-group">
-        <input class="form-control" id="inputExtension" type="text" name="Extension" placeholder="Extension" value="<?php echo $empExt; ?>">
+        <label for="inputExtension" class="mb-0">Extension:</label>
+        <input class="form-control" id="inputExtension" type="text" name="Extension" value="<?php echo $empExt; ?>">
       </div><!-- .form-group -->
     </div><!-- .col-md-3 -->
 
     <div class="col-md-3">
       <div class="form-group">
+        <label for="inputSex" class="mb-0">Sex:</label>
         <select name="sex" class="form-control" id="inputSex" required>
-          <option value="" <?php echo SetOptionSelected('', $empSex); ?>>Sex</option>
           <option value="Male" <?php echo SetOptionSelected('Male', $empSex); ?>>Male</option>
           <option value="Female" <?php echo SetOptionSelected('Female', $empSex); ?>>Female</option>
         </select>
@@ -44,8 +48,8 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
+        <label for="inputBMonth" class="mb-0">Birth Month:</label>
         <select name="month" class="form-control" id="inputBMonth" required>
-          <option value="" <?php echo SetOptionSelected('', $empBMonth); ?>>Birth Month</option>
           <option value="01" <?php echo SetOptionSelected('01', $empBMonth); ?>>January</option>
           <option value="02" <?php echo SetOptionSelected('02', $empBMonth); ?>>February</option>
           <option value="03" <?php echo SetOptionSelected('03', $empBMonth); ?>>March</option>
@@ -64,14 +68,15 @@
 
     <div class="col-md-4">
       <div class="form-group">
-        <input class="form-control" id="inputBDay" name="day" type="text" placeholder="Birth day" value="<?php echo $empBDay; ?>" required>
+        <label for="inputBDay" class="mb-0">Birth Day:</label>
+        <input class="form-control" id="inputBDay" name="day" type="text" value="<?php echo $empBDay; ?>" required>
       </div><!-- .form-group -->
     </div><!-- .col-md-4 -->
 
     <div class="col-md-4">
       <div class="form-group">
+        <label for="inputBYear" class="mb-0">Birth Year:</label>
         <select name="year" class="form-control" id="inputBYear" required>
-          <option value="" <?php echo SetOptionSelected('', $empBYear); ?>>Birth Year</option>
           <?php
           $age = 0;
           $year = date('Y');
@@ -91,8 +96,8 @@
   <div class="row">
     <div class="col-md-12">
       <div class="form-group">
+        <label for="inputPosition" class="mb-0">Position:</label>
         <select name="position" class="form-control" id="inputPosition" required>
-          <option value="">Position</option>
           <?php
           $data = DBQuery("SELECT * FROM tbl_job ORDER BY Job_description;");
           while ($row = DBFetchArray($data)) { ?>
@@ -106,6 +111,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="form-group">
+        <label for="inputSchool" class="mb-0">Station:</label>
         <select class="form-control" id="inputSchool" name="School" required>
           <option value="">Station</option>
           <?php
@@ -121,13 +127,15 @@
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
-        <input class="form-control" id="inputContact" type="number" name="contactNo" placeholder="Contact Number" value="<?php echo $empContact; ?>" required>
+        <label for="inputContact" class="mb-0">Contact Number:</label>
+        <input class="form-control" id="inputContact" type="number" name="contactNo" value="<?php echo $empContact; ?>" required>
       </div><!-- .form-group -->
     </div><!-- .col-md-6 -->
 
     <div class="col-md-6">
       <div class="form-group">
-        <input class="form-control" id="inputEmail" name="inputEmail" type="email" placeholder="Deped email address" value="<?php echo $empEmail; ?>" required>
+        <label for="inputEmail" class="mb-0">DepEd Email Address:</label>
+        <input class="form-control" id="inputEmail" name="inputEmail" type="email" value="<?php echo $empEmail; ?>" required>
       </div><!-- .form-group -->
     </div><!-- .col-md-6 -->
   </div><!-- .row -->
@@ -135,13 +143,15 @@
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
-        <input class="form-control" id="inputPassword" type="password" name="password" placeholder="Password" required>
+        <label for="inputPassword" class="mb-0">Password:</label>
+        <input class="form-control" id="inputPassword" type="password" name="password" required>
       </div><!-- .form-group -->
     </div><!-- .col-md-6-->
 
     <div class="col-md-6">
       <div class="form-group">
-        <input class="form-control" id="inputPasswordConfirm" type="password" name="repass" placeholder="Retype password" required>
+        <label for="inputPasswordConfirm" class="mb-0">Retype Password:</label>
+        <input class="form-control" id="inputPasswordConfirm" type="password" name="repass" required>
       </div><!-- .form-group -->
     </div><!-- .col-md-6 -->
   </div><!-- .row -->
