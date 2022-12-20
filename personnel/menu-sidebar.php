@@ -2,7 +2,7 @@
 # personnel/sidebar-menu.php
 ?>
 
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 	<a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo GetSiteURL(); ?>/personnel">
 		<div class="sidebar-brand-icon">
 			<img src="<?php echo $image; ?>" width="65" height="65">

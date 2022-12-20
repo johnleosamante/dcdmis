@@ -1,7 +1,7 @@
 <?php
 # _includes_/layout/components.php
 
-function AlertBox($message, $type = 'danger', $align='center')
+function AlertBox($message, $type = 'danger', $align = 'center')
 {
 ?>
   <script>
@@ -128,19 +128,19 @@ function ScrollToTop()
 <?php
 }
 
-function ContentTitle($title, $withbutton = false, $link='', $text='Back', $icon='fa-arrow-circle-left')
+function ContentTitle($title, $withbutton = false, $link = '', $text = 'Back', $icon = 'fa-arrow-circle-left')
 {
 ?>
   <div class="d-sm-flex align-items-center justify-content-between">
-  <h3 class="h4 mb-0"><?php echo $title; ?></h3>
-  <?php if ($withbutton) { ?>
-    <a href="<?php echo $link; ?>" class="btn btn-primary btn-icon-split btn-sm">';
-      <span class="icon text-white-50">'
-        <i class="fas <?php echo $icon; ?> fa-fw"></i>
-      </span>
-      <span class="text"><?php echo $text; ?></span>
-    </a>
-  <?php } ?>
+    <h3 class="h4 mb-0"><?php echo $title; ?></h3>
+    <?php if ($withbutton) { ?>
+      <a href="<?php echo $link; ?>" class="btn btn-primary btn-icon-split btn-sm">';
+        <span class="icon text-white-50">'
+          <i class="fas <?php echo $icon; ?> fa-fw"></i>
+        </span>
+        <span class="text"><?php echo $text; ?></span>
+      </a>
+    <?php } ?>
   </div>
 <?php
 }
@@ -149,11 +149,11 @@ function Card($title, $link, $icon, $color = 'primary', $counter = false, $numbe
 {
 ?>
   <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-    <div class="card border-left-' . $color . ' shadow h-100">
+    <div class="card border-left-<?php echo $color; ?> shadow h-100">
       <div class="card-body">
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
-            <div class="font-weight-bold text-' . $color . ' text-uppercase mb-1"><?php echo $title; ?></div>
+            <div class="font-weight-bold text-<?php echo $color; ?> text-uppercase mb-1"><?php echo $title; ?></div>
 
             <?php if ($counter) { ?>
               <div class="h3 mb-0 font-weight-bold text-gray-800"><?php echo $number; ?></div>
