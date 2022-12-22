@@ -8,7 +8,7 @@
 			<div class="card-header">
 				<div class="d-sm-flex align-items-center justify-content-between">
 					<h3 class="h4 mb-0">Service Record</h3>
-					<a href="<?php echo GetSiteURL(); ?>/personnel/print/service-record/" class="btn btn-primary btn-icon-split btn-sm" target="_blank"><span class="icon text-white-50"><i class="fas fa-print fa-fw"></i></span><span class="text">Print Preview</span></a>
+					<a href="<?php echo GetSiteURL(); ?>/print/service-record/" class="btn btn-primary btn-icon-split btn-sm" target="_blank"><span class="icon text-white-50"><i class="fas fa-print fa-fw"></i></span><span class="text">Print Preview</span></a>
 				</div>
 			</div>
 

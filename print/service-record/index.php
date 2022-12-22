@@ -1,32 +1,32 @@
 <?php
 # personnel/print_service_record/index.php
 
-include_once('../../../_includes_/function.php');
+include_once('../../_includes_/function.php');
 
 if (!isset($_SESSION['EmpID'])) {
 	header('location:' . GetSiteURL() . '/personnel');
 }
 
-include_once('../../../_includes_/database/database.php');
+include_once('../../_includes_/database/database.php');
 
 $result = mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
 $row = mysqli_fetch_assoc($result);
 
-require_once('../../../_includes_/FPDF/code128.php');
+require_once('../../_includes_/FPDF/code128.php');
 
 $pdf = new PDF_Code128('P', 'mm', 'Legal');
 //set it to writable location, a place for temp generated PNG files
 //$PNG_TEMP_DIR = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR;
-$PNG_TEMP_DIR = '../../../temp/service-record/';
+$PNG_TEMP_DIR = '../../temp/service-record/';
 
 if (!is_dir($PNG_TEMP_DIR)) {
 	mkdir($PNG_TEMP_DIR, 0777, true);
 }
 
 //html PNG location prefix
-$PNG_WEB_DIR = '../../../temp/service-record/';
+$PNG_WEB_DIR = '../../temp/service-record/';
 
-include_once("../../../_includes_/PHPQRCode/qrlib.php");
+include_once("../../_includes_/PHPQRCode/qrlib.php");
 
 //ofcourse we need rights to create temp dir
 if (!file_exists($PNG_TEMP_DIR)) mkdir($PNG_TEMP_DIR);
@@ -47,8 +47,8 @@ if (isset($_REQUEST['data'])) {
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-$logo = '../../../assets/img/logo.png';
-$department = '../../../assets/img/department.png';
+$logo = '../../assets/img/logo.png';
+$department = '../../assets/img/department.png';
 $qrImage = $PNG_WEB_DIR . basename($finame);
 //$img4 = '../../pcdmis/shs/offices.png';
 //New PDF File		 
