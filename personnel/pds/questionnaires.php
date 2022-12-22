@@ -7,28 +7,31 @@
         <tbody>
           <tr>
             <td width="80%">
-              <h6 class="h6">36. Are you related by sanguinity or affinity to any of the following:</h6>
+              <h6 class="h6">I. Are you related by sanguinity or affinity to any of the following:</h6>
               <ol type="a" class="mt-3">
                 <li class="pb-5">Within the third degree (by National Government Employees):
                   appointing authority, recommending authority, chief of office/bureau/department of person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed?</li>
                 <li class="pb-5">Within the fourth degree (for Local Government Employees): appointing authority or recommending authority where you will be appointed?</li>
               </ol>
             </td>
+
             <td width="20%">
               <?php
               $myone = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='one' AND Emp_ID='" . $_SESSION['EmpID'] . "'LIMIT 1");
               $rone = mysqli_fetch_assoc($myone);
               ?>
 
-              <input id="oneyes" type="radio" name="one" value="Yes" <?php echo SetRadioButtonChecked($rone['Answer'] === 'Yes'); ?> required>
-              <label for="oneyes" class="p-2">Yes</label>
+              <div class="pt-4">
+                <input id="oneyes" type="radio" name="one" value="Yes" <?php echo SetRadioButtonChecked($rone['Answer'] === 'Yes'); ?> required>
+                <label for="oneyes" class="px-1">Yes</label>
 
-              <input id="oneno" type="radio" name="one" value="No" <?php echo SetRadioButtonChecked($rone['Answer'] === 'No'); ?> required>
-              <label for="oneno" class="p-2">No</label>
+                <input id="oneno" type="radio" name="one" value="No" <?php echo SetRadioButtonChecked($rone['Answer'] === 'No'); ?> required>
+                <label for="oneno" class="px-1">No</label>
 
-              <div class="form-group">
-                <label for="one_details">If YES, give details:</label>
-                <input id="one_details" type="text" name="one_details" class="form-control" value="<?php echo $rone['Details']; ?>">
+                <div class="form-group">
+                  <label for="one_details">If YES, give details:</label>
+                  <input id="one_details" type="text" name="one_details" class="form-control" value="<?php echo $rone['Details']; ?>">
+                </div>
               </div>
 
               <hr>

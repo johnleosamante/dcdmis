@@ -271,7 +271,7 @@ if (isset($_POST['SaveAnswers'])) {
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Civil Service Eligibility has been added successfully!';
+		$message = 'Changes have been saved successfully!';
 		$showPrompt = true;
 	}
 
