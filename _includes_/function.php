@@ -3,14 +3,6 @@
 
 include_once('config.php');
 
-if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
-  $IP = $_SERVER["HTTP_CLIENT_IP"];
-} elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-  $IP = $_SERVER["HTTP_X_FORWARDED_FOR"];
-} else {
-  $IP = $_SERVER["REMOTE_ADDR"];
-}
-
 $PROTOCOL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
 $HOST_URL = $PROTOCOL . $_SERVER['HTTP_HOST'];
 $URL = $HOST_URL . '/' . strtolower(GetSiteAlias());
@@ -22,6 +14,14 @@ ini_set('post_max_size', '50M');
 ini_set('max_input_time', 300);
 ini_set('max_execution_time', 300);
 ini_set('memory_limit', '1024M');
+
+if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
+  $IP = $_SERVER["HTTP_CLIENT_IP"];
+} elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+  $IP = $_SERVER["HTTP_X_FORWARDED_FOR"];
+} else {
+  $IP = $_SERVER["REMOTE_ADDR"];
+}
 
 function GetHash($string) {
   return sha1($string);
