@@ -1,3 +1,4 @@
-# PERN Todo List Application
+# Data Management Information System
 
-Technologies: PostgreSQL, Express, React, Node
+HTML, CSS, JavaScript, PHP, MySQL
+SB Admin 2 Bootstrap Template
