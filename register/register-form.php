@@ -99,9 +99,10 @@
         <label for="inputPosition" class="mb-0">Position:</label>
         <select name="position" class="form-control" id="inputPosition" required>
           <?php
-          $data = DBQuery("SELECT * FROM tbl_job ORDER BY Job_description;");
-          while ($row = DBFetchArray($data)) { ?>
-            <option value="<?php echo $row['Job_code']; ?>" <?php echo SetOptionSelected($row['Job_code'], $empPosition); ?>><?php echo $row['Job_description']; ?></option>
+          include_once('../_includes_/database/job.php');
+          $jobs = GetJob();
+          while ($job = DBFetchArray($jobs)) { ?>
+            <option value="<?php echo $job['id']; ?>" <?php echo SetOptionSelected($job['id'], $empPosition); ?>><?php echo $job['name']; ?></option>
           <?php } ?>
         </select>
       </div><!-- .form-group -->
@@ -113,11 +114,11 @@
       <div class="form-group">
         <label for="inputSchool" class="mb-0">Station:</label>
         <select class="form-control" id="inputSchool" name="School" required>
-          <option value="">Station</option>
           <?php
-          $school = DBQuery("SELECT * FROM tbl_school ORDER BY SchoolName ASC;");
-          while ($rowschool = DBFetchArray($school)) { ?>
-            <option value="<?php echo $rowschool['SchoolID']; ?>" <?php echo SetOptionSelected($rowschool['SchoolID'], $empSchool); ?>><?php echo $rowschool['SchoolName']; ?></option>
+          include_once('../_includes_/database/school.php');
+          $schools = GetSchool();
+          while ($school = DBFetchArray($schools)) { ?>
+            <option value="<?php echo $school['id']; ?>" <?php echo SetOptionSelected($school['id'], $empSchool); ?>><?php echo $school['name']; ?></option>
           <?php } ?>
         </select>
       </div><!-- .form-group -->

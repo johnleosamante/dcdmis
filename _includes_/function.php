@@ -3,10 +3,6 @@
 
 include_once('config.php');
 
-$PROTOCOL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
-$HOST_URL = $PROTOCOL . $_SERVER['HTTP_HOST'];
-$URL = $HOST_URL . '/' . strtolower(GetSiteAlias());
-
 session_start();
 date_default_timezone_set("Asia/Manila");
 ini_set('upload_max_filesize', '50M');
@@ -14,14 +10,6 @@ ini_set('post_max_size', '50M');
 ini_set('max_input_time', 300);
 ini_set('max_execution_time', 300);
 ini_set('memory_limit', '1024M');
-
-if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
-  $IP = $_SERVER["HTTP_CLIENT_IP"];
-} elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-  $IP = $_SERVER["HTTP_X_FORWARDED_FOR"];
-} else {
-  $IP = $_SERVER["REMOTE_ADDR"];
-}
 
 function GetHash($string) {
   return sha1($string);
@@ -39,17 +27,25 @@ function GetDecoding($string) {
   return base64_decode(urldecode($string));
 }
 
+function GetClientIP() {
+  if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
+    return $_SERVER["HTTP_CLIENT_IP"];
+  } elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+    return $_SERVER["HTTP_X_FORWARDED_FOR"];
+  } else {
+    return $_SERVER["REMOTE_ADDR"];
+  }
+}
+
 function GetSiteURL() {
-  global $URL;
-  return $URL;
+  $PROTOCOL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+  return $PROTOCOL . $_SERVER['HTTP_HOST'] . '/dcdmis';
 }
 
 function GetHashURL($portal, $view, $identifier='') {
-  global $URL;
-
   if (strlen($identifier) > 0) $identifier = '&id=' . GetEncoding($identifier);
 
-  return $URL . '/' . $portal . '/?' . GetHash(SITE_TITLE) . $identifier . '&v=' . GetEncoding($view); 
+  return GetSiteURL() . '/' . $portal . '/?' . GetHash(SITE_TITLE) . $identifier . '&v=' . GetEncoding($view); 
 }
 
 function GetSiteTitle($page='') {
@@ -98,6 +94,10 @@ function GetAddress() {
 
 function GetDateTime() {
   return date('Y-m-d H:i:s');
+}
+
+function GetDateTimeAsID() {
+  return date('YmdHis');
 }
 
 function SetOptionSelected($reference, $value) {

@@ -3,9 +3,10 @@
 
 include_once('../_includes_/function.php');
 include_once('../_includes_/database/database.php');
+include_once('../_includes_/database/system-logs.php');
 
 if (isset($_SESSION['uid'])) {
-  DBQuery("INSERT INTO tbl_system_logs (SchoolID, Emp_ID, Time_Log, `Status`, IPAddress) VALUES ('" . $_SESSION['school_id'] . "', '" . $_SESSION['uid'] . "', '" . GetDateTime() . "', 'Logout', '$IP');");
+  SystemLogout($_SESSION['school_id'], $_SESSION['uid'], GetDateTime(), GetClientIP());
 }
 
 session_destroy();

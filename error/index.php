@@ -1,7 +1,7 @@
 <?php
 # _includes_/layout/error.php
 
-include_once('../function.php');
+include_once('../_includes_/function.php');
 $code = http_response_code();
 $error = '';
 
@@ -29,7 +29,7 @@ switch ($code) {
 }
 
 $page = $error;
-include_once('header.php');
+include_once('../_includes_/layout/header.php');
 ?>
 
 <link href="<?php echo GetSiteURL(); ?>/assets/css/custom.css" rel="stylesheet">
@@ -50,7 +50,7 @@ include_once('header.php');
     </div><!-- #layoutAuthentication_content -->
 
     <div id="layoutAuthentication_footer">
-      <?php include_once('footer.php'); ?>
+      <?php include_once('../_includes_/layout/footer.php'); ?>
     </div><!-- #layoutAuthenticaton_footer -->
   </div><!-- #layoutAuthentication -->
 </body>

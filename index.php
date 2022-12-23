@@ -1,19 +1,18 @@
 <?php
-# index.php
-
 include_once('_includes_/function.php');
 include_once('_includes_/database/database.php');
+include_once('_includes_/database/user.php');
 
-if (!empty($_COOKIE['administrator_email'])) {
-	$sql = DBQuery("SELECT * FROM tbl_user WHERE user='" . $_COOKIE['email'] . "' LIMIT 1;");
+if (isset($_COOKIE['administrator_email'])) {
+	$users = GetUser($_COOKIE['administrator_email']);
 
-	if (DBNumRows($sql) === 1) {
-		$rec = DBFetchAssoc($sql);
-		$_SESSION['station'] = $rec['Station'];
-		$_SESSION['uid'] = $rec['usercode'];
-		$_SESSION['ucode'] = $rec['position'];
-		$_SESSION['school_id'] = $rec['Station'];
-		$_SESSION['portal'] = $rec['Link'];
+	if (DBNumRows($users) === 1) {
+		$user = DBFetchAssoc($users);
+		$_SESSION['uid'] = $user['usercode'];
+		$_SESSION['ucode'] = $user['position'];
+		$_SESSION['station'] = $user['station'];
+		$_SESSION['school_id'] = $user['station'];
+		$_SESSION['portal'] = $user['link'];
 	}
 }
 

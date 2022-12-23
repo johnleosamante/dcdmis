@@ -1,10 +1,8 @@
 <?php
-# login/index.php
-
 include_once('../_includes_/function.php');
 
-if (isset($_SESSION['uid'])) {
-  header('location:' . GetHashURL($_SESSION['portal'], 'dashboard'));
+if (isset($_SESSION[GetSiteURL() . '_uid'])) {
+  header('location:' . GetHashURL($_SESSION[GetSiteURL() . '_portal'], 'dashboard'));
 }
 
 include_once('../_includes_/database/database.php');
@@ -35,8 +33,7 @@ if (isset($_POST['login'])) {
       $_SESSION['portal'] = $rec['Link'];
       $_SESSION['last_login_timestamp'] = time();
 
-      setcookie('administrator_email', $userinfo, time() + 60 * 60 * 7);
-      DBNonQuery("UPDATE tbl_user SET Last_login='$dateposted', Current_Status='Online' WHERE usercode='" . $_SESSION['uid'] . "' LIMIT 1;");
+      UserLogin($_SESSION['uid'], $dateposted);
 
       $query = DBQuery("SELECT * FROM tbl_data_privacy_aggrement WHERE Emp_ID='" . $_SESSION['uid'] . "';");
 
@@ -45,6 +42,7 @@ if (isset($_POST['login'])) {
       }
 
       DBNonQuery("INSERT INTO tbl_system_logs (SchoolID, Emp_ID, Time_Log, `Status`, IPAddress) VALUES ('" . $_SESSION['school_id'] . "', '" . $_SESSION['uid'] . "', '$dateposted', 'Login', '$IP');");
+      setcookie('administrator_email', $userinfo, time() + 60 * 60 * 24 * 3);
       header('location:' . GetHashURL($rec['Link'], 'dashboard'));
     }
   } else {
