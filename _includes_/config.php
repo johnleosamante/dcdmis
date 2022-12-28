@@ -20,6 +20,18 @@ define('DIVISION', 'Dipolog City Schools Division');
 define('DIVISION_CODE', '143');
 define('ADDRESS', 'Dipolog City');
 
+define('SDS', 'Danny B. Cordova, EdD, CESO VI');
+define('SDS_POSITION', 'Schools Division Supervisor');
+
+define('ASDS', 'Lourma I. Poculan, CESO VI');
+define('ASDS_POSITION', 'Assistant Schools Division Supervisor');
+
+define('CID_CHIEF', 'Amelinda D. Montero, DM');
+define('CID_CHIEF_POSITION', 'Chief Education Supervisor');
+
+define('SGOD_CHIEF', 'Nur N. Hussien, DM');
+define('SGOD_CHIEF_POSITION', 'Chief Education Supervisor');
+
 define('HRMO_HEAD', 'Love L. Ricafort');
-define('HRMO_HEAD_POSTION', 'Administrative Office IV');
+define('HRMO_HEAD_POSITION', 'Administrative Office IV');
 ?>
