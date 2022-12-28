@@ -116,12 +116,28 @@ function SetRadioButtonChecked($condition) {
   return $condition ? ' checked' : '';
 }
 
+function GetSDS() {
+  return SDS;
+}
+
+function GetSDSPosition() {
+  return SDS_POSITION;
+}
+
+function GetASDS() {
+  return ASDS;
+}
+
+function GetASDSPosition() {
+  return ASDS_POSITION;
+}
+
 function GetHRMOHead() {
   return HRMO_HEAD;
 }
 
 function GetHRMOHeadPosition() {
-  return HRMO_HEAD_POSTION;
+  return HRMO_HEAD_POSITION;
 }
 
 function GetImageFileUploadStatus($name, $target_file, $uploadlimit=5) {
