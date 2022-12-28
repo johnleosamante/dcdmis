@@ -2,7 +2,7 @@
 # register/register-form.php
 ?>
 
-<form action="" method="POST" enctype="multipart/form-data">
+<form action="" method="POST">
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
