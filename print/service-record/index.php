@@ -1,6 +1,5 @@
 <?php
 # personnel/print_service_record/index.php
-
 include_once('../../_includes_/function.php');
 
 if (!isset($_SESSION['EmpID'])) {

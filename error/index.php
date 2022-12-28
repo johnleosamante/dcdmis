@@ -1,7 +1,7 @@
 <?php
 # _includes_/layout/error.php
-
 include_once('../_includes_/function.php');
+
 $code = http_response_code();
 $error = '';
 
@@ -31,8 +31,6 @@ switch ($code) {
 $page = $error;
 include_once('../_includes_/layout/header.php');
 ?>
-
-<link href="<?php echo GetSiteURL(); ?>/assets/css/custom.css" rel="stylesheet">
 </head>
 
 <body>

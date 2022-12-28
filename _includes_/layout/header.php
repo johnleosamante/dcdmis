@@ -18,4 +18,3 @@
   <link rel="stylesheet" href="<?php echo GetSiteURL(); ?>/assets/css/sb-admin-2.min.css">
   <link rel="stylesheet" href="<?php echo GetSiteURL(); ?>/assets/css/custom.css">
   <script src="<?php echo GetSiteURL(); ?>/assets/vendor/jquery/jquery.min.js"></script>
-</head>

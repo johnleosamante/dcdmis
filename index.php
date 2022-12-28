@@ -1,4 +1,5 @@
 <?php
+# index.php
 include_once('_includes_/function.php');
 include_once('_includes_/database/database.php');
 include_once('_includes_/database/user.php');

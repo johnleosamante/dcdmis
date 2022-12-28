@@ -1,6 +1,5 @@
 <?php
 # register/index.php
-
 include_once('../_includes_/function.php');
 
 if (isset($_SESSION[GetSiteAlias() . '_uid'])) {
@@ -17,6 +16,7 @@ foreach ($_GET as $key => $data) {
 include_once('../_includes_/layout/header.php');
 include_once('../_includes_/layout/components.php');
 ?>
+</head>
 
 <body class="background-cover">
   <div id="layoutAuthentication">
