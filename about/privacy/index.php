@@ -1,14 +1,11 @@
 <?php
 # about/privacy/update/index.php
-
 $page = 'Data Privacy Policy';
 
 include_once('../../_includes_/function.php');
 include_once('../../_includes_/layout/header.php');
 include_once('../../_includes_/layout/components.php');
 ?>
-
-</head>
 
 <body class="background-cover">
   <div id="layoutAuthentication">
