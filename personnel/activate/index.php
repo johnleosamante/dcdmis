@@ -3,8 +3,9 @@
 
 include_once('../../_includes_/function.php');
 
-if (!isset($_SESSION['activate_puid'])) {
+if (!isset($_SESSION[GetSiteAlias() . '_activate_puid'])) {
   header('location:' . GetSiteURL() . '/personnel/login');
+  exit;
 }
 
 $page = 'Activate Personnel Account';
@@ -34,7 +35,7 @@ include_once('../../_includes_/layout/components.php');
                 if ($_POST['newpassword'] === $_POST['Confirmpassword']) {
                   $pass = GetHashPassword(DBRealEscapeString($_POST['newpassword']));
 
-                  DBNonQuery("UPDATE tbl_teacher_account SET tbl_teacher_account.Teacher_Password='$pass', tbl_teacher_account.Pass_status='Changed' WHERE tbl_teacher_account.Teacher_TIN='" . $_SESSION['activate_pemail'] . "' LIMIT 1");
+                  DBNonQuery("UPDATE tbl_teacher_account SET tbl_teacher_account.Teacher_Password='$pass', tbl_teacher_account.Pass_status='Changed' WHERE tbl_teacher_account.Teacher_TIN='" . $_SESSION[GetSiteAlias() . '_activate_pemail'] . "' LIMIT 1");
 
                   $match = true;
                   $success = true;

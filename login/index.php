@@ -3,6 +3,7 @@ include_once('../_includes_/function.php');
 
 if (isset($_SESSION[GetSiteAlias() . '_uid'])) {
   header('location:' . GetHashURL($_SESSION[GetSiteAlias() . '_portal'], 'dashboard'));
+  exit;
 }
 
 include_once('../_includes_/database/database.php');
@@ -45,6 +46,7 @@ if (isset($_POST['login'])) {
       DBNonQuery("INSERT INTO tbl_system_logs (SchoolID, Emp_ID, Time_Log, `Status`, IPAddress) VALUES ('" . $_SESSION[GetSiteAlias() . '_school_id'] . "', '" . $_SESSION['uid'] . "', '$dateposted', 'Login', '" . GetClientIP() . "');");
       setcookie('administrator_email', $userinfo, time() + 60 * 60 * 24 * 3);
       header('location:' . GetHashURL($_SESSION[GetSiteAlias() . '_portal'], 'dashboard'));
+      exit;
     }
   } else {
     $hasError = true;

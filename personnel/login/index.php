@@ -2,18 +2,21 @@
 # personnel/login/index.php
 
 include_once('../../_includes_/function.php');
+
+if (isset($_SESSION[GetSiteAlias() . '_activate_puid'])) {
+  header('location:' . GetSiteURL() . '/personnel/activate');
+  exit;
+}
+
+if (isset($_SESSION[GetSiteAlias() . '_EmpID'])) {
+  header('location:' . GetSiteURL() . '/personnel');
+  exit;
+}
+
 include_once('../../_includes_/database/database.php');
 include_once('../../_includes_/layout/components.php');
 
-if (isset($_SESSION['activate_puid'])) {
-  header('location:' . GetSiteURL() . '/personnel/activate');
-}
-
-if (isset($_SESSION['EmpID'])) {
-  header('location:' . GetSiteURL() . '/personnel');
-}
-
-$Err = false;
+$hasError = false;
 
 if (isset($_POST['login'])) {
   $dateposted = GetDateTime();
@@ -25,22 +28,23 @@ if (isset($_POST['login'])) {
     $rec = DBFetchAssoc($sql);
 
     if ($rec['Pass_status'] == 'Default') {
-      $_SESSION['activate_puid'] = $rec['Emp_ID'];
-      $_SESSION['activate_pemail'] = $rec['Teacher_TIN'];
+      $_SESSION[GetSiteAlias() . '_activate_puid'] = $rec['Emp_ID'];
+      $_SESSION[GetSiteAlias() . '_activate_pemail'] = $rec['Teacher_TIN'];
 
       header('location:' . GetSiteURL() . '/personnel/activate');
     } else {
-      $_SESSION['Email'] = $rec['Teacher_TIN'];
-      $_SESSION['EmpID'] = $rec['Emp_ID'];
-      $_SESSION['Picture'] = $rec['Picture'];
-      $_SESSION['last_login_timestamp'] = time();
+      $_SESSION[GetSiteAlias() . '_Email'] = $rec['Teacher_TIN'];
+      $_SESSION[GetSiteAlias() . '_EmpID'] = $rec['Emp_ID'];
+      $_SESSION[GetSiteAlias() . '_Picture'] = $rec['Picture'];
+      $_SESSION[GetSiteAlias() . '_last_login_timestamp'] = time();
 
-      DBNonQuery("UPDATE tbl_teacher_account SET Last_login='$dateposted',Teacher_status='Online' WHERE Teacher_TIN='" . $_SESSION['Email'] . "' LIMIT 1;");
+      DBNonQuery("UPDATE tbl_teacher_account SET Last_login='$dateposted',Teacher_status='Online' WHERE Teacher_TIN='" . $_SESSION[GetSiteAlias() . '_Email'] . "' LIMIT 1;");
 
       header('location:' . GetSiteURL() . '/personnel');
+      exit;
     }
   } else {
-    $Err = true;
+    $hasError = true;
   }
 }
 

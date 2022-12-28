@@ -4,6 +4,7 @@ include_once('../_includes_/function.php');
 
 if (!isset($_SESSION[GetSiteAlias() . '_activate_uid'])) {
   header('location:' . GetSiteURL() . '/login');
+  exit;
 }
 
 $page = 'Activate Administrator Account';
