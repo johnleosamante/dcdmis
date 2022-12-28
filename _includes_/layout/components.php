@@ -6,7 +6,7 @@ function AlertBox($message, $type = 'danger', $align = 'center')
 ?>
   <script>
     $(document).ready(function() {
-      $("div.alert").fadeIn(300).delay(10000).fadeOut(300);
+      $("div.alert").fadeIn(300).delay(30000).fadeOut(300);
     });
   </script>
 
