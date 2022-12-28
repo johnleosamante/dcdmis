@@ -1,9 +1,9 @@
 <?php
 function GetUser($email, $password='') {
   if (strlen($password) === 0) {
-    $sql = "SELECT usercode, position, Station AS station, Link AS portal FROM tbl_user WHERE `username`='$email' LIMIT 1;";
+    $sql = "SELECT usercode, username, position, Station AS station, `Status` AS activity, Link AS portal FROM tbl_user WHERE `username`='$email' LIMIT 1;";
   } else {
-    $sql = "SELECT usercode, position, Station AS station, Link AS portal FROM tbl_user WHERE `username`='$email' AND `password`='$password' LIMIT 1;";
+    $sql = "SELECT usercode, username, position, Station AS station, `Status` AS activity, Link AS portal FROM tbl_user WHERE `username`='$email' AND `password`='$password' LIMIT 1;";
   }
 
   return DBQuery($sql);
