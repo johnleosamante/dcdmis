@@ -37,6 +37,10 @@ function GetClientIP() {
   }
 }
 
+function isValidEmail($email) {
+  return preg_match("/^[a-zA-Z0-9_.-]+@deped.gov.ph+$/", $email);
+}
+
 function GetSiteURL() {
   $PROTOCOL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
   return $PROTOCOL . $_SERVER['HTTP_HOST'] . '/dcdmis';

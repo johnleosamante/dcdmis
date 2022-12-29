@@ -34,7 +34,9 @@
 				$empImage = "assets/img/user.png";
 				$start = date('Y');
 
-				if ((!empty($_POST['password']) && !empty($_POST['repass'])) && ($_POST['password'] === $_POST['repass'])) {
+				if (!isValidEmail($empEmail)) {
+					AlertBox('You have entered an invalid email! Please use your DepEd email account.');
+				} elseif ((!empty($_POST['password']) && !empty($_POST['repass'])) && ($_POST['password'] === $_POST['repass'])) {
 					include_once('../_includes_/database/employee.php');
 
 					$employees = GetEmployeeName($empLName, $empFName, $empMName, $empExt);
