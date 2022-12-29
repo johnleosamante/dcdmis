@@ -1,8 +1,8 @@
 <?php
 # personnel/certificate.php
 
-if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
-	mkdir('../uploads/certificate/' . $_SESSION['EmpID'], 0777, true);
+if (!is_dir('../uploads/certificate/' . $_SESSION[GetSiteAlias() . '_EmpID'])) {
+	mkdir('../uploads/certificate/' . $_SESSION[GetSiteAlias() . '_EmpID'], 0777, true);
 }
 ?>
 
@@ -12,6 +12,7 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 			<div class="card-header">
 				<div class="d-sm-flex align-items-center justify-content-between">
 					<h3 class="h4 mb-0"><?php echo $_GET['id']; ?> Certificates</h3>
+					
 					<a href="#uploadCertificateModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fa fa-upload fa-fw"></i></span><span class="text">Upload</span></a>
 				</div>
 			</div>
@@ -22,8 +23,8 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 					$file = $_FILES["uploadCertificate"]["name"];
 					$temp = $_FILES["uploadCertificate"]["tmp_name"];
 					$ext = pathinfo($file, PATHINFO_EXTENSION);
-					$target_dir = '../uploads/certificate/' . $_SESSION['EmpID'];
-					$target_file = $target_dir . '/' . $_SESSION['EmpID'] . date("YmdHis") . '.' . $ext;;
+					$target_dir = '../uploads/certificate/' . $_SESSION[GetSiteAlias() . '_EmpID'];
+					$target_file = $target_dir . '/' . $_SESSION[GetSiteAlias() . '_EmpID'] . date("YmdHis") . '.' . $ext;;
 					$uploadOk = 1;
 					$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 					$message = '';
@@ -55,7 +56,7 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 						// if everything is ok, try to upload file
 					} else {
 						if (move_uploaded_file($temp, $target_file)) {
-							mysqli_query($con, "INSERT INTO tbl_certificate_archive VALUES(NULL,'" . $_POST['cert_details'] . "','" . $_POST['category'] . "','" . GetDateTime() . "','" . $_GET['id'] . "', '$target_file','" . $_SESSION['EmpID'] . "')");
+							mysqli_query($con, "INSERT INTO tbl_certificate_archive VALUES(NULL,'" . $_POST['cert_details'] . "','" . $_POST['category'] . "','" . GetDateTime() . "','" . $_GET['id'] . "', '$target_file','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "')");
 
 							if (mysqli_affected_rows($con) === 1) {
 								AlertBox('Payslip has been uploaded successfully!', 'success', 'left');
@@ -81,7 +82,7 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 						<tbody>
 							<?php
 							$no = 0;
-							$result = mysqli_query($con, "SELECT * FROM tbl_certificate_archive WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND Certificate_Level='" . $_GET['id'] . "'");
+							$result = mysqli_query($con, "SELECT * FROM tbl_certificate_archive WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' AND Certificate_Level='" . $_GET['id'] . "'");
 
 							while ($row = mysqli_fetch_array($result)) {
 								$no++;

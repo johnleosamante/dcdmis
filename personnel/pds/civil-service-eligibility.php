@@ -1,4 +1,4 @@
-<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'eligibility'); ?>" id="eligibility">
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION[GetSiteAlias() . '_pdstab']) && $_SESSION[GetSiteAlias() . '_pdstab'] === 'eligibility'); ?>" id="eligibility">
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h4 mb-0">Civil Service Eligibility</h3>
     <a href="#AddEligibilityModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
@@ -6,7 +6,7 @@
 
   <div class="row mt-3">
     <div class="col table-responsive">
-      <table width="100%" class="table table-striped table-bordered table-hover mb-2" cellspacing="0">
+      <table width="100%" class="table table-striped table-bordered table-hover mb-0" cellspacing="0">
         <thead>
           <tr class="text-center">
             <th class="align-middle" width="25%" rowspan="2">Career Services / RA 1080 (Board / Bar) Underspecial Laws / CES / CSEE Barangay Eligibility/ Drivers License</th>
@@ -24,7 +24,7 @@
 
         <tbody>
           <?php
-          $eligibility = mysqli_query($con, "SELECT * FROM civil_service WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          $eligibility = mysqli_query($con, "SELECT * FROM civil_service WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
 
           if (mysqli_num_rows($eligibility) > 0) {
             while ($row3 = mysqli_fetch_array($eligibility)) { ?>

@@ -12,7 +12,7 @@
 			<div class="card-body">
 				<?php
 				if (isset($_POST['UpdatePosition'])) {
-					DBNonQuery("UPDATE tbl_station SET Emp_Position='" . $_POST['position'] . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
+					DBNonQuery("UPDATE tbl_station SET Emp_Position='" . $_POST['position'] . "' WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' LIMIT 1;");
 
 					if (DBAffectedRows($con) === 1) {
 						AlertBox('Position has been updated successfully!', 'success', 'left');
@@ -20,7 +20,7 @@
 				}
 
 				if (isset($_POST['UpdateTIN'])) {
-					DBNonQuery("UPDATE tbl_employee SET Emp_TIN='" . $_POST['myTIN'] . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
+					DBNonQuery("UPDATE tbl_employee SET Emp_TIN='" . $_POST['myTIN'] . "' WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' LIMIT 1;");
 
 					if (DBAffectedRows($con) === 1) {
 						AlertBox('Tax Identification Number (TIN) has been updated successfully!', 'success', 'left');
@@ -33,12 +33,12 @@
 					} else {
 						$pass = GetHashPassword(DBRealEscapeString($_POST['password']));
 
-						DBNonQuery("UPDATE tbl_teacher_account SET Teacher_Password='$pass' WHERE tbl_teacher_account.Teacher_TIN='" . $_SESSION['Email'] . "' LIMIT 1;");
+						DBNonQuery("UPDATE tbl_teacher_account SET Teacher_Password='$pass' WHERE tbl_teacher_account.Teacher_TIN='" . $_SESSION[GetSiteAlias() . '_Email'] . "' LIMIT 1;");
 
-						$rec = DBQuery("SELECT * FROM tbl_user WHERE usercode='" . $_SESSION['EmpID'] . "'");
+						$rec = DBQuery("SELECT * FROM tbl_user WHERE usercode='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
 
 						if (DBNumRows($rec) === 1) {
-							DBNonQuery("UPDATE tbl_user SET password='$pass' WHERE usercode='" . $_SESSION['EmpID'] . "'");
+							DBNonQuery("UPDATE tbl_user SET password='$pass' WHERE usercode='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
 						}
 
 						AlertBox('Password has been updated successfully!', 'success', 'left');
@@ -60,7 +60,7 @@
 					<div class="table-responsive tab-pane fade show active" id="user-information">
 						<table>
 							<?php
-							$myname = DBQuery("SELECT * FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID =  tbl_station.Emp_ID INNER JOIN tbl_job ON tbl_station.Emp_Position=tbl_job.Job_code INNER JOIN tbl_school ON tbl_station.Emp_Station = tbl_school.SchoolID WHERE tbl_employee.Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
+							$myname = DBQuery("SELECT * FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID =  tbl_station.Emp_ID INNER JOIN tbl_job ON tbl_station.Emp_Position=tbl_job.Job_code INNER JOIN tbl_school ON tbl_station.Emp_Station = tbl_school.SchoolID WHERE tbl_employee.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' LIMIT 1");
 
 							$row_record = DBFetchAssoc($myname);
 

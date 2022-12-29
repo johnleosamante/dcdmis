@@ -1,9 +1,9 @@
 <?php
-if (!is_dir('../pcdmis/step_requirement/'.$_SESSION['year'].'/'.$_SESSION['EmpID'])) {
-    mkdir('../pcdmis/step_requirement/'.$_SESSION['year'].'/'.$_SESSION['EmpID'], 0777, true);
+if (!is_dir('../pcdmis/step_requirement/'.$_SESSION[GetSiteAlias() . '_year'].'/'.$_SESSION[GetSiteAlias() . '_EmpID'])) {
+    mkdir('../pcdmis/step_requirement/'.$_SESSION[GetSiteAlias() . '_year'].'/'.$_SESSION[GetSiteAlias() . '_EmpID'], 0777, true);
 }
-$_SESSION['pathlocation']='../pcdmis/step_requirement/'.$_SESSION['year'].'/'.$_SESSION['EmpID'];
-mysqli_query($con,"UPDATE tbl_messages SET Message_status='Read' WHERE Message_to='".$_SESSION['EmpID']."'  AND No='".$_GET['No']."' LIMIT 1");
+$_SESSION[GetSiteAlias() . '_pathlocation']='../pcdmis/step_requirement/'.$_SESSION[GetSiteAlias() . '_year'].'/'.$_SESSION[GetSiteAlias() . '_EmpID'];
+mysqli_query($con,"UPDATE tbl_messages SET Message_status='Read' WHERE Message_to='".$_SESSION[GetSiteAlias() . '_EmpID']."'  AND No='".$_GET['No']."' LIMIT 1");
 date_default_timezone_set("Asia/Manila");
 	$dateposted = date("Y-m-d H:i:s");
 ?>
@@ -91,8 +91,8 @@ date_default_timezone_set("Asia/Manila");
 	<?php
 	if (isset($_POST['savepayslip']))
 	{
-		$newloc=$_SESSION['pathlocation'].'/'.$_POST['filename'];
-		mysqli_query($con,"INSERT INTO tbl_step_requirements VALUES('".date("ms")."','PAYSLIP','".$dateposted."','".$newloc."','STEP','".$_SESSION['year']."','".$_SESSION['EmpID']."')");
+		$newloc=$_SESSION[GetSiteAlias() . '_pathlocation'].'/'.$_POST['filename'];
+		mysqli_query($con,"INSERT INTO tbl_step_requirements VALUES('".date("ms")."','PAYSLIP','".$dateposted."','".$newloc."','STEP','".$_SESSION[GetSiteAlias() . '_year']."','".$_SESSION[GetSiteAlias() . '_EmpID']."')");
 	   if(mysqli_affected_rows($con)==1)
 	   {
 		    ?>
@@ -113,10 +113,10 @@ date_default_timezone_set("Asia/Manila");
 		$temp = $_FILES['appointment']['tmp_name'];
 		$type = $_FILES['appointment']['type'];
 		$ext = pathinfo($myfile, PATHINFO_EXTENSION);	
-		$newloc=$_SESSION['pathlocation'].'/'.$myfile;
+		$newloc=$_SESSION[GetSiteAlias() . '_pathlocation'].'/'.$myfile;
 		move_uploaded_file($temp, $newloc);
 		
-		mysqli_query($con,"INSERT INTO tbl_step_requirements VALUES('".date("ms")."','APPOINTMENT','".$dateposted."','".$newloc."','STEP','".$_SESSION['year']."','".$_SESSION['EmpID']."')");
+		mysqli_query($con,"INSERT INTO tbl_step_requirements VALUES('".date("ms")."','APPOINTMENT','".$dateposted."','".$newloc."','STEP','".$_SESSION[GetSiteAlias() . '_year']."','".$_SESSION[GetSiteAlias() . '_EmpID']."')");
 	   if(mysqli_affected_rows($con)==1)
 	   {
 		    ?>
@@ -137,9 +137,9 @@ date_default_timezone_set("Asia/Manila");
 		$temp = $_FILES['service_record']['tmp_name'];
 		$type = $_FILES['service_record']['type'];
 		$ext = pathinfo($myfile, PATHINFO_EXTENSION);	
-		$newloc=$_SESSION['pathlocation'].'/'.$myfile;
+		$newloc=$_SESSION[GetSiteAlias() . '_pathlocation'].'/'.$myfile;
 		move_uploaded_file($temp, $newloc);
-		mysqli_query($con,"INSERT INTO tbl_step_requirements VALUES('".date("ms")."','SERVICE RECORD','".$dateposted."','".$newloc."','STEP','".$_SESSION['year']."','".$_SESSION['EmpID']."')");
+		mysqli_query($con,"INSERT INTO tbl_step_requirements VALUES('".date("ms")."','SERVICE RECORD','".$dateposted."','".$newloc."','STEP','".$_SESSION[GetSiteAlias() . '_year']."','".$_SESSION[GetSiteAlias() . '_EmpID']."')");
 	   if(mysqli_affected_rows($con)==1)
 	   {
 		    ?>
@@ -155,10 +155,10 @@ date_default_timezone_set("Asia/Manila");
 	   }
 	}elseif (isset($_POST['step_required']))
 	{
-		$mystep=mysqli_query($con,"SELECT * FROM tbl_deployment_history WHERE Emp_ID='".$_SESSION['EmpID']."' ORDER BY Date_assignment Desc LIMIT 1");
+		$mystep=mysqli_query($con,"SELECT * FROM tbl_deployment_history WHERE Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."' ORDER BY Date_assignment Desc LIMIT 1");
 		$rowstep=mysqli_fetch_assoc($mystep);
 		echo $rowstep['No_of_years'];
-		mysqli_query($con,"INSERT INTO tbl_step_increment VALUES(NULL,'".date("Y-m-d")."','".$rowstep['StepNo']."','".$rowstep['No_of_years']."','".$_SESSION['EmpID']."')");
+		mysqli_query($con,"INSERT INTO tbl_step_increment VALUES(NULL,'".date("Y-m-d")."','".$rowstep['StepNo']."','".$rowstep['No_of_years']."','".$_SESSION[GetSiteAlias() . '_EmpID']."')");
 		 if(mysqli_affected_rows($con)==1)
 	   {
 		   ?>
@@ -187,7 +187,7 @@ date_default_timezone_set("Asia/Manila");
                         <!-- /.panel-heading -->
                         <div class="panel-body" style="font-size:25px;">
 						<?php
-						$query=mysqli_query($con,"SELECT * FROM tbl_step_requirements WHERE RequiredFor ='STEP' AND Emp_ID='".$_SESSION['EmpID']."' AND RequiredYear='".$_SESSION['year']."'");
+						$query=mysqli_query($con,"SELECT * FROM tbl_step_requirements WHERE RequiredFor ='STEP' AND Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."' AND RequiredYear='".$_SESSION[GetSiteAlias() . '_year']."'");
 						if (mysqli_num_rows($query)==3)
 						{
 							echo '<form action="" Method="POST" enctype="multipart/form-data"><input type="submit" name="step_required" class="btn btn-primary" style="float:right;" value="SUBMIT FOR EVALUATION"></form>';
@@ -200,7 +200,7 @@ date_default_timezone_set("Asia/Manila");
                            <hr/>
 						   <div class="col-lg-4">
                            <?php
-							$querypayslip=mysqli_query($con,"SELECT * FROM tbl_step_requirements WHERE RequiredFor ='STEP' AND Emp_ID='".$_SESSION['EmpID']."' AND RequiredDocument='PAYSLIP' AND RequiredYear='".$_SESSION['year']."'LIMIT 1");
+							$querypayslip=mysqli_query($con,"SELECT * FROM tbl_step_requirements WHERE RequiredFor ='STEP' AND Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."' AND RequiredDocument='PAYSLIP' AND RequiredYear='".$_SESSION[GetSiteAlias() . '_year']."'LIMIT 1");
 							$queryslip=mysqli_fetch_assoc($querypayslip);
 							 if(mysqli_num_rows($querypayslip)==1)
 							 {								 
@@ -211,7 +211,7 @@ date_default_timezone_set("Asia/Manila");
                         </div>
 						 <div class="col-lg-4">
 						 <?php
-							$queryappointment=mysqli_query($con,"SELECT * FROM tbl_step_requirements WHERE RequiredFor ='STEP' AND Emp_ID='".$_SESSION['EmpID']."' AND RequiredDocument='APPOINTMENT' AND RequiredYear='".$_SESSION['year']."'LIMIT 1");
+							$queryappointment=mysqli_query($con,"SELECT * FROM tbl_step_requirements WHERE RequiredFor ='STEP' AND Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."' AND RequiredDocument='APPOINTMENT' AND RequiredYear='".$_SESSION[GetSiteAlias() . '_year']."'LIMIT 1");
 							$queryapoint=mysqli_fetch_assoc($queryappointment);
 							 if(mysqli_num_rows($queryappointment)==1)
 							 {								 
@@ -222,7 +222,7 @@ date_default_timezone_set("Asia/Manila");
                         </div>
 						 <div class="col-lg-4">
 						 <?php
-							$queryappointment=mysqli_query($con,"SELECT * FROM tbl_step_requirements WHERE RequiredFor ='STEP' AND Emp_ID='".$_SESSION['EmpID']."' AND RequiredDocument='SERVICE RECORD' AND RequiredYear='".$_SESSION['year']."'LIMIT 1");
+							$queryappointment=mysqli_query($con,"SELECT * FROM tbl_step_requirements WHERE RequiredFor ='STEP' AND Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."' AND RequiredDocument='SERVICE RECORD' AND RequiredYear='".$_SESSION[GetSiteAlias() . '_year']."'LIMIT 1");
 							$queryapoint=mysqli_fetch_assoc($queryappointment);
 							 if(mysqli_num_rows($queryappointment)==1)
 							 {								 
@@ -252,7 +252,7 @@ date_default_timezone_set("Asia/Manila");
 			</div>
 			 <form action="" Method="POST" enctype="multipart/form-data">
 				<input type="hidden" id="filedata" name="filename" required>
-				<input type="hidden" id="location" value="<?php echo $_SESSION['pathlocation']; ?>"required>
+				<input type="hidden" id="location" value="<?php echo $_SESSION[GetSiteAlias() . '_pathlocation']; ?>"required>
 			<div class="modal-body"><center>
 			    <div id="container">
 				   <span id="pickfiles" style="cursor:pointer;"><button class="btn btn-success">Choose File to upload</button></span>

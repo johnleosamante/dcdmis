@@ -2,10 +2,10 @@
 <?php
 if (isset($_POST['send']))
 {
-	$query=mysqli_query($con,"SELECT * FROM tbl_deped_reset_account WHERE DateRequest='".date("Y-m-d")."' AND Remarks='".$_POST['purpose']."' AND SchoolID='".$_SESSION['SchoolID']."' AND Emp_ID='".$_SESSION['EmpID']."'");
+	$query=mysqli_query($con,"SELECT * FROM tbl_deped_reset_account WHERE DateRequest='".date("Y-m-d")."' AND Remarks='".$_POST['purpose']."' AND SchoolID='".$_SESSION[GetSiteAlias() . '_SchoolID']."' AND Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."'");
 	if (mysqli_num_rows($query)==0)
 	{
-	 mysqli_query($con,"INSERT INTO tbl_deped_reset_account  VALUES('".date("ydmis")."','".date("Y-m-d")."','".$_SESSION['EmpID']."','".$_POST['EmailAdd']."','".$_SESSION['SchoolID']."','".$_POST['ContactNo']."','".$_POST['purpose']."')");
+	 mysqli_query($con,"INSERT INTO tbl_deped_reset_account  VALUES('".date("ydmis")."','".date("Y-m-d")."','".$_SESSION[GetSiteAlias() . '_EmpID']."','".$_POST['EmailAdd']."','".$_SESSION[GetSiteAlias() . '_SchoolID']."','".$_POST['ContactNo']."','".$_POST['purpose']."')");
 	}
 	if (mysqli_affected_rows($con)==1)
 	{
@@ -26,7 +26,7 @@ if (isset($_POST['send']))
 	<div class="col-lg-3">
 <form action="" method="POST" enctype="multipart/form-data">
    <div class="panel-body">
-    <label>Name:</label><input type="text" class="form-control" value="<?php echo $_SESSION['TeacherName']; ?>"disabled>
+    <label>Name:</label><input type="text" class="form-control" value="<?php echo $_SESSION[GetSiteAlias() . '_TeacherName']; ?>"disabled>
 	<label>DepEd Emai:</label><input type="email" class="form-control" name="EmailAdd" required>
 	<label>Contact No:</label><input type="number" class="form-control" name="ContactNo" required>
 	<label>Purpose:</label>
@@ -58,7 +58,7 @@ if (isset($_POST['send']))
 		<tbody>
 		<?php
 		$no=0;
-		$myhistory=mysqli_query($con,"SELECT * FROM tbl_deped_reset_account INNER JOIN tbl_school ON tbl_deped_reset_account.SchoolID = tbl_school.SchoolID WHERE tbl_deped_reset_account.Emp_ID='".$_SESSION['EmpID']."'");
+		$myhistory=mysqli_query($con,"SELECT * FROM tbl_deped_reset_account INNER JOIN tbl_school ON tbl_deped_reset_account.SchoolID = tbl_school.SchoolID WHERE tbl_deped_reset_account.Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."'");
 		while($rowhist=mysqli_fetch_array($myhistory))
 		{
 			echo '<tr>

@@ -2,13 +2,13 @@
 # personnel/print_service_record/index.php
 include_once('../../_includes_/function.php');
 
-if (!isset($_SESSION['EmpID'])) {
+if (!isset($_SESSION[GetSiteAlias() . '_EmpID'])) {
 	header('location:' . GetSiteURL() . '/personnel');
 }
 
 include_once('../../_includes_/database/database.php');
 
-$result = mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+$result = mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
 $row = mysqli_fetch_assoc($result);
 
 require_once('../../_includes_/FPDF/code128.php');
@@ -30,11 +30,11 @@ include_once("../../_includes_/PHPQRCode/qrlib.php");
 //ofcourse we need rights to create temp dir
 if (!file_exists($PNG_TEMP_DIR)) mkdir($PNG_TEMP_DIR);
 
-$finame = $PNG_TEMP_DIR . $_SESSION['EmpID'] . '.png';
+$finame = $PNG_TEMP_DIR . $_SESSION[GetSiteAlias() . '_EmpID'] . '.png';
 //remember to sanitize user input in real-life solution !!!
 $errorCorrectionLevel = 'L';
 $matrixPointSize = 5;
-$_REQUEST['data'] = $_SESSION['EmpID'];
+$_REQUEST['data'] = $_SESSION[GetSiteAlias() . '_EmpID'];
 
 if (isset($_REQUEST['data'])) {
 	// user data
@@ -133,7 +133,7 @@ $pdf->Cell(30, 5, 'CES W/O PAY', 1, 0, 'C');
 $pdf->Cell(20, 5, '', 1, 1, 'C');
 
 //DATA QUERY
-$result = mysqli_query($con, "SELECT * FROM tbl_service_records WHERE tbl_service_records.Emp_ID='" . $_SESSION['EmpID'] . "'");
+$result = mysqli_query($con, "SELECT * FROM tbl_service_records WHERE tbl_service_records.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
 while ($row = mysqli_fetch_array($result)) {
 	$pdf->Cell(15, 5, $row['date_from'], 1, 0, 'C');
 	$pdf->Cell(15, 5, $row['date_to'], 1, 0, 'C');
@@ -146,6 +146,7 @@ while ($row = mysqli_fetch_array($result)) {
 	$pdf->Cell(20, 5, $row['separation'], 1, 1, 'C');
 }
 $pdf->Cell(0, 5, 'xxxxxxxxxxxxxxxxxxxxxxx nothing follows xxxxxxxxxxxxxxxxxxxxxxx', 1, 1, 'C');
+
 //STATEMENT
 $pdf->SetFont('Arial', '', 7);
 $pdf->Cell(0, 5, '', 0, 1, 'C');
@@ -160,7 +161,7 @@ $pdf->Cell(120, 5, GetHRMOHead(), 0, 1, 'R');
 $pdf->Cell(60, 5, 'Date', 0, 0, 'C');
 $pdf->Cell(120, 5, GetHRMOHeadPosition(), 0, 1, 'R');
 $pdf->Cell(0, 75, '', 0, 1, 'R');
-
 $pdf->Cell(0, 0, '', 1, 1, 'C');
+
 //Display the Output data
 $pdf->Output();

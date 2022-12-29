@@ -1,4 +1,4 @@
-<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'family-background'); ?>" id="family-background">
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION[GetSiteAlias() . '_pdstab']) && $_SESSION[GetSiteAlias() . '_pdstab'] === 'family-background'); ?>" id="family-background">
   <div class="d-sm-flex align-items=center justify-content-between">
     <h3 class="h4 mb-0">Family Background</h3>
     <a href="#AddFamilyMemberModal" data-toggle="modal" class="btn btn-primary btn-icon-split btn-sm"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
@@ -6,7 +6,7 @@
 
   <div class="row mt-3">
     <div class="col table-responsive">
-      <table width="100%" class="table table-striped table-bordered table-hover mb-2" cellspacing="0">
+      <table width="100%" class="table table-striped table-bordered table-hover mb-0" cellspacing="0">
         <thead>
           <tr class="text-center">
             <th width="20%">Last Name</th>
@@ -20,7 +20,7 @@
 
         <tbody>
           <?php
-          $familyMembers = mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          $familyMembers = mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
 
           if (mysqli_num_rows($familyMembers) > 0) {
             while ($member = mysqli_fetch_array($familyMembers)) { ?>

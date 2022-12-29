@@ -3,7 +3,7 @@
   <h4>
     42. References (Person not related by consanguinity or afinity to applicant / appointee) </h4>
   <div style="overflow-x:auto;width:100%;">
-    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+    <table width="100%" class="table table-striped table-bordered table-hover mb-0" id="dataTables-example">
       <thead>
         <tr>
           <th width="30%">Name</th>
@@ -15,7 +15,7 @@
       </thead>
       <tbody>
         <?php
-        $result8 = mysqli_query($con, "SELECT * FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+        $result8 = mysqli_query($con, "SELECT * FROM reference WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
         while ($row8 = mysqli_fetch_array($result8)) {
           echo '<tr>
 													<td style="text-align:center;">' . $row8['Name'] . '</td>

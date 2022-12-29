@@ -1,11 +1,11 @@
 	<?php
 		if (isset($_POST['AddScore']))
 		{
-			$query=mysqli_query($con,"SELECT * FROM tbl_ipcrf_consolidated WHERE Emp_ID='".$_SESSION['EmpID']."' AND SchoolYear='".$_POST['sy']."'");
+			$query=mysqli_query($con,"SELECT * FROM tbl_ipcrf_consolidated WHERE Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."' AND SchoolYear='".$_POST['sy']."'");
 			if(mysqli_num_rows($query)==0)
 			{
-				mysqli_query($con,"UPDATE tbl_station SET Emp_Position='".$_POST['position']."' WHERE Emp_ID='".$_SESSION['EmpID']."' LIMIT 1");
-				mysqli_query($con,"INSERT INTO tbl_ipcrf_consolidated (Emp_ID,RatingScore,RatingAdjective,Position,SchoolID,SchoolYear)VALUES('".$_SESSION['EmpID']."','".$_POST['rating']."','".$_POST['remarks']."','".$_POST['position']."','".$_SESSION['SchoolID']."','".$_POST['sy']."')") or die ("Hello");
+				mysqli_query($con,"UPDATE tbl_station SET Emp_Position='".$_POST['position']."' WHERE Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."' LIMIT 1");
+				mysqli_query($con,"INSERT INTO tbl_ipcrf_consolidated (Emp_ID,RatingScore,RatingAdjective,Position,SchoolID,SchoolYear)VALUES('".$_SESSION[GetSiteAlias() . '_EmpID']."','".$_POST['rating']."','".$_POST['remarks']."','".$_POST['position']."','".$_SESSION[GetSiteAlias() . '_SchoolID']."','".$_POST['sy']."')") or die ("Hello");
 			  if(mysqli_affected_rows($con)==1)
 			  {
 				  ?>
@@ -54,7 +54,7 @@
 											<tbody>
 												<?php
 												$no=0;
-												$result=mysqli_query($con,"SELECT * FROM tbl_ipcrf_consolidated INNER JOIN tbl_school_year ON tbl_ipcrf_consolidated.SchoolYear = tbl_school_year.SYCode INNER JOIN tbl_job ON tbl_ipcrf_consolidated.Position=tbl_job.Job_code INNER JOIN tbl_school ON tbl_ipcrf_consolidated.SchoolID =tbl_school.SchoolID  WHERE tbl_ipcrf_consolidated.Emp_ID='".$_SESSION['EmpID']."'");
+												$result=mysqli_query($con,"SELECT * FROM tbl_ipcrf_consolidated INNER JOIN tbl_school_year ON tbl_ipcrf_consolidated.SchoolYear = tbl_school_year.SYCode INNER JOIN tbl_job ON tbl_ipcrf_consolidated.Position=tbl_job.Job_code INNER JOIN tbl_school ON tbl_ipcrf_consolidated.SchoolID =tbl_school.SchoolID  WHERE tbl_ipcrf_consolidated.Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."'");
 												while($rowdata=mysqli_fetch_array($result))
 												{
 													$no++;

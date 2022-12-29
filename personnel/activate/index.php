@@ -58,7 +58,7 @@ include_once('../../_includes_/layout/components.php');
 
                 <form class="user" method="POST" action="" enctype="multipart/form-data">
                   <div class="form-group">
-                    <input class="form-control form-control-user" id="inputEmail" type="email" placeholder="DepEd email address" value="<?php echo $_SESSION['activate_pemail']; ?>" disabled>
+                    <input class="form-control form-control-user" id="inputEmail" type="email" placeholder="DepEd email address" value="<?php echo $_SESSION[GetSiteAlias() . '_activate_pemail']; ?>" disabled>
                   </div><!-- .form-group -->
 
                   <?php

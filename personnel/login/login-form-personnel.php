@@ -11,7 +11,7 @@
     <?php
     SiteLogo(120, 120);
 
-    if ($Err) {
+    if ($hasError) {
       AlertBox('Invalid DepEd email address and password! Try again.');
     }
     ?>

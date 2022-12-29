@@ -23,7 +23,7 @@
 						<tbody>
 							<?php
 							$no = 0;
-							$seminar = mysqli_query($con, "SELECT * FROM tbl_seminar_participant INNER JOIN tbl_seminar ON tbl_seminar_participant.Training_Code = tbl_seminar.Training_Code WHERE tbl_seminar_participant.Emp_ID='" . $_SESSION['EmpID'] . "'") or die("error training data");
+							$seminar = mysqli_query($con, "SELECT * FROM tbl_seminar_participant INNER JOIN tbl_seminar ON tbl_seminar_participant.Training_Code = tbl_seminar.Training_Code WHERE tbl_seminar_participant.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'") or die("error training data");
 
 							while ($row = mysqli_fetch_array($seminar)) {
 								$no++;

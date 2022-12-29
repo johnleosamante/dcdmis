@@ -5,12 +5,13 @@ ContentTitle('Dashboard'); ?>
 
 <div class="row my-3">
 <?php
-Card('Service Record', GetHashURL('personnel', 'Service Record'), 'fa-file-alt');
-Card('Personal Data Sheet', GetHashURL('personnel', 'Personal Data Sheet'), 'fa-user', 'success');
-Card('Locator', GetHashURL('personnel', 'Locator'), 'fa-search-location', 'info');
-Card('Transfer Request', GetHashURL('personnel', 'Transfer Request'), 'fa-map', 'warning');
-Card('DepEd Account Request', GetHashURL('personnel', 'DepEd Account Request'), 'fa-edit', 'danger');
-Card('IPCRF', GetHashURL('personnel', 'IPCRF'), 'fa-tasks', 'secondary');
-Card('201 File', GetHashURL('personnel', '201 File'), 'fa-book-open', 'primary');
+Card('Daily Time Record', GetHashURL('personnel', 'Daily Time Record'), 'fa-clock', 'primary');
+Card('Service Record', GetHashURL('personnel', 'Service Record'), 'fa-file-alt', 'success');
+Card('Personal Data Sheet', GetHashURL('personnel', 'Personal Data Sheet'), 'fa-user', 'info');
+Card('Locator', GetHashURL('personnel', 'Locator'), 'fa-search-location', 'warning');
+Card('Transfer Request', GetHashURL('personnel', 'Transfer Request'), 'fa-map', 'danger');
+Card('DepEd Account Request', GetHashURL('personnel', 'DepEd Account Request'), 'fa-edit', 'secondary');
+Card('IPCRF', GetHashURL('personnel', 'IPCRF'), 'fa-tasks', 'primary');
+Card('201 File', GetHashURL('personnel', '201 File'), 'fa-book-open', 'success');
 ?>
 </div>

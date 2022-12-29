@@ -1,4 +1,4 @@
-<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'learning-development'); ?>" id="learning-development">
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION[GetSiteAlias() . '_pdstab']) && $_SESSION[GetSiteAlias() . '_pdstab'] === 'learning-development'); ?>" id="learning-development">
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h4 mb-0">Learning &amp; Development (L&D) Interventions / Training Programs</h3>
     <a href="#AddTrainingModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
@@ -6,7 +6,7 @@
 
   <div class="row mt-3">
     <div class="col table-responsive">
-      <table width="100%" class="table table-striped table-bordered table-hover mb-2" cellspacing="0">
+      <table width="100%" class="table table-striped table-bordered table-hover mb-0" cellspacing="0">
         <thead>
           <tr class="text-center">
             <th class="align-middle" width="30%" rowspan="2">Title Learning and Development Interventions / Training Programs</th>
@@ -24,7 +24,7 @@
 
         <tbody>
           <?php
-          $training = mysqli_query($con, "SELECT * FROM learning_and_development WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY No Asc");
+          $training = mysqli_query($con, "SELECT * FROM learning_and_development WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' ORDER BY No Asc");
 
           if (mysqli_num_rows($training) > 0) {
             while ($row6 = mysqli_fetch_array($training)) { ?>
