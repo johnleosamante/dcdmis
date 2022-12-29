@@ -269,11 +269,9 @@ if (isset($_POST['SaveAnswers'])) {
 		}
 	}
 
-	if (mysqli_affected_rows($con) === 1) {
-		$success = true;
-		$message = 'Changes have been saved successfully!';
-		$showPrompt = true;
-	}
+	$success = true;
+	$message = 'Changes have been saved successfully!';
+	$showPrompt = true;
 
 	$_SESSION[GetSiteAlias() . '_pdstab'] = 'questionnaires';
 }
@@ -282,17 +280,13 @@ if (isset($_POST['SaveAnswers'])) {
 if (isset($_POST['AddReference'])) {
 	mysqli_query($con, "INSERT INTO reference VALUES (NULL,'" . $_POST['Ref_Name'] . "','" . $_POST['Address'] . "','" . $_POST['Cell'] . "','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "')");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Reference has been added successfully!';
+		$showPrompt = true;
 	}
+
+	$_SESSION[GetSiteAlias() . '_pdstab'] = 'reference';
 }
 
 
@@ -658,7 +652,7 @@ if (isset($_POST['save_psipop'])) {
 					include_once('pds/voluntary-work.php');
 					include_once('pds/learning-development.php');
 					include_once('pds/other-information.php');
-					include_once('pds/questionnaires.php');
+					include_once('pds/questionnaire.php');
 					include_once('pds/reference.php');
 					?>
 				</div>
