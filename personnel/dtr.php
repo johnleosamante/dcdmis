@@ -1,6 +1,6 @@
 <?php
 $success = true;
-$message = '';
+$message = 'You have successfully logged';
 $showPrompt = false;
 $log = '';
 $fromdata = '';
@@ -18,7 +18,7 @@ if (isset($_POST['attendance'])) {
 	$time = 0;
 	$hour = date("H");
 	$minute = date("i");
-	$second = 0;
+	$second = date("s");
 
 	if ($hour == 13) {
 		$time = '01:' . $minute . ':' . $second;
@@ -46,36 +46,36 @@ if (isset($_POST['attendance'])) {
 
 	$record = mysqli_query($con, "SELECT * FROM tbl_dtr WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
 
-	if (mysqli_num_rows($record) == 0) {
-		if ($_POST['Status'] == 'Morning Login') {
+	if (mysqli_num_rows($record) === 0) {
+		if ($_POST['Status'] === 'Morning Login') {
 			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','" . $time . "','0','0','0','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "','" . date("l") . "')") or die("Error Login");
-			$log = 'Logged In this morning';
-		} elseif ($_POST['Status'] == 'Morning Logout') {
+			$log = ' In this morning';
+		} elseif ($_POST['Status'] === 'Morning Logout') {
 			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','0','" . $time . "','0','0','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "','" . date("l") . "')");
-			$log = 'Logged Out this morning';
-		} elseif ($_POST['Status'] == 'Afternoon Login') {
+			$log = ' Out this morning';
+		} elseif ($_POST['Status'] === 'Afternoon Login') {
 			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','0','0','" . $time . "','0','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "','" . date("l") . "')");
-			$log = 'Logged In this afternoon';
-		} elseif ($_POST['Status'] == 'Afternoon Logout') {
+			$log = ' In this afternoon';
+		} elseif ($_POST['Status'] === 'Afternoon Logout') {
 			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','0','0','0','" . date("H:i:s") . "','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "','" . date("l") . "')");
-			$log = 'Logged Out this afternoon';
+			$log = ' Out this afternoon';
 		}
 	} else {
-		if ($_POST['Status'] == 'Morning Logout') {
+		if ($_POST['Status'] === 'Morning Logout') {
 			mysqli_query($con, "UPDATE tbl_dtr SET TimeOUTAM ='" . $time . "' WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
-			$log = 'Logged Out this morning';
-		} elseif ($_POST['Status'] == 'Afternoon Login') {
+			$log = ' Out this morning';
+		} elseif ($_POST['Status'] === 'Afternoon Login') {
 			mysqli_query($con, "UPDATE tbl_dtr SET TimeINPM ='" . $time . "' WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
-			$log = 'Logged In this afternoon';
-		} elseif ($_POST['Status'] == 'Afternoon Logout') {
+			$log = ' In this afternoon';
+		} elseif ($_POST['Status'] === 'Afternoon Logout') {
 			mysqli_query($con, "UPDATE tbl_dtr SET TimeOUTPM ='" . $time . "' WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
-			$log = 'Logged Out this afternoon';
+			$log = ' Out this afternoon';
 		}
 	}
 
-	if (mysqli_affected_rows($con) == 1) {
+	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = "You have successfully $log!";
+		$message = "You have successfully Logged$log!";
 		$showPrompt = true;
 	}
 }
@@ -86,10 +86,10 @@ if (isset($_POST['attendance'])) {
 		<div class="card">
 			<div class="card-header">
 				<div class="d-sm-flex align-items-center justify-content-between">
-					<h3 class="h4 mb-0">Daily Time Records</h3>
+					<h3 class="h4 mb-0">Daily Time Record</h3>
 
 					<div class="d-inline-block">
-						<a href="#newattendance" class="btn btn-success btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">WFM Attendance</span></a>
+						<a href="#newAttendanceModal" class="btn btn-success btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">WFM Attendance</span></a>
 
 						<a href="<?php echo GetSiteURL(); ?>/print/dtr" class="btn btn-primary btn-icon-split btn-sm" target="_blank"><span class="icon text-white-50"><i class="fas fa-print fa-fw"></i></span><span class="text">Print Preview</span></a>
 					</div>
@@ -165,53 +165,43 @@ if (isset($_POST['attendance'])) {
 	</div><!-- .col -->
 </div><!-- .row -->
 
-
-<!-- Modal for Re-assign-->
-<div class="panel-body">
-
-	<!-- Modal -->
-	<div class="modal fade" id="newattendance" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog">
-
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" onclick="window.location.reload()">&times;</button>
-					<h4 class="modal-title">Daily Attendance Record </h4>
-				</div>
-				<div class="modal-body">
-					<form action="" Method="POST" enctype="multipart/form-data">
-						<?php
-
-
-
-						echo '<label style="width:250px;height:250px;border:solid 1px black;float:right;padding:4px;margin:4px;font-size:25px;text-align:center;border-radius:.3em;">';
-						echo date("l") . '<br/>';
-						echo date("F  d, Y") . '<br/>';
-						echo date("H:i:s") . '<br/>';
-
-
-						echo '</label>';
-
-						if (date("H:i:s") >= '04:30:00' and date("H:i:s") <= '10:30:00') {
-							echo '<input type="hidden" name="Status" value="Morning Login">';
-							echo '<button style="width:250px;height:250px;font-size:35px;border-radius:.3em;" name="attendance">MORNING LOGIN</button>';
-						} elseif (date("H:i:s") >= '11:00:00' and date("H:i:s") <= '12:30:00') {
-							echo '<input type="hidden" name="Status" value="Morning Logout">';
-							echo '<button style="width:250px;height:250px;font-size:35px;border-radius:.3em;" name="attendance">LOGOUT</button>';
-						} elseif (date("H:i:s") >= '12:31:00' and date("H:i:s") <= '14:31:00') {
-							echo '<input type="hidden" name="Status" value="Afternoon Login">';
-							echo '<button style="width:250px;height:250px;font-size:35px;border-radius:.3em;" name="attendance">LOGIN</button>';
-						} else {
-							echo '<input type="hidden" name="Status" value="Afternoon Logout">';
-							echo '<button style="width:250px;height:250px;font-size:35px;border-radius:.3em;" name="attendance">LOGOUT</button>';
-						}
-
-
-						?>
-					</form>
-				</div>
+<div class="modal fade" id="newAttendanceModal" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Work from Home Attendance</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
 			</div>
+
+			<form action="" Method="POST">
+				<div class="modal-body">
+					<p class="text-center h3 mb-0"><?php echo date("F  d, Y"); ?></p>
+					<p class="text-center"><?php echo date('l'); ?></p>
+
+					<p class="text-center h2" id="time"></p>
+
+					<?php
+					$buttonValue = '';
+
+					if (date("H:i:s") >= '04:30:00' && date("H:i:s") <= '10:30:00') {
+						$buttonValue = 'Morning Login';
+					} elseif (date("H:i:s") >= '11:00:00' && date("H:i:s") <= '12:30:00') {
+						$buttonValue = 'Morning Logout';
+					} elseif (date("H:i:s") >= '12:31:00' && date("H:i:s") <= '14:31:00') {
+						$buttonValue = 'Afternoon Login';
+					} else {
+						$buttonValue = 'Afternoon Logout';
+					}
+					?>
+
+					<input type="hidden" name="Status" value="<?php echo $buttonValue; ?>">
+					<button class="btn-block btn btn-success" name="attendance"><i class="fas fa-clock fa-fw"></i> <?php echo $buttonValue; ?></button>
+				</div>
+			</form>
+
+			<script src="<?php echo GetSiteURL(); ?>/assets/js/clock.js"></script>
 		</div>
 	</div>
 </div>
