@@ -70,7 +70,7 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
-        <form enctype="multipart/form-data" method="post" role="form" action="">
+        <form method="post" role="form" action="">
           <div class="modal-body">
             <div class="form-group">
               <label for="Title_learning" class="mb-0">Learning &amp; Development Interventions / Training programs (Write in full):</label>
