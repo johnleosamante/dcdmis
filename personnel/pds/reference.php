@@ -1,6 +1,6 @@
 <div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'reference'); ?>" id="references">
   <div class="d-sm-flex align-items-center justify-content-between">
-    <h3>References (Person not related by consanguinity or afinity to applicant / appointee)</h3>
+    <h3 class="h4 mb-0">References</h3>
     <a href="#AddReferenceModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
   </div>
 
@@ -46,7 +46,7 @@
       <script>
         function delete_reference(id) {
           if (confirm("Are you sure you want to deleted this row?")) {
-            window.location.href = 'delete_reference.php?id=' + id;
+            window.location.href = 'pds/delete/delete-reference.php?id=' + id;
           }
         }
       </script>
@@ -57,12 +57,17 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
+          <h5 class="modal-title">References</h5>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">41. REFERENCES (Person not related by consanguinity or afinity to applicant / appointee)
         </div>
-        <div class="modal-body">
-          <form enctype="multipart/form-data" method="post" role="form" action="">
-            <div class="form-group" style="overflow-x:auto;">
+
+        <form method="post" role="form" action="">
+          <div class="modal-body">
+            <div class="form-group">
+              
+            </div>
+
+            <div class="form-group">
               <table width="100%" class="table table-bordered">
                 <tr>
                   <th style="text-align:center;">Name</th>
@@ -75,13 +80,15 @@
                   <th><input type="text" name="Address" class="form-control" required></th>
                   <th><input type="text" name="Cell" class="form-control" required></th>
                 </tr>
-
               </table>
             </div>
-            <button type="submit" class="btn btn-primary" name="save_reference" value="SAVE">ADD</button>
-          </form>
+          </div>
 
-        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" name="AddReference">Save</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

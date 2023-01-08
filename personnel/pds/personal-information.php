@@ -73,7 +73,7 @@ $_SESSION['Year'] = $row['Emp_Year'];
           <label id="imageUploadLabel" class="custom-file-label" for="imageUpload">Choose file</label>
         </div>
 
-        <input type="submit" name="ChangeProfilePicture" value="Save" class="btn btn-primary btn-block my-3">
+        <button type="submit" name="ChangeProfilePicture" class="btn btn-primary btn-block my-3"><i class="fas fa-save fa-fw"></i> Save</button>
       </form>
 
       <script>
