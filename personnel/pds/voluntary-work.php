@@ -1,4 +1,4 @@
-<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION[GetSiteAlias() . '_pdstab']) && $_SESSION[GetSiteAlias() . '_pdstab'] === 'voluntary-work'); ?>" id="voluntary-work">
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'voluntary-work'); ?>" id="voluntary-work">
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h4 mb-0">Voluntary Work or Involvement in Civic / Non-Government / People / Voluntary Organization</h3>
     <a href="#AddVoluntaryWorkModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
@@ -23,7 +23,7 @@
 
         <tbody>
           <?php
-          $voluntaryWork = mysqli_query($con, "SELECT * FROM voluntary_work WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+          $voluntaryWork = mysqli_query($con, "SELECT * FROM voluntary_work WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
 
           if (mysqli_num_rows($voluntaryWork) > 0) {
             while ($row5 = mysqli_fetch_array($voluntaryWork)) { ?>

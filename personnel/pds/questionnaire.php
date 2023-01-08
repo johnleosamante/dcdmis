@@ -1,4 +1,4 @@
-<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION[GetSiteAlias() . '_pdstab']) && $_SESSION[GetSiteAlias() . '_pdstab'] === 'questionnaires'); ?>" id="questionnaires">
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'questionnaires'); ?>" id="questionnaires">
   <form class="row mt-3" action="" Method="POST" enctype="multipart/form-data">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0">
@@ -16,7 +16,7 @@
             <td width="20%">
               <div class="pt-5">
                 <?php
-                $myone = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='one' AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'LIMIT 1");
+                $myone = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='one' AND Emp_ID='" . $_SESSION['EmpID'] . "'LIMIT 1");
                 $rone = mysqli_fetch_assoc($myone);
                 ?>
 
@@ -34,7 +34,7 @@
                 <hr>
 
                 <?php
-                $mytwo = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='two' AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'limit 1");
+                $mytwo = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='two' AND Emp_ID='" . $_SESSION['EmpID'] . "'limit 1");
                 $rtwo = mysqli_fetch_assoc($mytwo);
                 ?>
 
@@ -62,7 +62,7 @@
 
             <td width="20%">
               <?php
-              $mythree = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='three' AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'limit 1");
+              $mythree = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='three' AND Emp_ID='" . $_SESSION['EmpID'] . "'limit 1");
               $rthree = mysqli_fetch_assoc($mythree);
               ?>
 
@@ -80,7 +80,7 @@
               <hr>
 
               <?php
-              $myfour = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='four' AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'limit 1");
+              $myfour = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='four' AND Emp_ID='" . $_SESSION['EmpID'] . "'limit 1");
               $rfour = mysqli_fetch_assoc($myfour);
               ?>
 
@@ -104,7 +104,7 @@
 
             <td width="20%">
               <?php
-              $myfive = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='five' AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'limit 1");
+              $myfive = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='five' AND Emp_ID='" . $_SESSION['EmpID'] . "'limit 1");
               $rfive = mysqli_fetch_assoc($myfive); ?>
 
               <input id="fiveyes" type="radio" name="five" value="Yes" <?php echo SetRadioButtonChecked($rfive['Answer'] === 'Yes'); ?> required>
@@ -127,7 +127,7 @@
 
             <td width="20%">
               <?php
-              $mysix = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='six' AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'limit 1");
+              $mysix = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='six' AND Emp_ID='" . $_SESSION['EmpID'] . "'limit 1");
               $rsix = mysqli_fetch_assoc($mysix); ?>
 
               <input id="sixyes" type="radio" name="six" value="Yes" <?php echo SetRadioButtonChecked($rsix['Answer'] === 'Yes'); ?> required>
@@ -150,7 +150,7 @@
 
             <td width="20%">
               <?php
-              $myeight = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='seven' AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'limit 1");
+              $myeight = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='seven' AND Emp_ID='" . $_SESSION['EmpID'] . "'limit 1");
               $reight = mysqli_fetch_assoc($myeight); ?>
 
               <input id="sevenyes" type="radio" name="seven" value="Yes" <?php echo SetRadioButtonChecked($reight['Answer'] === 'Yes'); ?> required>
@@ -180,7 +180,7 @@
             <td width="20%">
               <div class="pt-5">
                 <?php
-                $myten = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='eight' AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'limit 1");
+                $myten = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='eight' AND Emp_ID='" . $_SESSION['EmpID'] . "'limit 1");
                 $rten = mysqli_fetch_assoc($myten); ?>
 
                 <input id="eightyes" type="radio" name="eight" value="Yes" <?php echo SetRadioButtonChecked($rten['Answer'] === 'Yes'); ?> required>
@@ -197,7 +197,7 @@
                 <hr>
 
                 <?php
-                $myeleven = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='nine' AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'limit 1");
+                $myeleven = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='nine' AND Emp_ID='" . $_SESSION['EmpID'] . "'limit 1");
                 $releven = mysqli_fetch_assoc($myeleven); ?>
 
                 <input id="nineyes" type="radio" name="nine" value="Yes" <?php echo SetRadioButtonChecked($releven['Answer'] === 'Yes'); ?> required>
@@ -214,7 +214,7 @@
                 <hr>
 
                 <?php
-                $mytweve = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='ten' AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'limit 1");
+                $mytweve = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='ten' AND Emp_ID='" . $_SESSION['EmpID'] . "'limit 1");
                 $rtweve = mysqli_fetch_assoc($mytweve); ?>
 
                 <input id="tenyes" type="radio" name="ten" value="Yes" <?php echo SetRadioButtonChecked($rtweve['Answer'] === 'Yes'); ?> required>

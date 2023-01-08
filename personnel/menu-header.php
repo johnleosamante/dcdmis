@@ -13,33 +13,33 @@
   </div>
 
   <?php
-  $result = DBQuery("SELECT * FROM tbl_deployment_history WHERE tbl_deployment_history.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' LIMIT 1");
+  $result = DBQuery("SELECT * FROM tbl_deployment_history WHERE tbl_deployment_history.Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
 
   if (DBNumRows($result) <> 0) {
     $getRow = DBFetchAssoc($result);
     $myyear = date('Y') - mb_strimwidth($getRow['Date_assignment'], 0, 4);
 
-    DBQuery("UPDATE tbl_deployment_history SET tbl_deployment_history.No_of_years ='" . $myyear . "' WHERE tbl_deployment_history.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' LIMIT 1");
+    DBQuery("UPDATE tbl_deployment_history SET tbl_deployment_history.No_of_years ='" . $myyear . "' WHERE tbl_deployment_history.Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
 
     if ($myyear >= 3) {
-      $qeduc = DBQuery("SELECT * FROM educational_background WHERE educational_background.Emp_ID ='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' AND educational_background.Level='Masteral'");
+      $qeduc = DBQuery("SELECT * FROM educational_background WHERE educational_background.Emp_ID ='" . $_SESSION['EmpID'] . "' AND educational_background.Level='Masteral'");
       $data = DBFetchAssoc($qeduc);
 
       if (DBNumRows($qeduc) <> 0) {
         if ($data['Highest_Level'] == 'GRADUATED') {
-          $res = DBQuery("SELECT * FROM tbl_messages WHERE Message_to='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+          $res = DBQuery("SELECT * FROM tbl_messages WHERE Message_to='" . $_SESSION['EmpID'] . "'");
           $mydate = DBFetchAssoc($res);
           $myoption = mb_strimwidth($mydate['Message_date'], 0, 4);
 
           if ($myoption <> date("Y")) {
-            DBQuery("INSERT INTO tbl_messages VALUES(NULL,'HRMO','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "','" . 'You are qualified for ERF' . "','" . date('Y-m-d') . "','Unread','ERF')");
+            DBQuery("INSERT INTO tbl_messages VALUES(NULL,'HRMO','" . $_SESSION['EmpID'] . "','" . 'You are qualified for ERF' . "','" . date('Y-m-d') . "','Unread','ERF')");
           }
         }
       }
     }
   }
 
-  // $get_step = DBQuery("SELECT * FROM tbl_step_increment WHERE tbl_step_increment.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+  // $get_step = DBQuery("SELECT * FROM tbl_step_increment WHERE tbl_step_increment.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
   // if (DBNumRows($get_step) <> 0) {
   //   $get_data = DBFetchAssoc($get_step);
@@ -49,21 +49,21 @@
   //   if (DBNumRows($get_step) <> 0) {
   //     $mylenght = date('Y') - $get_data['Date_last_step'];
 
-  //     DBNonQuery("UPDATE tbl_step_increment SET tbl_step_increment.No_of_year ='" . $mylenght . "' WHERE tbl_step_increment.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' LIMIT 1");
+  //     DBNonQuery("UPDATE tbl_step_increment SET tbl_step_increment.No_of_year ='" . $mylenght . "' WHERE tbl_step_increment.Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
 
   //     if ($mylenght >= 3) {
-  //       $dquery = DBQuery("SELECT * FROM tbl_messages WHERE Message_to='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' AND Message_date='" . date('Y-m-d') . "'");
+  //       $dquery = DBQuery("SELECT * FROM tbl_messages WHERE Message_to='" . $_SESSION['EmpID'] . "' AND Message_date='" . date('Y-m-d') . "'");
   //       $getdata = DBFetchAssoc($dquery);
   //       $gdata = mb_strimwidth($getdata['Message_date'], 0, 4);
 
   //       if ($gdata <> date('Y')) {
-  //         DBQuery($con, "INSERT INTO tbl_messages VALUES(NULL,'HRMO','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "','" . 'You are qualified for Step ' . $mystep . "','" . date('Y-m-d') . "','Unread','Steps')");
+  //         DBQuery($con, "INSERT INTO tbl_messages VALUES(NULL,'HRMO','" . $_SESSION['EmpID'] . "','" . 'You are qualified for Step ' . $mystep . "','" . date('Y-m-d') . "','Unread','Steps')");
   //       }
   //     }
   //   }
   // }
 
-  $myname = DBQuery("SELECT * FROM tbl_employee WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' LIMIT 1");
+  $myname = DBQuery("SELECT * FROM tbl_employee WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
   $rowdata = DBFetchAssoc($myname);
   ?>
 
@@ -77,48 +77,48 @@
         <?php
         $total = $fam = $educ = $civil = $work = $volun = $learn = $other = $ref = 0;
 
-        $family_data = DBQuery("SELECT * FROM family_background WHERE family_background.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+        $family_data = DBQuery("SELECT * FROM family_background WHERE family_background.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
         if (DBNumRows($family_data) <> 0) {
           $fam = 10;
         }
 
-        $educ_data = DBQuery("SELECT * FROM educational_background WHERE educational_background.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+        $educ_data = DBQuery("SELECT * FROM educational_background WHERE educational_background.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
         if (mysqli_num_rows($educ_data) <> 0) {
           $educ = 15;
         }
 
-        $civil_data = DBQuery("SELECT * FROM civil_service WHERE civil_service.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+        $civil_data = DBQuery("SELECT * FROM civil_service WHERE civil_service.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
         if (mysqli_num_rows($civil_data) <> 0) {
           $civil = 15;
         }
 
-        $work_data = DBQuery("SELECT * FROM work_experience WHERE work_experience.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+        $work_data = DBQuery("SELECT * FROM work_experience WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
         if (mysqli_num_rows($work_data) <> 0) {
           $work = 5;
         }
 
-        $voluntary_data = DBQuery("SELECT * FROM voluntary_work WHERE voluntary_work.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+        $voluntary_data = DBQuery("SELECT * FROM voluntary_work WHERE voluntary_work.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
         if (mysqli_num_rows($voluntary_data) <> 0) {
           $volun = 5;
         }
-        $learning_data = DBQuery("SELECT * FROM learning_and_development WHERE learning_and_development.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+        $learning_data = DBQuery("SELECT * FROM learning_and_development WHERE learning_and_development.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
         if (mysqli_num_rows($learning_data) <> 0) {
           $learn = 20;
         }
 
-        $other_data = DBQuery("SELECT * FROM other_information WHERE other_information.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+        $other_data = DBQuery("SELECT * FROM other_information WHERE other_information.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
         if (mysqli_num_rows($other_data) <> 0) {
           $other = 10;
         }
 
-        $reference_data = DBQuery("SELECT * FROM reference WHERE reference.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+        $reference_data = DBQuery("SELECT * FROM reference WHERE reference.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
         if (DBNumRows($reference_data) <> 0) {
           $ref = 20;
@@ -149,7 +149,7 @@
       <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-bell fa-fw"></i>
         <?php
-        $mymemo = DBQuery("SELECT * FROM tbl_messages WHERE Message_to='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'  AND  Message_status ='Unread' LIMIT 5");
+        $mymemo = DBQuery("SELECT * FROM tbl_messages WHERE Message_to='" . $_SESSION['EmpID'] . "'  AND  Message_status ='Unread' LIMIT 5");
 
         if (DBNumRows($mymemo) <> 0) {
         ?>
@@ -161,7 +161,7 @@
 
       <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
         <?php
-        $query_messages = DBQuery("SELECT * FROM tbl_messages WHERE Message_to='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' AND  Message_status ='Unread' ORDER BY Message_status Desc LIMIT 5");
+        $query_messages = DBQuery("SELECT * FROM tbl_messages WHERE Message_to='" . $_SESSION['EmpID'] . "' AND  Message_status ='Unread' ORDER BY Message_status Desc LIMIT 5");
         ?>
 
         <h6 class="dropdown-header">Notifications</h6>
@@ -187,10 +187,10 @@
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle p-0" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-          <?php echo $_SESSION[GetSiteAlias() . '_TeacherName'] = ToName($rowdata['Emp_LName'], $rowdata['Emp_FName'], $rowdata['Emp_MName'], $rowdata['Emp_Extension'], true); ?>
+          <?php echo $_SESSION['TeacherName'] = ToName($rowdata['Emp_LName'], $rowdata['Emp_FName'], $rowdata['Emp_MName'], $rowdata['Emp_Extension'], true); ?>
         </span>
 
-        <img class="img-profile rounded-circle" src="<?php echo GetSiteURL() . '/' . $_SESSION[GetSiteAlias() . '_Picture']; ?>">
+        <img class="img-profile rounded-circle" src="<?php echo GetSiteURL() . '/' . $_SESSION['Picture']; ?>">
       </a>
 
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

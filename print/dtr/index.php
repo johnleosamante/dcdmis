@@ -1,10 +1,10 @@
 <?php
 include_once('../../_includes_/function.php');
 
-$gmonth = mb_strimwidth($_SESSION[GetSiteAlias() . '_From'], 5, 2);
-$gmon = mb_strimwidth($_SESSION[GetSiteAlias() . '_From'], 5, 2);
-$gdate = mb_strimwidth($_SESSION[GetSiteAlias() . '_To'], 8, 2);
-$gYear = mb_strimwidth($_SESSION[GetSiteAlias() . '_To'], 0, 4);
+$gmonth = mb_strimwidth($_SESSION['From'], 5, 2);
+$gmon = mb_strimwidth($_SESSION['From'], 5, 2);
+$gdate = mb_strimwidth($_SESSION['To'], 8, 2);
+$gYear = mb_strimwidth($_SESSION['To'], 0, 4);
 
 if ($gmonth == '1' || $gmonth == '01') {
 	$gmonth = 'January';
@@ -56,11 +56,11 @@ $pdf->SetFont('Arial', '', 8);
 if (!file_exists($PNG_TEMP_DIR))
 	mkdir($PNG_TEMP_DIR);
 
-$finame = $PNG_TEMP_DIR . $_SESSION[GetSiteAlias() . '_EmpID'] . '.png';
+$finame = $PNG_TEMP_DIR . $_SESSION['EmpID'] . '.png';
 //remember to sanitize user input in real-life solution !!!
 $errorCorrectionLevel = 'L';
 $matrixPointSize = 5;
-$_REQUEST['data'] = $_SESSION[GetSiteAlias() . '_EmpID'];
+$_REQUEST['data'] = $_SESSION['EmpID'];
 
 if (isset($_REQUEST['data'])) {
 	// user data
@@ -142,7 +142,7 @@ $pdf->Cell(75, 3, 'DAILY TIME RECORD', 0, 0, 'C');
 $pdf->Cell(15, 3, '', 0, 0, 'C');
 $pdf->Cell(75, 3, 'DAILY TIME RECORD', 0, 1, 'C');
 
-$myname = mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' AND Emp_Status = 'Active'  LIMIT 1");
+$myname = mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND Emp_Status = 'Active'  LIMIT 1");
 $myinfo = mysqli_fetch_assoc($myname);
 $mname = mb_strimwidth($myinfo['Emp_MName'], 0, 1);
 
@@ -277,7 +277,7 @@ $pdf->Cell(11, 4, 'Minutes', 1, 1, 'C');
 
 
 //Data started
-$myinfoDTR = mysqli_query($con, "SELECT * FROM tbl_dtr WHERE tbl_dtr.DTRDate BETWEEN '" . $_SESSION[GetSiteAlias() . '_From'] . "' AND '" . $_SESSION[GetSiteAlias() . '_To'] . "' AND tbl_dtr.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' ORDER By DTRDate Asc");
+$myinfoDTR = mysqli_query($con, "SELECT * FROM tbl_dtr WHERE tbl_dtr.DTRDate BETWEEN '" . $_SESSION['From'] . "' AND '" . $_SESSION['To'] . "' AND tbl_dtr.Emp_ID='" . $_SESSION['EmpID'] . "' ORDER By DTRDate Asc");
 $days = mysqli_num_rows($myinfoDTR);
 if (mysqli_num_rows($myinfoDTR) == 0) {
 	$mydate = 1;
@@ -954,7 +954,7 @@ $pdf->Cell(70, 3, "VERIFIED as to the prescribed office hours.", 0, 1, 'C');
 
 
 //Signaturies
-$myoffice = mysqli_query($con, "SELECT * FROM tbl_station WHERE Emp_ID ='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' LIMIT 1");
+$myoffice = mysqli_query($con, "SELECT * FROM tbl_station WHERE Emp_ID ='" . $_SESSION['EmpID'] . "' LIMIT 1");
 $myrow = mysqli_fetch_array($myoffice);
 $mysignature = mysqli_query($con, "SELECT * FROM tbl_office WHERE Office_Name = '" . $myrow['Office'] . "' LIMIT 1");
 $myincharge = mysqli_fetch_assoc($mysignature);

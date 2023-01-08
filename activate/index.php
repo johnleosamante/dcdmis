@@ -2,7 +2,7 @@
 # activate/index.php
 include_once('../_includes_/function.php');
 
-if (!isset($_SESSION[GetSiteAlias() . '_activate_uid'])) {
+if (!isset($_SESSION['activate_uid'])) {
   header('location:' . GetSiteURL() . '/login');
   exit;
 }
@@ -34,8 +34,8 @@ include_once('../_includes_/layout/components.php');
                 if ($_POST['newpassword'] === $_POST['Confirmpassword']) {
                   $pass = GetHashPassword(DBRealEscapeString($_POST['newpassword']));
 
-                  DBQuery("UPDATE tbl_user SET tbl_user.password='$pass', tbl_user.Status='Changed' WHERE tbl_user.usercode='" . $_SESSION[GetSiteAlias() . '_activate_uid'] . "' LIMIT 1;");
-                  DBQuery("UPDATE tbl_teacher_account SET tbl_teacher_account.Teacher_Password='$pass',tbl_teacher_account.Pass_status='Changed' WHERE tbl_teacher_account.Teacher_TIN='" . $_SESSION[GetSiteAlias() . '_activate_email'] . "' LIMIT 1;");
+                  DBQuery("UPDATE tbl_user SET tbl_user.password='$pass', tbl_user.Status='Changed' WHERE tbl_user.usercode='" . $_SESSION['activate_uid'] . "' LIMIT 1;");
+                  DBQuery("UPDATE tbl_teacher_account SET tbl_teacher_account.Teacher_Password='$pass',tbl_teacher_account.Pass_status='Changed' WHERE tbl_teacher_account.Teacher_TIN='" . $_SESSION['activate_email'] . "' LIMIT 1;");
 
                   $match = true;
                   $success = true;
@@ -58,7 +58,7 @@ include_once('../_includes_/layout/components.php');
 
                 <form class="user" method="POST" action="" enctype="multipart/form-data">
                   <div class="form-group">
-                    <input class="form-control form-control-user" id="inputEmail" type="email" placeholder="name@deped.gov.ph" value="<?php echo $_SESSION[GetSiteAlias() . '_activate_email']; ?>" disabled>
+                    <input class="form-control form-control-user" id="inputEmail" type="email" placeholder="name@deped.gov.ph" value="<?php echo $_SESSION['activate_email']; ?>" disabled>
                   </div><!-- .form-group -->
 
                   <?php

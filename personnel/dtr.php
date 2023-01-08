@@ -7,68 +7,41 @@ $fromdata = '';
 $todata = '';
 
 if (isset($_POST['search'])) {
-	$fromdata = $_SESSION[GetSiteAlias() . '_From'] = $_POST['from'];
-	$todata = $_SESSION[GetSiteAlias() . '_To']	= $_POST['to'];
+	$fromdata = $_SESSION['From'] = $_POST['from'];
+	$todata = $_SESSION['To']	= $_POST['to'];
 } else {
-	$fromdata = $_SESSION[GetSiteAlias() . '_From'] = date('Y-m') . '-01';
-	$todata = $_SESSION[GetSiteAlias() . '_To']	= date('Y-m') . '-31';
+	$fromdata = $_SESSION['From'] = date('Y-m') . '-01';
+	$todata = $_SESSION['To']	= date('Y-m') . '-31';
 }
 
 if (isset($_POST['attendance'])) {
-	$time = 0;
-	$hour = date("H");
-	$minute = date("i");
-	$second = date("s");
+	$time = date('H:i:s');
 
-	if ($hour == 13) {
-		$time = '01:' . $minute . ':' . $second;
-	} elseif ($hour == 14) {
-		$time = '02:' . $minute . ':' . $second;
-	} elseif ($hour == 15) {
-		$time = '03:' . $minute . ':' . $second;
-	} elseif ($hour == 16) {
-		$time = '04:' . $minute . ':' . $second;
-	} elseif ($hour == 17) {
-		$time = '05:' . $minute . ':' . $second;
-	} elseif ($hour == 18) {
-		$time = '06:' . $minute . ':' . $second;
-	} elseif ($hour == 19) {
-		$time = '07:' . $minute . ':' . $second;
-	} elseif ($hour == 20) {
-		$time = '08:' . $minute . ':' . $second;
-	} elseif ($hour == 21) {
-		$time = '09:' . $minute . ':' . $second;
-	} elseif ($hour == 22) {
-		$time = '10:' . $minute . ':' . $second;
-	} else {
-		$time = $hour . ':' . $minute . ':' . $second;
-	}
-
-	$record = mysqli_query($con, "SELECT * FROM tbl_dtr WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+	$record = mysqli_query($con, "SELECT * FROM tbl_dtr WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION['EmpID'] . "'");
 
 	if (mysqli_num_rows($record) === 0) {
 		if ($_POST['Status'] === 'Morning Login') {
-			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','" . $time . "','0','0','0','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "','" . date("l") . "')") or die("Error Login");
+			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','" . $time . "','0','0','0','" . $_SESSION['EmpID'] . "','" . date("l") . "')") or die("Error Login");
 			$log = ' In this morning';
 		} elseif ($_POST['Status'] === 'Morning Logout') {
-			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','0','" . $time . "','0','0','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "','" . date("l") . "')");
+			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','0','" . $time . "','0','0','" . $_SESSION['EmpID'] . "','" . date("l") . "')");
 			$log = ' Out this morning';
 		} elseif ($_POST['Status'] === 'Afternoon Login') {
-			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','0','0','" . $time . "','0','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "','" . date("l") . "')");
+			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','0','0','" . $time . "','0','" . $_SESSION['EmpID'] . "','" . date("l") . "')");
 			$log = ' In this afternoon';
 		} elseif ($_POST['Status'] === 'Afternoon Logout') {
-			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','0','0','0','" . date("H:i:s") . "','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "','" . date("l") . "')");
+			mysqli_query($con, "INSERT INTO tbl_dtr VALUES(NULL,'" . date("Y-m-d") . "','0','0','0','" . date("H:i:s") . "','" . $_SESSION['EmpID'] . "','" . date("l") . "')");
 			$log = ' Out this afternoon';
 		}
 	} else {
 		if ($_POST['Status'] === 'Morning Logout') {
-			mysqli_query($con, "UPDATE tbl_dtr SET TimeOUTAM ='" . $time . "' WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+			mysqli_query($con, "UPDATE tbl_dtr SET TimeOUTAM ='" . $time . "' WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION['EmpID'] . "'");
 			$log = ' Out this morning';
 		} elseif ($_POST['Status'] === 'Afternoon Login') {
-			mysqli_query($con, "UPDATE tbl_dtr SET TimeINPM ='" . $time . "' WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+			mysqli_query($con, "UPDATE tbl_dtr SET TimeINPM ='" . $time . "' WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION['EmpID'] . "'");
 			$log = ' In this afternoon';
 		} elseif ($_POST['Status'] === 'Afternoon Logout') {
-			mysqli_query($con, "UPDATE tbl_dtr SET TimeOUTPM ='" . $time . "' WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+			mysqli_query($con, "UPDATE tbl_dtr SET TimeOUTPM ='" . $time . "' WHERE DTRDate='" . date("Y-m-d") . "'  AND Emp_ID='" . $_SESSION['EmpID'] . "'");
 			$log = ' Out this afternoon';
 		}
 	}
@@ -137,7 +110,7 @@ if (isset($_POST['attendance'])) {
 
 						<tbody>
 							<?php
-							$myinfoDTR = mysqli_query($con, "SELECT * FROM tbl_dtr WHERE tbl_dtr.DTRDate BETWEEN '" . $_SESSION[GetSiteAlias() . '_From'] . "' AND '" . $_SESSION[GetSiteAlias() . '_To'] . "' AND tbl_dtr.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' ORDER BY tbl_dtr.DTRDate Desc");
+							$myinfoDTR = mysqli_query($con, "SELECT * FROM tbl_dtr WHERE tbl_dtr.DTRDate BETWEEN '" . $_SESSION['From'] . "' AND '" . $_SESSION['To'] . "' AND tbl_dtr.Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY tbl_dtr.DTRDate Desc");
 
 							if (mysqli_num_rows($myinfoDTR) > 0) {
 								while ($row = mysqli_fetch_array($myinfoDTR)) { ?>
@@ -173,35 +146,35 @@ if (isset($_POST['attendance'])) {
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">×</span>
 				</button>
-			</div>
+			</div><!-- .modal-header -->
 
-			<form action="" Method="POST">
-				<div class="modal-body">
-					<p class="text-center h3 mb-0"><?php echo date("F  d, Y"); ?></p>
-					<p class="text-center"><?php echo date('l'); ?></p>
+			<div class="modal-body">
+				<p class="text-center h3 mb-0"><?php echo date("F  d, Y"); ?></p>
+				<p class="text-center"><?php echo date('l'); ?></p>
 
-					<p class="text-center h2" id="time"></p>
+				<p class="text-center h2" id="time"></p>
 
-					<?php
-					$buttonValue = '';
+				<?php
+				$buttonValue = '';
 
-					if (date("H:i:s") >= '04:30:00' && date("H:i:s") <= '10:30:00') {
-						$buttonValue = 'Morning Login';
-					} elseif (date("H:i:s") >= '11:00:00' && date("H:i:s") <= '12:30:00') {
-						$buttonValue = 'Morning Logout';
-					} elseif (date("H:i:s") >= '12:31:00' && date("H:i:s") <= '14:31:00') {
-						$buttonValue = 'Afternoon Login';
-					} else {
-						$buttonValue = 'Afternoon Logout';
-					}
-					?>
+				if (date("H:i:s") >= '04:30:00' && date("H:i:s") <= '10:30:00') {
+					$buttonValue = 'Morning Login';
+				} elseif (date("H:i:s") >= '11:00:00' && date("H:i:s") <= '12:30:00') {
+					$buttonValue = 'Morning Logout';
+				} elseif (date("H:i:s") >= '12:31:00' && date("H:i:s") <= '14:31:00') {
+					$buttonValue = 'Afternoon Login';
+				} else {
+					$buttonValue = 'Afternoon Logout';
+				}
+				?>
 
+				<form action="" Method="POST">
 					<input type="hidden" name="Status" value="<?php echo $buttonValue; ?>">
-					<button class="btn-block btn btn-success" name="attendance"><i class="fas fa-clock fa-fw"></i> <?php echo $buttonValue; ?></button>
-				</div>
-			</form>
+					<button class="w-100 btn btn-success" name="attendance"><i class="fas fa-clock fa-fw"></i> <?php echo $buttonValue; ?></button>
+				</form>
 
-			<script src="<?php echo GetSiteURL(); ?>/assets/js/clock.js"></script>
-		</div>
-	</div>
-</div>
+				<script src="<?php echo GetSiteURL(); ?>/assets/js/clock.js"></script>
+			</div><!-- .modal-body -->
+		</div><!-- .modal-content -->
+	</div><!-- .modal-dialog -->
+</div><!-- .modal -->

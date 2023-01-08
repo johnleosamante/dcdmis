@@ -4,13 +4,13 @@
 include_once('../_includes_/function.php');
 include_once('../_includes_/database/database.php');
 
-if ($_SESSION[GetSiteAlias() . '_EmpID'] == "") {
+if ($_SESSION['EmpID'] == "") {
   header('location:' . GetSiteURL() . '/personnel/login');
 } else {
-  if ((time() - $_SESSION[GetSiteAlias() . '_last_login_timestamp']) > 14400) {
+  if ((time() - $_SESSION['last_login_timestamp']) > 14400) {
     header('location:' . GetSiteURL() . '/personnel/logout');
   } else {
-    $_SESSION[GetSiteAlias() . '_last_login_timestamp'] = time();
+    $_SESSION['last_login_timestamp'] = time();
   }
 }
 
@@ -25,17 +25,17 @@ include_once('../_includes_/string.php');
 include_once('../_includes_/layout/header.php');
 include_once('../_includes_/layout/components.php');
 
-$result = DBQuery("SELECT * FROM tbl_employee INNER JOIN tbl_station  ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_school ON tbl_station.Emp_Station = tbl_school.SchoolID INNER JOIN tbl_job ON tbl_station.Emp_Position = tbl_job.Job_code WHERE tbl_employee.Emp_ID ='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' LIMIT 1;");
+$result = DBQuery("SELECT * FROM tbl_employee INNER JOIN tbl_station  ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_school ON tbl_station.Emp_Station = tbl_school.SchoolID INNER JOIN tbl_job ON tbl_station.Emp_Position = tbl_job.Job_code WHERE tbl_employee.Emp_ID ='" . $_SESSION['EmpID'] . "' LIMIT 1;");
 $row = DBFetchAssoc($result);
-$_SESSION[GetSiteAlias() . '_SchoolID'] = $row['SchoolID'];
-$_SESSION[GetSiteAlias() . '_Category'] = $row['School_Category'];
-$_SESSION[GetSiteAlias() . '_Job-Cat'] = $row['Job_Category'];
-$_SESSION[GetSiteAlias() . '_Station'] = $row['Abraviate'];
+$_SESSION['SchoolID'] = $row['SchoolID'];
+$_SESSION['Category'] = $row['School_Category'];
+$_SESSION['Job-Cat'] = $row['Job_Category'];
+$_SESSION['Station'] = $row['Abraviate'];
 $mydistrict = DBQuery("SELECT * FROM tbl_district WHERE District_code='" . $row['District_code'] . "' LIMIT 1");
 $rowdistrict = DBFetchAssoc($mydistrict);
-$_SESSION[GetSiteAlias() . '_SchoolName']  = $row['SchoolName'];
-$_SESSION[GetSiteAlias() . '_SchoolAddress']  = $row['Address'];
-$_SESSION[GetSiteAlias() . '_schoolLogo']  = '../' . $row['SchoolLogo'];
+$_SESSION['SchoolName']  = $row['SchoolName'];
+$_SESSION['SchoolAddress']  = $row['Address'];
+$_SESSION['schoolLogo']  = '../' . $row['SchoolLogo'];
 
 $image = ($row['SchoolLogo'] === NULL) ? '../assets/img/logo.png' : '../' . $row['SchoolLogo'];
 ?>

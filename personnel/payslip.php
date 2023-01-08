@@ -1,8 +1,8 @@
 <?php
 # personnel/payslip.php
 
-if (!is_dir('../uploads/payslip/' . $_SESSION[GetSiteAlias() . '_EmpID'])) {
-	mkdir('../uploads/payslip/' . $_SESSION[GetSiteAlias() . '_EmpID'], 0777, true);
+if (!is_dir('../uploads/payslip/' . $_SESSION['EmpID'])) {
+	mkdir('../uploads/payslip/' . $_SESSION['EmpID'], 0777, true);
 }
 ?>
 
@@ -19,14 +19,14 @@ if (!is_dir('../uploads/payslip/' . $_SESSION[GetSiteAlias() . '_EmpID'])) {
 			<div class="card-body">
 				<?php
 				if (isset($_POST["upload"])) {
-					$status = GetImageFileUploadStatus("uploadPayslip", '../uploads/payslip/' . $_SESSION[GetSiteAlias() . '_EmpID'] . '/' . $_SESSION[GetSiteAlias() . '_EmpID'] . date("ymdHis"));
+					$status = GetImageFileUploadStatus("uploadPayslip", '../uploads/payslip/' . $_SESSION['EmpID'] . '/' . $_SESSION['EmpID'] . date("ymdHis"));
 
 					if ($status["status"] === 0) {
 						AlertBox("Sorry, file was not uploaded. " . $status["message"], 'danger', 'left');
 						// if everything is ok, try to upload file
 					} else {
 						if (move_uploaded_file($status["temp_name"], $status["target"])) {
-							mysqli_query($con, "INSERT INTO tbl_payslip_archive(Payslip_details, date_time_upload, `location`, Emp_ID) VALUES('" . $_POST['payslipinfo'] . "','" . GetDateTime() . "','" . $status["target"] . "','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "')");
+							mysqli_query($con, "INSERT INTO tbl_payslip_archive(Payslip_details, date_time_upload, `location`, Emp_ID) VALUES('" . $_POST['payslipinfo'] . "','" . GetDateTime() . "','" . $status["target"] . "','" . $_SESSION['EmpID'] . "')");
 
 							if (mysqli_affected_rows($con) === 1) {
 								AlertBox('Payslip has been uploaded successfully!', 'success', 'left');
@@ -52,7 +52,7 @@ if (!is_dir('../uploads/payslip/' . $_SESSION[GetSiteAlias() . '_EmpID'])) {
 						<tbody>
 							<?php
 							$no = 0;
-							$result = mysqli_query($con, "SELECT * FROM tbl_payslip_archive WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+							$result = mysqli_query($con, "SELECT * FROM tbl_payslip_archive WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
 
 							while ($row = mysqli_fetch_array($result)) {
 								$no++;

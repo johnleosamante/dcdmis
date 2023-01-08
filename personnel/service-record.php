@@ -36,7 +36,7 @@
 
 						<tbody>
 							<?php
-							$result = mysqli_query($con, "SELECT * FROM tbl_service_records WHERE tbl_service_records.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' ORDER BY tbl_service_records.date_to Asc");
+							$result = mysqli_query($con, "SELECT * FROM tbl_service_records WHERE tbl_service_records.Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY tbl_service_records.date_to Asc");
 							while ($row = mysqli_fetch_array($result)) {
 
 								echo '<tr>

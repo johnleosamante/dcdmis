@@ -1,4 +1,4 @@
-<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION[GetSiteAlias() . '_pdstab']) && $_SESSION[GetSiteAlias() . '_pdstab'] === 'reference'); ?>" id="references">
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'reference'); ?>" id="references">
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3>References (Person not related by consanguinity or afinity to applicant / appointee)</h3>
     <a href="#AddReferenceModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
@@ -18,7 +18,7 @@
 
         <tbody>
           <?php
-          $reference = mysqli_query($con, "SELECT * FROM reference WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+          $reference = mysqli_query($con, "SELECT * FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
 
           if (mysqli_num_rows($reference)) {
             while ($row8 = mysqli_fetch_array($reference)) { ?>
@@ -42,6 +42,47 @@
           ?>
         </tbody>
       </table>
+
+      <script>
+        function delete_reference(id) {
+          if (confirm("Are you sure you want to deleted this row?")) {
+            window.location.href = 'delete_reference.php?id=' + id;
+          }
+        }
+      </script>
+    </div><!-- .col -->
+  </div><!-- .row -->
+
+  <div class="modal fade" id="AddReferenceModal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">41. REFERENCES (Person not related by consanguinity or afinity to applicant / appointee)
+        </div>
+        <div class="modal-body">
+          <form enctype="multipart/form-data" method="post" role="form" action="">
+            <div class="form-group" style="overflow-x:auto;">
+              <table width="100%" class="table table-bordered">
+                <tr>
+                  <th style="text-align:center;">Name</th>
+                  <th style="text-align:center;">Address</th>
+                  <th style="text-align:center;">Contact Number</th>
+                </tr>
+
+                <tr>
+                  <th><input type="text" name="Ref_Name" class="form-control" required></th>
+                  <th><input type="text" name="Address" class="form-control" required></th>
+                  <th><input type="text" name="Cell" class="form-control" required></th>
+                </tr>
+
+              </table>
+            </div>
+            <button type="submit" class="btn btn-primary" name="save_reference" value="SAVE">ADD</button>
+          </form>
+
+        </div>
+      </div>
     </div>
   </div>
 </div>

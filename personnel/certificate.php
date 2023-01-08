@@ -1,8 +1,8 @@
 <?php
 # personnel/certificate.php
 
-if (!is_dir('../uploads/certificate/' . $_SESSION[GetSiteAlias() . '_EmpID'])) {
-	mkdir('../uploads/certificate/' . $_SESSION[GetSiteAlias() . '_EmpID'], 0777, true);
+if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
+	mkdir('../uploads/certificate/' . $_SESSION['EmpID'], 0777, true);
 }
 ?>
 
@@ -23,8 +23,8 @@ if (!is_dir('../uploads/certificate/' . $_SESSION[GetSiteAlias() . '_EmpID'])) {
 					$file = $_FILES["uploadCertificate"]["name"];
 					$temp = $_FILES["uploadCertificate"]["tmp_name"];
 					$ext = pathinfo($file, PATHINFO_EXTENSION);
-					$target_dir = '../uploads/certificate/' . $_SESSION[GetSiteAlias() . '_EmpID'];
-					$target_file = $target_dir . '/' . $_SESSION[GetSiteAlias() . '_EmpID'] . date("YmdHis") . '.' . $ext;;
+					$target_dir = '../uploads/certificate/' . $_SESSION['EmpID'];
+					$target_file = $target_dir . '/' . $_SESSION['EmpID'] . date("YmdHis") . '.' . $ext;;
 					$uploadOk = 1;
 					$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 					$message = '';
@@ -56,7 +56,7 @@ if (!is_dir('../uploads/certificate/' . $_SESSION[GetSiteAlias() . '_EmpID'])) {
 						// if everything is ok, try to upload file
 					} else {
 						if (move_uploaded_file($temp, $target_file)) {
-							mysqli_query($con, "INSERT INTO tbl_certificate_archive VALUES(NULL,'" . $_POST['cert_details'] . "','" . $_POST['category'] . "','" . GetDateTime() . "','" . $_GET['id'] . "', '$target_file','" . $_SESSION[GetSiteAlias() . '_EmpID'] . "')");
+							mysqli_query($con, "INSERT INTO tbl_certificate_archive VALUES(NULL,'" . $_POST['cert_details'] . "','" . $_POST['category'] . "','" . GetDateTime() . "','" . $_GET['id'] . "', '$target_file','" . $_SESSION['EmpID'] . "')");
 
 							if (mysqli_affected_rows($con) === 1) {
 								AlertBox('Payslip has been uploaded successfully!', 'success', 'left');
@@ -82,7 +82,7 @@ if (!is_dir('../uploads/certificate/' . $_SESSION[GetSiteAlias() . '_EmpID'])) {
 						<tbody>
 							<?php
 							$no = 0;
-							$result = mysqli_query($con, "SELECT * FROM tbl_certificate_archive WHERE Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "' AND Certificate_Level='" . $_GET['id'] . "'");
+							$result = mysqli_query($con, "SELECT * FROM tbl_certificate_archive WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND Certificate_Level='" . $_GET['id'] . "'");
 
 							while ($row = mysqli_fetch_array($result)) {
 								$no++;

@@ -7,11 +7,11 @@ label,th,td{
 <?php
 if (isset($_POST['updatemyposition']))
 {
-	$query=mysqli_query($con,"SELECT * FROM tbl_deployment_history WHERE Emp_ID ='".$_SESSION[GetSiteAlias() . '_EmpID']."' AND position_assign='".$_POST['newposition']."' AND station_assign='".$_SESSION[GetSiteAlias() . '_SchoolID']."'");
+	$query=mysqli_query($con,"SELECT * FROM tbl_deployment_history WHERE Emp_ID ='".$_SESSION['EmpID']."' AND position_assign='".$_POST['newposition']."' AND station_assign='".$_SESSION['SchoolID']."'");
 	if (mysqli_num_rows($query)==0)
 	{
-	 mysqli_query($con,"UPDATE tbl_station SET Emp_Position='".$_POST['newposition']."' WHERE Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."' LIMIT 1");
-	 mysqli_query($con,"INSERT INTO tbl_deployment_history(Date_assignment,station_assign,position_assign,No_of_years,StepNo,Emp_ID) VALUES('".$_POST['date_of_assignment']."','".$_SESSION[GetSiteAlias() . '_SchoolID']."','".$_POST['newposition']."','0','1','".$_SESSION[GetSiteAlias() . '_EmpID']."')");
+	 mysqli_query($con,"UPDATE tbl_station SET Emp_Position='".$_POST['newposition']."' WHERE Emp_ID='".$_SESSION['EmpID']."' LIMIT 1");
+	 mysqli_query($con,"INSERT INTO tbl_deployment_history(Date_assignment,station_assign,position_assign,No_of_years,StepNo,Emp_ID) VALUES('".$_POST['date_of_assignment']."','".$_SESSION['SchoolID']."','".$_POST['newposition']."','0','1','".$_SESSION['EmpID']."')");
 	}
 	if (mysqli_affected_rows($con)==1)
 	{
@@ -29,7 +29,7 @@ if (isset($_POST['updatemyposition']))
 	}
 }elseif(isset($_POST['updatemyappointment']))
 {
-	mysqli_query($con,"UPDATE tbl_station SET Emp_DOA='".$_POST['DOA']."' WHERE Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."' LIMIT 1");
+	mysqli_query($con,"UPDATE tbl_station SET Emp_DOA='".$_POST['DOA']."' WHERE Emp_ID='".$_SESSION['EmpID']."' LIMIT 1");
 	if (mysqli_affected_rows($con)==1)
 	{
 		?>
@@ -49,7 +49,7 @@ if (isset($_POST['updatemyposition']))
 	<div class="col-lg-4">
 <div class="panel-body">
 <?php
-$result=mysqli_query($con,"SELECT * FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_job ON tbl_station.Emp_Position=tbl_job.Job_code WHERE tbl_employee.Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."' LIMIT 1");
+$result=mysqli_query($con,"SELECT * FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_job ON tbl_station.Emp_Position=tbl_job.Job_code WHERE tbl_employee.Emp_ID='".$_SESSION['EmpID']."' LIMIT 1");
 $row=mysqli_fetch_assoc($result);
 $date = date('F j\, Y', strtotime($row['Emp_DOA']));
 $bdate = date('F j\, Y', strtotime($row['Emp_Month'].'/'.$row['Emp_Day'].'/'.$row['Emp_Year']));
@@ -81,7 +81,7 @@ $age=date("Y")-$row['Emp_Year'];
 		<tbody>
 		<?php
 		$no=0;
-		$myhistory=mysqli_query($con,"SELECT * FROM tbl_deployment_history INNER JOIN tbl_school ON tbl_deployment_history.station_assign = tbl_school.SchoolID INNER JOIN tbl_job ON tbl_deployment_history.position_assign=tbl_job.Job_code WHERE tbl_deployment_history.Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."'");
+		$myhistory=mysqli_query($con,"SELECT * FROM tbl_deployment_history INNER JOIN tbl_school ON tbl_deployment_history.station_assign = tbl_school.SchoolID INNER JOIN tbl_job ON tbl_deployment_history.position_assign=tbl_job.Job_code WHERE tbl_deployment_history.Emp_ID='".$_SESSION['EmpID']."'");
 		while($rowhist=mysqli_fetch_array($myhistory))
 		{
 			$no++;

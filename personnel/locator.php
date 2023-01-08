@@ -21,7 +21,7 @@ date_default_timezone_set("Asia/Manila");
 
 if (isset($_POST['savelocator']))
 {
-	mysqli_query($con,"INSERT INTO tbl_locator_passslip VALUES('".date("ydms")."','".$_POST['category']."','".date("Y-m-d")."','".$_POST['purpose']."','".$_POST['timeleaving']."','".$_POST['timereturn']."','".$_POST['signature']."','For Approval','".$_SESSION[GetSiteAlias() . '_EmpID']."')");
+	mysqli_query($con,"INSERT INTO tbl_locator_passslip VALUES('".date("ydms")."','".$_POST['category']."','".date("Y-m-d")."','".$_POST['purpose']."','".$_POST['timeleaving']."','".$_POST['timereturn']."','".$_POST['signature']."','For Approval','".$_SESSION['EmpID']."')");
    if (mysqli_affected_rows($con)==1)	
    {
 	?>
@@ -70,7 +70,7 @@ if (isset($_POST['savelocator']))
 									<tbody>	
 									<?php
 									$no=0;
-									$result=mysqli_query($con,"SELECT * FROM tbl_locator_passslip WHERE Emp_ID='".$_SESSION[GetSiteAlias() . '_EmpID']."'");
+									$result=mysqli_query($con,"SELECT * FROM tbl_locator_passslip WHERE Emp_ID='".$_SESSION['EmpID']."'");
 									while($row=mysqli_fetch_array($result))
 									{
 										$no++;

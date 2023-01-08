@@ -1,4 +1,4 @@
-<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION[GetSiteAlias() . '_pdstab']) && $_SESSION[GetSiteAlias() . '_pdstab'] === 'other-information'); ?>" id="other-information">
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'other-information'); ?>" id="other-information">
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h4 mb-0">Other Information</h3>
     <a href="#AddOtherInformationModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
@@ -18,7 +18,7 @@
 
         <tbody>
           <?php
-          $information = mysqli_query($con, "SELECT * FROM other_information WHERE other_information.Emp_ID='" . $_SESSION[GetSiteAlias() . '_EmpID'] . "'");
+          $information = mysqli_query($con, "SELECT * FROM other_information WHERE other_information.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
           if (mysqli_num_rows($information) > 0) {
             while ($row7 = mysqli_fetch_array($information)) { ?>
