@@ -26,22 +26,22 @@
 
         <tbody>
           <?php
-          $experience = mysqli_query($con, "SELECT * FROM work_experience WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY work_experience.No Asc");
+          $experiences = mysqli_query($con, "SELECT * FROM work_experience WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY `From` DESC;");
 
-          if (mysqli_num_rows($experience) > 0) {
-            while ($row4 = mysqli_fetch_array($experience)) { ?>
+          if (mysqli_num_rows($experiences) > 0) {
+            while ($experience = mysqli_fetch_array($experiences)) { ?>
               <tr>
-                <td class="text-center align-middle"><?php echo $row4['From']; ?></td>
-                <td class="text-center align-middle"><?php echo $row4['To']; ?></td>
-                <td class="text-center align-middle"><?php echo $row4['Position_Title']; ?></td>
-                <td class="text-center align-middle"><?php echo $row4['Organization']; ?></td>
-                <td class="text-center align-middle"><?php echo $row4['Monthly_Salary']; ?></td>
-                <td class="text-center align-middle"><?php echo $row4['Salary_Grade']; ?></td>
-                <td class="text-center align-middle"><?php echo $row4['Job_Status']; ?></td>
-                <td class="text-center align-middle"><?php echo $row4['Goverment']; ?></td>
+                <td class="text-center align-middle"><?php echo GetDateString($experience['From']); ?></td>
+                <td class="text-center align-middle"><?php echo GetDateString($experience['To']); ?></td>
+                <td class="text-center align-middle"><?php echo $experience['Position_Title']; ?></td>
+                <td class="text-center align-middle"><?php echo $experience['Organization']; ?></td>
+                <td class="text-center align-middle"><?php echo $experience['Monthly_Salary']; ?></td>
+                <td class="text-center align-middle"><?php echo $experience['Salary_Grade']; ?></td>
+                <td class="text-center align-middle"><?php echo $experience['Job_Status']; ?></td>
+                <td class="text-center align-middle"><?php echo $experience['Goverment']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_experience.php?id=<?php echo urlencode(base64_encode($row4['No'])); ?>" data-toggle="modal" data-target="#UpdateExperienceModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" onclick="delete_work(this.id)" id="<?php echo $row4['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" href="my_experience.php?id=<?php echo urlencode(base64_encode($experience['No'])); ?>" data-toggle="modal" data-target="#UpdateExperienceModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" onclick="delete_work(this.id)" id="<?php echo $experience['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php
@@ -112,7 +112,7 @@
 
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="step" class="mb-0">Salary/Job/Pay Grade & Step Increment:</label>
+                  <label for="step" class="mb-0">Salary/Job/Pay Grade &amp; Step Increment:</label>
                   <input id="step" type="text" name="step" class="form-control" required>
                 </div>
               </div>
@@ -122,7 +122,15 @@
               <div class="col-md-6">
                 <div class="form-group mb-0">
                   <label for="status" class="mb-0">Status of Appointment:</label>
-                  <input id="status" type="text" name="status" class="form-control" required>
+                  <select name="status" id="status" class="form-control" required>
+                    <option value="Permanent">Permanent</option>
+                    <option value="Temporary">Temporary</option>
+                    <option value="Coterminus">Coterminus</option>
+                    <option value="Fixed Term">Fixed Term</option>
+                    <option value="Contractual">Contractual</option>
+                    <option value="Substitute">Substitute</option>
+                    <option value="Provisional">Provisional</option>
+                  </select>
                 </div>
               </div>
 

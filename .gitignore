@@ -4,6 +4,7 @@ picture/
 __secondary__/
 pcdmis/
 _includes_/PHPQRCode/temp*-errors.txt
+_includes_/PHPQRCode/test*.png-errors.txt
 accounting_portal/
 admin_portal/
 asds_portal/

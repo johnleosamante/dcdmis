@@ -20,7 +20,7 @@
 
         <tbody>
           <?php
-          $familyMembers = mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          $familyMembers = mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY Birthdate;");
 
           if (mysqli_num_rows($familyMembers) > 0) {
             while ($member = mysqli_fetch_array($familyMembers)) { ?>
@@ -28,10 +28,10 @@
                 <td class="text-center align-middle"><?php echo $member['Family_Name']; ?></td>
                 <td class="text-center align-middle"><?php echo $member['First_Name']; ?></td>
                 <td class="text-center align-middle"><?php echo $member['Middle_Name']; ?></td>
-                <td class="text-center align-middle"><?php echo $member['Birthdate']; ?></td>
+                <td class="text-center align-middle"><?php echo GetLongDateString($member['Birthdate']); ?></td>
                 <td class="text-center align-middle"><?php echo $member['Relation']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_family.php?id=<?php echo GetDecoding($member['No']); ?>" data-toggle="modal" data-target="#UpdateFamilyMemberModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-success my-1" href="pds/update/my_family.php?id=<?php echo GetDecoding($member['No']); ?>" data-toggle="modal" data-target="#UpdateFamilyMemberModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
                   <a class="btn btn-danger my-1" id="<?php echo $member['No']; ?>" onclick="delete_option(this.id)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>

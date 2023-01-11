@@ -23,19 +23,19 @@
 
         <tbody>
           <?php
-          $voluntaryWork = mysqli_query($con, "SELECT * FROM voluntary_work WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          $voluntaryWorks = mysqli_query($con, "SELECT * FROM voluntary_work WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
 
-          if (mysqli_num_rows($voluntaryWork) > 0) {
-            while ($row5 = mysqli_fetch_array($voluntaryWork)) { ?>
+          if (mysqli_num_rows($voluntaryWorks) > 0) {
+            while ($voluntaryWork = mysqli_fetch_array($voluntaryWorks)) { ?>
               <tr>
-                <td class="text-center align-middle"><?php echo $row5['Name_of_Organization']; ?></td>
-                <td class="text-center align-middle"><?php echo $row5['From']; ?></td>
-                <td class="text-center align-middle"><?php echo $row5['To']; ?></td>
-                <td class="text-center align-middle"><?php echo $row5['Number_of_Hour']; ?></td>
-                <td class="text-center align-middle"><?php echo $row5['Position']; ?></td>
+                <td class="text-center align-middle"><?php echo $voluntaryWork['Name_of_Organization']; ?></td>
+                <td class="text-center align-middle"><?php echo GetDateString($voluntaryWork['From']); ?></td>
+                <td class="text-center align-middle"><?php echo GetDateString($voluntaryWork['To']); ?></td>
+                <td class="text-center align-middle"><?php echo $voluntaryWork['Number_of_Hour']; ?></td>
+                <td class="text-center align-middle"><?php echo $voluntaryWork['Position']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_volunter.php?id=<?php echo urlencode(base64_encode($row5['No'])); ?>" data-toggle="modal" data-target="#UpdateVoluntaryWorkModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" onclick="delete_volunter(this.id)" id="<?php echo $row5['No'] ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" href="my_volunter.php?id=<?php echo urlencode(base64_encode($voluntaryWork['No'])); ?>" data-toggle="modal" data-target="#UpdateVoluntaryWorkModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" onclick="delete_volunter(this.id)" id="<?php echo $voluntaryWork['No'] ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php

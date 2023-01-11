@@ -64,32 +64,27 @@
         <form method="post" role="form" action="">
           <div class="modal-body">
             <div class="form-group">
-              
+              <label for="Ref_Name" class="mb-0">Name:</label>
+              <input type="text" id="Ref_Name" name="Ref_Name" class="form-control" required>
             </div>
 
             <div class="form-group">
-              <table width="100%" class="table table-bordered">
-                <tr>
-                  <th style="text-align:center;">Name</th>
-                  <th style="text-align:center;">Address</th>
-                  <th style="text-align:center;">Contact Number</th>
-                </tr>
-
-                <tr>
-                  <th><input type="text" name="Ref_Name" class="form-control" required></th>
-                  <th><input type="text" name="Address" class="form-control" required></th>
-                  <th><input type="text" name="Cell" class="form-control" required></th>
-                </tr>
-              </table>
+              <label for="Address" class="mb-0">Address:</label>
+              <input type="text" id="Address" name="Address" class="form-control" required>
             </div>
-          </div>
+
+            <div class="form-group">
+              <label for="Cell" class="mb-0">Contact Number:</label>
+              <input type="text" id="Cell" name="Cell" class="form-control" required>
+            </div>
+          </div><!-- .modal-body -->
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button type="submit" class="btn btn-primary" name="AddReference">Save</button>
-          </div>
+          </div><!-- .modal-footer -->
         </form>
-      </div>
-    </div>
-  </div>
-</div>
+      </div><!-- .modal-content -->
+    </div><!-- .modal-dialog -->
+  </div><!-- .modal -->
+</div><!-- .tab-pane -->

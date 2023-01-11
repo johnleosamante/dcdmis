@@ -11,7 +11,7 @@
           <tr class="text-center">
             <th class="align-middle" width="25%" rowspan="2">Career Services / RA 1080 (Board / Bar) Underspecial Laws / CES / CSEE Barangay Eligibility/ Drivers License</th>
             <th class="align-middle" width="15%" rowspan="2">Rating</th>
-            <th class="align-middle" width="15%" rowspan="2">Date of Examinition Conferment</th>
+            <th class="align-middle" width="15%" rowspan="2">Date of Examination Conferment</th>
             <th class="align-middle" width="15%" rowspan="2">Place of Examination / Conferment</th>
             <th class="align-middle" width="20%" colspan="2">License</th>
             <th class="align-middle" rowspan="2" width="10%">Action</th>
@@ -24,20 +24,20 @@
 
         <tbody>
           <?php
-          $eligibility = mysqli_query($con, "SELECT * FROM civil_service WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          $eligibilities = mysqli_query($con, "SELECT * FROM civil_service WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY Date_of_Examination");
 
-          if (mysqli_num_rows($eligibility) > 0) {
-            while ($row3 = mysqli_fetch_array($eligibility)) { ?>
+          if (mysqli_num_rows($eligibilities) > 0) {
+            while ($eligibility = mysqli_fetch_array($eligibilities)) { ?>
               <tr>
-                <td class="text-center align-middle"><?php echo $row3['Carrer_Service']; ?></td>
-                <td class="text-center align-middle"><?php echo $row3['Rating']; ?></td>
-                <td class="text-center align-middle"><?php echo $row3['Date_of_Examination']; ?></td>
-                <td class="text-center align-middle"><?php echo $row3['Place_of_Examination']; ?></td>
-                <td class="text-center align-middle"><?php echo $row3['Number_of_Hour']; ?></td>
-                <td class="text-center align-middle"><?php echo $row3['Date_of_Validity']; ?></td>
+                <td class="text-center align-middle"><?php echo $eligibility['Carrer_Service']; ?></td>
+                <td class="text-center align-middle"><?php echo $eligibility['Rating']; ?></td>
+                <td class="text-center align-middle"><?php echo GetDateString($eligibility['Date_of_Examination']); ?></td>
+                <td class="text-center align-middle"><?php echo $eligibility['Place_of_Examination']; ?></td>
+                <td class="text-center align-middle"><?php echo $eligibility['Number_of_Hour']; ?></td>
+                <td class="text-center align-middle"><?php echo $eligibility['Date_of_Validity']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_license.php?id=<?php echo urlencode(base64_encode($row3['No'])); ?>" data-toggle="modal" data-target="#UpdateEligibilityModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" onclick="delete_service(this.id)" id="<?php echo $row3['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" href="my_license.php?id=<?php echo urlencode(base64_encode($eligibility['No'])); ?>" data-toggle="modal" data-target="#UpdateEligibilityModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" onclick="delete_service(this.id)" id="<?php echo $eligibility['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php

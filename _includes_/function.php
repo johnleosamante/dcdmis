@@ -104,6 +104,14 @@ function GetDateTimeAsID() {
   return date('YmdHis');
 }
 
+function GetDateString($date) {
+  return date("m/d/Y", strtotime($date));
+}
+
+function GetLongDateString($date) {
+  return date("F d, Y", strtotime($date));
+}
+
 function SetOptionSelected($reference, $value) {
   return strtolower($reference) === strtolower($value) ? ' selected' : '';
 }

@@ -24,20 +24,20 @@
 
         <tbody>
           <?php
-          $training = mysqli_query($con, "SELECT * FROM learning_and_development WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY No Asc");
+          $trainings = mysqli_query($con, "SELECT * FROM learning_and_development WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY No Asc");
 
-          if (mysqli_num_rows($training) > 0) {
-            while ($row6 = mysqli_fetch_array($training)) { ?>
+          if (mysqli_num_rows($trainings) > 0) {
+            while ($training = mysqli_fetch_array($trainings)) { ?>
               <tr>
-                <td class="text-center align-middle"><?php echo $row6['Title_of_Training']; ?></td>
-                <td class="text-center align-middle"><?php echo $row6['From']; ?></td>
-                <td class="text-center align-middle"><?php echo $row6['To']; ?></td>
-                <td class="text-center align-middle"><?php echo $row6['Number_of_Hours']; ?></td>
-                <td class="text-center align-middle"><?php echo $row6['Managerial']; ?></td>
-                <td class="text-center align-middle"><?php echo $row6['Conducted']; ?></td>
+                <td class="text-center align-middle"><?php echo $training['Title_of_Training']; ?></td>
+                <td class="text-center align-middle"><?php echo GetDateString($training['From']); ?></td>
+                <td class="text-center align-middle"><?php echo GetDateString($training['To']); ?></td>
+                <td class="text-center align-middle"><?php echo $training['Number_of_Hours']; ?></td>
+                <td class="text-center align-middle"><?php echo $training['Managerial']; ?></td>
+                <td class="text-center align-middle"><?php echo $training['Conducted']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_training.php?id=<?php echo urlencode(base64_encode($row6['No'])); ?>" data-toggle="modal" data-target="#UpdateTrainingModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" onclick="delete_LD(this.id)" id="<?php echo $row6['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" href="my_training.php?id=<?php echo urlencode(base64_encode($training['No'])); ?>" data-toggle="modal" data-target="#UpdateTrainingModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" onclick="delete_LD(this.id)" id="<?php echo $training['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php
@@ -73,8 +73,8 @@
         <form method="post" role="form" action="">
           <div class="modal-body">
             <div class="form-group">
-              <label for="Title_learning" class="mb-0">Learning &amp; Development Interventions / Training programs (Write in full):</label>
-              <th><input id="Title_learning" type="text" name="Title_learning" class="form-control" required></th>
+              <label for="Title_learning" class="mb-0">Learning &amp; Development Intervention / Training Program (Write in full):</label>
+              <input id="Title_learning" type="text" name="Title_learning" class="form-control" required>
             </div>
 
             <div class="row">
@@ -99,12 +99,17 @@
             </div>
 
             <div class="form-group">
-              <label for="TrainingType" class="mb-0">Type of LD (Managerial / Supervisor / Technical / etc):</label>
-              <input id="TrainingType" type="text" name="TrainingType" class="form-control" required>
+              <label for="TrainingType" class="mb-0">Type of Learning &amp; Development:</label>
+              <select name="TrainingType" id="TrainingType" class="form-control" required>
+                <option value="Foundation">Foundation</option>
+                <option value="Technical">Technical</option>
+                <option value="Supervisory">Supervisory</option>
+                <option value="Managerial">Managerial</option>
+              </select>
             </div>
 
             <div class="form-group mb-0">
-              <label for="Conducted" class="mb-0">Conducted / Sponsored by (Write in Full) </label>
+              <label for="Conducted" class="mb-0">Conducted / Sponsored by (Write in full): </label>
               <input id="Conducted" type="text" name="Conducted" class="form-control" required>
             </div>
           </div><!-- .modal-body -->
