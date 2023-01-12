@@ -73,7 +73,7 @@ $image = ($row['SchoolLogo'] === NULL) ? '../assets/img/logo.png' : '../' . $row
             } elseif ($link === 'Personal Data Sheet') {
               include("pds/index.php");
             } elseif ($link === 'Locator') {
-              include("locator.php");
+              include("locator/index.php");
             } elseif ($link === 'Transfer Request') {
               include("transfer-request.php");
             } elseif ($link === 'DepEd Account Request') {
