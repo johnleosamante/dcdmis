@@ -31,12 +31,12 @@
               <tr>
                 <td class="text-center align-middle"><?php echo $eligibility['Carrer_Service']; ?></td>
                 <td class="text-center align-middle"><?php echo $eligibility['Rating']; ?></td>
-                <td class="text-center align-middle"><?php echo GetDateString($eligibility['Date_of_Examination']); ?></td>
+                <td class="text-center align-middle"><?php echo ToDateString($eligibility['Date_of_Examination']); ?></td>
                 <td class="text-center align-middle"><?php echo $eligibility['Place_of_Examination']; ?></td>
                 <td class="text-center align-middle"><?php echo $eligibility['Number_of_Hour']; ?></td>
-                <td class="text-center align-middle"><?php echo $eligibility['Date_of_Validity']; ?></td>
+                <td class="text-center align-middle"><?php echo ToDateString($eligibility['Date_of_Validity']); ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_license.php?id=<?php echo urlencode(base64_encode($eligibility['No'])); ?>" data-toggle="modal" data-target="#UpdateEligibilityModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-success my-1" id="<?php echo $eligibility['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-eligibility.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
                   <a class="btn btn-danger my-1" onclick="delete_service(this.id)" id="<?php echo $eligibility['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
@@ -70,7 +70,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
         </div><!-- .modal-header -->
 
-        <form enctype="multipart/form-data" method="post" role="form" action="">
+        <form method="post" role="form" action="">
           <div class="modal-body">
             <div class="form-group">
               <label for="Carrer" class="mb-0">Career Service / RA 1080 (Board/Bar) / Underspecial Laws / CES / CSEE / Barangay Eligibility / Drivers License</label>
@@ -121,13 +121,6 @@
           </div><!-- .modal-footer -->
         </form>
       </div><!-- .modal-content -->
-    </div><!-- .modal-dialog -->
-  </div><!-- .modal -->
-
-  <div class="modal fade" id="UpdateEligibilityModal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      </div>
     </div><!-- .modal-dialog -->
   </div><!-- .modal -->
 </div><!-- .tab-pane -->

@@ -18,4 +18,12 @@ function ToName($lname, $fname, $mname='', $ext='', $fnamefirst=false, $fullmnam
 function ToAddress($lot, $street, $subdivision, $barangay, $city, $province='') {
   return ToString($lot, '', ', ') . ToString($street, '', ', ') . ToString($subdivision, '', ', ') . ToString($barangay, '', ', ') . ToString($city) . ToString($province, ', ');
 }
+
+function ToDateString($date) {
+  return date("m/d/Y", strtotime($date));
+}
+
+function ToLongDateString($date) {
+  return date("F j, Y", strtotime($date));
+}
 ?>

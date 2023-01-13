@@ -28,19 +28,19 @@
           $educationalBackground = mysqli_query($con, "SELECT * FROM educational_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
 
           if (mysqli_num_rows($educationalBackground) > 0) {
-            while ($row2 = mysqli_fetch_array($educationalBackground)) { ?>
+            while ($education = mysqli_fetch_array($educationalBackground)) { ?>
               <tr>
-                <td class="text-center align-middle"><?php echo $row2['Level']; ?></td>
-                <td class="text-center align-middle"><?php echo $row2['Name_of_School']; ?></td>
-                <td class="text-center align-middle"><?php echo $row2['Course']; ?></td>
-                <td class="text-center align-middle"><?php echo $row2['From']; ?></td>
-                <td class="text-center align-middle"><?php echo $row2['To']; ?></td>
-                <td class="text-center align-middle"><?php echo $row2['Highest_Level']; ?></td>
-                <td class="text-center align-middle"><?php echo $row2['Year_Graduated']; ?></td>
-                <td class="text-center align-middle"><?php echo $row2['Honor_Recieved']; ?></td>
+                <td class="text-center align-middle"><?php echo $education['Level']; ?></td>
+                <td class="text-center align-middle"><?php echo $education['Name_of_School']; ?></td>
+                <td class="text-center align-middle"><?php echo $education['Course']; ?></td>
+                <td class="text-center align-middle"><?php echo $education['From']; ?></td>
+                <td class="text-center align-middle"><?php echo $education['To']; ?></td>
+                <td class="text-center align-middle"><?php echo $education['Highest_Level']; ?></td>
+                <td class="text-center align-middle"><?php echo $education['Year_Graduated']; ?></td>
+                <td class="text-center align-middle"><?php echo $education['Honor_Recieved']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_educate.php?id='<?php echo urlencode(base64_encode($row2['No'])); ?>" data-toggle="modal" data-target="#UpdateEducationModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" id="<?php echo $row2['No']; ?>" onclick="delete_educ(this.id)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" id="<?php echo $education['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-education.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" id="<?php echo $education['No']; ?>" onclick="delete_educ(this.id)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php
@@ -73,7 +73,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
         </div><!-- .modal-header -->
 
-        <form enctype="multipart/form-data" method="post" role="form" action="">
+        <form method="post" role="form" action="">
           <div class="modal-body">
             <div class="form-group">
               <label for="level" class="mb-0">Level:</label>
@@ -149,13 +149,6 @@
           </div><!-- .modal-footer -->
         </form>
       </div><!-- .modal-content -->
-    </div><!-- .modal-dialog -->
-  </div><!-- .modal -->
-
-  <div class="modal fade" id="UpdateEducationModal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      </div>
     </div><!-- .modal-dialog -->
   </div><!-- .modal -->
 </div><!-- .tab-pane -->

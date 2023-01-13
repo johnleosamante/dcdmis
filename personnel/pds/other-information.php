@@ -90,11 +90,4 @@
       </div><!-- .modal-content -->
     </div><!-- modal-dialog -->
   </div><!-- .modal -->
-
-  <div class="modal fade" id="UpdateOtherInformationModal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      </div>
-    </div><!-- .modal-dialog -->
-  </div><!-- .modal -->
 </div><!-- .tab-pane -->

@@ -167,7 +167,7 @@ function Card($title, $link, $icon, $color = 'primary', $counter = false, $numbe
       </div>
 
       <div class="card-footer py-1 text-right">
-        <a class="small" href="<?php echo $link; ?>">View Details</a>
+        <a class="small text-<?php echo $color; ?>" href="<?php echo $link; ?>">View Details</a>
       </div>
     </div>
   </div>

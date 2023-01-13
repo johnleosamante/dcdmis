@@ -4,37 +4,11 @@
 $result = mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID ='" . $_SESSION['EmpID'] . "' LIMIT 1");
 $row = mysqli_fetch_assoc($result);
 
-if ($row['Emp_Month'] == "1") {
-  $month = 'Jan';
-} elseif ($row['Emp_Month'] == "2") {
-  $month = 'Feb';
-} elseif ($row['Emp_Month'] == "3") {
-  $month = 'March';
-} elseif ($row['Emp_Month'] == "4") {
-  $month = 'April';
-} elseif ($row['Emp_Month'] == "5") {
-  $month = 'May';
-} elseif ($row['Emp_Month'] == "6") {
-  $month = 'June';
-} elseif ($row['Emp_Month'] == "7") {
-  $month = 'July';
-} elseif ($row['Emp_Month'] == "8") {
-  $month = 'Aug';
-} elseif ($row['Emp_Month'] == "9") {
-  $month = 'Sept';
-} elseif ($row['Emp_Month'] == "10") {
-  $month = 'Oct';
-} elseif ($row['Emp_Month'] == "11") {
-  $month = 'Nov';
-} elseif ($row['Emp_Month'] == "12") {
-  $month = 'Dec';
-}
-
 $_SESSION['Last_Name'] = $row['Emp_LName'];
 $_SESSION['First_Name'] = $row['Emp_FName'];
 $_SESSION['Middle_Name'] = $row['Emp_MName'];
 $_SESSION['Extension'] = $row['Emp_Extension'];
-$_SESSION['Birthdate'] = $month . ' ' . $row['Emp_Day'] . ', ' . $row['Emp_Year'];
+$_SESSION['Birthdate'] = ToLongDateString($row['Emp_Year'] . '-' . $row['Emp_Month'] . '-' . $row['Emp_Day']);
 $_SESSION['Place_of_Birth'] = $row['Emp_place_of_birth'];
 $_SESSION['Citizen'] = $row['Emp_Citizen'];
 $_SESSION['Civil_Status'] = $row['Emp_CS'];
@@ -67,7 +41,7 @@ $_SESSION['Year'] = $row['Emp_Year'];
       } ?>
       <img src="<?php echo $image; ?>" width="100%" class="mb-3 border rounded" id="employeePhoto">
 
-      <form action="" method="POST" enctype="multipart/form-data">
+      <form action="" method="POST" role="form">
         <div class="custom-file">
           <input id="imageUpload" type="file" name="image" class="custom-file-input" required>
           <label id="imageUploadLabel" class="custom-file-label" for="imageUpload">Choose file</label>
@@ -172,7 +146,7 @@ $_SESSION['Year'] = $row['Emp_Year'];
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
         </div><!-- .modal-header -->
 
-        <form enctype="multipart/form-data" method="post" role="form" action="">
+        <form method="post" role="form" action="">
           <div class="modal-body">
             <div class="row">
               <div class="col-md-6">
@@ -206,9 +180,8 @@ $_SESSION['Year'] = $row['Emp_Year'];
                 <div class="form-group">
                   <label for="gender" class="mb-0">Sex:</label>
                   <select id="gender" name="gender" class="form-control">
-                    <option value="<?php echo $_SESSION['Gender']; ?>"><?php echo $_SESSION['Gender']; ?></option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                    <option value="Male" <?php echo SetOptionSelected('Male', $_SESSION['Gender']); ?>>Male</option>
+                    <option value="Female" <?php echo SetOptionSelected('Female', $_SESSION['Gender']); ?>>Female</option>
                   </select>
                 </div><!-- .form-group -->
               </div><!-- .col-md-3 -->
@@ -219,7 +192,6 @@ $_SESSION['Year'] = $row['Emp_Year'];
                 <div class="form-group">
                   <label for="inputBMonth" class="mb-0">Birth Month:</label>
                   <select name="Month" class="form-control" id="inputBMonth" required>
-                    <option value="" <?php echo SetOptionSelected('', $_SESSION['Month']); ?>>Birth Month</option>
                     <option value="01" <?php echo SetOptionSelected('01', $_SESSION['Month']); ?>>January</option>
                     <option value="02" <?php echo SetOptionSelected('02', $_SESSION['Month']); ?>>February</option>
                     <option value="03" <?php echo SetOptionSelected('03', $_SESSION['Month']); ?>>March</option>
@@ -239,7 +211,7 @@ $_SESSION['Year'] = $row['Emp_Year'];
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="inputBDay" class="mb-0">Birth Day:</label>
-                  <input class="form-control" id="inputBDay" name="Day" type="text" value="<?php echo $_SESSION['Day']; ?>" required>
+                  <input class="form-control" id="inputBDay" name="Day" type="number" value="<?php echo $_SESSION['Day']; ?>" required>
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
 
@@ -247,7 +219,6 @@ $_SESSION['Year'] = $row['Emp_Year'];
                 <div class="form-group">
                   <label for="inputBYear" class="mb-0">Birth Year:</label>
                   <select name="Year" class="form-control" id="inputBYear" required>
-                    <option value="" <?php echo SetOptionSelected('', $_SESSION['Year']); ?>>Birth Year</option>
                     <?php
                     $age = 0;
                     $year = date('Y');
@@ -284,12 +255,11 @@ $_SESSION['Year'] = $row['Emp_Year'];
                 <div class="form-group">
                   <label for="CS" class="mb-0">Civil Status:</label>
                   <select id="CS" name="CS" class="form-control">
-                    <option value="<?php echo $_SESSION['Civil_Status']; ?>"><?php echo $_SESSION['Civil_Status']; ?></option>
-                    <option value="Single">Single</option>
-                    <option value="Married">Married</option>
-                    <option value="Widow">Widow</option>
-                    <option value="Separated">Separated</option>
-                    <option value="Other">Other</option>
+                    <option value="Single" <?php echo SetOptionSelected('Single', $_SESSION['Civil_Status']); ?>>Single</option>
+                    <option value="Married" <?php echo SetOptionSelected('Married', $_SESSION['Civil_Status']); ?>>Married</option>
+                    <option value="Widow" <?php echo SetOptionSelected('Widow', $_SESSION['Civil_Status']); ?>>Widow</option>
+                    <option value="Separated" <?php echo SetOptionSelected('Separated', $_SESSION['Civil_Status']); ?>>Separated</option>
+                    <option value="Other" <?php echo SetOptionSelected('Other', $_SESSION['Civil_Status']); ?>>Other</option>
                   </select>
                 </div><!-- .form-group -->
               </div><!-- .col-md-6 -->
@@ -299,21 +269,30 @@ $_SESSION['Year'] = $row['Emp_Year'];
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="height" class="mb-0">Height (m):</label>
-                  <input id="height" type="text" name="height" value="<?php echo $_SESSION['Height']; ?>" class="form-control">
+                  <input id="height" type="number" name="height" value="<?php echo $_SESSION['Height']; ?>" class="form-control">
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
 
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="weight" class="mb-0">Weight (kg):</label>
-                  <input id="weight" type="text" name="weight" value="<?php echo $_SESSION['Weight']; ?>" class="form-control">
+                  <input id="weight" type="number" name="weight" value="<?php echo $_SESSION['Weight']; ?>" class="form-control">
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
 
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="blood" class="mb-0">Blood Type:</label>
-                  <input id="blood" type="text" name="blood" value="<?php echo $_SESSION['Blood']; ?>" class="form-control">
+                  <select id="blood" name="blood" class="form-control">
+                    <option value="A+" <?php echo SetOptionSelected('A+', $_SESSION['Blood']); ?>>A+</option>
+                    <option value="A-" <?php echo SetOptionSelected('A-', $_SESSION['Blood']); ?>>A-</option>
+                    <option value="B+" <?php echo SetOptionSelected('B+', $_SESSION['Blood']); ?>>B+</option>
+                    <option value="B-" <?php echo SetOptionSelected('B-', $_SESSION['Blood']); ?>>B-</option>
+                    <option value="AB+" <?php echo SetOptionSelected('AB+', $_SESSION['Blood']); ?>>AB+</option>
+                    <option value="AB-" <?php echo SetOptionSelected('AB-', $_SESSION['Blood']); ?>>AB-</option>
+                    <option value="O+" <?php echo SetOptionSelected('O+', $_SESSION['Blood']); ?>>O+</option>
+                    <option value="O-" <?php echo SetOptionSelected('O-', $_SESSION['Blood']); ?>>O-</option>
+                  </select>
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
             </div><!-- .row -->
@@ -345,7 +324,7 @@ $_SESSION['Year'] = $row['Emp_Year'];
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
         </div><!-- .modal-header -->
 
-        <form enctype="multipart/form-data" method="post" role="form" action="">
+        <form method="post" role="form" action="">
           <div class="modal-body">
             <div class="form-group mb-0">
               <label for="Cell" class="mb-0">Contact Number:</label>

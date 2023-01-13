@@ -31,8 +31,8 @@
           if (mysqli_num_rows($experiences) > 0) {
             while ($experience = mysqli_fetch_array($experiences)) { ?>
               <tr>
-                <td class="text-center align-middle"><?php echo GetDateString($experience['From']); ?></td>
-                <td class="text-center align-middle"><?php echo GetDateString($experience['To']); ?></td>
+                <td class="text-center align-middle"><?php echo ToDateString($experience['From']); ?></td>
+                <td class="text-center align-middle"><?php echo ToDateString($experience['To']); ?></td>
                 <td class="text-center align-middle"><?php echo $experience['Position_Title']; ?></td>
                 <td class="text-center align-middle"><?php echo $experience['Organization']; ?></td>
                 <td class="text-center align-middle"><?php echo $experience['Monthly_Salary']; ?></td>
@@ -40,7 +40,7 @@
                 <td class="text-center align-middle"><?php echo $experience['Job_Status']; ?></td>
                 <td class="text-center align-middle"><?php echo $experience['Goverment']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_experience.php?id=<?php echo urlencode(base64_encode($experience['No'])); ?>" data-toggle="modal" data-target="#UpdateExperienceModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-success my-1" id="<?php echo $experience['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-work-experience.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
                   <a class="btn btn-danger my-1" onclick="delete_work(this.id)" id="<?php echo $experience['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
@@ -74,7 +74,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
         </div><!-- .modal-header -->
 
-        <form enctype="multipart/form-data" method="post" role="form" action="">
+        <form method="post" role="form" action="">
           <div class="modal-body">
             <div class="row">
               <div class="col-md-6">
@@ -152,13 +152,6 @@
           </div><!-- .modal-footer -->
         </form>
       </div><!-- .modal-content -->
-    </div><!-- .modal-dialog -->
-  </div><!-- .modal -->
-
-  <div class="modal fade" id="UpdateExperienceModal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      </div>
     </div><!-- .modal-dialog -->
   </div><!-- .modal -->
 </div><!-- .tab-pane -->

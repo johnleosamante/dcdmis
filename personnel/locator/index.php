@@ -54,7 +54,7 @@ if (isset($_POST['savelocator'])) {
 									$no++; ?>
 									<tr>
 										<td class="align-middle text-center"><?php echo $no; ?></td>
-										<td class="align-middle text-center"><?php echo GetDateString($row['dateout']); ?></td>
+										<td class="align-middle text-center"><?php echo ToDateString($row['dateout']); ?></td>
 										<td class="align-middle text-center"><?php echo $row['Category']; ?></td>
 										<td class="align-middle"><?php echo $row['Purpose']; ?></td>
 										<td class="align-middle text-center"><?php echo $row['TimeLeaving']; ?></td>
@@ -113,7 +113,7 @@ if (isset($_POST['savelocator'])) {
 
 					<div class="form-group mb-0">
 						<label for="station" class="mb-0">Section Assigned:</label>
-						<select id="station" class="form-control" onchange="viewdata(this.value)" required>
+						<select id="station" class="form-control" onchange="viewdata('supervisor', 'locator/immediate-supervisor.php?id=' + this.value)" required>
 							<option value="">Select Section</option>
 							<?php
 							$sig = mysqli_query($con, "SELECT * FROM tbl_office WHERE Office_Name <>'SCHOOL' ORDER BY Office_Name Asc");
@@ -123,7 +123,7 @@ if (isset($_POST['savelocator'])) {
 						</select>
 					</div>
 
-					<div class="form-group mb-0" id="signate"></div>
+					<div class="form-group mb-0" id="supervisor"></div>
 				</div><!-- .modal-body -->
 
 				<div class="modal-footer">
@@ -134,24 +134,3 @@ if (isset($_POST['savelocator'])) {
 		</div><!-- .modal-content -->
 	</div><!-- .modal-dialog -->
 </div><!-- .modal -->
-
-<script>
-	function viewdata(str) {
-		if (window.XMLHttpRequest) {
-			// code for IE7+, Firefox, Chrome, Opera, Safari
-			xmlhttp = new XMLHttpRequest();
-		} else {
-			// code for IE6, IE5
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				document.getElementById("signate").innerHTML = xmlhttp.responseText;
-			}
-		}
-
-		xmlhttp.open("GET", "locator/immediate-supervisor.php?id=" + str, false);
-		xmlhttp.send();
-	}
-</script>

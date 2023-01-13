@@ -3,6 +3,7 @@
 
 include_once('../_includes_/function.php');
 include_once('../_includes_/database/database.php');
+include_once('../_includes_/string.php');
 
 if ($_SESSION['EmpID'] == "") {
   header('location:' . GetSiteURL() . '/personnel/login');
@@ -107,6 +108,19 @@ $image = ($row['SchoolLogo'] === NULL) ? '../assets/img/logo.png' : '../' . $row
   <script src="<?php echo GetSiteURL(); ?>/assets/js/demo/datatables-demo.js"></script>
   <script>
     if (window.history.replaceState) window.history.replaceState(null, null, window.location.href);
+
+    function viewdata(id, href) {
+      xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          document.getElementById(id).innerHTML = xmlhttp.responseText;
+        }
+      }
+
+      xmlhttp.open("GET", href, false);
+      xmlhttp.send();
+    }
   </script>
 </body>
 

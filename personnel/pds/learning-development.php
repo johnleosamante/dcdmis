@@ -30,8 +30,8 @@
             while ($training = mysqli_fetch_array($trainings)) { ?>
               <tr>
                 <td class="text-center align-middle"><?php echo $training['Title_of_Training']; ?></td>
-                <td class="text-center align-middle"><?php echo GetDateString($training['From']); ?></td>
-                <td class="text-center align-middle"><?php echo GetDateString($training['To']); ?></td>
+                <td class="text-center align-middle"><?php echo ToDateString($training['From']); ?></td>
+                <td class="text-center align-middle"><?php echo ToDateString($training['To']); ?></td>
                 <td class="text-center align-middle"><?php echo $training['Number_of_Hours']; ?></td>
                 <td class="text-center align-middle"><?php echo $training['Managerial']; ?></td>
                 <td class="text-center align-middle"><?php echo $training['Conducted']; ?></td>
@@ -120,13 +120,6 @@
           </div><!-- .modal-footer -->
         </form>
       </div><!-- .modal-content -->
-    </div><!-- .modal-dialog -->
-  </div><!-- .modal -->
-
-  <div class="modal fade" id="UpdateTrainingModal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      </div>
     </div><!-- .modal-dialog -->
   </div><!-- .modal -->
 </div><!-- .tab-pane -->

@@ -29,8 +29,8 @@
             while ($voluntaryWork = mysqli_fetch_array($voluntaryWorks)) { ?>
               <tr>
                 <td class="text-center align-middle"><?php echo $voluntaryWork['Name_of_Organization']; ?></td>
-                <td class="text-center align-middle"><?php echo GetDateString($voluntaryWork['From']); ?></td>
-                <td class="text-center align-middle"><?php echo GetDateString($voluntaryWork['To']); ?></td>
+                <td class="text-center align-middle"><?php echo ToDateString($voluntaryWork['From']); ?></td>
+                <td class="text-center align-middle"><?php echo ToDateString($voluntaryWork['To']); ?></td>
                 <td class="text-center align-middle"><?php echo $voluntaryWork['Number_of_Hour']; ?></td>
                 <td class="text-center align-middle"><?php echo $voluntaryWork['Position']; ?></td>
                 <td class="text-center align-middle">
@@ -108,13 +108,6 @@
           </div><!-- .modal-footer -->
         </form>
       </div><!-- .modal-content -->
-    </div><!-- .modal-dialog -->
-  </div><!-- .modal -->
-
-  <div class="modal fade" id="UpdateVoluntaryWorkModal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      </div>
     </div><!-- .modal-dialog -->
   </div><!-- .modal -->
 </div><!-- .tab-pane -->

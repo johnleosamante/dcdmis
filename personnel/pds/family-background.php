@@ -28,10 +28,10 @@
                 <td class="text-center align-middle"><?php echo $member['Family_Name']; ?></td>
                 <td class="text-center align-middle"><?php echo $member['First_Name']; ?></td>
                 <td class="text-center align-middle"><?php echo $member['Middle_Name']; ?></td>
-                <td class="text-center align-middle"><?php echo GetLongDateString($member['Birthdate']); ?></td>
+                <td class="text-center align-middle"><?php echo ToLongDateString($member['Birthdate']); ?></td>
                 <td class="text-center align-middle"><?php echo $member['Relation']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="pds/update/my_family.php?id=<?php echo GetDecoding($member['No']); ?>" data-toggle="modal" data-target="#UpdateFamilyMemberModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-success my-1" id="<?php echo $member['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-family-member.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
                   <a class="btn btn-danger my-1" id="<?php echo $member['No']; ?>" onclick="delete_option(this.id)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
@@ -39,7 +39,7 @@
             }
           } else { ?>
             <tr>
-              <td class="text-center align-middle" colspan="6">No data available in data.</td>
+              <td class="text-center align-middle" colspan="6">No data available in table.</td>
             </tr>
           <?php
           }
@@ -49,7 +49,7 @@
 
       <script>
         function delete_option(id) {
-          if (confirm("Are you sure you want to deleted this row?")) {
+          if (confirm("Are you sure you want to delete this row?")) {
             window.location.href = 'pds/delete/delete-family-member.php?id=' + id;
           }
         }
@@ -65,7 +65,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
         </div><!-- .modal-header -->
 
-        <form enctype="multipart/form-data" method="post" role="form" action="">
+        <form method="post" role="form" action="">
           <div class="modal-body">
             <div class="form-group">
               <label for="LastName" class="mb-0">Last Name:</label>
@@ -101,11 +101,4 @@
       </div><!-- .modal-content -->
     </div><!-- .modal-dialog -->
   </div><!-- .modal -->
-
-  <div class="modal fade" id="UpdateFamilyMemberModal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      </div>
-    </div>
-  </div>
 </div>
