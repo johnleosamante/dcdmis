@@ -18,18 +18,18 @@
 
         <tbody>
           <?php
-          $information = mysqli_query($con, "SELECT * FROM other_information WHERE other_information.Emp_ID='" . $_SESSION['EmpID'] . "'");
+          $informations = mysqli_query($con, "SELECT * FROM other_information WHERE other_information.Emp_ID='" . $_SESSION['EmpID'] . "'");
 
-          if (mysqli_num_rows($information) > 0) {
-            while ($row7 = mysqli_fetch_array($information)) { ?>
+          if (mysqli_num_rows($informations) > 0) {
+            while ($information = mysqli_fetch_array($informations)) { ?>
               <tr>
-                <td class="text-center align-middle"><?php echo $row7['Special_Skills']; ?></td>
-                <td class="text-center align-middle"><?php echo $row7['Recognation']; ?></td>
-                <td class="text-center align-middle"><?php echo $row7['Organization']; ?></td>
+                <td class="text-center align-middle"><?php echo $information['Special_Skills']; ?></td>
+                <td class="text-center align-middle"><?php echo $information['Recognation']; ?></td>
+                <td class="text-center align-middle"><?php echo $information['Organization']; ?></td>
 
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="update_skills.php?id=<?php echo urlencode(base64_encode($row7['No'])); ?>" data-toggle="modal" data-target="#UpdateOtherInformationModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" onclick="delete_other(this.id)" id="<?php echo $row7['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" id="<?php echo $information['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-other-information.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" onclick="delete_other(this.id)" id="<?php echo $information['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php
@@ -56,8 +56,6 @@
 
   <div class="modal fade" id="AddOtherInformationModal" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
-
-      <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Add Other Information</h5>

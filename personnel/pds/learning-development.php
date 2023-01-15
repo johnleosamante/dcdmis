@@ -36,7 +36,7 @@
                 <td class="text-center align-middle"><?php echo $training['Managerial']; ?></td>
                 <td class="text-center align-middle"><?php echo $training['Conducted']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_training.php?id=<?php echo urlencode(base64_encode($training['No'])); ?>" data-toggle="modal" data-target="#UpdateTrainingModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-success my-1" id="<?php echo $training['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-learning-development.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
                   <a class="btn btn-danger my-1" onclick="delete_LD(this.id)" id="<?php echo $training['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>

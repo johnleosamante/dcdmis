@@ -143,7 +143,6 @@ if (isset($_POST['AddExperience'])) {
 	$_SESSION['pdstab'] = 'work-experience';
 }
 
-//Update Work Experience Records
 if (isset($_POST['UpdateExperience'])) {
 	mysqli_query($con, "UPDATE work_experience SET work_experience.From='" . $_POST['EFrom'] . "',work_experience.To='" . $_POST['ETo'] . "',work_experience.Position_Title='" . $_POST['EPost'] . "',work_experience.Organization='" . $_POST['EOrg'] . "',work_experience.Monthly_Salary='" . $_POST['ESal'] . "',work_experience.Salary_Grade='" . $_POST['EGarde'] . "',work_experience.Job_Status='" . $_POST['EStatus'] . "',work_experience.Goverment='" . $_POST['EGov'] . "' WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "' AND work_experience.No='" . $_SESSION['No'] . "'");
 
@@ -169,6 +168,19 @@ if (isset($_POST['AddVoluntaryWork'])) {
 	$_SESSION['pdstab'] = 'voluntary-work';
 }
 
+if (isset($_POST['UpdateVoluntaryWork'])) {
+	mysqli_query($con, "UPDATE voluntary_work SET voluntary_work.Name_of_Organization='" . $_POST['NOrg'] . "',voluntary_work.From='" . $_POST['NFrom'] . "',voluntary_work.To='" . $_POST['NTo'] . "',voluntary_work.Number_of_Hour='" . $_POST['NHour'] . "',voluntary_work.Position='" . $_POST['NPos'] . "' WHERE voluntary_work.Emp_ID='" . $_SESSION['EmpID'] . "' AND voluntary_work.No='" . $_SESSION['No'] . "'");
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Voluntary work has been updated successfully!';
+		$showPrompt = true;
+	}
+
+
+	$_SESSION['pdstab'] = 'voluntary-work';
+}
+
 /* LEARNING & DEVELOPMENT */
 if (isset($_POST['AddTraining'])) {
 	mysqli_query($con, "INSERT INTO learning_and_development VALUES (NULL,'" . $_POST['Title_learning'] . "','" . $_POST['From'] . "','" . $_POST['To'] . "','" . $_POST['No_of_hours'] . "','" . $_POST['TrainingType'] . "','" . $_POST['Conducted'] . "','" . $_SESSION['EmpID'] . "')");
@@ -182,6 +194,18 @@ if (isset($_POST['AddTraining'])) {
 	$_SESSION['pdstab'] = 'learning-development';
 }
 
+if (isset($_POST['UpdateTraining'])) {
+	mysqli_query($con, "UPDATE learning_and_development SET learning_and_development.Title_of_Training='" . $_POST['TTraining'] . "',learning_and_development.From='" . $_POST['TFrom'] . "',learning_and_development.To='" . $_POST['TTo'] . "',learning_and_development.Number_of_Hours='" . $_POST['THour'] . "',learning_and_development.Managerial='" . $_POST['TManage'] . "',learning_and_development.Conducted='" . $_POST['TConduct'] . "' WHERE learning_and_development.Emp_ID='" . $_SESSION['EmpID'] . "' AND learning_and_development.No='" . $_SESSION['No'] . "'");
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Learning &amp; Development (L&amp;D) Intervention has been updated successfully!';
+		$showPrompt = true;
+	}
+
+	$_SESSION['pdstab'] = 'learning-development';
+}
+
 /* OTHER INFORMATION TO CHANGE */
 if (isset($_POST['AddOtherInformation'])) {
 	mysqli_query($con, "INSERT INTO other_information VALUES(NULL,'" . $_POST['skills'] . "','" . $_POST['awards'] . "','" . $_POST['member'] . "','" . $_SESSION['EmpID'] . "')");
@@ -189,6 +213,18 @@ if (isset($_POST['AddOtherInformation'])) {
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
 		$message = 'Other Information has been added successfully!';
+		$showPrompt = true;
+	}
+
+	$_SESSION['pdstab'] = 'other-information';
+}
+
+if (isset($_POST['UpdateOtherInformation'])) {
+	mysqli_query($con, "UPDATE other_information SET Special_Skills='" . $_POST['myspecial'] . "',Recognation='" . $_POST['myrecog'] . "',Organization='" . $_POST['myorg'] . "' WHERE other_information.Emp_ID='" . $_SESSION['EmpID'] . "' AND other_information.No='" . $_SESSION['No'] . "'");
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Other Information has been updated successfully!';
 		$showPrompt = true;
 	}
 
@@ -338,171 +374,16 @@ if (isset($_POST['AddReference'])) {
 	$_SESSION['pdstab'] = 'reference';
 }
 
-//Remove Work Experience Records
-if (isset($_GET['Workexperiencerow'])) {
-	mysqli_query($con, "DELETE FROM work_experience WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "' AND work_experience.No ='" . $_GET['Workexperiencerow'] . "' LIMIT 1") or die("Work Experience Error");
-
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
-}
-//Update Work Volunatry Records
-elseif (isset($_POST['update_voluntary'])) {
-	mysqli_query($con, "UPDATE voluntary_work SET voluntary_work.Name_of_Organization='" . $_POST['NOrg'] . "',voluntary_work.From='" . $_POST['NFrom'] . "',voluntary_work.To='" . $_POST['NTo'] . "',voluntary_work.Number_of_Hour='" . $_POST['NHour'] . "',voluntary_work.Position='" . $_POST['NPos'] . "' WHERE voluntary_work.Emp_ID='" . $_SESSION['EmpID'] . "' AND voluntary_work.No='" . $_SESSION['No'] . "'");
-
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
-}
-//Remove Work Voluntary Records
-elseif (isset($_GET['remove_voluntary'])) {
-	mysqli_query($con, "DELETE FROM voluntary_work WHERE voluntary_work.Emp_ID='" . $_SESSION['EmpID'] . "' AND voluntary_work.No ='" . $_GET['remove_voluntary'] . "' LIMIT 1");
-
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
-}
-//Update Learning and Development Records
-elseif (isset($_POST['update_LAD'])) {
-	mysqli_query($con, "UPDATE learning_and_development SET learning_and_development.Title_of_Training='" . $_POST['TTraining'] . "',learning_and_development.From='" . $_POST['TFrom'] . "',learning_and_development.To='" . $_POST['TTo'] . "',learning_and_development.Number_of_Hours='" . $_POST['THour'] . "',learning_and_development.Managerial='" . $_POST['TManage'] . "',learning_and_development.Conducted='" . $_POST['TConduct'] . "' WHERE learning_and_development.Emp_ID='" . $_SESSION['EmpID'] . "' AND learning_and_development.No='" . $_SESSION['No'] . "'");
-
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
-}
-//Remove Learning and Development Records
-elseif (isset($_GET['remove_LAD'])) {
-	mysqli_query($con, "DELETE FROM learning_and_development WHERE learning_and_development.Emp_ID='" . $_SESSION['EmpID'] . "' AND learning_and_development.No ='" . $_GET['remove_LAD'] . "' LIMIT 1");
-
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
-}
-//Update Other Information Records
-elseif (isset($_POST['update_other'])) {
-	mysqli_query($con, "UPDATE other_information SET Special_Skills='" . $_POST['myspecial'] . "',Recognation='" . $_POST['myrecog'] . "',Organization='" . $_POST['myorg'] . "' WHERE other_information.Emp_ID='" . $_SESSION['EmpID'] . "' AND other_information.No='" . $_SESSION['No'] . "'");
-
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
-}
-//Remove Other Information Records
-elseif (isset($_GET['Remove_other'])) {
-	mysqli_query($con, "DELETE FROM other_information WHERE other_information.Emp_ID='" . $_SESSION['EmpID'] . "' AND other_information.No ='" . $_GET['Remove_other'] . "' LIMIT 1");
-
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
-}
-//Update Reference Records
-elseif (isset($_POST['update_reference'])) {
+if (isset($_POST['UpdateReference'])) {
 	mysqli_query($con, "UPDATE reference SET Name='" . $_POST['RefName'] . "',Address='" . $_POST['RefAddress'] . "',Tel_No='" . $_POST['RefContact'] . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "' LIMIT 1");
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
-}
-/* REFERENCES */
-if (isset($_GET['Remove_reference'])) {
-	mysqli_query($con, "DELETE FROM reference WHERE reference.Emp_ID='" . $_SESSION['EmpID'] . "' AND reference.No ='" . $_GET['Remove_reference'] . "' LIMIT 1");
-
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-	<?php
-	}
-}
-
-/* PSIPOP */
-if (isset($_POST['save_psipop'])) {
-	$query = mysqli_query($con, "SELECT * FROM psipop WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-	if (mysqli_num_rows($query) == 0) {
-		mysqli_query($con, "UPDATE tbl_station SET Emp_Position ='" . $_POST['position'] . "'  WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-		mysqli_query($con, "INSERT INTO psipop VALUES(NULL,'" . $_POST['item_number'] . "','" . $_POST['SN'] . "','" . $_POST['jobstatus'] . "','" . $_POST['DOA'] . "','" . $_POST['elegibility'] . "','" . $_SESSION['EmpID'] . "')");
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Reference has been updated successfully!';
+		$showPrompt = true;
 	}
 
-	if (mysqli_affected_rows($con) == 1) {
-	?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#access').modal({
-					show: 'true'
-				});
-			});
-		</script>
-<?php
-	}
+	$_SESSION['pdstab'] = 'reference';
 }
 ?>
 
@@ -600,7 +481,7 @@ if (isset($_POST['save_psipop'])) {
 						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'questionnaires'); ?>" href="#questionnaires" data-toggle="tab">Questionnaires</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'references'); ?>" href="#references" data-toggle="tab">References</a>
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'reference'); ?>" href="#reference" data-toggle="tab">References</a>
 					</li>
 				</ul>
 

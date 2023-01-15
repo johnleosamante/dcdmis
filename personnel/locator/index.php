@@ -50,19 +50,26 @@ if (isset($_POST['savelocator'])) {
 								<?php
 								$no = 0;
 								$result = mysqli_query($con, "SELECT * FROM tbl_locator_passslip WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
-								while ($row = mysqli_fetch_array($result)) {
-									$no++; ?>
+								if (mysqli_num_rows($result) > 0) {
+									while ($row = mysqli_fetch_array($result)) {
+										$no++; ?>
+										<tr>
+											<td class="align-middle text-center"><?php echo $no; ?></td>
+											<td class="align-middle text-center"><?php echo ToDateString($row['dateout']); ?></td>
+											<td class="align-middle text-center"><?php echo $row['Category']; ?></td>
+											<td class="align-middle"><?php echo $row['Purpose']; ?></td>
+											<td class="align-middle text-center"><?php echo $row['TimeLeaving']; ?></td>
+											<td class="align-middle text-center"><?php echo $row['TimeReturn']; ?></td>
+											<td class="align-middle"><?php echo $row['Approvedby']; ?></td>
+											<td class="align-middle text-center"><?php echo $row['RequestStatus']; ?></td>
+										</tr>
+									<?php }
+								} else { ?>
 									<tr>
-										<td class="align-middle text-center"><?php echo $no; ?></td>
-										<td class="align-middle text-center"><?php echo ToDateString($row['dateout']); ?></td>
-										<td class="align-middle text-center"><?php echo $row['Category']; ?></td>
-										<td class="align-middle"><?php echo $row['Purpose']; ?></td>
-										<td class="align-middle text-center"><?php echo $row['TimeLeaving']; ?></td>
-										<td class="align-middle text-center"><?php echo $row['TimeReturn']; ?></td>
-										<td class="align-middle"><?php echo $row['Approvedby']; ?></td>
-										<td class="align-middle text-center"><?php echo $row['RequestStatus']; ?></td>
+										<td class="text-center align-middle" colspan="8">No data available in table.</td>
 									</tr>
-								<?php } ?>
+								<?php
+								} ?>
 							</tbody>
 						</table>
 					</div><!-- .col -->

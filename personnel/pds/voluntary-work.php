@@ -34,7 +34,7 @@
                 <td class="text-center align-middle"><?php echo $voluntaryWork['Number_of_Hour']; ?></td>
                 <td class="text-center align-middle"><?php echo $voluntaryWork['Position']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_volunter.php?id=<?php echo urlencode(base64_encode($voluntaryWork['No'])); ?>" data-toggle="modal" data-target="#UpdateVoluntaryWorkModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-success my-1" id="<?php echo $voluntaryWork['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-voluntary-work.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
                   <a class="btn btn-danger my-1" onclick="delete_volunter(this.id)" id="<?php echo $voluntaryWork['No'] ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
@@ -68,7 +68,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
         </div>
 
-        <form enctype="multipart/form-data" method="post" role="form" action="">
+        <form method="post" role="form" action="">
           <div class="modal-body">
             <div class="form-group">
               <label for="Organization" class="mb-0">Name & Address of Organization (Write in full)</label>

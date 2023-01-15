@@ -1,4 +1,4 @@
-<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'reference'); ?>" id="references">
+<div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'reference'); ?>" id="reference">
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h4 mb-0">References</h3>
     <a href="#AddReferenceModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
@@ -18,17 +18,17 @@
 
         <tbody>
           <?php
-          $reference = mysqli_query($con, "SELECT * FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          $references = mysqli_query($con, "SELECT * FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
 
-          if (mysqli_num_rows($reference)) {
-            while ($row8 = mysqli_fetch_array($reference)) { ?>
+          if (mysqli_num_rows($references)) {
+            while ($reference = mysqli_fetch_array($references)) { ?>
               <tr>
-                <td class="text-center align-middle"><?php echo $row8['Name']; ?></td>
-                <td class="text-center align-middle"><?php echo $row8['Address']; ?></td>
-                <td class="text-center align-middle"><?php echo $row8['Tel_No']; ?></td>
+                <td class="text-center align-middle"><?php echo $reference['Name']; ?></td>
+                <td class="text-center align-middle"><?php echo $reference['Address']; ?></td>
+                <td class="text-center align-middle"><?php echo $reference['Tel_No']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" href="my_references.php?id=<?php echo urlencode(base64_encode($row8['No'])); ?>" data-toggle="modal" data-target="#UpdateReferenceModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" onclick="delete_reference(this.id)" id="<?php echo $row8['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" id="<?php echo $reference['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-reference.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" onclick="delete_reference(this.id)" id="<?php echo $reference['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php

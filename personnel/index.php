@@ -66,7 +66,7 @@ $image = ($row['SchoolLogo'] === NULL) ? '../assets/img/logo.png' : '../' . $row
             } elseif ($link === 'Step Increment Application') {
               include("step-increment-application.php");
             } elseif ($link === 'Settings') {
-              include("setting.php");
+              include("settings/index.php");
             } elseif ($link === 'Daily Time Record') {
               include("dtr.php");
             } elseif ($link === 'Service Record') {
