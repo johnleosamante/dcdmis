@@ -78,7 +78,7 @@ $image = ($row['SchoolLogo'] === NULL) ? '../assets/img/logo.png' : '../' . $row
             } elseif ($link === 'Transfer Request') {
               include("transfer-request.php");
             } elseif ($link === 'DepEd Account Request') {
-              include("deped-account-request.php");
+              include("deped-account-request/index.php");
             } elseif ($link === 'IPCRF') {
               include("ipcrf.php");
             } elseif ($link === '201 File') {

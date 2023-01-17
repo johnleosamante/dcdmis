@@ -144,7 +144,7 @@ if (isset($_POST['attendance'])) {
 			<div class="modal-header">
 				<h5 class="modal-title">Work from Home Attendance</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">×</span>
+					<span aria-hidden="true">&times;</span>
 				</button>
 			</div><!-- .modal-header -->
 

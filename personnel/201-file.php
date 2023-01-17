@@ -1,47 +1,102 @@
 <?php
-if (!is_dir('../pcdmis/201_files/' . $_SESSION['EmpID'])) {
-	mkdir('../pcdmis/201_files/' . $_SESSION['EmpID'], 0777, true);
+if (!is_dir('../uploads/201_files/' . $_SESSION['EmpID'])) {
+	mkdir('../uploads/201_files/' . $_SESSION['EmpID'], 0777, true);
 }
 
-$_SESSION['pathlocation'] = '../pcdmis/201_files/' . $_SESSION['EmpID'];
+$_SESSION['pathlocation'] = 'uploads/201_files/' . $_SESSION['EmpID'];
 ?>
 
-<div class="row">
-  	<div class="col-lg-12">
-  		<?php
-		$_SESSION['pathlocation'] = '../pcdmis/201_files/' . $_SESSION['EmpID'];
-		$emp_info = mysqli_query($con, "SELECT * FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID INNER JOIN tbl_school ON tbl_station.Emp_Station=tbl_school.SchoolID WHERE tbl_employee.Emp_ID='" . $_SESSION['EmpID'] . "'") or die("Error information data");
-		$data = mysqli_fetch_assoc($emp_info);
-		echo '<img src="../pcdmis/images/' . $data['Picture'] . '" width="200" height="250"   style="padding:4px;margin:4px;border-radius:10px;" align="right">';
-		echo '<h3>Employee ID: ' . $_SESSION['EmpID'] . '</h3>';
-		echo '<h3>Employee Name: ' . utf8_encode($data['Emp_LName'] . ', ' . $data['Emp_FName'] . ' ' . $data['Emp_MName']) . '</h3>';
-		echo '<h3>Station: ' . $data['SchoolName'] . '</h3>';
-		echo '<h3>Birthdate: ' . $data['Emp_Month'] . '/' . $data['Emp_Day'] . '/' . $data['Emp_Year'] . '</h3>';
-		$_SESSION['surname'] = $data['Emp_LName'];
-		$_SESSION['given'] = $data['Emp_FName'];
-		$_SESSION['middle'] = mb_strimwidth($data['Emp_MName'], 0, 1);
-		$_SESSION['birth'] = $data['Emp_Month'] . '/' . $data['Emp_Day'] . '/' . $data['Emp_Year'];
-		$_SESSION['place'] = $data['Emp_place_of_birth'];
-		?>
-  	</div>
-	
-  	<div class="col-lg-12">
-  		<div class="panel-body">
-  			<?php
-			$dir = $_SESSION['pathlocation']; // Directory where files are stored
+<div class="row mt-3 mb-4">
+	<div class="col">
+		<div class="card">
+			<div class="card-header">
+				<h3 class="h4 mb-0">201 Files</h3>
+			</div>
 
-			if ($dir_list = opendir($dir)) {
-				while (($filename = readdir($dir_list)) != false) {
-			?>
-  			
-			<p><a href="<?php echo $_SESSION['pathlocation'] . '/' . $filename; ?>" target="_blank"><?php echo $filename; ?></a></p>
-  			
-			<?php
-				}
+			<div class="card-body">
+				<?php
+				$emp_info = mysqli_query($con, "SELECT * FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID INNER JOIN tbl_school ON tbl_station.Emp_Station=tbl_school.SchoolID WHERE tbl_employee.Emp_ID='" . $_SESSION['EmpID'] . "'") or die("Error information data");
+				$data = mysqli_fetch_assoc($emp_info);
 
-				closedir($dir_list);
-			}
-			?>
-  		</div><!-- .panel-body -->
-  	</div><!-- .panel -->
+				$_SESSION['surname'] = $data['Emp_LName'];
+				$_SESSION['given'] = $data['Emp_FName'];
+				$_SESSION['middle'] = mb_strimwidth($data['Emp_MName'], 0, 1);
+				$_SESSION['birth'] = $data['Emp_Month'] . '/' . $data['Emp_Day'] . '/' . $data['Emp_Year'];
+				$_SESSION['place'] = $data['Emp_place_of_birth'];
+				?>
+
+				<div class="row">
+					<div class="col-3">
+						<img src="../<?php echo $data['Picture']; ?>" width="100%">
+					</div>
+
+					<div class="col-9">
+						<table>
+							<tr class="border-bottom">
+								<th class="px-2 py-3">Employee ID:</th>
+								<td class="px-2 py-3"><?php echo $_SESSION['EmpID']; ?></td>
+							</tr>
+							<tr class="border-bottom">
+								<th class="px-2 py-3">Employee Name:</th>
+								<td class="px-2 py-3"><?php echo $data['Emp_LName'] . ', ' . $data['Emp_FName'] . ' ' . $data['Emp_MName']; ?></td>
+							</tr>
+							<tr class="border-bottom">
+								<th class="px-2 py-3">Station:</th>
+								<td class="px-2 py-3"><?php echo $data['SchoolName']; ?></td>
+							</tr>
+							<tr class="border-bottom">
+								<th class="px-2 py-3">Birthdate:</th>
+								<td class="px-2 py-3"><?php echo ToLongDateString($data['Emp_Year'] . '-' . $data['Emp_Month'] . '-' . $data['Emp_Day']); ?></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col table-responsive">
+						<table width="100%" class="table table-striped table-bordered table-hover mb-0" cellspacing="0">
+							<thead>
+								<tr class="text-center">
+									<th class="align-middle" width="10%">#</th>
+									<th class="align-middle" width="80%">Filename</th>
+									<th class="align-middle" width="10%">Action</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<?php
+								$dir = '../' . $_SESSION['pathlocation'];
+								$no = 0;
+
+								if ($dir_list = opendir($dir)) {
+									while (($filename = readdir($dir_list)) !== false) {
+										if (!is_dir($filename)) {
+											$no++;
+								?>
+											<tr>
+												<td class="text-center align-middle"><?php echo $no; ?></td>
+												<td class="align-middle"><?php echo $filename; ?></td>
+												<td class="text-center align-middle"><a class="btn btn-success my-1" href="<?php echo $dir . '/' . $filename; ?>" target="_blank"><i class="fas fa-eye fa-fw"></i></a></td>
+											</tr>
+									<?php
+										}
+									}
+
+									closedir($dir_list);
+								}
+								
+								if ($no === 0) { ?>
+									<tr>
+										<td class="text-center align-middle" colspan="3">No available files to show.</td>
+									</tr>
+								<?php
+								}
+								?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

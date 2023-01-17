@@ -12,7 +12,7 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 			<div class="card-header">
 				<div class="d-sm-flex align-items-center justify-content-between">
 					<h3 class="h4 mb-0"><?php echo $_GET['id']; ?> Certificates</h3>
-					
+
 					<a href="#uploadCertificateModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fa fa-upload fa-fw"></i></span><span class="text">Upload</span></a>
 				</div>
 			</div>
@@ -71,11 +71,11 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 				<div class="table-responsive">
 					<table width="100%" class="table table-striped table-bordered table-hover" cellspacing="0" id="dataTable">
 						<thead>
-							<tr class="text-center align-middle">
-								<th>#</th>
-								<th>Descriptions</th>
-								<th>Category</th>
-								<th class="text-center align-middle" width="100px">Action</th>
+							<tr class="text-center">
+								<th class="align-middle" width="10%">#</th>
+								<th class="align-middle" width="50$">Descriptions</th>
+								<th class="align-middle" width="30%">Category</th>
+								<th class="align-middle" width="10%">Action</th>
 							</tr>
 						</thead>
 

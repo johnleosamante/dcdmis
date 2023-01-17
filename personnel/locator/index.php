@@ -130,7 +130,11 @@ if (isset($_POST['savelocator'])) {
 						</select>
 					</div>
 
-					<div class="form-group mb-0" id="supervisor"></div>
+					<div class="form-group mb-0" id="supervisor">
+						<label class="mt-3 mb-0">Immediate Supervisor:</label>
+						<input type="text" value="" class="form-control" disabled>
+						<input type="hidden" name="signature" value="" class="form-control" required>
+					</div>
 				</div><!-- .modal-body -->
 
 				<div class="modal-footer">
