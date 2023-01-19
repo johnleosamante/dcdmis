@@ -26,11 +26,11 @@ $_SESSION['pathlocation'] = 'uploads/201_files/' . $_SESSION['EmpID'];
 				?>
 
 				<div class="row">
-					<div class="col-3">
+					<div class="col-lg-2 col-md-5 col-sm-12 col-xs-12">
 						<img src="../<?php echo $data['Picture']; ?>" width="100%">
 					</div>
 
-					<div class="col-9">
+					<div class="col-lg-10 col-md-7 col-sm-12 col-xs-12">
 						<table>
 							<tr class="border-bottom">
 								<th class="px-2 py-3">Employee ID:</th>

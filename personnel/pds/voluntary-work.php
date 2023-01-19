@@ -34,8 +34,8 @@
                 <td class="text-center align-middle"><?php echo $voluntaryWork['Number_of_Hour']; ?></td>
                 <td class="text-center align-middle"><?php echo $voluntaryWork['Position']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" id="<?php echo $voluntaryWork['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-voluntary-work.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" onclick="delete_volunter(this.id)" id="<?php echo $voluntaryWork['No'] ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" onclick="viewdata('UpdateModal', 'pds/update/update-voluntary-work.php?id=<?php echo $voluntaryWork['No']; ?>')" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" onclick="delete_volunter(<?php echo $voluntaryWork['No']; ?>)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php
@@ -52,7 +52,7 @@
 
       <script>
         function delete_volunter(id) {
-          if (confirm("Are you sure you want to deleted this row?")) {
+          if (confirm("Are you sure you want to delete this entry?")) {
             window.location.href = 'pds/delete/delete-voluntary-work.php?id=' + id;
           }
         }

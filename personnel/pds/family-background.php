@@ -31,8 +31,8 @@
                 <td class="text-center align-middle"><?php echo ToLongDateString($member['Birthdate']); ?></td>
                 <td class="text-center align-middle"><?php echo $member['Relation']; ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" id="<?php echo $member['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-family-member.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" id="<?php echo $member['No']; ?>" onclick="delete_option(this.id)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" onclick="viewdata('UpdateModal', 'pds/update/update-family-member.php?id=<?php echo $member['No']; ?>')" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" onclick="delete_option(<?php echo $member['No']; ?>)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php
@@ -49,7 +49,7 @@
 
       <script>
         function delete_option(id) {
-          if (confirm("Are you sure you want to delete this row?")) {
+          if (confirm("Are you sure you want to delete this entry?")) {
             window.location.href = 'pds/delete/delete-family-member.php?id=' + id;
           }
         }

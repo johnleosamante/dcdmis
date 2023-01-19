@@ -28,8 +28,8 @@
                 <td class="text-center align-middle"><?php echo $information['Organization']; ?></td>
 
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" id="<?php echo $information['No']; ?>" onclick="viewdata('UpdateModal', 'pds/update/update-other-information.php?id=' + this.id)" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" onclick="delete_other(this.id)" id="<?php echo $information['No']; ?>" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1" onclick="viewdata('UpdateModal', 'pds/update/update-other-information.php?id=<?php echo $information['No']; ?>')" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1" onclick="delete_other(<?php echo $information['No']; ?>)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php
@@ -46,7 +46,7 @@
 
       <script>
         function delete_other(id) {
-          if (confirm("Are you sure you want to deleted this row?")) {
+          if (confirm("Are you sure you want to delete this entry?")) {
             window.location.href = 'pds/delete/delete-other-information.php?id=' + id;
           }
         }

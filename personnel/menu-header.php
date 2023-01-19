@@ -167,7 +167,7 @@
         <h6 class="dropdown-header">Notifications</h6>
 
         <?php while ($rmessages = DBFetchArray($query_messages)) : ?>
-          <a class="dropdown-item d-flex align-items-center" href="<?php echo GetHashURL('personnel', 'Step Increment Application', $rmessages['No']); ?>">
+          <a class="dropdown-item d-flex align-items-center" href="#<?php //echo GetHashURL('personnel', 'Step Increment Application', $rmessages['No']); ?>">
             <div class="mr-3">
               <div class="icon-circle bg-info"><i class="fas fa-donate text-white"></i></div>
             </div>

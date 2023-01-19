@@ -1,8 +1,8 @@
 <?php
-if (!is_dir('../pcdmis/step_requirement/'.$_SESSION['year'].'/'.$_SESSION['EmpID'])) {
-    mkdir('../pcdmis/step_requirement/'.$_SESSION['year'].'/'.$_SESSION['EmpID'], 0777, true);
-}
-$_SESSION['pathlocation']='../pcdmis/step_requirement/'.$_SESSION['year'].'/'.$_SESSION['EmpID'];
+// if (!is_dir('../pcdmis/step_requirement/'.$_SESSION['year'].'/'.$_SESSION['EmpID'])) {
+//     mkdir('../pcdmis/step_requirement/'.$_SESSION['year'].'/'.$_SESSION['EmpID'], 0777, true);
+// }
+//$_SESSION['pathlocation']='../pcdmis/step_requirement/'.$_SESSION['year'].'/'.$_SESSION['EmpID'];
 mysqli_query($con,"UPDATE tbl_messages SET Message_status='Read' WHERE Message_to='".$_SESSION['EmpID']."'  AND No='".$_GET['No']."' LIMIT 1");
 date_default_timezone_set("Asia/Manila");
 	$dateposted = date("Y-m-d H:i:s");

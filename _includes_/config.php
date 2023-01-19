@@ -23,7 +23,7 @@ define('ADDRESS', 'Dipolog City');
 define('SDS', 'Danny B. Cordova, EdD, CESO VI');
 define('SDS_POSITION', 'Schools Division Supervisor');
 
-define('ASDS', 'Lourma I. Poculan, CESO VI');
+define('ASDS', 'Lourma I. Poculan, CESE');
 define('ASDS_POSITION', 'Assistant Schools Division Supervisor');
 
 define('CID_CHIEF', 'Amelinda D. Montero, DM');
