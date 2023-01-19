@@ -37,7 +37,7 @@
           <label for="position" class="mb-0">Position:</label>
           <select name="position" id="position" class="form-control" required>
             <?php
-            $mypost = mysqli_query($con, "SELECT * FROM tbl_job");
+            $mypost = mysqli_query($con, "SELECT * FROM tbl_job ORDER BY Job_description;");
             while ($rowpost = mysqli_fetch_array($mypost)) { ?>
               <option value="<?php echo $rowpost['Job_code']; ?>" <?php echo SetOptionSelected($rowpost['Job_code'], $rowpsip['Job_code']); ?>><?php echo $rowpost['Job_description']; ?></option>
             <?php
