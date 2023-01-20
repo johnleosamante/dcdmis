@@ -19,11 +19,19 @@ function ToAddress($lot, $street, $subdivision, $barangay, $city, $province='') 
   return ToString($lot, '', ', ') . ToString($street, '', ', ') . ToString($subdivision, '', ', ') . ToString($barangay, '', ', ') . ToString($city) . ToString($province, ', ');
 }
 
-function ToDateString($date) {
-  return date("m/d/Y", strtotime($date));
+function ToDateString($date, $string='') {
+  if (strtotime($date)) {
+    return date("m/d/Y", strtotime($date));
+  } else {
+    return $string;
+  }
 }
 
-function ToLongDateString($date) {
-  return date("F j, Y", strtotime($date));
+function ToLongDateString($date, $string='') {
+  if (strtotime($date)) {
+    return date("F j, Y", strtotime($date));
+  } else {
+    return $string;
+  }
 }
 ?>

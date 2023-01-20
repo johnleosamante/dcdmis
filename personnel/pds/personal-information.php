@@ -269,14 +269,14 @@ $_SESSION['Year'] = $row['Emp_Year'];
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="height" class="mb-0">Height (m):</label>
-                  <input id="height" type="number" name="height" value="<?php echo $_SESSION['Height']; ?>" class="form-control">
+                  <input id="height" type="number" name="height" min="0" step="0.01" value="<?php echo $_SESSION['Height']; ?>" class="form-control">
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
 
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="weight" class="mb-0">Weight (kg):</label>
-                  <input id="weight" type="number" name="weight" value="<?php echo $_SESSION['Weight']; ?>" class="form-control">
+                  <input id="weight" type="number" name="weight" min="0" step="0.01" value="<?php echo $_SESSION['Weight']; ?>" class="form-control">
                 </div><!-- .form-group -->
               </div><!-- .col-md-4 -->
 
@@ -300,7 +300,7 @@ $_SESSION['Year'] = $row['Emp_Year'];
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group mb-0">
-                  <label for="address" class="mb-0">Residential Addres:</label>
+                  <label for="address" class="mb-0">Residential Address:</label>
                   <input id="address" type="text" name="address" value="<?php echo $_SESSION['Address']; ?>" class="form-control">
                 </div><!-- .form-group -->
               </div><!-- .col-md-12 -->
