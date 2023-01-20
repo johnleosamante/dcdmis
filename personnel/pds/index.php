@@ -12,10 +12,10 @@ if (!is_dir('../uploads/images/' . $_SESSION['EmpID'])) {
 if (isset($_POST['UpdatePersonalInformation'])) {
 	$myimage = '';
 
-	if ($_FILES['image']['size'] !== 0 && $_FILES['image']['error'] !== 0) {
-		$myfile = $_FILES['image']['name'];
-		$temp = $_FILES['image']['tmp_name'];
-		$type = $_FILES['image']['type'];
+	if ($_FILES['imageUpload']['size'] > 0 && $_FILES['imageUpload']['error'] == 0) {
+		$myfile = $_FILES['imageUpload']['name'];
+		$temp = $_FILES['imageUpload']['tmp_name'];
+		$type = $_FILES['imageUpload']['type'];
 		$ext = pathinfo($myfile, PATHINFO_EXTENSION);
 		$myimage = 'uploads/images/' . $_SESSION['EmpID'] . '/' . $_SESSION['EmpID'] . '.' . $ext;
 
