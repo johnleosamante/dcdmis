@@ -1,343 +1,374 @@
 <?php
 # personnel/pds/personal-information.php
 
-$result = mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID ='" . $_SESSION['EmpID'] . "' LIMIT 1");
+$result = mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID ='" . $_SESSION['EmpID'] . "' LIMIT 1;");
 $row = mysqli_fetch_assoc($result);
-
-$_SESSION['Last_Name'] = $row['Emp_LName'];
-$_SESSION['First_Name'] = $row['Emp_FName'];
-$_SESSION['Middle_Name'] = $row['Emp_MName'];
-$_SESSION['Extension'] = $row['Emp_Extension'];
-$_SESSION['Birthdate'] = ToLongDateString($row['Emp_Year'] . '-' . $row['Emp_Month'] . '-' . $row['Emp_Day']);
-$_SESSION['Place_of_Birth'] = $row['Emp_place_of_birth'];
-$_SESSION['Citizen'] = $row['Emp_Citizen'];
-$_SESSION['Civil_Status'] = $row['Emp_CS'];
-$_SESSION['Gender'] = $row['Emp_Sex'];
-$_SESSION['Address'] = $row['Emp_Address'];
-$_SESSION['Height'] = $row['Emp_Height'];
-$_SESSION['Weight'] = $row['Emp_Weight'];
-$_SESSION['Blood'] = $row['Emp_Blood_type'];
 $_SESSION['Picture'] = $row['Picture'];
-$_SESSION['Cell_No'] = $row['Emp_Cell_No'];
-$_SESSION['Month'] = $row['Emp_Month'];
-$_SESSION['Day'] = $row['Emp_Day'];
-$_SESSION['Year'] = $row['Emp_Year'];
 ?>
 
 <div class="tab-pane fade<?php echo SetActiveNavigationTab(!isset($_SESSION['pdstab']) || $_SESSION['pdstab'] === 'personal-information'); ?>" id="personal-information">
-
-  <div class="d-sm-flex align-items-center justify-content-between">
+  <div class="d-sm-flex">
     <h3 class="h4 mb-0">Personal Information</h3>
-    <a href="#PersonalInformationModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-edit fa-fw"></i></span><span class="text">Edit</span></a>
   </div><!-- .d-sm-flex -->
 
-  <div class="row mt-3">
-    <div class="col-md-6 col-lg-4 col-xl-2 justify-content-center">
-      <?php
-      if ($row['Picture'] == "") {
-        $image = "../assets/img/user.png";
-      } else {
-        $image = "../" . $_SESSION['Picture'];
-      } ?>
-      <img src="<?php echo $image; ?>" width="100%" class="mb-3 border rounded" id="employeePhoto">
+  <form action="" method="POST" role="form">
+    <div class="row mt-3">
+      <div class="col-md-6 col-lg-4 col-xl-2 justify-content-center">
+        <?php
+        if ($row['Picture'] == "") {
+          $image = "../assets/img/user.png";
+        } else {
+          $image = "../" . $row['Picture'];
+        } ?>
+        <img src="<?php echo $image; ?>" width="100%" class="mb-3 border rounded" id="employeePhoto">
 
-      <form action="" method="POST" role="form">
         <div class="custom-file">
-          <input id="imageUpload" type="file" name="image" class="custom-file-input" required>
+          <input id="imageUpload" type="file" name="image" class="custom-file-input">
           <label id="imageUploadLabel" class="custom-file-label" for="imageUpload">Choose file</label>
         </div>
 
-        <button type="submit" name="ChangeProfilePicture" class="btn btn-primary btn-block my-3"><i class="fas fa-save fa-fw"></i> Save</button>
-      </form>
+        <script>
+          document.getElementById('imageUpload').addEventListener('change', (event) => {
+            var preview = document.getElementById('employeePhoto');
+            const file = event.target.files[0];
+            const name = file.name;
+            const lastDot = name.lastIndexOf('.');
+            const ext = name.substring(lastDot + 1);
+            var label = document.getElementById('imageUploadLabel');
+            label.innerText = name;
 
-      <script>
-        document.getElementById('imageUpload').addEventListener('change', (event) => {
-          var preview = document.getElementById('employeePhoto');
-          const file = event.target.files[0];
-          const name = file.name;
-          const lastDot = name.lastIndexOf('.');
-          const ext = name.substring(lastDot + 1);
-          var label = document.getElementById('imageUploadLabel');
-          label.innerText = name;
+            switch (ext) {
+              case 'jpg':
+              case 'jpeg':
+              case 'png':
+              case 'gif':
+                preview.src = URL.createObjectURL(event.target.files[0]);
+                break;
+              default:
+                preview.src = '<?php echo GetSiteURL(); ?>/assets/img/nopreview.png';
+                break;
+            }
+          });
+        </script>
+      </div><!-- .col-md-6 -->
 
-          switch (ext) {
-            case 'jpg':
-            case 'jpeg':
-            case 'png':
-            case 'gif':
-              preview.src = URL.createObjectURL(event.target.files[0]);
-              break;
-            default:
-              preview.src = '<?php echo GetSiteURL(); ?>/assets/img/nopreview.png';
-              break;
-          }
-        });
-      </script>
-    </div><!-- .col-md-6 -->
+      <div class="col-md-6 col-lg-8 col-xl-10">
+        <div class="form-group">
+          <label for="LastName" class="mb-0">Last Name:</label>
+          <input type="text" class="form-control" id="LastName" name="LastName" required value="<?php echo $row['Emp_LName']; ?>">
+        </div>
 
-    <div class="col-md-6 col-lg-8 col-xl-10">
-      <table>
-        <tr class="border-bottom">
-          <th class="py-2">Last Name:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Last_Name']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">First Name:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['First_Name']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Middle Name:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Middle_Name']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Name Extension:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Extension']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Sex:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Gender']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Date of Birth:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Birthdate']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Place of Birth:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Place_of_Birth']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Citizenship:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Citizen']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Civil Status:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Civil_Status']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Height:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Height']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Weight:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Weight']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Blood Type:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Blood']; ?></td>
-        </tr>
-        <tr class="border-bottom">
-          <th class="py-2">Residential Address:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Address']; ?></td>
-        </tr>
-        <tr>
-          <th class="py-2">Contact No.:</th>
-          <td class="py-2 px-3"><?php echo $_SESSION['Cell_No']; ?></td>
-          <td class="py-2 px-3"><span class="small"><a class="text-decoration-none" href="#ContactNoModal" data-toggle="modal"><i class="fas fa-edit fa-fw"></i> Edit</a></span></td>
-        </tr>
-      </table>
-    </div><!-- .col-md-6 -->
-  </div><!-- .row -->
+        <div class="row">
+          <div class="col-lg-9">
+            <div class="form-group">
+              <label for="FirstName" class="mb-0">First Name:</label>
+              <input type="text" class="form-control" id="FirstName" name="FirstName" required value="<?php echo $row['Emp_FName']; ?>">
+            </div>
+          </div>
 
-  <div class="modal fade" id="PersonalInformationModal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Personal Information</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
-        </div><!-- .modal-header -->
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="NameExtension" class="mb-0">Name Extension:</label>
+              <input type="text" class="form-control" id="NameExtension" name="NameExtension" value="<?php echo $row['Emp_Extension']; ?>">
+            </div>
+          </div>
+        </div>
 
-        <form method="post" role="form" action="">
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="LName" class="mb-0">Last Name:</label>
-                  <input id="LName" type="text" name="LName" value="<?php echo $_SESSION['Last_Name']; ?>" class="form-control">
-                </div><!-- .form-group -->
-              </div><!-- .col-md-6 -->
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="FName" class="mb-0">First Name:</label>
-                  <input id="FName" type="text" name="FName" value="<?php echo $_SESSION['First_Name']; ?>" class="form-control">
-                </div><!-- .form-group -->
-              </div><!-- .col-md-6 -->
-            </div><!-- .row -->
+        <div class="form-group">
+          <label for="MiddleName" class="mb-0">Middle Name:</label>
+          <input type="text" class="form-control" id="MiddleName" name="MiddleName" value="<?php echo $row['Emp_MName']; ?>">
+        </div>
 
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="MName" class="mb-0">Middle Name:</label>
-                  <input id="MName" type="text" name="MName" value="<?php echo $_SESSION['Middle_Name']; ?>" class="form-control">
-                </div><!-- .form-group -->
-              </div><!-- .col-md-6 -->
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="Extension" class="mb-0">Extension:</label>
-                  <input id="Extension" type="text" name="Extension" value="<?php echo $_SESSION['Extension']; ?>" class="form-control">
-                </div><!-- .form-group -->
-              </div><!-- .col-md-3 -->
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="gender" class="mb-0">Sex:</label>
-                  <select id="gender" name="gender" class="form-control">
-                    <option value="Male" <?php echo SetOptionSelected('Male', $_SESSION['Gender']); ?>>Male</option>
-                    <option value="Female" <?php echo SetOptionSelected('Female', $_SESSION['Gender']); ?>>Female</option>
-                  </select>
-                </div><!-- .form-group -->
-              </div><!-- .col-md-3 -->
-            </div><!-- .row -->
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="DateofBirth" class="mb-0">Date of Birth:</label>
+              <input type="date" class="form-control" id="DateofBirth" name="DateofBirth" value="<?php echo $row['Emp_Year'] . '-' . $row['Emp_Month'] . '-' . $row['Emp_Day']; ?>" required>
+            </div>
+          </div>
 
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="inputBMonth" class="mb-0">Birth Month:</label>
-                  <select name="Month" class="form-control" id="inputBMonth" required>
-                    <option value="01" <?php echo SetOptionSelected('01', $_SESSION['Month']); ?>>January</option>
-                    <option value="02" <?php echo SetOptionSelected('02', $_SESSION['Month']); ?>>February</option>
-                    <option value="03" <?php echo SetOptionSelected('03', $_SESSION['Month']); ?>>March</option>
-                    <option value="04" <?php echo SetOptionSelected('04', $_SESSION['Month']); ?>>April</option>
-                    <option value="05" <?php echo SetOptionSelected('05', $_SESSION['Month']); ?>>May</option>
-                    <option value="06" <?php echo SetOptionSelected('06', $_SESSION['Month']); ?>>June</option>
-                    <option value="07" <?php echo SetOptionSelected('07', $_SESSION['Month']); ?>>July</option>
-                    <option value="08" <?php echo SetOptionSelected('08', $_SESSION['Month']); ?>>August</option>
-                    <option value="09" <?php echo SetOptionSelected('09', $_SESSION['Month']); ?>>September</option>
-                    <option value="10" <?php echo SetOptionSelected('10', $_SESSION['Month']); ?>>October</option>
-                    <option value="11" <?php echo SetOptionSelected('11', $_SESSION['Month']); ?>>November</option>
-                    <option value="12" <?php echo SetOptionSelected('12', $_SESSION['Month']); ?>>December</option>
-                  </select>
-                </div><!-- .form-group -->
-              </div><!-- .col-md-4 -->
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="Sex" class="mb-0">Sex:</label>
+              <select name="Sex" id="Sex" class="form-control" required>
+                <option value="Male" <?php echo SetOptionSelected('Male', $row['Emp_Sex']); ?>>Male</option>
+                <option value="Female" <?php echo SetOptionSelected('Female', $row['Emp_Sex']); ?>>Female</option>
+              </select>
+            </div>
+          </div>
 
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="inputBDay" class="mb-0">Birth Day:</label>
-                  <input class="form-control" id="inputBDay" name="Day" type="number" value="<?php echo $_SESSION['Day']; ?>" required>
-                </div><!-- .form-group -->
-              </div><!-- .col-md-4 -->
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="CivilStatus" class="mb-0">Civil Status:</label>
+              <select name="CivilStatus" id="CivilStatus" class="form-control" required>
+                <option value="Single" <?php echo SetOptionSelected('Single', $row['Emp_CS']); ?>>Single</option>
+                <option value="Married" <?php echo SetOptionSelected('Married', $row['Emp_CS']); ?>>Married</option>
+                <option value="Widowed" <?php echo SetOptionSelected('Widowed', $row['Emp_CS']); ?>>Widowed</option>
+                <option value="Separated" <?php echo SetOptionSelected('Separated', $row['Emp_CS']); ?>>Separated</option>
+                <option value="Others" <?php echo SetOptionSelected('Others', $row['Emp_CS']); ?>>Others</option>
+              </select>
+            </div>
+          </div>
 
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="inputBYear" class="mb-0">Birth Year:</label>
-                  <select name="Year" class="form-control" id="inputBYear" required>
-                    <?php
-                    $age = 0;
-                    $year = date('Y');
-                    while ($age <= 75) {
-                      $age++;
-                    ?>
-                      <option value="<?php echo $year; ?>" <?php echo SetOptionSelected($year, $_SESSION['Year']); ?>><?php echo $year; ?></option>
-                    <?php
-                      $year--;
-                    }
-                    ?>
-                  </select>
-                </div><!-- .form-group -->
-              </div><!-- .col-md-4 -->
-            </div><!-- .row -->
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="SpecifyOthers" class="mb-0">Specify, if Others:</label>
+              <input type="text" class="form-control" id="SpecifyOthers" name="SpecifyOthers">
+            </div>
+          </div>
+        </div>
 
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label for="PLB" class="mb-0">Place of Birth:</label>
-                  <input id="PLB" type="text" name="PLB" value="<?php echo $_SESSION['Place_of_Birth']; ?>" class="form-control">
-                </div><!-- .form-group -->
-              </div><!-- .col-md-12 -->
-            </div><!-- .row -->
+        <div class="form-group">
+          <label for="PlaceofBirth" class="mb-0">Place of Birth:</label>
+          <input type="text" class="form-control" id="PlaceofBirth" name="PlaceofBirth" required value="<?php echo $row['Emp_place_of_birth']; ?>">
+        </div>
 
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="citizen" class="mb-0">Citizenship:</label>
-                  <input id="citizen" type="text" name="citizen" value="<?php echo $_SESSION['Citizen']; ?>" class="form-control">
-                </div><!-- .form-group -->
-              </div><!-- .col-md-6 -->
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="CS" class="mb-0">Civil Status:</label>
-                  <select id="CS" name="CS" class="form-control">
-                    <option value="Single" <?php echo SetOptionSelected('Single', $_SESSION['Civil_Status']); ?>>Single</option>
-                    <option value="Married" <?php echo SetOptionSelected('Married', $_SESSION['Civil_Status']); ?>>Married</option>
-                    <option value="Widow" <?php echo SetOptionSelected('Widow', $_SESSION['Civil_Status']); ?>>Widow</option>
-                    <option value="Separated" <?php echo SetOptionSelected('Separated', $_SESSION['Civil_Status']); ?>>Separated</option>
-                    <option value="Other" <?php echo SetOptionSelected('Other', $_SESSION['Civil_Status']); ?>>Other</option>
-                  </select>
-                </div><!-- .form-group -->
-              </div><!-- .col-md-6 -->
-            </div><!-- .row -->
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="Citizenship" class="mb-0">Citizenship:</label>
+              <input type="text" class="form-control" id="Citizenship" name="Citizenship" required value="<?php echo $row['Emp_Citizen']; ?>">
+            </div>
+          </div>
 
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="height" class="mb-0">Height (m):</label>
-                  <input id="height" type="number" name="height" min="0" step="0.01" value="<?php echo $_SESSION['Height']; ?>" class="form-control">
-                </div><!-- .form-group -->
-              </div><!-- .col-md-4 -->
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="DualCitizenship" class="mb-0">Dual Citizenship:</label>
+              <select name="DualCitizenship" id="DualCitizenship" class="form-control" required>
+                <option value="N/A">N/A</option>
+                <option value="By Birth">By Birth</option>
+                <option value="By Naturalization">By Naturalization</option>
+              </select>
+            </div>
+          </div>
 
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="weight" class="mb-0">Weight (kg):</label>
-                  <input id="weight" type="number" name="weight" min="0" step="0.01" value="<?php echo $_SESSION['Weight']; ?>" class="form-control">
-                </div><!-- .form-group -->
-              </div><!-- .col-md-4 -->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="Country" class="mb-0">Please Indicate Country, if Dual Citizen:</label>
+              <input type="text" class="form-control" id="Country" name="Country">
+            </div>
+          </div>
+        </div>
 
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="blood" class="mb-0">Blood Type:</label>
-                  <select id="blood" name="blood" class="form-control">
-                    <option value="A+" <?php echo SetOptionSelected('A+', $_SESSION['Blood']); ?>>A+</option>
-                    <option value="A-" <?php echo SetOptionSelected('A-', $_SESSION['Blood']); ?>>A-</option>
-                    <option value="B+" <?php echo SetOptionSelected('B+', $_SESSION['Blood']); ?>>B+</option>
-                    <option value="B-" <?php echo SetOptionSelected('B-', $_SESSION['Blood']); ?>>B-</option>
-                    <option value="AB+" <?php echo SetOptionSelected('AB+', $_SESSION['Blood']); ?>>AB+</option>
-                    <option value="AB-" <?php echo SetOptionSelected('AB-', $_SESSION['Blood']); ?>>AB-</option>
-                    <option value="O+" <?php echo SetOptionSelected('O+', $_SESSION['Blood']); ?>>O+</option>
-                    <option value="O-" <?php echo SetOptionSelected('O-', $_SESSION['Blood']); ?>>O-</option>
-                  </select>
-                </div><!-- .form-group -->
-              </div><!-- .col-md-4 -->
-            </div><!-- .row -->
+        <div class="row">
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="Height" class="mb-0">Height (m):</label>
+              <input type="text" class="form-control" id="Height" name="Height" required value="<?php echo $row['Emp_Height']; ?>">
+            </div>
+          </div>
 
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group mb-0">
-                  <label for="address" class="mb-0">Residential Address:</label>
-                  <input id="address" type="text" name="address" value="<?php echo $_SESSION['Address']; ?>" class="form-control">
-                </div><!-- .form-group -->
-              </div><!-- .col-md-12 -->
-            </div><!-- .row -->
-          </div><!-- .modal-body -->
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="Weight" class="mb-0">Weight (kg):</label>
+              <input type="text" class="form-control" id="Weight" name="Weight" required value="<?php echo $row['Emp_Weight']; ?>">
+            </div>
+          </div>
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" name="UpdatePersonalInformation">Update</button>
-          </div><!-- .modal-footer -->
-        </form>
-      </div><!-- .modal-content -->
-    </div><!-- .modal-dialog -->
-  </div><!-- .modal -->
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="BloodType" class="mb-0">Blood Type:</label>
+              <select name="BloodType" id="BloodType" class="form-control" required>
+                <option value="A+" <?php echo SetOptionSelected('A+', $row['Emp_Blood_type']); ?>>A+</option>
+                <option value="A-" <?php echo SetOptionSelected('A-', $row['Emp_Blood_type']); ?>>A-</option>
+                <option value="B+" <?php echo SetOptionSelected('B+', $row['Emp_Blood_type']); ?>>B+</option>
+                <option value="B-" <?php echo SetOptionSelected('B-', $row['Emp_Blood_type']); ?>>B-</option>
+                <option value="AB+" <?php echo SetOptionSelected('AB+', $row['Emp_Blood_type']); ?>>AB+</option>
+                <option value="AB-" <?php echo SetOptionSelected('AB-', $row['Emp_Blood_type']); ?>>AB-</option>
+                <option value="O+" <?php echo SetOptionSelected('O+', $row['Emp_Blood_type']); ?>>O+</option>
+                <option value="O-" <?php echo SetOptionSelected('O-', $row['Emp_Blood_type']); ?>>O-</option>
+              </select>
+            </div>
+          </div>
 
-  <div class="modal fade" id="ContactNoModal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
-        </div><!-- .modal-header -->
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="GSISBP" class="mb-0">GSIS Number:</label>
+              <input type="text" class="form-control" id="GSISBP" name="GSISBP">
+            </div>
+          </div>
 
-        <form method="post" role="form" action="">
-          <div class="modal-body">
-            <div class="form-group mb-0">
-              <label for="Cell" class="mb-0">Contact Number:</label>
-              <input id="Cell" type="text" name="Cell" class="form-control" value="<?php echo $_SESSION['Cell_No']; ?>">
-            </div><!-- .form-group -->
-          </div><!-- .modal-body -->
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="PAGIBIG" class="mb-0">PAGIBIG ID Number:</label>
+              <input type="text" class="form-control" id="PAGIBIG" name="PAGIBIG">
+            </div>
+          </div>
+        </div>
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" name="UpdateContactNo" value="SAVE">Update</button>
-          </div><!-- .modal-footer -->
-        </form>
-      </div><!-- .modal-content -->
-    </div><!-- .modal-dialog -->
-  </div><!-- .modal -->
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="PHILHEALTH" class="mb-0">PHILHEALTH Number:</label>
+              <input type="text" class="form-control" id="PHILHEALTH" name="PHILHEALTH">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="SSS" class="mb-0">SSS Number:</label>
+              <input type="text" class="form-control" id="SSS" name="SSS">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="TIN" class="mb-0">TIN Number:</label>
+              <input type="text" class="form-control" id="TIN" name="TIN" value="<?php echo $row['Emp_TIN']; ?>">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="EmployeeNumber" class="mb-0">Agency Employee Number:</label>
+              <input type="text" class="form-control" id="EmployeeNumber" name="EmployeeNumber">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mb-0">
+          <label>Residential Address:</label>
+          <hr class="mt-0">
+        </div>
+
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="ResLot" class="mb-0 small">House/Block/Lot No.</label>
+              <input type="text" class="form-control" id="ResLot" name="ResLot">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="ResStreet" class="mb-0 small">Street</label>
+              <input type="text" class="form-control" id="ResStreet" name="ResStreet">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="ResSubdivision" class="mb-0 small">Subdivision/Village</label>
+              <input type="text" class="form-control" id="ResSubdivision" name="ResSubdivision">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="ResBarangay" class="mb-0 small">Barangay</label>
+              <input type="text" class="form-control" id="ResBarangay" name="ResBarangay" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="ResCity" class="mb-0 small">City/Municipality</label>
+              <input type="text" class="form-control" id="ResCity" name="ResCity" required>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="ResProvince" class="mb-0 small">Province</label>
+              <input type="text" class="form-control" id="ResProvince" name="ResProvince" required value="<?php echo $row['Emp_Address']; ?>">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="ResZIP" class="mb-0 small">ZIP Code</label>
+              <input type="text" class="form-control" id="ResZIP" name="ResZIP" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mb-0">
+          <label>Permanent Address:</label>
+          <hr class="mt-0">
+        </div>
+
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="PerLot" class="mb-0 small">House/Block/Lot No.</label>
+              <input type="text" class="form-control" id="PerLot" name="PerLot">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="PerStreet" class="mb-0 small">Street</label>
+              <input type="text" class="form-control" id="PerStreet" name="PerStreet">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="PerSubdivision" class="mb-0 small">Subdivision/Village</label>
+              <input type="text" class="form-control" id="PerSubdivision" name="PerSubdivision">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="PerBarangay" class="mb-0 small">Barangay</label>
+              <input type="text" class="form-control" id="PerBarangay" name="PerBarangay" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="PerCity" class="mb-0 small">City/Municipality</label>
+              <input type="text" class="form-control" id="PerCity" name="PerCity" required>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="PerProvince" class="mb-0 small">Province</label>
+              <input type="text" class="form-control" id="PerProvince" name="PerProvince" required>
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="PerZIP" class="mb-0 small">ZIP Code</label>
+              <input type="text" class="form-control" id="PerZIP" name="PerZIP" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="Telephone" class="mb-0">Telephone Number:</label>
+              <input type="text" class="form-control" id="Telephone" name="Telephone">
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="Mobile" class="mb-0">Mobile Number:</label>
+              <input type="text" class="form-control" id="Mobile" name="Mobile" value="<?php echo $row['Emp_Cell_No']; ?>">
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="Email" class="mb-0">Email Address:</label>
+              <input type="email" class="form-control" id="Email" name="Email" value="<?php echo $row['Emp_Email']; ?>">
+            </div>
+          </div>
+        </div>
+
+        <div class="rows">
+          <button class="btn btn-primary btn-block btn-lg" name="UpdatePersonalInformation"><i class="fas fa-save fa-fw"></i>Update Personal Information</button>
+        </div>
+      </div><!-- .col-md-6 -->
+    </div><!-- .row -->
+  </form>
 </div><!-- .tab-pane -->

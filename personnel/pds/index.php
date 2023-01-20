@@ -10,45 +10,52 @@ if (!is_dir('../uploads/images/' . $_SESSION['EmpID'])) {
 
 /* PERSONAL INFORMATION */
 if (isset($_POST['UpdatePersonalInformation'])) {
-	$age = date("Y") - $_POST['Year'];
+	$myimage = '';
 
-	mysqli_query($con, "UPDATE tbl_employee SET Emp_LName='" . $_POST['LName'] . "',Emp_FName='" . $_POST['FName'] . "',Emp_MName='" . $_POST['MName'] . "', Emp_Extension='" . $_POST['Extension'] . "', Emp_Month='" . $_POST['Month'] . "',Emp_Day='" . $_POST['Day'] . "',Emp_Year='" . $_POST['Year'] . "',Emp_Sex='" . $_POST['gender'] . "',Emp_CS='" . $_POST['CS'] . "',Emp_place_of_birth='" . $_POST['PLB'] . "',Emp_Citizen='" . $_POST['citizen'] . "',Emp_Address='" . $_POST['address'] . "',Emp_Height='" . $_POST['height'] . "',Emp_Weight='" . $_POST['weight'] . "',Emp_Blood_type='" . $_POST['blood'] . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
+	if ($_FILES['image']['size'] !== 0 && $_FILES['image']['error'] !== 0) {
+		$myfile = $_FILES['image']['name'];
+		$temp = $_FILES['image']['tmp_name'];
+		$type = $_FILES['image']['type'];
+		$ext = pathinfo($myfile, PATHINFO_EXTENSION);
+		$myimage = 'uploads/images/' . $_SESSION['EmpID'] . '/' . $_SESSION['EmpID'] . '.' . $ext;
+
+		move_uploaded_file($temp, '../' . $myimage);
+	} else {
+		$myimage = $_SESSION['Picture'];
+	}
+
+	$dob = strtotime($_POST['DateofBirth']);
+	$byear = date("Y", $dob);
+	$bmonth = date("m", $dob);
+	$bday = date("d", $dob);
+	$age = date("Y") - $byear;
+	$age = date("m") >= $bmonth ? $age : $age--;
+	$age = date("d") >= $bday ? $age : $age--;
+
 	mysqli_query($con, "UPDATE tbl_station SET Emp_age='$age' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
+
+	mysqli_query($con, "UPDATE tbl_employee SET 
+	Emp_LName='" . str_replace("'", "\'", $_POST['LastName']) . "', 
+	Emp_FName='" . str_replace("'", "\'", $_POST['FirstName']) . "', 
+	Emp_MName='" . str_replace("'", "\'", $_POST['MiddleName']) . "', 
+	Emp_Extension='" . str_replace("'", "\'", $_POST['NameExtension']) . "', 
+	Emp_Month='$bmonth', Emp_Day='$bday', Emp_Year='$byear', 
+	Emp_place_of_birth='" . str_replace("'", "\'", $_POST['PlaceofBirth']) . "', 
+	Emp_Sex='" . str_replace("'", "\'", $_POST['Sex']) . "', 
+	Emp_CS='" . str_replace("'", "\'", $_POST['CivilStatus']) . "', 
+	Emp_Citizen='" . str_replace("'", "\'", $_POST['Citizenship']) . "', 
+	Emp_Address='" . str_replace("'", "\'", $_POST['ResProvince']) . "', 
+	Emp_Height='" . str_replace("'", "\'", $_POST['Height']) . "', 
+	Emp_Weight='" . str_replace("'", "\'", $_POST['Weight']) . "', 
+	Emp_Blood_type='" . str_replace("'", "\'", $_POST['BloodType']) . "', 
+	Emp_Cell_No='" . str_replace("'", "\'", $_POST['Mobile']) . "', 
+	Emp_Email='" . str_replace("'", "\'", $_POST['Email']) . "',
+	Emp_TIN='" . str_replace("'", "\'", $_POST['TIN']) . "',
+	Picture='$myimage' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
 		$message = 'Personal Information has been updated successfully!';
-		$showPrompt = true;
-	}
-
-	$_SESSION['pdstab'] = 'personal-information';
-}
-
-if (isset($_POST['ChangeProfilePicture'])) {
-	$myfile = $_FILES['image']['name'];
-	$temp = $_FILES['image']['tmp_name'];
-	$type = $_FILES['image']['type'];
-	$ext = pathinfo($myfile, PATHINFO_EXTENSION);
-	$myimage = 'uploads/images/' . $_SESSION['EmpID'] . '/' . $_SESSION['EmpID'] . '.' . $ext;
-
-	move_uploaded_file($temp, '../' . $myimage);
-	mysqli_query($con, "UPDATE tbl_employee SET Picture='" . $myimage . "' WHERE Emp_ID = '" . $_SESSION['EmpID'] . "' LIMIT 1");
-
-	if (mysqli_affected_rows($con) === 1) {
-		$success = true;
-		$message = 'Profile picture has been updated successfully!';
-		$showPrompt = true;
-	}
-
-	$_SESSION['pdstab'] = 'personal-information';
-}
-
-if (isset($_POST['UpdateContactNo'])) {
-	mysqli_query($con, "UPDATE tbl_employee SET Emp_Cell_No='" . $_POST['Cell'] . "'WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-	if (mysqli_affected_rows($con) === 1) {
-		$success = true;
-		$message = 'Contact number has been updated successfully!';
 		$showPrompt = true;
 	}
 
