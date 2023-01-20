@@ -23,7 +23,7 @@
 
         <tbody>
           <?php
-          $voluntaryWorks = mysqli_query($con, "SELECT * FROM voluntary_work WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          $voluntaryWorks = mysqli_query($con, "SELECT * FROM voluntary_work WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY `From` DESC;");
 
           if (mysqli_num_rows($voluntaryWorks) > 0) {
             while ($voluntaryWork = mysqli_fetch_array($voluntaryWorks)) { ?>

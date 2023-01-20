@@ -24,7 +24,7 @@
 
         <tbody>
           <?php
-          $trainings = mysqli_query($con, "SELECT * FROM learning_and_development WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY No Asc");
+          $trainings = mysqli_query($con, "SELECT * FROM learning_and_development WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY `From` DESC;");
 
           if (mysqli_num_rows($trainings) > 0) {
             while ($training = mysqli_fetch_array($trainings)) { ?>

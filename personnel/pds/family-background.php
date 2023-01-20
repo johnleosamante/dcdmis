@@ -20,7 +20,7 @@
 
         <tbody>
           <?php
-          $familyMembers = mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY Birthdate;");
+          $familyMembers = mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY Birthdate DESC;");
 
           if (mysqli_num_rows($familyMembers) > 0) {
             while ($member = mysqli_fetch_array($familyMembers)) { ?>

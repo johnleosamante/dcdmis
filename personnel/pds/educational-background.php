@@ -25,7 +25,7 @@
         </thead>
         <tbody>
           <?php
-          $educationalBackground = mysqli_query($con, "SELECT * FROM educational_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+          $educationalBackground = mysqli_query($con, "SELECT * FROM educational_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY `From` ASC;");
 
           if (mysqli_num_rows($educationalBackground) > 0) {
             while ($education = mysqli_fetch_array($educationalBackground)) { ?>

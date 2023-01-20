@@ -24,7 +24,7 @@
 
         <tbody>
           <?php
-          $eligibilities = mysqli_query($con, "SELECT * FROM civil_service WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY Date_of_Examination");
+          $eligibilities = mysqli_query($con, "SELECT * FROM civil_service WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY Date_of_Examination DESC;");
 
           if (mysqli_num_rows($eligibilities) > 0) {
             while ($eligibility = mysqli_fetch_array($eligibilities)) { ?>
