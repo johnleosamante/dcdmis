@@ -50,7 +50,8 @@ if (isset($_POST['UpdatePersonalInformation'])) {
 	Emp_Blood_type='" . str_replace("'", "\'", $_POST['BloodType']) . "', 
 	Emp_Cell_No='" . str_replace("'", "\'", $_POST['Mobile']) . "', 
 	Emp_Email='" . str_replace("'", "\'", $_POST['Email']) . "',
-	Emp_TIN='" . str_replace("'", "\'", $_POST['TIN']) . "',
+	Emp_TIN='" . str_replace("'", "\'", $_POST['TIN']) . "', 
+	EmpNo='" . str_replace("'", "\'", $_POST['EmployeeNumber']) . "', 
 	Picture='$myimage' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
 
 	if (mysqli_affected_rows($con) === 1) {
