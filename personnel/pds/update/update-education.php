@@ -1,3 +1,33 @@
+<?php
+include_once('../../../_includes_/function.php');
+include_once('../../../_includes_/database/database.php');
+
+foreach ($_GET as $key => $data) {
+  $id = $_GET[$key] = $data;
+}
+
+$fname = $mname = $lname = $ext = $bdate = '';
+
+if (strlen($id) > 0) {
+  $_SESSION['No'] = $id;
+  $modalTitle = "Edit Education";
+
+  $children = mysqli_query($con, "SELECT * FROM family_background WHERE `No`='$id' LIMIT 1;");
+
+  if (mysqli_num_rows($children) > 0) {
+    $child = mysqli_fetch_array($children);
+    $fname = $child['First_Name'];
+    $mname = $child['Middle_Name'];
+    $lname = $child['Family_Name'];
+    $ext = $child['Name_Extension'];
+    $bdate = $child['Birthdate'];
+  }
+} else {
+  $_SESSION['No'] = '';
+  $modalTitle = "Add Education";
+}
+?>
+
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
