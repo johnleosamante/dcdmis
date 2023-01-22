@@ -366,7 +366,7 @@ $_SESSION['Picture'] = $row['Picture'];
         <div class="text-danger mb-3">* Required field</div>
 
         <div class="form-group mb-0">
-          <button class="btn btn-primary btn-block btn-lg" name="UpdatePersonalInformation"><i class="fas fa-save fa-fw"></i>Update Personal Information</button>
+          <button class="btn btn-primary btn-block" name="UpdatePersonalInformation"><i class="fas fa-save fa-fw"></i>Update Personal Information</button>
         </div>
       </div><!-- .col-md-6 -->
     </div><!-- .row -->

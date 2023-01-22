@@ -127,7 +127,7 @@
         $total = $fam + $educ + $civil + $work + $volun + $learn + $other + $ref;
         ?>
 
-        <h6 class="dropdown-header">
+        <h6 class="dropdown-header bg-dark border-dark">
           Personal Data Sheet
         </h6>
 
@@ -164,11 +164,12 @@
         $query_messages = DBQuery("SELECT * FROM tbl_messages WHERE Message_to='" . $_SESSION['EmpID'] . "' AND  Message_status ='Unread' ORDER BY Message_status Desc LIMIT 5");
         ?>
 
-        <h6 class="dropdown-header">Notifications</h6>
+        <h6 class="dropdown-header bg-dark border-dark">Notifications</h6>
 
         <?php while ($rmessages = DBFetchArray($query_messages)) : ?>
-          <a class="dropdown-item d-flex align-items-center" href="#<?php //echo GetHashURL('personnel', 'Step Increment Application', $rmessages['No']); ?>">
-            <div class="mr-3">
+          <a class="dropdown-item d-flex align-items-center px-3 py-2" href="#<?php //echo GetHashURL('personnel', 'Step Increment Application', $rmessages['No']); 
+                                                                              ?>">
+            <div class="mr-2">
               <div class="icon-circle bg-info"><i class="fas fa-donate text-white"></i></div>
             </div>
 

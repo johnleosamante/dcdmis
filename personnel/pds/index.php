@@ -73,7 +73,7 @@ if (isset($_POST['UpdatePersonalInformation'])) {
 	Emp_Email='" . str_replace("'", "\'", $_POST['Email']) . "',
 	Emp_TIN='" . str_replace("'", "\'", $_POST['TIN']) . "', 
 	EmpNo='" . str_replace("'", "\'", $_POST['EmployeeNumber']) . "', 
-	Picture='$myimage' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
+	Picture='$myimage' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
@@ -85,24 +85,92 @@ if (isset($_POST['UpdatePersonalInformation'])) {
 }
 
 /* FAMILY BACKGROUND */
-if (isset($_POST['AddFamilyMember'])) {
-	mysqli_query($con, "INSERT INTO family_background VALUES (NULL,'" . $_POST['Lname'] . "','" . $_POST['Fname'] . "','" . $_POST['Mname'] . "','" . $_POST['Birthdate'] . "','" . $_POST['Relation'] . "','" . $_SESSION['EmpID'] . "')");
+if (isset($_POST['UpdateFamilyBackground'])) {
+	$family_background = mysqli_query($con, "SELECT * FROM tbl_family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
+
+	if (mysqli_num_rows($family_background) === 0) {
+		mysqli_query($con, "INSERT INTO tbl_family_background VALUES (
+			'" . $_SESSION['EmpID'] . "', 
+			'" . str_replace("'", "\'", $_POST['SLastName']) . "',
+			'" . str_replace("'", "\'", $_POST['SFirstName']) . "',
+			'" . str_replace("'", "\'", $_POST['SNameExtension']) . "',
+			'" . str_replace("'", "\'", $_POST['SMiddleName']) . "',
+			'" . str_replace("'", "\'", $_POST['SOccupation']) . "',
+			'" . str_replace("'", "\'", $_POST['SBusiness']) . "',
+			'" . str_replace("'", "\'", $_POST['SBusinessAddress']) . "',
+			'" . str_replace("'", "\'", $_POST['STelephone']) . "',
+			'" . str_replace("'", "\'", $_POST['FLastName']) . "',
+			'" . str_replace("'", "\'", $_POST['FFirstName']) . "',
+			'" . str_replace("'", "\'", $_POST['FNameExtension']) . "',
+			'" . str_replace("'", "\'", $_POST['FMiddleName']) . "',
+			'" . str_replace("'", "\'", $_POST['MLastName']) . "',
+			'" . str_replace("'", "\'", $_POST['MFirstName']) . "',
+			'" . str_replace("'", "\'", $_POST['MMiddleName']) . "');");
+	} else {
+		mysqli_query($con, "UPDATE tbl_family_background SET 
+		SpouseLast='" . str_replace("'", "\'", $_POST['SLastName']) . "',
+		SpouseFirst='" . str_replace("'", "\'", $_POST['SFirstName']) . "', 
+		SpouseExtension='" . str_replace("'", "\'", $_POST['SNameExtension']) . "',
+		SpouseMiddle='" . str_replace("'", "\'", $_POST['SMiddleName']) . "',
+		SpouseOccupation='" . str_replace("'", "\'", $_POST['SOccupation']) . "',
+		SpouseBusiness='" . str_replace("'", "\'", $_POST['SBusiness']) . "',
+		SpouseBusinessAddress='" . str_replace("'", "\'", $_POST['SBusinessAddress']) . "',
+		SpouseTelephone='" . str_replace("'", "\'", $_POST['STelephone']) . "',
+		FatherLast='" . str_replace("'", "\'", $_POST['FLastName']) . "',
+		FatherFirst='" . str_replace("'", "\'", $_POST['FFirstName']) . "',
+		FatherExtension='" . str_replace("'", "\'", $_POST['FNameExtension']) . "',
+		FatherMiddle='" . str_replace("'", "\'", $_POST['FMiddleName']) . "',
+		MotherLast='" . str_replace("'", "\'", $_POST['MLastName']) . "',
+		MotherFirst='" . str_replace("'", "\'", $_POST['MFirstName']) . "',
+		MotherMiddle='" . str_replace("'", "\'", $_POST['MMiddleName']) . "'
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
+	}
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Family member has been added successfully!';
+		$message = 'Family Background has been updated successfully!';
 		$showPrompt = true;
 	}
 
 	$_SESSION['pdstab'] = 'family-background';
 }
 
-if (isset($_POST['UpdateFamilyMember'])) {
-	mysqli_query($con, "UPDATE family_background SET family_background.Family_Name='" . $_POST['Lname'] . "',family_background.First_Name='" . $_POST['Fname'] . "',family_background.Middle_Name='" . $_POST['Mname'] . "',family_background.Birthdate='" . $_POST['Bdate'] . "',family_background.Relation='" . $_POST['Relate'] . "' WHERE family_background.Emp_ID='" . $_SESSION['EmpID'] . "' AND family_background.No='" . $_SESSION['No'] . "'");
+if (isset($_POST['SaveChild'])) {
+	if (strlen($_SESSION['No']) === 0) {
+		mysqli_query($con, "INSERT INTO family_background VALUES (NULL, 
+		'" . str_replace("'", "\'", $_POST['CLastName']) . "',
+		'" . str_replace("'", "\'", $_POST['CFirstName']) . "',
+		'" . str_replace("'", "\'", $_POST['CNameExtension']) . "', 
+		'" . str_replace("'", "\'", $_POST['CMiddleName']) . "',
+		'" . str_replace("'", "\'", $_POST['CDateOfBirth']) . "', '',
+		'" . $_SESSION['EmpID'] . "'
+	);");
+
+		$message = 'Child has been added successfully!';
+	} else {
+		mysqli_query($con, "UPDATE family_background SET 
+		Family_Name='" . str_replace("'", "\'", $_POST['CLastName']) . "',
+		First_Name='" . str_replace("'", "\'", $_POST['CFirstName']) . "',Name_Extension='" . str_replace("'", "\'", $_POST['CNameExtension']) . "', Middle_Name='" . str_replace("'", "\'", $_POST['CMiddleName']) . "',Birthdate='" . str_replace("'", "\'", $_POST['CDateOfBirth']) . "'
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
+
+		$message = 'Child has been updated successfully!';
+	}
+
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Family member has been updated successfully!';
+		$showPrompt = true;
+	}
+
+	$_SESSION['pdstab'] = 'family-background';
+}
+
+if (isset($_POST['RemoveChild'])) {
+	mysqli_query($con, "DELETE FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "' LIMIT 1");
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Child has been removed successfully!';
 		$showPrompt = true;
 	}
 
@@ -539,4 +607,4 @@ if (isset($_POST['UpdateReference'])) {
 	</div><!-- .col -->
 </div><!-- .row -->
 
-<div class="modal fade" id="UpdateModal" role="dialog" data-backdrop="static" data-keyboard="false"></div><!-- .modal -->
+<div class="modal fade" id="Modal" role="dialog" data-backdrop="static" data-keyboard="false"></div><!-- .modal -->
