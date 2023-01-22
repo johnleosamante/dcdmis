@@ -54,14 +54,14 @@ $_SESSION['Picture'] = $row['Picture'];
 
       <div class="col-md-6 col-lg-8 col-xl-10">
         <div class="form-group">
-          <label for="LastName" class="mb-0">Last Name:</label>
+          <label for="LastName" class="mb-0">Last Name: <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="LastName" name="LastName" required value="<?php echo $row['Emp_LName']; ?>">
         </div>
 
         <div class="row">
           <div class="col-lg-9">
             <div class="form-group">
-              <label for="FirstName" class="mb-0">First Name:</label>
+              <label for="FirstName" class="mb-0">First Name: <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="FirstName" name="FirstName" required value="<?php echo $row['Emp_FName']; ?>">
             </div>
           </div>
@@ -82,14 +82,14 @@ $_SESSION['Picture'] = $row['Picture'];
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="DateofBirth" class="mb-0">Date of Birth:</label>
+              <label for="DateofBirth" class="mb-0">Date of Birth: <span class="text-danger">*</span></label>
               <input type="date" class="form-control" id="DateofBirth" name="DateofBirth" value="<?php echo $row['Emp_Year'] . '-' . $row['Emp_Month'] . '-' . $row['Emp_Day']; ?>" required>
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="Sex" class="mb-0">Sex:</label>
+              <label for="Sex" class="mb-0">Sex: <span class="text-danger">*</span></label>
               <select name="Sex" id="Sex" class="form-control" required>
                 <option value="Male" <?php echo SetOptionSelected('Male', $row['Emp_Sex']); ?>>Male</option>
                 <option value="Female" <?php echo SetOptionSelected('Female', $row['Emp_Sex']); ?>>Female</option>
@@ -99,7 +99,7 @@ $_SESSION['Picture'] = $row['Picture'];
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="CivilStatus" class="mb-0">Civil Status:</label>
+              <label for="CivilStatus" class="mb-0">Civil Status: <span class="text-danger">*</span></label>
               <select name="CivilStatus" id="CivilStatus" class="form-control" required>
                 <option value="Single" <?php echo SetOptionSelected('Single', $row['Emp_CS']); ?>>Single</option>
                 <option value="Married" <?php echo SetOptionSelected('Married', $row['Emp_CS']); ?>>Married</option>
@@ -113,39 +113,39 @@ $_SESSION['Picture'] = $row['Picture'];
           <div class="col-lg-3">
             <div class="form-group">
               <label for="SpecifyOthers" class="mb-0">Specify, if Others:</label>
-              <input type="text" class="form-control" id="SpecifyOthers" name="SpecifyOthers">
+              <input type="text" class="form-control" id="SpecifyOthers" name="SpecifyOthers" value="<?php echo $row['Emp_CS_Others']; ?>">
             </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="PlaceofBirth" class="mb-0">Place of Birth:</label>
+          <label for="PlaceofBirth" class="mb-0">Place of Birth: <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="PlaceofBirth" name="PlaceofBirth" required value="<?php echo $row['Emp_place_of_birth']; ?>">
         </div>
 
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="Citizenship" class="mb-0">Citizenship:</label>
+              <label for="Citizenship" class="mb-0">Citizenship: <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="Citizenship" name="Citizenship" required value="<?php echo $row['Emp_Citizen']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="DualCitizenship" class="mb-0">Dual Citizenship:</label>
+              <label for="DualCitizenship" class="mb-0">Dual Citizenship: <span class="text-danger">*</span></label>
               <select name="DualCitizenship" id="DualCitizenship" class="form-control" required>
-                <option value="N/A">N/A</option>
-                <option value="By Birth">By Birth</option>
-                <option value="By Naturalization">By Naturalization</option>
+                <option value="N/A" <?php echo SetOptionSelected('N/A', $row['Emp_Dual_Citizenship']); ?>>N/A</option>
+                <option value="By Birth" <?php echo SetOptionSelected('By Birth', $row['Emp_Dual_Citizenship']); ?>>By Birth</option>
+                <option value="By Naturalization" <?php echo SetOptionSelected('By Naturalization', $row['Emp_Dual_Citizenship']); ?>>By Naturalization</option>
               </select>
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="Country" class="mb-0">Please Indicate Country, if Dual Citizen:</label>
-              <input type="text" class="form-control" id="Country" name="Country">
+              <label for="Country" class="mb-0">Please Indicate Country if Dual Citizen:</label>
+              <input type="text" class="form-control" id="Country" name="Country" value="<?php echo $row['Emp_Country']; ?>">
             </div>
           </div>
         </div>
@@ -153,21 +153,21 @@ $_SESSION['Picture'] = $row['Picture'];
         <div class="row">
           <div class="col-lg-2">
             <div class="form-group">
-              <label for="Height" class="mb-0">Height (m):</label>
-              <input type="text" class="form-control" id="Height" name="Height" required value="<?php echo $row['Emp_Height']; ?>">
+              <label for="Height" class="mb-0">Height (m): <span class="text-danger">*</span></label>
+              <input type="number" min="0" step="0.01" class="form-control" id="Height" name="Height" required value="<?php echo $row['Emp_Height']; ?>">
             </div>
           </div>
 
           <div class="col-lg-2">
             <div class="form-group">
-              <label for="Weight" class="mb-0">Weight (kg):</label>
-              <input type="text" class="form-control" id="Weight" name="Weight" required value="<?php echo $row['Emp_Weight']; ?>">
+              <label for="Weight" class="mb-0">Weight (kg): <span class="text-danger">*</span></label>
+              <input type="number" min="0" step="0.01" class="form-control" id="Weight" name="Weight" required value="<?php echo $row['Emp_Weight']; ?>">
             </div>
           </div>
 
           <div class="col-lg-2">
             <div class="form-group">
-              <label for="BloodType" class="mb-0">Blood Type:</label>
+              <label for="BloodType" class="mb-0">Blood Type: <span class="text-danger">*</span></label>
               <select name="BloodType" id="BloodType" class="form-control" required>
                 <option value="A+" <?php echo SetOptionSelected('A+', $row['Emp_Blood_type']); ?>>A+</option>
                 <option value="A-" <?php echo SetOptionSelected('A-', $row['Emp_Blood_type']); ?>>A-</option>
@@ -183,15 +183,15 @@ $_SESSION['Picture'] = $row['Picture'];
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="GSISBP" class="mb-0">GSIS Number:</label>
-              <input type="text" class="form-control" id="GSISBP" name="GSISBP">
+              <label for="GSIS" class="mb-0">GSIS No.:</label>
+              <input type="text" class="form-control" id="GSIS" name="GSIS" value="<?php echo $row['Emp_GSIS']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="PAGIBIG" class="mb-0">PAGIBIG ID Number:</label>
-              <input type="text" class="form-control" id="PAGIBIG" name="PAGIBIG">
+              <label for="PAGIBIG" class="mb-0">PAGIBIG ID No.:</label>
+              <input type="text" class="form-control" id="PAGIBIG" name="PAGIBIG" value="<?php echo $row['Emp_PAGIBIG']; ?>">
             </div>
           </div>
         </div>
@@ -199,64 +199,63 @@ $_SESSION['Picture'] = $row['Picture'];
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="PHILHEALTH" class="mb-0">PHILHEALTH Number:</label>
-              <input type="text" class="form-control" id="PHILHEALTH" name="PHILHEALTH">
+              <label for="PHILHEALTH" class="mb-0">PHILHEALTH No.:</label>
+              <input type="text" class="form-control" id="PHILHEALTH" name="PHILHEALTH" value="<?php echo $row['Emp_PHILHEALTH']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="SSS" class="mb-0">SSS Number:</label>
-              <input type="text" class="form-control" id="SSS" name="SSS">
+              <label for="SSS" class="mb-0">SSS No.:</label>
+              <input type="text" class="form-control" id="SSS" name="SSS" value="<?php echo $row['Emp_SSS']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="TIN" class="mb-0">TIN Number:</label>
+              <label for="TIN" class="mb-0">TIN No.:</label>
               <input type="text" class="form-control" id="TIN" name="TIN" value="<?php echo $row['Emp_TIN']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="EmployeeNumber" class="mb-0">Agency Employee Number:</label>
+              <label for="EmployeeNumber" class="mb-0">Agency Employee No.:</label>
               <input type="text" class="form-control" id="EmployeeNumber" name="EmployeeNumber" value="<?php echo $row['EmpNo']; ?>">
             </div>
           </div>
         </div>
 
-        <div class="form-group mb-0">
-          <label>Residential Address:</label>
-          <hr class="mt-0">
-        </div>
+        <div>Residential Address:</div>
+
+        <hr class="mt-2">
 
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
               <label for="ResLot" class="mb-0 small">House/Block/Lot No.</label>
-              <input type="text" class="form-control" id="ResLot" name="ResLot">
+              <input type="text" class="form-control" id="ResLot" name="ResLot" value="<?php echo $row['Emp_Res_Lot']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
               <label for="ResStreet" class="mb-0 small">Street</label>
-              <input type="text" class="form-control" id="ResStreet" name="ResStreet">
+              <input type="text" class="form-control" id="ResStreet" name="ResStreet" value="<?php echo $row['Emp_Res_Street']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
               <label for="ResSubdivision" class="mb-0 small">Subdivision/Village</label>
-              <input type="text" class="form-control" id="ResSubdivision" name="ResSubdivision">
+              <input type="text" class="form-control" id="ResSubdivision" name="ResSubdivision" value="<?php echo $row['Emp_Res_Subdivision']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="ResBarangay" class="mb-0 small">Barangay</label>
-              <input type="text" class="form-control" id="ResBarangay" name="ResBarangay" required>
+              <label for="ResBarangay" class="mb-0 small">Barangay <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="ResBarangay" name="ResBarangay" required value="<?php echo $row['Emp_Res_Barangay']; ?>">
             </div>
           </div>
         </div>
@@ -264,57 +263,56 @@ $_SESSION['Picture'] = $row['Picture'];
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="ResCity" class="mb-0 small">City/Municipality</label>
-              <input type="text" class="form-control" id="ResCity" name="ResCity" required>
+              <label for="ResCity" class="mb-0 small">City/Municipality <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="ResCity" name="ResCity" required value="<?php echo $row['Emp_Res_City']; ?>">
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="ResProvince" class="mb-0 small">Province</label>
+              <label for="ResProvince" class="mb-0 small">Province <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="ResProvince" name="ResProvince" required value="<?php echo $row['Emp_Address']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="ResZIP" class="mb-0 small">ZIP Code</label>
-              <input type="text" class="form-control" id="ResZIP" name="ResZIP" required>
+              <label for="ResZIP" class="mb-0 small">ZIP Code <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="ResZIP" name="ResZIP" required value="<?php echo $row['Emp_Res_ZIP']; ?>">
             </div>
           </div>
         </div>
 
-        <div class="form-group mb-0">
-          <label>Permanent Address:</label>
-          <hr class="mt-0">
-        </div>
+        <div>Permanent Address:</div>
+
+        <hr class="mt-2">
 
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
               <label for="PerLot" class="mb-0 small">House/Block/Lot No.</label>
-              <input type="text" class="form-control" id="PerLot" name="PerLot">
+              <input type="text" class="form-control" id="PerLot" name="PerLot" value="<?php echo $row['Emp_Per_Lot']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
               <label for="PerStreet" class="mb-0 small">Street</label>
-              <input type="text" class="form-control" id="PerStreet" name="PerStreet">
+              <input type="text" class="form-control" id="PerStreet" name="PerStreet" value="<?php echo $row['Emp_Per_Street']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
               <label for="PerSubdivision" class="mb-0 small">Subdivision/Village</label>
-              <input type="text" class="form-control" id="PerSubdivision" name="PerSubdivision">
+              <input type="text" class="form-control" id="PerSubdivision" name="PerSubdivision" value="<?php echo $row['Emp_Per_Subdivision']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="PerBarangay" class="mb-0 small">Barangay</label>
-              <input type="text" class="form-control" id="PerBarangay" name="PerBarangay" required>
+              <label for="PerBarangay" class="mb-0 small">Barangay <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="PerBarangay" name="PerBarangay" required value="<?php echo $row['Emp_Per_Barangay']; ?>">
             </div>
           </div>
         </div>
@@ -322,22 +320,22 @@ $_SESSION['Picture'] = $row['Picture'];
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="PerCity" class="mb-0 small">City/Municipality</label>
-              <input type="text" class="form-control" id="PerCity" name="PerCity" required>
+              <label for="PerCity" class="mb-0 small">City/Municipality <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="PerCity" name="PerCity" required value="<?php echo $row['Emp_Per_City']; ?>">
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="PerProvince" class="mb-0 small">Province</label>
-              <input type="text" class="form-control" id="PerProvince" name="PerProvince" required>
+              <label for="PerProvince" class="mb-0 small">Province <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="PerProvince" name="PerProvince" required value="<?php echo $row['Emp_Per_Province']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="PerZIP" class="mb-0 small">ZIP Code</label>
-              <input type="text" class="form-control" id="PerZIP" name="PerZIP" required>
+              <label for="PerZIP" class="mb-0 small">ZIP Code <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="PerZIP" name="PerZIP" required value="<?php echo $row['Emp_Per_ZIP']; ?>">
             </div>
           </div>
         </div>
@@ -346,26 +344,28 @@ $_SESSION['Picture'] = $row['Picture'];
           <div class="col-lg-3">
             <div class="form-group">
               <label for="Telephone" class="mb-0">Telephone Number:</label>
-              <input type="text" class="form-control" id="Telephone" name="Telephone">
+              <input type="text" class="form-control" id="Telephone" name="Telephone" value="<?php echo $row['Emp_Telephone']; ?>">
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="Mobile" class="mb-0">Mobile Number:</label>
-              <input type="text" class="form-control" id="Mobile" name="Mobile" value="<?php echo $row['Emp_Cell_No']; ?>">
+              <label for="Mobile" class="mb-0">Mobile Number: <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="Mobile" name="Mobile" value="<?php echo $row['Emp_Cell_No']; ?>" required>
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="Email" class="mb-0">Email Address:</label>
-              <input type="email" class="form-control" id="Email" name="Email" value="<?php echo $row['Emp_Email']; ?>">
+              <label for="Email" class="mb-0">Email Address: <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" id="Email" name="Email" value="<?php echo $row['Emp_Email']; ?>" required>
             </div>
           </div>
         </div>
 
-        <div class="rows">
+        <div class="text-danger mb-3">* Required field</div>
+
+        <div class="form-group mb-0">
           <button class="btn btn-primary btn-block btn-lg" name="UpdatePersonalInformation"><i class="fas fa-save fa-fw"></i>Update Personal Information</button>
         </div>
       </div><!-- .col-md-6 -->
