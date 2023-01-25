@@ -49,7 +49,7 @@ function ModalOK($message, $title = '', $id = 'modal', $label = 'ModalLabel')
 {
 ?>
   <div class="modal fade" id="<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="<?php echo $label; ?>" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="<?php echo $label; ?>"><?php echo $title; ?></h5>
@@ -76,7 +76,7 @@ function ModalConfirm($message, $title = '', $id = 'modal', $label = 'ModalLabel
 {
 ?>
   <div class="modal fade" id="<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="<?php echo $label; ?>" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="<?php echo $label; ?>"><?php echo $title; ?></h5>
@@ -89,8 +89,8 @@ function ModalConfirm($message, $title = '', $id = 'modal', $label = 'ModalLabel
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
           <a class="btn btn-primary" href="<?php echo $oklink; ?>"><?php echo $okbtnlabel; ?></a>
+          <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
@@ -168,6 +168,31 @@ function Card($title, $link, $icon, $color = 'primary', $counter = false, $numbe
 
       <div class="card-footer py-1 text-right">
         <a class="small text-<?php echo $color; ?>" href="<?php echo $link; ?>">View Details</a>
+      </div>
+    </div>
+  </div>
+<?php
+}
+
+function ModalConfirmDelete($message, $title = 'Remove?', $buttonName = 'Remove')
+{
+?>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><?php echo $title; ?></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <?php echo $message; ?>
+      </div>
+
+      <div class="modal-footer">
+        <form action="" method="POST" role="form">
+          <input type="submit" class="btn btn-danger" name="<?php echo $buttonName; ?>" value="Yes, Continue">
+          <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </form>
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'eligibility'); ?>" id="eligibility">
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h4 mb-0">Civil Service Eligibility</h3>
-    <a href="#AddEligibilityModal" class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
+    <a onclick="viewdata('Modal', 'pds/update/update-eligibility.php?id=')" data-toggle="modal" data-target="#Modal" class="btn btn-primary btn-icon-split btn-sm"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
   </div><!-- .d-sm-flex -->
 
   <div class="row mt-3">
@@ -10,15 +10,15 @@
         <thead>
           <tr class="text-center">
             <th class="align-middle" width="25%" rowspan="2">Career Services / RA 1080 (Board / Bar) Underspecial Laws / CES / CSEE Barangay Eligibility/ Drivers License</th>
-            <th class="align-middle" width="15%" rowspan="2">Rating</th>
-            <th class="align-middle" width="15%" rowspan="2">Date of Examination Conferment</th>
-            <th class="align-middle" width="15%" rowspan="2">Place of Examination / Conferment</th>
+            <th class="align-middle" width="10%" rowspan="2">Rating</th>
+            <th class="align-middle" width="10%" rowspan="2">Date of Examination / Conferment</th>
+            <th class="align-middle" width="25%" rowspan="2">Place of Examination / Conferment</th>
             <th class="align-middle" width="20%" colspan="2">License</th>
             <th class="align-middle" rowspan="2" width="10%">Action</th>
           </tr>
           <tr class="text-center">
-            <th class="align-middle">Number</th>
-            <th class="align-middle">Date of Validity</th>
+            <th class="align-middle" width="10%">Number</th>
+            <th class="align-middle" width="10%">Date of Validity</th>
           </tr>
         </thead>
 
@@ -36,8 +36,8 @@
                 <td class="text-center align-middle"><?php echo $eligibility['Number_of_Hour']; ?></td>
                 <td class="text-center align-middle"><?php echo ToDateString($eligibility['Date_of_Validity']); ?></td>
                 <td class="text-center align-middle">
-                  <a class="btn btn-success my-1" onclick="viewdata('UpdateModal', 'pds/update/update-eligibility.php?id=<?php echo $eligibility['No']; ?>')" data-toggle="modal" data-target="#UpdateModal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1" onclick="delete_service(<?php echo $eligibility['No']; ?>)" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-success my-1 btn-sm" onclick="viewdata('Modal', 'pds/update/update-eligibility.php?id=<?php echo $eligibility['No']; ?>')" data-toggle="modal" data-target="#Modal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
+                  <a class="btn btn-danger my-1 btn-sm" onclick="viewdata('Modal', 'pds/delete/delete-eligibility.php?id=<?php echo $eligibility['No']; ?>')" data-toggle="modal" data-target="#Modal" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php
@@ -51,76 +51,6 @@
           ?>
         </tbody>
       </table>
-
-      <script>
-        function delete_service(id) {
-          if (confirm("Are you sure you want to delete this entry?")) {
-            window.location.href = 'pds/delete/delete-eligibility.php?id=' + id;
-          }
-        }
-      </script>
     </div>
   </div>
-
-  <div class="modal fade" id="AddEligibilityModal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Add Civil Service Eligibility</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
-        </div><!-- .modal-header -->
-
-        <form method="post" role="form" action="">
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="Carrer" class="mb-0">Career Service / RA 1080 (Board/Bar) / Underspecial Laws / CES / CSEE / Barangay Eligibility / Drivers License</label>
-              <input id="Carrer" type="text" name="Carrer" class="form-control" required>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="rating" class="mb-0">Rating <br>(if applicable)</label>
-                  <input id="rating" type="text" name="rating" class="form-control" required>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="date_exam" class="mb-0">Date of Examination / Conferment</label>
-                  <input id="date_exam" type="date" name="date_exam" class="form-control" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="Place" class="mb-0">Place of Examination / Conferment</label>
-              <input id="Place" type="text" name="Place" class="form-control" required>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group mb-0">
-                  <label for="license_number" class="mb-0">License No. (if applicable)</label>
-                  <input id="license_number" type="text" name="license_number" class="form-control" required>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group mb-0">
-                  <label for="year" class="mb-0">Date of Validity (if applicable)</label>
-                  <input id="year" type="date" name="year" class="form-control" required>
-                </div>
-              </div>
-            </div>
-          </div><!-- .modal-body -->
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" name="AddEligibility">Save</button>
-          </div><!-- .modal-footer -->
-        </form>
-      </div><!-- .modal-content -->
-    </div><!-- .modal-dialog -->
-  </div><!-- .modal -->
 </div><!-- .tab-pane -->

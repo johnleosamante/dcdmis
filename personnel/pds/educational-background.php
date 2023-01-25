@@ -19,8 +19,8 @@
             <th class="align-middle" width="10%" rowspan="2">Action</th>
           </tr>
           <tr class="text-center">
-            <th class="align-middle">From</th>
-            <th class="align-middle">To</th>
+            <th class="align-middle" width="5%">From</th>
+            <th class="align-middle" width="5%">To</th>
           </tr>
         </thead>
         <tbody>

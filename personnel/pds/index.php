@@ -150,7 +150,9 @@ if (isset($_POST['SaveChild'])) {
 	} else {
 		mysqli_query($con, "UPDATE family_background SET 
 		Family_Name='" . str_replace("'", "\'", $_POST['CLastName']) . "',
-		First_Name='" . str_replace("'", "\'", $_POST['CFirstName']) . "',Name_Extension='" . str_replace("'", "\'", $_POST['CNameExtension']) . "', Middle_Name='" . str_replace("'", "\'", $_POST['CMiddleName']) . "',Birthdate='" . str_replace("'", "\'", $_POST['CDateOfBirth']) . "'
+		First_Name='" . str_replace("'", "\'", $_POST['CFirstName']) . "',
+		Name_Extension='" . str_replace("'", "\'", $_POST['CNameExtension']) . "', Middle_Name='" . str_replace("'", "\'", $_POST['CMiddleName']) . "',
+		Birthdate='" . str_replace("'", "\'", $_POST['CDateOfBirth']) . "'
 		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
 
 		$message = 'Child has been updated successfully!';
@@ -178,24 +180,49 @@ if (isset($_POST['RemoveChild'])) {
 }
 
 /* EDUCATIONAL BACKGROUND */
-if (isset($_POST['AddEducation'])) {
-	mysqli_query($con, "INSERT INTO educational_background VALUES (NULL,'" . $_POST['level'] . "','" . $_POST['school'] . "','" . $_POST['education'] . "','" . $_POST['from'] . "','" . $_POST['to'] . "','" . $_POST['unit'] . "','" . $_POST['year'] . "','" . $_POST['honor'] . "','" . $_SESSION['EmpID'] . "')");
+if (isset($_POST['SaveEducation'])) {
+	if (strlen($_SESSION['No']) === 0) {
+		mysqli_query($con, "INSERT INTO educational_background VALUES (NULL,
+		'" . str_replace("'", "\'", $_POST['ELevel']) . "',
+		'" . str_replace("'", "\'", $_POST['ESchool']) . "',
+		'" . str_replace("'", "\'", $_POST['ECourse']) . "',
+		'" . str_replace("'", "\'", $_POST['EFrom']) . "',
+		'" . str_replace("'", "\'", $_POST['ETo']) . "',
+		'" . str_replace("'", "\'", $_POST['EHighest']) . "',
+		'" . str_replace("'", "\'", $_POST['EGraduated']) . "',
+		'" . str_replace("'", "\'", $_POST['EHonor']) . "',
+		'" . $_SESSION['EmpID'] . "');");
+
+		$message = 'Education has been added successfully!';
+	} else {
+		mysqli_query($con, "UPDATE educational_background SET 
+		`Level`='" . str_replace("'", "\'", $_POST['ELevel']) . "',
+		Name_of_School='" . str_replace("'", "\'", $_POST['ESchool']) . "',
+		Course='" . str_replace("'", "\'", $_POST['ECourse']) . "',
+		`From`='" . str_replace("'", "\'", $_POST['EFrom']) . "',
+		`To`='" . str_replace("'", "\'", $_POST['ETo']) . "',
+		Highest_Level='" . str_replace("'", "\'", $_POST['EHighest']) . "',
+		Year_Graduated='" . str_replace("'", "\'", $_POST['EGraduated']) . "',
+		Honor_Recieved='" . str_replace("'", "\'", $_POST['EHonor']) . "' 
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
+
+		$message = 'Education has been updated successfully!';
+	}
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Education has been added successfully!';
 		$showPrompt = true;
 	}
 
 	$_SESSION['pdstab'] = 'educational-background';
 }
 
-if (isset($_POST['UpdateEducation'])) {
-	mysqli_query($con, "UPDATE educational_background SET educational_background.Level='" . $_POST['ELevel'] . "',educational_background.Name_of_School='" . $_POST['ESchool'] . "',educational_background.Course='" . $_POST['ECourse'] . "',educational_background.From='" . $_POST['EFrom'] . "',educational_background.To='" . $_POST['ETo'] . "',educational_background.Highest_Level='" . $_POST['EHighest'] . "',educational_background.Year_Graduated='" . $_POST['EGraduated'] . "',educational_background.Honor_Recieved='" . $_POST['EHonor'] . "' WHERE educational_background.Emp_ID='" . $_SESSION['EmpID'] . "' AND educational_background.No='" . $_SESSION['No'] . "'");
+if (isset($_POST['RemoveEducation'])) {
+	mysqli_query($con, "DELETE FROM educational_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Education has been updated successfully!';
+		$message = 'Education has been removed successfully!';
 		$showPrompt = true;
 	}
 
@@ -203,24 +230,45 @@ if (isset($_POST['UpdateEducation'])) {
 }
 
 /* CIVIL SERVICE ELIGIBILITY */
-if (isset($_POST['AddEligibility'])) {
-	mysqli_query($con, "INSERT INTO civil_service VALUES (NULL,'" . $_POST['Carrer'] . "','" . $_POST['rating'] . "','" . $_POST['date_exam'] . "','" . $_POST['Place'] . "','" . $_POST['license_number'] . "','" . $_POST['year'] . "','" . $_SESSION['EmpID'] . "')");
+if (isset($_POST['SaveEligibility'])) {
+	if (strlen($_SESSION['No']) === 0) {
+		mysqli_query($con, "INSERT INTO civil_service VALUES (NULL,
+		'" . str_replace("'", "\'", $_POST['WCareer']) . "',
+		'" . str_replace("'", "\'", $_POST['WRating']) . "',
+		'" . str_replace("'", "\'", $_POST['WDate']) . "',
+		'" . str_replace("'", "\'", $_POST['WPlace']) . "',
+		'" . str_replace("'", "\'", $_POST['WLicense']) . "',
+		'" . str_replace("'", "\'", $_POST['WValidity']) . "',
+		'" . $_SESSION['EmpID'] . "');");
+
+		$message = 'Civil Service Eligibility has been added successfully!';
+	} else {
+		mysqli_query($con, "UPDATE civil_service SET 
+		Carrer_Service='" . str_replace("'", "\'", $_POST['WCareer']) . "',
+		Rating='" . str_replace("'", "\'", $_POST['WRating']) . "',
+		Date_of_Examination='" . str_replace("'", "\'", $_POST['WDate']) . "',
+		Place_of_Examination='" . str_replace("'", "\'", $_POST['WPlace']) . "',
+		Number_of_Hour='" . str_replace("'", "\'", $_POST['WLicense']) . "',
+		Date_of_Validity='" . str_replace("'", "\'", $_POST['WValidity']) . "' 
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "' LIMIT 1");
+
+		$message = 'Civil Service Eligibility has been updated successfully!';
+	}
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Civil Service Eligibility has been added successfully!';
 		$showPrompt = true;
 	}
 
 	$_SESSION['pdstab'] = 'eligibility';
 }
 
-if (isset($_POST['UpdateEligibility'])) {
-	mysqli_query($con, "UPDATE civil_service SET civil_service.Carrer_Service='" . $_POST['WCareer'] . "',civil_service.Rating='" . $_POST['WRating'] . "',civil_service.Date_of_Examination='" . $_POST['WDate'] . "',civil_service.Place_of_Examination='" . $_POST['WPlace'] . "',civil_service.Number_of_Hour='" . $_POST['WNHour'] . "',civil_service.Date_of_Validity='" . $_POST['WValidity'] . "' WHERE civil_service.Emp_ID='" . $_SESSION['EmpID'] . "' AND civil_service.No='" . $_SESSION['No'] . "' LIMIT 1");
+if (isset($_POST['RemoveEligibility'])) {
+	mysqli_query($con, "DELETE FROM civil_service WHERE civil_service.Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Civil Service Eligibility has been updated successfully!';
+		$message = 'Eligibility has been removed successfully!';
 		$showPrompt = true;
 	}
 
@@ -228,24 +276,49 @@ if (isset($_POST['UpdateEligibility'])) {
 }
 
 /* WORK EXPERIENCE */
-if (isset($_POST['AddExperience'])) {
-	mysqli_query($con, "INSERT INTO work_experience VALUES (NULL,'" . $_POST['from'] . "','" . $_POST['to'] . "','" . $_POST['position'] . "','" . $_POST['organization'] . "','" . $_POST['monthly'] . "','" . $_POST['step'] . "','" . $_POST['status'] . "','" . $_POST['government'] . "','" . $_SESSION['EmpID'] . "')");
+if (isset($_POST['SaveExperience'])) {
+	if (strlen($_SESSION['No']) === 0) {
+		mysqli_query($con, "INSERT INTO work_experience VALUES (NULL,
+		'" . str_replace("'", "\'", $_POST['EFrom']) . "',
+		'" . str_replace("'", "\'", $_POST['ETo']) . "',
+		'" . str_replace("'", "\'", $_POST['EPosition']) . "',
+		'" . str_replace("'", "\'", $_POST['EOrganization']) . "',
+		'" . str_replace("'", "\'", $_POST['ESalary']) . "',
+		'" . str_replace("'", "\'", $_POST['ESGrade']) . "',
+		'" . str_replace("'", "\'", $_POST['EStatus']) . "',
+		'" . str_replace("'", "\'", $_POST['EGovernment']) . "',
+		'" . $_SESSION['EmpID'] . "')");
+
+		$message = 'Work Experience has been added successfully!';
+	} else {
+		mysqli_query($con, "UPDATE work_experience SET 
+		`From`='" . str_replace("'", "\'", $_POST['EFrom']) . "',
+		`To`='" . str_replace("'", "\'", $_POST['ETo']) . "',
+		Position_Title='" . str_replace("'", "\'", $_POST['EPosition']) . "',
+		Organization='" . str_replace("'", "\'", $_POST['EOrganization']) . "',
+		Monthly_Salary='" . str_replace("'", "\'", $_POST['ESalary']) . "',
+		Salary_Grade='" . str_replace("'", "\'", $_POST['ESGrade']) . "',
+		Job_Status='" . str_replace("'", "\'", $_POST['EStatus']) . "',
+		Goverment='" . str_replace("'", "\'", $_POST['EGovernment']) . "' 
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "'");
+
+		$message = 'Work Experience has been updated successfully!';
+	}
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Work Experience has been added successfully!';
 		$showPrompt = true;
 	}
 
 	$_SESSION['pdstab'] = 'work-experience';
 }
 
-if (isset($_POST['UpdateExperience'])) {
-	mysqli_query($con, "UPDATE work_experience SET work_experience.From='" . $_POST['EFrom'] . "',work_experience.To='" . $_POST['ETo'] . "',work_experience.Position_Title='" . $_POST['EPost'] . "',work_experience.Organization='" . $_POST['EOrg'] . "',work_experience.Monthly_Salary='" . $_POST['ESal'] . "',work_experience.Salary_Grade='" . $_POST['EGarde'] . "',work_experience.Job_Status='" . $_POST['EStatus'] . "',work_experience.Goverment='" . $_POST['EGov'] . "' WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "' AND work_experience.No='" . $_SESSION['No'] . "'");
+if (isset($_POST['RemoveExperience'])) {
+	mysqli_query($con, "DELETE FROM work_experience WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_GET['id'] . "' LIMIT 1");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Work Experience has been updated successfully!';
+		$message = 'Experience has been removed successfully!';
 		$showPrompt = true;
 	}
 
@@ -607,4 +680,4 @@ if (isset($_POST['UpdateReference'])) {
 	</div><!-- .col -->
 </div><!-- .row -->
 
-<div class="modal fade" id="Modal" role="dialog" data-backdrop="static" data-keyboard="false"></div><!-- .modal -->
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" data-backdrop="static"></div><!-- .modal -->

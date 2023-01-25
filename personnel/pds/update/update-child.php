@@ -6,12 +6,12 @@ foreach ($_GET as $key => $data) {
   $id = $_GET[$key] = $data;
 }
 
-$fname = $mname = $lname = $ext = $bdate = '';
+$_SESSION['No'] = $fname = $mname = $lname = $ext = $bdate = '';
+$modalTitle = "Add Child";
 
 if (strlen($id) > 0) {
   $_SESSION['No'] = $id;
   $modalTitle = "Edit Child";
-
   $children = mysqli_query($con, "SELECT * FROM family_background WHERE `No`='$id' LIMIT 1;");
 
   if (mysqli_num_rows($children) > 0) {
@@ -22,9 +22,6 @@ if (strlen($id) > 0) {
     $ext = $child['Name_Extension'];
     $bdate = $child['Birthdate'];
   }
-} else {
-  $_SESSION['No'] = '';
-  $modalTitle = "Add Child";
 }
 ?>
 
@@ -72,8 +69,8 @@ if (strlen($id) > 0) {
       </div><!-- .modal-body -->
 
       <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" name="SaveChild">Save</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <input type="submit" class="btn btn-primary" name="SaveChild" value="Save">
       </div><!-- .modal-footer -->
     </form>
   </div><!-- .modal-content -->

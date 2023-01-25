@@ -170,7 +170,7 @@
           <a class="dropdown-item d-flex align-items-center px-3 py-2" href="#<?php //echo GetHashURL('personnel', 'Step Increment Application', $rmessages['No']); 
                                                                               ?>">
             <div class="mr-2">
-              <div class="icon-circle bg-info"><i class="fas fa-donate text-white"></i></div>
+              <div class="icon-circle bg-secondary"><i class="fas fa-envelope text-white"></i></div>
             </div>
 
             <div class="font-weight-bold">
