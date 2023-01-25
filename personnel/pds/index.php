@@ -146,7 +146,7 @@ if (isset($_POST['SaveChild'])) {
 		'" . $_SESSION['EmpID'] . "'
 	);");
 
-		$message = 'Child has been added successfully!';
+		$message = 'Child Name has been added successfully!';
 	} else {
 		mysqli_query($con, "UPDATE family_background SET 
 		Family_Name='" . str_replace("'", "\'", $_POST['CLastName']) . "',
@@ -155,7 +155,7 @@ if (isset($_POST['SaveChild'])) {
 		Birthdate='" . str_replace("'", "\'", $_POST['CDateOfBirth']) . "'
 		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
 
-		$message = 'Child has been updated successfully!';
+		$message = 'Child Name has been updated successfully!';
 	}
 
 
@@ -168,11 +168,11 @@ if (isset($_POST['SaveChild'])) {
 }
 
 if (isset($_POST['RemoveChild'])) {
-	mysqli_query($con, "DELETE FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "' LIMIT 1");
+	mysqli_query($con, "DELETE FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Child has been removed successfully!';
+		$message = 'Child Name has been removed successfully!';
 		$showPrompt = true;
 	}
 
@@ -193,7 +193,7 @@ if (isset($_POST['SaveEducation'])) {
 		'" . str_replace("'", "\'", $_POST['EHonor']) . "',
 		'" . $_SESSION['EmpID'] . "');");
 
-		$message = 'Education has been added successfully!';
+		$message = 'Educational Background has been added successfully!';
 	} else {
 		mysqli_query($con, "UPDATE educational_background SET 
 		`Level`='" . str_replace("'", "\'", $_POST['ELevel']) . "',
@@ -206,7 +206,7 @@ if (isset($_POST['SaveEducation'])) {
 		Honor_Recieved='" . str_replace("'", "\'", $_POST['EHonor']) . "' 
 		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
 
-		$message = 'Education has been updated successfully!';
+		$message = 'Educational Background has been updated successfully!';
 	}
 
 	if (mysqli_affected_rows($con) === 1) {
@@ -222,7 +222,7 @@ if (isset($_POST['RemoveEducation'])) {
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Education has been removed successfully!';
+		$message = 'Educational Background has been removed successfully!';
 		$showPrompt = true;
 	}
 
@@ -250,7 +250,7 @@ if (isset($_POST['SaveEligibility'])) {
 		Place_of_Examination='" . str_replace("'", "\'", $_POST['WPlace']) . "',
 		Number_of_Hour='" . str_replace("'", "\'", $_POST['WLicense']) . "',
 		Date_of_Validity='" . str_replace("'", "\'", $_POST['WValidity']) . "' 
-		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "' LIMIT 1");
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "' LIMIT 1;");
 
 		$message = 'Civil Service Eligibility has been updated successfully!';
 	}
@@ -264,11 +264,11 @@ if (isset($_POST['SaveEligibility'])) {
 }
 
 if (isset($_POST['RemoveEligibility'])) {
-	mysqli_query($con, "DELETE FROM civil_service WHERE civil_service.Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1");
+	mysqli_query($con, "DELETE FROM civil_service WHERE civil_service.Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Eligibility has been removed successfully!';
+		$message = 'Civil Service Eligibility has been removed successfully!';
 		$showPrompt = true;
 	}
 
@@ -287,7 +287,7 @@ if (isset($_POST['SaveExperience'])) {
 		'" . str_replace("'", "\'", $_POST['ESGrade']) . "',
 		'" . str_replace("'", "\'", $_POST['EStatus']) . "',
 		'" . str_replace("'", "\'", $_POST['EGovernment']) . "',
-		'" . $_SESSION['EmpID'] . "')");
+		'" . $_SESSION['EmpID'] . "');");
 
 		$message = 'Work Experience has been added successfully!';
 	} else {
@@ -300,7 +300,7 @@ if (isset($_POST['SaveExperience'])) {
 		Salary_Grade='" . str_replace("'", "\'", $_POST['ESGrade']) . "',
 		Job_Status='" . str_replace("'", "\'", $_POST['EStatus']) . "',
 		Goverment='" . str_replace("'", "\'", $_POST['EGovernment']) . "' 
-		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "'");
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "';");
 
 		$message = 'Work Experience has been updated successfully!';
 	}
@@ -314,11 +314,11 @@ if (isset($_POST['SaveExperience'])) {
 }
 
 if (isset($_POST['RemoveExperience'])) {
-	mysqli_query($con, "DELETE FROM work_experience WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_GET['id'] . "' LIMIT 1");
+	mysqli_query($con, "DELETE FROM work_experience WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_GET['id'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Experience has been removed successfully!';
+		$message = 'Work Experience has been removed successfully!';
 		$showPrompt = true;
 	}
 
@@ -326,50 +326,87 @@ if (isset($_POST['RemoveExperience'])) {
 }
 
 /* VOLUNTARY WORK */
-if (isset($_POST['AddVoluntaryWork'])) {
-	mysqli_query($con, "INSERT INTO voluntary_work VALUES (NULL,'" . $_POST['Organization'] . "','" . $_POST['From'] . "','" . $_POST['To'] . "','" . $_POST['Hours'] . "','" . $_POST['Position'] . "','" . $_SESSION['EmpID'] . "')");
+if (isset($_POST['SaveVoluntaryWork'])) {
+	if (strlen($_SESSION['No']) === 0) {
+		mysqli_query($con, "INSERT INTO voluntary_work VALUES (NULL,
+		'" . str_replace("'", "\'", $_POST['NOrganization']) . "',
+		'" . str_replace("'", "\'", $_POST['NFrom']) . "',
+		'" . str_replace("'", "\'", $_POST['NTo']) . "',
+		'" . str_replace("'", "\'", $_POST['NHours']) . "',
+		'" . str_replace("'", "\'", $_POST['NPosition']) . "',
+		'" . $_SESSION['EmpID'] . "');");
+
+		$message = 'Voluntary Work has been added successfully!';
+	} else {
+		mysqli_query($con, "UPDATE voluntary_work SET 
+		Name_of_Organization='" . str_replace("'", "\'", $_POST['NOrganization']) . "',
+		`From`='" . str_replace("'", "\'", $_POST['NFrom']) . "',
+		`To`='" . str_replace("'", "\'", $_POST['NTo']) . "',
+		Number_of_Hour='" . str_replace("'", "\'", $_POST['NHour']) . "',
+		Position='" . str_replace("'", "\'", $_POST['NPosition']) . "' 
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
+
+		$message = 'Voluntary Work has been updated successfully!';
+	}
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Voluntary work has been added successfully!';
 		$showPrompt = true;
 	}
 
 	$_SESSION['pdstab'] = 'voluntary-work';
 }
 
-if (isset($_POST['UpdateVoluntaryWork'])) {
-	mysqli_query($con, "UPDATE voluntary_work SET voluntary_work.Name_of_Organization='" . $_POST['NOrg'] . "',voluntary_work.From='" . $_POST['NFrom'] . "',voluntary_work.To='" . $_POST['NTo'] . "',voluntary_work.Number_of_Hour='" . $_POST['NHour'] . "',voluntary_work.Position='" . $_POST['NPos'] . "' WHERE voluntary_work.Emp_ID='" . $_SESSION['EmpID'] . "' AND voluntary_work.No='" . $_SESSION['No'] . "'");
+if (isset($_POST['RemoveVoluntaryWork'])) {
+	mysqli_query($con,"DELETE FROM voluntary_work WHERE Emp_ID='".$_SESSION['EmpID']."' AND `No`='".$_SESSION['No']."' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Voluntary work has been updated successfully!';
+		$message = 'Voluntary Work has been removed successfully!';
 		$showPrompt = true;
 	}
-
 
 	$_SESSION['pdstab'] = 'voluntary-work';
 }
 
 /* LEARNING & DEVELOPMENT */
-if (isset($_POST['AddTraining'])) {
-	mysqli_query($con, "INSERT INTO learning_and_development VALUES (NULL,'" . $_POST['Title_learning'] . "','" . $_POST['From'] . "','" . $_POST['To'] . "','" . $_POST['No_of_hours'] . "','" . $_POST['TrainingType'] . "','" . $_POST['Conducted'] . "','" . $_SESSION['EmpID'] . "')");
+if (isset($_POST['SaveLearningDevelopment'])) {
+	if (strlen($_SESSION['No']) === 0) {
+		mysqli_query($con, "INSERT INTO learning_and_development VALUES (NULL,
+		'" . str_replace("'", "\'", $_POST['TTraining']) . "',
+		'" . str_replace("'", "\'", $_POST['TFrom']) . "',
+		'" . str_replace("'", "\'", $_POST['TTo']) . "',
+		'" . str_replace("'", "\'", $_POST['THour']) . "',
+		'" . str_replace("'", "\'", $_POST['TManage']) . "',
+		'" . str_replace("'", "\'", $_POST['TConduct']) . "',
+		'" . $_SESSION['EmpID'] . "');");
+
+		$message = 'Learning &amp; Development (L&amp;D) Intervention has been added successfully!';
+	} else {
+		mysqli_query($con, "UPDATE learning_and_development SET 
+		Title_of_Training='" . str_replace("'", "\'", $_POST['TTraining']) . "',
+		`From`='" . str_replace("'", "\'", $_POST['TFrom']) . "',
+		`To`='" . str_replace("'", "\'", $_POST['TTo']) . "',
+		Number_of_Hours='" . str_replace("'", "\'", $_POST['THour']) . "',
+		Managerial='" . str_replace("'", "\'", $_POST['TManage']) . "',
+		Conducted='" . str_replace("'", "\'", $_POST['TConduct']) . "' 
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
+	}
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Learning &amp; Development (L&amp;D) Intervention has been added successfully!';
 		$showPrompt = true;
 	}
 
 	$_SESSION['pdstab'] = 'learning-development';
 }
 
-if (isset($_POST['UpdateTraining'])) {
-	mysqli_query($con, "UPDATE learning_and_development SET learning_and_development.Title_of_Training='" . $_POST['TTraining'] . "',learning_and_development.From='" . $_POST['TFrom'] . "',learning_and_development.To='" . $_POST['TTo'] . "',learning_and_development.Number_of_Hours='" . $_POST['THour'] . "',learning_and_development.Managerial='" . $_POST['TManage'] . "',learning_and_development.Conducted='" . $_POST['TConduct'] . "' WHERE learning_and_development.Emp_ID='" . $_SESSION['EmpID'] . "' AND learning_and_development.No='" . $_SESSION['No'] . "'");
+if (isset($_POST['RemoveLearningDevelopment'])) {
+	mysqli_query($con,"DELETE FROM learning_and_development WHERE Emp_ID='".$_SESSION['EmpID']."' AND `No`='".$_GET['id']."' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Learning &amp; Development (L&amp;D) Intervention has been updated successfully!';
+		$message = 'Learning &amp; Development (L&amp;D) Intervention has been removed successfully!';
 		$showPrompt = true;
 	}
 
@@ -377,24 +414,39 @@ if (isset($_POST['UpdateTraining'])) {
 }
 
 /* OTHER INFORMATION TO CHANGE */
-if (isset($_POST['AddOtherInformation'])) {
-	mysqli_query($con, "INSERT INTO other_information VALUES(NULL,'" . $_POST['skills'] . "','" . $_POST['awards'] . "','" . $_POST['member'] . "','" . $_SESSION['EmpID'] . "')");
+if (isset($_POST['SaveOtherInformation'])) {
+	if (strlen($_SESSION['No']) === 0) {
+		mysqli_query($con, "INSERT INTO other_information VALUES(NULL,
+		'" . str_replace("'", "\'", $_POST['Skill']) . "',
+		'" . str_replace("'", "\'", $_POST['Recognition']) . "',
+		'" . str_replace("'", "\'", $_POST['Membership']) . "',
+		'" . $_SESSION['EmpID'] . "');");
+
+		$message = 'Other Information has been added successfully!';
+	} else {
+		mysqli_query($con, "UPDATE other_information SET 
+		Special_Skills='" . str_replace("'", "\'", $_POST['Skill']) . "',
+		Recognation='" . str_replace("'", "\'", $_POST['Recognition']) . "',
+		Organization='" . str_replace("'", "\'", $_POST['Membership']) . "' 
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
+
+		$message = 'Other Information has been updated successfully!';
+	}
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Other Information has been added successfully!';
 		$showPrompt = true;
 	}
 
 	$_SESSION['pdstab'] = 'other-information';
 }
 
-if (isset($_POST['UpdateOtherInformation'])) {
-	mysqli_query($con, "UPDATE other_information SET Special_Skills='" . $_POST['myspecial'] . "',Recognation='" . $_POST['myrecog'] . "',Organization='" . $_POST['myorg'] . "' WHERE other_information.Emp_ID='" . $_SESSION['EmpID'] . "' AND other_information.No='" . $_SESSION['No'] . "'");
+if (isset($_POST['RemoveOtherInformation'])) {
+	mysqli_query($con, "DELETE FROM other_information WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No` ='" . $_GET['id'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Other Information has been updated successfully!';
+		$message = 'Other Information has been removed successfully!';
 		$showPrompt = true;
 	}
 
@@ -532,24 +584,39 @@ if (isset($_POST['SaveAnswers'])) {
 }
 
 /* REFERENCE */
-if (isset($_POST['AddReference'])) {
-	mysqli_query($con, "INSERT INTO reference VALUES (NULL,'" . $_POST['Ref_Name'] . "','" . $_POST['Address'] . "','" . $_POST['Cell'] . "','" . $_SESSION['EmpID'] . "')");
+if (isset($_POST['SaveReference'])) {
+	if (strlen($_SEESION['No']) === 0) {
+		mysqli_query($con, "INSERT INTO reference VALUES (NULL,
+		'" . str_replace("'", "\'", $_POST['RefName']) . "',
+		'" . str_replace("'", "\'", $_POST['RefAddress']) . "',
+		'" . str_replace("'", "\'", $_POST['RefContact']) . "',
+		'" . $_SESSION['EmpID'] . "');");
+
+		$message = 'Reference has been added successfully!';
+	} else {
+		mysqli_query($con, "UPDATE reference SET 
+		`Name`='" . str_replace("'", "\'", $_POST['RefName']) . "',
+		Address='" . str_replace("'", "\'", $_POST['RefAddress']) . "',
+		Tel_No='" . str_replace("'", "\'", $_POST['RefContact']) . "' 
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1;");
+
+		$message = 'Reference has been updated successfully!';
+	}
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Reference has been added successfully!';
 		$showPrompt = true;
 	}
 
 	$_SESSION['pdstab'] = 'reference';
 }
 
-if (isset($_POST['UpdateReference'])) {
-	mysqli_query($con, "UPDATE reference SET Name='" . $_POST['RefName'] . "',Address='" . $_POST['RefAddress'] . "',Tel_No='" . $_POST['RefContact'] . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='" . $_SESSION['No'] . "' LIMIT 1");
+if (isset($_POST['RemoveReference'])) {
+	mysqli_query($con, "DELETE FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_GET['id'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Reference has been updated successfully!';
+		$message = 'Reference has been removed successfully!';
 		$showPrompt = true;
 	}
 

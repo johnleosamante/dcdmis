@@ -34,17 +34,17 @@ if (strlen($id) > 0) {
       <div class="modal-body">
         <div class="form-group">
           <label for="skills" class="mb-0">Special Skills &amp; Hobbies:</label>
-          <input id="skills" type="text" name="myspecial" class="form-control" required value="<?php echo $skill; ?>">
+          <input id="skills" type="text" name="Skill" class="form-control" required value="<?php echo $skill; ?>">
         </div>
 
         <div class="form-group">
           <label for="awards" class="mb-0">Non-Academic Distinctions / Recognition (Write in full):</label>
-          <input id="awards" type="text" name="myrecog" class="form-control" required value="<?php echo $recognition; ?>">
+          <input id="awards" type="text" name="Recognition" class="form-control" required value="<?php echo $recognition; ?>">
         </div>
 
         <div class="form-group mb-0">
           <label for="member" class="mb-0">Membership in Association / Organization (Write in full):</label>
-          <input id="member" type="text" name="myorg" class="form-control" required value="<?php echo $organization; ?>">
+          <input id="member" type="text" name="Membership" class="form-control" required value="<?php echo $organization; ?>">
         </div>
       </div><!-- .modal-body -->
 

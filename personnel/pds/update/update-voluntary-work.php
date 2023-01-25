@@ -36,7 +36,7 @@ if (strlen($id) > 0) {
       <div class="modal-body">
         <div class="form-group">
           <label for="Organization" class="mb-0">Name & Address of Organization (Write in full)</label>
-          <input id="Organization" type="text" name="NOrg" class="form-control" required value="<?php echo $organization; ?>">
+          <input id="Organization" type="text" name="NOrganization" class="form-control" required value="<?php echo $organization; ?>">
         </div>
 
         <div class="row">
@@ -62,7 +62,7 @@ if (strlen($id) > 0) {
 
         <div class="form-group mb-0">
           <label for="Position" class="mb-0">Position:</label>
-          <input id="Position" type="text" name="NPos" class="form-control" required value="<?php echo $position; ?>">
+          <input id="Position" type="text" name="NPosition" class="form-control" required value="<?php echo $position; ?>">
         </div>
       </div>
 

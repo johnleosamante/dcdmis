@@ -9,5 +9,5 @@ foreach ($_GET as $key => $data) {
 
 $_SESSION['No'] = $id;
 
-ModalConfirmDelete('Are you sure you want to continue and remove this entry?', 'Remove Eligibility?', 'RemoveEligibility');
+ModalConfirmDelete('Are you sure you want to continue and remove this entry?', 'Remove Civil Service Eligibility?', 'RemoveEligibility');
 ?>

@@ -7,11 +7,11 @@ foreach ($_GET as $key => $data) {
 }
 
 $_SESSION['No'] = $fname = $mname = $lname = $ext = $bdate = '';
-$modalTitle = "Add Child";
+$modalTitle = "Add Child Name";
 
 if (strlen($id) > 0) {
   $_SESSION['No'] = $id;
-  $modalTitle = "Edit Child";
+  $modalTitle = "Edit Child Name";
   $children = mysqli_query($con, "SELECT * FROM family_background WHERE `No`='$id' LIMIT 1;");
 
   if (mysqli_num_rows($children) > 0) {

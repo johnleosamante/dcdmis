@@ -7,11 +7,11 @@ foreach ($_GET as $key => $data) {
 }
 
 $_SESSION['No'] = $education = $level = $school = $course = $from = $to = $highest_level = $year_graduated = $honor_received = '';
-$modalTitle = "Add Education";
+$modalTitle = "Add Educational Background";
 
 if (strlen($id) > 0) {
   $_SESSION['No'] = $id;
-  $modalTitle = "Edit Education";
+  $modalTitle = "Edit Educational Background";
   $educational_background = mysqli_query($con, "SELECT * FROM educational_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='$id' LIMIT 1;");
 
   if (mysqli_num_rows($educational_background) > 0) {
