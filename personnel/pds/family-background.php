@@ -167,7 +167,7 @@ if (mysqli_num_rows($family) > 0) {
 
       <div class="d-sm-flex justify-content-between my-3">
         <span>&nbsp;</span>
-        <a data-target="#Modal" onclick="viewdata('Modal', 'pds/update/update-child.php?id=')" data-toggle="modal" class="btn btn-primary btn-icon-split btn-sm"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add Child</span></a>
+        <a onclick="viewdata('Modal', 'pds/update/update-child.php?id=')" data-target="#Modal" data-toggle="modal" class="btn btn-primary btn-icon-split btn-sm"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add Child</span></a>
       </div>
 
       <div class="row">
