@@ -32,12 +32,12 @@
               <tr>
                 <td class="text-center align-middle"><?php echo $education['Level']; ?></td>
                 <td class="text-center align-middle"><?php echo $education['Name_of_School']; ?></td>
-                <td class="text-center align-middle"><?php echo $education['Course']; ?></td>
+                <td class="text-center align-middle"><?php echo ToHandleNullString($education['Course']); ?></td>
                 <td class="text-center align-middle"><?php echo $education['From']; ?></td>
                 <td class="text-center align-middle"><?php echo $education['To']; ?></td>
-                <td class="text-center align-middle"><?php echo $education['Highest_Level']; ?></td>
-                <td class="text-center align-middle"><?php echo $education['Year_Graduated']; ?></td>
-                <td class="text-center align-middle"><?php echo $education['Honor_Recieved']; ?></td>
+                <td class="text-center align-middle"><?php echo ToHandleNullString($education['Highest_Level']); ?></td>
+                <td class="text-center align-middle"><?php echo ToHandleNullString($education['Year_Graduated']); ?></td>
+                <td class="text-center align-middle"><?php echo ToHandleNullString($education['Honor_Recieved']); ?></td>
                 <td class="text-center align-middle">
                   <a class="btn btn-success my-1 btn-sm" onclick="viewdata('Modal', 'pds/update/update-education.php?id=<?php echo $education['No']; ?>')" data-toggle="modal" data-target="#Modal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
                   <a class="btn btn-danger my-1 btn-sm" onclick="viewdata('Modal', 'pds/delete/delete-education.php?id=<?php echo $education['No']; ?>')" data-toggle="modal" data-target="#Modal" title="Remove"><i class="fas fa-trash fa-fw"></i></a>

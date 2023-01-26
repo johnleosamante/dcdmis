@@ -61,7 +61,7 @@ if (strlen($id) > 0) {
         </div>
 
         <div class="form-group">
-          <label for="CDateOfBirth">Date of Birth:</label>
+          <label for="CDateOfBirth" class="mb-0">Date of Birth: <span class="text-danger">*</span></label>
           <input id="CDateOfBirth" type="date" name="CDateOfBirth" class="form-control" value="<?php echo $bdate; ?>" required>
         </div>
 

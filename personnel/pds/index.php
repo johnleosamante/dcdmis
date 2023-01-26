@@ -314,7 +314,7 @@ if (isset($_POST['SaveExperience'])) {
 }
 
 if (isset($_POST['RemoveExperience'])) {
-	mysqli_query($con, "DELETE FROM work_experience WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_GET['id'] . "' LIMIT 1;");
+	mysqli_query($con, "DELETE FROM work_experience WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
@@ -332,7 +332,7 @@ if (isset($_POST['SaveVoluntaryWork'])) {
 		'" . str_replace("'", "\'", $_POST['NOrganization']) . "',
 		'" . str_replace("'", "\'", $_POST['NFrom']) . "',
 		'" . str_replace("'", "\'", $_POST['NTo']) . "',
-		'" . str_replace("'", "\'", $_POST['NHours']) . "',
+		'" . str_replace("'", "\'", $_POST['NHour']) . "',
 		'" . str_replace("'", "\'", $_POST['NPosition']) . "',
 		'" . $_SESSION['EmpID'] . "');");
 

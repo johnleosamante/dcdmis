@@ -27,6 +27,14 @@ function ToDateString($date, $string='') {
   }
 }
 
+function ToHandleNullString($value, $string='N/A') {
+  if ($value === 0 || $value === '0' || $value === '') {
+    return $string;
+  }
+
+  return $value;
+}
+
 function ToLongDateString($date, $string='') {
   if (strtotime($date)) {
     return date("F j, Y", strtotime($date));

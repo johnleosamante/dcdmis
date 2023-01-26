@@ -35,14 +35,14 @@ if (strlen($id) > 0) {
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="Organization" class="mb-0">Name & Address of Organization (Write in full)</label>
+          <label for="Organization" class="mb-0">Name & Address of Organization (Write in full) <span class="text-danger">*</span></label>
           <input id="Organization" type="text" name="NOrganization" class="form-control" required value="<?php echo $organization; ?>">
         </div>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="From" class="mb-0">Inclusive Dates From:</label>
+              <label for="From" class="mb-0">Inclusive Dates From: <span class="text-danger">*</span></label>
               <input id="From" type="date" name="NFrom" class="form-control" required value="<?php echo $from; ?>">
             </div>
           </div>
@@ -50,20 +50,22 @@ if (strlen($id) > 0) {
           <div class="col-md-6">
             <div class="form-group">
               <label for="To" class="mb-0">Inclusive Dates To:</label>
-              <input id="To" type="date" name="NTo" class="form-control" required value="<?php echo $to; ?>">
+              <input id="To" type="date" name="NTo" class="form-control" value="<?php echo $to; ?>">
             </div>
           </div>
         </div>
 
         <div class="form-group">
           <label for="Hours" class="mb-0">Number of Hours:</label>
-          <input id="Hours" type="number" name="NHour" class="form-control" required value="<?php echo $hours; ?>">
+          <input id="Hours" type="number" name="NHour" class="form-control" value="<?php echo $hours; ?>">
         </div>
 
-        <div class="form-group mb-0">
-          <label for="Position" class="mb-0">Position:</label>
+        <div class="form-group">
+          <label for="Position" class="mb-0">Position: <span class="text-danger">*</span></label>
           <input id="Position" type="text" name="NPosition" class="form-control" required value="<?php echo $position; ?>">
         </div>
+
+        <div class="text-danger mb-0">* Required field</div>
       </div>
 
       <div class="modal-footer">

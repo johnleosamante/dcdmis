@@ -40,7 +40,7 @@ if (strlen($id) > 0) {
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="from" class="mb-0">Inclusive Dates From:</label>
+              <label for="from" class="mb-0">Inclusive Dates From: <span class="text-danger">*</span></label>
               <input id="from" type="date" name="EFrom" class="form-control" required value="<?php echo $from; ?>">
             </div>
           </div>
@@ -48,25 +48,25 @@ if (strlen($id) > 0) {
           <div class="col-md-6">
             <div class="form-group">
               <label for="to" class="mb-0">Inclusive Dates To:</label>
-              <input id="to" type="date" name="ETo" class="form-control" required value="<?php echo $to; ?>">
+              <input id="to" type="date" name="ETo" class="form-control" value="<?php echo $to; ?>">
             </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="position" class="mb-0">Position Title:</label>
+          <label for="position" class="mb-0">Position Title: <span class="text-danger">*</span></label>
           <input id="position" type="text" name="EPosition" class="form-control" required value="<?php echo $position; ?>">
         </div>
 
         <div class="form-group">
-          <label for="organization" class="mb-0">Department / Agency / Office / Company:</label>
+          <label for="organization" class="mb-0">Department / Agency / Office / Company: <span class="text-danger">*</span></label>
           <input id="organization" type="text" name="EOrganization" class="form-control" required value="<?php echo $organization; ?>">
         </div>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="monthly" class="mb-0">Monthly<br>Salary:</label>
+              <label for="monthly" class="mb-0">Monthly<br>Salary: <span class="text-danger">*</span></label>
               <input id="monthly" type="text" name="ESalary" class="form-control" required value="<?php echo $salary; ?>">
             </div>
           </div>
@@ -81,8 +81,8 @@ if (strlen($id) > 0) {
 
         <div class="row">
           <div class="col-md-6">
-            <div class="form-group mb-0">
-              <label for="status" class="mb-0">Status of Appointment:</label>
+            <div class="form-group">
+              <label for="status" class="mb-0">Status of Appointment: <span class="text-danger">*</span></label>
               <select name="EStatus" id="status" class="form-control" required>
                 <option value="Permanent" <?php echo SetOptionSelected("Permanent", $status); ?>>Permanent</option>
                 <option value="Temporary" <?php echo SetOptionSelected("Temporary", $status); ?>>Temporary</option>
@@ -96,8 +96,8 @@ if (strlen($id) > 0) {
           </div>
 
           <div class="col-md-6">
-            <div class="form-group mb-0">
-              <label for="government" class="mb-0">Government Service:</label>
+            <div class="form-group">
+              <label for="government" class="mb-0">Government Service: <span class="text-danger">*</span></label>
               <select name="EGovernment" id="government" class="form-control" required>
                 <option value="Y" <?php echo SetOptionSelected("Y", $service); ?>>Yes</option>
                 <option value="N" <?php echo SetOptionSelected("N", $service); ?>>No</option>
@@ -105,6 +105,8 @@ if (strlen($id) > 0) {
             </div>
           </div>
         </div>
+
+        <div class="text-danger mb-0">* Required field</div>
       </div><!-- .modal-body -->
 
       <div class="modal-footer">
