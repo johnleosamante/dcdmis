@@ -36,33 +36,33 @@ if (strlen($id) > 0) {
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="Title_learning" class="mb-0">Learning &amp; Development Intervention / Training Program (Write in full):</label>
+          <label for="Title_learning" class="mb-0">Learning &amp; Development Intervention / Training Program (Write in full): <span class="text-danger">*</span></label>
           <input id="Title_learning" type="text" name="TTraining" class="form-control" required value="<?php echo $title; ?>">
         </div>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="From" class="mb-0">Inclusive Date From:</label>
+              <label for="From" class="mb-0">Inclusive Date From: <span class="text-danger">*</span></label>
               <input id="From" type="date" name="TFrom" class="form-control" required value="<?php echo $from; ?>">
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="To" class="mb-0">Inclusive Date To:</label>
+              <label for="To" class="mb-0">Inclusive Date To: <span class="text-danger">*</span></label>
               <input id="To" type="date" name="TTo" class="form-control" required value="<?php echo $to; ?>">
             </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="No_of_hours" class="mb-0">Number of Hours:</label>
+          <label for="No_of_hours" class="mb-0">Number of Hours: <span class="text-danger">*</span></label>
           <input id="No_of_hours" type="text" name="THour" class="form-control" required value="<?php echo $hours; ?>">
         </div>
 
         <div class="form-group">
-          <label for="TrainingType" class="mb-0">Type of Learning &amp; Development:</label>
+          <label for="TrainingType" class="mb-0">Type of Learning &amp; Development: <span class="text-danger">*</span></label>
           <select name="TManage" id="TrainingType" class="form-control" required>
             <option value="Foundation" <?php echo SetOptionSelected("Foundation", $type); ?>>Foundation</option>
             <option value="Technical" <?php echo SetOptionSelected("Technical", $type); ?>>Technical</option>
@@ -71,14 +71,16 @@ if (strlen($id) > 0) {
           </select>
         </div>
 
-        <div class="form-group mb-0">
-          <label for="Conducted" class="mb-0">Conducted / Sponsored by (Write in full): </label>
+        <div class="form-group">
+          <label for="Conducted" class="mb-0">Conducted / Sponsored by (Write in full): <span class="text-danger">*</span></label>
           <input id="Conducted" type="text" name="TConduct" class="form-control" required value="<?php echo $sponsor; ?>">
         </div>
+
+        <div class="text-danger mb-0">* Required field</div>
       </div><!-- .modal-body -->
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="SaveTraining">Save</button>
+        <button type="submit" class="btn btn-primary" name="SaveLearningDevelopment">Save</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
       </div><!-- .modal-footer -->
     </form>

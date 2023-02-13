@@ -33,20 +33,20 @@ $_SESSION['pathlocation'] = 'uploads/201_files/' . $_SESSION['EmpID'];
 					<div class="col-lg-10 col-md-7 col-sm-12 col-xs-12">
 						<table>
 							<tr class="border-bottom">
-								<th class="px-2 py-3">Employee ID:</th>
-								<td class="px-2 py-3"><?php echo $_SESSION['EmpID']; ?></td>
+								<th class="px-2 py-3">Last Name:</th>
+								<td class="px-2 py-3"><?php echo $data['Emp_LName']; ?></td>
 							</tr>
 							<tr class="border-bottom">
-								<th class="px-2 py-3">Employee Name:</th>
-								<td class="px-2 py-3"><?php echo $data['Emp_LName'] . ', ' . $data['Emp_FName'] . ' ' . $data['Emp_MName']; ?></td>
+								<th class="px-2 py-3">First Name:</th>
+								<td class="px-2 py-3"><?php echo $data['Emp_FName']; ?></td>
 							</tr>
 							<tr class="border-bottom">
-								<th class="px-2 py-3">Station:</th>
-								<td class="px-2 py-3"><?php echo $data['SchoolName']; ?></td>
+								<th class="px-2 py-3">Middle Name:</th>
+								<td class="px-2 py-3"><?php echo $data['Emp_MName']; ?></td>
 							</tr>
-							<tr class="border-bottom">
-								<th class="px-2 py-3">Birthdate:</th>
-								<td class="px-2 py-3"><?php echo ToLongDateString($data['Emp_Year'] . '-' . $data['Emp_Month'] . '-' . $data['Emp_Day']); ?></td>
+							<tr>
+								<th class="px-2 py-3">Name Extension:</th>
+								<td class="px-2 py-3"><?php echo $data['Emp_Extension']; ?></td>
 							</tr>
 						</table>
 					</div>
@@ -84,7 +84,7 @@ $_SESSION['pathlocation'] = 'uploads/201_files/' . $_SESSION['EmpID'];
 
 									closedir($dir_list);
 								}
-								
+
 								if ($no === 0) { ?>
 									<tr>
 										<td class="text-center align-middle" colspan="3">No available files to show.</td>

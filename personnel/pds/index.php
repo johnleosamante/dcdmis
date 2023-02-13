@@ -391,6 +391,8 @@ if (isset($_POST['SaveLearningDevelopment'])) {
 		Managerial='" . str_replace("'", "\'", $_POST['TManage']) . "',
 		Conducted='" . str_replace("'", "\'", $_POST['TConduct']) . "' 
 		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
+
+		$message = 'Learning &amp; Development (L&amp;D) Intervention has been updated successfully!';
 	}
 
 	if (mysqli_affected_rows($con) === 1) {
@@ -402,7 +404,7 @@ if (isset($_POST['SaveLearningDevelopment'])) {
 }
 
 if (isset($_POST['RemoveLearningDevelopment'])) {
-	mysqli_query($con,"DELETE FROM learning_and_development WHERE Emp_ID='".$_SESSION['EmpID']."' AND `No`='".$_GET['id']."' LIMIT 1;");
+	mysqli_query($con,"DELETE FROM learning_and_development WHERE Emp_ID='".$_SESSION['EmpID']."' AND `No`='".$_SESSION['No']."' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
@@ -442,7 +444,7 @@ if (isset($_POST['SaveOtherInformation'])) {
 }
 
 if (isset($_POST['RemoveOtherInformation'])) {
-	mysqli_query($con, "DELETE FROM other_information WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No` ='" . $_GET['id'] . "' LIMIT 1;");
+	mysqli_query($con, "DELETE FROM other_information WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No` ='" . $_SESSION['No'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
@@ -585,7 +587,7 @@ if (isset($_POST['SaveAnswers'])) {
 
 /* REFERENCE */
 if (isset($_POST['SaveReference'])) {
-	if (strlen($_SEESION['No']) === 0) {
+	if (strlen($_SESSION['No']) === 0) {
 		mysqli_query($con, "INSERT INTO reference VALUES (NULL,
 		'" . str_replace("'", "\'", $_POST['RefName']) . "',
 		'" . str_replace("'", "\'", $_POST['RefAddress']) . "',
@@ -612,7 +614,7 @@ if (isset($_POST['SaveReference'])) {
 }
 
 if (isset($_POST['RemoveReference'])) {
-	mysqli_query($con, "DELETE FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_GET['id'] . "' LIMIT 1;");
+	mysqli_query($con, "DELETE FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;

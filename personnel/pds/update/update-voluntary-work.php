@@ -35,7 +35,7 @@ if (strlen($id) > 0) {
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="Organization" class="mb-0">Name & Address of Organization (Write in full) <span class="text-danger">*</span></label>
+          <label for="Organization" class="mb-0">Name & Address of Organization (Write in full): <span class="text-danger">*</span></label>
           <input id="Organization" type="text" name="NOrganization" class="form-control" required value="<?php echo $organization; ?>">
         </div>
 

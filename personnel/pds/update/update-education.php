@@ -76,7 +76,7 @@ if (strlen($id) > 0) {
         </div>
 
         <div class="form-group">
-          <label for="unit" class="mb-0">Highest Level / Units Earned (if not graduated)</label>
+          <label for="unit" class="mb-0">Highest Level / Units Earned (if not graduated):</label>
           <input id="unit" name="EHighest" type="text" class="form-control" value="<?php echo $highest_level; ?>">
         </div>
 

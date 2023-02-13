@@ -33,19 +33,21 @@ if (strlen($id) > 0) {
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="Ref_Name" class="mb-0">Name:</label>
+          <label for="Ref_Name" class="mb-0">Name: <span class="text-danger">*</span></label>
           <input type="text" id="Ref_Name" name="RefName" class="form-control" required value="<?php echo $name; ?>">
         </div>
 
         <div class="form-group">
-          <label for="Address" class="mb-0">Address:</label>
+          <label for="Address" class="mb-0">Address: <span class="text-danger">*</span></label>
           <input type="text" id="Address" name="RefAddress" class="form-control" required value="<?php echo $address; ?>">
         </div>
 
         <div class="form-group">
-          <label for="Cell" class="mb-0">Contact Number:</label>
+          <label for="Cell" class="mb-0">Contact Number: <span class="text-danger">*</span></label>
           <input type="text" id="Cell" name="RefContact" class="form-control" required value="<?php echo $contact; ?>">
         </div>
+
+        <div class="text-danger mb-0">* Required field</div>
       </div><!-- .modal-body -->
 
       <div class="modal-footer">

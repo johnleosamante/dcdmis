@@ -36,42 +36,42 @@ if (strlen($id) > 0) {
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="Carrer" class="mb-0">Career Service / RA 1080 (Board/Bar) / Underspecial Laws / CES / CSEE / Barangay Eligibility / Driver's License <span class="text-danger">*</span></label>
+          <label for="Carrer" class="mb-0">Career Service / RA 1080 (Board/Bar) / Underspecial Laws / CES / CSEE / Barangay Eligibility / Driver's License: <span class="text-danger">*</span></label>
           <input id="Carrer" type="text" name="WCareer" class="form-control" required value="<?php echo $career; ?>">
         </div>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="rating" class="mb-0">Rating <br>(if applicable)</label>
+              <label for="rating" class="mb-0">Rating <br>(if applicable):</label>
               <input id="rating" type="number" name="WRating" class="form-control" value="<?php echo $rating; ?>">
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="date_exam" class="mb-0">Date of Examination / Conferment <span class="text-danger">*</span></label>
+              <label for="date_exam" class="mb-0">Date of Examination / Conferment: <span class="text-danger">*</span></label>
               <input id="date_exam" type="date" name="WDate" class="form-control" required value="<?php echo $exam_date; ?>">
             </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="Place" class="mb-0">Place of Examination / Conferment <span class="text-danger">*</span></label>
+          <label for="Place" class="mb-0">Place of Examination / Conferment: <span class="text-danger">*</span></label>
           <input id="Place" type="text" name="WPlace" class="form-control" required value="<?php echo $exam_place; ?>">
         </div>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="license_number" class="mb-0">License No. (if applicable)</label>
+              <label for="license_number" class="mb-0">License No. (if applicable):</label>
               <input id="license_number" type="text" name="WLicense" class="form-control" value="<?php echo $number; ?>">
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="year" class="mb-0">Date of Validity (if applicable)</label>
+              <label for="year" class="mb-0">Date of Validity (if applicable):</label>
               <input id="year" type="date" name="WValidity" class="form-control" value="<?php echo $validity; ?>">
             </div>
           </div>

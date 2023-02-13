@@ -37,7 +37,7 @@
                 <td class="text-center align-middle"><?php echo $training['Conducted']; ?></td>
                 <td class="text-center align-middle">
                   <a class="btn btn-success my-1 btn-sm" onclick="viewdata('Modal', 'pds/update/update-learning-development.php?id=<?php echo $training['No']; ?>')" data-toggle="modal" data-target="#Modal" title="Edit"><i class="fas fa-edit fa-fw"></i></a>
-                  <a class="btn btn-danger my-1 btn-sm" onclick="viewdata('Modal', 'pds/delete/delete-learning-development.php?id=<?php echo $eligibility['No']; ?>')" data-toggle="modal" data-target="#Modal" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
+                  <a class="btn btn-danger my-1 btn-sm" onclick="viewdata('Modal', 'pds/delete/delete-learning-development.php?id=<?php echo $training['No']; ?>')" data-toggle="modal" data-target="#Modal" title="Remove"><i class="fas fa-trash fa-fw"></i></a>
                 </td>
               </tr>
             <?php
