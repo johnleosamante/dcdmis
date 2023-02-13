@@ -358,7 +358,7 @@ if (isset($_POST['SaveVoluntaryWork'])) {
 }
 
 if (isset($_POST['RemoveVoluntaryWork'])) {
-	mysqli_query($con,"DELETE FROM voluntary_work WHERE Emp_ID='".$_SESSION['EmpID']."' AND `No`='".$_SESSION['No']."' LIMIT 1;");
+	mysqli_query($con, "DELETE FROM voluntary_work WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
@@ -404,7 +404,7 @@ if (isset($_POST['SaveLearningDevelopment'])) {
 }
 
 if (isset($_POST['RemoveLearningDevelopment'])) {
-	mysqli_query($con,"DELETE FROM learning_and_development WHERE Emp_ID='".$_SESSION['EmpID']."' AND `No`='".$_SESSION['No']."' LIMIT 1;");
+	mysqli_query($con, "DELETE FROM learning_and_development WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
@@ -413,6 +413,42 @@ if (isset($_POST['RemoveLearningDevelopment'])) {
 	}
 
 	$_SESSION['pdstab'] = 'learning-development';
+}
+
+/* SPECIAL SKILL */
+if (isset($_POST['SaveSpecialSkill'])) {
+	if (strlen($_SESSION['No']) === 0) {
+		mysqli_query($con, "INSERT INTO tbl_special_skills VALUES (NULL,
+		'" . str_replace("'", "\'", $_POST['Skill']) . "',
+		'" . $_SESSION['EmpID'] . "');");
+
+		$message = 'Special Skill / Hobby has been added successfully!';
+	} else {
+		mysqli_query($con, "UPDATE tbl_special_skills SET 
+		Special_Skills='" . str_replace("'", "\'", $_POST['Skill']) . "'
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
+
+		$message = 'Special Skill / Hobby has been added successfully!';
+	}
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$showPrompt = true;
+	}
+
+	$_SESSION['pdstab'] = 'special-skills';
+}
+
+if (isset($_POST['RemoveSpecialSkill'])) {
+	mysqli_query($con, "DELETE FROM tbl_special_skills WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1;");
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Special Skill / Hobby has been removed successfully!';
+		$showPrompt = true;
+	}
+
+	$_SESSION['pdstab'] = 'special-skills';
 }
 
 /* OTHER INFORMATION TO CHANGE */
@@ -714,6 +750,15 @@ if (isset($_POST['RemoveReference'])) {
 						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'learning-development'); ?>" href="#learning-development" data-toggle="tab">Learning and Development</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'special-skills'); ?>" href="#special-skills" data-toggle="tab">Special Skills &amp; Hobbies</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'recognition'); ?>" href="#recognition" data-toggle="tab">Non-Academic Distinctions / Recognition</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'membership'); ?>" href="#membership" data-toggle="tab">Membership in Association / Organization</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'other-information'); ?>" href="#other-information" data-toggle="tab">Other Information</a>
 					</li>
 					<li class="nav-item">
@@ -739,6 +784,7 @@ if (isset($_POST['RemoveReference'])) {
 					include_once('pds/work-experience.php');
 					include_once('pds/voluntary-work.php');
 					include_once('pds/learning-development.php');
+					include_once('pds/special-skills.php');
 					include_once('pds/other-information.php');
 					include_once('pds/questionnaire.php');
 					include_once('pds/reference.php');

@@ -21,7 +21,7 @@
 			<i class="fas fa-certificate fa-fw"></i><span>Certificates</span>
 		</a>
 
-		<div id="collapseCertificates" class="collapse" aria-labelledby="headingCertificates" data-parent="#accordionSidebar">
+		<div id="collapseCertificates" class="collapse<?php echo SetActiveNavigationItem($page === 'Certificates'); ?>" aria-labelledby="headingCertificates" data-parent="#accordionSidebar">
 			<div class="bg-white py-2 collapse-inner rounded">
 				<a class="collapse-item" href="<?php echo GetHashURL('personnel', 'Certificates', 'Division'); ?>">Division Level</a>
 				<a class="collapse-item" href="<?php echo GetHashURL('personnel', 'Certificates', 'Regional'); ?>">Regional Level</a>

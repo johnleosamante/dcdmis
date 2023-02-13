@@ -18,7 +18,7 @@
 
         <tbody>
           <?php
-          $references = mysqli_query($con, "SELECT * FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY 'Name';");
+          $references = mysqli_query($con, "SELECT * FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY Name ASC;");
 
           if (mysqli_num_rows($references)) {
             while ($reference = mysqli_fetch_array($references)) { ?>
