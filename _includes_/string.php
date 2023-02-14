@@ -19,9 +19,9 @@ function ToAddress($lot, $street, $subdivision, $barangay, $city, $province='') 
   return ToString($lot, '', ', ') . ToString($street, '', ', ') . ToString($subdivision, '', ', ') . ToString($barangay, '', ', ') . ToString($city) . ToString($province, ', ');
 }
 
-function ToDateString($date, $string='') {
+function ToDateString($date, $string='', $format= "m/d/Y") {
   if (strtotime($date)) {
-    return date("m/d/Y", strtotime($date));
+    return date($format, strtotime($date));
   } else {
     return $string;
   }

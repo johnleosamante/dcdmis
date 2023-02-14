@@ -6,17 +6,17 @@ foreach ($_GET as $key => $data) {
   $id = $_GET[$key] = $data;
 }
 
-$_SESSION['No'] = $skillhobby = '';
-$modalTitle = "Add Special Skill / Hobby";
+$_SESSION['No'] = $title = '';
+$modalTitle = "Add Non-Academic Distinction / Recognition";
 
 if (strlen($id) > 0) {
   $_SESSION['No'] = $id;
-  $modalTitle = "Edit Special Skill / Hobby";
-  $skills = mysqli_query($con, "SELECT * FROM tbl_special_skills WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='$id' LIMIT 1;");
+  $modalTitle = "Edit Non-Academic Distinction / Recognition";
+  $recognitions = mysqli_query($con, "SELECT * FROM tbl_recognition WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND No='$id' LIMIT 1;");
 
-  if (mysqli_num_rows($skills) > 0) {
-    $skill = mysqli_fetch_array($skills);
-    $skillhobby = $skill['Special_Skills'];
+  if (mysqli_num_rows($recognitions) > 0) {
+    $recognition = mysqli_fetch_array($recognitions);
+    $title = $recognition['Recognition'];
   }
 }
 ?>
@@ -31,15 +31,15 @@ if (strlen($id) > 0) {
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="Skill" class="mb-0">Special Skill / Hobby: <span class="text-danger">*</span></label>
-          <input id="Skill" type="text" name="Skill" class="form-control" required value="<?php echo $skillhobby; ?>">
+          <label for="Recognition" class="mb-0">Non-Academic Distinction / Recognition: <span class="text-danger">*</span></label>
+          <input id="Recognition" type="text" name="Recognition" class="form-control" required value="<?php echo $title; ?>">
         </div>
 
         <div class="text-danger mb-0">* Required field</div>
       </div>
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="SaveSpecialSkill">Save</button>
+        <button type="submit" class="btn btn-primary" name="SaveRecognition">Save</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
       </div><!-- .modal-footer -->
     </form>

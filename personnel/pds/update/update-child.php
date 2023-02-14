@@ -1,6 +1,7 @@
 <?php
 include_once('../../../_includes_/function.php');
 include_once('../../../_includes_/database/database.php');
+include_once('../../../_includes_/string.php');
 
 foreach ($_GET as $key => $data) {
   $id = $_GET[$key] = $data;
@@ -62,7 +63,7 @@ if (strlen($id) > 0) {
 
         <div class="form-group">
           <label for="CDateOfBirth" class="mb-0">Date of Birth: <span class="text-danger">*</span></label>
-          <input id="CDateOfBirth" type="date" name="CDateOfBirth" class="form-control" value="<?php echo $bdate; ?>" required>
+          <input id="CDateOfBirth" type="date" name="CDateOfBirth" class="form-control" value="<?php echo ToDateString($bdate, '', "Y-m-d"); ?>" required>
         </div>
 
         <div class="text-danger mb-0">* Required field</div>

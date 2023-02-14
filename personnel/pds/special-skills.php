@@ -31,7 +31,7 @@
             }
           } else { ?>
             <tr>
-              <td class="text-center align-middle" colspan="6">No data available in table</td>
+              <td class="text-center align-middle" colspan="2">No data available in table</td>
             </tr>
           <?php
           }

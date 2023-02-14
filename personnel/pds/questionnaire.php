@@ -1,7 +1,11 @@
 <div class="tab-pane fade<?php echo SetActiveNavigationTab(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'questionnaires'); ?>" id="questionnaires">
+  <div class="d-sm-flex justify-content-between my-3">
+    <h3 class="h4 mb-0">Other Information</h3>
+  </div>
+
   <form class="row mt-3" action="" Method="POST" enctype="multipart/form-data">
     <div class="col table-responsive">
-      <table width="100%" class="table table-striped table-bordered table-hover mb-0">
+      <table width="100%" class="table table-striped table-bordered mb-0">
         <tbody>
           <tr>
             <td width="80%">
@@ -233,7 +237,7 @@
         </tbody>
       </table>
 
-      <button type="submit" name="SaveAnswers" class="btn btn-primary btn-block form-control mt-3"><i class="fas fa-save fa-fw"></i> Save Details</button>
+      <button type="submit" name="SaveAnswers" class="btn btn-primary btn-block form-control mt-3"><i class="fas fa-save fa-fw"></i> Update Other Information</button>
     </div><!-- .col -->
   </form>
 </div>

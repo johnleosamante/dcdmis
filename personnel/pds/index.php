@@ -135,6 +135,7 @@ if (isset($_POST['UpdateFamilyBackground'])) {
 	$_SESSION['pdstab'] = 'family-background';
 }
 
+/* CHILDREN */
 if (isset($_POST['SaveChild'])) {
 	if (strlen($_SESSION['No']) === 0) {
 		mysqli_query($con, "INSERT INTO family_background VALUES (NULL, 
@@ -451,24 +452,20 @@ if (isset($_POST['RemoveSpecialSkill'])) {
 	$_SESSION['pdstab'] = 'special-skills';
 }
 
-/* OTHER INFORMATION TO CHANGE */
-if (isset($_POST['SaveOtherInformation'])) {
+/* RECOGNITION */
+if (isset($_POST['SaveRecognition'])) {
 	if (strlen($_SESSION['No']) === 0) {
-		mysqli_query($con, "INSERT INTO other_information VALUES(NULL,
-		'" . str_replace("'", "\'", $_POST['Skill']) . "',
+		mysqli_query($con, "INSERT INTO tbl_recognition VALUES (NULL,
 		'" . str_replace("'", "\'", $_POST['Recognition']) . "',
-		'" . str_replace("'", "\'", $_POST['Membership']) . "',
 		'" . $_SESSION['EmpID'] . "');");
 
-		$message = 'Other Information has been added successfully!';
+		$message = 'Non-Academic Distinction / Recognition has been added successfully!';
 	} else {
-		mysqli_query($con, "UPDATE other_information SET 
-		Special_Skills='" . str_replace("'", "\'", $_POST['Skill']) . "',
-		Recognation='" . str_replace("'", "\'", $_POST['Recognition']) . "',
-		Organization='" . str_replace("'", "\'", $_POST['Membership']) . "' 
+		mysqli_query($con, "UPDATE tbl_recognition SET 
+		Recognition='" . str_replace("'", "\'", $_POST['Recognition']) . "'
 		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
 
-		$message = 'Other Information has been updated successfully!';
+		$message = 'Non-Academic Distinction / Recognition has been added successfully!';
 	}
 
 	if (mysqli_affected_rows($con) === 1) {
@@ -476,19 +473,55 @@ if (isset($_POST['SaveOtherInformation'])) {
 		$showPrompt = true;
 	}
 
-	$_SESSION['pdstab'] = 'other-information';
+	$_SESSION['pdstab'] = 'recognition';
 }
 
-if (isset($_POST['RemoveOtherInformation'])) {
-	mysqli_query($con, "DELETE FROM other_information WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No` ='" . $_SESSION['No'] . "' LIMIT 1;");
+if (isset($_POST['RemoveRecognition'])) {
+	mysqli_query($con, "DELETE FROM tbl_recognition WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1;");
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Other Information has been removed successfully!';
+		$message = 'Non-Academic Distinction / Recognition has been removed successfully!';
 		$showPrompt = true;
 	}
 
-	$_SESSION['pdstab'] = 'other-information';
+	$_SESSION['pdstab'] = 'recognition';
+}
+
+/* Membership */
+if (isset($_POST['SaveMembership'])) {
+	if (strlen($_SESSION['No']) === 0) {
+		mysqli_query($con, "INSERT INTO tbl_membership VALUES (NULL,
+		'" . str_replace("'", "\'", $_POST['Organization']) . "',
+		'" . $_SESSION['EmpID'] . "');");
+
+		$message = 'Membership in Association / Organization has been added successfully!';
+	} else {
+		mysqli_query($con, "UPDATE tbl_membership SET 
+		Organization='" . str_replace("'", "\'", $_POST['Organization']) . "'
+		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
+
+		$message = 'Membership in Association / Organization has been added successfully!';
+	}
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$showPrompt = true;
+	}
+
+	$_SESSION['pdstab'] = 'membership';
+}
+
+if (isset($_POST['RemoveMembership'])) {
+	mysqli_query($con, "DELETE FROM tbl_membership WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "' LIMIT 1;");
+
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Membership in Association / Organization has been removed successfully!';
+		$showPrompt = true;
+	}
+
+	$_SESSION['pdstab'] = 'membership';
 }
 
 /* QUESTIONNAIRES TO CHANGE */
@@ -660,139 +693,61 @@ if (isset($_POST['RemoveReference'])) {
 
 	$_SESSION['pdstab'] = 'reference';
 }
+
+// PERSONAL DATA SHEET PROGRESS BAR
+$total = 0;
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 15;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 5;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 5;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM educational_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 10;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM civil_service WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 10;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM work_experience WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 10;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM voluntary_work WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 5;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM learning_and_development WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 10;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_special_skills WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 5;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_recognition WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 5;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_membership WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 5;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 10;
+}
+
+if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
+	$total += 5;
+}
+
+include_once('pds.php');
 ?>
-
-<div class="row mt-4 mb-4">
-	<div class="col">
-		<div class="card">
-			<div class="card-header">
-				<?php
-				$total = $fam = $educ = $civil = $work = $volun = $learn = $other = $ref = 0;
-				$family_data = mysqli_query($con, "SELECT * FROM family_background WHERE family_background.Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-				if (mysqli_num_rows($family_data) <> 0) {
-					$fam = 10;
-				}
-
-				$educ_data = mysqli_query($con, "SELECT * FROM educational_background WHERE educational_background.Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-				if (mysqli_num_rows($educ_data) <> 0) {
-					$educ = 15;
-				}
-
-				$civil_data = mysqli_query($con, "SELECT * FROM civil_service WHERE civil_service.Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-				if (mysqli_num_rows($civil_data) <> 0) {
-					$civil = 15;
-				}
-
-				$work_data = mysqli_query($con, "SELECT * FROM work_experience WHERE work_experience.Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-				if (mysqli_num_rows($work_data) <> 0) {
-					$work = 5;
-				}
-
-				$voluntary_data = mysqli_query($con, "SELECT * FROM voluntary_work WHERE voluntary_work.Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-				if (mysqli_num_rows($voluntary_data) <> 0) {
-					$volun = 5;
-				}
-
-				$learning_data = mysqli_query($con, "SELECT * FROM learning_and_development WHERE learning_and_development.Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-				if (mysqli_num_rows($learning_data) <> 0) {
-					$learn = 20;
-				}
-
-				$other_data = mysqli_query($con, "SELECT * FROM other_information WHERE other_information.Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-				if (mysqli_num_rows($other_data) <> 0) {
-					$other = 10;
-				}
-
-				$reference_data = mysqli_query($con, "SELECT * FROM reference WHERE reference.Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-				if (mysqli_num_rows($reference_data) <> 0) {
-					$ref = 20;
-				}
-
-				$total = $fam + $educ + $civil + $work + $volun + $learn + $other + $ref;
-				?>
-
-				<h3 class="h4 mb-2">Personal Data Sheet (<?php echo $total; ?>% Complete)</h3>
-
-				<div class="progress">
-					<div class="progress-bar bg-success" role="progressbar" aria-valuenow="<?php echo $total; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total; ?>%"></div>
-				</div><!-- .progress -->
-			</div><!-- .card-header -->
-
-			<div class="card-body">
-				<ul class="nav nav-tabs mb-3">
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(!isset($_SESSION['pdstab']) || $_SESSION['pdstab'] === 'personal-information'); ?>" href="#personal-information" data-toggle="tab">Personal Information</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'family-background'); ?>" href="#family-background" data-toggle="tab">Family Background</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'educational-background'); ?>" href="#educational-background" data-toggle="tab">Educational Background</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'eligibility'); ?>" href="#eligibility" data-toggle="tab">Civil Service Eligibility</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'work-experience'); ?>" href="#work-experience" data-toggle="tab">Work Experience</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'voluntary-work'); ?>" href="#voluntary-work" data-toggle="tab">Voluntary Work</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'learning-development'); ?>" href="#learning-development" data-toggle="tab">Learning and Development</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'special-skills'); ?>" href="#special-skills" data-toggle="tab">Special Skills &amp; Hobbies</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'recognition'); ?>" href="#recognition" data-toggle="tab">Non-Academic Distinctions / Recognition</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'membership'); ?>" href="#membership" data-toggle="tab">Membership in Association / Organization</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'other-information'); ?>" href="#other-information" data-toggle="tab">Other Information</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'questionnaires'); ?>" href="#questionnaires" data-toggle="tab">Questionnaires</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'reference'); ?>" href="#reference" data-toggle="tab">References</a>
-					</li>
-				</ul>
-
-				<?php
-				if ($showPrompt) {
-					AlertBox($message, $success ? 'success' : 'danger', 'left');
-				}
-				?>
-
-				<div class="tab-content mt-2">
-					<?php
-					include_once('pds/personal-information.php');
-					include_once('pds/family-background.php');
-					include_once('pds/educational-background.php');
-					include_once('pds/civil-service-eligibility.php');
-					include_once('pds/work-experience.php');
-					include_once('pds/voluntary-work.php');
-					include_once('pds/learning-development.php');
-					include_once('pds/special-skills.php');
-					include_once('pds/other-information.php');
-					include_once('pds/questionnaire.php');
-					include_once('pds/reference.php');
-					?>
-				</div>
-			</div><!-- .card-body -->
-		</div><!-- .card -->
-	</div><!-- .col -->
-</div><!-- .row -->
-
-<div class="modal fade" id="Modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true" data-backdrop="static"></div><!-- .modal -->
