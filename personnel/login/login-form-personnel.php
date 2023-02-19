@@ -25,7 +25,7 @@
         <input class="form-control form-control-user" id="inputPassword" name="password" type="password" placeholder="Password">
       </div><!-- .form-group -->
 
-      <div class="form-check form-check small">
+      <div class="form-group form-check small">
         <input class="form-check-input" id="inputShowPassword" type="checkbox">
         <label class="form-check-label" for="inputShowPassword">Show password</label>
       </div><!-- .form-group -->
