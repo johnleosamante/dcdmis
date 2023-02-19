@@ -63,12 +63,7 @@ if (strlen($id) > 0) {
 
         <div class="form-group">
           <label for="TrainingType" class="mb-0">Type of Learning &amp; Development: <span class="text-danger">*</span></label>
-          <select name="TManage" id="TrainingType" class="form-control" required>
-            <option value="Foundation" <?php echo SetOptionSelected("Foundation", $type); ?>>Foundation</option>
-            <option value="Technical" <?php echo SetOptionSelected("Technical", $type); ?>>Technical</option>
-            <option value="Supervisory" <?php echo SetOptionSelected("Supervisory", $type); ?>>Supervisory</option>
-            <option value="Managerial" <?php echo SetOptionSelected("Managerial", $type); ?>>Managerial</option>
-          </select>
+          <input id="TrainingType" type="text" name="TManage" class="form-control" required value="<?php echo $type; ?>">
         </div>
 
         <div class="form-group">
