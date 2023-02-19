@@ -70,6 +70,7 @@
         <div class="form-group">
           <label for="elegibility" class="mb-0">Eligibility</label>
           <select id="elegibility" name="elegibility" class="form-control" required>
+            <option value="PBET" <?php echo SetOptionSelected("PBET", $rowpsip['Elegibility']); ?>>PBET</option>
             <option value="LET" <?php echo SetOptionSelected("LET", $rowpsip['Elegibility']); ?>>LET</option>
             <option value="BLET" <?php echo SetOptionSelected("BLET", $rowpsip['Elegibility']); ?>>BLET</option>
             <option value="CSC" <?php echo SetOptionSelected("CSC", $rowpsip['Elegibility']); ?>>CSC</option>

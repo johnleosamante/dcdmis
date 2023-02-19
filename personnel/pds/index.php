@@ -147,7 +147,7 @@ if (isset($_POST['SaveChild'])) {
 		'" . $_SESSION['EmpID'] . "'
 	);");
 
-		$message = 'Child Name has been added successfully!';
+		$message = 'Child has been added successfully!';
 	} else {
 		mysqli_query($con, "UPDATE family_background SET 
 		Family_Name='" . str_replace("'", "\'", $_POST['CLastName']) . "',
@@ -156,7 +156,7 @@ if (isset($_POST['SaveChild'])) {
 		Birthdate='" . str_replace("'", "\'", $_POST['CDateOfBirth']) . "'
 		WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND `No`='" . $_SESSION['No'] . "';");
 
-		$message = 'Child Name has been updated successfully!';
+		$message = 'Child has been updated successfully!';
 	}
 
 
@@ -165,7 +165,7 @@ if (isset($_POST['SaveChild'])) {
 		$showPrompt = true;
 	}
 
-	$_SESSION['pdstab'] = 'family-background';
+	$_SESSION['pdstab'] = 'children';
 }
 
 if (isset($_POST['RemoveChild'])) {
@@ -173,11 +173,11 @@ if (isset($_POST['RemoveChild'])) {
 
 	if (mysqli_affected_rows($con) === 1) {
 		$success = true;
-		$message = 'Child Name has been removed successfully!';
+		$message = 'Child has been removed successfully!';
 		$showPrompt = true;
 	}
 
-	$_SESSION['pdstab'] = 'family-background';
+	$_SESSION['pdstab'] = 'children';
 }
 
 /* EDUCATIONAL BACKGROUND */
@@ -488,7 +488,7 @@ if (isset($_POST['RemoveRecognition'])) {
 	$_SESSION['pdstab'] = 'recognition';
 }
 
-/* Membership */
+/* MEMBERSHIP */
 if (isset($_POST['SaveMembership'])) {
 	if (strlen($_SESSION['No']) === 0) {
 		mysqli_query($con, "INSERT INTO tbl_membership VALUES (NULL,
@@ -524,134 +524,70 @@ if (isset($_POST['RemoveMembership'])) {
 	$_SESSION['pdstab'] = 'membership';
 }
 
-/* QUESTIONNAIRES TO CHANGE */
-if (isset($_POST['SaveAnswers'])) {
-	//first data entry
-	$result_one = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='one' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
-	if (mysqli_num_rows($result_one) == 1) {
-		mysqli_query($con, "UPDATE tbl_questioner SET Answer='" . $_POST['one'] . "', Details='" . $_POST['one_details'] . "' WHERE Question='one' AND Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
+/* OTHER INFORMATION */
+if (isset($_POST['UpdateOtherInformation'])) {
+	if (mysqli_num_rows(mysqli_query($con, "SELECT Emp_ID FROM tbl_other_information WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;")) === 0) {
+		mysqli_query($con, "INSERT INTO tbl_other_information VALUES (NULL, 
+			" . $_POST['hasThirdDegree'] . ",
+			" . $_POST['hasFourthDegree'] . ",
+			'" . str_replace("'", "\'", $_POST['relatedDetails']) . "',
+			" . $_POST['wasGuilty'] . ",
+			'" . str_replace("'", "\'", $_POST['guiltyDetails']) . "',
+			" . $_POST['wasCharged'] . ",
+			'" . $_POST['dateFiled'] . "',
+			'" . str_replace("'", "\'", $_POST['caseStatus']) . "',
+			" . $_POST['wasConvicted'] . ",
+			'" . str_replace("'", "\'", $_POST['convictedDetails']) . "',
+			" . $_POST['wasSeparated'] . ",
+			'" . str_replace("'", "\'", $_POST['separatedDetails']) . "',
+			" . $_POST['wasCandidate'] . ",
+			'" . str_replace("'", "\'", $_POST['candidateDetails']) . "',
+			" . $_POST['resigned'] . ",
+			'" . str_replace("'", "\'", $_POST['resignedDetails']) . "',
+			" . $_POST['immigrant'] . ",
+			'" . str_replace("'", "\'", $_POST['immigrantCountry']) . "',
+			" . $_POST['isIndigenous'] . ",
+			'" . str_replace("'", "\'", $_POST['indigenousSpecify']) . "',
+			" . $_POST['isDifferentlyAbled'] . ",
+			'" . str_replace("'", "\'", $_POST['differentlyAbledSpecify']) . "',
+			" . $_POST['isSoloParent'] . ",
+			'" . str_replace("'", "\'", $_POST['soloParentSpecify']) . "',
+			'" . $_SESSION['EmpID'] . "');");
 	} else {
-		if ($_POST['one'] == 'Yes') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'one','" . $_POST['one'] . "','" . $_POST['one_details'] . "','" . $_SESSION['EmpID'] . "')");
-		} elseif ($_POST['one'] == 'No') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'one','" . $_POST['one'] . "','-','" . $_SESSION['EmpID'] . "')");
-		}
+		mysqli_query($con, "UPDATE tbl_other_information SET 
+	hasthirddegree=" . $_POST['hasThirdDegree'] . ", 
+	hasfourthdegree=" . $_POST['hasFourthDegree'] . ", 
+	relateddetails='" . str_replace("'", "\'", $_POST['relatedDetails']) . "', 
+	wasguilty=" . $_POST['wasGuilty'] . ", 
+	guiltydetails='" . str_replace("'", "\'", $_POST['guiltyDetails']) . "', 
+	wascharged=" . $_POST['wasCharged'] . ", 
+	datefiled='" . $_POST['dateFiled'] . "', 
+	casestatus='" . str_replace("'", "\'", $_POST['caseStatus']) . "', 
+	wasconvicted=" . $_POST['wasConvicted'] . ", 
+	convicteddetails='" . str_replace("'", "\'", $_POST['convictedDetails']) . "', 
+	wasseparated=" . $_POST['wasSeparated'] . ", 
+	separateddetails='" . str_replace("'", "\'", $_POST['separatedDetails']) . "', 
+	wascandidate=" . $_POST['wasCandidate'] . ", 
+	candidatedetails='" . str_replace("'", "\'", $_POST['candidateDetails']) . "', 
+	resigned=" . $_POST['resigned'] . ", 
+	resigneddetails='" . str_replace("'", "\'", $_POST['resignedDetails']) . "', 
+	immigrant=" . $_POST['immigrant'] . ", 
+	immigrantCountry='" . str_replace("'", "\'", $_POST['immigrantCountry']) . "', 
+	isindigenous=" . $_POST['isIndigenous'] . ", 
+	indigenousspecify='" . str_replace("'", "\'", $_POST['indigenousSpecify']) . "', 
+	isdifferentlyabled=" . $_POST['isDifferentlyAbled'] . ", 
+	differentlyabledspecify='" . str_replace("'", "\'", $_POST['differentlyAbledSpecify']) . "', 
+	issoloparent=" . $_POST['isSoloParent'] . ", 
+	soloparentspecify='" . str_replace("'", "\'", $_POST['soloParentSpecify']) . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
 	}
 
-	//second data entry
-	$result_two = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='two' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
-	if (mysqli_num_rows($result_two) == 1) {
-		mysqli_query($con, "UPDATE tbl_questioner SET Answer='" . $_POST['two'] . "', Details='" . $_POST['two_details'] . "' WHERE Question='two' AND Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-	} else {
-		if ($_POST['two'] == 'Yes') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'two','" . $_POST['two'] . "','" . $_POST['two_details'] . "','" . $_SESSION['EmpID'] . "')");
-		} elseif ($_POST['two'] == 'No') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'two','" . $_POST['two'] . "','-','" . $_SESSION['EmpID'] . "')");
-		}
+	if (mysqli_affected_rows($con) === 1) {
+		$success = true;
+		$message = 'Other Information have been saved successfully!';
+		$showPrompt = true;
 	}
 
-	//third data entry
-	$result_three = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='three' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
-	if (mysqli_num_rows($result_three) == 1) {
-		mysqli_query($con, "UPDATE tbl_questioner SET Answer='" . $_POST['three'] . "', Details='" . $_POST['three_details'] . "' WHERE Question='three' AND Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-	} else {
-		if ($_POST['three'] == 'Yes') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'three','" . $_POST['three'] . "','" . $_POST['three_details'] . "','" . $_SESSION['EmpID'] . "')");
-		} elseif ($_POST['three'] == 'No') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'three','" . $_POST['three'] . "','-','" . $_SESSION['EmpID'] . "')");
-		}
-	}
-
-	//fourth data entry
-	$result_four = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='four' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
-	if (mysqli_num_rows($result_four) == 1) {
-		mysqli_query($con, "UPDATE tbl_questioner SET Answer='" . $_POST['four'] . "', Details='" . $_POST['four_details'] . "' WHERE Question='four' AND Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-	} else {
-		if ($_POST['four'] == 'Yes') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'four','" . $_POST['four'] . "','" . $_POST['four_details'] . "','" . $_SESSION['EmpID'] . "')");
-		} elseif ($_POST['four'] == 'No') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'four','" . $_POST['four'] . "','-','" . $_SESSION['EmpID'] . "')");
-		}
-	}
-
-	//five data entry
-	$result_five = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='five' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
-	if (mysqli_num_rows($result_five) == 1) {
-		mysqli_query($con, "UPDATE tbl_questioner SET Answer='" . $_POST['five'] . "', Details='" . $_POST['five_details'] . "' WHERE Question='five' AND Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-	} else {
-		if ($_POST['five'] == 'Yes') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'five','" . $_POST['five'] . "','" . $_POST['five_details'] . "','" . $_SESSION['EmpID'] . "')");
-		} elseif ($_POST['five'] == 'No') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'five','" . $_POST['five'] . "','-','" . $_SESSION['EmpID'] . "')");
-		}
-	}
-
-	//six data entry
-	$result_six = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='six' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
-	if (mysqli_num_rows($result_six) == 1) {
-		mysqli_query($con, "UPDATE tbl_questioner SET Answer='" . $_POST['six'] . "', Details='" . $_POST['six_details'] . "' WHERE Question='six' AND Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-	} else {
-		if ($_POST['six'] == 'Yes') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'six','" . $_POST['six'] . "','" . $_POST['six_details'] . "','" . $_SESSION['EmpID'] . "')");
-		} elseif ($_POST['six'] == 'No') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'six','" . $_POST['six'] . "','-','" . $_SESSION['EmpID'] . "')");
-		}
-	}
-
-	//seven data entry
-	$result_seven = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='seven' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
-	if (mysqli_num_rows($result_seven) == 1) {
-		mysqli_query($con, "UPDATE tbl_questioner SET Answer='" . $_POST['seven'] . "', Details='" . $_POST['seven_details'] . "' WHERE Question='seven' AND Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-	} else {
-		if ($_POST['seven'] == 'Yes') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'seven','" . $_POST['seven'] . "','" . $_POST['seven_details'] . "','" . $_SESSION['EmpID'] . "')");
-		} elseif ($_POST['seven'] == 'No') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'seven','" . $_POST['seven'] . "','-','" . $_SESSION['EmpID'] . "')");
-		}
-	}
-
-	//eight data entry
-	$result_eight = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='eight' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
-	if (mysqli_num_rows($result_eight) == 1) {
-		mysqli_query($con, "UPDATE tbl_questioner SET Answer='" . $_POST['eight'] . "', Details='" . $_POST['eight_details'] . "' WHERE Question='eight' AND Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-	} else {
-		if ($_POST['eight'] == 'Yes') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'eight','" . $_POST['eight'] . "','" . $_POST['eight_details'] . "','" . $_SESSION['EmpID'] . "')");
-		} elseif ($_POST['eight'] == 'No') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'eight','" . $_POST['eight'] . "','-','" . $_SESSION['EmpID'] . "')");
-		}
-	}
-
-	//nine data entry
-	$result_nine = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='nine' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
-	if (mysqli_num_rows($result_nine) == 1) {
-		mysqli_query($con, "UPDATE tbl_questioner SET Answer='" . $_POST['eight'] . "', Details='" . $_POST['nine_details'] . "' WHERE Question='nine' AND Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-	} else {
-		if ($_POST['nine'] == 'Yes') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'nine','" . $_POST['nine'] . "','" . $_POST['nine_details'] . "','" . $_SESSION['EmpID'] . "')");
-		} elseif ($_POST['nine'] == 'No') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'nine','" . $_POST['nine'] . "','-','" . $_SESSION['EmpID'] . "')");
-		}
-	}
-
-	//ten data entry
-	$result_ten = mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Question='ten' AND Emp_ID='" . $_SESSION['EmpID'] . "'");
-
-	if (mysqli_num_rows($result_ten) == 1) {
-		mysqli_query($con, "UPDATE tbl_questioner SET Answer='" . $_POST['ten'] . "', Details='" . $_POST['ten_details'] . "' WHERE Question='ten' AND Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-	} else {
-		if ($_POST['ten'] == 'Yes') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'ten','" . $_POST['ten'] . "','" . $_POST['ten_details'] . "','" . $_SESSION['EmpID'] . "')");
-		} elseif ($_POST['ten'] == 'No') {
-			mysqli_query($con, "INSERT INTO tbl_questioner VALUES(NULL,'ten','" . $_POST['ten'] . "','-','" . $_SESSION['EmpID'] . "')");
-		}
-	}
-
-	$success = true;
-	$message = 'Changes have been saved successfully!';
-	$showPrompt = true;
-
-	$_SESSION['pdstab'] = 'questionnaires';
+	$_SESSION['pdstab'] = 'other-information';
 }
 
 /* REFERENCE */
@@ -694,60 +630,4 @@ if (isset($_POST['RemoveReference'])) {
 	$_SESSION['pdstab'] = 'reference';
 }
 
-// PERSONAL DATA SHEET PROGRESS BAR
-$total = 0;
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_employee WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 15;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 5;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM family_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 5;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM educational_background WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 10;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM civil_service WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 10;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM work_experience WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 10;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM voluntary_work WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 5;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM learning_and_development WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 10;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_special_skills WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 5;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_recognition WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 5;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_membership WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 5;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM tbl_questioner WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 10;
-}
-
-if (mysqli_num_rows(mysqli_query($con, "SELECT * FROM reference WHERE Emp_ID='" . $_SESSION['EmpID'] . "'")) > 0) {
-	$total += 5;
-}
-
 include_once('pds.php');
-?>

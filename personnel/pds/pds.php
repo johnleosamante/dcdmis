@@ -6,10 +6,10 @@
   <div class="col">
     <div class="card">
       <div class="card-header">
-        <h3 class="h4 mb-2">Personal Data Sheet (<?php echo $total; ?>% Complete)</h3>
+        <h3 class="h4 mb-2">Personal Data Sheet (<?php echo $pds_progress; ?>% Complete)</h3>
 
         <div class="progress">
-          <div class="progress-bar bg-success" role="progressbar" aria-valuenow="<?php echo $total; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total; ?>%"></div>
+          <div class="progress-bar bg-success" role="progressbar" aria-valuenow="<?php echo $pds_progress; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $pds_progress; ?>%"></div>
         </div><!-- .progress -->
       </div><!-- .card-header -->
 
@@ -49,7 +49,7 @@
             <a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'membership'); ?>" href="#membership" data-toggle="tab">Membership in Association / Organization</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'questionnaires'); ?>" href="#questionnaires" data-toggle="tab">Other Information</a>
+            <a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'other-information'); ?>" href="#other-information" data-toggle="tab">Other Information</a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-secondary<?php echo SetActiveNavigationItem(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'reference'); ?>" href="#reference" data-toggle="tab">References</a>
@@ -75,7 +75,7 @@
           include_once('pds/special-skills.php');
           include_once('pds/recognition.php');
           include_once('pds/membership.php');
-          include_once('pds/questionnaire.php');
+          include_once('pds/other-information.php');
           include_once('pds/reference.php');
           ?>
         </div>
