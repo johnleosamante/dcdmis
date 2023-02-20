@@ -38,6 +38,7 @@
       <div class="form-group">
         <label for="inputSex" class="mb-0">Sex:</label>
         <select name="sex" class="form-control" id="inputSex" required>
+          <option value="" <?php echo SetOptionSelected("", $empSex); ?>>Please select</option>
           <option value="Male" <?php echo SetOptionSelected('Male', $empSex); ?>>Male</option>
           <option value="Female" <?php echo SetOptionSelected('Female', $empSex); ?>>Female</option>
         </select>
@@ -98,6 +99,7 @@
       <div class="form-group">
         <label for="inputPosition" class="mb-0">Position:</label>
         <select name="position" class="form-control" id="inputPosition" required>
+          <option value="" <?php echo SetOptionSelected("", $empPosition); ?>>Please select</option>
           <?php
           include_once('../_includes_/database/job.php');
           $jobs = GetJob();
@@ -114,6 +116,7 @@
       <div class="form-group">
         <label for="inputSchool" class="mb-0">Station:</label>
         <select class="form-control" id="inputSchool" name="School" required>
+          <option value="" <?php echo SetOptionSelected("", $empSchool); ?>>Please select</option>
           <?php
           include_once('../_includes_/database/school.php');
           $schools = GetSchool();
@@ -129,7 +132,7 @@
     <div class="col-md-6">
       <div class="form-group">
         <label for="inputContact" class="mb-0">Contact Number:</label>
-        <input class="form-control" id="inputContact" type="number" name="contactNo" value="<?php echo $empContact; ?>" required>
+        <input class="form-control" id="inputContact" type="text" name="contactNo" value="<?php echo $empContact; ?>" required>
       </div><!-- .form-group -->
     </div><!-- .col-md-6 -->
 
