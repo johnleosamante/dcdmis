@@ -74,7 +74,7 @@ if (strlen($id) > 0) {
           <div class="col-md-6">
             <div class="form-group">
               <label for="step" class="mb-0">Salary/Job/Pay Grade &amp; Step Increment:</label>
-              <input id="step" type="text" name="ESGrade" class="form-control" required value="<?php echo $grade; ?>">
+              <input id="step" type="text" name="ESGrade" class="form-control" value="<?php echo $grade; ?>">
             </div>
           </div>
         </div>
