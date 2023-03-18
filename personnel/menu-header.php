@@ -81,7 +81,7 @@ $user = DBFetchAssoc($users);
           Personal Data Sheet
         </h6>
 
-        <div class="dropdown-item py-3">
+        <a class="dropdown-item py-3" href="<?php echo GetHashURL('personnel', 'Personal Data Sheet'); ?>">
           <div class="font-weight-bold text-left pb-1">
             <?php echo "$pds_progress% Complete"; ?>
           </div>
@@ -91,7 +91,7 @@ $user = DBFetchAssoc($users);
               <span class="sr-only"><?php echo $pds_progress; ?>% Complete</span>
             </div>
           </div>
-        </div>
+        </a>
       </div>
     </li>
 
