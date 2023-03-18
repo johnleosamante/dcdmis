@@ -36,7 +36,7 @@
                 <td class="text-center align-middle"><?php echo $experience['Position_Title']; ?></td>
                 <td class="text-center align-middle"><?php echo $experience['Organization']; ?></td>
                 <td class="text-center align-middle"><?php echo $experience['Monthly_Salary']; ?></td>
-                <td class="text-center align-middle"><?php echo $experience['Salary_Grade']; ?></td>
+                <td class="text-center align-middle"><?php echo ToHandleNullString($experience['Salary_Grade']); ?></td>
                 <td class="text-center align-middle"><?php echo $experience['Job_Status']; ?></td>
                 <td class="text-center align-middle"><?php echo $experience['Goverment']; ?></td>
                 <td class="text-center align-middle">
