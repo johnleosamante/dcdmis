@@ -73,7 +73,7 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 						<thead>
 							<tr class="text-center">
 								<th class="align-middle" width="10%">#</th>
-								<th class="align-middle" width="50$">Descriptions</th>
+								<th class="align-middle" width="50%">Description</th>
 								<th class="align-middle" width="30%">Category</th>
 								<th class="align-middle" width="10%">Action</th>
 							</tr>
@@ -82,7 +82,12 @@ if (!is_dir('../uploads/certificate/' . $_SESSION['EmpID'])) {
 						<tbody>
 							<?php
 							$no = 0;
-							$result = mysqli_query($con, "SELECT * FROM tbl_certificate_archive WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND Certificate_Level='" . $_GET['id'] . "'");
+
+							if (isset($_GET['id']) && $_GET['id'] === 'All') {
+								$result = mysqli_query($con, "SELECT * FROM tbl_certificate_archive WHERE Emp_ID='" . $_SESSION['EmpID'] . "';");
+							} else {
+								$result = mysqli_query($con, "SELECT * FROM tbl_certificate_archive WHERE Emp_ID='" . $_SESSION['EmpID'] . "' AND Certificate_Level='" . $_GET['id'] . "';");
+							}
 
 							while ($row = mysqli_fetch_array($result)) {
 								$no++;
