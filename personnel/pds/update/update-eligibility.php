@@ -44,7 +44,7 @@ if (strlen($id) > 0) {
           <div class="col-md-6">
             <div class="form-group">
               <label for="rating" class="mb-0">Rating <br>(if applicable):</label>
-              <input id="rating" type="number" name="WRating" class="form-control" value="<?php echo $rating; ?>">
+              <input id="rating" type="number" name="WRating" class="form-control" min="0" step="0.01" value="<?php echo $rating; ?>">
             </div>
           </div>
 
