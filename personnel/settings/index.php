@@ -53,11 +53,14 @@
 
 				/* PSIPOP */
 				if (isset($_POST['UpdatePSIPOP'])) {
-					$query = mysqli_query($con, "SELECT * FROM psipop WHERE Emp_ID='" . $_SESSION['EmpID'] . "';");
+					mysqli_query($con, "UPDATE tbl_station SET Emp_Position ='" . $_POST['position'] . "'  WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
 
-					if (mysqli_num_rows($query) == 0) {
-						mysqli_query($con, "UPDATE tbl_station SET Emp_Position ='" . $_POST['position'] . "'  WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1");
-						mysqli_query($con, "INSERT INTO psipop VALUES(NULL,'" . $_POST['item_number'] . "','" . $_POST['SN'] . "','" . $_POST['jobstatus'] . "','" . $_POST['DOA'] . "','" . $_POST['elegibility'] . "','" . $_SESSION['EmpID'] . "')");
+					$query = mysqli_query($con, "SELECT * FROM psipop WHERE Emp_ID='" . $_SESSION['EmpID'] . "';");
+					
+					if (mysqli_num_rows($query) === 0) {
+						mysqli_query($con, "INSERT INTO psipop VALUES (NULL,'" . $_POST['item_number'] . "','" . $_POST['SN'] . "','" . $_POST['jobstatus'] . "','" . $_POST['DOA'] . "','" . $_POST['elegibility'] . "','" . $_SESSION['EmpID'] . "');");
+					} else {
+						mysqli_query($con, "UPDATE psipop SET Item_Number='" . $_POST['item_number'] . "',Step='" . $_POST['SN'] . "',Job_Status='" . $_POST['jobstatus'] . "',Date_promoted='" . $_POST['DOA'] . "',Elegibility='" . $_POST['elegibility'] . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
 					}
 
 					if (DBAffectedRows($con) === 1) {
