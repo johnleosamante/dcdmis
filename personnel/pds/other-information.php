@@ -29,7 +29,8 @@ if (mysqli_num_rows($otherInformations) > 0) {
   $soloParentSpecify = $information['soloparentspecify'];
 } else {
   $hasThirdDegree = $hasFourthDegree = $wasGuilty = $wasCharged = $wasConvicted = $wasSeparated = $wasCandidate = $resigned = $immigrant = $isIndigenous = $isDifferentlyAbled = $isSoloParent = '0';
-  $relatedDetails = $guiltyDetails = $dateFiled = $caseStatus = $convictedDetails = $separatedDetails = $candidateDetails = $resignedDetails = $immigrantCountry = $isIndigenousSpecify = $isDifferentlyAbledSpecify = $soloParentSpecify = '';
+  $relatedDetails = $guiltyDetails = $caseStatus = $convictedDetails = $separatedDetails = $candidateDetails = $resignedDetails = $immigrantCountry = $isIndigenousSpecify = $isDifferentlyAbledSpecify = $soloParentSpecify = '';
+  $dateFiled = '0001-01-01';
 }
 ?>
 
@@ -58,7 +59,7 @@ if (mysqli_num_rows($otherInformations) > 0) {
                   </div>
                 </li>
 
-                <li>within the fourth degree (for Local Government Uniy - Career Employees)?
+                <li>within the fourth degree (for Local Government Unit - Career Employees)?
                   <div class="py-1">
                     <input id="hasFourthDegreeYes" type="radio" name="hasFourthDegree" value="1" <?php echo SetRadioButtonChecked($hasFourthDegree === '1');
                                                                                                   ?> required>
