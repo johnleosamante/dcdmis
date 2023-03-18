@@ -41,18 +41,18 @@ if (!is_dir('../uploads/payslip/' . $_SESSION['EmpID'])) {
 				<div class="table-responsive">
 					<table id="dataTable" class="table table-striped table-hover table-bordered" width="100%" cellspacing="0">
 						<thead>
-							<tr class="text-center align-middle">
-								<th>#</th>
-								<th>Date</th>
-								<th>Descriptions</th>
-								<th class="text-center align-middle" width="100px">Action</th>
+							<tr class="text-center">
+								<th class="align-middle" width="10%">#</th>
+								<th class="align-middle" width="20%">Date</th>
+								<th class="align-middle" width="60%">Description</th>
+								<th class="align-middle" width="10%">Action</th>
 							</tr>
 						</thead>
 
 						<tbody>
 							<?php
 							$no = 0;
-							$result = mysqli_query($con, "SELECT * FROM tbl_payslip_archive WHERE Emp_ID='" . $_SESSION['EmpID'] . "'");
+							$result = mysqli_query($con, "SELECT * FROM tbl_payslip_archive WHERE Emp_ID='" . $_SESSION['EmpID'] . "' ORDER BY Payslip_details DESC;");
 
 							while ($row = mysqli_fetch_array($result)) {
 								$no++;
@@ -61,7 +61,7 @@ if (!is_dir('../uploads/payslip/' . $_SESSION['EmpID'])) {
 									<td class="text-center"><?php echo $no; ?></td>
 									<td class="text-center"><?php echo $row['date_time_upload']; ?></td>
 									<td><?php echo $row['Payslip_details']; ?></td>
-									<td><a href="<?php echo $row['location']; ?>" class="text-xs btn btn-success btn-block" title="Download" target="_blank"><i class="fas fa-download fa-fw"></i> Download</a></td>
+									<td><a href="<?php echo $row['location']; ?>" class="btn btn-success btn-block" title="View" target="_blank"><i class="fas fa-eye fa-fw"></i> View</a></td>
 								</tr>
 							<?php
 							}
@@ -122,7 +122,7 @@ if (!is_dir('../uploads/payslip/' . $_SESSION['EmpID'])) {
 						});
 					</script>
 
-					<img src="../assets/img/upload.jpg" id="uploadPreview" style="width:100%">
+					<img src="../assets/img/upload.jpg" id="uploadPreview" width="100%">
 				</div>
 
 				<div class="modal-footer">
