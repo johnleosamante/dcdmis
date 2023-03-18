@@ -2,10 +2,6 @@
 # register/index.php
 include_once('../_includes_/function.php');
 
-if (isset($_SESSION['uid'])) {
-  header('location:' . GetHashURL($_SESSION['portal'], 'dashboard'));
-}
-
 $page = 'Data Privacy Policy Agreement';
 
 foreach ($_GET as $key => $data) {
