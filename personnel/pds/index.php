@@ -527,58 +527,9 @@ if (isset($_POST['RemoveMembership'])) {
 /* OTHER INFORMATION */
 if (isset($_POST['UpdateOtherInformation'])) {
 	if (mysqli_num_rows(mysqli_query($con, "SELECT Emp_ID FROM tbl_other_information WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;")) === 0) {
-		mysqli_query($con, "INSERT INTO tbl_other_information VALUES (NULL, 
-			" . $_POST['hasThirdDegree'] . ",
-			" . $_POST['hasFourthDegree'] . ",
-			'" . str_replace("'", "\'", $_POST['relatedDetails']) . "',
-			" . $_POST['wasGuilty'] . ",
-			'" . str_replace("'", "\'", $_POST['guiltyDetails']) . "',
-			" . $_POST['wasCharged'] . ",
-			'" . $_POST['dateFiled'] . "',
-			'" . str_replace("'", "\'", $_POST['caseStatus']) . "',
-			" . $_POST['wasConvicted'] . ",
-			'" . str_replace("'", "\'", $_POST['convictedDetails']) . "',
-			" . $_POST['wasSeparated'] . ",
-			'" . str_replace("'", "\'", $_POST['separatedDetails']) . "',
-			" . $_POST['wasCandidate'] . ",
-			'" . str_replace("'", "\'", $_POST['candidateDetails']) . "',
-			" . $_POST['resigned'] . ",
-			'" . str_replace("'", "\'", $_POST['resignedDetails']) . "',
-			" . $_POST['immigrant'] . ",
-			'" . str_replace("'", "\'", $_POST['immigrantCountry']) . "',
-			" . $_POST['isIndigenous'] . ",
-			'" . str_replace("'", "\'", $_POST['indigenousSpecify']) . "',
-			" . $_POST['isDifferentlyAbled'] . ",
-			'" . str_replace("'", "\'", $_POST['differentlyAbledSpecify']) . "',
-			" . $_POST['isSoloParent'] . ",
-			'" . str_replace("'", "\'", $_POST['soloParentSpecify']) . "',
-			'" . $_SESSION['EmpID'] . "');");
+		mysqli_query($con, "INSERT INTO tbl_other_information VALUES (NULL," . $_POST['hasThirdDegree'] . "," . $_POST['hasFourthDegree'] . ", '" . str_replace("'", "\'", $_POST['relatedDetails']) . "'," . $_POST['wasGuilty'] . ",'" . str_replace("'", "\'", $_POST['guiltyDetails']) . "'," . $_POST['wasCharged'] . ",'" . $_POST['dateFiled'] . "','" . str_replace("'", "\'", $_POST['caseStatus']) . "'," . $_POST['wasConvicted'] . ",'" . str_replace("'", "\'", $_POST['convictedDetails']) . "'," . $_POST['wasSeparated'] . ",'" . str_replace("'", "\'", $_POST['separatedDetails']) . "'," . $_POST['wasCandidate'] . ", '" . str_replace("'", "\'", $_POST['candidateDetails']) . "'," . $_POST['resigned'] . ",'" . str_replace("'", "\'", $_POST['resignedDetails']) . "'," . $_POST['immigrant'] . ", '" . str_replace("'", "\'", $_POST['immigrantCountry']) . "'," . $_POST['isIndigenous'] . ",'" . str_replace("'", "\'", $_POST['indigenousSpecify']) . "'," . $_POST['isDifferentlyAbled'] . ",'" . str_replace("'", "\'", $_POST['differentlyAbledSpecify']) . "'," . $_POST['isSoloParent'] . ",'" . str_replace("'", "\'", $_POST['soloParentSpecify']) . "','" . $_SESSION['EmpID'] . "');");
 	} else {
-		mysqli_query($con, "UPDATE tbl_other_information SET 
-	hasthirddegree=" . $_POST['hasThirdDegree'] . ", 
-	hasfourthdegree=" . $_POST['hasFourthDegree'] . ", 
-	relateddetails='" . str_replace("'", "\'", $_POST['relatedDetails']) . "', 
-	wasguilty=" . $_POST['wasGuilty'] . ", 
-	guiltydetails='" . str_replace("'", "\'", $_POST['guiltyDetails']) . "', 
-	wascharged=" . $_POST['wasCharged'] . ", 
-	datefiled='" . $_POST['dateFiled'] . "', 
-	casestatus='" . str_replace("'", "\'", $_POST['caseStatus']) . "', 
-	wasconvicted=" . $_POST['wasConvicted'] . ", 
-	convicteddetails='" . str_replace("'", "\'", $_POST['convictedDetails']) . "', 
-	wasseparated=" . $_POST['wasSeparated'] . ", 
-	separateddetails='" . str_replace("'", "\'", $_POST['separatedDetails']) . "', 
-	wascandidate=" . $_POST['wasCandidate'] . ", 
-	candidatedetails='" . str_replace("'", "\'", $_POST['candidateDetails']) . "', 
-	resigned=" . $_POST['resigned'] . ", 
-	resigneddetails='" . str_replace("'", "\'", $_POST['resignedDetails']) . "', 
-	immigrant=" . $_POST['immigrant'] . ", 
-	immigrantCountry='" . str_replace("'", "\'", $_POST['immigrantCountry']) . "', 
-	isindigenous=" . $_POST['isIndigenous'] . ", 
-	indigenousspecify='" . str_replace("'", "\'", $_POST['indigenousSpecify']) . "', 
-	isdifferentlyabled=" . $_POST['isDifferentlyAbled'] . ", 
-	differentlyabledspecify='" . str_replace("'", "\'", $_POST['differentlyAbledSpecify']) . "', 
-	issoloparent=" . $_POST['isSoloParent'] . ", 
-	soloparentspecify='" . str_replace("'", "\'", $_POST['soloParentSpecify']) . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
+		mysqli_query($con, "UPDATE tbl_other_information SET hasthirddegree=" . $_POST['hasThirdDegree'] . ",hasfourthdegree=" . $_POST['hasFourthDegree'] . ",relateddetails='" . str_replace("'", "\'", $_POST['relatedDetails']) . "',wasguilty=" . $_POST['wasGuilty'] . ",guiltydetails='" . str_replace("'", "\'", $_POST['guiltyDetails']) . "',wascharged=" . $_POST['wasCharged'] . ",datefiled='" . $_POST['dateFiled'] . "',casestatus='" . str_replace("'", "\'", $_POST['caseStatus']) . "',wasconvicted=" . $_POST['wasConvicted'] . ",convicteddetails='" . str_replace("'", "\'", $_POST['convictedDetails']) . "',wasseparated=" . $_POST['wasSeparated'] . ",separateddetails='" . str_replace("'", "\'", $_POST['separatedDetails']) . "',wascandidate=" . $_POST['wasCandidate'] . ",candidatedetails='" . str_replace("'", "\'", $_POST['candidateDetails']) . "',resigned=" . $_POST['resigned'] . ",resigneddetails='" . str_replace("'", "\'", $_POST['resignedDetails']) . "',immigrant=" . $_POST['immigrant'] . ",immigrantcountry='" . str_replace("'", "\'", $_POST['immigrantCountry']) . "',isindigenous=" . $_POST['isIndigenous'] . ",indigenousspecify='" . str_replace("'", "\'", $_POST['indigenousSpecify']) . "',isdifferentlyabled=" . $_POST['isDifferentlyAbled'] . ",differentlyabledspecify='" . str_replace("'", "\'", $_POST['differentlyAbledSpecify']) . "',issoloparent=" . $_POST['isSoloParent'] . ",soloparentspecify='" . str_replace("'", "\'", $_POST['soloParentSpecify']) . "' WHERE Emp_ID='" . $_SESSION['EmpID'] . "' LIMIT 1;");
 	}
 
 	if (mysqli_affected_rows($con) === 1) {
