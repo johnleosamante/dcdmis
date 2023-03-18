@@ -2,7 +2,7 @@
 # register/register.php
 ?>
 
-<div class="col-lg-6">
+<div class="col-lg-7">
 	<div class="card shadow-lg border-0 rounded-lg my-5">
 		<div class="card-header">
 			<?php SiteLogo(120, 120); ?>
