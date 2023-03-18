@@ -37,7 +37,7 @@ if (strlen($id) > 0) {
       <div class="modal-body">
         <div class="form-group">
           <label for="Title_learning" class="mb-0">Learning &amp; Development Intervention / Training Program (Write in full): <span class="text-danger">*</span></label>
-          <input id="Title_learning" type="text" name="TTraining" class="form-control" required value="<?php echo $title; ?>">
+          <textarea id="Title_learning" name="TTraining" class="form-control" required rows="2"><?php echo $title; ?></textarea>
         </div>
 
         <div class="row">
@@ -56,14 +56,20 @@ if (strlen($id) > 0) {
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="No_of_hours" class="mb-0">Number of Hours: <span class="text-danger">*</span></label>
-          <input id="No_of_hours" type="text" name="THour" class="form-control" required value="<?php echo $hours; ?>">
-        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="No_of_hours" class="mb-0">Number of <br>Hours: <span class="text-danger">*</span></label>
+              <input id="No_of_hours" type="number" min="0" steps="0.01" name="THour" class="form-control" required value="<?php echo $hours; ?>">
+            </div>
+          </div>
 
-        <div class="form-group">
-          <label for="TrainingType" class="mb-0">Type of Learning &amp; Development: <span class="text-danger">*</span></label>
-          <input id="TrainingType" type="text" name="TManage" class="form-control" required value="<?php echo $type; ?>">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="TrainingType" class="mb-0">Type of Learning &amp; Development: <span class="text-danger">*</span></label>
+              <input id="TrainingType" type="text" name="TManage" class="form-control" required value="<?php echo $type; ?>">
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
