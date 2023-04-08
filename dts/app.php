@@ -17,7 +17,7 @@ function station_name($id) {
   if (num_rows($section) > 0) {
     return fetch_assoc($section)['name'];
   } else {
-    $school = school($id);
+    $school = school_by_alias($id);
     return num_rows($school) > 0 ? fetch_assoc($school)['name'] : $id;
   }
 }
