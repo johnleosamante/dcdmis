@@ -8,7 +8,7 @@ INSERT INTO `tbl_div_section` (`Section_Code`, `Section_Office`) VALUES
 ('CID', 'Office of the Curriculum Implementation Division Chief'),
 ('PSDS', 'Public Schools District Supervisor'),
 ('EPS', 'Education Program Supervisor'),
-('LRMS', 'Learning Resource Management Section'),
+('LRMDS', 'Learning Resource Management Section'),
 ('SGOD', 'Office of the Schools Governance & Operations Division Chief'),
 ('LEGAL', 'Legal Section'),
 ('HRMO', 'Personnel Section'),
