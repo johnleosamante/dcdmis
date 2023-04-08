@@ -1,0 +1,27 @@
+/*
+# assets/css/custom.css
+*/
+
+.background-cover {
+  background: url('../img/background.png') no-repeat center center fixed;
+  background-size: cover;
+}
+
+#layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#layout #layout_content {
+  min-width: 0;
+  flex-grow: 1;
+}
+
+#layout #layout_footer {
+  min-width: 0;
+}
+
+input::-ms-clear, input::-ms-reveal {
+  display: none;
+}
