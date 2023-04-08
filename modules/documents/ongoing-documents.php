@@ -24,7 +24,7 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Ongoing Documents';
         <tbody>
           <?php
           $no = 0;
-          $query = ongoing_documents($_SESSION[alias() . '_station'], $_SESSION[alias() . '_station_is_school']);
+          $query = ongoing_documents($_SESSION[alias() . '_station']);
           while ($row = fetch_array($query)) {
           ?>
             <tr>
