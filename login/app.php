@@ -14,7 +14,8 @@ function set_user_session($userid) {
     if ($user['portal'] !== 'school_portal') {
       $_SESSION[alias() . '_station'] = $user['station'];
     } else {
-      
+      $school = school_by_id($user['station']);
+      $_SESSION[alias() . '_station'] = fetch_assoc($school)['alias'];
     }
   } else {
     $_SESSION[alias() . '_active_app'] = 'pis';
