@@ -26,13 +26,13 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Outgoing Documents';
         <tbody>
           <?php
           $no = 0;
-          $query = outgoing_documents($_SESSION[alias() . '_station'], $_SESSION[alias() . '_station_is_school']);
+          $query = outgoing_documents($_SESSION[alias() . '_station']);
           while ($row = fetch_array($query)) { ?>
             <tr>
               <td class="text-uppercase align-middle"><?php echo ++$no; ?></td>
               <td class="text-uppercase align-middle"><?php echo $row['id']; ?></td>
               <td class="text-uppercase text-left align-middle"><?php echo $row['description']; ?></td>
-              <td class="align-middle text-uppercase"><?php echo station_name($row['to'], $_SESSION[alias() . '_station_is_school']); ?></td>
+              <td class="align-middle text-uppercase"><?php echo station_name($row['to']); ?></td>
               <td class="align-middle text-uppercase"><?php echo user_name($row['user']); ?></td>
               <td class="align-middle"><?php echo $row['datetime']; ?></td>
               <td class="align-middle">
