@@ -25,7 +25,7 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Completed Documents';
         <tbody>
           <?php
           $no = 0;
-          $query = completed_documents($_SESSION[alias() . '_station'], $_SESSION[alias() . '_station_is_school']);
+          $query = completed_documents($_SESSION[alias() . '_station']);
           while ($row = fetch_array($query)) : ?>
             <tr>
               <td class="text-uppercase align-middle"><?php echo ++$no; ?></td>
