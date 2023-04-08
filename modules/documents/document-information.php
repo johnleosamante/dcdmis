@@ -8,15 +8,15 @@ if (num_rows($documents) > 0) {
   $document = fetch_assoc($documents);
   $_SESSION[alias() . '_No'] = $document['id'];
 
-  if (is_incoming_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'], $_SESSION[alias() . '_station_is_school'])) {
+  if (is_incoming_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Incoming Documents';
   }
 
-  if (is_pending_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'], $_SESSION[alias() . '_station_is_school'])) {
+  if (is_pending_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Pending Documents';
   }
 
-  if (is_outgoing_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'], $_SESSION[alias() . '_station_is_school'])) {
+  if (is_outgoing_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Outgoing Documents';
   }
 } else {
@@ -47,7 +47,7 @@ if (num_rows($documents) > 0) {
         </tr>
         <tr>
           <th class="pr-5" scope="row">From:</th>
-          <td class="text-uppercase"><?php echo station_name($document['from'], $_SESSION[alias() . '_station_is_school']); ?></td>
+          <td class="text-uppercase"><?php echo station_name($document['from']); ?></td>
         </tr>
         <tr>
           <th class="pr-5" scope="row">Status:</th>
@@ -105,8 +105,8 @@ if (num_rows($documents) > 0) {
             <tr>
               <td class="align-middle"><?php echo $log['datetime']; ?></td>
               <td class="align-middle text-uppercase"><?php echo user_name($log['user']); ?></td>
-              <td class="align-middle text-uppercase"><?php echo station_name($log['from'], $_SESSION[alias() . '_station_is_school']); ?></td>
-              <td class="align-middle text-uppercase"><?php echo station_name($log['to'], $_SESSION[alias() . '_station_is_school']); ?></td>
+              <td class="align-middle text-uppercase"><?php echo station_name($log['from']); ?></td>
+              <td class="align-middle text-uppercase"><?php echo station_name($log['to']); ?></td>
               <td class="align-middle text-uppercase"><?php echo $log['status']; ?></td>
             </tr>
           <?php } ?>
