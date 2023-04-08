@@ -42,7 +42,7 @@ if (isset($_POST['receive_document'])) {
   $code = $_SESSION[alias() . '_No'];
 
   update_document_log($code);
-  insert_document_log($code, $_SESSION[alias() . '_user_id'], $_SESSION[alias() . '_station'], '-', 'Received', 'New', $_SESSION[alias() . '_station_is_school']);
+  insert_document_log($code, $_SESSION[alias() . '_user_id'], $_SESSION[alias() . '_station'], '-', 'Received', 'New');
 
   if (affected_rows()) {
     $show_prompt = true;
@@ -55,7 +55,7 @@ if (isset($_POST['forward_document'])) {
   $purpose = real_escape_string($_POST['purpose']);
 
   update_document_log($code);
-  insert_document_log($code, $_SESSION[alias() . '_user_id'], $_SESSION[alias() . '_station'], real_escape_string($_POST['destination']), $purpose, 'New', $_SESSION[alias() . '_station_is_school']);
+  insert_document_log($code, $_SESSION[alias() . '_user_id'], $_SESSION[alias() . '_station'], real_escape_string($_POST['destination']), $purpose, 'New');
   update_document_status($code, $purpose);
 
   if (affected_rows()) {
@@ -71,7 +71,7 @@ if (isset($_POST['complete_document'])) {
   $status = strlen($remarks) > 0 ? "Completed - {$remarks}" : 'Completed';
 
   update_document_log($code);
-  insert_document_log($code, $_SESSION[alias() . '_user_id'], $_SESSION[alias() . '_station'], '-', 'Completed', 'Done', $_SESSION[alias() . '_station_is_school']);
+  insert_document_log($code, $_SESSION[alias() . '_user_id'], $_SESSION[alias() . '_station'], '-', 'Completed', 'Done');
   update_document_status($code, $status, 'Read');
 
   if (affected_rows()) {
