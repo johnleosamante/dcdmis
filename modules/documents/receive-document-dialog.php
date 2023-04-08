@@ -1,6 +1,5 @@
 <?php
 // modules/documents/receive-document-dialog.php
-
 $modal_title = 'Receive';
 ?>
 
