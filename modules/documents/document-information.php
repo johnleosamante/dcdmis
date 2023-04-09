@@ -1,7 +1,5 @@
 <?php
 // modules/documents/document-information.php
-$previous_document = $_SESSION[alias() . '_previous_document'];
-$back_link = isset($previous_document) ? custom_uri('dts', $previous_document) : uri() . '/dts';
 $documents = document(real_escape_string($_GET['id']));
 
 if (num_rows($documents) > 0) {
@@ -10,33 +8,37 @@ if (num_rows($documents) > 0) {
 
   if (is_incoming_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Incoming Documents';
-  }
-
-  if (is_pending_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+  } elseif (is_pending_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Pending Documents';
-  }
-
-  if (is_outgoing_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+  } elseif (is_outgoing_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Outgoing Documents';
+  } elseif (is_ongoing_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+    $_SESSION[alias() . '_previous_document'] = $previous_document = 'Ongoing Documents';
+  } elseif (is_completed_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+    $_SESSION[alias() . '_previous_document'] = $previous_document = 'Completed Documents';
+  } elseif (is_received_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+    $_SESSION[alias() . '_previous_document'] = $previous_document = 'Received Documents';
+  } elseif (is_canceled_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+    $_SESSION[alias() . '_previous_document'] = $previous_document = 'Canceled Documents';
+  } else {
+    $previous_document = null;
   }
 } else {
   include_once(root() . '/modules/error/not-found.php');
   return;
 }
+
+$back_link = isset($previous_document) ? custom_uri('dts', $previous_document) : uri() . '/dts';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php content_title("{$previous_document} : " . strtoupper($document['id']), true, $back_link); ?>
+    <?php content_title("Document Information : " . strtoupper($document['id']), true, $back_link); ?>
   </div>
 
   <div class="card-body">
     <div class="table-responsive">
       <table cellspacing="0">
-        <tr>
-          <th class="pr-5" scope="row">Code:</th>
-          <td class="text-uppercase"><?php echo $document['id']; ?></td>
-        </tr>
         <tr>
           <th class="align-top pr-5" scope="row">Description:</th>
           <td class="text-uppercase"><?php echo $document['description']; ?></td>
@@ -72,6 +74,9 @@ if (num_rows($documents) > 0) {
           case 'Pending Documents':
             modal_button_split('Modal', 'forward_document', 'Forward', 'fa-share', 'info', 'Forward Document');
             modal_button_split('Modal', 'complete_document', 'Mark Completed', 'fa-check-circle', 'success', 'Mark Complete Document');
+            if (is_document_from($document['id'], $_SESSION[alias() . '_station']) && $document['from'] === $_SESSION[alias() . '_station'] && !is_document($document['id'], 'Cancel')) {
+              modal_button_split('Modal', 'cancel_document', 'Cancel', 'fa-trash-alt', 'danger', 'Cancel Document');
+            }
             break;
           case 'Outgoing Documents':
             if (is_document_from($document['id'], $_SESSION[alias() . '_station']) && $document['from'] === $_SESSION[alias() . '_station'] && !is_document($document['id'], 'Cancel')) {
