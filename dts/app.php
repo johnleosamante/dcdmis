@@ -50,7 +50,15 @@ if (isset($_POST['save_document'])) {
     insert_document($code, real_escape_string($_POST['description']), $station, $purpose);
     insert_document_log($code, $_SESSION[alias() . '_user_id'], $station, real_escape_string($_POST['destination']), $purpose, 'New');
 
-    redirect(custom_uri('dts', 'Document Information', $code));
+    $link = '#';
+
+    $message = 'Document code [' . strtoupper($code) . '] has been saved successfully! Click the <a href="' . $link . '" title="Print document tracking slip" target="_blank">document tracking slip</a> to print.';
+  } else {
+    $message = 'Document code [12345] has been updated successfully!';
+  }
+
+  if (affected_rows()) {
+    $show_prompt = true;
   }
 }
 
