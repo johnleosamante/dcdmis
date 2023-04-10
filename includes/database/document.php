@@ -12,7 +12,7 @@ function is_document($id, $status) {
 }
 
 function count_documents_from($station) {
-  return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE From_office='{$station}';"));
+  return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE Trans_from='{$station}';"));
 }
 
 function is_document_from($id, $station, $status='New') {
