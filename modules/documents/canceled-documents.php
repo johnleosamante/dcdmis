@@ -5,7 +5,7 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Canceled Documents';
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php content_title($page_title, true, uri() . '/dts'); ?>
+    <?php content_title_with_link($page_title, uri() . '/dts'); ?>
   </div>
 
   <div class="card-body">
