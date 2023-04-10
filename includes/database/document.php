@@ -11,8 +11,8 @@ function is_document($id, $status) {
   return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE TransCode='{$id}' AND Trans_Stats LIKE '%{$status}%';")) > 0;
 }
 
-function count_documents_from($station) {
-  return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE Trans_from='{$station}';"));
+function count_documents_from($station, $year) {
+  return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE Trans_from='{$station}' AND TransCode LIKE '%{$station}-{$year}-%';"));
 }
 
 function is_document_from($id, $station, $status='New') {
