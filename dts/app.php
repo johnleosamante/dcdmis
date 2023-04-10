@@ -38,6 +38,21 @@ if (isset($_POST['primary_search_button'])) {
   redirect(custom_uri('dts', 'Document Information', real_escape_string($_POST['primary_search_text'])));
 }
 
+if (isset($_POST['save_document'])) {
+  $code = $station = $destination = $purpose = null;
+
+  if ($_SESSION[alias() . '_No'] === null) {
+    $station = $_SESSION[alias() . '_station'];
+    $code = $_SESSION[alias() . '_code'] . '-' . date('y') . '-' . sprintf("%04d", count_documents_from($station) + 1);
+    $purpose = real_escape_string($_POST['purpose']);
+
+    insert_document($code, real_escape_string($_POST['description']), $station, $purpose);
+    insert_document_log($code, $_SESSION[alias() . '_user_id'], $station, real_escape_string($_POST['destination']), $purpose, 'New');
+
+    redirect(custom_uri('dts', 'Document Information', $code));
+  }
+}
+
 if (isset($_POST['receive_document'])) {
   $code = $_SESSION[alias() . '_No'];
 
