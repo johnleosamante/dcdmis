@@ -16,8 +16,8 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Outgoing Documents';
             <th class="align-middle" width="5%">#</th>
             <th class="align-middle" width="10%">Code</th>
             <th class="align-middle" width="25%">Description</th>
-            <th class="align-middle" width="20%">Forwarded to</th>
             <th class="align-middle" width="20%">Forwarded by</th>
+            <th class="align-middle" width="20%">Forwarded to</th>
             <th class="align-middle" width="15%">Forwarded on</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
@@ -32,8 +32,8 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Outgoing Documents';
               <td class="text-uppercase align-middle"><?php echo ++$no; ?></td>
               <td class="text-uppercase align-middle"><?php echo $row['id']; ?></td>
               <td class="text-uppercase text-left align-middle"><?php echo $row['description']; ?></td>
-              <td class="align-middle text-uppercase"><?php echo station_name($row['to']); ?></td>
               <td class="align-middle text-uppercase"><?php echo user_name($row['user']); ?></td>
+              <td class="align-middle text-uppercase"><?php echo station_name($row['to']); ?></td>
               <td class="align-middle"><?php echo $row['datetime']; ?></td>
               <td class="align-middle">
                 <?php
