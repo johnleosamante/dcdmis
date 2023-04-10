@@ -50,7 +50,7 @@ if (!isset($url) || $url === 'dashboard') {
       $file = 'settings/settings';
       break;
     default:
-      $file = 'error/not-found';
+      $file = 'error/no-results-found';
       break;
   }
 
