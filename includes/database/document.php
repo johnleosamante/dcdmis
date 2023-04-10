@@ -19,6 +19,10 @@ function is_document_from($id, $station, $status='New') {
   return num_rows(query("SELECT Transaction_code AS id FROM tbl_transactions_log WHERE From_office='{$station}' AND `Status`='{$status}' AND Transaction_code='{$id}';"));
 }
 
+function insert_document($id, $description, $station, $purpose) {
+  non_query("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}');");
+}
+
 function incoming_documents($station) {
   return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.From_office AS `from`, tbl_transactions_log.Date_recieved AS `datetime`, tbl_transactions.Trans_Stats AS purpose, tbl_transactions.Trans_from AS station FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions_log.Forwarded_to='{$station}' AND  tbl_transactions_log.Status='New' ORDER BY tbl_transactions_log.Date_recieved DESC;");
 }
