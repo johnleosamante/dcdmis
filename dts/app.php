@@ -43,7 +43,8 @@ if (isset($_POST['save_document'])) {
 
   if ($_SESSION[alias() . '_No'] === null) {
     $station = $_SESSION[alias() . '_station'];
-    $code = $_SESSION[alias() . '_code'] . '-' . date('y') . '-' . sprintf("%04d", count_documents_from($station) + 1);
+    $year = date('y');
+    $code = $_SESSION[alias() . '_code'] . '-' . $year . '-' . sprintf("%05d", count_documents_from($station, $year) + 1);
     $purpose = real_escape_string($_POST['purpose']);
 
     insert_document($code, real_escape_string($_POST['description']), $station, $purpose);
