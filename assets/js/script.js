@@ -69,6 +69,13 @@ if (element_exist(user_logout)) {
   });
 }
 
+const save_document = document.getElementById('save_document');
+if (element_exist(save_document)) {
+  save_document.addEventListener('click', () => {
+    load_view('Modal', '../modules/documents/save-document-dialog.php');
+  });
+}
+
 const receive_document = document.getElementById('receive_document');
 if (element_exist(receive_document)) {
   receive_document.addEventListener('click', () => {
