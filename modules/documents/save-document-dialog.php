@@ -16,9 +16,22 @@ $modal_title = 'New';
 
     <form action="" method="POST">
       <div class="modal-body">
+        <?php
+        $description = $destination = $purpose = null;
+        if ($_SESSION[alias() . '_No'] !== null) {
+          $description = 'Description';
+          $destination = 'ITO';
+          $purpose = 'For release';
+        ?>
+          <div class="form-group">
+            <label class="mb-0">Code</label>
+            <input type="text" value="<?php echo $code; ?>" class="form-control text-uppercase" disabled>
+          </div>
+        <?php } ?>
+
         <div class="form-group">
           <label class="mb-0">Description</label>
-          <textarea class="form-control" rows="3" required placeholder="Type description..." name="description"></textarea>
+          <textarea class="form-control" rows="3" required placeholder="Type description..." name="description"><?php echo $description; ?></textarea>
         </div>
 
         <div class="form-group">
@@ -26,10 +39,15 @@ $modal_title = 'New';
           <select name="destination" id="destination" class="form-control" required>
             <option>Select destination...</option>
             <?php
-            $sections = section($_SESSION[alias() . '_station']);
-            while ($section = fetch_array($sections)) : ?>
+            if ($_SESSION[alias() . '_portal'] !== 'school_portal') {
+              $sections = sections_except($_SESSION[alias() . '_station']);
+              while ($section = fetch_array($sections)) { ?>
+                <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
+            <?php }
+            } else {
+              $section = fetch_assoc(section('RECORD')); ?>
               <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
-            <?php endwhile; ?>
+            <?php } ?>
           </select>
         </div>
 
