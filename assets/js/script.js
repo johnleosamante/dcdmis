@@ -5,7 +5,7 @@ if (window.history.replaceState) {
 //document.addEventListener('contextmenu', (e) => e.preventDefault());
 
 $(document).ready(function () {
-  $('div.alert').fadeIn(300).delay(10000).fadeOut(300);
+  $('div.alert').fadeIn(300).delay(60000).fadeOut(300);
 });
 
 $(document).ready(function () {
