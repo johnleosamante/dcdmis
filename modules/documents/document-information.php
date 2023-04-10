@@ -24,7 +24,7 @@ if (num_rows($documents) > 0) {
     $previous_document = null;
   }
 } else {
-  include_once(root() . '/modules/error/not-found.php');
+  include_once(root() . '/modules/error/no-results-found.php');
   return;
 }
 
