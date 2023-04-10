@@ -35,14 +35,31 @@ function sidebar_menu_item($condition, $link, $title, $icon = '', $counter = nul
 <?php
 }
 
-function content_title($title, $with_button = false, $link = '', $text = 'Back', $icon = 'fa-arrow-circle-left')
+function content_title($title)
+{
+?>
+  <div class="d-sm-flex">
+    <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
+  </div>
+<?php
+}
+
+function content_title_with_link($title, $link, $text = 'Back', $icon = 'fa-arrow-circle-left')
 {
 ?>
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
-    <?php if ($with_button) {
-      link_button_split($link, $text, $icon, 'primary', $text);
-    } ?>
+    <?php link_button_split($link, $text, $icon, 'primary', $text); ?>
+  </div>
+<?php
+}
+
+function content_title_with_modal($title, $target, $id, $text, $icon, $color = 'primary')
+{
+?>
+  <div class="d-sm-flex align-items-center justify-content-between">
+    <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
+    <?php modal_button_split($target, $id, $text, $icon, $color, $text) ?>
   </div>
 <?php
 }
