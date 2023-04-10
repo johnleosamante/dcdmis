@@ -1,5 +1,5 @@
 <?php
-// modules/documents/new-document.php
+// modules/documents/new-document-dialog.php
 ?>
 
 <div class="card border-left-primary shadow mb-4">
