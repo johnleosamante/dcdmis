@@ -1,6 +1,6 @@
 <?php
 // dts/dashboard.php
-content_title_with_modal('Dashboard', 'Modal', 'new_document', 'New Document', 'fa-plus');
+content_title_with_modal('Dashboard', 'Modal', 'save_document', 'New Document', 'fa-plus');
 ?>
 
 <div class="row mt-4">
