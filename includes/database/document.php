@@ -79,7 +79,7 @@ function document_logs($id) {
   return query("SELECT Date_recieved AS `datetime`, Recieved_by AS `user`, From_office AS `from`, Forwarded_to AS `to`, Trans_status AS `status` FROM tbl_transactions_log WHERE Transaction_code='{$id}' ORDER BY Date_recieved DESC;");
 }
 
-function insert_document_log($id, $user, $station, $destination, $purpose, $status, $school = false) {
+function insert_document_log($id, $user, $station, $destination, $purpose, $status) {
   non_query("INSERT INTO tbl_transactions_log VALUES (null, NOW(), '{$user}', '{$station}', '{$destination}', '{$purpose}', '{$id}', '{$status}');");
 }
 
