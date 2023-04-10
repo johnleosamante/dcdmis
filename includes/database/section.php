@@ -2,14 +2,15 @@
 // includes/database/section.php
 // tbl_div_section
 
-function section($id, $include_id = false) {
-  $sql = "SELECT Section_Code AS id, Section_Office AS `name` FROM tbl_div_section";
-  if (!$include_id) {
-    $sql .= " WHERE Section_Code <> '{$id}' ORDER BY Section_Office ASC;";
-  } else {
-    $sql .= " WHERE Section_Code='{$id}' LIMIT 1;"; 
-  }
+function sections_except($id) {
+  return query("SELECT Section_Code AS id, Section_Office AS `name` FROM tbl_div_section WHERE Section_Code <> '{$id}' ORDER BY Section_Office ASC;");
+}
 
-  return query($sql);
+function sections() {
+  return query("SELECT Section_Code AS id, Section_Office AS `name` FROM tbl_div_section ORDER BY Section_Office ASC;");
+}
+
+function section($id) {
+  return query("SELECT Section_Code AS id, Section_Office AS `name` FROM tbl_div_section WHERE Section_Code='{$id}' LIMIT 1;");
 }
 ?>
