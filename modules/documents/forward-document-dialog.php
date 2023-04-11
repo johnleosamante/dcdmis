@@ -32,7 +32,7 @@ $modal_title = 'Forward';
           <select name="destination" id="destination" class="form-control" required>
             <option>Select destination...</option>
             <?php
-            $sections = section($_SESSION[alias() . '_station']);
+            $sections = sections_except($_SESSION[alias() . '_station']);
             while ($section = fetch_array($sections)) : ?>
               <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
             <?php endwhile; ?>
