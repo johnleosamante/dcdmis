@@ -103,36 +103,3 @@ if (element_exist(cancel_document)) {
     load_view('Modal', '../modules/documents/cancel-document-dialog.php');
   });
 }
-
-const sidebar_toggle = localStorage.getItem('sidebar_toggle');
-if (sidebar_toggle === null) {
-  localStorage.setItem('sidebar_toggle', 'false');
-}
-
-if (sidebar_toggle === 'true') {
-  const sidebar = document.getElementById('accordionSidebar');
-  sidebar.classList.add('toggled');
-}
-
-function check_sidebar_toggle() {
-  if (localStorage.getItem('sidebar_toggle') === 'true') {
-    localStorage.setItem('sidebar_toggle', 'false');
-  } else {
-    localStorage.setItem('sidebar_toggle', 'true');
-  }
-}
-
-const sidebar_toggle_button = document.getElementById('sidebarToggle');
-if (element_exist(sidebar_toggle_button)) {
-  sidebar_toggle_button.addEventListener('click', () => {
-    check_sidebar_toggle()
-  });
-}
-
-const sidebar_toggle_top_button = document.getElementById('sidebarToggleTop');
-if (element_exist(sidebar_toggle_top_button)) {
-  sidebar_toggle_top_button.addEventListener('click', (e) => {
-    e.preventDefault();
-    check_sidebar_toggle()
-  });
-}
