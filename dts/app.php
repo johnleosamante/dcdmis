@@ -38,48 +38,53 @@ if (isset($_POST['primary_search_button'])) {
   redirect(custom_uri('dts', 'Document Information', real_escape_string($_POST['primary_search_text'])));
 }
 
+$code = $_SESSION[alias() . '_No'];
+$user_id = $_SESSION[alias() . '_user_id'];
+$station = $_SESSION[alias() . '_station'];
+$portal = $_SESSION[alias() . '_portal'];
+$station_code = $_SESSION[alias() . '_code'];
+
 if (isset($_POST['save_document'])) {
-  $code = $station = $destination = $purpose = null;
+  $status = null;
+  $description = real_escape_string($_POST['description']);
+  $purpose = real_escape_string($_POST['purpose']);
+  $destination = $portal === 'school_portal' ? 'RECORD' :  real_escape_string($_POST['destination']);
 
-  if ($_SESSION[alias() . '_No'] === null) {
-    $station = $_SESSION[alias() . '_station'];
+  if ($code === null) {
+    $status = 'saved';
     $year = date('y');
-    $code = $_SESSION[alias() . '_code'] . '-' . $year . '-' . sprintf("%05d", count_documents_from($station, $year) + 1);
-    $purpose = real_escape_string($_POST['purpose']);
-
-    insert_document($code, real_escape_string($_POST['description']), $station, $purpose);
-    insert_document_log($code, $_SESSION[alias() . '_user_id'], $station, real_escape_string($_POST['destination']), $purpose, 'New');
-
-    $link = '#';
-
-    $message = 'Document code [' . strtoupper($code) . '] has been saved successfully! Click the <a href="' . $link . '" title="Print document tracking slip" target="_blank">document tracking slip</a> to print.';
+    $code = $station_code . '-' . $year . '-' . sprintf("%05d", count_documents_from($station, $year) + 1);
+    
+    insert_document($code, $description, $station, $purpose);
+    insert_document_log($code, $user_id, $station, $destination, $purpose);
   } else {
-    $message = 'Document code [12345] has been updated successfully!';
+    $status = 'updated';
+
+    update_document($code, $description, $station, $purpose);
+    update_document_log($code, $user_id, $station, $destination, $purpose);
   }
 
   if (affected_rows()) {
+    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $code) . '" title="Document Information: ' . $code . '" target="_blank">' . strtoupper($code) . '</a>] has been ' . $status . ' successfully! You can now print the <a href="' . custom_uri('dts', 'Print Document Tracking Slip', $code) . '" title="Print Document Tracking Slip" target="_blank">document tracking slip</a>, or view your <a href="' . custom_uri('dts', 'Ongoing Documents') . '" target="_blank">ongoing documents</a>.';
     $show_prompt = true;
   }
 }
 
 if (isset($_POST['receive_document'])) {
-  $code = $_SESSION[alias() . '_No'];
-
-  update_document_log($code);
-  insert_document_log($code, $_SESSION[alias() . '_user_id'], $_SESSION[alias() . '_station'], '-', 'Received', 'New');
+  update_document_logs_done($code);
+  insert_document_log($code, $user_id, $station, '-', 'Received', 'New');
 
   if (affected_rows()) {
-    $show_prompt = true;
     $message = 'Document code [' . strtoupper($code) . '] has been received successfully!';
+    $show_prompt = true;
   }
 }
 
 if (isset($_POST['forward_document'])) {
-  $code = $_SESSION[alias() . '_No'];
   $purpose = real_escape_string($_POST['purpose']);
 
-  update_document_log($code);
-  insert_document_log($code, $_SESSION[alias() . '_user_id'], $_SESSION[alias() . '_station'], real_escape_string($_POST['destination']), $purpose, 'New');
+  update_document_logs_done($code);
+  insert_document_log($code, $user_id, $station, real_escape_string($_POST['destination']), $purpose, 'New');
   update_document_status($code, $purpose);
 
   if (affected_rows()) {
@@ -89,13 +94,11 @@ if (isset($_POST['forward_document'])) {
 }
 
 if (isset($_POST['complete_document'])) {
-  $code = $_SESSION[alias() . '_No'];
   $remarks = real_escape_string($_POST['remarks']);
-
   $status = strlen($remarks) > 0 ? "Completed - {$remarks}" : 'Completed';
 
-  update_document_log($code);
-  insert_document_log($code, $_SESSION[alias() . '_user_id'], $_SESSION[alias() . '_station'], '-', 'Completed', 'Done');
+  update_document_logs_done($code);
+  insert_document_log($code, $user_id, $station, '-', 'Completed', 'Done');
   update_document_status($code, $status, 'Read');
 
   if (affected_rows()) {
@@ -105,6 +108,5 @@ if (isset($_POST['complete_document'])) {
 }
 
 if (isset($_POST['cancel_document'])) {
-  $code = $_SESSION[alias() . '_No'];
 }
 ?>
