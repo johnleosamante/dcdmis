@@ -34,22 +34,18 @@ $modal_title = 'New';
           <textarea class="form-control" rows="3" required placeholder="Type description..." name="description"><?php echo $description; ?></textarea>
         </div>
 
-        <div class="form-group">
-          <label class="mb-0" for="destination">Destination</label>
-          <select name="destination" id="destination" class="form-control" required>
-            <option>Select destination...</option>
-            <?php
-            if ($_SESSION[alias() . '_portal'] !== 'school_portal') {
-              $sections = sections_except($_SESSION[alias() . '_station']);
-              while ($section = fetch_array($sections)) { ?>
+        <?php if ($_SESSION[alias() . '_portal'] !== 'school_portal') : ?>
+          <div class="form-group">
+            <label class="mb-0" for="destination">Destination</label>
+            <select name="destination" id="destination" class="form-control" required>
+              <option value="">Select destination...</option>
+              <?php $sections = sections_except($_SESSION[alias() . '_station']);
+              while ($section = fetch_array($sections)) : ?>
                 <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
-            <?php }
-            } else {
-              $section = fetch_assoc(section('RECORD')); ?>
-              <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
-            <?php } ?>
-          </select>
-        </div>
+              <?php endwhile; ?>
+            </select>
+          </div>
+        <?php endif; ?>
 
         <div class="form-group mb-0">
           <label class="mb-0" for="purpose">Purpose</label>
