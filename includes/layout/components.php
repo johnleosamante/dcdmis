@@ -13,7 +13,7 @@ function display_logo($width = '0', $height = '0', $margin_bottom = '3', $url = 
 function message_prompt($message, $type = 'danger', $align = 'left')
 {
 ?>
-  <div class="alert alert-<?php echo $type; ?> text-<?php echo $align; ?> small"><?php echo $message; ?></div>
+  <div class="alert alert-<?php echo $type; ?> text-<?php echo $align; ?>"><?php echo $message; ?></div>
 <?php
 }
 
