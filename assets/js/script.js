@@ -4,6 +4,37 @@ if (window.history.replaceState) {
 
 //document.addEventListener('contextmenu', (e) => e.preventDefault());
 
+function viewFullscreen(element) {
+  if (element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen();
+  } else if (element.msRequestFullscreen) {
+    element.msRequestFullscreen;
+  }
+}
+
+function closeFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) {
+    document.msExitFullscreen;
+  }
+}
+
+function fullscreen_toggle(fullscreen, toggle_id) {
+  const toggle = document.getElementById(toggle_id);
+  if (fullscreen) {
+    toggle.classList.remove('fa-compress-arrows-alt')
+    toggle.classList.add('fa-expand-arrows-alt');
+  } else {
+    toggle.classList.remove('fa-expand-arrows-alt');
+    toggle.classList.add('fa-compress-arrows-alt')
+  }
+}
+
 $(document).ready(function () {
   $('div.alert').fadeIn(300).delay(60000).fadeOut(300);
 });
