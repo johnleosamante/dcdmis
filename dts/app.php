@@ -36,15 +36,18 @@ $page = $app_title = "Document Tracking System";
 
 if (isset($_POST['primary_search_button'])) {
   redirect(custom_uri('dts', 'Document Information', real_escape_string($_POST['primary_search_text'])));
+  $_SESSION[alias() . '_search_term'] = real_escape_string($_POST['primary_search_text']);
+} else {
+  $_SESSION[alias() . '_search_term'] = null;
 }
 
-$code = $_SESSION[alias() . '_No'];
 $user_id = $_SESSION[alias() . '_user_id'];
 $station = $_SESSION[alias() . '_station'];
 $portal = $_SESSION[alias() . '_portal'];
 $station_code = $_SESSION[alias() . '_code'];
 
 if (isset($_POST['save_document'])) {
+  $code = $_SESSION[alias() . '_No'];
   $status = null;
   $description = real_escape_string($_POST['description']);
   $purpose = real_escape_string($_POST['purpose']);
@@ -71,6 +74,8 @@ if (isset($_POST['save_document'])) {
 }
 
 if (isset($_POST['receive_document'])) {
+  $code = $_SESSION[alias() . '_No'];
+
   update_document_logs_done($code);
   insert_document_log($code, $user_id, $station, '-', 'Received', 'New');
 
@@ -81,6 +86,7 @@ if (isset($_POST['receive_document'])) {
 }
 
 if (isset($_POST['forward_document'])) {
+  $code = $_SESSION[alias() . '_No'];
   $purpose = real_escape_string($_POST['purpose']);
 
   update_document_logs_done($code);
@@ -94,6 +100,7 @@ if (isset($_POST['forward_document'])) {
 }
 
 if (isset($_POST['complete_document'])) {
+  $code = $_SESSION[alias() . '_No'];
   $remarks = real_escape_string($_POST['remarks']);
   $status = strlen($remarks) > 0 ? "Completed - {$remarks}" : 'Completed';
 
@@ -108,5 +115,6 @@ if (isset($_POST['complete_document'])) {
 }
 
 if (isset($_POST['cancel_document'])) {
+  $code = $_SESSION[alias() . '_No'];
 }
 ?>
