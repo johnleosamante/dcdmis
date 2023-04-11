@@ -23,6 +23,10 @@ function insert_document($id, $description, $station, $purpose) {
   non_query("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}');");
 }
 
+function update_document($id, $description, $station, $purpose) {
+  non_query("UPDATE tbl_transactions SET Title='{$description}', Date_time=NOW(), Trans_Stats='{$purpose} WHERE TransCode='{$id}' AND Trans_from='{$station}' LIMIT 1;");
+}
+
 function incoming_documents($station) {
   return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.From_office AS `from`, tbl_transactions_log.Date_recieved AS `datetime`, tbl_transactions.Trans_Stats AS purpose, tbl_transactions.Trans_from AS station FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions_log.Forwarded_to='{$station}' AND  tbl_transactions_log.Status='New' ORDER BY tbl_transactions_log.Date_recieved DESC;");
 }
@@ -83,11 +87,15 @@ function document_logs($id) {
   return query("SELECT Date_recieved AS `datetime`, Recieved_by AS `user`, From_office AS `from`, Forwarded_to AS `to`, Trans_status AS `status` FROM tbl_transactions_log WHERE Transaction_code='{$id}' ORDER BY Date_recieved DESC;");
 }
 
-function insert_document_log($id, $user, $station, $destination, $purpose, $status) {
+function insert_document_log($id, $user, $station, $destination, $purpose, $status='New') {
   non_query("INSERT INTO tbl_transactions_log VALUES (null, NOW(), '{$user}', '{$station}', '{$destination}', '{$purpose}', '{$id}', '{$status}');");
 }
 
-function update_document_log($id) {
+function update_document_log($id, $user, $station, $destination, $purpose, $status='New') {
+  non_query("UPDATE tbl_transactions_log SET Date_Recieved=NOW(), Recieved_by='{$user}', From_office='{$station}', Forwarded_to='{$destination}', Trans_status='{$purpose}', `Status`='{$status}' WHERE Transaction_code='{$id}' ORDER BY Date_Recieved DESC LIMIT 1;");
+}
+
+function update_document_logs_done($id) {
   non_query("UPDATE tbl_transactions_log SET `Status`='Done' WHERE Transaction_code='{$id}';");
 }
 
