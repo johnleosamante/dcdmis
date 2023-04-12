@@ -116,5 +116,16 @@ if (isset($_POST['complete_document'])) {
 
 if (isset($_POST['cancel_document'])) {
   $code = $_SESSION[alias() . '_No'];
+  $remarks = real_escape_string($_POST['remarks']);
+  $status = strlen($remarks) > 0 ? "Canceled - {$remarks}" : 'Canceled';
+
+  update_document_logs_done($code);
+  insert_document_log($code, $user_id, $station, '-', 'Canceled', 'Done');
+  update_document_status($code, $status, 'Read');
+
+  if (affected_rows()) {
+    $show_prompt = true;
+    $message = 'Document code [' . strtoupper($code) . '] has been canceled successfully.';
+  }
 }
 ?>
