@@ -44,10 +44,10 @@ if (isset($_POST['primary_search_button'])) {
 $user_id = $_SESSION[alias() . '_user_id'];
 $station = $_SESSION[alias() . '_station'];
 $portal = $_SESSION[alias() . '_portal'];
-$station_code = $_SESSION[alias() . '_code'];
 
 if (isset($_POST['save_document'])) {
   $code = $_SESSION[alias() . '_No'];
+  $station_code = $_SESSION[alias() . '_code'];
   $status = null;
   $description = real_escape_string($_POST['description']);
   $purpose = real_escape_string($_POST['purpose']);
