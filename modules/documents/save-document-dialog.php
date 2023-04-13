@@ -4,7 +4,9 @@ require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/document.php');
 require_once(root() . '/includes/database/section.php');
-$modal_title = 'New';
+
+$is_edit = $_SESSION[alias() . '_No'] !== null;
+$modal_title = $is_edit ? 'Edit' : 'New';
 ?>
 
 <div class="modal-dialog">
@@ -18,10 +20,20 @@ $modal_title = 'New';
       <div class="modal-body">
         <?php
         $description = $destination = $purpose = null;
-        if ($_SESSION[alias() . '_No'] !== null) {
-          $description = 'Description';
-          $destination = 'ITO';
-          $purpose = 'For release';
+        $attribute = '';
+
+        if ($is_edit) {
+          $code = $_SESSION[alias() . '_No'];
+          $document = fetch_assoc(document_log($_SESSION[alias() . '_No']));
+          $description = $document['description'];
+          $destination = $document['destination'];
+          $purpose = $document['purpose'];
+
+          if ($_SESSION[alias() . '_station'] !== $document['from']) {
+            $attribute = ' disabled';
+          } else {
+            $attribute = num_rows(document_logs($code)) === 1 ? '' : ' disabled';
+          }
         ?>
           <div class="form-group">
             <label class="mb-0">Code</label>
@@ -31,7 +43,7 @@ $modal_title = 'New';
 
         <div class="form-group">
           <label class="mb-0">Description</label>
-          <textarea class="form-control" rows="3" required placeholder="Type description..." name="description"><?php echo $description; ?></textarea>
+          <textarea class="form-control" rows="3" required placeholder="Type description..." name="description" <?php echo $attribute; ?>><?php echo $description; ?></textarea>
         </div>
 
         <?php if ($_SESSION[alias() . '_portal'] !== 'school_portal') : ?>
@@ -41,7 +53,7 @@ $modal_title = 'New';
               <option value="">Select destination...</option>
               <?php $sections = sections_except($_SESSION[alias() . '_station']);
               while ($section = fetch_array($sections)) : ?>
-                <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
+                <option value="<?php echo $section['id']; ?>" <?php echo set_option_selected($section['id'], $destination); ?>><?php echo $section['name']; ?></option>
               <?php endwhile; ?>
             </select>
           </div>
@@ -50,7 +62,7 @@ $modal_title = 'New';
         <div class="form-group mb-0">
           <label class="mb-0" for="purpose">Purpose</label>
           <select name="purpose" id="purpose" class="form-control" required>
-            <option>Select purpose...</option>
+            <option value="">Select purpose...</option>
             <option value="For evaluation">For evaluation</option>
             <option value="For signature">For signature</option>
             <option value="For approval">For approval</option>
