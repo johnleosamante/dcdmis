@@ -92,5 +92,9 @@ function is_valid_email($email, $domain = null) {
   return preg_match("/^[a-zA-Z0-9_.-]+@+" . $domain . "+$/", $email);
 }
 
+function set_option_selected($reference, $value) {
+  return strtolower($reference) === strtolower($value) ? ' selected' : '';
+}
+
 require_once('initialization.php');
 ?>
