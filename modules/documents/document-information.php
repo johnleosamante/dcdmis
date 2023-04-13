@@ -81,6 +81,9 @@ $back_link = isset($previous_document) ? custom_uri('dts', $previous_document) :
             }
             break;
           case 'Outgoing Documents':
+            if (!is_document($document['id'], 'Complete') && !is_document($document['id'], 'Cancel')) {
+              modal_button_split('Modal', 'save_document', 'Edit', 'fa-edit', 'info', 'Edit Document');
+            }
             if (is_document_from($document['id'], $_SESSION[alias() . '_station']) && $document['from'] === $_SESSION[alias() . '_station'] && !is_document($document['id'], 'Cancel')) {
               modal_button_split('Modal', 'cancel_document', 'Cancel', 'fa-trash-alt', 'danger', 'Cancel Document');
             }
