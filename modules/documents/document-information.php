@@ -64,7 +64,7 @@ $back_link = isset($previous_document) ? custom_uri('dts', $previous_document) :
       <div class="d-inline-block">
         <?php
         if (($_SESSION[alias() . '_station']) === $document['from']) {
-          link_button_split(custom_uri('print', 'Print Document Information', $document['id']), 'Print', 'fa-print', 'primary', 'Print Document Information', true);
+          link_button_split(custom_uri('print', 'Document Information', $document['id']), 'Print', 'fa-print', 'primary', 'Print Document Information', true);
         }
 
         switch ($previous_document) {

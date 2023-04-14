@@ -12,15 +12,19 @@ foreach ($_GET as $key => $data) {
 
 $code = $_GET['id'];
 
+$pdf = new FPDF();
+$pdf->AddPage();
+$pdf->SetFont('Arial', 'B', 16);
+
 if (!isset($url) || $url === '') {
   redirect(custom_uri('dts', '404'));
 } else {
   $file = '';
   switch ($url) {
-    case 'Print Document Tracking Slip':
+    case 'Document Tracking Slip':
       $file = 'document-tracking-slip';
       break;
-    case 'Print Document Information':
+    case 'Document Information':
       $file = 'document-information';
       break;
     default:
@@ -28,6 +32,10 @@ if (!isset($url) || $url === '') {
       break;
   }
 
+  $pdf->SetTitle($url . ' : ' . $code);
+
   include_once(root() . "/print/{$file}.php");
+
+  $pdf->Output();
 }
 ?>

@@ -40,7 +40,7 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Outgoing Documents';
                 link_button_icon(custom_uri('dts', 'Document Information', $row['id']), 'fa-eye', 'success', 'View Document Information');
 
                 if ($row['station'] === $_SESSION[alias() . '_station']) {
-                  link_button_icon(custom_uri('print', 'Print Document Tracking Slip', $row['id']), 'fa-print', 'primary', 'Print Document Tracking Slip', true);
+                  link_button_icon(custom_uri('print', 'Document Tracking Slip', $row['id']), 'fa-print', 'primary', 'Print Document Tracking Slip', true);
                 }
                 ?>
               </td>
