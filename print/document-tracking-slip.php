@@ -1,8 +1,4 @@
 <?php
 // print/document-tracking-slip.php
-$pdf = new FPDF();
-$pdf->AddPage();
-$pdf->SetFont('Arial', 'B', 16);
-$pdf->Cell(40, 10, 'Print Document Tracking Slip: ' . $code);
-$pdf->Output();
+$pdf->Cell(40, 10, 'Document Tracking Slip: ' . $code);
 ?>
