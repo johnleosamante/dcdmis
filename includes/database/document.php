@@ -15,6 +15,10 @@ function count_documents_from($station, $year) {
   return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE Trans_from='{$station}' AND TransCode LIKE '%{$station}-{$year}-%';"));
 }
 
+function document_from($id, $station) {
+  return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions.Date_time AS `datetime`, tbl_transactions.Trans_from AS `from`, tbl_transactions.Trans_Stats AS `status` FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE (tbl_transactions_log.From_office='{$station}' OR tbl_transactions_log.Forwarded_to='{$station}') AND tbl_transactions_log.Transaction_code='{$id}';");
+}
+
 function is_document_from($id, $station, $status='New') {
   return num_rows(query("SELECT Transaction_code AS id FROM tbl_transactions_log WHERE From_office='{$station}' AND `Status`='{$status}' AND Transaction_code='{$id}';"));
 }
