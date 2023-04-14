@@ -1,6 +1,6 @@
 <?php
 // modules/documents/document-information.php
-$documents = document(real_escape_string($_GET['id']));
+$documents = document_from(real_escape_string($_GET['id']), $_SESSION[alias() . '_station']);
 
 if (num_rows($documents) > 0) {
   $document = fetch_assoc($documents);
