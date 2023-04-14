@@ -37,10 +37,10 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Outgoing Documents';
               <td class="align-middle"><?php echo $row['datetime']; ?></td>
               <td class="align-middle">
                 <?php
-                link_button_icon(custom_uri('/dts', 'Document Information', $row['id']), 'fa-eye', 'success', 'View Document Information');
+                link_button_icon(custom_uri('dts', 'Document Information', $row['id']), 'fa-eye', 'success', 'View Document Information');
 
                 if ($row['station'] === $_SESSION[alias() . '_station']) {
-                  link_button_icon(custom_uri('dts', 'Print Document Tracking Slip', $row['id']), 'fa-print', 'primary', 'Print Document Tracking Slip', true);
+                  link_button_icon(custom_uri('print', 'Print Document Tracking Slip', $row['id']), 'fa-print', 'primary', 'Print Document Tracking Slip', true);
                 }
                 ?>
               </td>
