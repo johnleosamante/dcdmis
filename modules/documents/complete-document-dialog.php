@@ -3,7 +3,7 @@
 include_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/document.php');
-$modal_title = 'Mark Completed';
+$modal_title = 'Mark Completed Document';
 ?>
 
 <div class="modal-dialog">

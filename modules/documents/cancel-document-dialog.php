@@ -3,7 +3,7 @@
 require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/document.php');
-$modal_title = 'Cancel';
+$modal_title = 'Cancel Document';
 ?>
 
 <div class="modal-dialog">

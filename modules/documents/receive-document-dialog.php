@@ -1,6 +1,6 @@
 <?php
 // modules/documents/receive-document-dialog.php
-$modal_title = 'Receive';
+$modal_title = 'Receive Document';
 ?>
 
 <div class="modal-dialog">
