@@ -26,9 +26,9 @@ function uri() {
 }
 
 function custom_uri($page, $view, $id=null) {
-  $value = ($id !== null) ? '&id=' . urlencode(base64_encode($id)) : '';
+  $value = ($id !== null) ? '&id=' . encode($id) : '';
 
-  return uri() . "/{$page}?{$value}&v=" . urlencode(base64_encode($view));
+  return uri() . "/{$page}?{$value}&v=" . encode($view);
 }
 
 function root() {
