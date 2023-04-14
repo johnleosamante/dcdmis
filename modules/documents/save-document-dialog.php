@@ -3,10 +3,11 @@
 require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/document.php');
+require_once(root() . '/includes/database/document-purpose.php');
 require_once(root() . '/includes/database/section.php');
 
 $is_edit = $_SESSION[alias() . '_No'] !== null;
-$modal_title = $is_edit ? 'Edit' : 'New';
+$modal_title = $is_edit ? 'Edit Document' : 'New Document';
 ?>
 
 <div class="modal-dialog">
@@ -19,8 +20,7 @@ $modal_title = $is_edit ? 'Edit' : 'New';
     <form action="" method="POST">
       <div class="modal-body">
         <?php
-        $description = $destination = $purpose = null;
-        $attribute = '';
+        $description = $destination = $purpose = $attribute = '';
 
         if ($is_edit) {
           $code = $_SESSION[alias() . '_No'];
@@ -63,13 +63,11 @@ $modal_title = $is_edit ? 'Edit' : 'New';
           <label class="mb-0" for="purpose">Purpose</label>
           <select name="purpose" id="purpose" class="form-control" required>
             <option value="">Select purpose...</option>
-            <option value="For evaluation">For evaluation</option>
-            <option value="For signature">For signature</option>
-            <option value="For approval">For approval</option>
-            <option value="For release">For release</option>
-            <option value="For comments &amp; recommendations">For comments &amp; recommendations</option>
-            <option value="For submission">For submission</option>
-            <option value="For appropriate action">For appropriate action</option>
+            <?php
+            $document_purposes = document_purpose();
+            while ($document_purpose = fetch_array($document_purposes)) : ?>
+              <option value="<?php echo $document_purpose['purpose']; ?>" <?php echo set_option_selected($document_purpose['purpose'], $purpose); ?>><?php echo $document_purpose['purpose']; ?></option>
+            <?php endwhile; ?>
           </select>
         </div>
       </div>

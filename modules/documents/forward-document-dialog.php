@@ -3,8 +3,9 @@
 require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/document.php');
+require_once(root() . '/includes/database/document-purpose.php');
 require_once(root() . '/includes/database/section.php');
-$modal_title = 'Forward';
+$modal_title = 'Forward Document';
 ?>
 
 <div class="modal-dialog">
@@ -30,7 +31,7 @@ $modal_title = 'Forward';
         <div class="form-group">
           <label class="mb-0" for="destination">Destination</label>
           <select name="destination" id="destination" class="form-control" required>
-            <option>Select destination...</option>
+            <option value="">Select destination...</option>
             <?php
             $sections = sections_except($_SESSION[alias() . '_station']);
             while ($section = fetch_array($sections)) : ?>
@@ -42,14 +43,12 @@ $modal_title = 'Forward';
         <div class="form-group mb-0">
           <label class="mb-0" for="purpose">Purpose</label>
           <select name="purpose" id="purpose" class="form-control" required>
-            <option>Select purpose...</option>
-            <option value="For evaluation">For evaluation</option>
-            <option value="For signature">For signature</option>
-            <option value="For approval">For approval</option>
-            <option value="For release">For release</option>
-            <option value="For comments &amp; recommendations">For comments &amp; recommendations</option>
-            <option value="For submission">For submission</option>
-            <option value="For appropriate action">For appropriate action</option>
+            <option value="">Select purpose...</option>
+            <?php
+            $document_purpose = document_purpose();
+            while ($purpose = fetch_array($document_purpose)) : ?>
+              <option value="<?php echo $purpose['purpose']; ?>"><?php echo $purpose['purpose']; ?></option>
+            <?php endwhile; ?>
           </select>
         </div>
       </div>
