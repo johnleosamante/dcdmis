@@ -3,7 +3,7 @@
 include_once('app.php');
 
 foreach ($_GET as $key => $data) {
-  $url = $_GET[$key] = base64_decode(urldecode($data));
+  $url = $_GET[$key] = decode($data);
   $page = real_escape_string($url) . ' | ' . $app_title;
 }
 
