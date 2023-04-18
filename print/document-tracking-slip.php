@@ -3,10 +3,9 @@
 $document = fetch_assoc(document_origin($code));
 $section = strtoupper(station_name($document['from']));
 $section_head = fetch_assoc(section($document['from']));
-$is_school = $_SESSION[alias() . '_portal'] === 'school_portal';
+
 
 if ($is_school) {
-  $address = 'Address';
   $district = 'District';
   $prepared_by_head = true;
 } else {

@@ -5,7 +5,10 @@ UPDATE `tbl_transactions` SET `Trans_Stats`='Received' WHERE `Trans_stats` LIKE 
 
 SELECT * FROM `tbl_transactions` WHERE `Trans_Stats` LIKE '%complete%' OR `Trans_Stats` LIKE '%cancel%';
 
-/* CHANGE PHYSICAL TO GSS (General Services Section) */
+/* CHANGE PHYSICAL TO GSS (GENERAL SERVICES SECTION) */
 SELECT * FROM `tbl_transactions` WHERE TransCode LIKE '%PHYSICAL%';
-SELECT * FROM `tbl_transactions_log` WHERE Transaction_code LIKE '%PHYSICAL%' OR From_office='PHYSICAL' OR Forwarded_to='PHYSICAL';
-SELECT * FROM `tbl_transaction_flow` WHERE TransactionCode LIKE '%PHYSICAL%' OR Destination_section='PHYSICAL';
+
+/* CHANGE DIVISION SCHOOL ID */
+UPDATE `tbl_transactions` SET `SchoolID`='143' WHERE `SchoolID`='123131';
+
+ALTER TABLE `tbl_transactions` ADD `details` VARCHAR(500) NOT NULL AFTER `Attachfile`;

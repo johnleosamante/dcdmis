@@ -22,20 +22,24 @@ foreach ($_GET as $key => $data) {
 }
 
 $code = strtoupper($_GET['id']);
-$address = 'Purok Farmers, Olingan, Dipolog City';
-$telephone = '(065) 908-2583';
-$email = 'dipolog.city@deped.gov.ph';
-$website = 'https://dipologcitydivision.net';
-$fb_page = 'https://facebook.com/depeddipologcity';
+$is_school = $_SESSION[alias() . '_portal'] === 'school_portal';
 $division_name = 'DIPOLOG CITY SCHOOLS DIVISION';
 $department_logo = root() . '/assets/img/department.png';
-$station_logo = root() . '/assets/img/division.png';
 
 $title = '';
 $logo_size = 24;
 $margin = 25.4;
 $width = 210;
 $height = 297;
+
+$school = fetch_array(school_details_by_id(!$is_school ? '143' : $_SESSION[alias() . '_code']));
+$station_logo = root() . '/' . $school['logo'];
+$address = $school['address'];
+$telephone = $school['telephone'];
+$email = $school['email'];
+$website = $school['website'];
+$fb_page = $school['fb_page'];
+
 
 class PDF extends FPDF {
   function Header() {
@@ -81,19 +85,19 @@ class PDF extends FPDF {
     $this->SetY(-28);
     $this->AddFont('calibri', '', 'calibri.php');
     $this->SetFont('calibri', '', 10);
-    $this->SetX($logo_size + 28);
+    $this->SetX($logo_size + 25);
     $this->Cell(0, 0, "Address: {$address}");
     $this->Ln(4);
-    $this->SetX($logo_size + 28);
+    $this->SetX($logo_size + 25);
     $this->Cell(0, 0, "Telephone No: {$telephone}");
     $this->Ln(4);
-    $this->SetX($logo_size + 28);
+    $this->SetX($logo_size + 25);
     $this->Cell(0, 0, "Email Address: {$email}");
     $this->Ln(4);
-    $this->SetX($logo_size + 28);
+    $this->SetX($logo_size + 25);
     $this->Cell(0, 0, "Website: {$website}");
     $this->Ln(4);
-    $this->SetX($logo_size + 28);
+    $this->SetX($logo_size + 25);
     $this->Cell(0, 0, "FB Page: {$fb_page}");
 
     if ($this->PageNo() > 1) {

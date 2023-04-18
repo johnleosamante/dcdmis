@@ -11,8 +11,9 @@ function is_document($id, $status) {
   return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE TransCode='{$id}' AND Trans_Stats LIKE '%{$status}%';")) > 0;
 }
 
-function count_documents_from($station, $year) {
-  return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE Trans_from='{$station}' AND TransCode LIKE '%{$station}-{$year}-%';"));
+function count_documents_from($station, $year, $schoolid = null) {
+  $assignment = $schoolid === null ? $station : $schoolid;
+  return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE Trans_from='{$station}' AND TransCode LIKE '%{$assignment}-{$year}-%';"));
 }
 
 function document_from($id, $station) {
@@ -27,8 +28,8 @@ function is_document_from($id, $station, $status='New') {
   return num_rows(query("SELECT Transaction_code AS id FROM tbl_transactions_log WHERE From_office='{$station}' AND `Status`='{$status}' AND Transaction_code='{$id}';"));
 }
 
-function insert_document($id, $description, $station, $purpose) {
-  non_query("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}');");
+function insert_document($id, $description, $station, $purpose, $details = '') {
+  non_query("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats, details) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}', '{$details}');");
 }
 
 function update_document($id, $description, $station, $purpose) {
@@ -99,8 +100,8 @@ function document_logs($id) {
   return query("SELECT Date_recieved AS `datetime`, Recieved_by AS `user`, From_office AS `from`, Forwarded_to AS `to`, Trans_status AS `status` FROM tbl_transactions_log WHERE Transaction_code='{$id}' ORDER BY Date_recieved DESC;");
 }
 
-function insert_document_log($id, $user, $station, $destination, $purpose, $status='New') {
-  non_query("INSERT INTO tbl_transactions_log VALUES (null, NOW(), '{$user}', '{$station}', '{$destination}', '{$purpose}', '{$id}', '{$status}');");
+function insert_document_log($id, $user, $station, $destination, $purpose, $status='New', $details = '') {
+  non_query("INSERT INTO tbl_transactions_log VALUES (null, NOW(), '{$user}', '{$station}', '{$destination}', '{$purpose}', '{$id}', '{$status}', '{$details}');");
 }
 
 function update_document_log($id, $user, $station, $destination, $purpose, $status='New', $change_date=true) {

@@ -39,7 +39,10 @@ if (isset($_POST['save_document'])) {
   if ($code === null) {
     $status = 'saved';
     $year = date('y');
-    $code = $station_code . '-' . $year . '-' . sprintf("%05d", count_documents_from($station, $year) + 1);
+
+    $schoolid = $_SESSION[alias() . '_portal'] === 'school_portal' ? $station_code : null;
+
+    $code = $station_code . '-' . $year . '-' . sprintf("%05d", count_documents_from($station, $year, $schoolid) + 1);
     
     insert_document($code, $description, $station, $purpose);
     insert_document_log($code, $user_id, $station, $destination, $purpose);
