@@ -1,1 +1,3 @@
 uploads/
+temp/
+*.png-errors.txt
