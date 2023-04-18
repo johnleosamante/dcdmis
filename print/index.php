@@ -95,8 +95,11 @@ class PDF extends FPDF {
     $this->Ln(4);
     $this->SetX($logo_size + 28);
     $this->Cell(0, 0, "FB Page: {$fb_page}");
-    $this->SetY(-6);
-    $this->Cell(0, 0, 'Page ' . $this->PageNo() . ' of {nb}', 0, 0, 'C');
+
+    if ($this->PageNo() > 1) {
+      $this->SetY(-6);
+      $this->Cell(0, 0, 'Page ' . $this->PageNo() . ' of {nb}', 0, 0, 'C');
+    }
   }
 }
 
