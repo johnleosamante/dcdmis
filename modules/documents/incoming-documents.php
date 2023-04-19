@@ -36,7 +36,7 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Incoming Documents';
               <td class="align-middle text-uppercase">
                 <?php echo station_name($row['from']); ?>
               </td>
-              <td class="align-middle"><?php echo $row['datetime']; ?></td>
+              <td class="align-middle"><?php echo to_datetime($row['datetime']); ?></td>
               <td class="text-uppercase align-middle"><?php echo $row['purpose']; ?></td>
               <td class="align-middle">
                 <?php

@@ -31,7 +31,7 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Received Documents';
               <td class="text-uppercase align-middle"><?php echo ++$no; ?></td>
               <td class="text-uppercase align-middle"><?php echo $row['id']; ?></td>
               <td class="text-uppercase text-left align-middle"><?php echo $row['description']; ?></td>
-              <td class="align-middle"><?php echo $row['datetime']; ?></td>
+              <td class="text-uppercase align-middle"><?php echo to_datetime($row['datetime']); ?></td>
               <td class="align-middle">
                 <?php
                 link_button_icon(custom_uri('dts', 'Document Information', $row['id']), 'fa-eye', 'success', 'View Document Information');

@@ -53,4 +53,12 @@ function to_long_date($date, $string='') {
     return $string;
   }
 }
+
+function to_datetime($date) {
+  if (strtotime($date)) {
+    return date('F d, Y', strtotime($date)) . '<br>' . date('h:i:s A', strtotime($date));
+  } else {
+    return $date;
+  }
+}
 ?>

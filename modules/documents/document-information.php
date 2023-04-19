@@ -45,7 +45,7 @@ $back_link = isset($previous_document) ? custom_uri('dts', $previous_document) :
         </tr>
         <tr>
           <th class="pr-5" scope="row">Created on:</th>
-          <td><?php echo $document['datetime']; ?></td>
+          <td><?php echo to_datetime($document['datetime']); ?></td>
         </tr>
         <tr>
           <th class="pr-5" scope="row">From:</th>
@@ -113,7 +113,7 @@ $back_link = isset($previous_document) ? custom_uri('dts', $previous_document) :
           while ($log = fetch_array($logs)) {
           ?>
             <tr>
-              <td class="align-middle"><?php echo $log['datetime']; ?></td>
+              <td class="align-middle"><?php echo to_datetime($log['datetime']); ?></td>
               <td class="align-middle text-uppercase"><?php echo user_name($log['user']); ?></td>
               <td class="align-middle text-uppercase"><?php echo station_name($log['from']); ?></td>
               <td class="align-middle text-uppercase"><?php echo station_name($log['to']); ?></td>
