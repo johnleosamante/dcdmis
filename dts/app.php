@@ -54,7 +54,7 @@ if (isset($_POST['save_document'])) {
   }
 
   if (affected_rows()) {
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $code) . '" title="Document Information: ' . $code . '" target="_blank">' . strtoupper($code) . '</a>] has been ' . $status . ' successfully! You can now print the <a href="' . custom_uri('dts', 'Print Document Tracking Slip', $code) . '" title="Print Document Tracking Slip" target="_blank">document tracking slip</a>, or view your <a href="' . custom_uri('dts', 'Ongoing Documents') . '" target="_blank">ongoing documents</a>.';
+    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $code) . '" title="Document Information: ' . $code . '" target="_blank">' . strtoupper($code) . '</a>] has been ' . $status . ' successfully! You can now print the <a href="' . custom_uri('print', 'Document Tracking Slip', $code) . '" title="Print Document Tracking Slip" target="_blank">document tracking slip</a>, or view your <a href="' . custom_uri('dts', 'Ongoing Documents') . '" target="_blank">ongoing documents</a>.';
     $show_prompt = true;
   }
 }
