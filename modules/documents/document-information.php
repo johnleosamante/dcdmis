@@ -112,12 +112,12 @@ $back_link = isset($previous_document) ? custom_uri('dts', $previous_document) :
           $logs = document_logs($_GET['id']);
           while ($log = fetch_array($logs)) {
           ?>
-            <tr>
+            <tr class="text-uppercase">
               <td class="align-middle"><?php echo to_datetime($log['datetime']); ?></td>
-              <td class="align-middle text-uppercase"><?php echo user_name($log['user']); ?></td>
-              <td class="align-middle text-uppercase"><?php echo station_name($log['from']); ?></td>
-              <td class="align-middle text-uppercase"><?php echo station_name($log['to']); ?></td>
-              <td class="align-middle text-uppercase"><?php echo $log['status']; ?></td>
+              <td class="align-middle"><?php echo user_name($log['user']); ?></td>
+              <td class="align-middle"><?php echo station_name($log['from']); ?></td>
+              <td class="align-middle"><?php echo station_name($log['to']); ?></td>
+              <td class="align-middle"><?php echo $log['status']; ?></td>
             </tr>
           <?php } ?>
         </tbody>
