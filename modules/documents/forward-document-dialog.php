@@ -40,7 +40,7 @@ $modal_title = 'Forward Document';
           </select>
         </div>
 
-        <div class="form-group mb-0">
+        <div class="form-group">
           <label class="mb-0" for="purpose">Purpose</label>
           <select name="purpose" id="purpose" class="form-control" required>
             <option value="">Select purpose...</option>
@@ -50,6 +50,11 @@ $modal_title = 'Forward Document';
               <option value="<?php echo $purpose['purpose']; ?>"><?php echo $purpose['purpose']; ?></option>
             <?php endwhile; ?>
           </select>
+        </div>
+
+        <div class="form-group mb-0">
+          <label class="mb-0" for="details">Additional details (optional)</label>
+          <textarea class="form-control" rows="2" placeholder="Type additional details..." name="details"></textarea>
         </div>
       </div>
 

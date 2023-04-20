@@ -20,7 +20,7 @@ $modal_title = $is_edit ? 'Edit Document' : 'New Document';
     <form action="" method="POST">
       <div class="modal-body">
         <?php
-        $description = $destination = $purpose = $attribute = '';
+        $description = $destination = $purpose = $details = $attribute = '';
 
         if ($is_edit) {
           $code = $_SESSION[alias() . '_No'];
@@ -28,11 +28,18 @@ $modal_title = $is_edit ? 'Edit Document' : 'New Document';
           $description = $document['description'];
           $destination = $document['destination'];
           $purpose = $document['purpose'];
+          $details = $document['details'];
 
           if ($_SESSION[alias() . '_station'] !== $document['from']) {
             $attribute = ' disabled';
           } else {
-            $attribute = num_rows(document_logs($code)) === 1 ? '' : ' disabled';
+            if (num_rows(document_logs($code)) === 1) {
+              $attribute = '';
+              $_SESSION[alias() . '_editable_description'] = true;
+            } else {
+              $attribute = ' disabled';
+              $_SESSION[alias() . '_editable_description'] = false;
+            }
           }
         ?>
           <div class="form-group">
@@ -59,7 +66,7 @@ $modal_title = $is_edit ? 'Edit Document' : 'New Document';
           </div>
         <?php endif; ?>
 
-        <div class="form-group mb-0">
+        <div class="form-group">
           <label class="mb-0" for="purpose">Purpose</label>
           <select name="purpose" id="purpose" class="form-control" required>
             <option value="">Select purpose...</option>
@@ -69,6 +76,11 @@ $modal_title = $is_edit ? 'Edit Document' : 'New Document';
               <option value="<?php echo $document_purpose['purpose']; ?>" <?php echo set_option_selected($document_purpose['purpose'], $purpose); ?>><?php echo $document_purpose['purpose']; ?></option>
             <?php endwhile; ?>
           </select>
+        </div>
+
+        <div class="form-group mb-0">
+          <label class="mb-0" for="details">Additional details (optional)</label>
+          <textarea class="form-control" rows="2" placeholder="Type additional details..." name="details"><?php echo $details; ?></textarea>
         </div>
       </div>
 

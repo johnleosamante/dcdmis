@@ -45,16 +45,18 @@ $back_link = isset($previous_document) ? custom_uri('dts', $previous_document) :
         </tr>
         <tr>
           <th class="pr-5" scope="row">Created on:</th>
-          <td><?php echo to_datetime($document['datetime']); ?></td>
+          <td class="text-uppercase"><?php echo to_date($document['datetime'], '', 'F d, Y h:i:s A'); ?></td>
         </tr>
         <tr>
           <th class="pr-5" scope="row">From:</th>
           <td class="text-uppercase"><?php echo station_name($document['from']); ?></td>
         </tr>
         <tr>
-          <th class="pr-5" scope="row">Status:</th>
+          <th class="align-top pr-5" scope="row">Status:</th>
           <td class="text-uppercase">
-            <?php echo $document['status']; ?>
+            <?php
+            echo strlen($document['details']) === 0 ? $document['status'] : $document['status'] . ' - ' . $document['details'];
+            ?>
           </td>
         </tr>
       </table>
@@ -64,7 +66,7 @@ $back_link = isset($previous_document) ? custom_uri('dts', $previous_document) :
       <div class="d-inline-block">
         <?php
         if (($_SESSION[alias() . '_station']) === $document['from']) {
-          link_button_split(custom_uri('print', 'Document Information', $document['id']), 'Print', 'fa-print', 'primary', 'Print Document Information', true);
+          link_button_split(custom_uri('print', 'Document Tracking Slip', $document['id']), 'Print', 'fa-print', 'primary', 'Print Document Tracking Slip', true);
         }
 
         switch ($previous_document) {
@@ -117,7 +119,18 @@ $back_link = isset($previous_document) ? custom_uri('dts', $previous_document) :
               <td class="align-middle"><?php echo user_name($log['user']); ?></td>
               <td class="align-middle"><?php echo station_name($log['from']); ?></td>
               <td class="align-middle"><?php echo station_name($log['to']); ?></td>
-              <td class="align-middle"><?php echo $log['status']; ?></td>
+              <td class="align-middle">
+                <?php
+                  $status = $log['status'];
+                  $details = $log['details'];
+
+                  if (strlen($details) > 0) {
+                    echo $status . ' - ' . $details;
+                  } else {
+                    echo $status;
+                  }
+                ?>
+              </td>
             </tr>
           <?php } ?>
         </tbody>
