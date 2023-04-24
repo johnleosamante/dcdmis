@@ -75,7 +75,7 @@ if ($document['user'] !== $section_head['head']) {
 /* QR Code */
 require_once(root() . '/includes/plugin/phpqrcode/qrlib.php');
 
-$PNG_TEMP_DIR = root() . '/temp';
+$PNG_TEMP_DIR = root() . '/temp/qr';
 $errorCorrectionLevel = 'L';
 $matrixPointSize = 5;
 $filename = $PNG_TEMP_DIR . '/' . md5($code . $errorCorrectionLevel . $matrixPointSize) . '.png';
