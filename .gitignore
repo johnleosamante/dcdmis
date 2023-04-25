@@ -5,6 +5,7 @@ index.php
 temp-index.php
 wp-index.php
 .well-known/
+cgi-bin/
 wp-admin/
 wp-content/
 wp-includes/
