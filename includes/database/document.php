@@ -11,24 +11,30 @@ function is_document($id, $status) {
   return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE TransCode='{$id}' AND Trans_Stats LIKE '%{$status}%';")) > 0;
 }
 
-function count_documents_from($station, $year) {
-  return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE Trans_from='{$station}' AND TransCode LIKE '%{$station}-{$year}-%';"));
+function count_documents_from($station, $year, $schoolid = null) {
+  $assignment = $schoolid === null ? $station : $schoolid;
+  return num_rows(query("SELECT TransCode AS id FROM tbl_transactions WHERE Trans_from='{$station}' AND TransCode LIKE '%{$assignment}-{$year}-%';"));
 }
 
 function document_from($id, $station) {
-  return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions.Date_time AS `datetime`, tbl_transactions.Trans_from AS `from`, tbl_transactions.Trans_Stats AS `status` FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE (tbl_transactions_log.From_office='{$station}' OR tbl_transactions_log.Forwarded_to='{$station}') AND tbl_transactions_log.Transaction_code='{$id}';");
+  return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions.Date_time AS `datetime`, tbl_transactions.Trans_from AS `from`, tbl_transactions.Trans_Stats AS `status`, tbl_transactions.details FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE (tbl_transactions_log.From_office='{$station}' OR tbl_transactions_log.Forwarded_to='{$station}') AND tbl_transactions_log.Transaction_code='{$id}';");
+}
+
+function document_origin($id) {
+  return query("SELECT tbl_transactions.TransCode AS `id`, tbl_transactions.Title AS `description`, tbl_transactions.Date_time AS `datetime`, tbl_transactions_log.Recieved_by AS `user`, tbl_transactions_log.From_office AS `from` FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' ORDER BY tbl_transactions_log.Date_recieved ASC LIMIT 1;");
 }
 
 function is_document_from($id, $station, $status='New') {
   return num_rows(query("SELECT Transaction_code AS id FROM tbl_transactions_log WHERE From_office='{$station}' AND `Status`='{$status}' AND Transaction_code='{$id}';"));
 }
 
-function insert_document($id, $description, $station, $purpose) {
-  non_query("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}');");
+function insert_document($id, $description, $station, $purpose, $details = '') {
+  non_query("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats, details) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}', '{$details}');");
 }
 
-function update_document($id, $description, $station, $purpose) {
-  non_query("UPDATE tbl_transactions SET Title='{$description}', Date_time=NOW(), Trans_Stats='{$purpose}' WHERE TransCode='{$id}' AND Trans_from='{$station}' LIMIT 1;");
+function update_document($id, $description, $station, $purpose, $details = '', $update_description = true) {
+  $description_column = $update_description ? "Title='{$description}', " : '';
+  non_query("UPDATE tbl_transactions SET {$description_column}Date_time=NOW(), Trans_Stats='{$purpose}', details='{$details}' WHERE TransCode='{$id}' AND Trans_from='{$station}' LIMIT 1;");
 }
 
 function incoming_documents($station) {
@@ -88,27 +94,27 @@ function is_canceled_document($id, $station) {
 }
 
 function document_log($id) {
-  return query("SELECT `tbl_transactions`.`TransCode` AS `id`, `tbl_transactions`.`Title` AS `description`, `tbl_transactions`.`Trans_from` AS `from`, `tbl_transactions_log`.`Date_recieved` AS `datetime`, `tbl_transactions_log`.`Forwarded_To` AS `destination`, `tbl_transactions_log`.`Trans_status` AS `purpose` FROM `tbl_transactions` INNER JOIN `tbl_transactions_log` ON `tbl_transactions`.`TransCode` = `tbl_transactions_log`.`Transaction_code` WHERE `tbl_transactions`.`TransCode`='{$id}' ORDER BY `datetime` DESC LIMIT 1;");
+  return query("SELECT `tbl_transactions`.`TransCode` AS `id`, `tbl_transactions`.`Title` AS `description`, `tbl_transactions`.`Trans_from` AS `from`, `tbl_transactions_log`.`Date_recieved` AS `datetime`, `tbl_transactions_log`.`Forwarded_To` AS `destination`, `tbl_transactions_log`.`Trans_status` AS `purpose`, tbl_transactions_log.details FROM `tbl_transactions` INNER JOIN `tbl_transactions_log` ON `tbl_transactions`.`TransCode` = `tbl_transactions_log`.`Transaction_code` WHERE `tbl_transactions`.`TransCode`='{$id}' ORDER BY `datetime` DESC LIMIT 1;");
 }
 
 function document_logs($id) {
-  return query("SELECT Date_recieved AS `datetime`, Recieved_by AS `user`, From_office AS `from`, Forwarded_to AS `to`, Trans_status AS `status` FROM tbl_transactions_log WHERE Transaction_code='{$id}' ORDER BY Date_recieved DESC;");
+  return query("SELECT Date_recieved AS `datetime`, Recieved_by AS `user`, From_office AS `from`, Forwarded_to AS `to`, Trans_status AS `status`, tbl_transactions_log.details FROM tbl_transactions_log WHERE Transaction_code='{$id}' ORDER BY Date_recieved DESC;");
 }
 
-function insert_document_log($id, $user, $station, $destination, $purpose, $status='New') {
-  non_query("INSERT INTO tbl_transactions_log VALUES (null, NOW(), '{$user}', '{$station}', '{$destination}', '{$purpose}', '{$id}', '{$status}');");
+function insert_document_log($id, $user, $station, $destination, $purpose, $status='New', $details = '') {
+  non_query("INSERT INTO tbl_transactions_log VALUES (null, NOW(), '{$user}', '{$station}', '{$destination}', '{$purpose}', '{$id}', '{$status}', '{$details}');");
 }
 
-function update_document_log($id, $user, $station, $destination, $purpose, $status='New', $change_date=true) {
+function update_document_log($id, $user, $station, $destination, $purpose, $status='New', $details='', $change_date=true) {
   $date = $change_date ? "Date_Recieved=NOW(), " : '';
-  non_query("UPDATE tbl_transactions_log SET " . $date . " Recieved_by='{$user}', From_office='{$station}', Forwarded_to='{$destination}', Trans_status='{$purpose}', `Status`='{$status}' WHERE Transaction_code='{$id}' ORDER BY Date_Recieved DESC LIMIT 1;");
+  non_query("UPDATE tbl_transactions_log SET " . $date . " Recieved_by='{$user}', From_office='{$station}', Forwarded_to='{$destination}', Trans_status='{$purpose}', `Status`='{$status}', `details`='{$details}' WHERE Transaction_code='{$id}' ORDER BY Date_Recieved DESC LIMIT 1;");
 }
 
 function update_document_logs_done($id) {
   non_query("UPDATE tbl_transactions_log SET `Status`='Done' WHERE Transaction_code='{$id}';");
 }
 
-function update_document_status($id, $purpose, $status='Unread') {
-  non_query("UPDATE tbl_transactions SET Trans_Stats='{$purpose}',`Status`='{$status}' WHERE TransCode='{$id}' LIMIT 1;");
+function update_document_status($id, $purpose, $status='Unread', $details = '') {
+  non_query("UPDATE tbl_transactions SET Trans_Stats='{$purpose}', `Status`='{$status}', details='{$details}' WHERE TransCode='{$id}' LIMIT 1;");
 }
 ?>
