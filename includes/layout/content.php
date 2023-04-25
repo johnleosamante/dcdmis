@@ -43,6 +43,15 @@ if (!isset($url) || $url === 'dashboard') {
     case 'Approve Document':
       $file = 'documents/approve-document';
       break;
+    case 'Active Employees':
+      $file = 'employees/active-employees';
+      break;
+    case 'Retirable Employees':
+      $file = 'employees/retirable-employees';
+      break;
+    case 'Archived Employees':
+      $file = 'employees/archived-employees';
+      break;
     case 'Activity Log':
       $file = 'activity/activity-log';
       break;
