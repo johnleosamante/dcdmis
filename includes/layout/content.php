@@ -52,6 +52,9 @@ if (!isset($url) || $url === 'dashboard') {
     case 'Archived Employees':
       $file = 'employees/archived-employees';
       break;
+    case 'Employee Information':
+      $file = 'employees/employee-information';
+      break;
     case 'Activity Log':
       $file = 'activity/activity-log';
       break;
