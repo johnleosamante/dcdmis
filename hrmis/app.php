@@ -6,12 +6,12 @@ if (!isset($_SESSION[alias() . '_user_id'])) {
   redirect(uri() . '/login');
 }
 
-echo 'HRMIS Warning: Unauthorized Access';
-exit;
+// echo 'HRMIS Warning: Unauthorized Access';
+// exit;
 
 $show_prompt = false;
 $message = null;
 $type = 'success';
 $align = 'left';
-$page = $app = "Human Resource Management Information System";
+$page = $app_title = "Human Resource Management Information System";
 ?>

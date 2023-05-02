@@ -25,3 +25,10 @@
 input::-ms-clear, input::-ms-reveal {
   display: none;
 }
+
+.employee-photo {
+  width: 4rem;
+  height: 4rem;
+  display: inline-block;
+  background-color: #fff;
+}

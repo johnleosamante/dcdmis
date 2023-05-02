@@ -84,6 +84,10 @@ function set_active_item($reference, $value, $class='active') {
   return strtolower($reference) === strtolower($value) ? " {$class}" : '';
 }
 
+function set_active_navigation($condition, $class='active') {
+  return $condition ? " {$class}" : '';
+}
+
 function is_valid_email($email, $domain = null) {
   if ($domain === null) {
     return preg_match("/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/", $email);
