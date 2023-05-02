@@ -2,7 +2,6 @@ uploads/
 temp/
 *.png-errors.txt
 index.php
-temp-index.php
 wp-index.php
 .well-known/
 cgi-bin/
