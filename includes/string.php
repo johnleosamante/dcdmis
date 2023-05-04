@@ -47,6 +47,13 @@ function to_date($date, $string='', $format='m/d/Y') {
   }
 }
 
+function to_age($birth_date) {
+  $current_date = date_create(date('Y-m-d'));
+  $date = date_create($birth_date);
+  $difference = date_diff($date, $current_date);
+  return $difference->format('%y');
+}
+
 function to_long_date($date, $string='') {
   if (strtotime($date)) {
     return date("F j, Y", strtotime($date));
