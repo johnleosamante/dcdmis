@@ -20,6 +20,10 @@ function decode($string) {
   return urldecode(base64_decode($string));
 }
 
+function root() {
+  return $_SERVER['DOCUMENT_ROOT'];
+}
+
 function uri() {
   $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
   return $protocol . $_SERVER['HTTP_HOST'];
@@ -29,10 +33,6 @@ function custom_uri($page, $view, $id=null) {
   $value = ($id !== null) ? '&id=' . encode($id) : '';
 
   return uri() . "/{$page}?{$value}&v=" . encode($view);
-}
-
-function root() {
-  return $_SERVER['DOCUMENT_ROOT'];
 }
 
 function title($page=null) {
