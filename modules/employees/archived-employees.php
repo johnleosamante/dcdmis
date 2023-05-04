@@ -43,7 +43,7 @@ $page_title = 'Archived Employees';
               <td class="align-middle"><?php echo fetch_assoc(school_by_id($row['station']))['name']; ?></td>
               <td class="align-middle">
                 <?php
-                link_button_icon(custom_uri('hrmis', 'View Employee', $row['id']), 'fa-eye', 'success', 'View Employee');
+                link_button_icon(custom_uri('hrmis', 'Employee Information', $row['id']), 'fa-eye', 'success', 'View Employee');
                 ?>
               </td>
             </tr>
