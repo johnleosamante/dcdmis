@@ -27,6 +27,7 @@ function to_address($lot, $street, $subdivision, $barangay, $city, $province='')
 
 function to_handle_null($value, $string='') {
   switch ($value) {
+    case null:
     case 0:
     case '0':
     case '':
