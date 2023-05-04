@@ -16,7 +16,7 @@ if (num_rows($employees) > 0) {
     <?php content_title_with_link('Employee Information : ' . strtoupper(to_name($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), custom_uri('hrmis', 'Edit Employee'), 'Edit', 'fa-edit'); ?>
   </div>
 
-  <div class="card-body">
+  <div class="card-body pb-2">
     <ul class="nav nav-tabs mb-3">
       <li class="nav-item">
         <a class="nav-link text-secondary active" href="#personal-information" data-toggle="tab">Personal Information</a>
