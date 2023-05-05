@@ -10,5 +10,8 @@ require_once(root() . '/includes/database/family-background.php');
 require_once(root() . '/includes/database/children.php');
 require_once(root() . '/includes/database/education.php');
 require_once(root() . '/includes/database/eligibility.php');
+require_once(root() . '/includes/database/experience.php');
+require_once(root() . '/includes/database/voluntary-work.php');
+require_once(root() . '/includes/database/learning-development.php');
 require_once(root() . '/includes/layout/theme-dashboard.php');
 ?>

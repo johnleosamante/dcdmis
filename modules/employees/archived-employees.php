@@ -38,7 +38,28 @@ $page_title = 'Archived Employees';
               </td>
               <td class="align-middle text-left"><?php echo $employee_name; ?></td>
               <td class="align-middle"><?php echo $row['sex']; ?></td>
-              <td class="align-middle"><?php echo $row['status']; ?></td>
+              <td class="align-middle">
+                <?php
+                $color = null;
+                $status = strtolower($row['status']);
+
+                switch ($status) {
+                  case 'transferred':
+                  case 'resigned':
+                    $color = 'warning';
+                    break;
+                  case 'retired':
+                  case 'deceased':
+                    $color = 'danger';
+                    break;
+                  default:
+                    $color = 'secondary';
+                    break;
+                }
+
+                round_pill($row['status'], $color); 
+                ?>
+              </td>
               <td class="align-middle"><?php echo fetch_assoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetch_assoc(school_by_id($row['station']))['name']; ?></td>
               <td class="align-middle">

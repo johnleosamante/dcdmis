@@ -8,9 +8,8 @@
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center" cellspacing="0">
         <thead>
           <tr>
-            <th width="5%">#</th>
             <th width="70%">Name of Child</th>
-            <th widht="25%">Date of Birth</th>
+            <th widht="30%">Date of Birth</th>
           </tr>
         </thead>
         <tbody>
@@ -18,12 +17,10 @@
           $children = children($employee['id']);
 
           if (num_rows($children) > 0) {
-            $no = 0;
             while ($child = fetch_assoc($children)) : ?>
               <tr>
-                <td class="align-middle"><?php echo ++$no; ?></td>
                 <td class="align-middle"><?php echo to_name($child['last'], $child['first'], $child['middle'], $child['ext']); ?></td>
-                <td class="align-middle"><?php echo to_date($child['dob'], '', 'F d, Y'); ?></td>
+                <td class="align-middle"><?php echo to_date($child['dob']); ?></td>
               </tr>
             <?php endwhile;
           } else { ?>

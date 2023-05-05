@@ -28,10 +28,17 @@ function sidebar_menu_item($condition, $link, $title, $icon = '', $counter = nul
         <span><?php echo $title; ?></span>
       </span>
       <?php if ($counter !== null) : ?>
-        <span class="bg-dark px-3 rounded-pill font-weight-bold"><?php echo $counter; ?></span>
+        <span class="bg-dark px-2 rounded-pill font-weight-bold"><?php echo $counter; ?></span>
       <?php endif; ?>
     </a>
   </li>
+<?php
+}
+
+function round_pill($text, $bg_color = 'primary', $text_color = 'light')
+{
+?>
+  <span class="py-1 px-3 small bg-<?php echo $bg_color; ?> rounded-pill text-<?php echo $text_color; ?>"><?php echo $text; ?></span>
 <?php
 }
 

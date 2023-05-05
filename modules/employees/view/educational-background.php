@@ -37,7 +37,7 @@
                 <td class="align-middle"><?php echo to_handle_null($education['highest'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo to_handle_null($education['year_graduated'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo to_handle_null($education['scholarship'], 'N/A'); ?></td>
-                <td class="align-middle"><span class="py-1 px-3 bg-danger rounded-pill text-light">None</span></td>
+                <td class="align-middle"><?php round_pill('None', 'danger'); ?></td>
               </tr>
             <?php endwhile;
           } else { ?>
