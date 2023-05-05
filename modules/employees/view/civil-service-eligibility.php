@@ -33,7 +33,7 @@
                 <td class="align-middle"><?php echo $eligibility['place']; ?></td>
                 <td class="align-middle"><?php echo to_handle_null($eligibility['license'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo to_date($eligibility['validity'], 'N/A', 'F d, Y'); ?></td>
-                <td class="align-middle">None</td>
+                <td class="align-middle"><span class="py-1 px-3 bg-danger rounded-pill text-light">None</span></td>
               </tr>
             <?php endwhile;
           } else { ?>
