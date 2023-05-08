@@ -35,7 +35,7 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Completed Documents';
               <td class="align-middle"><?php echo to_datetime($row['completedon']); ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
-                  <?php dropdown_ellipsis($no); ?>
+                  <?php dropdown_ellipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php link_dropdown_item(custom_uri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 

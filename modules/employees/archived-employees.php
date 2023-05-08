@@ -57,15 +57,20 @@ $page_title = 'Archived Employees';
                     break;
                 }
 
-                round_pill($row['status'], $color); 
+                round_pill($row['status'], $color);
                 ?>
               </td>
               <td class="align-middle"><?php echo fetch_assoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetch_assoc(school_by_id($row['station']))['name']; ?></td>
-              <td class="align-middle">
-                <?php
-                link_button_icon(custom_uri('hrmis', 'Employee Information', $row['id']), 'fa-eye', 'success', 'View Employee');
-                ?>
+              <td class="align-middle text-capitalize">
+                <div class="dropdown no-arrow">
+                  <?php dropdown_ellipsis(); ?>
+                  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                    <?php
+                    link_dropdown_item(custom_uri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
+                    ?>
+                  </div>
+                </div>
               </td>
             </tr>
           <?php endwhile; ?>

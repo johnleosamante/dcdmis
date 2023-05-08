@@ -41,12 +41,18 @@ $page_title = 'Active Employees';
               <td class="align-middle"><?php echo to_date($row['month'] . '/' . $row['day'] . '/' . $row['year'], '', 'F d, Y'); ?></td>
               <td class="align-middle"><?php echo fetch_assoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetch_assoc(school_by_id($row['station']))['name']; ?></td>
-              <td class="align-middle">
-                <?php
-                link_button_icon(custom_uri('hrmis', 'Employee Information', $row['id']), 'fa-eye', 'success', 'View Employee');
-                link_button_icon(custom_uri('hrmis', 'Transfer Employee', $row['id']), 'fa-share', 'info', 'Transfer Employee');
-                link_button_icon(custom_uri('hrmis', 'Remove Employee', $row['id']), 'fa-times-circle', 'danger', 'Remove Employee');
-                ?>
+              <td class="align-middle text-capitalize">
+                <div class="dropdown no-arrow">
+                  <?php dropdown_ellipsis(); ?>
+                  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                    <?php
+                    link_dropdown_item(custom_uri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
+                    link_dropdown_item(custom_uri('hrmis', 'Transfer Employee', $row['id']), 'Transfer', 'fa-share', 'Transfer Employee');
+                    ?>
+                    <div class="dropdown-divider"></div>
+                    <?php link_dropdown_item(custom_uri('hrmis', 'Remove Employee', $row['id']), 'Remove', 'fa-times-circle', 'Remove Employee', false, 'text-danger'); ?>
+                  </div>
+                </div>
               </td>
             </tr>
           <?php endwhile; ?>
