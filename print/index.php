@@ -41,6 +41,7 @@ $email = $school['email'];
 $website = $school['website'];
 $fb_page = $school['fb_page'];
 $district = fetch_assoc(district($school['district']))['name'];
+$lineY = 60;
 
 class PDF extends FPDF {
   function Header() {
@@ -58,12 +59,11 @@ class PDF extends FPDF {
     $this->SetFont('OLDENGL', '', 18);
     $this->Cell(0, 0, 'Department of Education', 0, 0, 'C');
     $this->Ln(6);
-    $this->SetFont('tahomabd', 'B', 10);
+    $this->SetFont('tahomabd', 'B', 11);
     $this->Cell(0, 0, 'REGION IX - ZAMBOANGA PENINSULA', 0, 0, 'C');
     $this->Ln(5);
     $this->Cell(0, 0, $division_name, 0, 0, 'C');
-    $this->Line($margin, 55, $width - $margin, 55);
-    $this->Ln(6);
+    $this->Ln(5);
   }
 
   function Footer() {
