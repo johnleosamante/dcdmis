@@ -8,19 +8,18 @@ $employee = strtoupper(user_name($document['user']));
 $employee_position = fetch_assoc(position($document['user']))['position'];
 
 /* Station Header */
-$pdf->SetY(65);
-$pdf->SetFont('calibrib',  'B', 15);
+$pdf->SetFont('tahomabd',  'B', 11);
 $pdf->Cell(0, 0, $section, 0, 0, 'C');
 
 if ($is_school) {
   $pdf->Ln(5);
-  $pdf->SetFont('calibrib',  'B', 12);
   $pdf->Cell(0, 0, strtoupper($address), 0, 0, 'C');
   $pdf->Ln(5);
-  $pdf->SetFont('calibrib',  'B', 14);
   $pdf->Cell(0, 0, strtoupper($district), 0, 0, 'C');
+  $lineY = 70;
 }
 
+$pdf->Line($margin, $lineY, $width - $margin, $lineY);
 $pdf->Ln(15);
 
 /* Document body */
