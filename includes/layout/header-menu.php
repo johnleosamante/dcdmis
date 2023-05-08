@@ -49,23 +49,13 @@ $display_photo = uri() . '/' . $user['picture'];
       </a>
 
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-        <a class="dropdown-item" href="<?php echo uri(); ?>/pis">
-          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-          Profile
-        </a>
-        <a class="dropdown-item" href="<?php echo custom_uri('dts', 'Settings'); ?>">
-          <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-          Settings
-        </a>
-        <a class="dropdown-item" href="<?php echo custom_uri('dts', 'Activity Log'); ?>">
-          <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-          Activity Log
-        </a>
+        <?php
+        link_dropdown_item(uri() . '/pis', 'Profile', 'fa-user', 'Go to user profile');
+        link_dropdown_item(custom_uri('dts', 'Settings'), 'Settings', 'fa-cogs', 'Go to settings');
+        link_dropdown_item(custom_uri('dts', 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
+        ?>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#" id="user_logout" data-toggle="modal" data-target="#Modal">
-          <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-          Logout
-        </a>
+        <?php modal_dropdown_item('user_logout', 'Logout', 'fa-sign-out', 'Logout', 'text-danger'); ?>
       </div>
     </li>
   </ul>

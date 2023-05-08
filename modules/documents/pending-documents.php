@@ -34,14 +34,18 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Pending Documents';
               <td class="text-left align-middle"><?php echo $row['description']; ?></td>
               <td class="align-middle"><?php echo user_name($row['user']); ?></td>
               <td class="align-middle"><?php echo to_datetime($row['datetime']); ?></td>
-              <td class="align-middle">
-                <?php
-                link_button_icon(custom_uri('dts', 'Document Information', $row['id']), 'fa-eye', 'success', 'View Document Information');
+              <td class="align-middle text-capitalize">
+                <div class="dropdown no-arrow">
+                  <?php dropdown_ellipsis($no); ?>
+                  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                    <?php link_dropdown_item(custom_uri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 
-                if ($row['station'] === $_SESSION[alias() . '_station']) {
-                  link_button_icon(custom_uri('print', 'Document Tracking Slip', $row['id']), 'fa-print', 'primary', 'Print Document Tracking Slip', true);
-                }
-                ?>
+                    if ($row['station'] === $_SESSION[alias() . '_station']) {
+                      link_dropdown_item(custom_uri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
+                    }
+                    ?>
+                  </div>
+                </div>
               </td>
             </tr>
           <?php } ?>
