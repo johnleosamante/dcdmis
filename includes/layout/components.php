@@ -140,4 +140,30 @@ function link_button_split($link, $text, $icon, $color = 'primary', $title = '',
   </a>
 <?php
 }
+
+function link_dropdown_item($link, $text, $icon, $title ='', $new_tab =false, $color = 'text-gray-400')
+{ ?>
+  <a class="dropdown-item" href="<?php echo $link; ?>" title="<?php echo $title; ?>" target="<?php echo $new_tab ? '_blank' : '_self'; ?>">
+    <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1 <?php echo $color; ?>"></i><?php echo $text; ?>
+  </a>
+<?php
+}
+
+function modal_dropdown_item($id, $text, $icon, $title = '', $new_tab = false, $color = 'text-gray-500')
+{
+?>
+  <a class="dropdown-item" href="#" id="<?php echo $id; ?>" data-toggle="modal" data-target="#Modal" title="<?php echo $title; ?>" target="<?php echo $new_tab ? '_blank' : '_self'; ?>">
+    <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1 <?php echo $color; ?>"></i><?php echo $text; ?>
+  </a>
+<?php
+}
+
+function dropdown_ellipsis()
+{
+?>
+  <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+  </a>
+<?php
+}
 ?>
