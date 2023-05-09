@@ -40,7 +40,7 @@ if (num_rows($employees) > 0) {
         <a class="nav-link text-secondary" href="#voluntary-work" data-toggle="tab">Voluntary Work</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#learning-development" data-toggle="tab">Learning and Development</a>
+        <a class="nav-link text-secondary" href="#learning-development" data-toggle="tab">Learning &amp; Development</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
         <a class="nav-link text-secondary" href="#special-skills" data-toggle="tab">Special Skills &amp; Hobbies</a>
