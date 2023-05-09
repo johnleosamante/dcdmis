@@ -32,3 +32,11 @@ input::-ms-clear, input::-ms-reveal {
   display: inline-block;
   background-color: #fff;
 }
+
+.text-mars {
+  color: #02a3fe;
+}
+
+.text-venus {
+  color: #ec49a6;
+}
