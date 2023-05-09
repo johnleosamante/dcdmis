@@ -37,7 +37,7 @@
                 <td class="align-middle"><?php echo $experience['sg']; ?></td>
                 <td class="align-middle"><?php echo $experience['status']; ?></td>
                 <td class="align-middle"><?php echo $experience['isgovernment']; ?></td>
-                <td class="align-middle"><?php round_pill('None', 'danger'); ?></td>
+                <td class="align-middle"><?php round_pill('None'); ?></td>
               </tr>
             <?php endwhile;
           } else { ?>
