@@ -2,6 +2,6 @@
 // includes/database/learning-development.php
 
 function learning_development($id) {
-  return query("SELECT `No` AS `no`, Title_of_Training AS `training`, `From` AS `from`, `To` AS `to`, `Number_of_Hours` AS `hours`, `Managerial` AS `type`, `Conducted` AS `sponsor`, Emp_ID AS `id` FROM learning_development WHERE Emp_ID='{$id}' ORDER BY `From` DESC, `To` DESC;");
+  return query("SELECT `No` AS `no`, Title_of_Training AS `title`, `From` AS `from`, `To` AS `to`, `Number_of_Hours` AS `hours`, `Managerial` AS `type`, `Conducted` AS `sponsor`, Emp_ID AS `id` FROM learning_and_development WHERE Emp_ID='{$id}' ORDER BY `From` DESC, `To` DESC;");
 }
 ?>
