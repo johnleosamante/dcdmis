@@ -19,9 +19,6 @@ $page = $app_title = "Document Tracking System";
 
 if (isset($_POST['primary_search_button'])) {
   redirect(custom_uri('dts', 'Document Information', real_escape_string($_POST['primary_search_text'])));
-  $_SESSION[alias() . '_search_term'] = real_escape_string($_POST['primary_search_text']);
-} else {
-  $_SESSION[alias() . '_search_term'] = null;
 }
 
 $user_id = $_SESSION[alias() . '_user_id'];
