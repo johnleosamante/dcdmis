@@ -51,6 +51,12 @@ if (num_rows($employees) > 0) {
       <li class="nav-item">
         <a class="nav-link text-secondary" href="#membership" data-toggle="tab">Membership in Association / Organization</a>
       </li><!-- .nav-item -->
+      <li class="nav-item">
+        <a class="nav-link text-secondary" href="#other-information" data-toggle="tab">Other Information</a>
+      </li><!-- .nav-item -->
+      <li class="nav-item">
+        <a class="nav-link text-secondary" href="#reference" data-toggle="tab">References</a>
+      </li><!-- .nav-item -->
     </ul><!-- .nav-tabs -->
 
     <div class="tab-content mt-2">
@@ -66,6 +72,8 @@ if (num_rows($employees) > 0) {
       include_once(root() . '/modules/employees/view/special-skills.php');
       include_once(root() . '/modules/employees/view/recognition.php');
       include_once(root() . '/modules/employees/view/membership.php');
+      include_once(root() . '/modules/employees/view/other-information.php');
+      include_once(root() . '/modules/employees/view/reference.php');
       ?>
     </div><!-- .tab-content -->
   </div><!-- .card-body -->
