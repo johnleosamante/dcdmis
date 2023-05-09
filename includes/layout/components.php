@@ -37,6 +37,23 @@ function sidebar_menu_item($condition, $link, $title, $icon = '', $counter = nul
 
 function round_pill($text, $bg_color = 'primary', $text_color = 'light')
 {
+  switch (strtolower($text)) {
+    case 'active':
+      $bg_color='success';
+      break;
+    case 'transferred':
+    case 'resigned':
+      $bg_color = 'warning';
+      break;
+    case 'retired':
+    case 'deceased':
+    case 'none':
+      $bg_color = 'danger';
+      break;
+    default:
+      $bg_color = 'secondary';
+      break;
+  }
 ?>
   <span class="py-1 px-3 small bg-<?php echo $bg_color; ?> rounded-pill text-<?php echo $text_color; ?>"><?php echo $text; ?></span>
 <?php
@@ -48,6 +65,13 @@ function content_title($title)
   <div class="d-sm-flex">
     <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
   </div>
+<?php
+}
+
+function sex($sex) {
+  $sign = strtolower($sex) === 'male' ? 'mars' : 'venus';
+?>
+  <i class="<?php echo "fas fa-{$sign} text-{$sign} fa-2x"; ?>"></i>
 <?php
 }
 
