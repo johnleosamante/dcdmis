@@ -20,7 +20,7 @@
             while ($recognition = fetch_assoc($recognitions)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $recognition['recognition']; ?></td>
-                <td class="align-middle"><?php round_pill('None', 'danger'); ?></td>
+                <td class="align-middle"><?php round_pill('None'); ?></td>
               </tr>
             <?php endwhile;
           } else { ?>
