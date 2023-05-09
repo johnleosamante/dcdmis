@@ -3,7 +3,7 @@
 ?>
 
 <div class="tab-pane fade" id="recognition">
-  <div class="row mt-3">
+  <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
         <thead>
