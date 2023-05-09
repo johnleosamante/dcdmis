@@ -17,4 +17,8 @@ function retirable_employees($station=null) {
 function archived_employees() {
   return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS month, tbl_employee.Emp_Day AS day, tbl_employee.Emp_Year AS year, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Status AS `status`  FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID WHERE (tbl_employee.Emp_Status NOT LIKE 'Active' AND tbl_employee.Emp_Status NOT LIKE 'Registered') ORDER BY tbl_employee.Emp_LName ASC;");
 }
+
+function employee_search($text) {
+  return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS month, tbl_employee.Emp_Day AS day, tbl_employee.Emp_Year AS year, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Status AS `status`  FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID WHERE tbl_employee.Emp_LName LIKE '%{$text}%' OR tbl_employee.Emp_FName LIKE '%{$text}%' OR tbl_employee.Emp_MName LIKE '%{$text}%' OR tbl_employee.Emp_GSIS='{$text}' OR tbl_employee.Emp_PAGIBIG='{$text}' OR tbl_employee.Emp_PHILHEALTH='{$text}' OR tbl_employee.Emp_SSS='{$text}' OR tbl_employee.Emp_TIN='{$text}' OR tbl_employee.EmpNo='{$text}' ORDER BY tbl_employee.Emp_LName ASC;");
+}
 ?>
