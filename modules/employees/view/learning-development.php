@@ -33,7 +33,7 @@
                 <td class="align-middle"><?php echo $learning['hours']; ?></td>
                 <td class="align-middle"><?php echo $learning['type']; ?></td>
                 <td class="align-middle"><?php echo $learning['sponsor']; ?></td>
-                <td class="align-middle"><?php round_pill('None', 'danger'); ?></td>
+                <td class="align-middle"><?php round_pill('None'); ?></td>
               </tr>
             <?php endwhile;
           } else { ?>
