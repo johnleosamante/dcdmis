@@ -11,12 +11,16 @@
   <p class="text-gray-700 mb-1">Try a new search term instead</p>
 
   <form class="mx-auto mb-4" method="POST" action="">
-    <div class="input-group">
-      <input type="text" class="form-control small" placeholder="Search for..." aria-label="Search" name="primary_search_text" value="" autofocus required>
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="submit" name="primary_search_button">
-          <i class="fas fa-search fa-sm"></i>
-        </button>
+    <div class="row justify-content-center">
+      <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12">
+        <div class="input-group">
+          <input type="text" class="form-control small" placeholder="Search..." aria-label="Search" name="primary_search_text" autofocus required>
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit" name="primary_search_button">
+              <i class="fas fa-search fa-sm"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </form>
