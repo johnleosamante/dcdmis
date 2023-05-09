@@ -55,7 +55,7 @@ $display_photo = uri() . '/' . $user['picture'];
         link_dropdown_item(custom_uri('dts', 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
         ?>
         <div class="dropdown-divider"></div>
-        <?php modal_dropdown_item('user_logout', 'Logout', 'fa-sign-out', 'Logout', 'text-danger'); ?>
+        <?php modal_dropdown_item('user_logout', 'Logout', 'fa-sign-out-alt', 'Logout'); ?>
       </div>
     </li>
   </ul>
