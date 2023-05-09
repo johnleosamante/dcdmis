@@ -37,7 +37,7 @@ $page_title = 'Retirable Employees';
                 </span>
               </td>
               <td class="align-middle text-left"><?php echo $employee_name; ?></td>
-              <td class="align-middle"><?php echo $row['sex']; ?></td>
+              <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle"><?php echo to_date($row['month'] . '/' . $row['day'] . '/' . $row['year'], '', 'F d, Y'); ?></td>
               <td class="align-middle"><?php echo fetch_assoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetch_assoc(school_by_id($row['station']))['name']; ?></td>

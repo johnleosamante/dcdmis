@@ -37,7 +37,7 @@ $page_title = 'Archived Employees';
                 </span>
               </td>
               <td class="align-middle text-left"><?php echo $employee_name; ?></td>
-              <td class="align-middle"><?php echo $row['sex']; ?></td>
+              <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle">
                 <?php
                 $color = null;
