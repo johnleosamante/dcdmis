@@ -69,4 +69,25 @@ function to_datetime($date) {
     return $date;
   }
 }
+
+function random_password($length) {
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:<>?-=[]\;,./';
+  $char_length = strlen($characters);
+  $random_string = '';
+  for ($i = 0; $i < $length; $i++) {
+    $random_string .= $characters[rand(0, $char_length - 1)];
+  }
+  return $random_string;
+}
+
+function check_password_strength($password) {
+  $has_uppercase = preg_match('/[A-Z]/', $password);
+  $has_lowercase = preg_match('/[a-z]/', $password);
+  $has_number = preg_match('/\d/', $password);
+  $has_special_character = preg_match('/[^a-zA-Z\d]/', $password);
+  if (!$has_uppercase || !$has_lowercase || !$has_number || !$has_special_character) {
+    return false;
+  }
+  return true;
+}
 ?>

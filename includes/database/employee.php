@@ -21,4 +21,16 @@ function archived_employees() {
 function employee_search($text) {
   return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS month, tbl_employee.Emp_Day AS day, tbl_employee.Emp_Year AS year, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Status AS `status`  FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID WHERE tbl_employee.Emp_LName LIKE '%{$text}%' OR tbl_employee.Emp_FName LIKE '%{$text}%' OR tbl_employee.Emp_MName LIKE '%{$text}%' OR tbl_employee.Emp_GSIS='{$text}' OR tbl_employee.Emp_PAGIBIG='{$text}' OR tbl_employee.Emp_PHILHEALTH='{$text}' OR tbl_employee.Emp_SSS='{$text}' OR tbl_employee.Emp_TIN='{$text}' OR tbl_employee.EmpNo='{$text}' ORDER BY tbl_employee.Emp_LName ASC;");
 }
+
+function employee_gender() {
+  return query("SELECT Emp_Sex AS `name`, COUNT(*) AS `count` FROM tbl_employee WHERE Emp_Status='Active' GROUP BY Emp_Sex ORDER BY Emp_Sex DESC;");
+}
+
+function employee_station() {
+  return query("SELECT tbl_school.SchoolName AS `name`, COUNT(*) AS `count` FROM tbl_station INNER JOIN tbl_school ON tbl_station.Emp_Station=tbl_school.SchoolID INNER JOIN tbl_employee ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_district ON tbl_school.District_code=tbl_district.District_code WHERE tbl_employee.Emp_Status='Active' GROUP BY tbl_school.SchoolName ORDER BY tbl_district.District_Name, tbl_school.SchoolName;");
+}
+
+function employee_position() {
+  return query("SELECT tbl_job.Job_description AS `name`, COUNT(*) AS `count` FROM tbl_station INNER JOIN tbl_job ON tbl_station.Emp_Position=tbl_job.Job_code INNER JOIN tbl_employee ON tbl_employee.Emp_ID=tbl_station.Emp_ID WHERE tbl_employee.Emp_Status='Active' GROUP BY tbl_job.Job_description ORDER BY tbl_job.Salary_Grade DESC, tbl_job.Job_description ASC;");
+}
 ?>

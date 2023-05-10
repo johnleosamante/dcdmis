@@ -29,6 +29,10 @@ function real_escape_string($string) {
   return mysqli_real_escape_string(connection(), $string);
 }
 
+function fetch_all_assoc($result) {
+  return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
 function fetch_assoc($result) {
   return mysqli_fetch_assoc($result);
 }

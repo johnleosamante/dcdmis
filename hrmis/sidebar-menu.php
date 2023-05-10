@@ -11,5 +11,7 @@ sidebar_menu_item(isset($url) && str_contains($url, 'Active'), custom_uri('hrmis
 
 sidebar_menu_item(isset($url) && str_contains($url, 'Retirable'), custom_uri('hrmis', 'Retirable Employees'), 'Retirable','fa-user-clock', number_format(num_rows(retirable_employees())));
 
+sidebar_menu_item(isset($url) && str_contains($url, 'Celebrant'), custom_uri('hrmis', 'Celebrant Employees'), 'Celebrant', 'fa-birthday-cake');
+
 sidebar_menu_item(isset($url) && str_contains($url, 'Archived'), custom_uri('hrmis', 'Archived Employees'), 'Archived', 'fa-user-lock');
 ?>
