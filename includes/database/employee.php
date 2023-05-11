@@ -41,4 +41,8 @@ function district_employee() {
 function employee_category() {
   return query("SELECT tbl_job.Job_Category AS name, COUNT(*) AS count FROM tbl_job INNER JOIN tbl_station ON tbl_station.Emp_Position=tbl_job.Job_code INNER JOIN tbl_employee ON tbl_employee.Emp_ID=tbl_station.Emp_ID WHERE tbl_employee.Emp_Status='Active' GROUP BY tbl_job.Job_Category ORDER BY tbl_job.Job_Category;");
 }
+
+function employee_gender_category() {
+  return query("SELECT tbl_job.Job_Category AS `name`, COUNT(CASE WHEN tbl_employee.Emp_Sex='Male' THEN 1 END) AS male, COUNT(CASE WHEN tbl_employee.Emp_Sex='Female' THEN 1 END) AS female FROM tbl_job INNER JOIN tbl_station ON tbl_station.Emp_Position=tbl_job.Job_code INNER JOIN tbl_employee ON tbl_employee.Emp_ID=tbl_station.Emp_ID WHERE tbl_employee.Emp_Status='Active' GROUP BY tbl_job.Job_Category ORDER BY tbl_job.Job_Category;");
+}
 ?>

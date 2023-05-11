@@ -75,7 +75,25 @@ content_title('Dashboard');
 </div><!-- .row -->
 
 <div class="row">
-  <div class="col-xl-12 col-md-12 mb-4">
+  <div class="col-xl-8 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employee Gender by Category</h6>
+      </div>
+      <div class="card-body">
+        <div class="chart-bar h-auto">
+          <canvas id="gender-comparative-bar-chart"></canvas>
+          <script>
+            generate_comparative_bar_chart(<?php echo json_encode(fetch_all_assoc(employee_gender_category())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>, 'gender-comparative-bar-chart');
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xl-8 col-md-12 mb-4">
     <div class="card shadow">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Assignment</h6>
@@ -96,7 +114,7 @@ content_title('Dashboard');
 </div><!-- .row -->
 
 <div class="row">
-  <div class="col-xl-12 col-md-12">
+  <div class="col-xl-8 col-md-12">
     <div class="card shadow">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Position</h6>
