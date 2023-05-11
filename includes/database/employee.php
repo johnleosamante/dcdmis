@@ -33,4 +33,12 @@ function employee_station() {
 function employee_position() {
   return query("SELECT tbl_job.Job_description AS `name`, COUNT(*) AS `count` FROM tbl_station INNER JOIN tbl_job ON tbl_station.Emp_Position=tbl_job.Job_code INNER JOIN tbl_employee ON tbl_employee.Emp_ID=tbl_station.Emp_ID WHERE tbl_employee.Emp_Status='Active' GROUP BY tbl_job.Job_description ORDER BY tbl_job.Salary_Grade DESC, tbl_job.Job_description ASC;");
 }
+
+function district_employee() {
+  return query("SELECT tbl_district.District_Name AS name, COUNT(*) AS count FROM tbl_station INNER JOIN tbl_school ON tbl_station.Emp_Station=tbl_school.SchoolID INNER JOIN tbl_employee ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_district ON tbl_school.District_code=tbl_district.District_code WHERE tbl_employee.Emp_Status='Active' GROUP BY tbl_district.District_Name ORDER BY tbl_district.District_Name;");
+}
+
+function employee_category() {
+  return query("SELECT tbl_job.Job_Category AS name, COUNT(*) AS count FROM tbl_job INNER JOIN tbl_station ON tbl_station.Emp_Position=tbl_job.Job_code INNER JOIN tbl_employee ON tbl_employee.Emp_ID=tbl_station.Emp_ID WHERE tbl_employee.Emp_Status='Active' GROUP BY tbl_job.Job_Category ORDER BY tbl_job.Job_Category;");
+}
 ?>
