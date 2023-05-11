@@ -17,8 +17,9 @@ $page_title = 'Retirable Employees';
             <th class="align-middle" width="25%">Name</th>
             <th class="align-middle" width="5%">Sex</th>
             <th class="align-middle" width="15%">Date of Birth</th>
+            <th class="align-middle" width="5%">Age</th>
             <th class="align-middle" width="20%">Position</th>
-            <th class="align-middle" width="25%">Station</th>
+            <th class="align-middle" width="20%">Station</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
@@ -39,6 +40,12 @@ $page_title = 'Retirable Employees';
               <td class="align-middle text-left"><?php echo $employee_name; ?></td>
               <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle"><?php echo to_date($row['month'] . '/' . $row['day'] . '/' . $row['year'], '', 'F d, Y'); ?></td>
+              <td class="align-middle">
+                <?php
+                  $age = get_age($row['year'], $row['month'], $row['day']);
+                  echo $age < 60 ? 'Turning <strong>60</strong> this year' : $age;
+                ?>
+              </td>
               <td class="align-middle"><?php echo fetch_assoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetch_assoc(school_by_id($row['station']))['name']; ?></td>
               <td class="align-middle text-capitalize">
