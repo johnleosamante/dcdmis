@@ -13,50 +13,105 @@ content_title('Dashboard');
 
   card('Archived Employees', custom_uri('hrmis', 'Archived Employees'), 'fa-user-lock', 'danger');
   ?>
-</div>
+</div><!-- .row -->
+
 <script src="<?php echo uri(); ?>/assets/vendor/chart.js/Chart.min.js"></script>
 <script src="<?php echo uri(); ?>/assets/js/chart-custom.js"></script>
+
 <div class="row">
-  <div class="col-xl-9 col-md-12 mb-4">
+  <div class="col-xl-4 col-lg-4 col-md-12 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Gender</h6>
+      </div>
+      <div class="card-body">
+        <div class="chart-pie py-2">
+          <canvas id="gender-pie-chart"></canvas>
+          <script>
+            generate_pie_chart(<?php echo json_encode(fetch_all_assoc(employee_gender())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>, 'gender-pie-chart');
+          </script>
+        </div>
+      </div>
+    </div>
+  </div><!-- .col-xl-4 -->
+
+  <div class="col-xl-4 col-lg-4 col-md-12 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Category</h6>
+      </div>
+      <div class="card-body">
+        <div class="chart-pie py-2">
+          <canvas id="category-doughnut-chart"></canvas>
+          <script>
+            <?php
+            $employee_category = employee_category();
+            ?>
+            generate_doughnut_chart(<?php echo json_encode(fetch_all_assoc($employee_category)); ?>, generate_color_pallete(<?php echo num_rows($employee_category); ?>), 'category-doughnut-chart');
+          </script>
+        </div>
+      </div>
+    </div>
+  </div><!-- .col-xl-4 -->
+
+  <div class="col-xl-4 col-lg-4 col-md-12 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by District</h6>
+      </div>
+      <div class="card-body">
+        <div class="chart-pie py-2">
+          <canvas id="district-polar-area-chart"></canvas>
+          <script>
+            <?php
+            $district_employees = district_employee();
+            ?>
+            generate_polar_area_chart(<?php echo json_encode(fetch_all_assoc($district_employees)); ?>, generate_color_pallete(<?php echo num_rows($district_employees); ?>), 'district-polar-area-chart');
+          </script>
+        </div>
+      </div>
+    </div>
+  </div><!-- .col-xl-4 -->
+</div><!-- .row -->
+
+<div class="row">
+  <div class="col-xl-12 col-md-12 mb-4">
     <div class="card shadow">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Assignment</h6>
       </div>
       <div class="card-body">
         <div class="chart-bar h-auto">
-          <canvas id="bar-chart"></canvas>
+          <canvas id="station-bar-chart"></canvas>
           <script>
             <?php
             $employee_stations = employee_station();
             ?>
-            generate_pie_chart(<?php echo json_encode(fetch_all_assoc($employee_stations)); ?>, generate_color_pallete(<?php echo num_rows($employee_stations); ?>), 'bar-chart');
+            generate_bar_chart(<?php echo json_encode(fetch_all_assoc($employee_stations)); ?>, generate_color_pallete(<?php echo num_rows($employee_stations); ?>), 'station-bar-chart');
           </script>
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-xl-3 col-md-6 col-sm-12 mb-4">
+  </div><!-- .col-xl-12 -->
+</div><!-- .row -->
+
+<div class="row">
+  <div class="col-xl-12 col-md-12">
     <div class="card shadow">
-      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Gender</h6>
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Position</h6>
       </div>
-      <!-- Card Body -->
       <div class="card-body">
-        <div class="chart-pie py-2">
-          <canvas id="pie-chart"></canvas>
+        <div class="chart-bar h-auto">
+          <canvas id="position-bar-chart"></canvas>
           <script>
-            generate_pie_chart(<?php echo json_encode(fetch_all_assoc(employee_gender())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>);
+            <?php
+            $employee_positions = employee_position();
+            ?>
+            generate_bar_chart(<?php echo json_encode(fetch_all_assoc($employee_positions)); ?>, generate_color_pallete(<?php echo num_rows($employee_positions); ?>), 'position-bar-chart');
           </script>
-        </div>
-        <div class="mt-4 text-center small">
-          <span class="mx-3">
-            <i class="fas fa-circle text-mars"></i> <a href="<?php echo custom_uri('hrmis', 'Male Employees'); ?>" title="Male Employees">Male</a>
-          </span>
-          <span class="mx-3">
-            <i class="fas fa-circle text-venus"></i> <a href="<?php echo custom_uri('hrmis', 'Female Employees'); ?>" title="Female Employees">Female</a>
-          </span>
         </div>
       </div>
     </div>
-  </div>
-</div>
+  </div><!-- .col-xl-12 -->
+</div><!-- .row -->

@@ -4,15 +4,20 @@
 function to_string($string, $prefix=null, $suffix=null, $ischar=false) {
   if (strlen($string) === 0) return '';
 
+  if (strtolower($string) === 'n/a') return '';
+
   if ($ischar) $string = $string[0];
 
   return $prefix . $string . $suffix;
 }
 
 function to_name($last_name, $first_name, $middle_name='', $extension='', $fname_first=false, $middle_initial=true) {
-  $suffix = $middle_initial ? '.' : '';
-
-  $middle_name = to_string($middle_name, ' ', $suffix, $middle_initial);
+  if (strlen($middle_name) > 0 && $middle_name !== ' ' && strtoupper($middle_name) !== 'n/a') {
+    $suffix = $middle_initial ? '.' : '';
+    $middle_name = to_string($middle_name, ' ', $suffix, $middle_initial);
+  } else {
+    $middle_name = '';
+  }
 
   if (!$fname_first) {
     return $last_name . to_string($first_name, ', ') . to_string($extension, ' ') . $middle_name;
