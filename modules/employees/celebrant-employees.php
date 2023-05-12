@@ -23,7 +23,7 @@ $now = date('Y-m-d');
       </li><!-- .nav-item -->
     </ul><!-- nav-tabs -->
 
-    <div class="tab-content mt-2">
+    <div class="tab-content">
       <?php
       $months = 0;
       while ($months < 3) {
@@ -44,9 +44,9 @@ $now = date('Y-m-d');
       ?>
         <div class="tab-pane fade <?php echo set_active_item($months, 1, 'show active'); ?>" id="<?php echo $tabID; ?>">
           <?php $bmonth = date('m', strtotime($datetimeString)); ?>
-          <div class="row mt-3">
+          <div class="row">
             <div class="col table-responsive">
-              <table width="100%" class="table table-bordered-bottom table-hover mb-0 text-center" cellspacing="0">
+              <table class="table table-hover mb-0 text-center" width="100%" cellspacing="0">
                 <thead>
                   <tr>
                     <th class="align-middle" width="5%">Photo</th>

@@ -10,7 +10,7 @@ $page_title = 'Archived Employees';
 
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-striped table-hover table-bordered mb-0 text-center" id="dataTable" width="100%" cellspacing="0">
+      <table class="table table-hover mb-0 text-center" id="dataTable" width="100%" cellspacing="0">
         <thead>
           <tr>
             <th class="align-middle" width="5%">Photo</th>
