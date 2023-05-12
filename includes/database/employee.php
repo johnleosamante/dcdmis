@@ -45,4 +45,9 @@ function employee_category() {
 function employee_gender_category() {
   return query("SELECT tbl_job.Job_Category AS `name`, COUNT(CASE WHEN tbl_employee.Emp_Sex='Male' THEN 1 END) AS male, COUNT(CASE WHEN tbl_employee.Emp_Sex='Female' THEN 1 END) AS female FROM tbl_job INNER JOIN tbl_station ON tbl_station.Emp_Position=tbl_job.Job_code INNER JOIN tbl_employee ON tbl_employee.Emp_ID=tbl_station.Emp_ID WHERE tbl_employee.Emp_Status='Active' GROUP BY tbl_job.Job_Category ORDER BY tbl_job.Job_Category;");
 }
+
+function celebrant_employees($month, $station=null) {
+  $filter = $station === null ? '' : " AND station_code='{$station}'";
+  return query("SELECT * FROM (SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS `month`, tbl_employee.Emp_Day AS `day`, tbl_employee.Emp_Year AS `year`, YEAR(CURRENT_DATE) - CONVERT(tbl_employee.Emp_Year, DECIMAL) AS year_age, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_station.Emp_Station AS station_code, tbl_employee.Picture AS picture FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID WHERE tbl_employee.Emp_Status='Active') AS employee WHERE `month`='{$month}' {$filter} ORDER BY `day` ASC;");
+}
 ?>
