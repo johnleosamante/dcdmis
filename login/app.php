@@ -11,6 +11,7 @@ function set_user_session($userid) {
     $user = fetch_assoc($users);
     $_SESSION[alias() . '_portal'] = $user['portal'];
     $_SESSION[alias() . '_code'] = $user['station'];
+    $_SESSION[alias() . '_station_code'] = $user['station_code'];
 
     if ($user['portal'] !== 'school_portal') {
       $_SESSION[alias() . '_station'] = $user['station'];
