@@ -1,8 +1,3 @@
-const legend = {
-  display: true,
-  position: 'bottom'
-};
-
 const tooltips = {
   titleMarginBottom: 10,
   titleFontColor: '#6e707e',
@@ -13,15 +8,54 @@ const tooltips = {
   borderWidth: 1,
   xPadding: 15,
   yPadding: 15,
-  displayColors: false,
-  caretPadding: 10,
+  displayColors: true,
+  caretPadding: 10
+};
+
+const font = {
+  size: 14
 };
 
 const pieOptions = {
   maintainAspectRatio: false,
   tooltips: tooltips,
-  legend: legend
+  legend: {
+    display: true,
+    position: 'bottom',
+    labels: {
+      usePointStyle: true,
+    }
+  },
+  plugins: {
+    datalabels: {
+      formatter: (value, ctx) => {
+        let sum = 0;
+        let dataArr = ctx.chart.data.datasets[0].data;
+        dataArr.map(data => {
+          sum += (data * 1);
+        });
+        let percentage = (((value * 1) / sum) * 100).toFixed(2) + "%";
+        return percentage;
+      },
+      color: '#fff',
+      font: font
+    }
+  }
 }
+
+const plugins = {
+  datalabels: {
+    color: function (ctx) {
+      return ctx.dataset.backgroundColor;
+    },
+    anchor: 'end',
+    align: 'end',
+    font: font,
+    formatter: (value, context) => {
+      return value;
+    }
+  }
+};
 
 const barOptions = {
   scales: {
@@ -40,7 +74,8 @@ const barOptions = {
   legend: {
     display: false
   },
-  tooltips: tooltips
+  tooltips: tooltips,
+  plugins: plugins
 };
 
 function generate_random_color() {
@@ -126,25 +161,79 @@ function generate_bar_chart(data, colors, element) {
 }
 
 function generate_comparative_bar_chart(data, colors, element) {
-  const salesChart = new Chart(document.getElementById(element).getContext('2d'), {
+  const barChart = new Chart(document.getElementById(element).getContext('2d'), {
     type: 'bar',
     data: {
       labels: data.map((item) => { return item.name; }),
       datasets: [{
-          backgroundColor: colors[0],
-          data: data.map((item) => { return item.male; })
-        },
-        {
-          backgroundColor: colors[1],
-          data: data.map((item) => { return item.female; })
-        }
-      ]},
+        backgroundColor: colors[0],
+        data: data.map((item) => { return item.male; })
+      },
+      {
+        backgroundColor: colors[1],
+        data: data.map((item) => { return item.female; })
+      }]
+    },
     options: barOptions
   });
-  return salesChart;
+  return barChart;
 }
 
-
-//   var $visitorsChart = $('#visitors-chart')
-//   var visitorsChart = new Chart($visitorsChart, { data: { labels: ['18th', '20th', '22nd', '24th', '26th', '28th', '30th'], datasets: [{ type: 'line', data: [100, 120, 170, 167, 180, 177, 160], backgroundColor: 'transparent', borderColor: '#007bff', pointBorderColor: '#007bff', pointBackgroundColor: '#007bff', fill: false }, { type: 'line', data: [60, 80, 70, 67, 80, 77, 100], backgroundColor: 'tansparent', borderColor: '#ced4da', pointBorderColor: '#ced4da', pointBackgroundColor: '#ced4da', fill: false }] }, options: { maintainAspectRatio: false, tooltips: { mode: mode, intersect: intersect }, hover: { mode: mode, intersect: intersect }, legend: { display: false }, scales: { yAxes: [{ gridLines: { display: true, lineWidth: '4px', color: 'rgba(0, 0, 0, .2)', zeroLineColor: 'transparent' }, ticks: $.extend({ beginAtZero: true, suggestedMax: 200 }, ticksStyle) }], xAxes: [{ display: true, gridLines: { display: false }, ticks: ticksStyle }] } } })
-// })
+function generate_comparative_line_chart(data, colors, element) {
+  const lineChart = new Chart(document.getElementById(element).getContext('2d'), {
+    data: { 
+      labels: data.map((item) => { return item.name; }), 
+      datasets: [{ 
+        type: 'line', 
+        data: data.map((item) => {}), 
+        backgroundColor: 'transparent', 
+        borderColor: '#007bff', 
+        pointBorderColor: '#007bff', 
+        pointBackgroundColor: '#007bff', 
+        fill: false 
+      }, 
+      { 
+        type: 'line', 
+        data: [60, 80, 70, 67, 80, 77, 100], 
+        backgroundColor: 'tansparent', 
+        borderColor: '#ced4da', 
+        pointBorderColor: '#ced4da', 
+        pointBackgroundColor: '#ced4da', 
+        fill: false }] 
+      },
+      options: { 
+        maintainAspectRatio: false, 
+        tooltips: { 
+          mode: mode, 
+          intersect: intersect 
+        }, 
+        hover: { 
+          mode: mode, 
+          intersect: intersect 
+        }, 
+        legend: { 
+          display: false 
+        }, 
+        scales: { 
+          yAxes: [{ 
+            gridLines: { 
+              display: true, 
+              lineWidth: '4px', 
+              color: 'rgba(0, 0, 0, .2)', 
+              zeroLineColor: 'transparent' 
+            }, 
+            ticks: $.extend({ 
+              beginAtZero: true, 
+              suggestedMax: 200 }, ticksStyle)
+          }], 
+          xAxes: [{ display: true, 
+            gridLines: { 
+              display: false 
+            }, 
+            ticks: ticksStyle 
+          }] 
+        } 
+      }
+  });
+  return lineChart;
+}
