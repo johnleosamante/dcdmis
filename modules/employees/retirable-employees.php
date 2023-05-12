@@ -41,10 +41,7 @@ $page_title = 'Retirable Employees';
               <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle"><?php echo to_date($row['month'] . '/' . $row['day'] . '/' . $row['year'], '', 'F d, Y'); ?></td>
               <td class="align-middle">
-                <?php
-                  $age = get_age($row['year'], $row['month'], $row['day']);
-                  echo $age < 60 ? 'Turning <strong>60</strong> this year' : $age;
-                ?>
+                <?php echo get_age($row['year'], $row['month'], $row['day']); ?>
               </td>
               <td class="align-middle"><?php echo fetch_assoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetch_assoc(school_by_id($row['station']))['name']; ?></td>
