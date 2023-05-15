@@ -29,7 +29,7 @@ content_title('Dashboard');
         <div class="chart-pie py-2">
           <canvas id="gender-pie-chart"></canvas>
           <script>
-            generate_pie_chart(<?php echo json_encode(fetch_all_assoc(employee_gender())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>, 'gender-pie-chart');
+            generate_doughnut_chart(<?php echo json_encode(fetch_all_assoc(employee_gender())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>, 'gender-pie-chart');
           </script>
         </div>
       </div>
@@ -66,7 +66,7 @@ content_title('Dashboard');
             <?php
             $employee_category = employee_category();
             ?>
-            generate_doughnut_chart(<?php echo json_encode(fetch_all_assoc($employee_category)); ?>, generate_color_pallete(<?php echo num_rows($employee_category); ?>), 'category-doughnut-chart');
+            generate_pie_chart(<?php echo json_encode(fetch_all_assoc($employee_category)); ?>, generate_color_pallete(<?php echo num_rows($employee_category); ?>), 'category-doughnut-chart');
           </script>
         </div>
       </div>
