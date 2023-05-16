@@ -94,43 +94,43 @@ function show_asterisk($show)
   <div class="card-body pb-2">
     <ul class="nav nav-tabs mb-3">
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(!isset($_SESSION['pdstab']) || $_SESSION['pdstab'] === 'personal-information'); ?>" href="#personal-information" data-toggle="tab">Personal Information</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(!isset($_SESSION[alias() . '_pds_tab']) || $_SESSION[alias() . '_pds_tab'] === 'personal-information'); ?>" href="#personal-information" data-toggle="tab">Personal Information</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'family-background'); ?>" href="#family-background" data-toggle="tab">Family Background</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'family-background'); ?>" href="#family-background" data-toggle="tab">Family Background</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'children'); ?>" href="#children" data-toggle="tab">Children</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'children'); ?>" href="#children" data-toggle="tab">Children</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'educational-background'); ?>" href="#educational-background" data-toggle="tab">Educational Background</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'educational-background'); ?>" href="#educational-background" data-toggle="tab">Educational Background</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'civil-service-eligibility'); ?>" href="#civil-service-eligibility" data-toggle="tab">Civil Service Eligibility</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'civil-service-eligibility'); ?>" href="#civil-service-eligibility" data-toggle="tab">Civil Service Eligibility</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'work-experience'); ?>" href="#work-experience" data-toggle="tab">Work Experience</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'work-experience'); ?>" href="#work-experience" data-toggle="tab">Work Experience</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'voluntary-work'); ?>" href="#voluntary-work" data-toggle="tab">Voluntary Work</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'voluntary-work'); ?>" href="#voluntary-work" data-toggle="tab">Voluntary Work</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'learning-development'); ?>" href="#learning-development" data-toggle="tab">Learning &amp; Development</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'learning-development'); ?>" href="#learning-development" data-toggle="tab">Learning &amp; Development</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'special-skills'); ?>" href="#special-skills" data-toggle="tab">Special Skills &amp; Hobbies</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'special-skills'); ?>" href="#special-skills" data-toggle="tab">Special Skills &amp; Hobbies</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'recognition'); ?>" href="#recognition" data-toggle="tab">Non-Academic Distinctions / Recognition</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'recognition'); ?>" href="#recognition" data-toggle="tab">Non-Academic Distinctions / Recognition</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'membership'); ?>" href="#membership" data-toggle="tab">Membership in Association / Organization</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'membership'); ?>" href="#membership" data-toggle="tab">Membership in Association / Organization</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'other-information'); ?>" href="#other-information" data-toggle="tab">Other Information</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'other-information'); ?>" href="#other-information" data-toggle="tab">Other Information</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'reference'); ?>" href="#reference" data-toggle="tab">References</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'reference'); ?>" href="#reference" data-toggle="tab">References</a>
       </li><!-- .nav-item -->
     </ul><!-- .nav-tabs -->
 
