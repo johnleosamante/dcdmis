@@ -2,7 +2,7 @@
 // modules/employees/view/reference.php
 ?>
 
-<div class="tab-pane fade" id="reference">
+<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'reference', 'show active'); ?>" id="reference">
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
@@ -24,7 +24,7 @@
                 <td class="align-middle"><?php echo to_handle_null($reference['address'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo to_handle_null($reference['telephone'], 'N/A'); ?></td>
               </tr>
-          <?php
+            <?php
             endwhile;
           } else { ?>
             <tr>

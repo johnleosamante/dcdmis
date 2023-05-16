@@ -2,7 +2,7 @@
 // modules/employees/view/voluntary-work.php
 ?>
 
-<div class="tab-pane fade" id="voluntary-work">
+<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'voluntary-work', 'show active'); ?>" id="voluntary-work">
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">

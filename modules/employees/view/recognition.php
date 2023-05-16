@@ -2,7 +2,7 @@
 // modules/employees/view/recognition.php
 ?>
 
-<div class="tab-pane fade" id="recognition">
+<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'recognition', 'show active'); ?>" id="recognition">
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">

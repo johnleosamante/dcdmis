@@ -2,7 +2,7 @@
 // modules/employees/view/civil-service-eligibility.php
 ?>
 
-<div class="tab-pane fade" id="civil-service-eligibility">
+<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'civil-service-eligibility', 'show active'); ?>" id="civil-service-eligibility">
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
