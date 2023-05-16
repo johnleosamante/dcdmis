@@ -190,4 +190,28 @@ function dropdown_ellipsis()
   </a>
 <?php
 }
+
+function modal_confirm_delete($message, $title='Delete', $buttonName='Delete') {
+?>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><?php echo $title; ?></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <?php echo $message; ?>
+      </div>
+
+      <div class="modal-footer">
+        <form action="" method="POST" role="form">
+          <input type="submit" class="btn btn-danger" name="<?php echo $buttonName; ?>" value="Yes, Continue">
+          <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+<?php
+}
 ?>
