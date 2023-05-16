@@ -4,58 +4,133 @@ $employees = employee(real_escape_string($_GET['id']));
 
 if (num_rows($employees) > 0) {
   $employee = fetch_assoc($employees);
-  $_SESSION[alias() . '_No'] = $employee['id'];
 } else {
   include_once(root() . '/modules/error/no-results-found.php');
   return;
+}
+
+if (!is_dir('../uploads/images/' . $employee['id'])) {
+  mkdir('../uploads/images/' . $employee['id'], 0777, true);
+}
+
+$editMode = $url === 'Edit Employee Information';
+
+function show_asterisk($show)
+{
+  if ($show) : ?>
+    <span class="text-danger"> *</span>
+<?php endif;
 }
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php content_title_with_link('Employee Information : ' . strtoupper(to_name($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), custom_uri('hrmis', 'Edit Employee'), 'Edit', 'fa-edit'); ?>
+    <?php if (!$editMode) {
+      content_title_with_link('Employee Information : ' . strtoupper(to_name($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), custom_uri('hrmis', 'Edit Employee Information', $employee['id']), 'Edit', 'fa-edit');
+    } else {
+      content_title_with_link('Update Employee Information : ' . strtoupper(to_name($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), custom_uri('hrmis', 'Employee Information', $employee['id']));
+    }
+
+    $pds_progress = 0;
+
+    if (num_rows(employee($employee['id'])) > 0) {
+      $pds_progress += 15;
+    }
+
+    if (num_rows(family($employee['id'])) > 0) {
+      $pds_progress += 5;
+    }
+
+    if (num_rows(children($employee['id'])) > 0) {
+      $pds_progress += 5;
+    }
+
+    if (num_rows(education($employee['id'])) > 0) {
+      $pds_progress += 10;
+    }
+
+    if (num_rows(eligibility($employee['id'])) > 0) {
+      $pds_progress += 10;
+    }
+
+    if (num_rows(experience($employee['id'])) > 0) {
+      $pds_progress += 10;
+    }
+
+    if (num_rows(voluntary_work($employee['id'])) > 0) {
+      $pds_progress += 5;
+    }
+
+    if (num_rows(learning_development($employee['id'])) > 0) {
+      $pds_progress += 10;
+    }
+
+    if (num_rows(special_skill($employee['id'])) > 0) {
+      $pds_progress += 5;
+    }
+
+    if (num_rows(recognition($employee['id'])) > 0) {
+      $pds_progress += 5;
+    }
+
+    if (num_rows(membership($employee['id'])) > 0) {
+      $pds_progress += 5;
+    }
+
+    if (num_rows(other_information($employee['id'])) > 0) {
+      $pds_progress += 10;
+    }
+
+    if (num_rows(reference($employee['id'])) > 0) {
+      $pds_progress += 5;
+    }
+    ?>
+
+    <div class="progress mt-1" title="<?php echo $pds_progress; ?>% Complete">
+      <div class="progress-bar bg-success" role="progressbar" aria-valuenow="<?php echo $pds_progress; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $pds_progress; ?>%"></div>
+    </div><!-- .progress -->
   </div>
 
   <div class="card-body pb-2">
     <ul class="nav nav-tabs mb-3">
       <li class="nav-item">
-        <a class="nav-link text-secondary active" href="#personal-information" data-toggle="tab">Personal Information</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(!isset($_SESSION['pdstab']) || $_SESSION['pdstab'] === 'personal-information'); ?>" href="#personal-information" data-toggle="tab">Personal Information</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#family-background" data-toggle="tab">Family Background</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'family-background'); ?>" href="#family-background" data-toggle="tab">Family Background</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#children" data-toggle="tab">Children</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'children'); ?>" href="#children" data-toggle="tab">Children</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#educational-background" data-toggle="tab">Educational Background</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'educational-background'); ?>" href="#educational-background" data-toggle="tab">Educational Background</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#civil-service-eligibility" data-toggle="tab">Civil Service Eligibility</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'civil-service-eligibility'); ?>" href="#civil-service-eligibility" data-toggle="tab">Civil Service Eligibility</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#work-experience" data-toggle="tab">Work Experience</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'work-experience'); ?>" href="#work-experience" data-toggle="tab">Work Experience</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#voluntary-work" data-toggle="tab">Voluntary Work</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'voluntary-work'); ?>" href="#voluntary-work" data-toggle="tab">Voluntary Work</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#learning-development" data-toggle="tab">Learning &amp; Development</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'learning-development'); ?>" href="#learning-development" data-toggle="tab">Learning &amp; Development</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#special-skills" data-toggle="tab">Special Skills &amp; Hobbies</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'special-skills'); ?>" href="#special-skills" data-toggle="tab">Special Skills &amp; Hobbies</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#recognition" data-toggle="tab">Non-Academic Distinctions / Recognition</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'recognition'); ?>" href="#recognition" data-toggle="tab">Non-Academic Distinctions / Recognition</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#membership" data-toggle="tab">Membership in Association / Organization</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'membership'); ?>" href="#membership" data-toggle="tab">Membership in Association / Organization</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#other-information" data-toggle="tab">Other Information</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'other-information'); ?>" href="#other-information" data-toggle="tab">Other Information</a>
       </li><!-- .nav-item -->
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#reference" data-toggle="tab">References</a>
+        <a class="nav-link text-secondary<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'reference'); ?>" href="#reference" data-toggle="tab">References</a>
       </li><!-- .nav-item -->
     </ul><!-- .nav-tabs -->
 
