@@ -24,7 +24,7 @@ if (num_rows($family_members) > 0) {
 }
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'family-background', 'show active'); ?>" id="family-background">
+<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'family-background', 'show active'); ?>" id="family-background">
   <?php if ($editMode) : ?>
     <form action="" method="POST" role="form">
     <?php endif; ?>
@@ -160,6 +160,7 @@ if (num_rows($family_members) > 0) {
     </div><!-- .row -->
     <?php if ($editMode) : ?>
       <div class="form-group mb-3">
+        <input name="employee_id" type="hidden" value="<?php echo $employee['id']; ?>">
         <button class="btn btn-primary btn-block " name="UpdateFamilyBackground"><i class="fas fa-save fa-fw"></i>Update Family Background</button>
       </div>
     </form>

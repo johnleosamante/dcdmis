@@ -2,7 +2,7 @@
 // modules/employees/view/special-skills.php
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'special-skills', 'show active'); ?>" id="special-skills">
+<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'special-skills', 'show active'); ?>" id="special-skills">
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">

@@ -4,7 +4,7 @@ $_SESSION['current_employee_photo'] = $employee['picture'];
 $_SESSION['current_employee_id'] = $employee['id'];
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION['pdstab']) && $_SESSION['pdstab'] === 'personal-information', 'show active'); ?>" id="personal-information">
+<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'personal-information', 'show active'); ?>" id="personal-information">
   <?php if ($editMode) : ?>
     <form action="" method="POST" role="form" enctype="multipart/form-data">
     <?php endif; ?>
@@ -379,6 +379,8 @@ $_SESSION['current_employee_id'] = $employee['id'];
           <div class="text-danger mb-2">* Required field</div>
 
           <div class="form-group mb-3">
+            <input name="employee_photo" type="hidden" value="<?php echo $employee['picture']; ?>">
+            <input name="employee_id" type="hidden" value="<?php echo $employee['id']; ?>">
             <button class="btn btn-primary btn-block" name="UpdatePersonalInformation"><i class="fas fa-save fa-fw"></i>Update Personal Information</button>
           </div>
         <?php endif; ?>
