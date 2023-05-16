@@ -1,7 +1,7 @@
 <?php
 // modules/employees/view/personal-information.php
-$_SESSION['current_employee_photo'] = $employee['picture'];
-$_SESSION['current_employee_id'] = $employee['id'];
+$_SESSION[alias() . '_current_employee_id'] = $employee['id'];
+$_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
 ?>
 
 <div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'personal-information', 'show active'); ?>" id="personal-information">
