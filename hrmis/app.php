@@ -6,7 +6,8 @@ if (!isset($_SESSION[alias() . '_user_id'])) {
   redirect(uri() . '/login');
 }
 
-$success = true; 
+$user_id = $_SESSION[alias() . '_user_id'];
+$success = true;
 $show_prompt = false;
 $message = null;
 $type = 'success';
@@ -17,12 +18,14 @@ if (isset($_POST['primary_search_button'])) {
   redirect(custom_uri('hrmis', 'Employee Search', real_escape_string($_POST['primary_search_text'])));
 }
 
-$user_id = $_SESSION[alias() . '_user_id'];
-
 /* PERSONAL INFORMATION */
 if (isset($_POST['UpdatePersonalInformation'])) {
-  $employee_photo = $_SESSION['current_employee_photo'];
-  $employee_id = $_SESSION['current_employee_id'];
+  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $employee_photo = $_SESSION[alias() . '_current_employee_photo'];
+
+  if (num_rows(employee($employee_id)) === 0) {
+    return;
+  }
 
   if ($_FILES['imageUpload']['size'] > 0 && $_FILES['imageUpload']['error'] == 0) {
     $myfile = $_FILES['imageUpload']['name'];
@@ -47,12 +50,16 @@ if (isset($_POST['UpdatePersonalInformation'])) {
     $show_prompt = true;
   }
 
-  $_SESSION['pdstab'] = 'personal-information';
+  $_SESSION[alias() . '_pds_tab'] = 'personal-information';
 }
 
 /* FAMILY BACKGROUND */
 if (isset($_POST['UpdateFamilyBackground'])) {
-  $employee_id = $_SESSION['current_employee_id'];
+  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+
+  if (num_rows(employee($employee_id)) === 0) {
+    return;
+  }
 
   if (num_rows(family($employee_id)) === 0) {
     create_family(sanitize($_POST['slast']), sanitize($_POST['sfirst']), sanitize($_POST['sext']), sanitize($_POST['smiddle']), sanitize($_POST['swork']), sanitize($_POST['sbusiness']), sanitize($_POST['sbusiness_address']), sanitize($_POST['stelephone']), sanitize($_POST['flast']), sanitize($_POST['ffirst']), sanitize($_POST['fext']), sanitize($_POST['fmiddle']), sanitize($_POST['mlast']), sanitize($_POST['mfirst']), sanitize($_POST['mmiddle']), $employee_id);
@@ -66,6 +73,46 @@ if (isset($_POST['UpdateFamilyBackground'])) {
     $show_prompt = true;
   }
 
-  $_SESSION['pdstab'] = 'family-background';
+  $_SESSION[alias() . '_pds_tab'] = 'family-background';
+}
+
+/* CHILDREN */
+if (isset($_POST['SaveChild'])) {
+  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $child_id = $_SESSION[alias() . '_current_child_id'];
+
+  if (num_rows(child($child_id)) === 0) {
+    create_child(sanitize($_POST['clast']), sanitize($_POST['cfirst']), sanitize($_POST['cext']), sanitize($_POST['cmiddle']), sanitize($_POST['cdob']), $employee_id);
+
+    $message = 'Child has been added successfully!';
+  } else {
+    update_child(sanitize($_POST['clast']), sanitize($_POST['cfirst']), sanitize($_POST['cext']), sanitize($_POST['cmiddle']), sanitize($_POST['cdob']), $employee_id, $child_id);
+
+    $message = 'Child has been updated successfully!';
+  }
+
+  if (affected_rows() === 1) {
+    $success = true;
+    $show_prompt = true;
+  }
+
+  $_SESSION[alias() . '_current_child_id'] = '';
+  $_SESSION[alias() . '_pds_tab'] = 'children';
+}
+
+if (isset($_POST['DeleteChild'])) {
+  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $child_id = $_SESSION[alias() . '_current_child_id'];
+
+  delete_child($employee_id, $child_id);
+
+  if (affected_rows() === 1) {
+    $success = true;
+    $message = 'Child has been removed successfully!';
+    $show_prompt = true;
+  }
+
+  $_SESSION[alias() . '_current_child_id'] = '';
+  $_SESSION[alias() . '_pds_tab'] = 'children';
 }
 ?>
