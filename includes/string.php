@@ -95,4 +95,11 @@ function check_password_strength($password) {
   }
   return true;
 }
+
+function sanitize($input) {
+  $input = trim($input);
+  $input = stripslashes($input);
+  $input = htmlspecialchars($input, ENT_QUOTES);
+  return $input;
+}
 ?>
