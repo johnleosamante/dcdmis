@@ -13,6 +13,8 @@ if (!is_dir('../uploads/images/' . $employee['id'])) {
   mkdir('../uploads/images/' . $employee['id'], 0777, true);
 }
 
+$_SESSION[alias() . '_current_employee_id'] = $_SESSION[alias() . '_current_employee_photo'] = '';
+
 $editMode = $url === 'Edit Employee Information';
 
 function show_asterisk($show)
@@ -26,8 +28,11 @@ function show_asterisk($show)
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
     <?php if (!$editMode) {
+      $_SESSION[alias() . '_pds_tab'] = 'personal-information';
       content_title_with_link('Employee Information : ' . strtoupper(to_name($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), custom_uri('hrmis', 'Edit Employee Information', $employee['id']), 'Edit', 'fa-edit');
     } else {
+      $_SESSION[alias() . '_current_employee_id'] = $employee['id'];
+      $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
       content_title_with_link('Update Employee Information : ' . strtoupper(to_name($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), custom_uri('hrmis', 'Employee Information', $employee['id']));
     }
 
@@ -38,51 +43,31 @@ function show_asterisk($show)
     }
 
     if (num_rows(family($employee['id'])) > 0) {
-      $pds_progress += 5;
-    }
-
-    if (num_rows(children($employee['id'])) > 0) {
-      $pds_progress += 5;
+      $pds_progress += 10;
     }
 
     if (num_rows(education($employee['id'])) > 0) {
-      $pds_progress += 10;
+      $pds_progress += 15;
     }
 
     if (num_rows(eligibility($employee['id'])) > 0) {
-      $pds_progress += 10;
+      $pds_progress += 15;
     }
 
     if (num_rows(experience($employee['id'])) > 0) {
-      $pds_progress += 10;
-    }
-
-    if (num_rows(voluntary_work($employee['id'])) > 0) {
-      $pds_progress += 5;
+      $pds_progress += 15;
     }
 
     if (num_rows(learning_development($employee['id'])) > 0) {
-      $pds_progress += 10;
+      $pds_progress += 15;
     }
 
     if (num_rows(special_skill($employee['id'])) > 0) {
       $pds_progress += 5;
     }
 
-    if (num_rows(recognition($employee['id'])) > 0) {
-      $pds_progress += 5;
-    }
-
-    if (num_rows(membership($employee['id'])) > 0) {
-      $pds_progress += 5;
-    }
-
     if (num_rows(other_information($employee['id'])) > 0) {
       $pds_progress += 10;
-    }
-
-    if (num_rows(reference($employee['id'])) > 0) {
-      $pds_progress += 5;
     }
     ?>
 
