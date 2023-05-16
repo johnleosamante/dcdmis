@@ -379,8 +379,6 @@ $_SESSION['current_employee_id'] = $employee['id'];
           <div class="text-danger mb-2">* Required field</div>
 
           <div class="form-group mb-3">
-            <input name="employee_photo" type="hidden" value="<?php echo $employee['picture']; ?>">
-            <input name="employee_id" type="hidden" value="<?php echo $employee['id']; ?>">
             <button class="btn btn-primary btn-block" name="UpdatePersonalInformation"><i class="fas fa-save fa-fw"></i>Update Personal Information</button>
           </div>
         <?php endif; ?>

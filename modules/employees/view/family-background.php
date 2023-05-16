@@ -160,7 +160,6 @@ if (num_rows($family_members) > 0) {
     </div><!-- .row -->
     <?php if ($editMode) : ?>
       <div class="form-group mb-3">
-        <input name="employee_id" type="hidden" value="<?php echo $employee['id']; ?>">
         <button class="btn btn-primary btn-block " name="UpdateFamilyBackground"><i class="fas fa-save fa-fw"></i>Update Family Background</button>
       </div>
     </form>
