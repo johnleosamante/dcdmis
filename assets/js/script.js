@@ -80,12 +80,12 @@ if (element_exist(confirm_toggle)) {
   });
 }
 
-function load_view(id, href) {
+function load_view(href) {
   const xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
   xmlhttp.onreadystatechange = () => {
     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-      document.getElementById(id).innerHTML = xmlhttp.responseText;
+      document.getElementById('Modal').innerHTML = xmlhttp.responseText;
     }
   }
 
