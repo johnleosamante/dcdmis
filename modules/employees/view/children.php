@@ -2,14 +2,23 @@
 // modules/employees/view/children.php
 ?>
 
-<div class="tab-pane fade" id="children">
+<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'children', 'show active'); ?>" id="children">
+  <?php if ($editMode) : ?>
+    <div class="d-sm-flex justify-content-end my-3">
+      <a onclick="load_view('<?php echo uri(); ?>/modules/employees/update/update-child.php')" data-target="#Modal" data-toggle="modal" class="btn btn-primary btn-icon-split btn-sm"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
+    </div>
+  <?php endif; ?>
+
   <div class="row my-3">
     <div class="col table-responsive">
-      <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center" cellspacing="0">
+      <table width="100%" class="table table-hover mb-0 text-center" cellspacing="0">
         <thead>
           <tr>
             <th width="70%">Name of Child</th>
-            <th widht="30%">Date of Birth</th>
+            <th>Date of Birth</th>
+            <?php if ($editMode) : ?>
+              <th width="5%">Action</th>
+            <?php endif; ?>
           </tr>
         </thead>
         <tbody>
@@ -21,11 +30,23 @@
               <tr>
                 <td class="align-middle"><?php echo to_name($child['last'], $child['first'], $child['middle'], $child['ext']); ?></td>
                 <td class="align-middle"><?php echo to_date($child['dob']); ?></td>
+                <?php if ($editMode) : ?>
+                  <td class="align-middle text-capitalize">
+                    <div class="dropdown no-arrow">
+                      <?php dropdown_ellipsis(); ?>
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-child.php?id=' . $child['no'], 'Edit', 'fa-edit', 'Edit Child'); ?>
+                        <div class="dropdown-divider"></div>
+                        <?php modal_dropdown_item(uri() . '/modules/employees/update/delete-child.php?id=' . $child['no'], 'Remove', 'fa-trash', 'Remove Child', false, 'text-danger'); ?>
+                      </div>
+                    </div>
+                  </td>
+                <?php endif; ?>
               </tr>
             <?php endwhile;
           } else { ?>
             <tr>
-              <td colspan="3" class="align-middle">No data available in table</td>
+              <td colspan="<?php echo $editMode ? '3' : '2'; ?>" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>
