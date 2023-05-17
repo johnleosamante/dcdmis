@@ -3,6 +3,12 @@
 ?>
 
 <div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'educational-background', 'show active'); ?>" id="educational-background">
+  <?php if ($editMode) : ?>
+    <div class="d-sm-flex justify-content-end my-3">
+      <?php modal_button_split('Add', uri() . '/modules/employees/update/update-education.php', 'fa-plus', 'primary', 'Add Education'); ?>
+    </div>
+  <?php endif; ?>
+
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
@@ -16,6 +22,9 @@
             <th class="align-middle" width="5%" rowspan="2">Year Graduated</th>
             <th class="align-middle" width="15%" rowspan="2">Scholarship / Academic Honors Received</th>
             <th class="align-middle" width="5%" rowspan="2">Attachment</th>
+            <?php if ($editMode) : ?>
+              <th class="align-middle" width="5%" rowspan="2">Action</th>
+            <?php endif; ?>
           </tr>
           <tr>
             <th class="align-middle" width="5%">From</th>
@@ -38,11 +47,23 @@
                 <td class="align-middle"><?php echo to_handle_null($education['year_graduated'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo to_handle_null($education['scholarship'], 'N/A'); ?></td>
                 <td class="align-middle"><?php round_pill('None'); ?></td>
+                <?php if ($editMode) : ?>
+                  <td class="align-middle text-capitalize">
+                    <div class="dropdown no-arrow">
+                      <?php dropdown_ellipsis(); ?>
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-education.php?id=' . $education['no'], 'Edit', 'fa-edit', 'Edit Education'); ?>
+                        <div class="dropdown-divider"></div>
+                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-education.php?id=' . $education['no'], 'Delete', 'fa-trash', 'Delete Education', false, 'text-danger'); ?>
+                      </div>
+                    </div>
+                  </td>
+                <?php endif; ?>
               </tr>
             <?php endwhile;
           } else { ?>
             <tr>
-              <td colspan="9" class="align-middle">No data available in table</td>
+              <td colspan="<?php echo $editMode ? '10' : '9'; ?>" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>
