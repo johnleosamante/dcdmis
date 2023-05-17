@@ -6,7 +6,7 @@ function education($id) {
 }
 
 function educational_background($id, $no) {
-  return query("SELECT `No` AS `no`, `Level` AS `level`, Name_of_School AS school, Course AS course, `From` AS `from`, `To` AS `to`, Highest_Level AS highest, Year_Graduated AS year_graduated, Honor_Recieved AS scholarship, Emp_ID AS id FROM educational_background WHERE Emp_ID='{$id}' AND `No`={$no} LIMIT 1;");
+  return query("SELECT `No` AS `no`, `Level` AS `level`, Name_of_School AS school, Course AS course, `From` AS `from`, `To` AS `to`, Highest_Level AS highest, Year_Graduated AS year_graduated, Honor_Recieved AS scholarship, Emp_ID AS id FROM educational_background WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
 function create_education($level, $school, $course, $from, $to, $highest, $year, $scholarship, $id) {
@@ -18,6 +18,6 @@ function update_education($level, $school, $course, $from, $to, $highest, $year,
 }
 
 function delete_education($id, $no) {
-  non_query("DELETE FROM educational_background WHERE Emp_ID='{$id}' AND `No`='{$no} LIMIT 1;");
+  non_query("DELETE FROM educational_background WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 ?>
