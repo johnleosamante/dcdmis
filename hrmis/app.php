@@ -199,9 +199,9 @@ if (isset($_POST['SaveEducation'])) {
   $_SESSION[alias() . '_pds_tab'] = 'educational-background';
 }
 
-if (isset($_POST['DeleteChild'])) {
+if (isset($_POST['DeleteEducation'])) {
   $employee_id = $_SESSION[alias() . '_current_employee_id'];
-  $child_id = $_SESSION[alias() . '_current_child_id'];
+  $education_id = $_SESSION[alias() . '_current_education_id'];
 
   delete_education($employee_id, $education_id);
 
