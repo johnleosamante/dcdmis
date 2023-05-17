@@ -125,14 +125,14 @@ if (isset($_POST['UpdateFamilyBackground'])) {
 /* CHILDREN */
 if (isset($_POST['SaveChild'])) {
   $employee_id = $_SESSION[alias() . '_current_employee_id'];
-  $child_id = $_SESSION[alias() . '_current_child_id'];
+  $child_id = !empty($_SESSION[alias() . '_current_child_id']) ? $_SESSION[alias() . '_current_child_id'] : '';
   $clast = !empty($_POST['clast']) ? sanitize($_POST['clast']) : '';
   $cfirst = !empty($_POST['cfirst']) ? sanitize($_POST['cfirst']) : '';
   $cext = !empty($_POST['cext']) ? sanitize($_POST['cext']) : '';
   $cmiddle = !empty($_POST['cmiddle']) ? sanitize($_POST['cmiddle']) : '';
   $cdob = !empty($_POST['cdob']) ? sanitize($_POST['cdob']) : '';
 
-  if (num_rows(child($employee_id, $child_id)) === 0) {
+  if (strlen($child_id) === 0) {
     create_child($clast, $cfirst, $cext, $cmiddle, $cdob, $employee_id);
 
     $message = 'Child has been added successfully!';
@@ -170,7 +170,7 @@ if (isset($_POST['DeleteChild'])) {
 /* EDUCATIONAL BACKGROUND */
 if (isset($_POST['SaveEducation'])) {
   $employee_id = $_SESSION[alias() . '_current_employee_id'];
-  $education_id = $_SESSION[alias() . '_current_education_id'];
+  $education_id = !empty($_SESSION[alias() . '_current_education_id']) ? $_SESSION[alias() . '_current_education_id'] : '';
   $level = !empty($_POST['level']) ? sanitize($_POST['level']) : '';
   $school = !empty($_POST['school']) ? sanitize($_POST['school']) : '';
   $course = !empty($_POST['course']) ? sanitize($_POST['course']) : '';
@@ -180,7 +180,7 @@ if (isset($_POST['SaveEducation'])) {
   $year = !empty($_POST['year']) ? sanitize($_POST['year']) : '';
   $scholarship = !empty($_POST['scholarship']) ? sanitize($_POST['scholarship']) : '';
 
-  if (num_rows(educational_background($employee_id, $education_id)) === 0) {
+  if (strlen($education_id) === 0) {
     create_education($level, $school, $course, $from, $to, $highest, $year, $scholarship, $employee_id);
 
     $message = 'Educational Background has been added successfully!';
