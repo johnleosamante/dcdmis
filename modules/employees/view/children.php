@@ -5,7 +5,7 @@
 <div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'children', 'show active'); ?>" id="children">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <a onclick="load_view('<?php echo uri(); ?>/modules/employees/update/update-child.php')" data-target="#Modal" data-toggle="modal" class="btn btn-primary btn-icon-split btn-sm"><span class="icon text-white-50"><i class="fas fa-plus fa-fw"></i></span><span class="text">Add</span></a>
+      <?php modal_button_split('Add', uri() . '/modules/employees/update/update-child.php', 'fa-plus', 'primary', 'Add Child'); ?>
     </div>
   <?php endif; ?>
 
@@ -14,10 +14,10 @@
       <table width="100%" class="table table-hover mb-0 text-center" cellspacing="0">
         <thead>
           <tr>
-            <th width="70%">Name of Child</th>
-            <th>Date of Birth</th>
+            <th class="align-middle" width="70%">Name of Child</th>
+            <th class="align-middle" width="30%">Date of Birth</th>
             <?php if ($editMode) : ?>
-              <th width="5%">Action</th>
+              <th class="align-middle" width="5%">Action</th>
             <?php endif; ?>
           </tr>
         </thead>
