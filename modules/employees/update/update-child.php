@@ -16,7 +16,7 @@ $modalTitle = "Add Child Name";
 if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
   $modalTitle = "Edit Child Name";
   $_SESSION[alias() . '_current_child_id'] = $id;
-  $children = child($id);
+  $children = child($employee_id, $id);
 
   if (num_rows($children) > 0) {
     $child = fetch_array($children);
