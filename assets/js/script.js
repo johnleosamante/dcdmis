@@ -2,39 +2,6 @@ if (window.history.replaceState) {
   window.history.replaceState(null, null, window.location.href);
 }
 
-//document.addEventListener('contextmenu', (e) => e.preventDefault());
-
-function viewFullscreen(element) {
-  if (element.requestFullscreen) {
-    element.requestFullscreen();
-  } else if (element.webkitRequestFullscreen) {
-    element.webkitRequestFullscreen();
-  } else if (element.msRequestFullscreen) {
-    element.msRequestFullscreen;
-  }
-}
-
-function closeFullscreen() {
-  if (document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if (document.webkitExitFullscreen) {
-    document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) {
-    document.msExitFullscreen;
-  }
-}
-
-function fullscreen_toggle(fullscreen, toggle_id) {
-  const toggle = document.getElementById(toggle_id);
-  if (fullscreen) {
-    toggle.classList.remove('fa-compress-arrows-alt')
-    toggle.classList.add('fa-expand-arrows-alt');
-  } else {
-    toggle.classList.remove('fa-expand-arrows-alt');
-    toggle.classList.add('fa-compress-arrows-alt')
-  }
-}
-
 $(document).ready(function () {
   $('div.alert').fadeIn(300).delay(60000).fadeOut(300);
 });
@@ -80,12 +47,12 @@ if (element_exist(confirm_toggle)) {
   });
 }
 
-function load_view(href) {
+function load_view(href, id='Modal') {
   const xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
   xmlhttp.onreadystatechange = () => {
     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-      document.getElementById('Modal').innerHTML = xmlhttp.responseText;
+      document.getElementById(id).innerHTML = xmlhttp.responseText;
     }
   }
 
@@ -96,41 +63,41 @@ function load_view(href) {
 const user_logout = document.getElementById('user_logout');
 if (element_exist(user_logout)) {
   user_logout.addEventListener('click', () => {
-    load_view('Modal', '../logout/logout-dialog.php');
+    load_view('../logout/logout-dialog.php');
   });
 }
 
 const save_document = document.getElementById('save_document');
 if (element_exist(save_document)) {
   save_document.addEventListener('click', () => {
-    load_view('Modal', '../modules/documents/save-document-dialog.php');
+    load_view('../modules/documents/save-document-dialog.php');
   });
 }
 
 const receive_document = document.getElementById('receive_document');
 if (element_exist(receive_document)) {
   receive_document.addEventListener('click', () => {
-    load_view('Modal', '../modules/documents/receive-document-dialog.php');
+    load_view('../modules/documents/receive-document-dialog.php');
   });
 }
 
 const forward_document = document.getElementById('forward_document');
 if (element_exist(forward_document)) {
   forward_document.addEventListener('click', () => {
-    load_view('Modal', '../modules/documents/forward-document-dialog.php');
+    load_view('../modules/documents/forward-document-dialog.php');
   });
 }
 
 const complete_document = document.getElementById('complete_document');
 if (element_exist(complete_document)) {
   complete_document.addEventListener('click', () => {
-    load_view('Modal', '../modules/documents/complete-document-dialog.php');
+    load_view('../modules/documents/complete-document-dialog.php');
   });
 }
 
 const cancel_document = document.getElementById('cancel_document');
 if (element_exist(cancel_document)) {
   cancel_document.addEventListener('click', () => {
-    load_view('Modal', '../modules/documents/cancel-document-dialog.php');
+    load_view('../modules/documents/cancel-document-dialog.php');
   });
 }
