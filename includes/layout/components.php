@@ -39,7 +39,7 @@ function round_pill($text, $bg_color = 'primary', $text_color = 'light')
 {
   switch (strtolower($text)) {
     case 'active':
-      $bg_color='success';
+      $bg_color = 'success';
       break;
     case 'transferred':
     case 'resigned':
@@ -68,7 +68,8 @@ function content_title($title)
 <?php
 }
 
-function sex($sex) {
+function sex($sex)
+{
   $sign = strtolower($sex) === 'male' ? 'mars' : 'venus';
 ?>
   <i class="<?php echo "fas fa-{$sign} text-{$sign} fa-2x"; ?>"></i>
@@ -81,16 +82,6 @@ function content_title_with_link($title, $link, $text = 'Back', $icon = 'fa-arro
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
     <?php link_button_split($link, $text, $icon, 'primary', $text); ?>
-  </div>
-<?php
-}
-
-function content_title_with_modal($title, $target, $id, $text, $icon, $color = 'primary')
-{
-?>
-  <div class="d-sm-flex align-items-center justify-content-between">
-    <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
-    <?php modal_button_split($target, $id, $text, $icon, $color, $text) ?>
   </div>
 <?php
 }
@@ -143,11 +134,11 @@ function link_button_icon($link, $icon, $color = 'primary', $title = '', $new_ta
 <?php
 }
 
-function modal_button_split($target, $id, $text, $icon, $color = 'primary', $title = '')
+function modal_button_split($text, $link, $icon, $color = 'primary', $title = '')
 {
 ?>
-  <a data-toggle="modal" data-target="#<?php echo $target; ?>" class="btn btn-<?php echo $color; ?> btn-icon-split btn-sm my-1" href='#' id='<?php echo $id; ?>' title='<?php echo $title; ?>'>
-    <span class="icon text-white-50"><i class="fas <?php echo $icon; ?> fa-fw"></i></span>
+  <a data-toggle="modal" data-target="#Modal" class="btn btn-<?php echo $color; ?> btn-icon-split btn-sm my-1" href='#' onclick="load_view('<?php echo $link; ?>')" title='<?php echo $title; ?>'>
+    <span class=" icon text-white-50"><i class="fas <?php echo $icon; ?> fa-fw"></i></span>
     <span class="text"><?php echo $text; ?></span>
   </a>
 <?php
@@ -165,7 +156,7 @@ function link_button_split($link, $text, $icon, $color = 'primary', $title = '',
 <?php
 }
 
-function link_dropdown_item($link, $text, $icon, $title ='', $new_tab =false, $color = 'text-gray-700')
+function link_dropdown_item($link, $text, $icon, $title = '', $new_tab = false, $color = 'text-gray-700')
 { ?>
   <a class="dropdown-item" href="<?php echo $link; ?>" title="<?php echo $title; ?>" target="<?php echo $new_tab ? '_blank' : '_self'; ?>">
     <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1 <?php echo $color; ?>"></i><?php echo $text; ?>
@@ -191,7 +182,8 @@ function dropdown_ellipsis()
 <?php
 }
 
-function modal_confirm_delete($message, $title='Delete', $buttonName='Delete') {
+function modal_confirm_delete($message, $title = 'Delete', $buttonName = 'Delete')
+{
 ?>
   <div class="modal-dialog">
     <div class="modal-content">
