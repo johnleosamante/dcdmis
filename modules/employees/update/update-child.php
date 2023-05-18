@@ -67,7 +67,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
         <div class="form-group">
           <label for="cdob" class="mb-0">Date of Birth: <span class="text-danger">*</span></label>
-          <input id="cdob" type="date" name="cdob" class="form-control" value="<?php echo to_date($bdate, '', "Y-m-d"); ?>" required>
+          <input id="cdob" type="date" name="cdob" class="form-control" value="<?php echo to_date($bdate, "Y-m-d"); ?>" required>
         </div>
 
         <div class="text-danger mb-0">* Required field</div>
