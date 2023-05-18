@@ -127,14 +127,14 @@ function modal_button_split($link, $text, $icon, $title ='', $color = 'primary')
   </a>
 <?php }
 
-function link_dropdown_item($link, $text, $icon, $title = '', $color = 'text-gray-700', $new_tab = false) { ?>
-  <a href="<?php echo $link; ?>" class="dropdown-item <?php echo $color; ?>" title="<?php echo $title; ?>" target="<?php echo $new_tab ? '_blank' : '_self'; ?>">
+function link_dropdown_item($link, $text, $icon, $title = '', $new_tab = false) { ?>
+  <a href="<?php echo $link; ?>" class="dropdown-item" title="<?php echo $title; ?>" target="<?php echo $new_tab ? '_blank' : '_self'; ?>">
     <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i><?php echo $text; ?>
   </a>
 <?php }
 
-function modal_dropdown_item($link, $text, $icon, $title = '', $color = 'text-gray-700') { ?>
-  <a href="#" data-toggle="modal" data-target="#Modal" class="dropdown-item <?php echo $color; ?>" title="<?php echo $title; ?>" onclick="load_view('<?php echo $link; ?>')">
+function modal_dropdown_item($link, $text, $icon, $title = '') { ?>
+  <a href="#" data-toggle="modal" data-target="#Modal" class="dropdown-item" title="<?php echo $title; ?>" onclick="load_view('<?php echo $link; ?>')">
     <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i><?php echo $text; ?>
   </a>
 <?php }
