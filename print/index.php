@@ -1,47 +1,44 @@
 <?php
 // print/index.php
-require_once('../includes/function.php');
+include_once('../includes/function.php');
 
 if (!isset($_SESSION[alias() . '_user_id']) || !isset($_SESSION[alias() . '_portal'])) {
   redirect(uri() . '/login');
 }
 
-require_once(root() . '/includes/plugin/fpdf/fpdf.php');
-require_once(root() . '/includes/database/database.php');
-require_once(root() . '/includes/database/section.php');
-require_once(root() . '/includes/database/school.php');
-require_once(root() . '/includes/database/document.php');
-require_once(root() . '/includes/database/employee.php');
-require_once(root() . '/includes/database/position.php');
-require_once(root() . '/includes/database/district.php');
-require_once(root() . '/includes/string.php');
-require_once(root() . '/includes/database/utility.php');
+include_once(root() . '/includes/plugin/fpdf/fpdf.php');
+include_once(root() . '/includes/database/database.php');
+include_once(root() . '/includes/database/section.php');
+include_once(root() . '/includes/database/school.php');
+include_once(root() . '/includes/database/district.php');
+include_once(root() . '/includes/database/utility.php');
+include_once(root() . '/includes/string.php');
+include_once(root() . '/includes/plugin/phpqrcode/qrlib.php');
 
 foreach ($_GET as $key => $data) {
   $url = $_GET[$key] = decode($data);
-  $page = real_escape_string($url);
+  $page = sanitize($url);
 }
 
 $code = strtoupper($_GET['id']);
-$is_school = $_SESSION[alias() . '_portal'] === 'school_portal';
-$division_name = 'DIPOLOG CITY SCHOOLS DIVISION';
-$department_logo = root() . '/assets/img/department.png';
-
 $title = '';
 $logo_size = 24;
 $margin = 25.4;
 $width = 210;
 $height = 297;
-
-$school = fetch_array(school_details_by_id(!$is_school ? '143' : $_SESSION[alias() . '_code']));
+$lineY = 60;
+$department_logo = root() . '/assets/img/department.png';
+$division_name = 'DIPOLOG CITY SCHOOLS DIVISION';
+$section = strtoupper(station_name($_SESSION[alias() . '_station']));
+$is_school = $_SESSION[alias() . '_portal'] === 'school_portal';
+$school = fetch_array(school_details_by_id($_SESSION[alias() . '_station_id']));
+$district = fetch_assoc(district($school['district']))['name'];
 $station_logo = root() . '/' . $school['logo'];
 $address = $school['address'];
 $telephone = $school['telephone'];
 $email = $school['email'];
 $website = $school['website'];
 $fb_page = $school['fb_page'];
-$district = fetch_assoc(district($school['district']))['name'];
-$lineY = 60;
 
 class PDF extends FPDF {
   function Header() {
@@ -50,6 +47,11 @@ class PDF extends FPDF {
     global $logo_size;
     global $width;
     global $margin;
+    global $is_school;
+    global $section;
+    global $address;
+    global $district;
+    global $lineY;
     $this->Image($department_logo, ($width / 2) - ($logo_size / 2), 8, $logo_size);
     $this->AddFont('OLDENGL', '', 'OLDENGL.php');
     $this->AddFont('tahomabd', 'B', 'tahomabd.php');
@@ -64,6 +66,17 @@ class PDF extends FPDF {
     $this->Ln(5);
     $this->Cell(0, 0, $division_name, 0, 0, 'C');
     $this->Ln(5);
+    $this->SetFont('tahomabd',  'B', 11);
+    $this->Cell(0, 0, $section, 0, 0, 'C');
+    if ($is_school) {
+      $this->Ln(5);
+      $this->Cell(0, 0, strtoupper($address), 0, 0, 'C');
+      $this->Ln(5);
+      $this->Cell(0, 0, strtoupper($district), 0, 0, 'C');
+      $lineY = 70;
+    }
+    $this->Line($margin, $lineY, $width - $margin, $lineY);
+    $this->Ln(15);
   }
 
   function Footer() {
@@ -81,6 +94,7 @@ class PDF extends FPDF {
     global $margin;
     global $height;
     global $width;
+    global $code;
     $footer_space = 27;
 
     $this->Line($margin, $height - 33, $width - $margin, $height - 33);
@@ -118,10 +132,28 @@ class PDF extends FPDF {
       $this->Cell(0, 0, "FB Page: {$fb_page}");
     }
 
-    if ($this->PageNo() > 1) {
-      $this->SetY(-6);
-      $this->Cell(0, 0, 'Page ' . $this->PageNo() . ' of {nb}', 0, 0, 'C');
+    if (!empty($code)) {
+      $PNG_TEMP_DIR_ROOT = root() . '/temp';
+      $PNG_TEMP_DIR = root() . '/temp/qr';
+      $errorCorrectionLevel = 'L';
+      $matrixPointSize = 5;
+      $filename = $PNG_TEMP_DIR . '/' . md5($code . $errorCorrectionLevel . $matrixPointSize) . '.png';
+
+      if (!file_exists($PNG_TEMP_DIR_ROOT)) {
+        mkdir($PNG_TEMP_DIR_ROOT);
+      }
+
+      if (!file_exists($PNG_TEMP_DIR)) {
+        mkdir($PNG_TEMP_DIR);
+      }
+
+      QRcode::png($code, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
+
+      $this->Image($filename, $width - $margin - $logo_size, $height - 32, $logo_size);
     }
+
+    $this->SetY(-6);
+    $this->Cell(0, 0, 'Page ' . $this->PageNo() . ' of {nb}', 0, 0, 'C');
   }
 }
 
@@ -133,10 +165,6 @@ if (!isset($url) || $url === '') {
     case 'Document Tracking Slip':
       $title = $url . ' : ' . $code;
       $file = 'document-tracking-slip';
-      break;
-    case 'Document Information':
-      $title = $url . ' : ' . $code;
-      $file = 'document-information';
       break;
     default:
       redirect(custom_uri('dts', '404'));
@@ -156,4 +184,3 @@ if (!isset($url) || $url === '') {
 
   $pdf->Output();
 }
-?>
