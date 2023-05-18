@@ -13,8 +13,13 @@ function station_name($id) {
 }
 
 function user_name($id) {
-  $user = fetch_assoc(employee($id));
+  $users = employee($id);
 
-  return to_name($user['lname'], $user['fname'], $user['mname'], $user['ext'], true);
+  if (num_rows($users) > 0) {
+    $user = fetch_assoc($users);
+    return to_name($user['lname'], $user['fname'], $user['mname'], $user['ext'], true);
+  } else {
+    return $id;
+  }
 }
 ?>
