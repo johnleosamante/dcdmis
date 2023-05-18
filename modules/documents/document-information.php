@@ -1,24 +1,24 @@
 <?php
 // modules/documents/document-information.php
-$documents = document_from(real_escape_string($_GET['id']), $_SESSION[alias() . '_station']);
+$documents = document_from(sanitize($_GET['id']), $_SESSION[alias() . '_station']);
 
 if (num_rows($documents) > 0) {
   $document = fetch_assoc($documents);
-  $_SESSION[alias() . '_No'] = $document['id'];
+  $_SESSION[alias() . '_document_id'] = $document['id'];
 
-  if (is_incoming_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+  if (is_incoming_document($_SESSION[alias() . '_document_id'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Incoming Documents';
-  } elseif (is_pending_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+  } elseif (is_pending_document($_SESSION[alias() . '_document_id'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Pending Documents';
-  } elseif (is_outgoing_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+  } elseif (is_outgoing_document($_SESSION[alias() . '_document_id'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Outgoing Documents';
-  } elseif (is_ongoing_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+  } elseif (is_ongoing_document($_SESSION[alias() . '_document_id'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Ongoing Documents';
-  } elseif (is_completed_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+  } elseif (is_completed_document($_SESSION[alias() . '_document_id'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Completed Documents';
-  } elseif (is_received_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+  } elseif (is_received_document($_SESSION[alias() . '_document_id'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Received Documents';
-  } elseif (is_canceled_document($_SESSION[alias() . '_No'], $_SESSION[alias() . '_station'])) {
+  } elseif (is_canceled_document($_SESSION[alias() . '_document_id'], $_SESSION[alias() . '_station'])) {
     $_SESSION[alias() . '_previous_document'] = $previous_document = 'Canceled Documents';
   } else {
     $previous_document = null;
@@ -45,7 +45,7 @@ $back_link = isset($previous_document) ? custom_uri('dts', $previous_document) :
         </tr>
         <tr>
           <th class="pr-5" scope="row">Created on:</th>
-          <td class="text-uppercase"><?php echo to_date($document['datetime'], '', 'F d, Y h:i:s A'); ?></td>
+          <td class="text-uppercase"><?php echo to_date($document['datetime'], 'F d, Y h:i:s A'); ?></td>
         </tr>
         <tr>
           <th class="pr-5" scope="row">From:</th>
@@ -66,28 +66,28 @@ $back_link = isset($previous_document) ? custom_uri('dts', $previous_document) :
       <div class="d-inline-block">
         <?php
         if (($_SESSION[alias() . '_station']) === $document['from']) {
-          link_button_split(custom_uri('print', 'Document Tracking Slip', $document['id']), 'Print', 'fa-print', 'primary', 'Print Document Tracking Slip', true);
+          link_button_split(custom_uri('print', 'Document Tracking Slip', $document['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', 'primary', true);
         }
 
         switch ($previous_document) {
           case 'Incoming Documents':
             if (!is_document($document['id'], 'Cancel')) {
-              modal_button_split('Modal', 'receive_document', 'Receive', 'fa-hand-holding-medical', 'success', 'Receive Document');
+              modal_button_split(uri() . '/modules/documents/receive-document-dialog.php','Receive', 'fa-hand-holding-medical','Receive Document', 'success');
             }
             break;
           case 'Pending Documents':
-            modal_button_split('Modal', 'forward_document', 'Forward', 'fa-share', 'info', 'Forward Document');
-            modal_button_split('Modal', 'complete_document', 'Mark Completed', 'fa-check-circle', 'success', 'Mark Complete Document');
+            modal_button_split(uri() . '/modules/documents/forward-document-dialog.php', 'Forward', 'fa-share', 'Forward Document', 'info');
+            modal_button_split(uri() . '/modules/documents/complete-document-dialog.php', 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
             if (is_document_from($document['id'], $_SESSION[alias() . '_station']) && $document['from'] === $_SESSION[alias() . '_station'] && !is_document($document['id'], 'Cancel')) {
-              modal_button_split('Modal', 'cancel_document', 'Cancel', 'fa-trash-alt', 'danger', 'Cancel Document');
+              modal_button_split(uri() . '/modules/documents/cancel-document-dialog.php', 'Cancel', 'fa-trash-alt','Cancel Document', 'danger');
             }
             break;
           case 'Outgoing Documents':
             if (!is_document($document['id'], 'Complete') && !is_document($document['id'], 'Cancel')) {
-              modal_button_split('Modal', 'save_document', 'Edit', 'fa-edit', 'info', 'Edit Document');
+              modal_button_split(uri() . '/modules/documents/save-document-dialog.php', 'Edit', 'fa-edit','Edit Document', 'info');
             }
             if (is_document_from($document['id'], $_SESSION[alias() . '_station']) && $document['from'] === $_SESSION[alias() . '_station'] && !is_document($document['id'], 'Cancel')) {
-              modal_button_split('Modal', 'cancel_document', 'Cancel', 'fa-trash-alt', 'danger', 'Cancel Document');
+              modal_button_split(uri() . '/modules/documents/cancel-document-dialog.php', 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
             }
             break;
           default:
