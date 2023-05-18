@@ -25,7 +25,7 @@
             <?php endwhile;
           } else { ?>
             <tr>
-              <td colspan="1" class="align-middle">No data available in table</td>
+              <td colspan="2" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>
