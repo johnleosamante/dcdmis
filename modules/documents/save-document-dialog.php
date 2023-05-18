@@ -6,7 +6,7 @@ require_once(root() . '/includes/database/document.php');
 require_once(root() . '/includes/database/document-purpose.php');
 require_once(root() . '/includes/database/section.php');
 
-$is_edit = $_SESSION[alias() . '_No'] !== null;
+$is_edit = $_SESSION[alias() . '_document_id'] !== null;
 $modal_title = $is_edit ? 'Edit Document' : 'New Document';
 ?>
 
@@ -23,8 +23,8 @@ $modal_title = $is_edit ? 'Edit Document' : 'New Document';
         $description = $destination = $purpose = $details = $attribute = '';
 
         if ($is_edit) {
-          $code = $_SESSION[alias() . '_No'];
-          $document = fetch_assoc(document_log($_SESSION[alias() . '_No']));
+          $code = $_SESSION[alias() . '_document_id'];
+          $document = fetch_assoc(document_log($_SESSION[alias() . '_document_id']));
           $description = $document['description'];
           $destination = $document['destination'];
           $purpose = $document['purpose'];

@@ -16,7 +16,7 @@ $modal_title = 'Forward Document';
     </div>
 
     <form action="" method="POST">
-      <?php $document = fetch_assoc(document($_SESSION[alias() . '_No'])); ?>
+      <?php $document = fetch_assoc(document($_SESSION[alias() . '_document_id'])); ?>
       <div class="modal-body">
         <div class="form-group">
           <label class="mb-0">Code</label>
