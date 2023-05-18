@@ -4,7 +4,7 @@ include_once('app.php');
 
 foreach ($_GET as $key => $data) {
   $url = $_GET[$key] = decode($data);
-  $page = real_escape_string($url) . ' | ' . $app_title;
+  $page = sanitize($url) . ' | ' . $app_title;
 }
 
 include_once(root() . '/includes/layout/components.php');
@@ -24,19 +24,13 @@ include_once(root() . '/includes/layout/components.php');
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo uri(); ?>">
         <img class="sidebar-brand-icon" src="<?php echo uri(); ?>/assets/img/division.png" title="<?php echo title(); ?>" width="60">
       </a>
-
-      <hr class="sidebar-divider my-0">
-
       <?php
-      sidebar_menu_item(!isset($url), uri() . '/' . $_SESSION[alias() . '_active_app'], 'Dashboard', 'fa-tachometer-alt');
-
-      include_once('sidebar-menu.php'); ?>
-
-      <hr class="sidebar-divider">
-
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
+      sidebar_divider();
+      sidebar_menu_item(uri() . '/' . $_SESSION[alias() . '_active_app'], 'Dashboard', 'fa-tachometer-alt', !isset($url));
+      include_once('sidebar-menu.php'); 
+      sidebar_divider('3', true);
+      sidebar_toggle();
+      ?>
     </ul>
 
     <div id="content-wrapper" class="d-flex flex-column">
@@ -53,8 +47,8 @@ include_once(root() . '/includes/layout/components.php');
   </div><!-- #wrapper -->
 
   <?php
-  scroll_to('#page-top');
-  modal('Modal');
+  scroll_to_top();
+  modal();
   ?>
 
   <script src="<?php echo uri(); ?>/assets/vendor/jquery/jquery.min.js"></script>
