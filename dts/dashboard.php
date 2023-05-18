@@ -1,7 +1,7 @@
 <?php
 // dts/dashboard.php
-content_title_with_modal('Dashboard', 'Modal', 'save_document', 'New Document', 'fa-plus');
-$_SESSION[alias() . '_No'] = null;
+content_title_with_modal('Dashboard', uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus');
+$_SESSION[alias() . '_document_id'] = null;
 ?>
 
 <div class="row mt-4">
