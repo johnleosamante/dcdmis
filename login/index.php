@@ -1,6 +1,7 @@
 <?php
 // login/index.php
-require_once('../includes/function.php');
+include_once('../includes/function.php');
+include_once(root() . '/includes/string.php');
 include_once(root() . '/includes/database/database.php');
 include_once(root() . '/includes/database/account.php');
 include_once(root() . '/includes/database/user.php');
