@@ -1,15 +1,14 @@
 <?php
 // dts/app.php
-$_SESSION[alias() . '_active_app'] = 'dts';
-
 if (!isset($_SESSION[alias() . '_user_id'])) {
   redirect(uri() . '/login');
 }
 
 if (!isset($_SESSION[alias() . '_portal'])) {
-  echo 'DTS Warning: Unauthorized access.';
-  exit;
+  redirect(uri() . '/pis');
 }
+
+$_SESSION[alias() . '_active_app'] = 'dts';
 
 if (isset($_POST['primary_search_button'])) {
   redirect(custom_uri('dts', 'Document Information', sanitize($_POST['primary_search_text'])));
