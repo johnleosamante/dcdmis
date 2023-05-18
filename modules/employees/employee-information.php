@@ -1,6 +1,6 @@
 <?php
 // modules/employees/employee-information.php
-$employees = employee(real_escape_string($_GET['id']));
+$employees = employee(sanitize($_GET['id']));
 
 if (num_rows($employees) > 0) {
   $employee = fetch_assoc($employees);
