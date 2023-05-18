@@ -1,5 +1,9 @@
 <?php
 // hrmis/app.php
+if ($_SESSION[alias() . '_portal'] !== 'hrmo_portal') {
+  redirect(uri() . '/pis');
+}
+
 $_SESSION[alias() . '_active_app'] = 'hrmis';
 
 if (!isset($_SESSION[alias() . '_user_id'])) {
