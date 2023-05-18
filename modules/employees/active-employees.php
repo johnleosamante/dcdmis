@@ -39,7 +39,7 @@ $page_title = 'Active Employees';
               </td>
               <td class="align-middle text-left"><?php echo $employee_name; ?></td>
               <td class="align-middle"><?php sex($row['sex']); ?></td>
-              <td class="align-middle"><?php echo to_date($row['month'] . '/' . $row['day'] . '/' . $row['year'], '', 'F d, Y'); ?></td>
+              <td class="align-middle"><?php echo to_date($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F d, Y'); ?></td>
               <td class="align-middle"><?php echo get_age($row['year'], $row['month'], $row['day']); ?></td>
               <td class="align-middle"><?php echo fetch_assoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetch_assoc(school_by_id($row['station']))['name']; ?></td>
@@ -52,7 +52,7 @@ $page_title = 'Active Employees';
                     link_dropdown_item(custom_uri('hrmis', 'Transfer Employee', $row['id']), 'Transfer', 'fa-share', 'Transfer Employee');
                     ?>
                     <div class="dropdown-divider"></div>
-                    <?php link_dropdown_item(custom_uri('hrmis', 'Remove Employee', $row['id']), 'Remove', 'fa-times-circle', 'Remove Employee', false, 'text-danger'); ?>
+                    <?php link_dropdown_item(custom_uri('hrmis', 'Remove Employee', $row['id']), 'Remove', 'fa-times-circle', 'Remove Employee','text-danger', false); ?>
                   </div>
                 </div>
               </td>
