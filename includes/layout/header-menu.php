@@ -41,7 +41,7 @@ $display_photo = uri() . '/' . $user['picture'];
     </li>
 
     <li class="nav-item dropdown no-arrow">
-      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="<?php echo strtoupper($display_name); ?>">
         <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo strtoupper($display_name); ?></span>
         <span class="img-profile rounded-circle overflow-hidden">
           <img src="<?php echo $display_photo; ?>" alt="<?php echo $display_name; ?>" width="100%">
