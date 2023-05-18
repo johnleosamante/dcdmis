@@ -2,7 +2,7 @@
 // include/function.php
 // All custom made general function goes here.
 
-require_once('config.php');
+include_once('config.php');
 
 function hash_string($string) {
   return sha1($string);
@@ -106,5 +106,5 @@ function get_age($year, $month, $day) {
   return $now->diff($bdate)->y;
 }
 
-require_once('initialization.php');
+include_once('initialization.php');
 ?>
