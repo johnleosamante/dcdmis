@@ -5,6 +5,7 @@
 $con = connect(HOSTNAME, USER, PASSWORD, DATABASE, PORT);
 
 function connect($hostname, $user, $password, $database, $port) {
+  mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
   return mysqli_connect($hostname, $user, $password, $database, $port);
 }
 
@@ -23,10 +24,6 @@ function query($query) {
 
 function non_query($query) {
   mysqli_query(connection(), $query);
-}
-
-function real_escape_string($string) {
-  return mysqli_real_escape_string(connection(), $string);
 }
 
 function fetch_all_assoc($result) {
