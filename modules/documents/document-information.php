@@ -27,13 +27,11 @@ if (num_rows($documents) > 0) {
   include_once(root() . '/modules/error/no-results-found.php');
   return;
 }
-
-$back_link = isset($previous_document) ? custom_uri('dts', $previous_document) : uri() . '/dts';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php content_title_with_link("Document Information : " . strtoupper($document['id']), $back_link); ?>
+    <?php content_title("Document Information : " . strtoupper($document['id'])); ?>
   </div>
 
   <div class="card-body">
