@@ -9,23 +9,23 @@ function set_user_session($userid) {
 
   if (num_rows($users) === 1) {
     $user = fetch_assoc($users);
+    $_SESSION[alias() . '_code'] = $user['code'];
     $_SESSION[alias() . '_portal'] = $user['portal'];
-    $_SESSION[alias() . '_code'] = $user['station'];
-    $_SESSION[alias() . '_station_code'] = $user['station_code'];
-
+    $_SESSION[alias() . '_station_id'] = $user['station_id'];
     if ($user['portal'] !== 'school_portal') {
-      $_SESSION[alias() . '_station'] = $user['station'];
+      $_SESSION[alias() . '_station'] = $user['code'];
     } else {
-      $school = school_by_id($user['station']);
-      $_SESSION[alias() . '_station'] = fetch_assoc($school)['alias'];
+      $school = school_by_id($user['code']);
+      $_SESSION[alias() . '_station'] = num_rows($school) ? fetch_assoc($school)['alias'] : '';
     }
+    echo $user['station'];
   } else {
     $_SESSION[alias() . '_active_app'] = 'pis';
   }
 }
 
 if (isset($_COOKIE[alias() . '_login'])) {
-  $account = account(real_escape_string($_COOKIE[alias() . '_login']));
+  $account = account(sanitize($_COOKIE[alias() . '_login']));
 
   if (num_rows($account === 1)) {
     $_SESSION[alias() . '_user_id'] = fetch_assoc($account)['id'];
@@ -45,11 +45,11 @@ if (!isset($_POST['login'])) {
   return;
 }
 
-$email = real_escape_string($_POST['email']);
-$password = hash_password(real_escape_string($_POST['password']));
+$email = sanitize($_POST['email']);
+$password = hash_password(sanitize($_POST['password']));
 $has_error = true;
 
-if (strlen($email) === 0 || strlen($password) === 0) {
+if (empty($email) || empty($password)) {
   $error_message = 'All fields are required!';
   return;
 }
