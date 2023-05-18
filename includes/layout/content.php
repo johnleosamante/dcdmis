@@ -1,7 +1,7 @@
 <?php
 // includes/layout/content.php
 if ($show_prompt) {
-  message_prompt($message, $type, $align);
+  message_prompt($message, 'success');
 }
 
 if (!isset($url) || $url === 'dashboard') {
