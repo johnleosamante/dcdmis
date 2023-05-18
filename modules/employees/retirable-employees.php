@@ -53,7 +53,7 @@ $page_title = 'Retirable Employees';
                     link_dropdown_item(custom_uri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
                     link_dropdown_item(custom_uri('hrmis', 'Transfer Employee', $row['id']), 'Transfer', 'fa-share', 'Transfer Employee'); ?>
                     <div class="dropdown-divider"></div>
-                    <?php link_dropdown_item(custom_uri('hrmis', 'Remove Employee', $row['id']), 'Remove', 'fa-times-circle', 'Remove Employee', false, 'text-danger');
+                    <?php link_dropdown_item(custom_uri('hrmis', 'Remove Employee', $row['id']), 'Remove', 'fa-times-circle', 'Remove Employee','text-danger', false);
                     ?>
                   </div>
                 </div>
