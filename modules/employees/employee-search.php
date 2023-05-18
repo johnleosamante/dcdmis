@@ -1,6 +1,6 @@
 <?php
 // modules/employees/employee-search.php
-$search = isset($_GET['id']) ? real_escape_string($_GET['id']) : '';
+$search = sanitize($_GET['id']);
 $employees = employee_search($search);
 
 if (num_rows($employees) === 0) {
