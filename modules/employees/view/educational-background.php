@@ -5,7 +5,7 @@
 <div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'educational-background', 'show active'); ?>" id="educational-background">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modal_button_split('Add', uri() . '/modules/employees/update/update-education.php', 'fa-plus', 'primary', 'Add Education'); ?>
+      <?php modal_button_split(uri() . '/modules/employees/update/update-education.php', 'Add',  'fa-plus', 'Add Education', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -54,7 +54,7 @@
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                         <?php modal_dropdown_item(uri() . '/modules/employees/update/update-education.php?id=' . $education['no'], 'Edit', 'fa-edit', 'Edit Education'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-education.php?id=' . $education['no'], 'Delete', 'fa-trash', 'Delete Education', false, 'text-danger'); ?>
+                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-education.php?id=' . $education['no'], 'Delete', 'fa-trash', 'Delete Education', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>
