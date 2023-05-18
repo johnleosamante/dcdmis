@@ -11,38 +11,34 @@ if (!isset($_SESSION[alias() . '_portal'])) {
   exit;
 }
 
-$show_prompt = false;
-$message = null;
-$type = 'success';
-$align = 'left';
-$page = $app_title = "Document Tracking System";
-
 if (isset($_POST['primary_search_button'])) {
-  redirect(custom_uri('dts', 'Document Information', real_escape_string($_POST['primary_search_text'])));
+  redirect(custom_uri('dts', 'Document Information', sanitize($_POST['primary_search_text'])));
 }
 
+$show_prompt = false;
+$message = null;
+$page = $app_title = "Document Tracking System";
 $user_id = $_SESSION[alias() . '_user_id'];
+$code = $_SESSION[alias() . '_code'];
+$station_id = $_SESSION[alias() . '_station_id'];
 $station = $_SESSION[alias() . '_station'];
 $portal = $_SESSION[alias() . '_portal'];
 
 if (isset($_POST['save_document'])) {
-  $code = $_SESSION[alias() . '_No'];
-  $station_code = $_SESSION[alias() . '_code'];
+  $document_id = $_SESSION[alias() . '_document_id'];
+  $purpose = sanitize($_POST['purpose']);
+  $details = sanitize($_POST['details']);
+  $destination = $portal === 'school_portal' ? 'RECORD' :  sanitize($_POST['destination']);
   $status = null;
-  $purpose = real_escape_string($_POST['purpose']);
-  $destination = $portal === 'school_portal' ? 'RECORD' :  real_escape_string($_POST['destination']);
-  $details = real_escape_string($_POST['details']);
 
-  if ($code === null) {
+  if (empty($document_id)) {
     $status = 'saved';
     $year = date('y');
-    $description = real_escape_string($_POST['description']);
-    $schoolid = $_SESSION[alias() . '_portal'] === 'school_portal' ? $station_code : null;
-
-    $code = $station_code . '-' . $year . '-' . sprintf("%05d", count_documents_from($station, $year, $schoolid) + 1);
+    $description = sanitize($_POST['description']);
+    $document_id = $code . '-' . $year . '-' . sprintf("%05d", count_documents_from($code, $year, $code) + 1);
     
-    insert_document($code, $description, $station, $purpose, $details);
-    insert_document_log($code, $user_id, $station, $destination, $purpose, 'New', $details);
+    insert_document($document_id, $description, $code, $purpose, $details);
+    insert_document_log($document_id, $user_id, $code, $destination, $purpose, 'New', $details);
   } else {
     $status = 'updated';
     $update_description = false;
@@ -50,73 +46,73 @@ if (isset($_POST['save_document'])) {
 
     if (isset($_SESSION[alias() . '_editable_description']) && $_SESSION[alias() . '_editable_description']) {
       $update_description = true;
-      $description = real_escape_string($_POST['description']);
+      $description = sanitize($_POST['description']);
     }
 
-    update_document($code, $description, $station, $purpose, $details, $update_description);
-    update_document_log($code, $user_id, $station, $destination, $purpose, 'New', $details);
+    update_document($document_id, $description, $code, $purpose, $details, $update_description);
+    update_document_log($document_id, $user_id, $code, $destination, $purpose, 'New', $details);
   }
 
   if (affected_rows()) {
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $code) . '" title="Document Information: ' . $code . '" target="_blank">' . strtoupper($code) . '</a>] has been ' . $status . ' successfully!';
+    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been ' . $status . ' successfully!';
     $show_prompt = true;
   }
 }
 
 if (isset($_POST['receive_document'])) {
-  $code = $_SESSION[alias() . '_No'];
+  $document_id = $_SESSION[alias() . '_document_id'];
 
-  update_document_logs_done($code);
-  insert_document_log($code, $user_id, $station, '-', 'Received', 'New');
+  update_document_logs_done($document_id);
+  insert_document_log($document_id, $user_id, $code, '-', 'Received', 'New');
 
   if (affected_rows()) {
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $code) . '" title="Document Information: ' . $code . '" target="_blank">' . strtoupper($code) . '</a>] has been received successfully!';
+    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been received successfully!';
     $show_prompt = true;
   }
 }
 
 if (isset($_POST['forward_document'])) {
-  $code = $_SESSION[alias() . '_No'];
-  $purpose = real_escape_string($_POST['purpose']);
-  $details = real_escape_string($_POST['details']);
+  $document_id = $_SESSION[alias() . '_document_id'];
+  $purpose = sanitize($_POST['purpose']);
+  $details = sanitize($_POST['details']);
 
-  update_document_logs_done($code);
-  insert_document_log($code, $user_id, $station, real_escape_string($_POST['destination']), $purpose, 'New', $details);
-  update_document_status($code, $purpose, 'Unread', $details);
+  update_document_logs_done($document_id);
+  insert_document_log($document_id, $user_id, $code, sanitize($_POST['destination']), $purpose, 'New', $details);
+  update_document_status($document_id, $purpose, 'Unread', $details);
 
   if (affected_rows()) {
     $show_prompt = true;
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $code) . '" title="Document Information: ' . $code . '" target="_blank">' . strtoupper($code) . '</a>] has been forwarded successfully!';
+    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been forwarded successfully!';
   }
 }
 
 if (isset($_POST['complete_document'])) {
-  $code = $_SESSION[alias() . '_No'];
-  $remarks = real_escape_string($_POST['remarks']);
+  $document_id = $_SESSION[alias() . '_document_id'];
+  $remarks = sanitize($_POST['remarks']);
   $status = 'Completed';
 
-  update_document_logs_done($code);
-  insert_document_log($code, $user_id, $station, '-', $status, 'Done', $remarks);
-  update_document_status($code, $status, 'Read', $remarks);
+  update_document_logs_done($document_id);
+  insert_document_log($document_id, $user_id, $code, '-', $status, 'Done', $remarks);
+  update_document_status($document_id, $status, 'Read', $remarks);
 
   if (affected_rows()) {
     $show_prompt = true;
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $code) . '" title="Document Information: ' . $code . '" target="_blank">' . strtoupper($code) . '</a>] has been mark completed successfully.';
+    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been mark completed successfully.';
   }
 }
 
 if (isset($_POST['cancel_document'])) {
-  $code = $_SESSION[alias() . '_No'];
-  $remarks = real_escape_string($_POST['remarks']);
+  $document_id = $_SESSION[alias() . '_document_id'];
+  $remarks = sanitize($_POST['remarks']);
   $status = 'Canceled';
 
-  update_document_logs_done($code);
-  insert_document_log($code, $user_id, $station, '-', $status, 'Done', $remarks);
-  update_document_status($code, $status, 'Read', $remarks);
+  update_document_logs_done($document_id);
+  insert_document_log($document_id, $user_id, $code, '-', $status, 'Done', $remarks);
+  update_document_status($document_id, $status, 'Read', $remarks);
 
   if (affected_rows()) {
     $show_prompt = true;
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $code) . '" title="Document Information: ' . $code . '" target="_blank">' . strtoupper($code) . '</a>] has been canceled successfully.';
+    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been canceled successfully.';
   }
 }
 ?>
