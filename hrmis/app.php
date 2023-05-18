@@ -1,16 +1,22 @@
 <?php
 // hrmis/app.php
-if ($_SESSION[alias() . '_portal'] !== 'hrmo_portal') {
-  redirect(uri() . '/pis');
-}
-
-$_SESSION[alias() . '_active_app'] = 'hrmis';
 
 if (!isset($_SESSION[alias() . '_user_id'])) {
   redirect(uri() . '/login');
 }
 
 $user_id = $_SESSION[alias() . '_user_id'];
+
+if (num_rows(user_role($user_id, 'HRMO')) > 0) {
+  if (isset($_SESSION[alias() . '_active_app'])) {
+    redirect(uri() . '/' . $_SESSION[alias() . '_active_app']);
+  } else {
+    redirect(uri() . '/pis');
+  }
+}
+
+$_SESSION[alias() . '_active_app'] = 'hrmis';
+
 $success = true;
 $show_prompt = false;
 $message = null;
