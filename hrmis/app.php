@@ -7,7 +7,7 @@ if (!isset($_SESSION[alias() . '_user_id'])) {
 
 $user_id = $_SESSION[alias() . '_user_id'];
 
-if (num_rows(user_role($user_id, 'HRMO')) > 0) {
+if (num_rows(user_role($user_id, 'HRMO')) === 0) {
   if (isset($_SESSION[alias() . '_active_app'])) {
     redirect(uri() . '/' . $_SESSION[alias() . '_active_app']);
   } else {
