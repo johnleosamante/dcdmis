@@ -1,5 +1,6 @@
 <?php
 // hrmis/app.php
+$_SESSION[alias() . '_active_app'] = 'hrmis';
 
 if (!isset($_SESSION[alias() . '_user_id'])) {
   redirect(uri() . '/login');
@@ -14,8 +15,6 @@ if (num_rows(user_role($user_id, 'HRMO')) === 0) {
     redirect(uri() . '/pis');
   }
 }
-
-$_SESSION[alias() . '_active_app'] = 'hrmis';
 
 $success = true;
 $show_prompt = false;

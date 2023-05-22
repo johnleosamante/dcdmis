@@ -1,9 +1,5 @@
 <?php
 // login/app.php
-if (!isset($_SESSION[alias() . '_active_app'])) {
-  $_SESSION[alias() . '_active_app'] = 'pis';
-}
-
 function set_user_session($userid) {
   $users = user($userid);
 
@@ -86,6 +82,10 @@ if (isset($_POST['remember']) && $_POST['remember'] === true) {
 }
 
 set_user_session($_SESSION[alias() . '_user_id']);
+
+if (!isset($_SESSION[alias() . '_active_app'])) {
+  $_SESSION[alias() . '_active_app'] = 'pis';
+}
 
 redirect(uri() . '/' . $_SESSION[alias() . '_active_app']);
 ?>
