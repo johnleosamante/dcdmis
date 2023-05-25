@@ -16,13 +16,6 @@ if (!is_dir('../uploads/images/' . $employee['id'])) {
 $_SESSION[alias() . '_current_employee_id'] = $_SESSION[alias() . '_current_employee_photo'] = '';
 
 $editMode = $url === 'Edit Employee Information';
-
-function show_asterisk($show)
-{
-  if ($show) : ?>
-    <span class="text-danger"> *</span>
-<?php endif;
-}
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -50,7 +43,7 @@ function show_asterisk($show)
       $pds_progress += 15;
     }
 
-    if (num_rows(eligibility($employee['id'])) > 0) {
+    if (num_rows(eligibilities($employee['id'])) > 0) {
       $pds_progress += 15;
     }
 
