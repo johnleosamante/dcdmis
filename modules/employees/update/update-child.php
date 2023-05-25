@@ -2,10 +2,11 @@
 include_once('../../../includes/function.php');
 include_once(root() . '/includes/database/database.php');
 include_once(root() . '/includes/database/children.php');
+include_once(root() . '/includes/layout/components.php');
 include_once(root() . '/includes/string.php');
 
 foreach ($_GET as $key => $data) {
-  $id = $_GET[$key] = $data;
+  $id = $_GET[$key] = decode($data);
 }
 
 $employee_id = $_SESSION[alias() . '_current_employee_id'];
@@ -32,22 +33,19 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
 <div class="modal-dialog">
   <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title"><?php echo $modalTitle; ?></h5>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
-    </div><!-- .modal-header -->
+    <?php modal_header($modalTitle); ?>
 
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="clast" class="mb-0">Last Name: <span class="text-danger">*</span></label>
+          <label for="clast" class="mb-0">Last Name: <?php show_asterisk(); ?></label>
           <input id="clast" type="text" name="clast" class="form-control" value="<?php echo $lname; ?>" required>
         </div>
 
         <div class="row">
           <div class="col-lg-9">
             <div class="form-group">
-              <label for="cfirst" class="mb-0">First Name: <span class="text-danger">*</span></label>
+              <label for="cfirst" class="mb-0">First Name: <?php show_asterisk(); ?></label>
               <input id="cfirst" type="text" name="cfirst" class="form-control" value="<?php echo $fname; ?>" required>
             </div>
           </div>
@@ -66,7 +64,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
         </div>
 
         <div class="form-group">
-          <label for="cdob" class="mb-0">Date of Birth: <span class="text-danger">*</span></label>
+          <label for="cdob" class="mb-0">Date of Birth: <?php show_asterisk(); ?></label>
           <input id="cdob" type="date" name="cdob" class="form-control" value="<?php echo to_date($bdate, "Y-m-d"); ?>" required>
         </div>
 
