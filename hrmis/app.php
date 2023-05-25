@@ -9,11 +9,7 @@ if (!isset($_SESSION[alias() . '_user_id'])) {
 $user_id = $_SESSION[alias() . '_user_id'];
 
 if (num_rows(user_role($user_id, 'HRMO')) === 0) {
-  if (isset($_SESSION[alias() . '_active_app'])) {
-    redirect(uri() . '/' . $_SESSION[alias() . '_active_app']);
-  } else {
-    redirect(uri() . '/pis');
-  }
+  redirect(uri() . '/pis');  
 }
 
 $success = true;
@@ -144,16 +140,17 @@ if (isset($_POST['SaveEducation'])) {
   $course = sanitize($_POST['course']);
   $from = sanitize($_POST['from']);
   $to = sanitize($_POST['to']);
+  $ispresent = sanitize($_POST['ispresent']);
   $highest = sanitize($_POST['highest']);
   $year = sanitize($_POST['year']);
   $scholarship = sanitize($_POST['scholarship']);
 
   if (strlen($education_id) === 0) {
-    create_education($level, $school, $course, $from, $to, $highest, $year, $scholarship, $employee_id);
+    create_education($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $employee_id);
 
     $message = 'Educational Background has been added successfully!';
   } else {
-    update_education($level, $school, $course, $from, $to, $highest, $year, $scholarship, $employee_id, $education_id);
+    update_education($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $employee_id, $education_id);
 
     $message = 'Educational Background has been updated successfully!';
   }
