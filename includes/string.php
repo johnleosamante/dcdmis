@@ -46,7 +46,7 @@ function to_datetime($date) {
 }
 
 function sanitize($input, $default = '') {
-  return !empty($input) ? htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES) : $default;
+  return empty($input) ? $default : htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES);
 }
 
 function random_password($length) {
