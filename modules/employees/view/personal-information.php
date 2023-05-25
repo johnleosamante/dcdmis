@@ -144,8 +144,8 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
 
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="dual_citizen_country" class="mb-0">Please Indicate Country if Dual Citizen:</label>
-              <input id="dual_citizen_country" name="dual_citizenship_country" type="text" class="form-control" value="<?php echo $employee['country']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <label for="dual_citizenship_country" class="mb-0">Please Indicate Country if Dual Citizen:</label>
+              <input id="dual_citizenship_country" name="dual_citizenship_country" type="text" class="form-control" value="<?php echo $employee['country']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
             <div class="form-group">
               <label for="height" class="mb-0">Height (m): <?php show_asterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
-                <input id="height" type="text" class="form-control" value="<?php $employee['height']; ?>" readonly>
+                <input id="height" type="text" class="form-control" value="<?php echo $employee['height']; ?>" readonly>
               <?php else : ?>
                 <input id="height" name="height" type="number" min="0" step="0.01" class="form-control" value="<?php echo $employee['height']; ?>">
               <?php endif; ?>
@@ -177,7 +177,7 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
             <div class="form-group">
               <label for="blood_type" class="mb-0">Blood Type:</label>
               <?php if (!$editMode) : ?>
-                <input id="blood_type" type="text" class="form-control" value="<?php $employee['blood_type']; ?>" readonly>
+                <input id="blood_type" type="text" class="form-control" value="<?php echo $employee['blood_type']; ?>" readonly>
               <?php else : ?>
                 <select name="blood_type" id="blood_type" class="form-control" required>
                   <option value="A+" <?php echo set_option_selected('A+', $employee['blood_type']); ?>>A+</option>
