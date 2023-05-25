@@ -109,6 +109,12 @@ function scroll_to_top() { ?>
   <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
 <?php }
 
+function show_asterisk($show = true) {
+  if ($show) : ?>
+    <span class="text-danger"> *</span>
+<?php endif;
+}
+
 function modal() { ?>
   <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true" data-backdrop="static" data-keyboard="false"></div>
 <?php }
