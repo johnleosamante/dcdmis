@@ -2,9 +2,11 @@
 include_once('../../../includes/function.php');
 include_once(root() . '/includes/database/database.php');
 include_once(root() . '/includes/database/education.php');
+include_once(root() . '/includes/layout/components.php');
+include_once(root() . '/includes/string.php');
 
 foreach ($_GET as $key => $data) {
-  $id = $_GET[$key] = $data;
+  $id = $_GET[$key] = decode($data);
 }
 
 $employee_id = $_SESSION[alias() . '_current_employee_id'];
@@ -33,15 +35,12 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
 <div class="modal-dialog">
   <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title"><?php echo $modalTitle; ?></h5>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
-    </div><!-- .modal-header -->
+    <?php modal_header($modalTitle); ?>
 
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="level" class="mb-0">Level: <span class="text-danger">*</span></label>
+          <label for="level" class="mb-0">Level: <?php show_asterisk(); ?></label>
           <select id="level" name="level" class="form-control" required>
             <option value="Elementary" <?php echo set_option_selected("Elementary", $level); ?>>Elementary</option>
             <option value="High School" <?php echo set_option_selected("High School", $level); ?>>High School</option>
@@ -53,7 +52,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
         </div>
 
         <div class="form-group">
-          <label for="school" class="mb-0">Name of School (Write in full): <span class="text-danger">*</span></label>
+          <label for="school" class="mb-0">Name of School (Write in full): <?php show_asterisk(); ?></label>
           <input id="school" name="school" type="text" class="form-control" required value="<?php echo $school; ?>">
         </div>
 
@@ -65,15 +64,15 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="from" class="mb-0">Attendance from: <span class="text-danger">*</span></label>
-              <input id="from" name="from" type="text" class="form-control" required value="<?php echo $from; ?>">
+              <label for="from" class="mb-0">Attendance from: <?php show_asterisk(); ?></label>
+              <input id="from" name="from" type="number" step="1" min="0" class="form-control" required value="<?php echo $from; ?>">
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="to" class="mb-0">Attendance to: <span class="text-danger">*</span></label>
-              <input id="to" name="to" type="text" class="form-control" required value="<?php echo $to; ?>">
+              <label for="to" class="mb-0">Attendance to: <?php show_asterisk(); ?></label>
+              <input id="to" name="to" type="number" step="1" min="0" class="form-control" required value="<?php echo $to; ?>">
             </div>
           </div>
         </div>
@@ -85,7 +84,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
         <div class="form-group">
           <label for="year" class="mb-0">Year Graduated:</label>
-          <input id="year" name="year" type="text" class="form-control" value="<?php echo $year_graduated; ?>">
+          <input id="year" name="year" type="number" step="1" min="0" class="form-control" value="<?php echo $year_graduated; ?>">
         </div>
 
         <div class="form-group">
