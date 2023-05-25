@@ -1,17 +1,15 @@
 <?php
 // modules/documents/cancel-document-dialog.php
-require_once('../../includes/function.php');
-require_once(root() . '/includes/database/database.php');
-require_once(root() . '/includes/database/document.php');
+include_once('../../includes/function.php');
+include_once(root() . '/includes/database/database.php');
+include_once(root() . '/includes/database/document.php');
+include_once(root() . '/includes/layout/components.php');
 $modal_title = 'Cancel Document';
 ?>
 
 <div class="modal-dialog">
   <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title"><?php echo $modal_title; ?></h5>
-      <button type="button" class="close" aria-hidden="true" data-dismiss="modal" aria-label="Close">&times;</button>
-    </div>
+    <?php modal_header($modal_title); ?>
 
     <form action="" method="POST">
       <?php $document = fetch_assoc(document($_SESSION[alias() . '_document_id'])); ?>

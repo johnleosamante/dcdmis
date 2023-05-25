@@ -1,21 +1,18 @@
 <?php
 // modules/documents/save-document-dialog.php
-require_once('../../includes/function.php');
-require_once(root() . '/includes/database/database.php');
-require_once(root() . '/includes/database/document.php');
-require_once(root() . '/includes/database/document-purpose.php');
-require_once(root() . '/includes/database/section.php');
-
+include_once('../../includes/function.php');
+include_once(root() . '/includes/database/database.php');
+include_once(root() . '/includes/database/document.php');
+include_once(root() . '/includes/database/document-purpose.php');
+include_once(root() . '/includes/database/section.php');
+include_once(root() . '/includes/layout/components.php');
 $is_edit = $_SESSION[alias() . '_document_id'] !== null;
 $modal_title = $is_edit ? 'Edit Document' : 'New Document';
 ?>
 
 <div class="modal-dialog">
   <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title"><?php echo $modal_title; ?></h5>
-      <button type="button" class="close" aria-hidden="true" data-dismiss="modal" aria-label="Close">&times;</button>
-    </div>
+    <?php modal_header($modal_title); ?>
 
     <form action="" method="POST">
       <div class="modal-body">
@@ -50,7 +47,7 @@ $modal_title = $is_edit ? 'Edit Document' : 'New Document';
 
         <div class="form-group">
           <label for="description" class="mb-0">Description</label>
-          <textarea id="description" name="description" class="form-control" rows="3" required placeholder="Type description..." <?php echo $attribute; ?>><?php echo $description; ?></textarea>
+          <textarea id="description" name="description" class="form-control" rows="3" placeholder="Type description..." <?php echo $attribute; ?> required><?php echo $description; ?></textarea>
         </div>
 
         <?php if ($_SESSION[alias() . '_portal'] !== 'school_portal') : ?>
