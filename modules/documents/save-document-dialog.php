@@ -43,14 +43,14 @@ $modal_title = $is_edit ? 'Edit Document' : 'New Document';
           }
         ?>
           <div class="form-group">
-            <label class="mb-0">Code</label>
-            <input type="text" value="<?php echo $code; ?>" class="form-control text-uppercase" disabled>
+            <label for="code" class="mb-0">Code</label>
+            <input id="code" type="text" value="<?php echo $code; ?>" class="form-control text-uppercase" disabled>
           </div>
         <?php } ?>
 
         <div class="form-group">
-          <label class="mb-0">Description</label>
-          <textarea class="form-control" rows="3" required placeholder="Type description..." name="description" <?php echo $attribute; ?>><?php echo $description; ?></textarea>
+          <label for="description" class="mb-0">Description</label>
+          <textarea id="description" name="description" class="form-control" rows="3" required placeholder="Type description..." <?php echo $attribute; ?>><?php echo $description; ?></textarea>
         </div>
 
         <?php if ($_SESSION[alias() . '_portal'] !== 'school_portal') : ?>
@@ -80,7 +80,7 @@ $modal_title = $is_edit ? 'Edit Document' : 'New Document';
 
         <div class="form-group mb-0">
           <label class="mb-0" for="details">Additional details (optional)</label>
-          <textarea class="form-control" rows="2" placeholder="Type additional details..." name="details"><?php echo $details; ?></textarea>
+          <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."><?php echo $details; ?></textarea>
         </div>
       </div>
 

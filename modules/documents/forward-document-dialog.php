@@ -19,18 +19,18 @@ $modal_title = 'Forward Document';
       <?php $document = fetch_assoc(document($_SESSION[alias() . '_document_id'])); ?>
       <div class="modal-body">
         <div class="form-group">
-          <label class="mb-0">Code</label>
-          <input type="text" value="<?php echo $document['id']; ?>" class="form-control text-uppercase" disabled>
+          <label for="code" class="mb-0">Code</label>
+          <input id="code" type="text" value="<?php echo $document['id']; ?>" class="form-control text-uppercase" disabled>
         </div>
 
         <div class="form-group">
-          <label class="mb-0">Description</label>
-          <textarea class="form-control text-uppercase" rows="3" disabled><?php echo $document['description']; ?></textarea>
+          <label for="description" class="mb-0">Description</label>
+          <textarea id="description" class="form-control text-uppercase" rows="3" disabled><?php echo $document['description']; ?></textarea>
         </div>
 
         <div class="form-group">
-          <label class="mb-0" for="destination">Destination</label>
-          <select name="destination" id="destination" class="form-control" required>
+          <label for="destination" class="mb-0">Destination</label>
+          <select id="destination" name="destination" class="form-control" required>
             <option value="">Select destination...</option>
             <?php
             $sections = sections_except($_SESSION[alias() . '_station']);
@@ -41,8 +41,8 @@ $modal_title = 'Forward Document';
         </div>
 
         <div class="form-group">
-          <label class="mb-0" for="purpose">Purpose</label>
-          <select name="purpose" id="purpose" class="form-control" required>
+          <label for="purpose" class="mb-0">Purpose</label>
+          <select id="purpose" name="purpose" class="form-control" required>
             <option value="">Select purpose...</option>
             <?php
             $document_purpose = document_purpose();
@@ -53,8 +53,8 @@ $modal_title = 'Forward Document';
         </div>
 
         <div class="form-group mb-0">
-          <label class="mb-0" for="details">Additional details (optional)</label>
-          <textarea class="form-control" rows="2" placeholder="Type additional details..." name="details"></textarea>
+          <label for="details" class="mb-0">Additional details (optional)</label>
+          <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."></textarea>
         </div>
       </div>
 

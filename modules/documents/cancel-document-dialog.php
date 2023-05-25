@@ -17,18 +17,18 @@ $modal_title = 'Cancel Document';
       <?php $document = fetch_assoc(document($_SESSION[alias() . '_document_id'])); ?>
       <div class="modal-body">
         <div class="form-group">
-          <label class="mb-0">Code</label>
-          <input type="text" value="<?php echo $document['id']; ?>" class="form-control text-uppercase" disabled>
+          <label for="code" class="mb-0">Code</label>
+          <input id="code" type="text" value="<?php echo $document['id']; ?>" class="form-control text-uppercase" disabled>
         </div>
 
         <div class="form-group">
-          <label class="mb-0">Description</label>
-          <textarea class="form-control text-uppercase" rows="3" disabled><?php echo $document['description']; ?></textarea>
+          <label for="description" class="mb-0">Description</label>
+          <textarea id="description" class="form-control text-uppercase" rows="3" disabled><?php echo $document['description']; ?></textarea>
         </div>
 
         <div class="form-group mb-0">
-          <label class="mb-0" for="remarks">Reason (required)</label>
-          <textarea class="form-control" rows="3" name="remarks" id="remarks" autofocus placeholder="Reason..." required></textarea>
+          <label for="remarks" class="mb-0">Reason (required)</label>
+          <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Reason..." required></textarea>
         </div>
       </div>
 
