@@ -75,7 +75,7 @@ $now = date('Y-m-d');
                         </td>
                         <td class="align-middle text-left"><?php echo $employee_name; ?></td>
                         <td class="align-middle"><?php sex($row['sex']); ?></td>
-                        <td class="align-middle"><?php echo to_date($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F d, Y'); ?></td>
+                        <td class="align-middle"><?php echo to_date($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
                         <td class="align-middle">
                           <?php echo get_age($row['year'], $row['month'], $row['day']); ?>
                         </td>
