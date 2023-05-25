@@ -16,12 +16,11 @@
           <tr>
             <th class="align-middle" width="10%" rowspan="2">Level</th>
             <th class="align-middle" width="25%" rowspan="2">Name of School</th>
-            <th class="align-middle" width="20%" rowspan="2">Basic Education / Degree / Course</th>
+            <th class="align-middle" width="25%" rowspan="2">Basic Education / Degree / Course</th>
             <th class="align-middle" width="10%" colspan="2">Period of Attendance</th>
             <th class="align-middle" width="10%" rowspan="2">Highest Level / Units Earned</th>
             <th class="align-middle" width="5%" rowspan="2">Year Graduated</th>
             <th class="align-middle" width="15%" rowspan="2">Scholarship / Academic Honors Received</th>
-            <th class="align-middle" width="5%" rowspan="2">Attachment</th>
             <?php if ($editMode) : ?>
               <th class="align-middle" width="5%" rowspan="2">Action</th>
             <?php endif; ?>
@@ -46,7 +45,6 @@
                 <td class="align-middle"><?php echo to_handle_null($education['highest'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo to_handle_null($education['year_graduated'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo to_handle_null($education['scholarship'], 'N/A'); ?></td>
-                <td class="align-middle"><?php round_pill('None'); ?></td>
                 <?php if ($editMode) : ?>
                   <td class="align-middle text-capitalize">
                     <div class="dropdown no-arrow">
@@ -63,7 +61,7 @@
             <?php endwhile;
           } else { ?>
             <tr>
-              <td colspan="<?php echo $editMode ? '10' : '9'; ?>" class="align-middle">No data available in table</td>
+              <td colspan="<?php echo $editMode ? '9' : '8'; ?>" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>
