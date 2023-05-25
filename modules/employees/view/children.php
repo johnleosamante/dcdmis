@@ -35,9 +35,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdown_ellipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-child.php?id=' . $child['no'], 'Edit', 'fa-edit', 'Edit Child'); ?>
+                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-child.php?id=' . encode($child['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-child.php?id=' . $child['no'], 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
+                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-child.php?id=' . encode($child['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>

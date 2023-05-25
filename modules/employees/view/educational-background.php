@@ -50,9 +50,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdown_ellipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-education.php?id=' . $education['no'], 'Edit', 'fa-edit', 'Edit Education'); ?>
+                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-education.php?id=' . encode($education['no']), 'Edit', 'fa-edit', 'Edit Education'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-education.php?id=' . $education['no'], 'Delete', 'fa-trash', 'Delete Education', 'text-danger'); ?>
+                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-education.php?id=' . encode($education['no']), 'Delete', 'fa-trash', 'Delete Education', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>
