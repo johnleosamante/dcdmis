@@ -41,7 +41,9 @@
                 <td class="align-middle"><?php echo $education['school']; ?></td>
                 <td class="align-middle"><?php echo to_handle_null($education['course'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo $education['from']; ?></td>
-                <td class="align-middle"><?php echo $education['to']; ?></td>
+                <td class="align-middle">
+                  <?php echo $education['ispresent'] ? 'PRESENT' : $education['to']; ?>
+                </td>
                 <td class="align-middle"><?php echo to_handle_null($education['highest'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo to_handle_null($education['year_graduated'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo to_handle_null($education['scholarship'], 'N/A'); ?></td>
