@@ -71,8 +71,18 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="to" class="mb-0">Attendance to: <?php show_asterisk(); ?></label>
-              <input id="to" name="to" type="number" step="1" min="0" class="form-control" required value="<?php echo $to; ?>">
+              <div class="row">
+                <div class="col-7">
+                  <label for="to" class="mb-0">Attendance to: <?php show_asterisk(); ?></label>
+                </div>
+                <div class="col-5">
+                  <div class="form-check">
+                    <input class="form-check-input" id="ispresent" type="checkbox" name="ispresent">
+                    <label class="form-check-label" for="ispresent">Present</label>
+                  </div><!-- .form-check-->
+                </div>
+              </div>
+              <input id="to" name="to" type="number" step="1" min="0" class="form-control" value="<?php echo $to; ?>" required>
             </div>
           </div>
         </div>
