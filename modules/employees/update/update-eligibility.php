@@ -14,6 +14,7 @@ $employee_id = $_SESSION[alias() . '_current_employee_id'];
 $eligibility_id = $career = $rating = $exam_place = $license = '';
 $exam_date = $validity = date('Y-m-d');
 $is_applicable = true;
+$_SESSION[alias() . '_current_eligibility_id'] = '';
 $modalTitle = "Add Civil Service Eligibility";
 
 if (isset($_GET['id']) && strlen($_GET['id']) > 0) {

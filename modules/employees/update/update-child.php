@@ -12,6 +12,7 @@ foreach ($_GET as $key => $data) {
 $employee_id = $_SESSION[alias() . '_current_employee_id'];
 $child_id = $fname = $mname = $lname = $ext = '';
 $bdate = date('Y-M-d');
+$_SESSION[alias() . '_current_child_id'] = '';
 $modalTitle = "Add Child Name";
 
 if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
