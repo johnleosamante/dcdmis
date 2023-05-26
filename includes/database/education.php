@@ -14,7 +14,7 @@ function create_education($level, $school, $course, $from, $to, $ispresent, $hig
 }
 
 function update_education($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $id, $no) {
-  non_query("UPDATE educational_background SET `Level`='{$level}', Name_of_School='{$school}', Course='{$course}', `From`='{$from}', `To`='{$to}', `ispresent`='{$ispresent}'Highest_Level='{$highest}', Year_Graduated='{$year}', Honor_Recieved='{$scholarship}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+  non_query("UPDATE educational_background SET `Level`='{$level}', Name_of_School='{$school}', Course='{$course}', `From`='{$from}', `To`='{$to}', `ispresent`='{$ispresent}', Highest_Level='{$highest}', Year_Graduated='{$year}', Honor_Recieved='{$scholarship}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
 function delete_education($id, $no) {
