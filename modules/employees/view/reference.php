@@ -15,7 +15,7 @@
         </thead>
         <tbody>
           <?php
-          $references = reference($employee['id']);
+          $references = references($employee['id']);
 
           if (num_rows($references) > 0) {
             while ($reference = fetch_assoc($references)) : ?>

@@ -20,7 +20,7 @@
         </thead>
         <tbody>
           <?php
-          $voluntary_work = voluntary_work($employee['id']);
+          $voluntary_work = voluntary_works($employee['id']);
 
           if (num_rows($voluntary_work) > 0) {
             while ($voluntary = fetch_assoc($voluntary_work)) : ?>

@@ -22,7 +22,7 @@
         </thead>
         <tbody>
           <?php
-          $learnings = learning_development($employee['id']);
+          $learnings = learning_and_development($employee['id']);
 
           if (num_rows($learnings) > 0) {
             while ($learning = fetch_assoc($learnings)) : ?>

@@ -14,7 +14,7 @@
         </thead>
         <tbody>
           <?php
-          $recognitions = recognition($employee['id']);
+          $recognitions = recognitions($employee['id']);
 
           if (num_rows($recognitions) > 0) {
             while ($recognition = fetch_assoc($recognitions)) : ?>

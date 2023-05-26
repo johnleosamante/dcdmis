@@ -13,7 +13,7 @@
         </thead>
         <tbody>
           <?php
-          $skills = special_skill($employee['id']);
+          $skills = special_skills($employee['id']);
 
           if (num_rows($skills) > 0) {
             while ($skill = fetch_assoc($skills)) : ?>

@@ -39,7 +39,7 @@ $editMode = $url === 'Edit Employee Information';
       $pds_progress += 10;
     }
 
-    if (num_rows(education($employee['id'])) > 0) {
+    if (num_rows(educational_backgrounds($employee['id'])) > 0) {
       $pds_progress += 15;
     }
 
@@ -47,15 +47,15 @@ $editMode = $url === 'Edit Employee Information';
       $pds_progress += 15;
     }
 
-    if (num_rows(experience($employee['id'])) > 0) {
+    if (num_rows(experiences($employee['id'])) > 0) {
       $pds_progress += 15;
     }
 
-    if (num_rows(learning_development($employee['id'])) > 0) {
+    if (num_rows(learning_and_development($employee['id'])) > 0) {
       $pds_progress += 15;
     }
 
-    if (num_rows(special_skill($employee['id'])) > 0) {
+    if (num_rows(special_skills($employee['id'])) > 0) {
       $pds_progress += 5;
     }
 

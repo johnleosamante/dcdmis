@@ -24,7 +24,7 @@
         </thead>
         <tbody>
           <?php
-          $experiences = experience($employee['id']);
+          $experiences = experiences($employee['id']);
 
           if (num_rows($experiences) > 0) {
             while ($experience = fetch_assoc($experiences)) : ?>

@@ -14,7 +14,7 @@
         </thead>
         <tbody>
           <?php
-          $organizations = membership($employee['id']);
+          $organizations = memberships($employee['id']);
 
           if (num_rows($organizations) > 0) {
             while ($membership = fetch_assoc($organizations)) : ?>

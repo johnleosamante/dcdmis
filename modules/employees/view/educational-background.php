@@ -32,7 +32,7 @@
         </thead>
         <tbody>
           <?php
-          $education_background = education($employee['id']);
+          $education_background = educational_backgrounds($employee['id']);
 
           if (num_rows($education_background) > 0) {
             while ($education = fetch_assoc($education_background)) : ?>
