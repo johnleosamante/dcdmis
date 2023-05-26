@@ -100,6 +100,10 @@ function set_option_selected($reference, $value) {
   return strtolower($reference) === strtolower($value) ? ' selected' : '';
 }
 
+function set_item_checked($condition) {
+  return $condition ? ' checked' : '';
+}
+
 function get_age($year, $month, $day) {
   $now = new DateTime();
   $bdate = new DateTime("{$year}-{$month}-{$day}");
