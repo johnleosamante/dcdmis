@@ -83,6 +83,15 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
             </div>
           </div>
 
+          <div class="col-lg-9">
+            <div class="form-group">
+              <label for="pob" class="mb-0">Place of Birth: <?php show_asterisk($editMode); ?></label>
+              <input id="pob" name="pob" type="text" class="form-control" value="<?php echo $employee['pob']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
               <label for="sex" class="mb-0">Sex: <?php show_asterisk($editMode); ?></label>
@@ -114,38 +123,10 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
             </div>
           </div>
 
-          <div class="col-lg-3">
+          <div class="col-lg-6">
             <div class="form-group">
               <label for="civil_status_others" class="mb-0">Specify, if Others:</label>
               <input id="civil_status_others" name="civil_status_others" type="text" class="form-control" value="<?php echo $employee['civil_status_specify']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="pob" class="mb-0">Place of Birth: <?php show_asterisk($editMode); ?></label>
-          <input id="pob" name="pob" type="text" class="form-control" value="<?php echo $employee['pob']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-3">
-            <div class="form-group">
-              <label for="citizenship" class="mb-0">Citizenship: <?php show_asterisk($editMode); ?></label>
-              <input id="citizenship" name="citizenship" type="text" class="form-control" value="<?php echo $employee['citizenship']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
-            </div>
-          </div>
-
-          <div class="col-lg-3">
-            <div class="form-group">
-              <label for="dual_citizenship" class="mb-0">Dual Citizenship: <?php show_asterisk($editMode); ?></label>
-              <input id="dual_citizenship" name="dual_citizenship" type="text" class="form-control" value="<?php echo $employee['dual_citizenship']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-            <div class="form-group">
-              <label for="dual_citizenship_country" class="mb-0">Please Indicate Country if Dual Citizen:</label>
-              <input id="dual_citizenship_country" name="dual_citizenship_country" type="text" class="form-control" value="<?php echo $employee['country']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
         </div>
@@ -157,25 +138,25 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
               <?php if (!$editMode) : ?>
                 <input id="height" type="text" class="form-control" value="<?php echo $employee['height']; ?>" readonly>
               <?php else : ?>
-                <input id="height" name="height" type="number" min="0" step="0.01" class="form-control" value="<?php echo $employee['height']; ?>">
+                <input id="height" name="height" type="number" min="0" step="0.01" class="form-control" value="<?php echo $employee['height']; ?>" required>
               <?php endif; ?>
             </div>
           </div>
 
           <div class="col-lg-2">
             <div class="form-group">
-              <label for="weight" class="mb-0">Weight (kg):</label>
+              <label for="weight" class="mb-0">Weight (kg): <?php show_asterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
                 <input id="weight" type="text" class="form-control" value="<?php echo $employee['weight']; ?>" readonly>
               <?php else : ?>
-                <input id="weight" name="weight" type="number" min="0" step="0.01" class="form-control" value="<?php echo $employee['weight']; ?>">
+                <input id="weight" name="weight" type="number" min="0" step="0.01" class="form-control" value="<?php echo $employee['weight']; ?>" required>
               <?php endif; ?>
             </div>
           </div>
 
           <div class=" col-lg-2">
             <div class="form-group">
-              <label for="blood_type" class="mb-0">Blood Type:</label>
+              <label for="blood_type" class="mb-0">Blood Type: <?php show_asterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
                 <input id="blood_type" type="text" class="form-control" value="<?php echo $employee['blood_type']; ?>" readonly>
               <?php else : ?>
@@ -238,6 +219,37 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
           </div>
         </div>
 
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="citizenship" class="mb-0">Citizenship: <?php show_asterisk($editMode); ?></label>
+              <input id="citizenship" name="citizenship" type="text" class="form-control" value="<?php echo $employee['citizenship']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label for="dual_citizenship" class="mb-0">Dual Citizenship: <?php show_asterisk($editMode); ?></label>
+              <?php if (!$editMode) : ?>
+                <input id="dual_citizenship" name="dual_citizenship" type="text" class="form-control" value="<?php echo $employee['dual_citizenship']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
+              <?php else : ?>
+                <select id="dual_citizenship" name="dual_citizenship" class="form-control" required>
+                  <option value="N/A" <?php echo set_option_selected('N/A', $employee['dual_citizenship']); ?>>N/A</option>
+                  <option value="By Birth" <?php echo set_option_selected('By Birth', $employee['dual_citizenship']); ?>>By Birth</option>
+                  <option value="By Naturalization" <?php echo set_option_selected('By Naturalization', $employee['dual_citizenship']); ?>>By Naturalization</option>
+                </select>
+              <?php endif; ?>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="dual_citizenship_country" class="mb-0">Please Indicate Country if Dual Citizen:</label>
+              <input id="dual_citizenship_country" name="dual_citizenship_country" type="text" class="form-control" value="<?php echo $employee['country']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+            </div>
+          </div>
+        </div>
+
         <div>Residential Address:</div>
 
         <hr class="mt-2">
@@ -267,7 +279,7 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
           <div class="col-lg-3">
             <div class="form-group">
               <label for="rbarangay" class="mb-0 small">Barangay <?php show_asterisk($editMode); ?></label>
-              <input id="rbarangay" name="rbarangay" type=" text" class="form-control" value="<?php echo $employee['rbarangay']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <input id="rbarangay" name="rbarangay" type=" text" class="form-control" value="<?php echo $employee['rbarangay']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
         </div>
@@ -276,21 +288,21 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
           <div class="col-lg-3">
             <div class="form-group">
               <label for="rcity" class="mb-0 small">City/Municipality <?php show_asterisk($editMode); ?></label>
-              <input id="rcity" name="rcity" type="text" class="form-control" value="<?php echo $employee['rcity']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <input id="rcity" name="rcity" type="text" class="form-control" value="<?php echo $employee['rcity']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="form-group">
               <label for="rprovince" class="mb-0 small">Province <?php show_asterisk($editMode); ?></label>
-              <input id="rprovince" name="rprovince" type="text" class="form-control" value="<?php echo $employee['rprovince']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <input id="rprovince" name="rprovince" type="text" class="form-control" value="<?php echo $employee['rprovince']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
               <label for="rzip" class="mb-0 small">ZIP Code <?php show_asterisk($editMode); ?></label>
-              <input id="rzip" name="rzip" type="text" class="form-control" value="<?php echo $employee['rzip']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <input id="rzip" name="rzip" type="text" class="form-control" value="<?php echo $employee['rzip']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
         </div>
@@ -324,7 +336,7 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
           <div class="col-lg-3">
             <div class="form-group">
               <label for="pbarangay" class="mb-0 small">Barangay <?php show_asterisk($editMode); ?></label>
-              <input id="pbarangay" name="pbarangay" type="text" class="form-control" value="<?php echo $employee['pbarangay']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <input id="pbarangay" name="pbarangay" type="text" class="form-control" value="<?php echo $employee['pbarangay']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
         </div>
@@ -333,21 +345,21 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
           <div class="col-lg-3">
             <div class="form-group">
               <label for="pcity" class="mb-0 small">City/Municipality <?php show_asterisk($editMode); ?></label>
-              <input id="pcity" name="pcity" type="text" class="form-control" value="<?php echo $employee['pcity']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <input id="pcity" name="pcity" type="text" class="form-control" value="<?php echo $employee['pcity']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="form-group">
               <label for="pprovince" class="mb-0 small">Province <?php show_asterisk($editMode); ?></label>
-              <input id="pprovince" name="pprovince" type="text" class="form-control" value="<?php echo $employee['pprovince']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <input id="pprovince" name="pprovince" type="text" class="form-control" value="<?php echo $employee['pprovince']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
               <label for="pzip" class="mb-0 small">ZIP Code <?php show_asterisk($editMode); ?></label>
-              <input id="pzip" name="pzip" type="text" class="form-control" value="<?php echo $employee['pzip']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <input id="pzip" name="pzip" type="text" class="form-control" value="<?php echo $employee['pzip']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
         </div>
@@ -363,14 +375,14 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
           <div class="col-lg-3">
             <div class="form-group">
               <label for="mobile" class="mb-0">Mobile Number: <?php show_asterisk($editMode); ?></label>
-              <input id="mobile" name="mobile" type="text" class="form-control" value="<?php echo $employee['mobile']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <input id="mobile" name="mobile" type="text" class="form-control" value="<?php echo $employee['mobile']; ?>" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="form-group">
               <label for="email" class="mb-0">Email Address: <?php show_asterisk($editMode); ?></label>
-              <input id="email" name="email" type="email" class="form-control" value="<?php echo $employee['email']; ?>" autocomplete="false" <?php echo set_active_navigation(!$editMode, 'readonly'); ?>>
+              <input id="email" name="email" type="email" class="form-control" value="<?php echo $employee['email']; ?>" autocomplete="false" <?php echo set_active_navigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
         </div>
