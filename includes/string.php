@@ -45,6 +45,10 @@ function to_datetime($date) {
   return strtotime($date) ? date('F d, Y', strtotime($date)) . '<br>' . date('h:i:s A', strtotime($date)) : $date;
 }
 
+function to_currency($value) {
+  return '&#8369; ' . number_format($value, 2);
+}
+
 function sanitize($input, $default = '') {
   return empty($input) ? $default : htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES);
 }
