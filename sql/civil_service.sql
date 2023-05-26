@@ -1,0 +1,1 @@
+ALTER TABLE `civil_service` ADD `isapplicabledate` BOOLEAN NOT NULL AFTER `Number_of_Hour`;

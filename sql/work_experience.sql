@@ -1,0 +1,1 @@
+ALTER TABLE `work_experience` ADD `ispresent` BOOLEAN NOT NULL AFTER `To`;

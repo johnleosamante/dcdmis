@@ -1,0 +1,1 @@
+ALTER TABLE `educational_background` ADD `ispresent` BOOLEAN NOT NULL AFTER `To`;
