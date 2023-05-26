@@ -12,6 +12,7 @@ foreach ($_GET as $key => $data) {
 $employee_id = $_SESSION[alias() . '_current_employee_id'];
 $education_id = $education = $level = $school = $course = $from = $to = $highest_level = $year_graduated = $honor_received = '';
 $modalTitle = "Add Educational Background";
+$ispresent = false;
 
 if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
   $modalTitle = "Edit Educational Background";
@@ -26,6 +27,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
     $course = $education['course'];
     $from = $education['from'];
     $to = $education['to'];
+    $ispresent = $education['ispresent'];
     $highest_level = $education['highest'];
     $year_graduated = $education['year_graduated'];
     $honor_received = $education['scholarship'];
@@ -77,7 +79,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
                 </div>
                 <div class="col-5">
                   <div class="form-check">
-                    <input class="form-check-input" id="ispresent" type="checkbox" name="ispresent">
+                    <input class="form-check-input" id="ispresent" type="checkbox" name="ispresent" <?php echo set_item_checked($ispresent); ?>>
                     <label class="form-check-label" for="ispresent">Present</label>
                   </div><!-- .form-check-->
                 </div>
