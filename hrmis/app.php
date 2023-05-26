@@ -140,7 +140,7 @@ if (isset($_POST['SaveEducation'])) {
   $course = sanitize($_POST['course']);
   $from = sanitize($_POST['from']);
   $to = sanitize($_POST['to']);
-  $ispresent = sanitize($_POST['ispresent']);
+  $ispresent = isset($_POST['ispresent']);
   $highest = sanitize($_POST['highest']);
   $year = sanitize($_POST['year']);
   $scholarship = sanitize($_POST['scholarship']);
