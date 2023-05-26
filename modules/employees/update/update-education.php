@@ -11,8 +11,8 @@ foreach ($_GET as $key => $data) {
 
 $employee_id = $_SESSION[alias() . '_current_employee_id'];
 $education_id = $education = $level = $school = $course = $from = $to = $highest_level = $year_graduated = $honor_received = '';
-$modalTitle = "Add Educational Background";
 $ispresent = false;
+$modalTitle = "Add Educational Background";
 
 if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
   $modalTitle = "Edit Educational Background";
