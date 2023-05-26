@@ -26,8 +26,8 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
     $school = $education['school'];
     $course = $education['course'];
     $from = $education['from'];
-    $to = $education['to'];
     $ispresent = $education['ispresent'];
+    $to = $ispresent ? date('Y') : $education['to'];
     $highest_level = $education['highest'];
     $year_graduated = $education['year_graduated'];
     $honor_received = $education['scholarship'];
