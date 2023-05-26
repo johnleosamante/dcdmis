@@ -96,7 +96,7 @@ if (isset($_POST['SaveChild'])) {
   $cmiddle = sanitize($_POST['cmiddle']);
   $cdob = sanitize($_POST['cdob']);
 
-  if (strlen($child_id) === 0) {
+  if (empty($child_id)) {
     create_child($clast, $cfirst, $cext, $cmiddle, $cdob, $employee_id);
 
     $message = 'Child has been added successfully!';
@@ -145,7 +145,7 @@ if (isset($_POST['SaveEducation'])) {
   $year = sanitize($_POST['year']);
   $scholarship = sanitize($_POST['scholarship']);
 
-  if (strlen($education_id) === 0) {
+  if (empty($education_id)) {
     create_education($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $employee_id);
 
     $message = 'Educational Background has been added successfully!';
@@ -155,7 +155,7 @@ if (isset($_POST['SaveEducation'])) {
     $message = 'Educational Background has been updated successfully!';
   }
 
-  if (mysqli_affected_rows($con) === 1) {
+  if (affected_rows($con) === 1) {
     $success = true;
     $show_prompt = true;
   }
@@ -172,11 +172,58 @@ if (isset($_POST['DeleteEducation'])) {
 
   if (affected_rows() === 1) {
     $success = true;
-    $message = 'Educational background has been deleted successfully!';
+    $message = 'Educational Background has been deleted successfully!';
     $show_prompt = true;
   }
 
   $_SESSION[alias() . '_current_education_id'] = '';
   $_SESSION[alias() . '_pds_tab'] = 'educational-background';
+}
+
+/* CIVIL SERVICE ELIGIBILITY */
+if (isset($_POST['SaveEligibility'])) {
+  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $eligibility_id = !empty($_SESSION[alias() . '_current_eligibility_id']) ? $_SESSION[alias() . '_current_eligibility_id'] : '';
+  $career = sanitize($_POST['career']);
+  $rating = sanitize($_POST['rating']);
+  $exam_date = sanitize($_POST['exam_date']);
+  $exam_place = sanitize($_POST['exam_place']);
+  $license = sanitize($_POST['license']);
+  $is_applicable = isset($_POST['isapplicable']);
+  $validity = sanitize($_POST['validity']);
+
+  if (empty($eligibility_id)) {
+    create_eligibility($career, $rating, $exam_date, $exam_place, $license, $is_applicable, $validity, $employee_id);
+
+    $message = 'Civil Service Eligibility has been added successfully!';
+  } else {
+    update_eligibility($career, $rating, $exam_date, $exam_place, $license, $is_applicable, $validity, $employee_id, $eligibility_id);
+
+    $message = 'Civil Service Eligibility has been updated successfully!';
+  }
+
+  if (affected_rows($con) === 1) {
+    $success = true;
+    $show_prompt = true;
+  }
+
+  $_SESSION[alias() . '_current_eligibility_id'] = '';
+  $_SESSION[alias() . '_pds_tab'] = 'civil-service-eligibility';
+}
+
+if (isset($_POST['DeleteEligibility'])) {
+  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $eligibility_id = $_SESSION[alias() . '_current_eligibility_id'];
+
+  delete_eligibility($employee_id, $eligibility_id);
+
+  if (affected_rows() === 1) {
+    $success = true;
+    $message = 'Civil Service Eligibility has been deleted successfully!';
+    $show_prompt = true;
+  }
+
+  $_SESSION[alias() . '_current_eligibility_id'] = '';
+  $_SESSION[alias() . '_pds_tab'] = 'civil-service-eligibility';
 }
 ?>
