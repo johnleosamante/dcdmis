@@ -3,17 +3,25 @@
 ?>
 
 <div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'civil-service-eligibility', 'show active'); ?>" id="civil-service-eligibility">
+  <?php if ($editMode) : ?>
+    <div class="d-sm-flex justify-content-end my-3">
+      <?php modal_button_split(uri() . '/modules/employees/update/update-eligibility.php', 'Add', 'fa-plus', 'Add Civil Service Eligibility', 'primary'); ?>
+    </div>
+  <?php endif; ?>
+
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
         <thead>
           <tr>
-            <th class="align-middle" width="30%" rowspan="2">Career Services / RA 1080 (Board / Bar) Under Special Laws / CES / CSEE Barangay Eligibility / Driver's License</th>
+            <th class="align-middle" width="35%" rowspan="2">Career Services / RA 1080 (Board / Bar) Under Special Laws / CES / CSEE Barangay Eligibility / Driver's License</th>
             <th class="align-middle" width="10%" rowspan="2">Rating</th>
             <th class="align-middle" width="10%" rowspan="2">Date of Examination / Conferment</th>
             <th class="align-middle" width="25%" rowspan="2">Place of Examination / Conferment</th>
             <th class="align-middle" width="20%" colspan="2">License</th>
-            <th class="align-middle" width="5%" rowspan="2">Attachment</th>
+            <?php if ($editMode) : ?>
+              <th class="align-middle" width="5%" rowspan="2">Action</th>
+            <?php endif; ?>
           </tr>
           <tr>
             <th class="align-middle" width="10%">Number</th>
@@ -22,7 +30,7 @@
         </thead>
         <tbody>
           <?php
-          $eligibilities = eligibility($employee['id']);
+          $eligibilities = eligibilities($employee['id']);
 
           if (num_rows($eligibilities) > 0) {
             while ($eligibility = fetch_assoc($eligibilities)) : ?>
@@ -32,13 +40,28 @@
                 <td class="align-middle"><?php echo to_date($eligibility['date']); ?></td>
                 <td class="align-middle"><?php echo $eligibility['place']; ?></td>
                 <td class="align-middle"><?php echo to_handle_null($eligibility['license'], 'N/A'); ?></td>
-                <td class="align-middle"><?php echo to_date($eligibility['validity'], 'N/A'); ?></td>
-                <td class="align-middle"><?php round_pill('None'); ?></td>
+                <td class="align-middle">
+                  <?php
+                  echo $eligibility['isapplicable'] ? to_date($eligibility['validity'], 'm/d/Y', 'N/A') : 'N/A';
+                  ?>
+                </td>
+                <?php if ($editMode) : ?>
+                  <td class="align-middle text-capitalize">
+                    <div class="dropdown no-arrow">
+                      <?php dropdown_ellipsis(); ?>
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-eligibility.php?id=' . encode($eligibility['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
+                        <div class="dropdown-divider"></div>
+                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-eligibility.php?id=' . encode($eligibility['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
+                      </div>
+                    </div>
+                  </td>
+                <?php endif; ?>
               </tr>
             <?php endwhile;
           } else { ?>
             <tr>
-              <td colspan="7" class="align-middle">No data available in table</td>
+              <td colspan="<?php echo $editMode ? '6' : '5'; ?>" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>
