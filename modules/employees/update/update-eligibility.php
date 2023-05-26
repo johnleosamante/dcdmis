@@ -11,7 +11,7 @@ foreach ($_GET as $key => $data) {
 }
 
 $employee_id = $_SESSION[alias() . '_current_employee_id'];
-$eligibility_id = $career = $rating = $exam_place = $number = '';
+$eligibility_id = $career = $rating = $exam_place = $license = '';
 $exam_date = $validity = date('Y-m-d');
 $is_applicable = true;
 $modalTitle = "Add Civil Service Eligibility";
@@ -28,9 +28,9 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
     $rating = $eligibility['rating'];
     $exam_date = to_date($eligibility['date'], 'Y-m-d');
     $exam_place = $eligibility['place'];
-    $number = $eligibility['license'];
+    $license = $eligibility['license'];
     $is_applicable = $eligibility['isapplicable'];
-    $validity = to_date($eligibility['validity'], 'Y-m-d');
+    $validity = $is_applicable ? to_date($eligibility['validity'], 'Y-m-d') : date('Y-m-d');
   }
 }
 ?>
@@ -71,7 +71,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
           <div class="col-md-6">
             <div class="form-group">
               <label for="license" class="mb-0">License No. (if applicable):</label>
-              <input id="license" type="text" name="license" class="form-control" value="<?php echo $number; ?>">
+              <input id="license" type="text" name="license" class="form-control" value="<?php echo $license; ?>">
             </div>
           </div>
 
