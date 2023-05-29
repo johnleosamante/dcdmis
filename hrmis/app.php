@@ -226,4 +226,53 @@ if (isset($_POST['DeleteEligibility'])) {
   $_SESSION[alias() . '_current_eligibility_id'] = '';
   $_SESSION[alias() . '_pds_tab'] = 'civil-service-eligibility';
 }
+
+/* WORK EXPERIENCE */
+if (isset($_POST['SaveExperience'])) {
+  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $experience_id = !empty($_SESSION[alias() . '_current_work_experience_id']) ? $_SESSION[alias() . '_current_work_experience_id'] : '';
+  $from = sanitize($_POST['from']);
+  $ispresent = isset($_POST['ispresent']);
+  $to = $ispresent ? date('m/d/Y') : sanitize($_POST['to']);
+  $position = sanitize($_POST['position']);
+  $organization = sanitize($_POST['organization']);
+  $salary = isset($_POST['salary']) ? $_POST['salary'] : 0;
+  $sg = sanitize($_POST['sg']);
+  $status = sanitize($_POST['status']);
+  $isgovernment = sanitize($_POST['isgovernment']);
+
+  if (empty($experience_id)) {
+    create_experience($from, $to, $ispresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employee_id);
+
+    $message = 'Work Experience has been added successfully!';
+  } else {
+    update_experience($from, $to, $ispresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employee_id, $experience_id);
+
+    $message = 'Work Experience has been updated successfully!';
+  }
+
+  if (affected_rows($con) === 1) {
+    $success = true;
+    $show_prompt = true;
+  }
+
+  $_SESSION[alias() . '_current_work_experience_id'] = '';
+  $_SESSION[alias() . '_pds_tab'] = 'work-experience';
+}
+
+if (isset($_POST['DeleteWorkExperience'])) {
+  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $experience_id = $_SESSION[alias() . '_current_work_experience_id'];
+
+  delete_experience($employee_id, $experience_id);
+
+  if (affected_rows() === 1) {
+    $success = true;
+    $message = 'Work Experience has been deleted successfully!';
+    $show_prompt = true;
+  }
+
+  $_SESSION[alias() . '_current_work_experience_id'] = '';
+  $_SESSION[alias() . '_pds_tab'] = 'work-experience';
+}
 ?>
