@@ -5,7 +5,7 @@
 <div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'work-experience', 'show active'); ?>" id="work-experience">
     <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modal_button_split(uri() . '/modules/employees/update/update-experience.php', 'Add', 'fa-plus', 'Add Work Experience', 'primary'); ?>
+      <?php modal_button_split(uri() . '/modules/employees/update/update-work-experience.php', 'Add', 'fa-plus', 'Add Work Experience', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -38,7 +38,7 @@
             while ($experience = fetch_assoc($experiences)) : ?>
               <tr>
                 <td class="align-middle"><?php echo to_date($experience['from']); ?></td>
-                <td class="align-middle"><?php echo to_date($experience['to']); ?></td>
+                <td class="align-middle"><?php echo $experience['ispresent'] ? 'PRESENT' : to_date($experience['to']); ?></td>
                 <td class="align-middle"><?php echo $experience['position']; ?></td>
                 <td class="align-middle"><?php echo $experience['organization']; ?></td>
                 <td class="align-middle"><?php echo to_currency($experience['salary']); ?></td>
@@ -50,9 +50,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdown_ellipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-experience.php?id=' . encode($experience['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
+                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-work-experience.php?id=' . encode($experience['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-experience.php?id=' . encode($experience['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
+                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-work-experience.php?id=' . encode($experience['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>
