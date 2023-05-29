@@ -10,11 +10,11 @@ function eligibility($id, $no) {
 }
 
 function create_eligibility($career, $rating, $exam_date, $exam_place, $license, $is_applicable, $validity, $id) {
-  return non_query("INSERT INTO civil_service (`Carrer_Service`, `Rating`, `Date_of_Examination`, `Place_of_Examination`, `Number_of_Hour`, `isapplicabledate`, `Date_of_Validity`, `Emp_ID`) VALUES ('{$career}', '{$rating}', '{$exam_date}', '{$exam_place}', '{$license}', '{$is_applicable}', '{$validity}', '{$id}');");
+  non_query("INSERT INTO civil_service (`Carrer_Service`, `Rating`, `Date_of_Examination`, `Place_of_Examination`, `Number_of_Hour`, `isapplicabledate`, `Date_of_Validity`, `Emp_ID`) VALUES ('{$career}', '{$rating}', '{$exam_date}', '{$exam_place}', '{$license}', '{$is_applicable}', '{$validity}', '{$id}');");
 }
 
 function update_eligibility($career, $rating, $exam_date, $exam_place, $license, $is_applicable, $validity, $id, $no) {
-  return non_query("UPDATE civil_service SET `Carrer_Service`='{$career}', `Rating`='{$rating}', `Date_of_Examination`='{$exam_date}', `Place_of_Examination`='{$exam_place}', `Number_of_Hour`='{$license}', `isapplicabledate`='{$is_applicable}', `Date_of_Validity`='{$validity}' WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
+  non_query("UPDATE civil_service SET `Carrer_Service`='{$career}', `Rating`='{$rating}', `Date_of_Examination`='{$exam_date}', `Place_of_Examination`='{$exam_place}', `Number_of_Hour`='{$license}', `isapplicabledate`='{$is_applicable}', `Date_of_Validity`='{$validity}' WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
 function delete_eligibility($id, $no) {
