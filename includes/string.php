@@ -46,7 +46,8 @@ function to_datetime($date) {
 }
 
 function to_currency($value) {
-  return '&#8369; ' . number_format($value, 2);
+  $number = is_numeric($value) ? $value : 0;
+  return '&#8369; ' . number_format(floatval($number), 2);
 }
 
 function sanitize($input, $default = '') {
