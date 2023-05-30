@@ -97,7 +97,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="status" class="mb-0">Status of Appointment: <span class="text-danger">*</span></label>
+              <label for="status" class="mb-0">Status of Appointment: <?php show_asterisk(); ?></label>
               <select name="status" id="status" class="form-control" required>
                 <option value="Permanent" <?php echo set_option_selected("Permanent", $status); ?>>Permanent</option>
                 <option value="Temporary" <?php echo set_option_selected("Temporary", $status); ?>>Temporary</option>
@@ -113,7 +113,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="isgovernment" class="mb-0">Government Service: <span class="text-danger">*</span></label>
+              <label for="isgovernment" class="mb-0">Government Service: <?php show_asterisk(); ?></label>
               <select name="isgovernment" id="isgovernment" class="form-control" required>
                 <option value="Y" <?php echo set_option_selected("Y", $service); ?>>Yes</option>
                 <option value="N" <?php echo set_option_selected("N", $service); ?>>No</option>
