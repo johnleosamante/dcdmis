@@ -1,30 +1,31 @@
 <?php
 // dts/app.php
 $_SESSION[alias() . '_active_app'] = 'dts';
+$page = $app_title = "Document Tracking System";
 
 if (!isset($_SESSION[alias() . '_user_id'])) {
   redirect(uri() . '/login');
 }
 
+$user_id = $_SESSION[alias() . '_user_id'];
+
 if (!isset($_SESSION[alias() . '_portal'])) {
   redirect(uri() . '/pis');
 }
+
+$code = $_SESSION[alias() . '_code'];
+$station_id = $_SESSION[alias() . '_station_id'];
+$station = $_SESSION[alias() . '_station'];
+$portal = $_SESSION[alias() . '_portal'];
+$show_prompt = false;
+$message = null;
 
 if (isset($_POST['primary_search_button'])) {
   redirect(custom_uri('dts', 'Document Information', sanitize($_POST['primary_search_text'])));
 }
 
-$show_prompt = false;
-$message = null;
-$page = $app_title = "Document Tracking System";
-$user_id = $_SESSION[alias() . '_user_id'];
-$code = $_SESSION[alias() . '_code'];
-$station_id = $_SESSION[alias() . '_station_id'];
-$station = $_SESSION[alias() . '_station'];
-$portal = $_SESSION[alias() . '_portal'];
-
 if (isset($_POST['save_document'])) {
-  $document_id = $_SESSION[alias() . '_document_id'];
+  $document_id = isset($_POST['verifier']) ? sanitize(decode($_POST['verifier'])) : null;
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
   $destination = $portal === 'school_portal' ? 'RECORD' :  sanitize($_POST['destination']);
@@ -39,11 +40,12 @@ if (isset($_POST['save_document'])) {
     insert_document($document_id, $description, $code, $purpose, $details);
     insert_document_log($document_id, $user_id, $code, $destination, $purpose, 'New', $details);
   } else {
+    $is_description_editable = isset($_SESSION[alias() . '_editable_description']) ?  $_SESSION[alias() . '_editable_description'] : false;
     $status = 'updated';
     $update_description = false;
     $description = '';
 
-    if (isset($_SESSION[alias() . '_editable_description']) && $_SESSION[alias() . '_editable_description']) {
+    if ($is_description_editable) {
       $update_description = true;
       $description = sanitize($_POST['description']);
     }
@@ -59,7 +61,7 @@ if (isset($_POST['save_document'])) {
 }
 
 if (isset($_POST['receive_document'])) {
-  $document_id = $_SESSION[alias() . '_document_id'];
+  $document_id = isset($_POST['verifier']) ? sanitize(decode($_POST['verifier'])) : null;
 
   update_document_logs_done($document_id);
   insert_document_log($document_id, $user_id, $code, '-', 'Received', 'New');
@@ -71,7 +73,7 @@ if (isset($_POST['receive_document'])) {
 }
 
 if (isset($_POST['forward_document'])) {
-  $document_id = $_SESSION[alias() . '_document_id'];
+  $document_id = isset($_POST['verifier']) ? sanitize(decode($_POST['verifier'])) : null;
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
 
@@ -86,7 +88,7 @@ if (isset($_POST['forward_document'])) {
 }
 
 if (isset($_POST['complete_document'])) {
-  $document_id = $_SESSION[alias() . '_document_id'];
+  $document_id = isset($_POST['verifier']) ? sanitize(decode($_POST['verifier'])) : null;
   $remarks = sanitize($_POST['remarks']);
   $status = 'Completed';
 
@@ -101,7 +103,7 @@ if (isset($_POST['complete_document'])) {
 }
 
 if (isset($_POST['cancel_document'])) {
-  $document_id = $_SESSION[alias() . '_document_id'];
+  $document_id = isset($_POST['verifier']) ? sanitize(decode($_POST['verifier'])) : null;
   $remarks = sanitize($_POST['remarks']);
   $status = 'Canceled';
 
