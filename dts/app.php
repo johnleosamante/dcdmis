@@ -25,7 +25,7 @@ if (isset($_POST['primary_search_button'])) {
 }
 
 if (isset($_POST['save_document'])) {
-  $document_id = isset($_POST['verifier']) ? sanitize(decode($_POST['verifier'])) : null;
+  $document_id = $_SESSION[alias() . '_document_id'];
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
   $destination = $portal === 'school_portal' ? 'RECORD' :  sanitize($_POST['destination']);
@@ -61,7 +61,7 @@ if (isset($_POST['save_document'])) {
 }
 
 if (isset($_POST['receive_document'])) {
-  $document_id = isset($_POST['verifier']) ? sanitize(decode($_POST['verifier'])) : null;
+  $document_id = $_SESSION[alias() . '_document_id'];
 
   update_document_logs_done($document_id);
   insert_document_log($document_id, $user_id, $code, '-', 'Received', 'New');
@@ -73,7 +73,7 @@ if (isset($_POST['receive_document'])) {
 }
 
 if (isset($_POST['forward_document'])) {
-  $document_id = isset($_POST['verifier']) ? sanitize(decode($_POST['verifier'])) : null;
+  $document_id = $_SESSION[alias() . '_document_id'];
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
 
@@ -88,7 +88,7 @@ if (isset($_POST['forward_document'])) {
 }
 
 if (isset($_POST['complete_document'])) {
-  $document_id = isset($_POST['verifier']) ? sanitize(decode($_POST['verifier'])) : null;
+  $document_id = $_SESSION[alias() . '_document_id'];
   $remarks = sanitize($_POST['remarks']);
   $status = 'Completed';
 
@@ -103,7 +103,7 @@ if (isset($_POST['complete_document'])) {
 }
 
 if (isset($_POST['cancel_document'])) {
-  $document_id = isset($_POST['verifier']) ? sanitize(decode($_POST['verifier'])) : null;
+  $document_id = $_SESSION[alias() . '_document_id'];
   $remarks = sanitize($_POST['remarks']);
   $status = 'Canceled';
 
