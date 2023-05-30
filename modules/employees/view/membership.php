@@ -9,7 +9,6 @@
         <thead>
           <tr>
             <th class="align-middle" width="90%">Membership in Association / Organization</th>
-            <th class="align-middle" width="10%">Attachment</th>
           </tr>
         </thead>
         <tbody>
@@ -20,12 +19,11 @@
             while ($membership = fetch_assoc($organizations)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $membership['organization']; ?></td>
-                <td class="align-middle"><?php round_pill('None', 'danger'); ?></td>
               </tr>
             <?php endwhile;
           } else { ?>
             <tr>
-              <td class="align-middle" colspan="2">No data available in table</td>
+              <td class="align-middle" colspan="1">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>

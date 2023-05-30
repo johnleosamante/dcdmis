@@ -9,7 +9,6 @@
         <thead>
           <tr>
             <th class="align-middle" width="90%">Non-Academic Distinctions / Recognition</th>
-            <th class="align-middle" width="10%">Attachment</th>
           </tr>
         </thead>
         <tbody>
@@ -20,12 +19,11 @@
             while ($recognition = fetch_assoc($recognitions)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $recognition['recognition']; ?></td>
-                <td class="align-middle"><?php round_pill('None'); ?></td>
               </tr>
             <?php endwhile;
           } else { ?>
             <tr>
-              <td colspan="2" class="align-middle">No data available in table</td>
+              <td colspan="1" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>

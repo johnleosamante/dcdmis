@@ -13,7 +13,6 @@
             <th class="align-middle" width="5%" rowspan="2">Number of Hours</th>
             <th class="align-middle" width="10%" rowspan="2">Type of Learning &amp; Development</th>
             <th class="align-middle" width="30%" rowspan="2">Conducted / Sponsored by</th>
-            <th class="align-middle" width="10%" rowspan="2">Attachment</th>
           </tr>
           <tr>
             <th class="align-middle" width="5%">From</th>
@@ -33,12 +32,11 @@
                 <td class="align-middle"><?php echo $learning['hours']; ?></td>
                 <td class="align-middle"><?php echo $learning['type']; ?></td>
                 <td class="align-middle"><?php echo $learning['sponsor']; ?></td>
-                <td class="align-middle"><?php round_pill('None'); ?></td>
               </tr>
             <?php endwhile;
           } else { ?>
             <tr>
-              <td colspan="7" class="align-middle">No data available in table</td>
+              <td colspan="6" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>
