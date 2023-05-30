@@ -185,20 +185,20 @@ function generate_comparative_line_chart(data, colors, element) {
       labels: data.map((item) => { return item.name; }), 
       datasets: [{ 
         type: 'line', 
-        data: data.map((item) => {}), 
+        data: data.map((item) => { return item.data_one; }), 
         backgroundColor: 'transparent', 
-        borderColor: '#007bff', 
-        pointBorderColor: '#007bff', 
-        pointBackgroundColor: '#007bff', 
+        borderColor: colors[0], 
+        pointBorderColor: colors[0], 
+        pointBackgroundColor: colors[0], 
         fill: false 
       }, 
       { 
         type: 'line', 
-        data: [60, 80, 70, 67, 80, 77, 100], 
+        data: data.map((item) => { return item.data_one; }), 
         backgroundColor: 'tansparent', 
-        borderColor: '#ced4da', 
-        pointBorderColor: '#ced4da', 
-        pointBackgroundColor: '#ced4da', 
+        borderColor: colors[1], 
+        pointBorderColor: colors[1], 
+        pointBackgroundColor: colors[1], 
         fill: false }] 
       },
       options: { 
