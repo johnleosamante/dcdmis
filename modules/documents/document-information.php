@@ -5,7 +5,7 @@ $documents = document_from($document_id, $station);
 
 if (num_rows($documents) > 0) {
   $document = fetch_assoc($documents);
-  $document_id = $document['id'];
+  $document_id = $_SESSION[alias() . '_document_id'] = $document['id'];
 
   if (is_incoming_document($document_id, $station)) {
     $document_type = 'Incoming Documents';
