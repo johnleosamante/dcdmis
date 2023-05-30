@@ -71,16 +71,16 @@ if (num_rows($documents) > 0) {
         switch ($document_type) {
           case 'Incoming Documents':
             if (!is_document($document_id, 'Cancel')) {
-              modal_button_split(uri() . '/modules/documents/receive-document-dialog.php?id=' . encode($document_id),'Receive', 'fa-hand-holding-medical','Receive Document', 'success');
+              modal_button_split(uri() . '/modules/documents/receive-document-dialog.php','Receive', 'fa-hand-holding-medical','Receive Document', 'success');
             }
             break;
           case 'Pending Documents':
-            modal_button_split(uri() .'/modules/documents/forward-document-dialog.php?id=' . encode($document_id), 'Forward', 'fa-share', 'Forward Document', 'info');
-            modal_button_split(uri() .'/modules/documents/complete-document-dialog.php?id=' . encode($document_id), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
+            modal_button_split(uri() .'/modules/documents/forward-document-dialog.php', 'Forward', 'fa-share', 'Forward Document', 'info');
+            modal_button_split(uri() .'/modules/documents/complete-document-dialog.php', 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
             break;
           case 'Outgoing Documents':
             if (!is_document($document_id, 'Complete') && !is_document($document_id, 'Cancel')) {
-              modal_button_split(uri() .'/modules/documents/save-document-dialog.php?id=' . encode($document_id), 'Edit', 'fa-edit','Edit Document', 'info');
+              modal_button_split(uri() .'/modules/documents/save-document-dialog.php', 'Edit', 'fa-edit','Edit Document', 'info');
             }
             break;
           default:
@@ -91,7 +91,7 @@ if (num_rows($documents) > 0) {
           case 'Pending Documents':
           case 'Outgoing Documents':
             if (is_document_from($document_id, $station) && $document['from'] === $station && !is_document($document_id, 'Cancel')) {
-              modal_button_split(uri() . '/modules/documents/cancel-document-dialog.php?id=' . encode($document_id), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
+              modal_button_split(uri() . '/modules/documents/cancel-document-dialog.php', 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
             }
             break;
           default:
