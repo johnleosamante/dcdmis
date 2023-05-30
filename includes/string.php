@@ -50,8 +50,8 @@ function to_currency($value) {
   return '&#8369; ' . number_format(floatval($number), 2);
 }
 
-function sanitize($input, $default = '') {
-  return empty($input) ? $default : htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES);
+function sanitize($input) {
+  return htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES);
 }
 
 function random_password($length) {
