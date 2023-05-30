@@ -24,7 +24,7 @@ include_once(root() . '/includes/layout/components.php');
     </div>
   </div>
 
-  <?php scroll_to('#page-top'); ?>
+  <?php scroll_to_top(); ?>
 
   <script src="<?php echo uri(); ?>/assets/vendor/jquery/jquery.min.js"></script>
   <script src="<?php echo uri(); ?>/assets/vendor/jquery-easing/jquery.easing.min.js"></script>
