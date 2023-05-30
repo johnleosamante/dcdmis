@@ -61,7 +61,7 @@
             <?php endwhile;
           } else { ?>
             <tr>
-              <td colspan="<?php echo $editMode ? '6' : '5'; ?>" class="align-middle">No data available in table</td>
+              <td colspan="<?php echo $editMode ? '7' : '6'; ?>" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>
