@@ -25,13 +25,13 @@ if (num_rows($documents) > 0) {
 }
 ?>
 
-<div class="modal-dialog">
+<div class="modal-dialog <?php echo $not_found ? 'modal-sm' : ''; ?>">
   <div class="modal-content">
     <?php modal_header($modal_title); ?>
 
     <form action="" method="POST">
       <div class="modal-body">
-        <?php if (!$not_found) : ?>
+        <?php if (!$not_found) { ?>
           <div class="form-group">
             <label for="code" class="mb-0">Code</label>
             <input id="code" type="text" value="<?php echo $code; ?>" class="form-control text-uppercase" disabled>
@@ -70,9 +70,9 @@ if (num_rows($documents) > 0) {
             <label for="details" class="mb-0">Additional details (optional)</label>
             <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."></textarea>
           </div>
-        <?php else : ?>
-          Sorry, the document that you are looking for could not be found.
-        <?php endif; ?>
+        <?php } else {
+          missing_prompt($modal_title, 'fa-times-circle');
+        } ?>
       </div>
 
       <div class="modal-footer">
@@ -80,7 +80,7 @@ if (num_rows($documents) > 0) {
           <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
           <button class="btn btn-primary" name="forward_document" type="submit">Continue</button>
         <?php endif; ?>
-        <button class="btn btn-secondary close" type="button" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
       </div>
     </form>
   </div>
