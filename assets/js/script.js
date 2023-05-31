@@ -61,6 +61,6 @@ function loadData(href, id = 'Modal') {
     }
   }
 
-  xmlhttp.open('GET', href);
+  xmlhttp.open('GET', href, false);
   xmlhttp.send();
 }
