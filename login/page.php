@@ -27,7 +27,7 @@
           <div class="input-group">
             <input class="form-control border-right-0" id="password" name="password" type="password" placeholder="Password">
             <div class="input-group-append">
-              <button type="button" id="eye_toggle" class="input-group-text border-left-0 bg-white">
+              <button type="button" id="eye-toggle" class="input-group-text border-left-0 bg-white">
                 <i id="eye" class="small fas fa-eye fa-sm"></i>
               </button>
             </div>
