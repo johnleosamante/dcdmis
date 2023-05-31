@@ -2,11 +2,10 @@
 // modules/error/not-found.php
 ?>
 
-<div class="text-center pt-5 px-5">
+<div class="text-center py-0">
   <div class="error mx-auto text-gray-800"><i class="fas fa-search fa-fw"></i></div>
-  <p class="lead text-gray-800 mb-0">No results found</p>
+  <p class="lead text-gray-800 mt-1 mb-0">No results found</p>
   <p class="text-gray-500 mb-4">Sorry, we couldn't find what you're looking for...</p>
-
 
   <p class="text-gray-700 mb-1">Try a new search term instead</p>
 
@@ -26,6 +25,6 @@
   </form>
 
   <?php if (isset($_SESSION[alias() . '_user_id'])) : ?>
-    <a href="<?php echo uri() . '/' . $_SESSION[alias() . '_active_app']; ?>" title="Go back to dashboard">Go back to Dashboard</a>
+    <a href="<?php echo uri() . '/' . $_SESSION[alias() . '_active_app']; ?>" title="Go to dashboard">Go to Dashboard</a>
   <?php endif; ?>
 </div>

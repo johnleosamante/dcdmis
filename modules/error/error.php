@@ -1,11 +1,11 @@
 <?php
-// modules/error/404.php
+// modules/error/error.php
 ?>
 
 <div class="text-center py-0">
-  <div class="error mx-auto" data-text="404">404</div>
-  <p class="lead text-gray-800 mt-1 mb-0">Page not found</p>
-  <p class="text-gray-500 mb-4">Sorry, we couldn't find what you're looking for...</p>
+  <div class="error mx-auto w-100">Ooops!</div>
+  <p class="lead text-gray-800 mt-1 mb-0">Unexpected error</p>
+  <p class="text-gray-500 mb-4">It seems you have encountered a glitch in the system...</p>
 
   <?php if (isset($_SESSION[alias() . '_user_id'])) : ?>
     <a href="<?php echo uri() . '/' . $_SESSION[alias() . '_active_app']; ?>" title="Go to dashboard">Go to dashboard</a>
