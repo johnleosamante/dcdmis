@@ -12,9 +12,9 @@ $(document).ready(function () {
   }
 });
 
-function eye_toggle(input_id, eye_id) {
-  const input = document.getElementById(input_id);
-  const eye = document.getElementById(eye_id);
+function eyeToggle(inputId, eyeId) {
+  const input = document.getElementById(inputId);
+  const eye = document.getElementById(eyeId);
 
   if (input.type === 'password') {
     input.type = 'text';
@@ -27,32 +27,50 @@ function eye_toggle(input_id, eye_id) {
   }
 }
 
-function element_exist(element) {
+function elementExist(element) {
   return typeof(element) !== 'undefined' && element !== null;
 }
 
-let toggle = document.getElementById('eye_toggle');
-if (element_exist(toggle)) {
-  document.getElementById('eye_toggle').addEventListener('click', (e) => {
+let toggle = document.getElementById('eye-toggle');
+if (elementExist(toggle)) {
+  document.getElementById('eye-toggle').addEventListener('click', (e) => {
     e.preventDefault();
-    eye_toggle('password', 'eye');
+    eyeToggle('password', 'eye');
   });
 }
 
-let confirm_toggle = document.getElementById('eye_confirm_toggle');
-if (element_exist(confirm_toggle)) {
-  document.getElementById('eye_confirm_toggle').addEventListener('click', (e) => {
+let confirmToggle = document.getElementById('eye-confirm-toggle');
+if (elementExist(confirmToggle)) {
+  document.getElementById('eye-confirm-toggle').addEventListener('click', (e) => {
     e.preventDefault();
-    eye_toggle('password_confirm', 'eye_confirm');
+    eyeToggle('password-confirm', 'eye-confirm');
   });
 }
 
-function load_view(href, id='Modal') {
+function loadModal(href) {
+  const xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+  xmlhttp.onreadystatechange = () => {
+    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+      document.getElementById('Modal').innerHTML = xmlhttp.responseText;
+    } else {
+      let error = xmlhttp.status;
+      document.getElementById('Modal').innerHTML = '<div class="modal-dialog modal-sm"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button></div><div class="modal-body text-center"><div class="error mx-auto" data-text="' + error + '">' + error + '</div><p class="text-gray-500">Please refresh the page and try again...</p></div></div></div>';
+    }
+  }
+
+  xmlhttp.open('GET', href, false);
+  xmlhttp.send();
+}
+
+function loadData(href, id) {
   const xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
   xmlhttp.onreadystatechange = () => {
     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
       document.getElementById(id).innerHTML = xmlhttp.responseText;
+    } else if (xmlhttp.status >= 400) {
+      document.getElementById(id).innerHTML = 'No data to available';
     }
   }
 
