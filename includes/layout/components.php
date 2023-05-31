@@ -127,7 +127,7 @@ function link_button_split($link, $text, $icon, $title = '', $color = 'primary',
 <?php }
 
 function modal_button_split($link, $text, $icon, $title ='', $color = 'primary') { ?>
-  <a href='#' data-toggle="modal" data-target="#Modal" class="btn btn-<?php echo $color; ?>  btn-icon-split btn-sm my-1" title="<?php echo $title; ?>" onclick="loadModal('<?php echo $link; ?>')">
+  <a href='#' data-toggle="modal" data-target="#Modal" class="btn btn-<?php echo $color; ?>  btn-icon-split btn-sm my-1" title="<?php echo $title; ?>" onclick="loadData('<?php echo $link; ?>')">
     <span class="icon text-white-50"><i class="fas <?php echo $icon; ?> fa-fw"></i></span>
     <span class="text"><?php echo $text; ?></span>
   </a>
@@ -140,7 +140,7 @@ function link_dropdown_item($link, $text, $icon, $title = '', $new_tab = false) 
 <?php }
 
 function modal_dropdown_item($link, $text, $icon, $title = '') { ?>
-  <a href="#" data-toggle="modal" data-target="#Modal" class="dropdown-item" title="<?php echo $title; ?>" onclick="loadModal('<?php echo $link; ?>')">
+  <a href="#" data-toggle="modal" data-target="#Modal" class="dropdown-item" title="<?php echo $title; ?>" onclick="loadData('<?php echo $link; ?>')">
     <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i><?php echo $text; ?>
   </a>
 <?php }
@@ -170,7 +170,7 @@ function modal_confirm_delete($message, $title = 'Delete', $buttonName = 'Delete
       <div class="modal-footer">
         <form action="" method="POST" role="form">
           <input type="submit" class="btn btn-danger" name="<?php echo $buttonName; ?>" value="Yes, Continue">
-          <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-secondary close" data-dismiss="modal">Cancel</button>
         </form>
       </div>
     </div>
