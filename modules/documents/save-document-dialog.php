@@ -93,9 +93,9 @@ if (num_rows($documents) > 0) {
       <div class="modal-footer">
         <?php if (!$not_found) : ?>
           <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
-          <button class="btn btn-primary" name="save_document" type="submit">Continue</button>
         <?php endif; ?>
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" name="save_document" type="submit">Continue</button>
+        <button class="btn btn-secondary close" type="button" data-dismiss="modal">Cancel</button>
       </div>
     </form>
   </div>
