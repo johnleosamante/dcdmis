@@ -3,11 +3,9 @@
 ?>
 
 <div class="text-center py-0">
-  <div class="error mx-auto text-gray-800"><i class="fas fa-search fa-fw"></i></div>
-  <p class="lead text-gray-800 mt-1 mb-0">No results found</p>
-  <p class="text-gray-500 mb-4">Sorry, we couldn't find what you're looking for...</p>
+  <?php missing_prompt('No results found'); ?>
 
-  <p class="text-gray-700 mb-1">Try a new search term instead</p>
+  <p class="text-gray-700 mt-4 mb-1">Try a new search term instead</p>
 
   <form class="mx-auto mb-4" method="POST" action="">
     <div class="row justify-content-center">
