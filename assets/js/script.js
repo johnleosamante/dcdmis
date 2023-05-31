@@ -47,33 +47,20 @@ if (elementExist(confirmToggle)) {
   });
 }
 
-function loadModal(href) {
+function loadData(href, id = 'Modal') {
   const xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
   xmlhttp.onreadystatechange = () => {
-    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-      document.getElementById('Modal').innerHTML = xmlhttp.responseText;
-    } else {
-      let error = xmlhttp.status;
-      document.getElementById('Modal').innerHTML = '<div class="modal-dialog modal-sm"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button></div><div class="modal-body text-center"><div class="error mx-auto" data-text="' + error + '">' + error + '</div><p class="text-gray-500">Please refresh the page and try again...</p></div></div></div>';
+    if (xmlhttp.readyState === 4) {
+      if (xmlhttp.status === 200) {
+        document.getElementById(id).innerHTML = xmlhttp.responseText;
+      } else {
+        alert('Bad request encountered! Please refresh the page and try again.');
+        return;
+      }
     }
   }
 
-  xmlhttp.open('GET', href, false);
-  xmlhttp.send();
-}
-
-function loadData(href, id) {
-  const xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-
-  xmlhttp.onreadystatechange = () => {
-    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-      document.getElementById(id).innerHTML = xmlhttp.responseText;
-    } else if (xmlhttp.status >= 400) {
-      document.getElementById(id).innerHTML = 'No data to available';
-    }
-  }
-
-  xmlhttp.open('GET', href, false);
+  xmlhttp.open('GET', href);
   xmlhttp.send();
 }
