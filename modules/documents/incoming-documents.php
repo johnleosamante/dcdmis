@@ -1,6 +1,7 @@
 <?php
 // modules/documents/incoming-documents.php
 $_SESSION[alias() . '_previous_document'] = $page_title = 'Incoming Documents';
+$station = $_SESSION[alias() . '_station'];
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -26,7 +27,7 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Incoming Documents';
         <tbody>
           <?php
           $no = 0;
-          $query = incoming_documents($_SESSION[alias() . '_station']);
+          $query = incoming_documents($station);
           while ($row = fetch_array($query)) {
           ?>
             <tr class="text-uppercase">
@@ -44,7 +45,7 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Incoming Documents';
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php link_dropdown_item(custom_uri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 
-                    if ($row['station'] === $_SESSION[alias() . '_station']) {
+                    if ($row['station'] === $station) {
                       link_dropdown_item(custom_uri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
                     }
                     ?>

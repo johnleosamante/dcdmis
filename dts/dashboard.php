@@ -1,22 +1,23 @@
 <?php
 // dts/dashboard.php
 content_title_with_modal('Dashboard', uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus');
-$_SESSION[alias() . '_document_id'] = null;
+$portal = $_SESSION[alias() . '_portal'];
+$station = $_SESSION[alias() . '_station'];
 ?>
 
 <div class="row mt-4">
   <?php
-  $is_school_portal = $_SESSION[alias() . '_portal'] === 'school_portal';
+  $is_school_portal = $portal === 'school_portal';
 
-  card('Incoming Documents', custom_uri('dts', 'Incoming Documents'), 'fa-file-download', 'primary', num_rows(incoming_documents($_SESSION[alias() . '_station'])));
+  card('Incoming Documents', custom_uri('dts', 'Incoming Documents'), 'fa-file-download', 'primary', num_rows(incoming_documents($station)));
 
   if (!$is_school_portal) {
-    card('Pending Documents', custom_uri('dts', 'Pending Documents'), 'fa-history', 'success', num_rows(pending_documents($_SESSION[alias() . '_station'])));
+    card('Pending Documents', custom_uri('dts', 'Pending Documents'), 'fa-history', 'success', num_rows(pending_documents($station)));
   }
 
-  card('Outgoing Documents', custom_uri('dts', 'Outgoing Documents'), 'fa-file-upload', 'info', num_rows(outgoing_documents($_SESSION[alias() . '_station'])));
+  card('Outgoing Documents', custom_uri('dts', 'Outgoing Documents'), 'fa-file-upload', 'info', num_rows(outgoing_documents($station)));
 
-  card('Ongoing Documents', custom_uri('dts', 'Ongoing Documents'), 'fa-tasks', 'warning', num_rows(ongoing_documents($_SESSION[alias() . '_station'])));
+  card('Ongoing Documents', custom_uri('dts', 'Ongoing Documents'), 'fa-tasks', 'warning', num_rows(ongoing_documents($station)));
 
   card('Completed Documents', custom_uri('dts', 'Completed Documents'), 'fa-check-circle', 'secondary');
 

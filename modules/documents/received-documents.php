@@ -1,6 +1,7 @@
 <?php
 // modules/documents/received-documents.php
 $_SESSION[alias() . '_previous_document'] = $page_title = 'Received Documents';
+$station = $_SESSION[alias() . '_station'];
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -24,7 +25,7 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Received Documents';
         <tbody>
           <?php
           $no = 0;
-          $query = received_documents($_SESSION[alias() . '_station']);
+          $query = received_documents($station);
           while ($row = fetch_array($query)) {
           ?>
             <tr class="text-uppercase">

@@ -17,6 +17,7 @@ $code = $_SESSION[alias() . '_code'];
 $station_id = $_SESSION[alias() . '_station_id'];
 $station = $_SESSION[alias() . '_station'];
 $portal = $_SESSION[alias() . '_portal'];
+$is_description_editable = isset($_SESSION[alias() . '_editable_description']) ?  $_SESSION[alias() . '_editable_description'] : false;
 $show_prompt = false;
 $message = null;
 
@@ -25,13 +26,13 @@ if (isset($_POST['primary_search_button'])) {
 }
 
 if (isset($_POST['save_document'])) {
-  $document_id = $_SESSION[alias() . '_document_id'];
+  $document_id = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
   $destination = $portal === 'school_portal' ? 'RECORD' :  sanitize($_POST['destination']);
   $status = null;
 
-  if (empty($document_id)) {
+  if (num_rows(document($document_id)) === 0) {
     $status = 'saved';
     $year = date('y');
     $description = sanitize($_POST['description']);
@@ -40,7 +41,6 @@ if (isset($_POST['save_document'])) {
     insert_document($document_id, $description, $code, $purpose, $details);
     insert_document_log($document_id, $user_id, $code, $destination, $purpose, 'New', $details);
   } else {
-    $is_description_editable = isset($_SESSION[alias() . '_editable_description']) ?  $_SESSION[alias() . '_editable_description'] : false;
     $status = 'updated';
     $update_description = false;
     $description = '';
@@ -61,59 +61,59 @@ if (isset($_POST['save_document'])) {
 }
 
 if (isset($_POST['receive_document'])) {
-  $document_id = $_SESSION[alias() . '_document_id'];
+  $document_id = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
 
   update_document_logs_done($document_id);
-  insert_document_log($document_id, $user_id, $code, '-', 'Received', 'New');
 
   if (affected_rows()) {
+    insert_document_log($document_id, $user_id, $code, '-', 'Received', 'New');
     $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been received successfully!';
     $show_prompt = true;
   }
 }
 
 if (isset($_POST['forward_document'])) {
-  $document_id = $_SESSION[alias() . '_document_id'];
+  $document_id = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
 
   update_document_logs_done($document_id);
-  insert_document_log($document_id, $user_id, $code, sanitize($_POST['destination']), $purpose, 'New', $details);
-  update_document_status($document_id, $purpose, 'Unread', $details);
 
   if (affected_rows()) {
-    $show_prompt = true;
+    insert_document_log($document_id, $user_id, $code, sanitize($_POST['destination']), $purpose, 'New', $details);
+    update_document_status($document_id, $purpose, 'Unread', $details);
     $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been forwarded successfully!';
+    $show_prompt = true;
   }
 }
 
 if (isset($_POST['complete_document'])) {
-  $document_id = $_SESSION[alias() . '_document_id'];
+  $document_id = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
   $remarks = sanitize($_POST['remarks']);
   $status = 'Completed';
 
   update_document_logs_done($document_id);
-  insert_document_log($document_id, $user_id, $code, '-', $status, 'Done', $remarks);
-  update_document_status($document_id, $status, 'Read', $remarks);
 
   if (affected_rows()) {
-    $show_prompt = true;
+    insert_document_log($document_id, $user_id, $code, '-', $status, 'Done', $remarks);
+    update_document_status($document_id, $status, 'Read', $remarks);
     $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been mark completed successfully.';
+    $show_prompt = true;
   }
 }
 
 if (isset($_POST['cancel_document'])) {
-  $document_id = $_SESSION[alias() . '_document_id'];
+  $document_id = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
   $remarks = sanitize($_POST['remarks']);
   $status = 'Canceled';
 
   update_document_logs_done($document_id);
-  insert_document_log($document_id, $user_id, $code, '-', $status, 'Done', $remarks);
-  update_document_status($document_id, $status, 'Read', $remarks);
 
   if (affected_rows()) {
-    $show_prompt = true;
+    insert_document_log($document_id, $user_id, $code, '-', $status, 'Done', $remarks);
+    update_document_status($document_id, $status, 'Read', $remarks);
     $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been canceled successfully.';
+    $show_prompt = true;
   }
 }
 ?>
