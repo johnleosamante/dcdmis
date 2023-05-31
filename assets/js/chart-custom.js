@@ -78,7 +78,7 @@ const barOptions = {
   plugins: plugins
 };
 
-function generate_random_color() {
+function generateRandomColor() {
   let num = Math.floor(Math.random() * 16777215);
   let hex = num.toString(16).toUpperCase();
   while (hex.length < 6) {
@@ -87,17 +87,17 @@ function generate_random_color() {
   return "#" + hex;
 }
 
-function generate_color_pallete(items) {
+function generateColorPallete(items) {
   let colors = [];
   let counter = 0;
   while (counter < items) {
-    colors.push(generate_random_color());
+    colors.push(generateRandomColor());
     counter++;
   }
   return colors;
 }
 
-function generate_pie_chart(data, colors, element) {
+function generatePieChart(data, colors, element) {
   const pieChart = new Chart(document.getElementById(element).getContext('2d'), {
     type: 'pie',
     data: {
@@ -113,7 +113,7 @@ function generate_pie_chart(data, colors, element) {
   return pieChart;
 }
 
-function generate_doughnut_chart(data, colors, element) {
+function generateDoughnutChart(data, colors, element) {
   const doughnutChart = new Chart(document.getElementById(element).getContext('2d'), {
     type: 'doughnut',
     data: {
@@ -129,7 +129,7 @@ function generate_doughnut_chart(data, colors, element) {
   return doughnutChart;
 }
 
-function generate_polar_area_chart(data, colors, element) {
+function generatePolarAreaChart(data, colors, element) {
   const polarAreaChart = new Chart(document.getElementById(element).getContext('2d'), {
     type: 'polarArea',
     data: {
@@ -145,7 +145,7 @@ function generate_polar_area_chart(data, colors, element) {
   return polarAreaChart;
 }
 
-function generate_bar_chart(data, colors, element) {
+function generateBarChart(data, colors, element) {
   const barChart = new Chart(document.getElementById(element).getContext('2d'), {
     type: 'bar',
     data: {
@@ -160,7 +160,7 @@ function generate_bar_chart(data, colors, element) {
   return barChart;
 }
 
-function generate_comparative_bar_chart(data, colors, element) {
+function generateComparativeBarChart(data, colors, element) {
   const barChart = new Chart(document.getElementById(element).getContext('2d'), {
     type: 'bar',
     data: {
@@ -179,13 +179,13 @@ function generate_comparative_bar_chart(data, colors, element) {
   return barChart;
 }
 
-function generate_comparative_line_chart(data, colors, element) {
+function generateComparativeLineChart(data, colors, element) {
   const lineChart = new Chart(document.getElementById(element).getContext('2d'), {
     data: { 
       labels: data.map((item) => { return item.name; }), 
       datasets: [{ 
         type: 'line', 
-        data: data.map((item) => { return item.data_one; }), 
+        data: data.map((item) => { return item.dataOne; }), 
         backgroundColor: 'transparent', 
         borderColor: colors[0], 
         pointBorderColor: colors[0], 
@@ -194,7 +194,7 @@ function generate_comparative_line_chart(data, colors, element) {
       }, 
       { 
         type: 'line', 
-        data: data.map((item) => { return item.data_one; }), 
+        data: data.map((item) => { return item.dataTwo; }), 
         backgroundColor: 'tansparent', 
         borderColor: colors[1], 
         pointBorderColor: colors[1], 
