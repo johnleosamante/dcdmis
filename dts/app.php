@@ -47,7 +47,7 @@ if (isset($_POST['save_document'])) {
 
     if ($is_description_editable) {
       $update_description = true;
-      $description = sanitize($_POST['description']);
+      $description = isset($_POST['description']) ? sanitize($_POST['description']) : null;
     }
 
     update_document($document_id, $description, $code, $purpose, $details, $update_description);
