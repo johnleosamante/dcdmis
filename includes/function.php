@@ -12,12 +12,20 @@ function hash_password($string) {
   return md5($string);
 }
 
+function cipher($string) {
+  return base64_encode($string);
+}
+
+function decipher($string) {
+  return base64_decode($string);
+}
+
 function encode($string) {
-  return urlencode(base64_encode($string));
+  return urlencode(cipher($string));
 }
 
 function decode($string) {
-  return urldecode(base64_decode($string));
+  return urldecode(decipher($string));
 }
 
 function root() {
