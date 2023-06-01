@@ -4,7 +4,7 @@ $user = fetch_assoc(employee($_SESSION[alias() . '_user_id']));
 $display_name = to_name($user['lname'], $user['fname'], $user['mname'], $user['ext'], true, true);
 $display_photo = uri() . '/' . $user['picture'];
 ?>
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
   <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
     <i class="fa fa-bars"></i>
   </button>
@@ -60,3 +60,20 @@ $display_photo = uri() . '/' . $user['picture'];
     </li>
   </ul>
 </nav>
+
+<div class="banner text-uppercase text-gray-700">
+  <?php
+  $schools = school_details_by_id($_SESSION[alias() . '_station_id']);
+  if (num_rows($schools)) {
+    $school = fetch_assoc($schools);
+  ?>
+    <div class="h3 m-0"><?php echo $school['name']; ?></div>
+    <?php if (!empty($school['address'])) : ?>
+      <div class="small m-0"><?php echo $school['address']; ?></div>
+    <?php endif;
+  }
+
+  if ($_SESSION[alias() . '_portal'] !== 'school_portal') : ?>
+    <div class="h2 mt-4 m-0"><?php echo station_name($_SESSION[alias() . '_code']); ?></div>
+  <?php endif; ?>
+</div>
