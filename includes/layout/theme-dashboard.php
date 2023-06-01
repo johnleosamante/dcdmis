@@ -21,13 +21,16 @@ include_once(root() . '/includes/layout/components.php');
 <body id="page-top">
   <div id="wrapper">
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo uri(); ?>">
-        <img class="sidebar-brand-icon" src="<?php echo uri(); ?>/assets/img/division.png" title="<?php echo title(); ?>" width="60">
-      </a>
+      <div class="sidebar-brand d-flex align-items-center justify-content-center">
+        <a href="<?php echo uri(); ?>" title="<?php echo title(); ?>">
+          <img class="sidebar-brand-icon" src="<?php echo uri(); ?>/assets/img/division.png" alt="<?php echo title(); ?>" width="60">
+        </a>
+      </div>
+      
       <?php
       sidebar_divider();
       sidebar_menu_item(uri() . '/' . $_SESSION[alias() . '_active_app'], 'Dashboard', 'fa-tachometer-alt', !isset($url));
-      include_once('sidebar-menu.php'); 
+      include_once('sidebar-menu.php');
       sidebar_divider('3', true);
       sidebar_toggle();
       ?>
@@ -37,7 +40,7 @@ include_once(root() . '/includes/layout/components.php');
       <div id="content">
         <?php include_once(root() . '/includes/layout/header-menu.php'); ?>
 
-        <div class="container-fluid mb-4">
+        <div class="container-fluid my-4">
           <?php include_once(root() . '/includes/layout/content.php'); ?>
         </div><!-- .container-fluid -->
       </div><!-- #content -->
