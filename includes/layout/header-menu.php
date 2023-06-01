@@ -1,6 +1,6 @@
 <?php
 // includes/layout/header-menu.php
-$user = fetch_assoc(employee($_SESSION[alias() . '_user_id']));
+$user = fetch_assoc(employee($user_id));
 $display_name = to_name($user['lname'], $user['fname'], $user['mname'], $user['ext'], true, true);
 $display_photo = uri() . '/' . $user['picture'];
 ?>
@@ -63,7 +63,7 @@ $display_photo = uri() . '/' . $user['picture'];
 
 <div class="banner text-uppercase text-gray-700">
   <?php
-  $schools = school_details_by_id($_SESSION[alias() . '_station_id']);
+  $schools = school_details_by_id($station_id);
   if (num_rows($schools)) {
     $school = fetch_assoc($schools);
   ?>
@@ -73,7 +73,7 @@ $display_photo = uri() . '/' . $user['picture'];
     <?php endif;
   }
 
-  if ($_SESSION[alias() . '_portal'] !== 'school_portal') : ?>
-    <div class="h2 mt-4 m-0"><?php echo station_name($_SESSION[alias() . '_code']); ?></div>
+  if ($portal !== 'school_portal') : ?>
+    <div class="h2 mt-4 m-0"><?php echo station_name($code); ?></div>
   <?php endif; ?>
 </div>
