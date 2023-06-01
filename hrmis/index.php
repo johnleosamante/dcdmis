@@ -19,5 +19,7 @@ include_once(root() . '/includes/database/recognition.php');
 include_once(root() . '/includes/database/membership.php');
 include_once(root() . '/includes/database/other-information.php');
 include_once(root() . '/includes/database/references.php');
+include_once(root() . '/includes/database/section.php');
+include_once(root() . '/includes/database/utility.php');
 include_once(root() . '/includes/layout/theme-dashboard.php');
 ?>
