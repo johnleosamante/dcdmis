@@ -14,7 +14,6 @@ function set_user_session($userid) {
       $school = school_by_id($user['code']);
       $_SESSION[alias() . '_station'] = num_rows($school) ? fetch_assoc($school)['alias'] : '';
     }
-    echo $user['station'];
   } else {
     $_SESSION[alias() . '_active_app'] = 'pis';
   }
