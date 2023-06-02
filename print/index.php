@@ -2,9 +2,15 @@
 // print/index.php
 include_once('../includes/function.php');
 
-if (!isset($_SESSION[alias() . '_user_id']) || !isset($_SESSION[alias() . '_portal'])) {
+if (!isset($_SESSION[alias() . '_userId']) || !isset($_SESSION[alias() . '_portal'])) {
   redirect(uri() . '/login');
 }
+
+$userId = $_SESSION[alias() . '_userId'];
+$portal = $_SESSION[alias() . '_portal'];
+$isSchool = $portal === 'school_portal';
+$station = $_SESSION[alias() . '_station'];
+$stationId = $_SESSION[alias() . '_stationId'];
 
 include_once(root() . '/includes/plugin/fpdf/fpdf.php');
 include_once(root() . '/includes/database/database.php');
@@ -22,37 +28,36 @@ foreach ($_GET as $key => $data) {
 
 $code = strtoupper($_GET['id']);
 $title = '';
-$logo_size = 24;
+$logoSize = 24;
 $margin = 25.4;
 $width = 210;
 $height = 297;
 $lineY = 60;
-$department_logo = root() . '/assets/img/department.png';
-$division_name = 'DIPOLOG CITY SCHOOLS DIVISION';
-$section = strtoupper(station_name($_SESSION[alias() . '_station']));
-$is_school = $_SESSION[alias() . '_portal'] === 'school_portal';
-$school = fetch_array(school_details_by_id($_SESSION[alias() . '_station_id']));
-$district = fetch_assoc(district($school['district']))['name'];
-$station_logo = root() . '/' . $school['logo'];
+$departmentLogo = root() . '/assets/img/department.png';
+$divisionName = 'DIPOLOG CITY SCHOOLS DIVISION';
+$section = strtoupper(stationName($station));
+$school = fetchArray(schoolDetailsById($stationId));
+$district = fetchAssoc(district($school['district']))['name'];
+$stationLogo = root() . '/' . $school['logo'];
 $address = $school['address'];
 $telephone = $school['telephone'];
 $email = $school['email'];
 $website = $school['website'];
-$fb_page = $school['fb_page'];
+$fbPage = $school['fb_page'];
 
 class PDF extends FPDF {
   function Header() {
-    global $division_name;
-    global $department_logo;
-    global $logo_size;
+    global $divisionName;
+    global $departmentLogo;
+    global $logoSize;
     global $width;
     global $margin;
-    global $is_school;
+    global $isSchool;
     global $section;
     global $address;
     global $district;
     global $lineY;
-    $this->Image($department_logo, ($width / 2) - ($logo_size / 2), 8, $logo_size);
+    $this->Image($departmentLogo, ($width / 2) - ($logoSize / 2), 8, $logoSize);
     $this->AddFont('OLDENGL', '', 'OLDENGL.php');
     $this->AddFont('tahomabd', 'B', 'tahomabd.php');
     $this->SetFont('OLDENGL', '', 12);
@@ -64,11 +69,11 @@ class PDF extends FPDF {
     $this->SetFont('tahomabd', 'B', 11);
     $this->Cell(0, 0, 'REGION IX - ZAMBOANGA PENINSULA', 0, 0, 'C');
     $this->Ln(5);
-    $this->Cell(0, 0, $division_name, 0, 0, 'C');
+    $this->Cell(0, 0, $divisionName, 0, 0, 'C');
     $this->Ln(5);
     $this->SetFont('tahomabd',  'B', 11);
     $this->Cell(0, 0, $section, 0, 0, 'C');
-    if ($is_school) {
+    if ($isSchool) {
       $this->Ln(5);
       $this->Cell(0, 0, strtoupper($address), 0, 0, 'C');
       $this->Ln(5);
@@ -80,76 +85,76 @@ class PDF extends FPDF {
   }
 
   function Footer() {
-    global $station_logo;
+    global $stationLogo;
     global $address;
     global $telephone;
     global $email;
     global $website;
-    global $fb_page;
+    global $fbPage;
     global $address;
     global $telephone;
     global $email;
     global $website;
-    global $logo_size;
+    global $logoSize;
     global $margin;
     global $height;
     global $width;
     global $code;
-    $footer_space = 27;
+    $footerSpace = 27;
 
     $this->Line($margin, $height - 33, $width - $margin, $height - 33);
-    $this->Image($station_logo, $margin, $height - 32, $logo_size);
+    $this->Image($stationLogo, $margin, $height - 32, $logoSize);
     $this->SetY(-28);
     $this->AddFont('calibri', '', 'calibri.php');
     $this->SetFont('calibri', '', 10);
 
     if (strlen($address) > 0) {
-      $this->SetX($logo_size + $footer_space);
+      $this->SetX($logoSize + $footerSpace);
       $this->Cell(0, 0, "Address: {$address}");
       $this->Ln(4);
     }
 
     if (strlen($telephone) > 0) {
-      $this->SetX($logo_size + $footer_space);
+      $this->SetX($logoSize + $footerSpace);
       $this->Cell(0, 0, "Telephone No: {$telephone}");
       $this->Ln(4);
     }
 
     if (strlen($email) > 0) {
-      $this->SetX($logo_size + $footer_space);
+      $this->SetX($logoSize + $footerSpace);
       $this->Cell(0, 0, "Email Address: {$email}");
       $this->Ln(4);
     }
 
     if (strlen($website) > 0) {
-      $this->SetX($logo_size + $footer_space);
+      $this->SetX($logoSize + $footerSpace);
       $this->Cell(0, 0, "Website: {$website}");
       $this->Ln(4);
     }
 
-    if (strlen($fb_page) > 0) {
-      $this->SetX($logo_size + $footer_space);
-      $this->Cell(0, 0, "FB Page: {$fb_page}");
+    if (strlen($fbPage) > 0) {
+      $this->SetX($logoSize + $footerSpace);
+      $this->Cell(0, 0, "FB Page: {$fbPage}");
     }
 
     if (!empty($code)) {
-      $PNG_TEMP_DIR_ROOT = root() . '/temp';
-      $PNG_TEMP_DIR = root() . '/temp/qr';
+      $pngTempDirRoot = root() . '/temp';
+      $pngTempDir = root() . '/temp/qr';
       $errorCorrectionLevel = 'L';
       $matrixPointSize = 5;
-      $filename = $PNG_TEMP_DIR . '/' . md5($code . $errorCorrectionLevel . $matrixPointSize) . '.png';
+      $filename = $pngTempDir . '/' . md5($code . $errorCorrectionLevel . $matrixPointSize) . '.png';
 
-      if (!file_exists($PNG_TEMP_DIR_ROOT)) {
-        mkdir($PNG_TEMP_DIR_ROOT);
+      if (!file_exists($pngTempDirRoot)) {
+        mkdir($pngTempDirRoot);
       }
 
-      if (!file_exists($PNG_TEMP_DIR)) {
-        mkdir($PNG_TEMP_DIR);
+      if (!file_exists($pngTempDir)) {
+        mkdir($pngTempDir);
       }
 
       QRcode::png($code, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
 
-      $this->Image($filename, $width - $margin - $logo_size, $height - 32, $logo_size);
+      $this->Image($filename, $width - $margin - $logoSize, $height - 32, $logoSize);
     }
 
     $this->SetY(-6);
@@ -158,7 +163,7 @@ class PDF extends FPDF {
 }
 
 if (!isset($url) || $url === '') {
-  redirect(custom_uri('dts', '404'));
+  redirect(customUri('dts', '404'));
 } else {
   $file = '';
   switch ($url) {
@@ -167,14 +172,14 @@ if (!isset($url) || $url === '') {
       $file = 'document-tracking-slip';
       break;
     default:
-      redirect(custom_uri('dts', '404'));
+      redirect(customUri('dts', '404'));
       break;
   }
 
   $pdf = new PDF('P', 'mm', array($width, $height));
   $pdf->SetTitle($title);
   $pdf->AliasNbPages();
-  $pdf->SetMargins($margin, 11 + $logo_size, $margin);
+  $pdf->SetMargins($margin, 11 + $logoSize, $margin);
   $pdf->SetAutoPageBreak(true, 35);
   $pdf->AddPage();
   $pdf->AddFont('calibri', '', 'calibri.php');
