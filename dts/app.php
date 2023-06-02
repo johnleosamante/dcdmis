@@ -36,10 +36,10 @@ if (isset($_POST['save_document'])) {
     $status = 'saved';
     $year = date('y');
     $description = sanitize($_POST['description']);
-    $document_id = $code . '-' . $year . '-' . sprintf("%05d", count_documents_from($code, $year, $code) + 1);
+    $document_id = $code . '-' . $year . '-' . sprintf("%05d", count_documents_from($station, $year, $code) + 1);
     
-    insert_document($document_id, $description, $code, $purpose, $details);
-    insert_document_log($document_id, $user_id, $code, $destination, $purpose, 'New', $details);
+    insert_document($document_id, $description, $station, $purpose, $details);
+    insert_document_log($document_id, $user_id, $station, $destination, $purpose, 'New', $details);
   } else {
     $status = 'updated';
     $update_description = false;
@@ -50,8 +50,8 @@ if (isset($_POST['save_document'])) {
       $description = isset($_POST['description']) ? sanitize($_POST['description']) : null;
     }
 
-    update_document($document_id, $description, $code, $purpose, $details, $update_description);
-    update_document_log($document_id, $user_id, $code, $destination, $purpose, 'New', $details);
+    update_document($document_id, $description, $station, $purpose, $details, $update_description);
+    update_document_log($document_id, $user_id, $station, $destination, $purpose, 'New', $details);
   }
 
   if (affected_rows()) {
@@ -66,7 +66,7 @@ if (isset($_POST['receive_document'])) {
   update_document_logs_done($document_id);
 
   if (affected_rows()) {
-    insert_document_log($document_id, $user_id, $code, '-', 'Received', 'New');
+    insert_document_log($document_id, $user_id, $station, '-', 'Received', 'New');
     $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been received successfully!';
     $show_prompt = true;
   }
@@ -80,7 +80,7 @@ if (isset($_POST['forward_document'])) {
   update_document_logs_done($document_id);
 
   if (affected_rows()) {
-    insert_document_log($document_id, $user_id, $code, sanitize($_POST['destination']), $purpose, 'New', $details);
+    insert_document_log($document_id, $user_id, $station, sanitize($_POST['destination']), $purpose, 'New', $details);
     update_document_status($document_id, $purpose, 'Unread', $details);
     $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been forwarded successfully!';
     $show_prompt = true;
@@ -95,7 +95,7 @@ if (isset($_POST['complete_document'])) {
   update_document_logs_done($document_id);
 
   if (affected_rows()) {
-    insert_document_log($document_id, $user_id, $code, '-', $status, 'Done', $remarks);
+    insert_document_log($document_id, $user_id, $station, '-', $status, 'Done', $remarks);
     update_document_status($document_id, $status, 'Read', $remarks);
     $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been mark completed successfully.';
     $show_prompt = true;
@@ -110,7 +110,7 @@ if (isset($_POST['cancel_document'])) {
   update_document_logs_done($document_id);
 
   if (affected_rows()) {
-    insert_document_log($document_id, $user_id, $code, '-', $status, 'Done', $remarks);
+    insert_document_log($document_id, $user_id, $station, '-', $status, 'Done', $remarks);
     update_document_status($document_id, $status, 'Read', $remarks);
     $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been canceled successfully.';
     $show_prompt = true;
