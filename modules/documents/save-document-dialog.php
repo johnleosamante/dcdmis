@@ -8,10 +8,10 @@ include_once(root() . '/includes/database/document-purpose.php');
 include_once(root() . '/includes/database/section.php');
 include_once(root() . '/includes/layout/components.php');
 
+$station     = $_SESSION[alias() . '_station'];
+$portal      = $_SESSION[alias() . '_portal'];
 $document_id = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$station = $_SESSION[alias() . '_station'];
-$portal = $_SESSION[alias() . '_portal'];
-$documents = document_log($document_id);
+$documents   = document_log($document_id);
 
 if (num_rows($documents) > 0) {
   $document = fetch_assoc($documents);
@@ -20,6 +20,7 @@ if (num_rows($documents) > 0) {
   $destination = $document['destination'];
   $purpose = $document['purpose'];
   $details = $document['details'];
+
   if ($station !== $document['from']) {
     $attribute = ' disabled';
   } else {
@@ -31,6 +32,7 @@ if (num_rows($documents) > 0) {
       $_SESSION[alias() . '_editable_description'] = false;
     }
   }
+
   $modal_title = 'Edit Document';
   $not_found = false;
 } else {

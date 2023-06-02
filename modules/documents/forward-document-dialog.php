@@ -8,8 +8,8 @@ include_once(root() . '/includes/database/document-purpose.php');
 include_once(root() . '/includes/database/section.php');
 include_once(root() . '/includes/layout/components.php');
 
-$document_id = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $station = $_SESSION[alias() . '_station'];
+$document_id = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $documents = document($document_id);
 
 if (num_rows($documents) > 0) {
