@@ -31,9 +31,9 @@ function insert_document($id, $description, $station, $purpose, $details = '') {
   non_query("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats, details) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}', '{$details}');");
 }
 
-function update_document($id, $description, $station, $purpose, $details = '', $update_description = true) {
-  $description_column = $update_description ? "Title='{$description}', " : '';
-  non_query("UPDATE tbl_transactions SET {$description_column}Date_time=NOW(), Trans_Stats='{$purpose}', details='{$details}' WHERE TransCode='{$id}' AND Trans_from='{$station}' LIMIT 1;");
+function update_document($id, $description, $purpose, $details = '', $update_description = true) {
+  $description_column = $update_description ? " Title='{$description}', " : ' ';
+  non_query("UPDATE tbl_transactions SET $description_column Date_time=NOW(), Trans_Stats='{$purpose}', details='{$details}' WHERE TransCode='{$id}' LIMIT 1;");
 }
 
 function incoming_documents($station) {

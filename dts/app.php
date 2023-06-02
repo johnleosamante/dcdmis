@@ -37,7 +37,7 @@ if (isset($_POST['save_document'])) {
     $year = date('y');
     $description = sanitize($_POST['description']);
     $document_id = $code . '-' . $year . '-' . sprintf("%05d", count_documents_from($station, $year, $code) + 1);
-    
+
     insert_document($document_id, $description, $station, $purpose, $details);
     insert_document_log($document_id, $user_id, $station, $destination, $purpose, 'New', $details);
   } else {
@@ -50,7 +50,7 @@ if (isset($_POST['save_document'])) {
       $description = isset($_POST['description']) ? sanitize($_POST['description']) : null;
     }
 
-    update_document($document_id, $description, $station, $purpose, $details, $update_description);
+    update_document($document_id, $description, $purpose, $details, $update_description);
     update_document_log($document_id, $user_id, $station, $destination, $purpose, 'New', $details);
   }
 
