@@ -1,7 +1,6 @@
 <?php
 // modules/documents/ongoing-documents.php
 $_SESSION[alias() . '_previous_document'] = $page_title = 'Ongoing Documents';
-$station = $_SESSION[alias() . '_station'];
 ?>
 
 <div class="card border-left-primary shadow mb-4">
