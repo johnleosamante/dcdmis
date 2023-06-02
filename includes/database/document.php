@@ -4,7 +4,7 @@
 // tbl_transactions_log
 
 function document($id) {
-  return query("SELECT TransCode AS id, Title AS `description`, Date_time AS `datetime`, Trans_from AS `from`, Trans_Stats AS `status` FROM tbl_transactions WHERE TransCode='{$id}' LIMIT 1;");
+  return query("SELECT TransCode AS id, Title AS `description`, Date_time AS `datetime`, Trans_from AS `from`, Trans_Stats AS `status`, details FROM tbl_transactions WHERE TransCode='{$id}' LIMIT 1;");
 }
 
 function is_document($id, $status) {
