@@ -1,25 +1,24 @@
 <?php
 // includes/database/utility.php
-
-function station_name($id) {
+function stationName($id) {
   $section = section($id, true);
 
-  if (num_rows($section) > 0) {
-    return fetch_assoc($section)['name'];
-  } else {
-    $school = school_by_alias($id);
-    return num_rows($school) > 0 ? fetch_assoc($school)['name'] : $id;
+  if (numRows($section) > 0) {
+    return fetchAssoc($section)['name'];
   }
+
+  $school = schoolByAlias($id);
+  return numRows($school) > 0 ? fetchAssoc($school)['name'] : $id;
 }
 
 function user_name($id) {
   $users = employee($id);
 
-  if (num_rows($users) > 0) {
-    $user = fetch_assoc($users);
+  if (numRows($users) > 0) {
+    $user = fetchAssoc($users);
     return to_name($user['lname'], $user['fname'], $user['mname'], $user['ext'], true);
-  } else {
-    return $id;
   }
+  
+  return $id;
 }
 ?>
