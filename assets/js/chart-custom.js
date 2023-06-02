@@ -9,11 +9,11 @@ const tooltips = {
   xPadding: 15,
   yPadding: 15,
   displayColors: true,
-  caretPadding: 10
+  caretPadding: 10,
 };
 
 const font = {
-  size: 14
+  size: 14,
 };
 
 const pieOptions = {
@@ -38,7 +38,7 @@ const pieOptions = {
         return percentage;
       },
       color: '#fff',
-      font: font
+      font: font,
     }
   }
 }
@@ -62,17 +62,17 @@ const barOptions = {
     xAxes: [{
       gridLines: {
         display: false,
-        drawBorder: false
+        drawBorder: false,
       }
     }],
     yAxes: [{
       ticks: {
-        beginAtZero: true
+        beginAtZero: true,
       }
     }]
   },
   legend: {
-    display: false
+    display: false,
   },
   tooltips: tooltips,
   plugins: plugins
@@ -104,10 +104,10 @@ function generatePieChart(data, colors, element) {
       labels: data.map((item) => { return item.name; }),
       datasets: [{
         data: data.map((item) => { return item.count; }),
-        backgroundColor: colors
+        backgroundColor: colors,
       }]
     },
-    options: pieOptions
+    options: pieOptions,
   });
   pieChart.canvas.parentNode.style.minHeight = '400px';
   return pieChart;
@@ -120,10 +120,10 @@ function generateDoughnutChart(data, colors, element) {
       labels: data.map((item) => { return item.name; }),
       datasets: [{
         data: data.map((item) => { return item.count; }),
-        backgroundColor: colors
+        backgroundColor: colors,
       }]
     },
-    options: pieOptions
+    options: pieOptions,
   });
   doughnutChart.canvas.parentNode.style.minHeight = '400px';
   return doughnutChart;
@@ -136,10 +136,10 @@ function generatePolarAreaChart(data, colors, element) {
       labels: data.map((item) => { return item.name; }),
       datasets: [{
         data: data.map((item) => { return item.count; }),
-        backgroundColor: colors
+        backgroundColor: colors,
       }]
     },
-    options: pieOptions
+    options: pieOptions,
   });
   polarAreaChart.canvas.parentNode.style.minHeight = '400px';
   return polarAreaChart;
@@ -152,10 +152,10 @@ function generateBarChart(data, colors, element) {
       labels: data.map((item) => { return item.name; }),
       datasets: [{
         data: data.map((item) => { return item.count; }),
-        backgroundColor: colors
+        backgroundColor: colors,
       }]
     },
-    options: barOptions
+    options: barOptions,
   });
   return barChart;
 }
@@ -174,7 +174,7 @@ function generateComparativeBarChart(data, colors, element) {
         data: data.map((item) => { return item.female; })
       }]
     },
-    options: barOptions
+    options: barOptions,
   });
   return barChart;
 }
@@ -190,8 +190,8 @@ function generateComparativeLineChart(data, colors, element) {
         borderColor: colors[0], 
         pointBorderColor: colors[0], 
         pointBackgroundColor: colors[0], 
-        fill: false 
-      }, 
+        fill: false,
+      },
       { 
         type: 'line', 
         data: data.map((item) => { return item.dataTwo; }), 
@@ -199,41 +199,42 @@ function generateComparativeLineChart(data, colors, element) {
         borderColor: colors[1], 
         pointBorderColor: colors[1], 
         pointBackgroundColor: colors[1], 
-        fill: false }] 
+        fill: false,
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      tooltips: {
+        mode: mode,
+        intersect: intersect,
       },
-      options: { 
-        maintainAspectRatio: false, 
-        tooltips: { 
-          mode: mode, 
-          intersect: intersect 
-        }, 
-        hover: { 
-          mode: mode, 
-          intersect: intersect 
-        }, 
-        legend: { 
-          display: false 
-        }, 
-        scales: { 
-          yAxes: [{ 
-            gridLines: { 
-              display: true, 
-              lineWidth: '4px', 
-              color: 'rgba(0, 0, 0, .2)', 
-              zeroLineColor: 'transparent' 
-            }, 
-            ticks: $.extend({ 
-              beginAtZero: true, 
-              suggestedMax: 200 }, ticksStyle)
-          }], 
-          xAxes: [{ display: true, 
-            gridLines: { 
-              display: false 
-            }, 
-            ticks: ticksStyle 
-          }] 
-        } 
-      }
+      hover: {
+        mode: mode,
+        intersect: intersect,
+      },
+      legend: {
+        display: false,
+      },
+      scales: {
+        yAxes: [{
+          gridLines: {
+            display: true,
+            lineWidth: '4px',
+            color: 'rgba(0, 0, 0, .2)',
+            zeroLineColor: 'transparent'
+          },
+          ticks: $.extend({
+            beginAtZero: true,
+            suggestedMax: 200 }, ticksStyle)
+        }], 
+        xAxes: [{ display: true,
+          gridLines: {
+            display: false
+          },
+          ticks: ticksStyle
+        }]
+      } 
+    }
   });
   return lineChart;
 }
