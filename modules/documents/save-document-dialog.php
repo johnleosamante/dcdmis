@@ -6,12 +6,14 @@ include_once(root() . '/includes/database/database.php');
 include_once(root() . '/includes/database/document.php');
 include_once(root() . '/includes/database/document-purpose.php');
 include_once(root() . '/includes/database/section.php');
+include_once(root() . '/includes/database/school.php');
 include_once(root() . '/includes/layout/components.php');
 
 $station     = $_SESSION[alias() . '_station'];
 $portal      = $_SESSION[alias() . '_portal'];
 $document_id = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $documents   = document_log($document_id);
+$for_release = false;
 
 if (num_rows($documents) > 0) {
   $document = fetch_assoc($documents);
@@ -33,6 +35,7 @@ if (num_rows($documents) > 0) {
     }
   }
 
+  $for_release = (strtolower($document['purpose']) === 'for release' && $portal === 'record_portal');
   $modal_title = 'Edit Document';
   $not_found = false;
 } else {
@@ -63,27 +66,42 @@ if (num_rows($documents) > 0) {
         <?php if ($portal !== 'school_portal') : ?>
           <div class="form-group">
             <label class="mb-0" for="destination">Destination</label>
-            <select name="destination" id="destination" class="form-control" required>
-              <option value="">Select destination...</option>
-              <?php $sections = sections_except($station);
-              while ($section = fetch_array($sections)) : ?>
-                <option value="<?php echo $section['id']; ?>" <?php echo set_option_selected($section['id'], $destination); ?>><?php echo $section['name']; ?></option>
-              <?php endwhile; ?>
-            </select>
+            <?php if (!$for_release) { ?>
+              <select name="destination" id="destination" class="form-control" required>
+                <option value="">Select destination...</option>
+                <?php $sections = sections_except($station);
+                while ($section = fetch_array($sections)) : ?>
+                  <option value="<?php echo $section['id']; ?>" <?php echo set_option_selected($section['id'], $destination); ?>><?php echo $section['name']; ?></option>
+                <?php endwhile; ?>
+              </select>
+            <?php } else {
+              $schools = school_by_alias($destination);
+              $school = '';
+
+              if (num_rows($schools) > 0) {
+                $school = fetch_assoc($schools)['name'];
+              }
+            ?>
+              <input id="destination" class="form-control" type="text" value="<?php echo $school; ?>" disabled>
+              <input name="destination" class="form-control" type="hidden" value="<?php echo $destination; ?>" required>
+            <?php } ?>
           </div>
         <?php endif; ?>
 
         <div class="form-group">
-          <?php echo $purpose; ?>
           <label class="mb-0" for="purpose">Purpose</label>
-          <select name="purpose" id="purpose" class="form-control" required>
-            <option value="">Select purpose...</option>
-            <?php
-            $document_purposes = document_purpose();
-            while ($document_purpose = fetch_array($document_purposes)) : ?>
-              <option value="<?php echo $document_purpose['purpose']; ?>" <?php echo set_option_selected($document_purpose['purpose'], $purpose); ?>><?php echo $document_purpose['purpose']; ?></option>
-            <?php endwhile; ?>
-          </select>
+          <?php if (!$for_release) : ?>
+            <select name="purpose" id="purpose" class="form-control" required>
+              <option value="">Select purpose...</option>
+              <?php
+              $document_purposes = document_purpose();
+              while ($document_purpose = fetch_array($document_purposes)) : ?>
+                <option value="<?php echo $document_purpose['purpose']; ?>" <?php echo set_option_selected($document_purpose['purpose'], $purpose); ?>><?php echo $document_purpose['purpose']; ?></option>
+              <?php endwhile; ?>
+            </select>
+          <?php else : ?>
+            <input id="purpose" name="purpose" class="form-control" type="text" value="<?php echo $purpose; ?>" required readonly>
+          <?php endif; ?>
         </div>
 
         <div class="form-group mb-0">

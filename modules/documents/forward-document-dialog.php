@@ -6,16 +6,30 @@ include_once(root() . '/includes/database/database.php');
 include_once(root() . '/includes/database/document.php');
 include_once(root() . '/includes/database/document-purpose.php');
 include_once(root() . '/includes/database/section.php');
+include_once(root() . '/includes/database/school.php');
 include_once(root() . '/includes/layout/components.php');
 
 $station = $_SESSION[alias() . '_station'];
+$portal      = $_SESSION[alias() . '_portal'];
 $document_id = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $documents = document($document_id);
+$destination = '';
+$purpose = '';
+$details = '';
+$for_release = false;
 
 if (num_rows($documents) > 0) {
   $document = fetch_assoc($documents);
   $code = $document['id'];
   $description = $document['description'];
+
+  if (strtolower($document['status']) === 'for release' && $portal === 'record_portal') {
+    $for_release = true;
+    $destination = $document['from'];
+    $purpose = $document['status'];
+    $details = $document['details'];
+  }
+
   $modal_title = 'Forward Document';
   $not_found = false;
 } else {
@@ -44,31 +58,47 @@ if (num_rows($documents) > 0) {
 
           <div class="form-group">
             <label for="destination" class="mb-0">Destination</label>
-            <select id="destination" name="destination" class="form-control" required>
-              <option value="">Select destination...</option>
-              <?php
-              $sections = sections_except($station);
-              while ($section = fetch_array($sections)) : ?>
-                <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
-              <?php endwhile; ?>
-            </select>
+            <?php if (!$for_release) { ?>
+              <select id="destination" name="destination" class="form-control" required>
+                <option value="">Select destination...</option>
+                <?php
+                $sections = sections_except($station);
+                while ($section = fetch_array($sections)) : ?>
+                  <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
+                <?php endwhile; ?>
+              </select>
+            <?php } else {
+              $schools = school_by_alias($destination);
+              $school = '';
+
+              if (num_rows($schools) > 0) {
+                $school = fetch_assoc($schools)['name'];
+              }
+            ?>  
+              <input id="destination" class="form-control" type="text" value="<?php echo $school; ?>" disabled>
+              <input name="destination" class="form-control" type="hidden" value="<?php echo $destination; ?>" required>
+            <?php } ?>
           </div>
 
           <div class="form-group">
             <label for="purpose" class="mb-0">Purpose</label>
-            <select id="purpose" name="purpose" class="form-control" required>
-              <option value="">Select purpose...</option>
-              <?php
-              $document_purpose = document_purpose();
-              while ($purpose = fetch_array($document_purpose)) : ?>
-                <option value="<?php echo $purpose['purpose']; ?>"><?php echo $purpose['purpose']; ?></option>
-              <?php endwhile; ?>
-            </select>
+            <?php if (!$for_release) : ?>
+              <select id="purpose" name="purpose" class="form-control" required>
+                <option value="">Select purpose...</option>
+                <?php
+                $document_purpose = document_purpose();
+                while ($purpose = fetch_array($document_purpose)) : ?>
+                  <option value="<?php echo $purpose['purpose']; ?>"><?php echo $purpose['purpose']; ?></option>
+                <?php endwhile; ?>
+              </select>
+            <?php else : ?>
+              <input id="purpose" name="purpose" class="form-control" type="text" value="<?php echo $purpose; ?>" required readonly>
+            <?php endif; ?>
           </div>
 
           <div class="form-group mb-0">
             <label for="details" class="mb-0">Additional details (optional)</label>
-            <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."></textarea>
+            <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."><?php echo $details; ?></textarea>
           </div>
         <?php } else {
           missing_prompt($modal_title, 'fa-times-circle');
