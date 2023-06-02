@@ -1,9 +1,5 @@
 <?php
 // includes/layout/content.php
-if ($show_prompt) {
-  message_prompt($message, 'success');
-}
-
 if (!isset($url) || $url === 'dashboard') {
   include_once('dashboard.php');
 } else {
@@ -66,7 +62,7 @@ if (!isset($url) || $url === 'dashboard') {
       $file = 'activity/activity-log';
       break;
     case 'Settings':
-      $file = 'settings/settings';
+      $file = 'settings/index';
       break;
     case '404':
     default:
