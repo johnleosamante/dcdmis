@@ -11,12 +11,12 @@ function stationName($id) {
   return numRows($school) > 0 ? fetchAssoc($school)['name'] : $id;
 }
 
-function user_name($id) {
+function userName($id) {
   $users = employee($id);
 
   if (numRows($users) > 0) {
     $user = fetchAssoc($users);
-    return to_name($user['lname'], $user['fname'], $user['mname'], $user['ext'], true);
+    return toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true);
   }
   
   return $id;
