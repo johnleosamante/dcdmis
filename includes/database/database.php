@@ -14,7 +14,7 @@ function connection() {
   return $con;
 }
 
-function affected_rows() {
+function affectedRows() {
   return mysqli_affected_rows(connection());
 }
 
@@ -22,23 +22,23 @@ function query($query) {
   return mysqli_query(connection(), $query);
 }
 
-function non_query($query) {
+function nonQuery($query) {
   mysqli_query(connection(), $query);
 }
 
-function fetch_all_assoc($result) {
+function fetchAllAssoc($result) {
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-function fetch_assoc($result) {
+function fetchAssoc($result) {
   return mysqli_fetch_assoc($result);
 }
 
-function fetch_array($result) {
+function fetchArray($result) {
   return mysqli_fetch_array($result);
 }
 
-function num_rows($result) {
+function numRows($result) {
   return mysqli_num_rows($result);
 }
 ?>
