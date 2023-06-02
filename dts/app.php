@@ -18,6 +18,7 @@ $code = $_SESSION[alias() . '_code'];
 $stationId = $_SESSION[alias() . '_stationId'];
 $station = $_SESSION[alias() . '_station'];
 $portal = $_SESSION[alias() . '_portal'];
+$isSchoolPortal = $portal === 'school_portal';
 $isDescriptionEditable = isset($_SESSION[alias() . '_editableDescription']) ?  $_SESSION[alias() . '_editableDescription'] : false;
 $showPrompt = false;
 $message = null;
