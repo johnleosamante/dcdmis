@@ -1,28 +1,28 @@
 <?php
 // dts/dashboard.php
-message_prompt($show_prompt, $message, $success);
+messagePrompt($showPrompt, $message, $success);
 
-content_title_with_modal('Dashboard', uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus');
+contentTitleWithModal('Dashboard', uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus');
 ?>
 
 <div class="row mt-4">
   <?php
   $is_school_portal = $portal === 'school_portal';
 
-  card('Incoming Documents', custom_uri('dts', 'Incoming Documents'), 'fa-file-download', 'primary', num_rows(incoming_documents($station)));
+  card('Incoming Documents', customUri('dts', 'Incoming Documents'), 'fa-file-download', 'primary', numRows(incomingDocuments($station)));
 
-  card('Pending Documents', custom_uri('dts', 'Pending Documents'), 'fa-history', 'success', num_rows(pending_documents($station)));
+  card('Pending Documents', customUri('dts', 'Pending Documents'), 'fa-history', 'success', numRows(pendingDocuments($station)));
 
-  card('Outgoing Documents', custom_uri('dts', 'Outgoing Documents'), 'fa-file-upload', 'info', num_rows(outgoing_documents($station)));
+  card('Outgoing Documents', customUri('dts', 'Outgoing Documents'), 'fa-file-upload', 'info', numRows(outgoingDocuments($station)));
 
-  card('Ongoing Documents', custom_uri('dts', 'Ongoing Documents'), 'fa-tasks', 'warning', num_rows(ongoing_documents($station)));
+  card('Ongoing Documents', customUri('dts', 'Ongoing Documents'), 'fa-tasks', 'warning', numRows(ongoingDocuments($station)));
 
-  card('Completed Documents', custom_uri('dts', 'Completed Documents'), 'fa-check-circle', 'secondary');
+  card('Completed Documents', customUri('dts', 'Completed Documents'), 'fa-check-circle', 'secondary');
 
   if (!$is_school_portal) {
-    card('Received Documents', custom_uri('dts', 'Received Documents'), 'fa-hand-holding-medical', 'dark');
+    card('Received Documents', customUri('dts', 'Received Documents'), 'fa-hand-holding-medical', 'dark');
   }
 
-  card('Canceled Documents', custom_uri('dts', 'Canceled Documents'), 'fa-trash-alt', 'danger');
+  card('Canceled Documents', customUri('dts', 'Canceled Documents'), 'fa-trash-alt', 'danger');
   ?>
 </div>
