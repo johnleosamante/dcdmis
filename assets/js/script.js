@@ -7,8 +7,8 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  if ($('#dataTable').length > 0) {
-    $('#dataTable').DataTable();
+  if ($('#data-table').length > 0) {
+    $('#data-table').DataTable();
   }
 });
 
@@ -47,7 +47,7 @@ if (elementExist(confirmToggle)) {
   });
 }
 
-function loadData(href, id = 'Modal') {
+function loadData(href, id = 'modal') {
   const xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
   xmlhttp.onreadystatechange = () => {
