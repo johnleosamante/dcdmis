@@ -1,3 +1,4 @@
+// assets/js/chart-custom.js
 const tooltips = {
   titleMarginBottom: 10,
   titleFontColor: '#6e707e',
