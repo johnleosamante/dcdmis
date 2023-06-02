@@ -28,6 +28,8 @@ if (num_rows($documents) > 0) {
   include_once(root() . '/modules/error/no-results-found.php');
   return;
 }
+
+message_prompt($show_prompt, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
