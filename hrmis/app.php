@@ -1,21 +1,26 @@
 <?php
 // hrmis/app.php
 $_SESSION[alias() . '_active_app'] = 'hrmis';
+$page = $app_title = "Human Resource Management Information System";
 
 if (!isset($_SESSION[alias() . '_user_id'])) {
   redirect(uri() . '/login');
 }
 
 $user_id = $_SESSION[alias() . '_user_id'];
+$email = $_SESSION[alias() . '_email'];
 
 if (num_rows(user_role($user_id, 'HRMO')) === 0) {
   redirect(uri() . '/pis');  
 }
 
-$success = true;
+$code = $_SESSION[alias() . '_code'];
+$station_id = $_SESSION[alias() . '_station_id'];
+$station = $_SESSION[alias() . '_station'];
+$portal = $_SESSION[alias() . '_portal'];
 $show_prompt = false;
 $message = null;
-$page = $app_title = "Human Resource Management Information System";
+$success = true;
 
 if (isset($_POST['primary_search_button'])) {
   redirect(custom_uri('hrmis', 'Employee Search', sanitize($_POST['primary_search_text'])));
