@@ -11,9 +11,7 @@
       <?php
       display_logo(120, 120, '3', uri(), title());
 
-      if ($has_error) {
-        message_prompt($error_message);
-      }
+      message_prompt($show_prompt, $message, $success);
       ?>
 
       <form action="" method="POST" class="text-left">
