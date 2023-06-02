@@ -68,13 +68,8 @@ if ($account['status'] === 'Registered') {
   return;
 }
 
-if ($account['status'] === 'Default') {
-  $_SESSION[alias() . '_inactive_id'] = $account['id'];
-  $_SESSION[alias() . '_inactive_email'] = $account['email'];
-  redirect(uri() . '/activate');
-}
-
 $_SESSION[alias() . '_user_id'] = $account['id'];
+$_SESSION[alias() . '_email'] = $account['email'];
 
 if (isset($_POST['remember']) && $_POST['remember'] === true) {
   setcookie(alias() . '_login', $account['email'], time() + get_seconds(8), '/', uri(), false, true);
