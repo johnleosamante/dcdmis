@@ -1,13 +1,13 @@
 <?php
 // dts/app.php
-$_SESSION[alias() . '_active_app'] = 'dts';
-$page = $app_title = "Document Tracking System";
+$_SESSION[alias() . '_activeApp'] = 'dts';
+$page = $appTitle = "Document Tracking System";
 
-if (!isset($_SESSION[alias() . '_user_id'])) {
+if (!isset($_SESSION[alias() . '_userId'])) {
   redirect(uri() . '/login');
 }
 
-$user_id = $_SESSION[alias() . '_user_id'];
+$userId = $_SESSION[alias() . '_userId'];
 $email = $_SESSION[alias() . '_email'];
 
 if (!isset($_SESSION[alias() . '_portal'])) {
@@ -15,107 +15,107 @@ if (!isset($_SESSION[alias() . '_portal'])) {
 }
 
 $code = $_SESSION[alias() . '_code'];
-$station_id = $_SESSION[alias() . '_station_id'];
+$stationId = $_SESSION[alias() . '_stationId'];
 $station = $_SESSION[alias() . '_station'];
 $portal = $_SESSION[alias() . '_portal'];
-$is_description_editable = isset($_SESSION[alias() . '_editable_description']) ?  $_SESSION[alias() . '_editable_description'] : false;
-$show_prompt = false;
+$isDescriptionEditable = isset($_SESSION[alias() . '_editableDescription']) ?  $_SESSION[alias() . '_editableDescription'] : false;
+$showPrompt = false;
 $message = null;
 $success = true;
 
-if (isset($_POST['primary_search_button'])) {
-  redirect(custom_uri('dts', 'Document Information', sanitize($_POST['primary_search_text'])));
+if (isset($_POST['primary-search-button'])) {
+  redirect(customUri('dts', 'Document Information', sanitize($_POST['primary-search-text'])));
 }
 
-if (isset($_POST['save_document'])) {
-  $document_id = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+if (isset($_POST['save-document'])) {
+  $documentid = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
   $destination = $portal === 'school_portal' ? 'RECORD' :  sanitize($_POST['destination']);
   $status = null;
 
-  if (num_rows(document($document_id)) === 0) {
+  if (numRows(document($documentId)) === 0) {
     $status = 'saved';
     $year = date('y');
     $description = sanitize($_POST['description']);
-    $document_id = $code . '-' . $year . '-' . sprintf("%05d", count_documents_from($station, $year, $code) + 1);
+    $documentId = $code . '-' . $year . '-' . sprintf("%05d", countCocumentsFrom($station, $year, $code) + 1);
 
-    insert_document($document_id, $description, $station, $purpose, $details);
-    insert_document_log($document_id, $user_id, $station, $destination, $purpose, 'New', $details);
+    insertDocument($documentId, $description, $station, $purpose, $details);
+    insertDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
   } else {
     $status = 'updated';
-    $update_description = false;
+    $updateDescription = false;
     $description = '';
 
-    if ($is_description_editable) {
-      $update_description = true;
+    if ($isDescriptionEditable) {
+      $updateDescription = true;
       $description = isset($_POST['description']) ? sanitize($_POST['description']) : null;
     }
 
-    update_document($document_id, $description, $purpose, $details, $update_description);
-    update_document_log($document_id, $user_id, $station, $destination, $purpose, 'New', $details);
+    updateDocument($documentId, $description, $purpose, $details, $updateDescription);
+    updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
   }
 
-  if (affected_rows()) {
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been ' . $status . ' successfully!';
-    $show_prompt = true;
-  }
-}
-
-if (isset($_POST['receive_document'])) {
-  $document_id = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
-
-  update_document_logs_done($document_id);
-
-  if (affected_rows()) {
-    insert_document_log($document_id, $user_id, $station, '-', 'Received', 'New');
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been received successfully!';
-    $show_prompt = true;
+  if (affectedRows()) {
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="Document Information: ' . $documentId . '" target="_blank">' . strtoupper($documentId) . '</a>] has been ' . $status . ' successfully!';
+    $showPrompt = true;
   }
 }
 
-if (isset($_POST['forward_document'])) {
-  $document_id = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+if (isset($_POST['receive-document'])) {
+  $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+
+  updateDocumentLogsDone($documentId);
+
+  if (affectedRows()) {
+    insertDocumentLog($documentId, $userId, $station, '-', 'Received', 'New');
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="Document Information: ' . $documentId . '" target="_blank">' . strtoupper($documentId) . '</a>] has been received successfully!';
+    $showPrompt = true;
+  }
+}
+
+if (isset($_POST['forward-document'])) {
+  $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
 
-  update_document_logs_done($document_id);
+  updateDocumentLogsDone($documentId);
 
-  if (affected_rows()) {
-    insert_document_log($document_id, $user_id, $station, sanitize($_POST['destination']), $purpose, 'New', $details);
-    update_document_status($document_id, $purpose, 'Unread', $details);
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been forwarded successfully!';
-    $show_prompt = true;
+  if (affectedRows()) {
+    insertDocumentLog($documentId, $userId, $station, sanitize($_POST['destination']), $purpose, 'New', $details);
+    updateDocumentStatus($documentId, $purpose, 'Unread', $details);
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="Document Information: ' . $documentId . '" target="_blank">' . strtoupper($documentId) . '</a>] has been forwarded successfully!';
+    $showPrompt = true;
   }
 }
 
-if (isset($_POST['complete_document'])) {
-  $document_id = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+if (isset($_POST['complete-document'])) {
+  $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
   $remarks = sanitize($_POST['remarks']);
   $status = 'Completed';
 
-  update_document_logs_done($document_id);
+  updateDocumentLogsDone($documentId);
 
-  if (affected_rows()) {
-    insert_document_log($document_id, $user_id, $station, '-', $status, 'Done', $remarks);
-    update_document_status($document_id, $status, 'Read', $remarks);
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been mark completed successfully.';
-    $show_prompt = true;
+  if (affectedRows()) {
+    insertDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
+    updateDocumentStatus($documentId, $status, 'Read', $remarks);
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="Document Information: ' . $documentId . '" target="_blank">' . strtoupper($documentId) . '</a>] has been mark completed successfully.';
+    $showPrompt = true;
   }
 }
 
-if (isset($_POST['cancel_document'])) {
-  $document_id = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+if (isset($_POST['cancel-document'])) {
+  $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
   $remarks = sanitize($_POST['remarks']);
   $status = 'Canceled';
 
-  update_document_logs_done($document_id);
+  updateDocumentLogsDone($documentId);
 
-  if (affected_rows()) {
-    insert_document_log($document_id, $user_id, $station, '-', $status, 'Done', $remarks);
-    update_document_status($document_id, $status, 'Read', $remarks);
-    $message = 'Document code [<a href="' . custom_uri('dts', 'Document Information', $document_id) . '" title="Document Information: ' . $document_id . '" target="_blank">' . strtoupper($document_id) . '</a>] has been canceled successfully.';
-    $show_prompt = true;
+  if (affectedRows()) {
+    insertDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
+    updateDocumentStatus($documentId, $status, 'Read', $remarks);
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="Document Information: ' . $documentId . '" target="_blank">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
+    $showPrompt = true;
   }
 }
 ?>
