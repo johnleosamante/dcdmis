@@ -13,12 +13,12 @@
   min-height: 100vh;
 }
 
-#layout #layout_content {
+#layout #layout-content {
   min-width: 0;
   flex-grow: 1;
 }
 
-#layout #layout_footer {
+#layout #layout-footer {
   min-width: 0;
 }
 
