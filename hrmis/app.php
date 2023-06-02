@@ -1,42 +1,42 @@
 <?php
 // hrmis/app.php
-$_SESSION[alias() . '_active_app'] = 'hrmis';
+$_SESSION[alias() . '_activeApp'] = 'hrmis';
 $page = $app_title = "Human Resource Management Information System";
 
-if (!isset($_SESSION[alias() . '_user_id'])) {
+if (!isset($_SESSION[alias() . '_userId'])) {
   redirect(uri() . '/login');
 }
 
-$user_id = $_SESSION[alias() . '_user_id'];
+$user_id = $_SESSION[alias() . '_userId'];
 $email = $_SESSION[alias() . '_email'];
 
-if (num_rows(user_role($user_id, 'HRMO')) === 0) {
+if (numRows(userRole($user_id, 'HRMO')) === 0) {
   redirect(uri() . '/pis');  
 }
 
 $code = $_SESSION[alias() . '_code'];
-$station_id = $_SESSION[alias() . '_station_id'];
+$stationId = $_SESSION[alias() . '_stationId'];
 $station = $_SESSION[alias() . '_station'];
 $portal = $_SESSION[alias() . '_portal'];
-$show_prompt = false;
+$showPrompt = false;
 $message = null;
 $success = true;
 
-if (isset($_POST['primary_search_button'])) {
-  redirect(custom_uri('hrmis', 'Employee Search', sanitize($_POST['primary_search_text'])));
+if (isset($_POST['primary-search-button'])) {
+  redirect(customUri('hrmis', 'Employee Search', sanitize($_POST['primary-search-text'])));
 }
 
 /* PERSONAL INFORMATION */
-if (isset($_POST['UpdatePersonalInformation'])) {
-  $employee_id = $_SESSION[alias() . '_current_employee_id'];
-  $employee_photo = $_SESSION[alias() . '_current_employee_photo'];
+if (isset($_POST['update-personal-information'])) {
+  $employeeId = $_SESSION[alias() . '_currentEmployeeId'];
+  $employeePhoto = $_SESSION[alias() . '_currentEmployeePhoto'];
 
-  if ($_FILES['imageUpload']['size'] > 0 && $_FILES['imageUpload']['error'] == 0) {
-    $myfile = $_FILES['imageUpload']['name'];
+  if ($_FILES['image-upload']['size'] > 0 && $_FILES['image-upload']['error'] == 0) {
+    $fileUpload = $_FILES['imageUpload']['name'];
     $temp = $_FILES['imageUpload']['tmp_name'];
     $type = $_FILES['imageUpload']['type'];
-    $ext = pathinfo($myfile, PATHINFO_EXTENSION);
-    $employee_photo = 'uploads/images/' . $employee_id . '/' . $employee_id . '.' . $ext;
+    $ext = pathinfo($fileUpload, PATHINFO_EXTENSION);
+    $employeePhoto = 'uploads/images/' . $employeeId . '/' . $employeeId . '.' . $ext;
 
     move_uploaded_file($temp, '../' . $employee_photo);
   }
@@ -48,7 +48,7 @@ if (isset($_POST['UpdatePersonalInformation'])) {
 
   update_employee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), $bmonth, $bday, $byear, sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil_status']), sanitize($_POST['civil_status_others']), sanitize($_POST['citizenship']), sanitize($_POST['dual_citizenship']), sanitize($_POST['dual_citizenship_country']), sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood_type']), sanitize($_POST['gsis']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency_id']), $employee_photo, $employee_id);
 
-  if (affected_rows() === 1) {
+  if (affectedRows() === 1) {
     $success = true;
     $message = 'Personal Information has been updated successfully!';
     $show_prompt = true;
