@@ -4,11 +4,11 @@
 
 include_once('config.php');
 
-function hash_string($string) {
+function hashString($string) {
   return sha1($string);
 }
 
-function hash_password($string) {
+function hashPassword($string) {
   return md5($string);
 }
 
@@ -37,7 +37,7 @@ function uri() {
   return $protocol . $_SERVER['HTTP_HOST'];
 }
 
-function custom_uri($page, $view, $id=null) {
+function customUri($page, $view, $id=null) {
   $value = ($id !== null) ? '&id=' . encode($id) : '';
 
   return uri() . "/{$page}?{$value}&v=" . encode($view);
@@ -59,7 +59,7 @@ function author() {
   return SITE_AUTHOR;
 }
 
-function client_ip() {
+function clientIp() {
   if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
     return $_SERVER['HTTP_CLIENT_IP'];
   } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -69,34 +69,34 @@ function client_ip() {
   }
 }
 
-function redirect($url = null) {
+function redirect($url=null) {
   if ($url !== null) {
     header("Location: {$url}");
     exit;
   }
 }
 
-function get_datetime() {
+function getDatetime() {
   return date('Y-m-d H:i:s');
 }
 
-function get_datetime_as_id() {
+function getDatetimeAsId() {
   return date('YmdHis');
 }
 
-function get_seconds($hours=1) {
+function getSeconds($hours=1) {
   return $hours * 60 * 60;
 }
 
-function set_active_item($reference, $value, $class='active') {
+function setActiveItem($reference, $value, $class='active') {
   return strtolower($reference) === strtolower($value) ? " {$class}" : '';
 }
 
-function set_active_navigation($condition, $class='active') {
+function setActiveNavigation($condition, $class='active') {
   return $condition ? " {$class}" : '';
 }
 
-function is_valid_email($email, $domain = null) {
+function isValidEmail($email, $domain=null) {
   if ($domain === null) {
     return preg_match("/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/", $email);
   }
@@ -104,15 +104,15 @@ function is_valid_email($email, $domain = null) {
   return preg_match("/^[a-zA-Z0-9_.-]+@+" . $domain . "+$/", $email);
 }
 
-function set_option_selected($reference, $value) {
+function setOptionSelected($reference, $value) {
   return strtolower($reference) === strtolower($value) ? ' selected' : '';
 }
 
-function set_item_checked($condition) {
+function setItemChecked($condition) {
   return $condition ? ' checked' : '';
 }
 
-function get_age($year, $month, $day) {
+function getAge($year, $month, $day) {
   $now = new DateTime();
   $bdate = new DateTime("{$year}-{$month}-{$day}");
   return $now->diff($bdate)->y;
