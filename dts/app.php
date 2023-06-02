@@ -38,7 +38,7 @@ if (isset($_POST['save-document'])) {
     $status = 'saved';
     $year = date('y');
     $description = sanitize($_POST['description']);
-    $documentId = $code . '-' . $year . '-' . sprintf("%05d", countCocumentsFrom($station, $year, $code) + 1);
+    $documentId = $code . '-' . $year . '-' . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
 
     insertDocument($documentId, $description, $station, $purpose, $details);
     insertDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
