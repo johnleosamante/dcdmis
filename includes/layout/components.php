@@ -6,9 +6,9 @@ function display_logo($width, $height, $margin_bottom = '3', $url = '', $text = 
   </a>
 <?php }
 
-function message_prompt($show, $message, $status = 'danger', $align = 'left') { 
+function message_prompt($show, $message, $success = true, $align = 'left') { 
   if ($show) : ?>
-  <div class="alert alert-<?php echo $status; ?> text-<?php echo $align; ?>">
+  <div class="alert alert-<?php echo $success ? 'success' : 'danger'; ?> text-<?php echo $align; ?>">
     <?php echo $message; ?>
   </div>
 <?php endif;
