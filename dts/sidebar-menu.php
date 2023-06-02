@@ -6,15 +6,13 @@ $is_school_portal = $portal === 'school_portal';
 
 sidebar_menu_item(custom_uri('dts', 'Incoming Documents'), 'Incoming', 'fa-file-download', isset($url) && str_contains($url, 'Incoming'), number_format(num_rows(incoming_documents($station))));
 
-if (!$is_school_portal) {
-  sidebar_menu_item(custom_uri('dts', 'Pending Documents'), 'Pending', 'fa-history', isset($url) && str_contains($url, 'Pending'), number_format(num_rows(pending_documents($station))));
-}
+
+sidebar_menu_item(custom_uri('dts', 'Pending Documents'), 'Pending', 'fa-history', isset($url) && str_contains($url, 'Pending'), number_format(num_rows(pending_documents($station))));
 
 sidebar_menu_item(custom_uri('dts', 'Outgoing Documents'), 'Outgoing', 'fa-file-upload', isset($url) && str_contains($url, 'Outgoing'), number_format(num_rows(outgoing_documents($station))));
 
-if (!$is_school_portal) {
-  sidebar_divider();
-}
+
+sidebar_divider();
 
 sidebar_menu_item(custom_uri('dts', 'Ongoing Documents'), 'Ongoing', 'fa-tasks', isset($url) && str_contains($url, 'Ongoing'), number_format(num_rows(ongoing_documents($station))));
 
