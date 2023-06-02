@@ -4,9 +4,9 @@ sidebar_divider();
 
 $is_school_portal = $portal === 'school_portal';
 
-if (!$is_school_portal) {
-  sidebar_menu_item(custom_uri('dts', 'Incoming Documents'), 'Incoming', 'fa-file-download', isset($url) && str_contains($url, 'Incoming'), number_format(num_rows(incoming_documents($station))));
+sidebar_menu_item(custom_uri('dts', 'Incoming Documents'), 'Incoming', 'fa-file-download', isset($url) && str_contains($url, 'Incoming'), number_format(num_rows(incoming_documents($station))));
 
+if (!$is_school_portal) {
   sidebar_menu_item(custom_uri('dts', 'Pending Documents'), 'Pending', 'fa-history', isset($url) && str_contains($url, 'Pending'), number_format(num_rows(pending_documents($station))));
 }
 
