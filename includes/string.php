@@ -1,74 +1,74 @@
 <?php
 // include/string.php
-function to_string($string, $prefix=null, $suffix=null, $ischar=false) {
+function toString($string, $prefix=null, $suffix=null, $ischar=false) {
   if (empty($string)) return '';
   if (strtolower($string) === 'n/a') return '';
   if ($ischar) $string = $string[0];
   return $prefix . $string . $suffix;
 }
 
-function to_name($last_name, $first_name, $middle_name='', $extension='', $fname_first=false, $middle_initial=true) {
-  if (strlen($middle_name) > 0 && $middle_name !== ' ' && strtoupper($middle_name) !== 'n/a') {
-    $suffix = $middle_initial ? '.' : '';
-    $middle_name = to_string($middle_name, ' ', $suffix, $middle_initial);
+function toName($lastName, $firstName, $middleName='', $extension='', $fnameFirst=false, $middleInitial=true) {
+  if (strlen($middleName) > 0 && $middleName !== ' ' && strtoupper($middleName) !== 'n/a') {
+    $suffix = $middleInitial ? '.' : '';
+    $middleName = toString($middleName, ' ', $suffix, $middleInitial);
   } else {
-    $middle_name = '';
+    $middleName = '';
   }
-  if (!$fname_first) {
-    return $last_name . to_string($first_name, ', ') . to_string($extension, ' ') . $middle_name;
+  if (!$fnameFirst) {
+    return $lastName . toString($firstName, ', ') . toString($extension, ' ') . $middleName;
   } else {
-    return $first_name . to_string($middle_name, ' ') . to_string($last_name, ' ') . to_string($extension, ', ');
+    return $firstName . toString($middleName, ' ') . toString($lastName, ' ') . toString($extension, ', ');
   }
 }
 
-function to_address($lot, $street, $subdivision, $barangay, $city, $province='') {
-  return to_string($lot, '', ', ') . to_string($street, '', ', ') . to_string($subdivision, '', ', ') . to_string($barangay, '', ', ') . to_string($city) . to_string($province, ', ');
+function toAddress($lot, $street, $subdivision, $barangay, $city, $province='') {
+  return toString($lot, '', ', ') . toString($street, '', ', ') . toString($subdivision, '', ', ') . toString($barangay, '', ', ') . toString($city) . toString($province, ', ');
 }
 
-function to_handle_null($value, $default = '') {
+function toHandleNull($value, $default='') {
   return !empty($value) ? $value : $default;
 }
 
-function to_age($birth_date) {
-  return date_diff(date_create($birth_date), date_create(date('Y-m-d')))->format('%y');
+function toAge($birthDate) {
+  return date_diff(date_create($birthDate), date_create(date('Y-m-d')))->format('%y');
 }
 
-function to_date($date, $format='m/d/Y', $default = '') {
+function toDate($date, $format='m/d/Y', $default='') {
   return strtotime($date) ? date($format, strtotime($date)) : $default;
 }
 
-function to_long_date($date, $default = '') {
-  return to_date($date, 'F j, Y', $default);
+function toLongDate($date, $default = '') {
+  return toDate($date, 'F j, Y', $default);
 }
 
-function to_datetime($date) {
+function toDatetime($date) {
   return strtotime($date) ? date('F d, Y', strtotime($date)) . '<br>' . date('h:i:s A', strtotime($date)) : $date;
 }
 
-function to_currency($value) {
+function toCurrency($value, $currency='&#8369;') {
   $number = is_numeric($value) ? $value : 0;
-  return '&#8369; ' . number_format(floatval($number), 2);
+  return $currency . ' ' . number_format(floatval($number), 2);
 }
 
 function sanitize($input) {
   return htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES);
 }
 
-function random_password($length) {
+function randomPassword($length) {
   $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:<>?-=[]\;,./';
-  $char_length = strlen($characters);
-  $random_string = '';
+  $charLength = strlen($characters);
+  $randomString = '';
   for ($i = 0; $i < $length; $i++) {
-    $random_string .= $characters[rand(0, $char_length - 1)];
+    $randomString .= $characters[rand(0, $charLength - 1)];
   }
-  return $random_string;
+  return $randomString;
 }
 
-function check_password_strength($password) {
-  $has_uppercase = preg_match('/[A-Z]/', $password);
-  $has_lowercase = preg_match('/[a-z]/', $password);
-  $has_number = preg_match('/\d/', $password);
-  $has_special_character = preg_match('/[^a-zA-Z\d]/', $password);
-  return !$has_uppercase || !$has_lowercase || !$has_number || !$has_special_character;
+function checkPasswordStrength($password) {
+  $hasUppercase = preg_match('/[A-Z]/', $password);
+  $hasLowercase = preg_match('/[a-z]/', $password);
+  $hasNumber = preg_match('/\d/', $password);
+  $hasSpecialCharacter = preg_match('/[^a-zA-Z\d]/', $password);
+  return !$hasUppercase || !$hasLowercase || !$hasNumber || !$hasSpecialCharacter;
 }
 ?>
