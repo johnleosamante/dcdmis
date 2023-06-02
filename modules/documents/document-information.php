@@ -75,7 +75,9 @@ if (num_rows($documents) > 0) {
             }
             break;
           case 'Pending Documents':
-            modal_button_split(uri() .'/modules/documents/forward-document-dialog.php?id=' . cipher($document_id), 'Forward', 'fa-share', 'Forward Document', 'info');
+            if ($portal !== 'school_portal') {
+              modal_button_split(uri() . '/modules/documents/forward-document-dialog.php?id=' . cipher($document_id), 'Forward', 'fa-share', 'Forward Document', 'info');
+            }
             modal_button_split(uri() .'/modules/documents/complete-document-dialog.php?id=' . cipher($document_id), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
             break;
           case 'Outgoing Documents':
@@ -89,6 +91,14 @@ if (num_rows($documents) > 0) {
 
         switch ($document_type) {
           case 'Pending Documents':
+            if ($portal === 'school_portal') {
+              break;
+            }
+            
+            if (is_document_from($document_id, $station) && $document['from'] === $station && !is_document($document_id, 'Cancel')) {
+              modal_button_split(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($document_id), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
+            }
+            break;
           case 'Outgoing Documents':
             if (is_document_from($document_id, $station) && $document['from'] === $station && !is_document($document_id, 'Cancel')) {
               modal_button_split(uri() .'/modules/documents/cancel-document-dialog.php?id=' . cipher($document_id), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
