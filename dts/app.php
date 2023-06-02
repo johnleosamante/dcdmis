@@ -8,6 +8,7 @@ if (!isset($_SESSION[alias() . '_user_id'])) {
 }
 
 $user_id = $_SESSION[alias() . '_user_id'];
+$email = $_SESSION[alias() . '_email'];
 
 if (!isset($_SESSION[alias() . '_portal'])) {
   redirect(uri() . '/pis');
@@ -20,6 +21,7 @@ $portal = $_SESSION[alias() . '_portal'];
 $is_description_editable = isset($_SESSION[alias() . '_editable_description']) ?  $_SESSION[alias() . '_editable_description'] : false;
 $show_prompt = false;
 $message = null;
+$success = true;
 
 if (isset($_POST['primary_search_button'])) {
   redirect(custom_uri('dts', 'Document Information', sanitize($_POST['primary_search_text'])));
