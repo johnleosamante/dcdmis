@@ -2,10 +2,10 @@
 // modules/employees/view/work-experience.php
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'work-experience', 'show active'); ?>" id="work-experience">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'work-experience', 'show active'); ?>" id="work-experience">
     <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modal_button_split(uri() . '/modules/employees/update/update-work-experience.php', 'Add', 'fa-plus', 'Add Work Experience', 'primary'); ?>
+      <?php modalButtonSplit(uri() . '/modules/employees/update/update-work-experience.php', 'Add', 'fa-plus', 'Add Work Experience', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -34,25 +34,25 @@
           <?php
           $experiences = experiences($employee['id']);
 
-          if (num_rows($experiences) > 0) {
-            while ($experience = fetch_assoc($experiences)) : ?>
+          if (numRows($experiences) > 0) {
+            while ($experience = fetchAssoc($experiences)) : ?>
               <tr>
-                <td class="align-middle"><?php echo to_date($experience['from']); ?></td>
-                <td class="align-middle"><?php echo $experience['ispresent'] ? 'PRESENT' : to_date($experience['to']); ?></td>
+                <td class="align-middle"><?php echo toDate($experience['from']); ?></td>
+                <td class="align-middle"><?php echo $experience['ispresent'] ? 'PRESENT' : toDate($experience['to']); ?></td>
                 <td class="align-middle"><?php echo $experience['position']; ?></td>
                 <td class="align-middle"><?php echo $experience['organization']; ?></td>
-                <td class="align-middle"><?php echo to_currency($experience['salary']); ?></td>
+                <td class="align-middle"><?php echo toCurrency($experience['salary']); ?></td>
                 <td class="align-middle"><?php echo $experience['sg']; ?></td>
                 <td class="align-middle"><?php echo $experience['status']; ?></td>
                 <td class="align-middle"><?php echo $experience['isgovernment']; ?></td>
                 <?php if ($editMode) : ?>
                   <td class="align-middle text-capitalize">
                     <div class="dropdown no-arrow">
-                      <?php dropdown_ellipsis(); ?>
+                      <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-work-experience.php?id=' . encode($experience['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-work-experience.php?id=' . encode($experience['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-work-experience.php?id=' . encode($experience['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-work-experience.php?id=' . encode($experience['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>

@@ -2,7 +2,7 @@
 // modules/employees/view/recognition.php
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'recognition', 'show active'); ?>" id="recognition">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'recognition', 'show active'); ?>" id="recognition">
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
@@ -15,8 +15,8 @@
           <?php
           $recognitions = recognitions($employee['id']);
 
-          if (num_rows($recognitions) > 0) {
-            while ($recognition = fetch_assoc($recognitions)) : ?>
+          if (numRows($recognitions) > 0) {
+            while ($recognition = fetchAssoc($recognitions)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $recognition['recognition']; ?></td>
               </tr>

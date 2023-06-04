@@ -2,10 +2,10 @@
 // modules/employees/view/educational-background.php
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'educational-background', 'show active'); ?>" id="educational-background">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'educational-background', 'show active'); ?>" id="educational-background">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modal_button_split(uri() . '/modules/employees/update/update-education.php', 'Add',  'fa-plus', 'Add Education', 'primary'); ?>
+      <?php modalButtonSplit(uri() . '/modules/employees/update/update-education.php', 'Add',  'fa-plus', 'Add Education', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -32,29 +32,29 @@
         </thead>
         <tbody>
           <?php
-          $education_background = educational_backgrounds($employee['id']);
+          $education_background = educationalBackgrounds($employee['id']);
 
-          if (num_rows($education_background) > 0) {
-            while ($education = fetch_assoc($education_background)) : ?>
+          if (numRows($education_background) > 0) {
+            while ($education = fetchAssoc($education_background)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $education['level']; ?></td>
                 <td class="align-middle"><?php echo $education['school']; ?></td>
-                <td class="align-middle"><?php echo to_handle_null($education['course'], 'N/A'); ?></td>
+                <td class="align-middle"><?php echo toHandleNull($education['course'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo $education['from']; ?></td>
                 <td class="align-middle">
                   <?php echo $education['ispresent'] ? 'PRESENT' : $education['to']; ?>
                 </td>
-                <td class="align-middle"><?php echo to_handle_null($education['highest'], 'N/A'); ?></td>
-                <td class="align-middle"><?php echo to_handle_null($education['year_graduated'], 'N/A'); ?></td>
-                <td class="align-middle"><?php echo to_handle_null($education['scholarship'], 'N/A'); ?></td>
+                <td class="align-middle"><?php echo toHandleNull($education['highest'], 'N/A'); ?></td>
+                <td class="align-middle"><?php echo toHandleNull($education['year_graduated'], 'N/A'); ?></td>
+                <td class="align-middle"><?php echo toHandleNull($education['scholarship'], 'N/A'); ?></td>
                 <?php if ($editMode) : ?>
                   <td class="align-middle text-capitalize">
                     <div class="dropdown no-arrow">
-                      <?php dropdown_ellipsis(); ?>
+                      <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-education.php?id=' . encode($education['no']), 'Edit', 'fa-edit', 'Edit Education'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-education.php?id=' . encode($education['no']), 'Edit', 'fa-edit', 'Edit Education'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-education.php?id=' . encode($education['no']), 'Delete', 'fa-trash', 'Delete Education', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education.php?id=' . encode($education['no']), 'Delete', 'fa-trash', 'Delete Education', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>

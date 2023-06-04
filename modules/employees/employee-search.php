@@ -1,9 +1,9 @@
 <?php
 // modules/employees/employee-search.php
 $search = sanitize($_GET['id']);
-$employees = employee_search($search);
+$employees = employeeSearch($search);
 
-if (num_rows($employees) === 0) {
+if (numRows($employees) === 0) {
   include_once(root() . '/modules/error/no-results-found.php');
   return;
 }
@@ -11,7 +11,7 @@ if (num_rows($employees) === 0) {
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php content_title_with_link("Employee Search : \"{$search}\"", uri() . '/hrmis'); ?>
+    <?php contentTitleWithLink("Employee Search : \"{$search}\"", uri() . '/hrmis'); ?>
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -30,8 +30,8 @@ if (num_rows($employees) === 0) {
 
         <tbody>
           <?php
-          while ($row = fetch_array($employees)) :
-            $employee_name =  to_name($row['lname'], $row['fname'], $row['mname'], $row['ext']);
+          while ($row = fetchArray($employees)) :
+            $employee_name =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
             $photo = uri() . '/' . $row['picture'];
           ?>
             <tr class="text-uppercase">
@@ -47,17 +47,17 @@ if (num_rows($employees) === 0) {
                 $color = null;
                 $status = strtolower($row['status']);
 
-                round_pill($row['status']);
+                roundPill($row['status']);
                 ?>
               </td>
-              <td class="align-middle"><?php echo fetch_assoc(positions($row['position']))['position']; ?></td>
-              <td class="align-middle"><?php echo fetch_assoc(school_by_id($row['station']))['name']; ?></td>
+              <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
+              <td class="align-middle"><?php echo fetchAssoc(schoolById($row['station']))['name']; ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
-                  <?php dropdown_ellipsis(); ?>
+                  <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php
-                    link_dropdown_item(custom_uri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
+                    linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
                     ?>
                   </div>
                 </div>

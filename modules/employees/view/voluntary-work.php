@@ -2,10 +2,10 @@
 // modules/employees/view/voluntary-work.php
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'voluntary-work', 'show active'); ?>" id="voluntary-work">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'voluntary-work', 'show active'); ?>" id="voluntary-work">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modal_button_split(uri() . '/modules/employees/update/update-voluntary-work.php', 'Add', 'fa-plus', 'Add Voluntary Work', 'primary'); ?>
+      <?php modalButtonSplit(uri() . '/modules/employees/update/update-voluntary-work.php', 'Add', 'fa-plus', 'Add Voluntary Work', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -29,24 +29,24 @@
         </thead>
         <tbody>
           <?php
-          $voluntary_work = voluntary_works($employee['id']);
+          $voluntary_work = voluntaryWorks($employee['id']);
 
-          if (num_rows($voluntary_work) > 0) {
-            while ($voluntary = fetch_assoc($voluntary_work)) : ?>
+          if (numRows($voluntary_work) > 0) {
+            while ($voluntary = fetchAssoc($voluntary_work)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $voluntary['organization']; ?></td>
-                <td class="align-middle"><?php echo to_date($voluntary['from']); ?></td>
-                <td class="align-middle"><?php echo $voluntary['ispresent'] ? 'PRESENT' : to_date($voluntary['to']); ?></td>
-                <td class="align-middle"><?php echo to_handle_null($voluntary['hours'], 'N/A'); ?></td>
+                <td class="align-middle"><?php echo toDate($voluntary['from']); ?></td>
+                <td class="align-middle"><?php echo $voluntary['ispresent'] ? 'PRESENT' : toDate($voluntary['to']); ?></td>
+                <td class="align-middle"><?php echo toHandleNull($voluntary['hours'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo $voluntary['position']; ?></td>
                 <?php if ($editMode) : ?>
                   <td class="align-middle text-capitalize">
                     <div class="dropdown no-arrow">
-                      <?php dropdown_ellipsis(); ?>
+                      <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-voluntary-work.php?id=' . encode($voluntary['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-voluntary-work.php?id=' . encode($voluntary['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-voluntary-work.php?id=' . encode($voluntary['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-voluntary-work.php?id=' . encode($voluntary['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>

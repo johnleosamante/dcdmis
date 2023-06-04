@@ -20,12 +20,12 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
   $_SESSION[alias() . '_current_work_experience_id'] = $id;
   $experiences = experience($employee_id, $id);
 
-  if (num_rows($experiences) > 0) {
-    $experience = fetch_array($experiences);
+  if (numRows($experiences) > 0) {
+    $experience = fetchArray($experiences);
     $experience_id = $experience['no'];
-    $from = to_date($experience['from'], 'Y-m-d');
+    $from = toDate($experience['from'], 'Y-m-d');
     $is_present = $experience['ispresent'];
-    $to = $is_present ? date('Y-m-d') : to_date($experience['to'], 'Y-m-d');
+    $to = $is_present ? date('Y-m-d') : toDate($experience['to'], 'Y-m-d');
     $position = $experience['position'];
     $organization = $experience['organization'];
     $salary = $experience['salary'];
@@ -38,14 +38,14 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
 <div class="modal-dialog">
   <div class="modal-content">
-    <?php modal_header($modalTitle); ?>
+    <?php modalHeader($modalTitle); ?>
 
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="from" class="mb-0">Inclusive Dates From: <?php show_asterisk(); ?></label>
+              <label for="from" class="mb-0">Inclusive Dates From: <?php showAsterisk(); ?></label>
               <input id="from" type="date" name="from" class="form-control" value="<?php echo $from; ?>" required>
             </div>
           </div>
@@ -54,11 +54,11 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
             <div class="form-group">
               <div class="row">
                 <div class="col-6">
-                  <label for="to" class="mb-0">Dates To: <?php show_asterisk(); ?></label>
+                  <label for="to" class="mb-0">Dates To: <?php showAsterisk(); ?></label>
                 </div>
                 <div class="col-6">
                   <div class="form-check">
-                    <input class="form-check-input" id="ispresent" type="checkbox" name="ispresent" <?php echo set_item_checked($is_present); ?>>
+                    <input class="form-check-input" id="ispresent" type="checkbox" name="ispresent" <?php echo setItemChecked($is_present); ?>>
                     <label class="form-check-label" for="ispresent">Present</label>
                   </div><!-- .form-check-->
                 </div>
@@ -69,12 +69,12 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
         </div>
 
         <div class="form-group">
-          <label for="position" class="mb-0">Position Title: <?php show_asterisk(); ?></label>
+          <label for="position" class="mb-0">Position Title: <?php showAsterisk(); ?></label>
           <input id="position" type="text" name="position" class="form-control" required value="<?php echo $position; ?>">
         </div>
 
         <div class="form-group">
-          <label for="organization" class="mb-0">Department / Agency / Office / Company: <?php show_asterisk(); ?></label>
+          <label for="organization" class="mb-0">Department / Agency / Office / Company: <?php showAsterisk(); ?></label>
           <input id="organization" type="text" name="organization" class="form-control" required value="<?php echo $organization; ?>">
         </div>
 
@@ -97,26 +97,26 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="status" class="mb-0">Status of Appointment: <?php show_asterisk(); ?></label>
+              <label for="status" class="mb-0">Status of Appointment: <?php showAsterisk(); ?></label>
               <select name="status" id="status" class="form-control" required>
-                <option value="Permanent" <?php echo set_option_selected("Permanent", $status); ?>>Permanent</option>
-                <option value="Temporary" <?php echo set_option_selected("Temporary", $status); ?>>Temporary</option>
-                <option value="Coterminus" <?php echo set_option_selected("Coterminus", $status); ?>>Coterminus</option>
-                <option value="Fixed Term" <?php echo set_option_selected("Fixed Term", $status); ?>>Fixed Term</option>
-                <option value="Contractual" <?php echo set_option_selected("Contractual", $status); ?>>Contractual</option>
-                <option value="Substitute" <?php echo set_option_selected("Substitute", $status); ?>>Substitute</option>
-                <option value="Provisional" <?php echo set_option_selected("Provisional", $status); ?>>Provisional</option>
-                <option value="Volunteer" <?php echo set_option_selected("Volunteer", $status); ?>>Volunteer</option>
+                <option value="Permanent" <?php echo setOptionSelected("Permanent", $status); ?>>Permanent</option>
+                <option value="Temporary" <?php echo setOptionSelected("Temporary", $status); ?>>Temporary</option>
+                <option value="Coterminus" <?php echo setOptionSelected("Coterminus", $status); ?>>Coterminus</option>
+                <option value="Fixed Term" <?php echo setOptionSelected("Fixed Term", $status); ?>>Fixed Term</option>
+                <option value="Contractual" <?php echo setOptionSelected("Contractual", $status); ?>>Contractual</option>
+                <option value="Substitute" <?php echo setOptionSelected("Substitute", $status); ?>>Substitute</option>
+                <option value="Provisional" <?php echo setOptionSelected("Provisional", $status); ?>>Provisional</option>
+                <option value="Volunteer" <?php echo setOptionSelected("Volunteer", $status); ?>>Volunteer</option>
               </select>
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="isgovernment" class="mb-0">Government Service: <?php show_asterisk(); ?></label>
+              <label for="isgovernment" class="mb-0">Government Service: <?php showAsterisk(); ?></label>
               <select name="isgovernment" id="isgovernment" class="form-control" required>
-                <option value="Y" <?php echo set_option_selected("Y", $service); ?>>Yes</option>
-                <option value="N" <?php echo set_option_selected("N", $service); ?>>No</option>
+                <option value="Y" <?php echo setOptionSelected("Y", $service); ?>>Yes</option>
+                <option value="N" <?php echo setOptionSelected("N", $service); ?>>No</option>
               </select>
             </div>
           </div>

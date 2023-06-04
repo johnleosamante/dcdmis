@@ -22,28 +22,28 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
   $_SESSION[alias() . '_current_eligibility_id'] = $id;
   $eligibilities = eligibility($employee_id, $id);
 
-  if (num_rows($eligibilities) > 0) {
-    $eligibility = fetch_array($eligibilities);
+  if (numRows($eligibilities) > 0) {
+    $eligibility = fetchArray($eligibilities);
     $eligibility_id = $eligibility['no'];
     $career = $eligibility['eligibility'];
     $rating = $eligibility['rating'];
-    $exam_date = to_date($eligibility['date'], 'Y-m-d');
+    $exam_date = toDate($eligibility['date'], 'Y-m-d');
     $exam_place = $eligibility['place'];
     $license = $eligibility['license'];
     $is_applicable = $eligibility['isapplicable'];
-    $validity = $is_applicable ? to_date($eligibility['validity'], 'Y-m-d') : date('Y-m-d');
+    $validity = $is_applicable ? toDate($eligibility['validity'], 'Y-m-d') : date('Y-m-d');
   }
 }
 ?>
 
 <div class="modal-dialog">
   <div class="modal-content">
-    <?php modal_header($modalTitle); ?>
+    <?php modalHeader($modalTitle); ?>
 
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="career" class="mb-0">Career Service / RA 1080 (Board/Bar) / Under Special Laws / CES / CSEE / Barangay Eligibility / Driver's License: <?php show_asterisk(); ?></label>
+          <label for="career" class="mb-0">Career Service / RA 1080 (Board/Bar) / Under Special Laws / CES / CSEE / Barangay Eligibility / Driver's License: <?php showAsterisk(); ?></label>
           <input id="career" name="career" type="text" class="form-control" value="<?php echo $career; ?>" required>
         </div>
 
@@ -57,14 +57,14 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="exam_date" class="mb-0">Date of Examination / Conferment: <?php show_asterisk(); ?></label>
+              <label for="exam_date" class="mb-0">Date of Examination / Conferment: <?php showAsterisk(); ?></label>
               <input id="exam_date" name="exam_date" type="date" class="form-control" required value="<?php echo $exam_date; ?>">
             </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="exam_place" class="mb-0">Place of Examination / Conferment: <?php show_asterisk(); ?></label>
+          <label for="exam_place" class="mb-0">Place of Examination / Conferment: <?php showAsterisk(); ?></label>
           <input id="exam_place" name="exam_place" type="text" class="form-control" required value="<?php echo $exam_place; ?>">
         </div>
 
@@ -84,7 +84,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
                 </div>
                 <div class="col-6">
                   <div class="form-check">
-                    <input class="form-check-input" id="isapplicable" type="checkbox" name="isapplicable" <?php echo set_item_checked($is_applicable); ?>>
+                    <input class="form-check-input" id="isapplicable" type="checkbox" name="isapplicable" <?php echo setItemChecked($is_applicable); ?>>
                     <label class="form-check-label" for="isapplicable">Applicable</label>
                   </div><!-- .form-check-->
                 </div>

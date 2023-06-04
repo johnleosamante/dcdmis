@@ -2,7 +2,7 @@
 // modules/employees/view/learning-development.php
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'learning-development', 'show active'); ?>" id="learning-development">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'learning-development', 'show active'); ?>" id="learning-development">
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
@@ -21,14 +21,14 @@
         </thead>
         <tbody>
           <?php
-          $learnings = learning_and_development($employee['id']);
+          $learnings = learningAndDevelopment($employee['id']);
 
-          if (num_rows($learnings) > 0) {
-            while ($learning = fetch_assoc($learnings)) : ?>
+          if (numRows($learnings) > 0) {
+            while ($learning = fetchAssoc($learnings)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $learning['title']; ?></td>
-                <td class="align-middle"><?php echo to_date($learning['from']); ?></td>
-                <td class="align-middle"><?php echo to_date($learning['to']); ?></td>
+                <td class="align-middle"><?php echo toDate($learning['from']); ?></td>
+                <td class="align-middle"><?php echo toDate($learning['to']); ?></td>
                 <td class="align-middle"><?php echo $learning['hours']; ?></td>
                 <td class="align-middle"><?php echo $learning['type']; ?></td>
                 <td class="align-middle"><?php echo $learning['sponsor']; ?></td>

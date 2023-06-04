@@ -2,10 +2,10 @@
 // modules/employees/view/civil-service-eligibility.php
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'civil-service-eligibility', 'show active'); ?>" id="civil-service-eligibility">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'civil-service-eligibility', 'show active'); ?>" id="civil-service-eligibility">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modal_button_split(uri() . '/modules/employees/update/update-eligibility.php', 'Add', 'fa-plus', 'Add Civil Service Eligibility', 'primary'); ?>
+      <?php modalButtonSplit(uri() . '/modules/employees/update/update-eligibility.php', 'Add', 'fa-plus', 'Add Civil Service Eligibility', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -32,27 +32,27 @@
           <?php
           $eligibilities = eligibilities($employee['id']);
 
-          if (num_rows($eligibilities) > 0) {
-            while ($eligibility = fetch_assoc($eligibilities)) : ?>
+          if (numRows($eligibilities) > 0) {
+            while ($eligibility = fetchAssoc($eligibilities)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $eligibility['eligibility']; ?></td>
-                <td class="align-middle"><?php echo to_handle_null($eligibility['rating'], 'N/A'); ?></td>
-                <td class="align-middle"><?php echo to_date($eligibility['date']); ?></td>
+                <td class="align-middle"><?php echo toHandleNull($eligibility['rating'], 'N/A'); ?></td>
+                <td class="align-middle"><?php echo toDate($eligibility['date']); ?></td>
                 <td class="align-middle"><?php echo $eligibility['place']; ?></td>
-                <td class="align-middle"><?php echo to_handle_null($eligibility['license'], 'N/A'); ?></td>
+                <td class="align-middle"><?php echo toHandleNull($eligibility['license'], 'N/A'); ?></td>
                 <td class="align-middle">
                   <?php
-                  echo $eligibility['isapplicable'] ? to_date($eligibility['validity'], 'm/d/Y', 'N/A') : 'N/A';
+                  echo $eligibility['isapplicable'] ? toDate($eligibility['validity'], 'm/d/Y', 'N/A') : 'N/A';
                   ?>
                 </td>
                 <?php if ($editMode) : ?>
                   <td class="align-middle text-capitalize">
                     <div class="dropdown no-arrow">
-                      <?php dropdown_ellipsis(); ?>
+                      <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-eligibility.php?id=' . encode($eligibility['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-eligibility.php?id=' . encode($eligibility['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-eligibility.php?id=' . encode($eligibility['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-eligibility.php?id=' . encode($eligibility['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>

@@ -2,7 +2,7 @@
 // modules/employees/view/reference.php
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'reference', 'show active'); ?>" id="reference">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'reference', 'show active'); ?>" id="reference">
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
@@ -17,12 +17,12 @@
           <?php
           $references = references($employee['id']);
 
-          if (num_rows($references) > 0) {
-            while ($reference = fetch_assoc($references)) : ?>
+          if (numRows($references) > 0) {
+            while ($reference = fetchAssoc($references)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $reference['name']; ?></td>
-                <td class="align-middle"><?php echo to_handle_null($reference['address'], 'N/A'); ?></td>
-                <td class="align-middle"><?php echo to_handle_null($reference['telephone'], 'N/A'); ?></td>
+                <td class="align-middle"><?php echo toHandleNull($reference['address'], 'N/A'); ?></td>
+                <td class="align-middle"><?php echo toHandleNull($reference['telephone'], 'N/A'); ?></td>
               </tr>
             <?php
             endwhile;

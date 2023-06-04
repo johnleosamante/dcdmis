@@ -1,21 +1,21 @@
 <?php
 // modules/employees/view/other-information.php
 
-$other_information = other_information($employee['id']);
+$other_information = otherInformation($employee['id']);
 
 $hasThirdDegree = $hasFourthDegree = $wasGuilty = $wasCharged = $wasConvicted = $wasSeparated = $wasCandidate = $resigned = $immigrant = $isIndigenous = $isDifferentlyAbled = $isSoloParent = '0';
 $relatedDetails = $guiltyDetails = $caseStatus = $convictedDetails = $separatedDetails = $candidateDetails = $resignedDetails = $immigrantCountry = $isIndigenousSpecify = $isDifferentlyAbledSpecify = $soloParentSpecify = '';
 $dateFiled = '0001-01-01';
 
-if (num_rows($other_information) > 0) {
-  $information = fetch_assoc($other_information);
+if (numRows($other_information) > 0) {
+  $information = fetchAssoc($other_information);
   $hasThirdDegree = $information['hasthirddegree'];
   $hasFourthDegree = $information['hasfourthdegree'];
   $relatedDetails = $information['relateddetails'];
   $wasGuilty = $information['wasguilty'];
   $guiltyDetails = $information['guiltydetails'];
   $wasCharged = $information['wascharged'];
-  $dateFiled = to_date($information['datefiled'], '', "Y-m-d");
+  $dateFiled = toDate($information['datefiled'], '', "Y-m-d");
   $caseStatus = $information['casestatus'];
   $wasConvicted = $information['wasconvicted'];
   $convictedDetails = $information['convicteddetails'];
@@ -36,7 +36,7 @@ if (num_rows($other_information) > 0) {
 }
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'other-information', 'show active'); ?>" id="other-information">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'other-information', 'show active'); ?>" id="other-information">
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered mb-0">
@@ -47,20 +47,20 @@ if (num_rows($other_information) > 0) {
               <ol type="a" class="mb-0">
                 <li>within the third degree?
                   <div class="py-1">
-                    <input id="hasThirdDegreeYes" type="radio" value="1" <?php echo set_active_item($hasThirdDegree, '1', 'checked'); ?> disabled>
+                    <input id="hasThirdDegreeYes" type="radio" value="1" <?php echo setActiveItem($hasThirdDegree, '1', 'checked'); ?> disabled>
                     <label for="hasThirdDegreeYes" class="px-1 mr-3">Yes</label>
 
-                    <input id="hasThirdDegreeNo" type="radio" value="0" <?php echo set_active_item($hasThirdDegree, '0', 'checked'); ?> disabled>
+                    <input id="hasThirdDegreeNo" type="radio" value="0" <?php echo setActiveItem($hasThirdDegree, '0', 'checked'); ?> disabled>
                     <label for="hasThirdDegreeNo" class="px-1">No</label>
                   </div>
                 </li>
 
                 <li>within the fourth degree (for Local Government Unit - Career Employees)?
                   <div class="py-1">
-                    <input id="hasFourthDegreeYes" type="radio" value="1" <?php echo set_active_item($hasFourthDegree, '1', 'checked'); ?> disabled>
+                    <input id="hasFourthDegreeYes" type="radio" value="1" <?php echo setActiveItem($hasFourthDegree, '1', 'checked'); ?> disabled>
                     <label for="hasFourthDegreeYes" class="px-1 mr-3">Yes</label>
 
-                    <input id="hasFourthDegreeNo" type="radio" value="0" <?php echo set_active_item($hasFourthDegree, '0', 'checked'); ?> disabled>
+                    <input id="hasFourthDegreeNo" type="radio" value="0" <?php echo setActiveItem($hasFourthDegree, '0', 'checked'); ?> disabled>
                     <label for="hasFourthDegreeNo" class="px-1">No</label>
                   </div>
                 </li>
@@ -78,10 +78,10 @@ if (num_rows($other_information) > 0) {
               <ol type="a" class="pl-3 mb-0">
                 <li>Have you ever been found guilty of any administrative offense?
                   <div class="py-1">
-                    <input id="wasGuiltyYes" type="radio" value="1" <?php echo set_active_item($wasGuilty, '1', 'checked'); ?> disabled>
+                    <input id="wasGuiltyYes" type="radio" value="1" <?php echo setActiveItem($wasGuilty, '1', 'checked'); ?> disabled>
                     <label for="wasGuiltyYes" class="px-1 mr-3">Yes</label>
 
-                    <input id="wasGuiltyNo" type="radio" value="0" <?php echo set_active_item($wasGuilty, '0', 'checked'); ?> disabled>
+                    <input id="wasGuiltyNo" type="radio" value="0" <?php echo setActiveItem($wasGuilty, '0', 'checked'); ?> disabled>
                     <label for="wasGuiltyNo" class="px-1">No</label>
 
                     <div class="form-group">
@@ -93,10 +93,10 @@ if (num_rows($other_information) > 0) {
 
                 <li>Have you been criminally charged before any court?
                   <div class="py-1">
-                    <input id="wasChargedYes" type="radio" value="1" <?php echo set_active_item($wasCharged, '1', 'checked'); ?> disabled>
+                    <input id="wasChargedYes" type="radio" value="1" <?php echo setActiveItem($wasCharged, '1', 'checked'); ?> disabled>
                     <label for="wasChargedYes" class="px-1 mr-3">Yes</label>
 
-                    <input id="wasChargedNo" type="radio" value="0" <?php echo set_active_item($wasCharged, '0', 'checked'); ?> disabled>
+                    <input id="wasChargedNo" type="radio" value="0" <?php echo setActiveItem($wasCharged, '0', 'checked'); ?> disabled>
                     <label for="wasChargedNo" class="px-1">No</label>
 
                     <div class="mb-1">If YES, give details:</div>
@@ -121,10 +121,10 @@ if (num_rows($other_information) > 0) {
               <p class="mb-1">Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?</p>
 
               <div class="pl-3">
-                <input id="wasconvictedYes" type="radio" value="1" <?php echo set_active_item($wasConvicted, '1', 'checked'); ?> disabled>
+                <input id="wasconvictedYes" type="radio" value="1" <?php echo setActiveItem($wasConvicted, '1', 'checked'); ?> disabled>
                 <label for="wasconvictedYes" class="px-1 mr-3">Yes</label>
 
-                <input id="wasconvictedNo" type="radio" value="0" <?php echo set_active_item($wasConvicted, '0', 'checked'); ?> disabled>
+                <input id="wasconvictedNo" type="radio" value="0" <?php echo setActiveItem($wasConvicted, '0', 'checked'); ?> disabled>
                 <label for="wasconvictedNo" class="px-1">No</label>
 
                 <div class="form-group mb-0">
@@ -140,10 +140,10 @@ if (num_rows($other_information) > 0) {
               <p class="mb-1">Have you ever been separated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term, finished contract or phased out (abolition) in the public or private sector?</p>
 
               <div class="pl-3">
-                <input id="wasSeparatedYes" type="radio" value="1" <?php echo set_active_item($wasSeparated, '1', 'checked'); ?> disabled>
+                <input id="wasSeparatedYes" type="radio" value="1" <?php echo setActiveItem($wasSeparated, '1', 'checked'); ?> disabled>
                 <label for="wasSeparatedYes" class="px-1 mr-3">Yes</label>
 
-                <input id="wasSeparatedNo" type="radio" value="0" <?php echo set_active_item($wasSeparated, '0', 'checked'); ?> disabled>
+                <input id="wasSeparatedNo" type="radio" value="0" <?php echo setActiveItem($wasSeparated, '0', 'checked'); ?> disabled>
                 <label for="wasSeparatedNo" class="px-1">No</label>
 
                 <div class="form-group mb-0">
@@ -159,10 +159,10 @@ if (num_rows($other_information) > 0) {
               <ol type="a" class="pl-3 mb-0">
                 <li>Have you ever been a candidate in a national or local election (except Barangay election)?
                   <div class="my-1">
-                    <input id="wasCandidateYes" type="radio" value="1" <?php echo set_active_item($wasCandidate, '1', 'checked'); ?> disabled>
+                    <input id="wasCandidateYes" type="radio" value="1" <?php echo setActiveItem($wasCandidate, '1', 'checked'); ?> disabled>
                     <label for="wasCandidateYes" class="px-1 mr-3">Yes</label>
 
-                    <input id="wasCandidateNo" type="radio" value="0" <?php echo set_active_item($wasCandidate, '0', 'checked'); ?> disabled>
+                    <input id="wasCandidateNo" type="radio" value="0" <?php echo setActiveItem($wasCandidate, '0', 'checked'); ?> disabled>
                     <label for="wasCandidateNo" class="px-1">No</label>
 
                     <div class="form-group">
@@ -174,10 +174,10 @@ if (num_rows($other_information) > 0) {
 
                 <li>Have you resigned from the government service during the three (3)-month period the last election to promote/actively campaign for a national or local candidate?
                   <div class="my-1">
-                    <input id="resignedYes" type="radio" value="1" <?php echo set_active_item($resigned, '1', 'checked'); ?> disabled>
+                    <input id="resignedYes" type="radio" value="1" <?php echo setActiveItem($resigned, '1', 'checked'); ?> disabled>
                     <label for="resignedYes" class="px-1 mr-3">Yes</label>
 
-                    <input id="resignedNo" type="radio" value="0" <?php echo set_active_item($resigned, '0', 'checked'); ?> disabled>
+                    <input id="resignedNo" type="radio" value="0" <?php echo setActiveItem($resigned, '0', 'checked'); ?> disabled>
                     <label for="resignedNo" class="px-1">No</label>
 
                     <div class="form-group mb-0">
@@ -195,10 +195,10 @@ if (num_rows($other_information) > 0) {
               <p class="mb-1">Have you acquired the status of an immigrant or permanent resident of another country?</p>
 
               <div class="pl-3">
-                <input id="immigrantYes" type="radio" value="1" <?php echo set_active_item($immigrant, '1', 'checked'); ?> disabled>
+                <input id="immigrantYes" type="radio" value="1" <?php echo setActiveItem($immigrant, '1', 'checked'); ?> disabled>
                 <label for="immigrantYes" class="px-1 mr-3">Yes</label>
 
-                <input id="immigrantNo" type="radio" value="0" <?php echo set_active_item($immigrant, '0', 'checked'); ?> disabled>
+                <input id="immigrantNo" type="radio" value="0" <?php echo setActiveItem($immigrant, '0', 'checked'); ?> disabled>
                 <label for="immigrantNo" class="px-1">No</label>
 
                 <div class="form-group mb-0">
@@ -216,10 +216,10 @@ if (num_rows($other_information) > 0) {
               <ol type="a" class="mb-0">
                 <li>Are you a member of any indigenous group?
                   <div class="my-1">
-                    <input id="isIndigenousYes" type="radio" value="1" <?php echo set_active_item($isIndigenous, '1', 'checked'); ?> disabled>
+                    <input id="isIndigenousYes" type="radio" value="1" <?php echo setActiveItem($isIndigenous, '1', 'checked'); ?> disabled>
                     <label for="isIndigenousYes" class="px-1 mr-3">Yes</label>
 
-                    <input id="isIndigenousNo" type="radio" value="0" <?php echo set_active_item($isIndigenous, '0', 'checked'); ?> disabled>
+                    <input id="isIndigenousNo" type="radio" value="0" <?php echo setActiveItem($isIndigenous, '0', 'checked'); ?> disabled>
                     <label for="isIndigenousNo" class="px-1">No</label>
 
                     <div class="form-group mb-0">
@@ -230,10 +230,10 @@ if (num_rows($other_information) > 0) {
                 </li>
                 <li>Are you differently abled?
                   <div class="my-1">
-                    <input id="isDifferentlyAbledYes" type="radio" value="1" <?php echo set_active_item($isDifferentlyAbled, '1', 'checked'); ?> disabled>
+                    <input id="isDifferentlyAbledYes" type="radio" value="1" <?php echo setActiveItem($isDifferentlyAbled, '1', 'checked'); ?> disabled>
                     <label for="isDifferentlyAbledYes" class="px-1 mr-3">Yes</label>
 
-                    <input id="isDifferentlyAbledNo" type="radio" value="0" <?php echo set_active_item($isDifferentlyAbled, '0', 'checked'); ?> disabled>
+                    <input id="isDifferentlyAbledNo" type="radio" value="0" <?php echo setActiveItem($isDifferentlyAbled, '0', 'checked'); ?> disabled>
                     <label for="isDifferentlyAbledNo" class="px-1">No</label>
 
                     <div class="form-group mb-0">
@@ -244,10 +244,10 @@ if (num_rows($other_information) > 0) {
                 </li>
                 <li>Are you a solo parent?
                   <div class="my-1">
-                    <input id="isSoloParentYes" type="radio" value="1" <?php echo set_active_item($isSoloParent, '1', 'checked'); ?> disabled>
+                    <input id="isSoloParentYes" type="radio" value="1" <?php echo setActiveItem($isSoloParent, '1', 'checked'); ?> disabled>
                     <label for="isSoloParentYes" class="px-1 mr-3">Yes</label>
 
-                    <input id="isSoloParentNo" type="radio" value="0" <?php echo set_active_item($isSoloParent, '0', 'checked'); ?> disabled>
+                    <input id="isSoloParentNo" type="radio" value="0" <?php echo setActiveItem($isSoloParent, '0', 'checked'); ?> disabled>
                     <label for="isSoloParentNo" class="px-1">No</label>
 
                     <div class="form-group mb-0">

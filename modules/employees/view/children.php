@@ -2,10 +2,10 @@
 // modules/employees/view/children.php
 ?>
 
-<div class="tab-pane fade<?php echo set_active_navigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'children', 'show active'); ?>" id="children">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'children', 'show active'); ?>" id="children">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modal_button_split(uri() . '/modules/employees/update/update-child.php', 'Add', 'fa-plus', 'Add Child', 'primary'); ?>
+      <?php modalButtonSplit(uri() . '/modules/employees/update/update-child.php', 'Add', 'fa-plus', 'Add Child', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -25,19 +25,19 @@
           <?php
           $children = children($employee['id']);
 
-          if (num_rows($children) > 0) {
-            while ($child = fetch_assoc($children)) : ?>
+          if (numRows($children) > 0) {
+            while ($child = fetchAssoc($children)) : ?>
               <tr>
-                <td class="align-middle"><?php echo to_name($child['last'], $child['first'], $child['middle'], $child['ext']); ?></td>
-                <td class="align-middle"><?php echo to_date($child['dob']); ?></td>
+                <td class="align-middle"><?php echo toName($child['last'], $child['first'], $child['middle'], $child['ext']); ?></td>
+                <td class="align-middle"><?php echo toDate($child['dob']); ?></td>
                 <?php if ($editMode) : ?>
                   <td class="align-middle text-capitalize">
                     <div class="dropdown no-arrow">
-                      <?php dropdown_ellipsis(); ?>
+                      <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modal_dropdown_item(uri() . '/modules/employees/update/update-child.php?id=' . encode($child['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-child.php?id=' . encode($child['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modal_dropdown_item(uri() . '/modules/employees/delete/delete-child.php?id=' . encode($child['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-child.php?id=' . encode($child['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>
