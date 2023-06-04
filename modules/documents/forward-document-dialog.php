@@ -9,46 +9,40 @@ include_once(root() . '/includes/database/section.php');
 include_once(root() . '/includes/database/school.php');
 include_once(root() . '/includes/layout/components.php');
 
-$station = $_SESSION[alias() . '_station'];
-$portal      = $_SESSION[alias() . '_portal'];
-$document_id = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$documents = document($document_id);
-$destination = '';
-$purpose = '';
-$details = '';
-$for_release = false;
+$documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$documents = document($documentId);
+$description = $destination = $purpose = $details = '';
+$modalTitle = 'Document not found';
+$hasDocument = false;
+$forRelease = false;
 
-if (num_rows($documents) > 0) {
-  $document = fetch_assoc($documents);
-  $code = $document['id'];
+if (numRows($documents) > 0) {
+  $document = fetchAssoc($documents);
+  $documentId = $document['id'];
   $description = $document['description'];
+  $documentLogs = fetchAssoc(documentLogs($documentId));
+  $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['from'] === $station && $documentLogs['to'] === '-';
+  $modalTitle = $hasDocument ? 'Forward Document' : $modalTitle;
 
   if (strtolower($document['status']) === 'for release' && $portal === 'record_portal') {
-    $for_release = true;
+    $forRelease = true;
     $destination = $document['from'];
     $purpose = $document['status'];
     $details = $document['details'];
   }
-
-  $modal_title = 'Forward Document';
-  $not_found = false;
-} else {
-  $code = $description = '';
-  $modal_title = 'Document not found';
-  $not_found = true;
 }
 ?>
 
-<div class="modal-dialog <?php echo $not_found ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?php echo !$hasDocument ? 'modal-sm' : ''; ?>">
   <div class="modal-content">
-    <?php modal_header($modal_title); ?>
+    <?php modalHeader($modalTitle); ?>
 
     <form action="" method="POST">
       <div class="modal-body">
-        <?php if (!$not_found) { ?>
+        <?php if ($hasDocument) { ?>
           <div class="form-group">
             <label for="code" class="mb-0">Code</label>
-            <input id="code" type="text" value="<?php echo $code; ?>" class="form-control text-uppercase" disabled>
+            <input id="code" type="text" value="<?php echo $documentId; ?>" class="form-control text-uppercase" disabled>
           </div>
 
           <div class="form-group">
@@ -58,23 +52,23 @@ if (num_rows($documents) > 0) {
 
           <div class="form-group">
             <label for="destination" class="mb-0">Destination</label>
-            <?php if (!$for_release) { ?>
+            <?php if (!$forRelease) { ?>
               <select id="destination" name="destination" class="form-control" required>
                 <option value="">Select destination...</option>
                 <?php
-                $sections = sections_except($station);
-                while ($section = fetch_array($sections)) : ?>
+                $sections = sectionsExcept($station);
+                while ($section = fetchArray($sections)) : ?>
                   <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
                 <?php endwhile; ?>
               </select>
             <?php } else {
-              $schools = school_by_alias($destination);
+              $schools = schoolByAlias($destination);
               $school = '';
 
-              if (num_rows($schools) > 0) {
-                $school = fetch_assoc($schools)['name'];
+              if (numRows($schools) > 0) {
+                $school = fetchAssoc($schools)['name'];
               }
-            ?>  
+            ?>
               <input id="destination" class="form-control" type="text" value="<?php echo $school; ?>" disabled>
               <input name="destination" class="form-control" type="hidden" value="<?php echo $destination; ?>" required>
             <?php } ?>
@@ -82,12 +76,12 @@ if (num_rows($documents) > 0) {
 
           <div class="form-group">
             <label for="purpose" class="mb-0">Purpose</label>
-            <?php if (!$for_release) : ?>
+            <?php if (!$forRelease) : ?>
               <select id="purpose" name="purpose" class="form-control" required>
                 <option value="">Select purpose...</option>
                 <?php
-                $document_purpose = document_purpose();
-                while ($purpose = fetch_array($document_purpose)) : ?>
+                $documentPurpose = documentPurpose();
+                while ($purpose = fetchArray($documentPurpose)) : ?>
                   <option value="<?php echo $purpose['purpose']; ?>"><?php echo $purpose['purpose']; ?></option>
                 <?php endwhile; ?>
               </select>
@@ -101,16 +95,16 @@ if (num_rows($documents) > 0) {
             <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."><?php echo $details; ?></textarea>
           </div>
         <?php } else {
-          missing_prompt($modal_title, 'fa-times-circle');
+          missingAlert($modalTitle, 'fa-times-circle');
         } ?>
       </div>
 
       <div class="modal-footer">
-        <?php if (!$not_found) : ?>
+        <?php if ($hasDocument) : ?>
           <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
-          <button class="btn btn-primary" name="forward_document" type="submit">Continue</button>
+          <button class="btn btn-primary" name="forward-document" type="submit">Continue</button>
         <?php endif; ?>
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <?php cancelModalButton(); ?>
       </div>
     </form>
   </div>

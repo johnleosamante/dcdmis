@@ -4,7 +4,7 @@ include_once('app.php');
 
 foreach ($_GET as $key => $data) {
   $url = $_GET[$key] = decode($data);
-  $page = sanitize($url) . ' | ' . $app_title;
+  $page = sanitize($url) . ' | ' . $appTitle;
 }
 
 include_once(root() . '/includes/layout/components.php');
@@ -28,11 +28,11 @@ include_once(root() . '/includes/layout/components.php');
       </div>
       
       <?php
-      sidebar_divider();
-      sidebar_menu_item(uri() . '/' . $_SESSION[alias() . '_active_app'], 'Dashboard', 'fa-tachometer-alt', !isset($url));
+      sidebarDivider();
+      sidebarMenuItem(uri() . '/' . $activeApp, 'Dashboard', 'fa-tachometer-alt', !isset($url));
       include_once('sidebar-menu.php');
-      sidebar_divider('3', true);
-      sidebar_toggle();
+      sidebarDivider('3', true);
+      sidebarToggle();
       ?>
     </ul>
 
@@ -50,7 +50,7 @@ include_once(root() . '/includes/layout/components.php');
   </div><!-- #wrapper -->
 
   <?php
-  scroll_to_top();
+  scrollToTop();
   modal();
   ?>
 

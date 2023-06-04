@@ -9,52 +9,53 @@ include_once(root() . '/includes/database/section.php');
 include_once(root() . '/includes/database/school.php');
 include_once(root() . '/includes/layout/components.php');
 
-$station     = $_SESSION[alias() . '_station'];
-$portal      = $_SESSION[alias() . '_portal'];
-$document_id = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$documents   = document_log($document_id);
-$for_release = false;
+$documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$documents = documentLog($documentId);
+$description = $destination = $purpose = $details = $attribute = '';
+$modalTitle = 'New Document';
+$hasDocument = false;
+$forRelease = false;
 
-if (num_rows($documents) > 0) {
-  $document = fetch_assoc($documents);
-  $code = $document['id'];
+if (numRows($documents) > 0) {
+  $document = fetchAssoc($documents);
+  $documentId = $document['id'];
   $description = $document['description'];
   $destination = $document['destination'];
   $purpose = $document['purpose'];
   $details = $document['details'];
+  $documentLogsResults = documentLogs($documentId);
+  $documentLogs = fetchAssoc($documentLogsResults);
+  $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['from'] === $station;
+  $modalTitle = $hasDocument ? 'Edit Document' : 'Document not found';
 
   if ($station !== $document['from']) {
     $attribute = ' disabled';
   } else {
-    if (num_rows(document_logs($document_id)) === 1) {
+    if (numRows($documentLogsResults) === 1) {
       $attribute = '';
-      $_SESSION[alias() . '_editable_description'] = true;
+      $isDescriptionEditable = $_SESSION[alias() . '_editableDescription'] = true;
     } else {
       $attribute = ' disabled';
-      $_SESSION[alias() . '_editable_description'] = false;
+      $isDescriptionEditable = $_SESSION[alias() . '_editableDescription'] = false;
     }
   }
 
-  $for_release = (strtolower($document['purpose']) === 'for release' && $portal === 'record_portal');
-  $modal_title = 'Edit Document';
-  $not_found = false;
-} else {
-  $code = $description = $destination = $purpose = $details = $attribute = '';
-  $modal_title = 'New Document';
-  $not_found = true;
+  $forRelease = str_contains(strtolower($document['purpose']), 'release') && $destination === 'RECORD' && $isRecordsPortal;
+  $modalTitle = 'Edit Document';
+  $notFound = false;
 }
 ?>
 
-<div class="modal-dialog">
+<div class="modal-dialog <?php echo !$hasDocument ? 'modal-sm' : ''; ?>">
   <div class="modal-content">
-    <?php modal_header($modal_title); ?>
+    <?php modalHeader($modalTitle); ?>
 
     <form action="" method="POST">
       <div class="modal-body">
-        <?php if (!$not_found) : ?>
+        <?php if ($hasDocument) : ?>
           <div class="form-group">
             <label for="code" class="mb-0">Code</label>
-            <input id="code" type="text" value="<?php echo $code; ?>" class="form-control text-uppercase" disabled>
+            <input id="code" type="text" value="<?php echo $documentId; ?>" class="form-control text-uppercase" disabled>
           </div>
         <?php endif; ?>
 
@@ -63,23 +64,23 @@ if (num_rows($documents) > 0) {
           <textarea id="description" name="description" class="form-control" rows="3" placeholder="Type description..." <?php echo $attribute; ?> required><?php echo $description; ?></textarea>
         </div>
 
-        <?php if ($portal !== 'school_portal') : ?>
+        <?php if (!$isSchoolPortal) : ?>
           <div class="form-group">
             <label class="mb-0" for="destination">Destination</label>
-            <?php if (!$for_release) { ?>
+            <?php if (!$forRelease) { ?>
               <select name="destination" id="destination" class="form-control" required>
                 <option value="">Select destination...</option>
-                <?php $sections = sections_except($station);
-                while ($section = fetch_array($sections)) : ?>
-                  <option value="<?php echo $section['id']; ?>" <?php echo set_option_selected($section['id'], $destination); ?>><?php echo $section['name']; ?></option>
+                <?php $sections = sectionsExcept($station);
+                while ($section = fetchArray($sections)) : ?>
+                  <option value="<?php echo $section['id']; ?>" <?php echo setOptionSelected($section['id'], $destination); ?>><?php echo $section['name']; ?></option>
                 <?php endwhile; ?>
               </select>
             <?php } else {
-              $schools = school_by_alias($destination);
+              $schools = schoolByAlias($destination);
               $school = '';
 
-              if (num_rows($schools) > 0) {
-                $school = fetch_assoc($schools)['name'];
+              if (numRows($schools) > 0) {
+                $school = fetchAssoc($schools)['name'];
               }
             ?>
               <input id="destination" class="form-control" type="text" value="<?php echo $school; ?>" disabled>
@@ -90,13 +91,13 @@ if (num_rows($documents) > 0) {
 
         <div class="form-group">
           <label class="mb-0" for="purpose">Purpose</label>
-          <?php if (!$for_release) : ?>
+          <?php if (!$forRelease) : ?>
             <select name="purpose" id="purpose" class="form-control" required>
               <option value="">Select purpose...</option>
               <?php
-              $document_purposes = document_purpose();
-              while ($document_purpose = fetch_array($document_purposes)) : ?>
-                <option value="<?php echo $document_purpose['purpose']; ?>" <?php echo set_option_selected($document_purpose['purpose'], $purpose); ?>><?php echo $document_purpose['purpose']; ?></option>
+              $documentPurposes = documentPurpose();
+              while ($documentPurpose = fetchArray($documentPurposes)) : ?>
+                <option value="<?php echo $documentPurpose['purpose']; ?>" <?php echo setOptionSelected($documentPurpose['purpose'], $purpose); ?>><?php echo $documentPurpose['purpose']; ?></option>
               <?php endwhile; ?>
             </select>
           <?php else : ?>
@@ -111,11 +112,11 @@ if (num_rows($documents) > 0) {
       </div>
 
       <div class="modal-footer">
-        <?php if (!$not_found) : ?>
+        <?php if ($hasDocument) : ?>
           <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
         <?php endif; ?>
-        <button class="btn btn-primary" name="save_document" type="submit">Continue</button>
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" name="save-document" type="submit">Continue</button>
+        <?php cancelModalButton(); ?>
       </div>
     </form>
   </div>

@@ -1,17 +1,14 @@
 <?php
 // hrmis/sidebar-menu.php
-?>
+sidebarDivider();
 
-<hr class="sidebar-divider d-none d-md-block my-0">
+sidebarHeading('Employees');
 
-<div class="sidebar-heading mt-3">Employees</div>
+sidebarMenuItem(customUri('hrmis', 'Active Employees'), 'Active', 'fa-user-check', isset($url) && str_contains($url, 'Active'), number_format(numRows(activeEmployees())));
 
-<?php
-sidebar_menu_item(custom_uri('hrmis', 'Active Employees'), 'Active', 'fa-user-check', isset($url) && str_contains($url, 'Active'), number_format(num_rows(active_employees())));
+sidebarMenuItem(customUri('hrmis', 'Retirable Employees'), 'Retirable','fa-user-clock',isset($url) && str_contains($url, 'Retirable'), number_format(numRows(retirableEmployees())));
 
-sidebar_menu_item(custom_uri('hrmis', 'Retirable Employees'), 'Retirable','fa-user-clock',isset($url) && str_contains($url, 'Retirable'), number_format(num_rows(retirable_employees())));
+sidebarMenuItem(customUri('hrmis', 'Celebrant Employees'), 'Celebrant', 'fa-birthday-cake', isset($url) && str_contains($url, 'Celebrant'));
 
-sidebar_menu_item(custom_uri('hrmis', 'Celebrant Employees'), 'Celebrant', 'fa-birthday-cake', isset($url) && str_contains($url, 'Celebrant'));
-
-sidebar_menu_item(custom_uri('hrmis', 'Archived Employees'), 'Archived', 'fa-user-lock', isset($url) && str_contains($url, 'Archived'));
+sidebarMenuItem(customUri('hrmis', 'Archived Employees'), 'Archived', 'fa-user-lock', isset($url) && str_contains($url, 'Archived'));
 ?>

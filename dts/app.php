@@ -1,39 +1,25 @@
 <?php
 // dts/app.php
-$_SESSION[alias() . '_activeApp'] = 'dts';
+$activeApp = $_SESSION[alias() . '_activeApp'] = 'dts';
 $page = $appTitle = "Document Tracking System";
 
-if (!isset($_SESSION[alias() . '_userId'])) {
+if (!isset($userId)) {
   redirect(uri() . '/login');
 }
 
-$userId = $_SESSION[alias() . '_userId'];
-$email = $_SESSION[alias() . '_email'];
-
-if (!isset($_SESSION[alias() . '_portal'])) {
+if (!isset($portal)) {
   redirect(uri() . '/pis');
 }
-
-$code = $_SESSION[alias() . '_code'];
-$stationId = $_SESSION[alias() . '_stationId'];
-$station = $_SESSION[alias() . '_station'];
-$portal = $_SESSION[alias() . '_portal'];
-$isSchoolPortal = $portal === 'school_portal';
-$isDescriptionEditable = isset($_SESSION[alias() . '_editableDescription']) ?  $_SESSION[alias() . '_editableDescription'] : false;
-$showPrompt = false;
-$message = null;
-$success = true;
 
 if (isset($_POST['primary-search-button'])) {
   redirect(customUri('dts', 'Document Information', sanitize($_POST['primary-search-text'])));
 }
 
 if (isset($_POST['save-document'])) {
-  $documentid = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+  $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
-  $destination = $portal === 'school_portal' ? 'RECORD' :  sanitize($_POST['destination']);
-  $status = null;
+  $destination = $isSchoolPortal ? 'RECORD' :  sanitize($_POST['destination']);
 
   if (numRows(document($documentId)) === 0) {
     $status = 'saved';

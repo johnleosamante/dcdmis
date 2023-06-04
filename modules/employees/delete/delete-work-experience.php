@@ -9,5 +9,5 @@ foreach ($_GET as $key => $data) {
 
 $_SESSION[alias() . '_current_work_experience_id'] = $id;
 
-modal_confirm_delete('Are you sure you want to continue and delete this entry?', 'Delete Work Experience?', 'DeleteWorkExperience');
+modalConfirmDelete('Are you sure you want to continue and delete this entry?', 'Delete Work Experience?', 'delete-work-experience');
 ?>

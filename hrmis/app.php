@@ -1,26 +1,15 @@
 <?php
 // hrmis/app.php
-$_SESSION[alias() . '_activeApp'] = 'hrmis';
-$page = $app_title = "Human Resource Management Information System";
+$activeApp = $_SESSION[alias() . '_activeApp'] = 'hrmis';
+$page = $appTitle = "Human Resource Management Information System";
 
-if (!isset($_SESSION[alias() . '_userId'])) {
+if (!isset($userId)) {
   redirect(uri() . '/login');
 }
 
-$user_id = $_SESSION[alias() . '_userId'];
-$email = $_SESSION[alias() . '_email'];
-
-if (numRows(userRole($user_id, 'HRMO')) === 0) {
+if (numRows(userRole($userId, 'HRMO')) === 0) {
   redirect(uri() . '/pis');  
 }
-
-$code = $_SESSION[alias() . '_code'];
-$stationId = $_SESSION[alias() . '_stationId'];
-$station = $_SESSION[alias() . '_station'];
-$portal = $_SESSION[alias() . '_portal'];
-$showPrompt = false;
-$message = null;
-$success = true;
 
 if (isset($_POST['primary-search-button'])) {
   redirect(customUri('hrmis', 'Employee Search', sanitize($_POST['primary-search-text'])));
@@ -32,41 +21,40 @@ if (isset($_POST['update-personal-information'])) {
   $employeePhoto = $_SESSION[alias() . '_currentEmployeePhoto'];
 
   if ($_FILES['image-upload']['size'] > 0 && $_FILES['image-upload']['error'] == 0) {
-    $fileUpload = $_FILES['imageUpload']['name'];
-    $temp = $_FILES['imageUpload']['tmp_name'];
-    $type = $_FILES['imageUpload']['type'];
+    $fileUpload = $_FILES['image-upload']['name'];
+    $temp = $_FILES['image-upload']['tmp_name'];
+    $type = $_FILES['image-upload']['type'];
     $ext = pathinfo($fileUpload, PATHINFO_EXTENSION);
     $employeePhoto = 'uploads/images/' . $employeeId . '/' . $employeeId . '.' . $ext;
 
-    move_uploaded_file($temp, '../' . $employee_photo);
+    move_uploaded_file($temp, '../' . $employeePhoto);
   }
 
-  $dob = !empty($_POST['dob']) ? strtotime($_POST['dob']) : strtotime(date('Y-m-d'));
+  $dob = isset($_POST['dob']) ? strtotime($_POST['dob']) : strtotime(date('Y-m-d'));
   $byear = date("Y", $dob);
   $bmonth = date("m", $dob);
   $bday = date("d", $dob);
 
-  update_employee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), $bmonth, $bday, $byear, sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil_status']), sanitize($_POST['civil_status_others']), sanitize($_POST['citizenship']), sanitize($_POST['dual_citizenship']), sanitize($_POST['dual_citizenship_country']), sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood_type']), sanitize($_POST['gsis']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency_id']), $employee_photo, $employee_id);
+  updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), $bmonth, $bday, $byear, sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-others']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), sanitize($_POST['dual-citizenship-country']), sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood_type']), sanitize($_POST['gsis']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency_id']), $employeePhoto, $employeeId);
 
   if (affectedRows() === 1) {
-    $success = true;
+    $showPrompt = true;
     $message = 'Personal Information has been updated successfully!';
-    $show_prompt = true;
   }
 
-  $_SESSION[alias() . '_pds_tab'] = 'personal-information';
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'personal-information';
 }
 
 /* FAMILY BACKGROUND */
-if (isset($_POST['UpdateFamilyBackground'])) {
-  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+if (isset($_POST['update-family-background'])) {
+  $employeeId = $_SESSION[alias() . '_currentEmployeeId'];
   $slast = sanitize($_POST['slast']);
   $sfirst = sanitize($_POST['sfirst']);
   $sext = sanitize($_POST['sext']);
   $smiddle = sanitize($_POST['smiddle']);
   $swork = sanitize($_POST['swork']);
   $sbusiness = sanitize($_POST['sbusiness']);
-  $sbusiness_address = sanitize($_POST['sbusiness_address']);
+  $sbusinessAddress = sanitize($_POST['sbusiness-address']);
   $stelephone = sanitize($_POST['stelephone']);
   $flast = sanitize($_POST['flast']);
   $ffirst = sanitize($_POST['ffirst']);
@@ -76,24 +64,23 @@ if (isset($_POST['UpdateFamilyBackground'])) {
   $mfirst = sanitize($_POST['mfirst']);
   $mmiddle = sanitize($_POST['mmiddle']);
 
-  if (num_rows(family($employee_id)) === 0) {
-    create_family($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusiness_address, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employee_id);
+  if (numRows(family($employeeId)) === 0) {
+    createFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusiness_address, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId);
   } else {
-    update_family($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusiness_address, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employee_id);
+    updateFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusiness_address, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId);
   }
 
-  if (affected_rows() === 1) {
-    $success = true;
+  if (affectedRows() === 1) {
     $message = 'Family Background has been updated successfully!';
     $show_prompt = true;
   }
 
-  $_SESSION[alias() . '_pds_tab'] = 'family-background';
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'family-background';
 }
 
 /* CHILDREN */
-if (isset($_POST['SaveChild'])) {
-  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+if (isset($_POST['save-child'])) {
+  $employeeId = $_SESSION[alias() . '_current_employee_id'];
   $child_id = !empty($_SESSION[alias() . '_current_child_id']) ? $_SESSION[alias() . '_current_child_id'] : '';
   $clast = sanitize($_POST['clast']);
   $cfirst = sanitize($_POST['cfirst']);
@@ -102,16 +89,16 @@ if (isset($_POST['SaveChild'])) {
   $cdob = sanitize($_POST['cdob']);
 
   if (empty($child_id)) {
-    create_child($clast, $cfirst, $cext, $cmiddle, $cdob, $employee_id);
+    createChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId);
 
     $message = 'Child has been added successfully!';
   } else {
-    update_child($clast, $cfirst, $cext, $cmiddle, $cdob, $employee_id, $child_id);
+    updateChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId, $child_id);
 
     $message = 'Child has been updated successfully!';
   }
 
-  if (affected_rows() === 1) {
+  if (affectedRows() === 1) {
     $success = true;
     $show_prompt = true;
   }
@@ -121,12 +108,12 @@ if (isset($_POST['SaveChild'])) {
 }
 
 if (isset($_POST['DeleteChild'])) {
-  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $employeeId = $_SESSION[alias() . '_current_employee_id'];
   $child_id = $_SESSION[alias() . '_current_child_id'];
 
-  delete_child($employee_id, $child_id);
+  deleteChild($employeeId, $child_id);
 
-  if (affected_rows() === 1) {
+  if (affectedRows() === 1) {
     $success = true;
     $message = 'Child has been deleted successfully!';
     $show_prompt = true;
@@ -138,7 +125,7 @@ if (isset($_POST['DeleteChild'])) {
 
 /* EDUCATIONAL BACKGROUND */
 if (isset($_POST['SaveEducation'])) {
-  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $employeeId = $_SESSION[alias() . '_current_employee_id'];
   $education_id = !empty($_SESSION[alias() . '_current_education_id']) ? $_SESSION[alias() . '_current_education_id'] : '';
   $level = sanitize($_POST['level']);
   $school = sanitize($_POST['school']);
@@ -151,16 +138,16 @@ if (isset($_POST['SaveEducation'])) {
   $scholarship = sanitize($_POST['scholarship']);
 
   if (empty($education_id)) {
-    create_education($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $employee_id);
+    createEducation($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $employeeId);
 
     $message = 'Educational Background has been added successfully!';
   } else {
-    update_education($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $employee_id, $education_id);
+    updateEducation($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $employeeId, $education_id);
 
     $message = 'Educational Background has been updated successfully!';
   }
 
-  if (affected_rows($con) === 1) {
+  if (affectedRows($con) === 1) {
     $success = true;
     $show_prompt = true;
   }
@@ -170,12 +157,12 @@ if (isset($_POST['SaveEducation'])) {
 }
 
 if (isset($_POST['DeleteEducation'])) {
-  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $employeeId = $_SESSION[alias() . '_current_employee_id'];
   $education_id = $_SESSION[alias() . '_current_education_id'];
 
-  delete_education($employee_id, $education_id);
+  deleteEducation($employeeId, $education_id);
 
-  if (affected_rows() === 1) {
+  if (affectedRows() === 1) {
     $success = true;
     $message = 'Educational Background has been deleted successfully!';
     $show_prompt = true;
@@ -187,7 +174,7 @@ if (isset($_POST['DeleteEducation'])) {
 
 /* CIVIL SERVICE ELIGIBILITY */
 if (isset($_POST['SaveEligibility'])) {
-  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $employeeId = $_SESSION[alias() . '_current_employee_id'];
   $eligibility_id = !empty($_SESSION[alias() . '_current_eligibility_id']) ? $_SESSION[alias() . '_current_eligibility_id'] : '';
   $career = sanitize($_POST['career']);
   $rating = sanitize($_POST['rating']);
@@ -198,16 +185,16 @@ if (isset($_POST['SaveEligibility'])) {
   $validity = sanitize($_POST['validity']);
 
   if (empty($eligibility_id)) {
-    create_eligibility($career, $rating, $exam_date, $exam_place, $license, $is_applicable, $validity, $employee_id);
+    createEligibility($career, $rating, $exam_date, $exam_place, $license, $is_applicable, $validity, $employeeId);
 
     $message = 'Civil Service Eligibility has been added successfully!';
   } else {
-    update_eligibility($career, $rating, $exam_date, $exam_place, $license, $is_applicable, $validity, $employee_id, $eligibility_id);
+    updateEligibility($career, $rating, $exam_date, $exam_place, $license, $is_applicable, $validity, $employeeId, $eligibility_id);
 
     $message = 'Civil Service Eligibility has been updated successfully!';
   }
 
-  if (affected_rows($con) === 1) {
+  if (affectedRows($con) === 1) {
     $success = true;
     $show_prompt = true;
   }
@@ -217,12 +204,12 @@ if (isset($_POST['SaveEligibility'])) {
 }
 
 if (isset($_POST['DeleteEligibility'])) {
-  $employee_id = $_SESSION[alias() . '_current_employee_id'];
+  $employeeId = $_SESSION[alias() . '_current_employee_id'];
   $eligibility_id = $_SESSION[alias() . '_current_eligibility_id'];
 
-  delete_eligibility($employee_id, $eligibility_id);
+  deleteEligibility($employeeId, $eligibility_id);
 
-  if (affected_rows() === 1) {
+  if (affectedRows() === 1) {
     $success = true;
     $message = 'Civil Service Eligibility has been deleted successfully!';
     $show_prompt = true;
@@ -234,8 +221,8 @@ if (isset($_POST['DeleteEligibility'])) {
 
 /* WORK EXPERIENCE */
 if (isset($_POST['SaveExperience'])) {
-  $employee_id = $_SESSION[alias() . '_current_employee_id'];
-  $experience_id = !empty($_SESSION[alias() . '_current_work_experience_id']) ? $_SESSION[alias() . '_current_work_experience_id'] : '';
+  $employeeId = $_SESSION[alias() . '_current_employee_id'];
+  $experienceId = !empty($_SESSION[alias() . '_current_work_experience_id']) ? $_SESSION[alias() . '_current_work_experience_id'] : '';
   $from = sanitize($_POST['from']);
   $ispresent = isset($_POST['ispresent']);
   $to = $ispresent ? date('m/d/Y') : sanitize($_POST['to']);
@@ -246,17 +233,17 @@ if (isset($_POST['SaveExperience'])) {
   $status = sanitize($_POST['status']);
   $isgovernment = sanitize($_POST['isgovernment']);
 
-  if (empty($experience_id)) {
-    create_experience($from, $to, $ispresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employee_id);
+  if (empty($experienceId)) {
+    createExperience($from, $to, $ispresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employeeId);
 
     $message = 'Work Experience has been added successfully!';
   } else {
-    update_experience($from, $to, $ispresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employee_id, $experience_id);
+    updateExperience($from, $to, $ispresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employeeId, $experienceId);
 
     $message = 'Work Experience has been updated successfully!';
   }
 
-  if (affected_rows($con) === 1) {
+  if (affectedRows($con) === 1) {
     $success = true;
     $show_prompt = true;
   }
@@ -266,18 +253,17 @@ if (isset($_POST['SaveExperience'])) {
 }
 
 if (isset($_POST['DeleteWorkExperience'])) {
-  $employee_id = $_SESSION[alias() . '_current_employee_id'];
-  $experience_id = $_SESSION[alias() . '_current_work_experience_id'];
+  $employeeId = $_SESSION[alias() . '_current_employee_id'];
+  $experienceId = $_SESSION[alias() . '_current_work_experience_id'];
 
-  delete_experience($employee_id, $experience_id);
+  deleteExperience($employeeId, $experienceId);
 
-  if (affected_rows() === 1) {
+  if (affectedRows() === 1) {
     $success = true;
     $message = 'Work Experience has been deleted successfully!';
     $show_prompt = true;
   }
 
-  $_SESSION[alias() . '_current_work_experience_id'] = '';
-  $_SESSION[alias() . '_pds_tab'] = 'work-experience';
+  $_SESSION[alias() . '_activeTab'] = 'work-experience';
 }
 ?>

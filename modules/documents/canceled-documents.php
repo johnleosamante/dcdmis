@@ -1,11 +1,11 @@
 <?php
 // modules/documents/completed-documents.php
-$_SESSION[alias() . '_previous_document'] = $page_title = 'Canceled Documents';
+$pageTitle = 'Canceled Documents';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php content_title_with_link($page_title, uri() . '/dts'); ?>
+    <?php contentTitleWithLink($pageTitle, uri() . '/dts'); ?>
   </div>
 
   <div class="card-body">
@@ -25,22 +25,22 @@ $_SESSION[alias() . '_previous_document'] = $page_title = 'Canceled Documents';
         <tbody>
           <?php
           $no = 0;
-          $query = canceled_documents($station);
-          while ($row = fetch_array($query)) : ?>
+          $query = canceledDocuments($station);
+          while ($row = fetchArray($query)) : ?>
             <tr class="text-uppercase">
               <td class="align-middle"><?php echo ++$no; ?></td>
               <td class="align-middle"><?php echo $row['id']; ?></td>
               <td class="text-left align-middle"><?php echo $row['description']; ?></td>
-              <td class="align-middle"><?php echo to_datetime($row['postedon']); ?></td>
-              <td class="align-middle"><?php echo to_datetime($row['canceledon']); ?></td>
+              <td class="align-middle"><?php echo toDatetime($row['postedon']); ?></td>
+              <td class="align-middle"><?php echo toDatetime($row['canceledon']); ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
-                  <?php dropdown_ellipsis(); ?>
+                  <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                    <?php link_dropdown_item(custom_uri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
+                    <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 
                     if ($row['station'] === $station) {
-                      link_dropdown_item(custom_uri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
+                      linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
                     }
                     ?>
                   </div>

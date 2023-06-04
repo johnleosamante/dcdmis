@@ -6,32 +6,32 @@ include_once(root() . '/includes/database/database.php');
 include_once(root() . '/includes/database/document.php');
 include_once(root() . '/includes/layout/components.php');
 
-$document_id = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$documents = document($document_id);
+$documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$documents = document($documentId);
+$description = '';
+$modalTitle = 'Document not found';
+$hasDocument = false;
 
-if (num_rows($documents) > 0) {
-  $document = fetch_assoc($documents);
-  $code = $document['id'];
+if (numRows($documents) > 0) {
+  $document = fetchAssoc($documents);
+  $documentId = $document['id'];
   $description = $document['description'];
-  $modal_title = 'Cancel Document';
-  $not_found = false;
-} else {
-  $code = $description = '';
-  $modal_title = 'Document not found';
-  $not_found = true;
+  $documentLogs = fetchAssoc(documentLogs($documentId));
+  $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['from'] === $station;
+  $modalTitle = $hasDocument ? 'Cancel Document' : $modalTitle;
 }
 ?>
 
-<div class="modal-dialog <?php echo $not_found ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?php echo !$hasDocument ? 'modal-sm' : ''; ?>">
   <div class="modal-content">
-    <?php modal_header($modal_title); ?>
+    <?php modalHeader($modalTitle); ?>
 
     <form action="" method="POST">
       <div class="modal-body">
-        <?php if (!$not_found) { ?>
+        <?php if ($hasDocument) { ?>
           <div class="form-group">
             <label for="code" class="mb-0">Code</label>
-            <input id="code" type="text" value="<?php echo $code; ?>" class="form-control text-uppercase" disabled>
+            <input id="code" type="text" value="<?php echo $documentId; ?>" class="form-control text-uppercase" disabled>
           </div>
 
           <div class="form-group">
@@ -44,16 +44,16 @@ if (num_rows($documents) > 0) {
             <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Reason..." required></textarea>
           </div>
         <?php } else {
-          missing_prompt($modal_title, 'fa-times-circle');
+          missingAlert($modalTitle, 'fa-times-circle');
         } ?>
       </div>
 
       <div class="modal-footer">
-        <?php if (!$not_found) : ?>
+        <?php if ($hasDocument) : ?>
           <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
-          <button class="btn btn-primary" name="cancel_document" type="submit">Continue</button>
+          <button class="btn btn-primary" name="cancel-document" type="submit">Continue</button>
         <?php endif; ?>
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <?php cancelModalButton(); ?>
       </div>
     </form>
   </div>

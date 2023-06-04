@@ -16,7 +16,7 @@ sidebarDivider();
 
 sidebarMenuItem(customUri('dts', 'Completed Documents'), 'Completed', 'fa-check-circle', isset($url) && str_contains($url, 'Completed'));
 
-if (!$is_school_portal) {
+if (!$isSchoolPortal) {
   sidebarMenuItem(customUri('dts', 'Received Documents'), 'Received', 'fa-hand-holding-medical', isset($url) && str_contains($url, 'Received'));
 }
 

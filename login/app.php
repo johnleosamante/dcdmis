@@ -1,85 +1,73 @@
 <?php
 // login/app.php
-function set_user_session($userid) {
+function setUserSession($userid) {
   $users = user($userid);
 
-  if (num_rows($users) === 1) {
-    $user = fetch_assoc($users);
+  if (numRows($users) === 1) {
+    $user = fetchAssoc($users);
     $_SESSION[alias() . '_code'] = $user['code'];
     $_SESSION[alias() . '_portal'] = $user['portal'];
-    $_SESSION[alias() . '_station_id'] = $user['station_id'];
+    $_SESSION[alias() . '_stationId'] = $user['station_id'];
+
     if ($user['portal'] !== 'school_portal') {
       $_SESSION[alias() . '_station'] = $user['code'];
     } else {
-      $school = school_by_id($user['code']);
-      $_SESSION[alias() . '_station'] = num_rows($school) ? fetch_assoc($school)['alias'] : '';
+      $school = schoolById($user['code']);
+      $_SESSION[alias() . '_station'] = numRows($school) ? fetchAssoc($school)['alias'] : '';
     }
-  } else {
-    $_SESSION[alias() . '_active_app'] = 'pis';
   }
 }
 
 if (isset($_COOKIE[alias() . '_login'])) {
   $account = account(sanitize($_COOKIE[alias() . '_login']));
 
-  if (num_rows($account === 1)) {
-    $_SESSION[alias() . '_user_id'] = fetch_assoc($account)['id'];
-    set_user_session($_SESSION[alias() . '_user_id']);
+  if (numRows($account === 1)) {
+    $userId = $_SESSION[alias() . '_userId'] = fetchAssoc($account)['id'];
+    setUserSession($userId);
   }
 }
 
-if (isset($_SESSION[alias() . '_user_id'])) {
-  redirect(uri() . '/' . $_SESSION[alias() . '_active_app']);
-}
-
 $page = 'Login';
-$has_error = false;
-$error_message = null;
+
+if (isset($userId)) {
+  redirect(uri() . '/' . $activeApp);
+}
 
 if (!isset($_POST['login'])) {
   return;
 }
 
 $email = sanitize($_POST['email']);
-$password = hash_password(sanitize($_POST['password']));
-$has_error = true;
+$password = hashPassword(sanitize($_POST['password']));
+$showPrompt = true;
+$success = false;
 
 if (empty($email) || empty($password)) {
-  $error_message = 'All fields are required!';
+  $message = 'All fields are required!';
   return;
 }
 
-if (!is_valid_email($email, 'deped.gov.ph')) {
-  $error_message = 'Please use your DepEd Email Address.';
+if (!isValidEmail($email, 'deped.gov.ph')) {
+  $message = 'Please use your DepEd Email Address.';
   return;
 }
 
 $accounts = account($email, $password);
 
-if (num_rows($accounts) === 0) {
-  $error_message = 'Invalid login details! Try again.';
+if (numRows($accounts) === 0) {
+  $message = 'Invalid login details! Try again.';
   return;
 }
 
-$account = fetch_assoc($accounts);
-
-if ($account['status'] === 'Registered') {
-  $error_message = 'Your account still needs to be verified! Please wait for the system administrator to accept your registration.';
-  return;
-}
-
-$_SESSION[alias() . '_user_id'] = $account['id'];
-$_SESSION[alias() . '_email'] = $account['email'];
+$account = fetchAssoc($accounts);
+$userId = $_SESSION[alias() . '_userId'] = $account['id'];
+$email = $_SESSION[alias() . '_email'] = $account['email'];
 
 if (isset($_POST['remember']) && $_POST['remember'] === true) {
-  setcookie(alias() . '_login', $account['email'], time() + get_seconds(8), '/', uri(), false, true);
+  setcookie(alias() . '_login', $account['email'], time() + getSeconds(8), '/', uri(), false, true);
 }
 
-set_user_session($_SESSION[alias() . '_user_id']);
+setUserSession($userId);
 
-if (!isset($_SESSION[alias() . '_active_app'])) {
-  $_SESSION[alias() . '_active_app'] = 'pis';
-}
-
-redirect(uri() . '/' . $_SESSION[alias() . '_active_app']);
+redirect(uri() . '/' . $activeApp);
 ?>

@@ -13,18 +13,18 @@ include_once(root() . '/includes/layout/components.php');
 
 <body id="page-top" class="background-cover">
   <div id="layout">
-    <div id="layout_content" class="container">
+    <div id="layout-content" class="container">
       <div class="row justify-content-center">
         <?php include_once('page.php'); ?>
       </div>
     </div><!-- .row -->
 
-    <div id="layout_footer">
+    <div id="layout-footer">
       <?php include_once(root() . '/includes/layout/footer.php'); ?>
     </div>
   </div>
 
-  <?php scroll_to_top(); ?>
+  <?php scrollToTop(); ?>
 
   <script src="<?php echo uri(); ?>/assets/vendor/jquery/jquery.min.js"></script>
   <script src="<?php echo uri(); ?>/assets/vendor/jquery-easing/jquery.easing.min.js"></script>

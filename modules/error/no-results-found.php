@@ -3,7 +3,7 @@
 ?>
 
 <div class="text-center py-0">
-  <?php missing_prompt('No results found'); ?>
+  <?php missingAlert('No results found'); ?>
 
   <p class="text-gray-700 mt-4 mb-1">Try a new search term instead</p>
 
@@ -11,9 +11,9 @@
     <div class="row justify-content-center">
       <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12">
         <div class="input-group">
-          <input type="text" class="form-control small" placeholder="Search..." aria-label="Search" name="primary_search_text" autofocus required>
+          <input type="text" class="form-control small" placeholder="Search..." aria-label="Search" name="primary-search-text" autofocus required>
           <div class="input-group-append">
-            <button class="btn btn-primary" type="submit" name="primary_search_button">
+            <button class="btn btn-primary" type="submit" name="primary-search-button">
               <i class="fas fa-search fa-sm"></i>
             </button>
           </div>
@@ -22,7 +22,7 @@
     </div>
   </form>
 
-  <?php if (isset($_SESSION[alias() . '_user_id'])) : ?>
-    <a href="<?php echo uri() . '/' . $_SESSION[alias() . '_active_app']; ?>" title="Go to dashboard">Go to Dashboard</a>
+  <?php if (isset($userId)) : ?>
+    <a href="<?php echo uri() . '/' . $activeApp; ?>" title="Go to dashboard">Go to Dashboard</a>
   <?php endif; ?>
 </div>

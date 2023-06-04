@@ -9,4 +9,4 @@ foreach ($_GET as $key => $data) {
 
 $_SESSION[alias() . '_current_recognition_id'] = $id;
 
-modal_confirm_delete('Are you sure you want to continue and delete this entry?', 'Delete Recognition?', 'DeleteRecognition');
+modalConfirmDelete('Are you sure you want to continue and delete this entry?', 'Delete Recognition?', 'delete-recognition');

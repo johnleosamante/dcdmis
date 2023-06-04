@@ -1,8 +1,7 @@
 <?php
 // includes/database/section.php
 // tbl_div_section
-
-function sections_except($id) {
+function sectionsExcept($id) {
   return query("SELECT Section_Code AS id, Section_Incharge AS `head`, Section_Office AS `name` FROM tbl_div_section WHERE Section_Code <> '{$id}' ORDER BY Section_Office ASC;");
 }
 

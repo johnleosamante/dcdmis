@@ -9,8 +9,8 @@ foreach ($_GET as $key => $data) {
   $id = $_GET[$key] = decode($data);
 }
 
-$employee_id = $_SESSION[alias() . '_current_employee_id'];
-$education_id = $education = $level = $school = $course = $from = $to = $highest_level = $year_graduated = $honor_received = '';
+$employeeId = $_SESSION[alias() . '_current_employee_id'];
+$educationId = $education = $level = $school = $course = $from = $to = $highestLevel = $year_graduated = $honor_received = '';
 $ispresent = false;
 $_SESSION[alias() . '_current_education_id'] = '';
 $modalTitle = "Add Educational Background";
@@ -18,10 +18,10 @@ $modalTitle = "Add Educational Background";
 if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
   $modalTitle = "Edit Educational Background";
   $_SESSION[alias() . '_current_education_id'] = $id;
-  $educational_background = educational_background($employee_id, $id);
+  $educational_background = educationalBackground($employee_id, $id);
 
-  if (num_rows($educational_background) > 0) {
-    $education = fetch_array($educational_background);
+  if (numRows($educational_background) > 0) {
+    $education = fetchArray($educational_background);
     $education_id = $education['no'];
     $level = $education['level'];
     $school = $education['school'];
@@ -38,24 +38,24 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
 <div class="modal-dialog">
   <div class="modal-content">
-    <?php modal_header($modalTitle); ?>
+    <?php modalHeader($modalTitle); ?>
 
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="level" class="mb-0">Level: <?php show_asterisk(); ?></label>
+          <label for="level" class="mb-0">Level: <?php showAsterisk(); ?></label>
           <select id="level" name="level" class="form-control" required>
-            <option value="Elementary" <?php echo set_option_selected("Elementary", $level); ?>>Elementary</option>
-            <option value="High School" <?php echo set_option_selected("High School", $level); ?>>High School</option>
-            <option value="College" <?php echo set_option_selected("College", $level); ?>>College</option>
-            <option value="Vocational" <?php echo set_option_selected("Vocational", $level); ?>>Vocational</option>
-            <option value="Masteral" <?php echo set_option_selected("Masteral", $level); ?>>Masteral</option>
-            <option value="Doctoral" <?php echo set_option_selected("Doctoral", $level); ?>>Doctoral</option>
+            <option value="Elementary" <?php echo setOptionSelected("Elementary", $level); ?>>Elementary</option>
+            <option value="High School" <?php echo setOptionSelected("High School", $level); ?>>High School</option>
+            <option value="College" <?php echo setOptionSelected("College", $level); ?>>College</option>
+            <option value="Vocational" <?php echo setOptionSelected("Vocational", $level); ?>>Vocational</option>
+            <option value="Masteral" <?php echo setOptionSelected("Masteral", $level); ?>>Masteral</option>
+            <option value="Doctoral" <?php echo setOptionSelected("Doctoral", $level); ?>>Doctoral</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="school" class="mb-0">Name of School (Write in full): <?php show_asterisk(); ?></label>
+          <label for="school" class="mb-0">Name of School (Write in full): <?php showAsterisk(); ?></label>
           <input id="school" name="school" type="text" class="form-control" required value="<?php echo $school; ?>">
         </div>
 
@@ -67,7 +67,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="from" class="mb-0">Attendance from: <?php show_asterisk(); ?></label>
+              <label for="from" class="mb-0">Attendance from: <?php showAsterisk(); ?></label>
               <input id="from" name="from" type="number" step="1" min="0" class="form-control" required value="<?php echo $from; ?>">
             </div>
           </div>
@@ -76,11 +76,11 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
             <div class="form-group">
               <div class="row">
                 <div class="col-7">
-                  <label for="to" class="mb-0">Attendance to: <?php show_asterisk(); ?></label>
+                  <label for="to" class="mb-0">Attendance to: <?php showAsterisk(); ?></label>
                 </div>
                 <div class="col-5">
                   <div class="form-check">
-                    <input class="form-check-input" id="ispresent" type="checkbox" name="ispresent" <?php echo set_item_checked($ispresent); ?>>
+                    <input class="form-check-input" id="ispresent" type="checkbox" name="ispresent" <?php echo setItemChecked($ispresent); ?>>
                     <label class="form-check-label" for="ispresent">Present</label>
                   </div><!-- .form-check-->
                 </div>
@@ -110,7 +110,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary" name="SaveEducation">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <?php cancelModalButton(); ?>
       </div><!-- .modal-footer -->
     </form>
   </div><!-- .modal-content -->

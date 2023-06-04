@@ -6,7 +6,7 @@ function displayLogo($width, $height, $marginBottom='3', $url='', $text='') { ?>
   </a>
 <?php }
 
-function messagePrompt($show, $message, $success=true, $align='left') { 
+function messageAlert($show, $message, $success=true, $align='left') { 
   if ($show) : ?>
   <div class="alert alert-<?php echo $success ? 'success' : 'danger'; ?> text-<?php echo $align; ?>">
     <?php echo $message; ?>
@@ -51,6 +51,10 @@ function roundPill($text, $bgColor='primary', $textColor='light') {
 
 function sidebarDivider($marginBottom='0', $autoHide = false) { ?>
   <hr class="sidebar-divider mb-<?php echo $marginBottom; ?> <?php echo $autoHide ? 'd-none d-md-block' : ''; ?>">
+<?php }
+
+function sidebarHeading($text) { ?>
+  <div class="sidebar-heading mt-3"><?php echo $text; ?></div>
 <?php }
 
 function sidebarToggle() { ?>
@@ -118,7 +122,21 @@ function showAsterisk($show = true) {
 }
 
 function modal() { ?>
-  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true" data-backdrop="static" data-keyboard="false"></div>
+  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <?php modalHeader(''); ?>
+
+        <div class="modal-body"></div>
+
+        <div class="modal-footer">
+          <form action="" method="POST" role="form">
+            <?php cancelModalButton(); ?>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 <?php }
 
 function linkButtonSplit($link, $text, $icon, $title='', $color='primary', $newTab=false) { ?>
@@ -129,7 +147,7 @@ function linkButtonSplit($link, $text, $icon, $title='', $color='primary', $newT
 <?php }
 
 function modalButtonSplit($link, $text, $icon, $title='', $color='primary') { ?>
-  <a href='#' data-toggle="modal" data-target="#Modal" class="btn btn-<?php echo $color; ?>  btn-icon-split btn-sm my-1" title="<?php echo $title; ?>" onclick="loadData('<?php echo $link; ?>')">
+  <a href='#' data-toggle="modal" data-target="#modal" class="btn btn-<?php echo $color; ?>  btn-icon-split btn-sm my-1" title="<?php echo $title; ?>" onclick="loadData('<?php echo $link; ?>')">
     <span class="icon text-white-50"><i class="fas <?php echo $icon; ?> fa-fw"></i></span>
     <span class="text"><?php echo $text; ?></span>
   </a>
@@ -156,7 +174,7 @@ function dropdownEllipsis() { ?>
 function modalHeader($title) { ?>
   <div class="modal-header">
     <h5 class="modal-title"><?php echo $title; ?></h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+    <button id="close-modal-button" type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
   </div>
 <?php }
 
@@ -172,15 +190,19 @@ function modalConfirmDelete($message, $title='Delete', $buttonName='Delete') { ?
       <div class="modal-footer">
         <form action="" method="POST" role="form">
           <input type="submit" class="btn btn-danger" name="<?php echo $buttonName; ?>" value="Yes, Continue">
-          <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <?php cancelModalButton(); ?>
         </form>
       </div>
     </div>
   </div>
-<?php } 
+<?php }
 
-function missingPrompt($text, $icon='fa-search') { ?>
-  <div class="error mx-auto text-center text-gray-800"><i class="fas <?php echo $icon; ?> fa-fw"></i></div>
+function cancelModalButton() { ?>
+  <button id="cancel-modal-button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+<?php }
+
+function missingAlert($text, $icon='fa-search') { ?>
+  <div class="error mx-auto text-center text-danger"><i class="fas <?php echo $icon; ?> fa-fw"></i></div>
   <p class="lead text-center text-gray-800 mt-1 mb-0"><?php echo $text; ?></p>
   <p class="text-center text-gray-500 mb-0">Sorry, we couldn't find what you're looking for...</p>
 <?php } ?>

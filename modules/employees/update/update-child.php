@@ -20,8 +20,8 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
   $_SESSION[alias() . '_current_child_id'] = $id;
   $children = child($employee_id, $id);
 
-  if (num_rows($children) > 0) {
-    $child = fetch_array($children);
+  if (numRows($children) > 0) {
+    $child = fetchArray($children);
     $child_id = $child['no'];
     $fname = $child['first'];
     $mname = $child['middle'];
@@ -34,19 +34,19 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
 <div class="modal-dialog">
   <div class="modal-content">
-    <?php modal_header($modalTitle); ?>
+    <?php modalHeader($modalTitle); ?>
 
     <form method="post" role="form" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label for="clast" class="mb-0">Last Name: <?php show_asterisk(); ?></label>
+          <label for="clast" class="mb-0">Last Name: <?php showAsterisk(); ?></label>
           <input id="clast" type="text" name="clast" class="form-control" value="<?php echo $lname; ?>" required>
         </div>
 
         <div class="row">
           <div class="col-lg-9">
             <div class="form-group">
-              <label for="cfirst" class="mb-0">First Name: <?php show_asterisk(); ?></label>
+              <label for="cfirst" class="mb-0">First Name: <?php showAsterisk(); ?></label>
               <input id="cfirst" type="text" name="cfirst" class="form-control" value="<?php echo $fname; ?>" required>
             </div>
           </div>
@@ -65,16 +65,16 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
         </div>
 
         <div class="form-group">
-          <label for="cdob" class="mb-0">Date of Birth: <?php show_asterisk(); ?></label>
-          <input id="cdob" type="date" name="cdob" class="form-control" value="<?php echo to_date($bdate, "Y-m-d"); ?>" required>
+          <label for="cdob" class="mb-0">Date of Birth: <?php showAsterisk(); ?></label>
+          <input id="cdob" type="date" name="cdob" class="form-control" value="<?php echo toDate($bdate, "Y-m-d"); ?>" required>
         </div>
 
         <div class="text-danger mb-0">* Required field</div>
       </div><!-- .modal-body -->
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="SaveChild">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" name="save-child">Save</button>
+        <?php cancelModalButton(); ?>
       </div><!-- .modal-footer -->
     </form>
   </div><!-- .modal-content -->

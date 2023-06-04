@@ -9,21 +9,21 @@
 
     <div class="card-body text-center">
       <?php
-      display_logo(120, 120, '3', uri(), title());
+      displayLogo(120, 120, '3', uri(), title());
 
-      message_prompt($show_prompt, $message, $success);
+      messageAlert($showPrompt, $message, $success);
       ?>
 
       <form action="" method="POST" class="text-left">
         <div class="form-group">
           <label for="email" class="text-gray-900 font-weight-bold mb-1">Email Address</label>
-          <input class="form-control" id="email" name="email" type="email" placeholder="name@deped.gov.ph" autofocus>
+          <input class="form-control" id="email" name="email" type="email" placeholder="name@deped.gov.ph" autofocus required>
         </div><!-- .form-group -->
 
         <div class="form-group">
           <label for="password" class="text-gray-900 font-weight-bold mb-1">Password</label>
           <div class="input-group">
-            <input class="form-control border-right-0" id="password" name="password" type="password" placeholder="Password">
+            <input class="form-control border-right-0" id="password" name="password" type="password" placeholder="Password" required>
             <div class="input-group-append">
               <button type="button" id="eye-toggle" class="input-group-text border-left-0 bg-white">
                 <i id="eye" class="small fas fa-eye fa-sm"></i>
@@ -42,15 +42,5 @@
         <button type="submit" class="btn btn-primary btn-block" name="login">Login</button>
       </form>
     </div><!-- .card-body -->
-
-    <div class="card-footer">
-      <div class="text-center">
-        <a class="small" href="<?php echo uri(); ?>/forgot">Forgot password?</a>
-      </div><!-- .text-center -->
-
-      <div class="text-center">
-        <a class="small" href="<?php echo uri(); ?>/register">Register for an account</a>
-      </div><!-- .text-center -->
-    </div><!-- .card-footer -->
   </div><!-- .card -->
 </div><!-- .col-xl-2 -->

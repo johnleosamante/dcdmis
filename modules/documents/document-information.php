@@ -1,40 +1,41 @@
 <?php
 // modules/documents/document-information.php
-$document_id = isset($_GET['id']) ? sanitize($_GET['id']) : null;
-$documents = document_from($document_id, $station);
+$documentId = isset($_GET['id']) ? sanitize($_GET['id']) : null;
+$documents = documentFrom($documentId, $station);
+$documentType = null;
 
-if (num_rows($documents) > 0) {
-  $document = fetch_assoc($documents);
-  $document_id = $document['id'];
+if (numRows($documents) > 0) {
+  $document = fetchAssoc($documents);
+  $documentId = $document['id'];
 
-  if (is_incoming_document($document_id, $station)) {
-    $document_type = 'Incoming Documents';
-  } elseif (is_pending_document($document_id, $station)) {
-    $document_type = 'Pending Documents';
-  } elseif (is_outgoing_document($document_id, $station)) {
-    $document_type = 'Outgoing Documents';
-  } elseif (is_ongoing_document($document_id, $station)) {
-    $document_type = 'Ongoing Documents';
-  } elseif (is_completed_document($document_id, $station)) {
-    $document_type = 'Completed Documents';
-  } elseif (is_received_document($document_id, $station)) {
-    $document_type = 'Received Documents';
-  } elseif (is_canceled_document($document_id, $station)) {
-    $document_type = 'Canceled Documents';
+  if (isIncomingDocument($documentId, $station)) {
+    $documentType = 'Incoming Documents';
+  } elseif (isPendingDocument($documentId, $station)) {
+    $documentType = 'Pending Documents';
+  } elseif (isOutgoingDocument($documentId, $station)) {
+    $documentType = 'Outgoing Documents';
+  } elseif (isOngoingDocument($documentId, $station)) {
+    $documentType = 'Ongoing Documents';
+  } elseif (isCompletedDocument($documentId, $station)) {
+    $documentType = 'Completed Documents';
+  } elseif (isReceivedDocument($documentId, $station)) {
+    $documentType = 'Received Documents';
+  } elseif (isCanceledDocument($documentId, $station)) {
+    $documentType = 'Canceled Documents';
   } else {
-    $document_type = null;
+    $documentType = null;
   }
 } else {
   include_once(root() . '/modules/error/no-results-found.php');
   return;
 }
 
-message_prompt($show_prompt, $message, $success);
+messageAlert($showPrompt, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php content_title("Document Information : " . strtoupper($document_id)); ?>
+    <?php contentTitle("Document Information : " . strtoupper($documentId)); ?>
   </div>
 
   <div class="card-body">
@@ -46,11 +47,11 @@ message_prompt($show_prompt, $message, $success);
         </tr>
         <tr>
           <th class="pr-5" scope="row">Created on:</th>
-          <td class="text-uppercase"><?php echo to_date($document['datetime'], 'F d, Y h:i:s A'); ?></td>
+          <td class="text-uppercase"><?php echo toDate($document['datetime'], 'F d, Y h:i:s A'); ?></td>
         </tr>
         <tr>
           <th class="pr-5" scope="row">From:</th>
-          <td class="text-uppercase"><?php echo station_name($document['from']); ?></td>
+          <td class="text-uppercase"><?php echo stationName($document['from']); ?></td>
         </tr>
         <tr>
           <th class="align-top pr-5" scope="row">Status:</th>
@@ -67,43 +68,43 @@ message_prompt($show_prompt, $message, $success);
       <div class="d-inline-block">
         <?php
         if ($station === $document['from']) {
-          link_button_split(custom_uri('print', 'Document Tracking Slip', $document_id), 'Print', 'fa-print', 'Print Document Tracking Slip', 'primary', true);
+          linkButtonSplit(customUri('print', 'Document Tracking Slip', $documentId), 'Print', 'fa-print', 'Print Document Tracking Slip', 'primary', true);
         }
 
-        switch ($document_type) {
+        switch ($documentType) {
           case 'Incoming Documents':
-            if (!is_document($document_id, 'Cancel')) {
-              modal_button_split(uri() . '/modules/documents/receive-document-dialog.php?id=' . cipher($document_id), 'Receive', 'fa-hand-holding-medical','Receive Document', 'success');
+            if (!isDocument($documentId, 'Cancel')) {
+              modalButtonSplit(uri() . '/modules/documents/receive-document-dialog.php?id=' . cipher($documentId), 'Receive', 'fa-hand-holding-medical','Receive Document', 'success');
             }
             break;
           case 'Pending Documents':
-            if ($portal !== 'school_portal') {
-              modal_button_split(uri() . '/modules/documents/forward-document-dialog.php?id=' . cipher($document_id), 'Forward', 'fa-share', 'Forward Document', 'info');
+            if (!$isSchoolPortal) {
+              modalButtonSplit(uri() . '/modules/documents/forward-document-dialog.php?id=' . cipher($documentId), 'Forward', 'fa-share', 'Forward Document', 'info');
             }
-            modal_button_split(uri() .'/modules/documents/complete-document-dialog.php?id=' . cipher($document_id), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
+            modalButtonSplit(uri() .'/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
             break;
           case 'Outgoing Documents':
-            if (!is_document($document_id, 'Complete') && !is_document($document_id, 'Cancel')) {
-              modal_button_split(uri() .'/modules/documents/save-document-dialog.php?id=' . cipher($document_id), 'Edit', 'fa-edit','Edit Document', 'info');
+            if (!isDocument($documentId, 'Complete') && !isDocument($documentId, 'Cancel')) {
+              modalButtonSplit(uri() .'/modules/documents/save-document-dialog.php?id=' . cipher($documentId), 'Edit', 'fa-edit','Edit Document', 'info');
             }
             break;
           default:
             break;
         }
 
-        switch ($document_type) {
+        switch ($documentType) {
           case 'Pending Documents':
-            if ($portal === 'school_portal') {
+            if ($isSchoolPortal) {
               break;
             }
             
-            if (is_document_from($document_id, $station) && $document['from'] === $station && !is_document($document_id, 'Cancel')) {
-              modal_button_split(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($document_id), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
+            if (isDocumentFrom($documentId, $station) && $document['from'] === $station && !isDocument($documentId, 'Cancel')) {
+              modalButtonSplit(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($documentId), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
             }
             break;
           case 'Outgoing Documents':
-            if (is_document_from($document_id, $station) && $document['from'] === $station && !is_document($document_id, 'Cancel')) {
-              modal_button_split(uri() .'/modules/documents/cancel-document-dialog.php?id=' . cipher($document_id), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
+            if (isDocumentFrom($documentId, $station) && $document['from'] === $station && !isDocument($documentId, 'Cancel')) {
+              modalButtonSplit(uri() .'/modules/documents/cancel-document-dialog.php?id=' . cipher($documentId), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
             }
             break;
           default:
@@ -127,14 +128,14 @@ message_prompt($show_prompt, $message, $success);
 
         <tbody>
           <?php
-          $logs = document_logs($document_id);
-          while ($log = fetch_array($logs)) {
+          $logs = documentLogs($documentId);
+          while ($log = fetchArray($logs)) {
           ?>
             <tr class="text-uppercase">
-              <td class="align-middle"><?php echo to_datetime($log['datetime']); ?></td>
-              <td class="align-middle"><?php echo user_name($log['user']); ?></td>
-              <td class="align-middle"><?php echo station_name($log['from']); ?></td>
-              <td class="align-middle"><?php echo station_name($log['to']); ?></td>
+              <td class="align-middle"><?php echo toDatetime($log['datetime']); ?></td>
+              <td class="align-middle"><?php echo userName($log['user']); ?></td>
+              <td class="align-middle"><?php echo stationName($log['from']); ?></td>
+              <td class="align-middle"><?php echo stationName($log['to']); ?></td>
               <td class="align-middle">
                 <?php
                   $status = $log['status'];

@@ -1,19 +1,19 @@
 <?php
 // dts/dashboard.php
-message_prompt($show_prompt, $message, $success);
+messageAlert($showPrompt, $message, $success);
 
-content_title('Dashboard');
+contentTitle('Dashboard');
 ?>
 
 <div class="row mt-4">
   <?php
-  card('Active Employees', custom_uri('hrmis', 'Active Employees'), 'fa-user-check', 'primary', number_format(num_rows(active_employees())));
+  card('Active Employees', customUri('hrmis', 'Active Employees'), 'fa-user-check', 'primary', number_format(numRows(activeEmployees())));
 
-  card('Retirable Employees', custom_uri('hrmis', 'Retirable Employees'), 'fa-user-clock', 'success', number_format(num_rows(retirable_employees())));
+  card('Retirable Employees', customUri('hrmis', 'Retirable Employees'), 'fa-user-clock', 'success', number_format(numRows(retirableEmployees())));
 
-  card('Celebrant Employees', custom_uri('hrmis', 'Celebrant Employees'), 'fa-birthday-cake', 'warning');
+  card('Celebrant Employees', customUri('hrmis', 'Celebrant Employees'), 'fa-birthday-cake', 'warning');
 
-  card('Archived Employees', custom_uri('hrmis', 'Archived Employees'), 'fa-user-lock', 'danger');
+  card('Archived Employees', customUri('hrmis', 'Archived Employees'), 'fa-user-lock', 'danger');
   ?>
 </div><!-- .row -->
 
@@ -31,7 +31,7 @@ content_title('Dashboard');
         <div class="chart-pie py-2">
           <canvas id="gender-pie-chart"></canvas>
           <script>
-            generate_doughnut_chart(<?php echo json_encode(fetch_all_assoc(employee_gender())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>, 'gender-pie-chart');
+            generateDoughnutChart(<?php echo json_encode(fetchAllAssoc(employeeGender())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>, 'gender-pie-chart');
           </script>
         </div>
       </div>
@@ -47,7 +47,7 @@ content_title('Dashboard');
         <div class="chart-bar h-auto">
           <canvas id="gender-comparative-bar-chart"></canvas>
           <script>
-            generate_comparative_bar_chart(<?php echo json_encode(fetch_all_assoc(employee_gender_category())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>, 'gender-comparative-bar-chart');
+            generateComparativeBarChart(<?php echo json_encode(fetchAllAssoc(employeeGenderCategory())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>, 'gender-comparative-bar-chart');
           </script>
         </div>
       </div>
@@ -66,9 +66,9 @@ content_title('Dashboard');
           <canvas id="category-doughnut-chart"></canvas>
           <script>
             <?php
-            $employee_category = employee_category();
+            $employeeCategory = employeeCategory();
             ?>
-            generate_pie_chart(<?php echo json_encode(fetch_all_assoc($employee_category)); ?>, generate_color_pallete(<?php echo num_rows($employee_category); ?>), 'category-doughnut-chart');
+            generatePieChart(<?php echo json_encode(fetchAllAssoc($employeeCategory)); ?>, generateColorPallete(<?php echo numRows($employeeCategory); ?>), 'category-doughnut-chart');
           </script>
         </div>
       </div>
@@ -85,9 +85,9 @@ content_title('Dashboard');
           <canvas id="position-bar-chart"></canvas>
           <script>
             <?php
-            $employee_positions = employee_position();
+            $employeePositions = employeePosition();
             ?>
-            generate_bar_chart(<?php echo json_encode(fetch_all_assoc($employee_positions)); ?>, generate_color_pallete(<?php echo num_rows($employee_positions); ?>), 'position-bar-chart');
+            generateBarChart(<?php echo json_encode(fetchAllAssoc($employeePositions)); ?>, generateColorPallete(<?php echo numRows($employeePositions); ?>), 'position-bar-chart');
           </script>
         </div>
       </div>
@@ -106,9 +106,9 @@ content_title('Dashboard');
           <canvas id="district-polar-area-chart"></canvas>
           <script>
             <?php
-            $district_employees = district_employee();
+            $districtEmployees = districtEmployee();
             ?>
-            generate_polar_area_chart(<?php echo json_encode(fetch_all_assoc($district_employees)); ?>, generate_color_pallete(<?php echo num_rows($district_employees); ?>), 'district-polar-area-chart');
+            generatePolarAreaChart(<?php echo json_encode(fetchAllAssoc($districtEmployees)); ?>, generateColorPallete(<?php echo numRows($districtEmployees); ?>), 'district-polar-area-chart');
           </script>
         </div>
       </div>
@@ -125,9 +125,9 @@ content_title('Dashboard');
           <canvas id="station-bar-chart"></canvas>
           <script>
             <?php
-            $employee_stations = employee_station();
+            $employeeStations = employeeStation();
             ?>
-            generate_bar_chart(<?php echo json_encode(fetch_all_assoc($employee_stations)); ?>, generate_color_pallete(<?php echo num_rows($employee_stations); ?>), 'station-bar-chart');
+            generateBarChart(<?php echo json_encode(fetchAllAssoc($employeeStations)); ?>, generateColorPallete(<?php echo numRows($employeeStations); ?>), 'station-bar-chart');
           </script>
         </div>
       </div>

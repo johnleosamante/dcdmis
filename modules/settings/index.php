@@ -5,7 +5,7 @@ include_once('app.php');
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php content_title($page_title); ?>
+    <?php contentTitle($pageTitle); ?>
   </div>
 
   <div class="card-body">
