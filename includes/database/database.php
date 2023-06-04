@@ -1,7 +1,5 @@
 <?php
 // include/database/database.php
-// All custom made database related function goes here.
-
 $con = connect(HOSTNAME, USER, PASSWORD, DATABASE, PORT);
 
 function connect($hostname, $user, $password, $database, $port) {
