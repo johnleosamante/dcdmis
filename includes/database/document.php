@@ -2,7 +2,6 @@
 // includes/database/document.php
 // tbl_transactions
 // tbl_transactions_log
-
 function document($id) {
   return query("SELECT TransCode AS id, Title AS `description`, Date_time AS `datetime`, Trans_from AS `from`, Trans_Stats AS `status`, details FROM tbl_transactions WHERE TransCode='{$id}' LIMIT 1;");
 }
@@ -31,8 +30,8 @@ function insertDocument($id, $description, $station, $purpose, $details = '') {
   nonQuery("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats, details) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}', '{$details}');");
 }
 
-function updateDocument($id, $description, $purpose, $details = '', $update_description = true) {
-  $description_column = $update_description ? " Title='{$description}', " : ' ';
+function updateDocument($id, $description, $purpose, $details='', $updateDescription=true) {
+  $description_column = $updateDescription ? " Title='{$description}', " : ' ';
   nonQuery("UPDATE tbl_transactions SET $description_column Date_time=NOW(), Trans_Stats='{$purpose}', details='{$details}' WHERE TransCode='{$id}' LIMIT 1;");
 }
 
@@ -113,7 +112,7 @@ function updateDocumentLogsDone($id) {
   nonQuery("UPDATE tbl_transactions_log SET `Status`='Done' WHERE Transaction_code='{$id}';");
 }
 
-function updateDocumentStatus($id, $purpose, $status='Unread', $details = '') {
+function updateDocumentStatus($id, $purpose, $status='Unread', $details='') {
   nonQuery("UPDATE tbl_transactions SET Trans_Stats='{$purpose}', `Status`='{$status}', details='{$details}' WHERE TransCode='{$id}' LIMIT 1;");
 }
 ?>
