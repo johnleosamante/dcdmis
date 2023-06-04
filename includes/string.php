@@ -51,7 +51,7 @@ function toCurrency($value, $currency='&#8369;') {
 }
 
 function sanitize($input) {
-  return htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES);
+  return isset($input) ? htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES) : '';
 }
 
 function randomPassword($length) {
