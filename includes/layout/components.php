@@ -201,8 +201,8 @@ function cancelModalButton() { ?>
   <button id="cancel-modal-button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 <?php }
 
-function missingAlert($text, $icon='fa-search') { ?>
-  <div class="error mx-auto text-center text-danger"><i class="fas <?php echo $icon; ?> fa-fw"></i></div>
+function missingAlert($text, $icon='fa-times-circle', $color='text-danger') { ?>
+  <div class="error mx-auto text-center <?php echo $color; ?>"><i class="fas <?php echo $icon; ?> fa-fw"></i></div>
   <p class="lead text-center text-gray-800 mt-1 mb-0"><?php echo $text; ?></p>
   <p class="text-center text-gray-500 mb-0">Sorry, we couldn't find what you're looking for...</p>
 <?php } ?>
