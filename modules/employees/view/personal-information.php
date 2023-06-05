@@ -1,31 +1,29 @@
 <?php
 // modules/employees/view/personal-information.php
-$_SESSION[alias() . '_current_employee_id'] = $employee['id'];
-$_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'personal-information', 'show active'); ?>" id="personal-information">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'personal-information', 'show active'); ?>" id="personal-information">
   <?php if ($editMode) : ?>
     <form action="" method="POST" role="form" enctype="multipart/form-data">
     <?php endif; ?>
     <div class="row mt-3">
       <div class="col-sm-12 col-md-4 col-lg-3 col-xl-2 mb-4">
-        <img src="<?php echo uri() . '/' . $employee['picture']; ?>" width="100%" class="border rounded" id="employee_photo">
+        <img src="<?php echo uri() . '/' . $employee['picture']; ?>" width="100%" class="border rounded" id="employee-photo">
 
         <?php if ($editMode) : ?>
           <div class="mt-3 custom-file">
-            <input id="imageUpload" type="file" name="imageUpload" class="custom-file-input">
-            <label id="imageUploadLabel" class="custom-file-label" for="imageUpload">Choose file</label>
+            <input id="image-upload" type="file" name="image-upload" class="custom-file-input">
+            <label id="image-upload-label" class="custom-file-label" for="image-upload">Choose file</label>
           </div>
 
           <script>
-            document.getElementById('imageUpload').addEventListener('change', (event) => {
-              var preview = document.getElementById('employeePhoto');
+            document.getElementById('image-upload').addEventListener('change', (event) => {
+              var preview = document.getElementById('employee-photo');
               const file = event.target.files[0];
               const name = file.name;
               const lastDot = name.lastIndexOf('.');
               const ext = name.substring(lastDot + 1);
-              var label = document.getElementById('imageUploadLabel');
+              var label = document.getElementById('image-upload-label');
               label.innerText = name;
 
               switch (ext) {
@@ -108,11 +106,11 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="civil_status" class="mb-0">Civil Status: <?php showAsterisk($editMode); ?></label>
+              <label for="civil-status" class="mb-0">Civil Status: <?php showAsterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
-                <input id="civil_status" type="text" class="form-control" value="<?php echo $employee['civil_status']; ?>" readonly>
+                <input id="civil-status" type="text" class="form-control" value="<?php echo $employee['civil_status']; ?>" readonly>
               <?php else : ?>
-                <select id="civil_status" name="civil_status" class="form-control" required>
+                <select id="civil-status" name="civil-status" class="form-control" required>
                   <option value="Single" <?php echo setOptionSelected('Single', $employee['civil_status']); ?>>Single</option>
                   <option value="Married" <?php echo setOptionSelected('Married', $employee['civil_status']); ?>>Married</option>
                   <option value="Widowed" <?php echo setOptionSelected('Widowed', $employee['civil_status']); ?>>Widowed</option>
@@ -125,8 +123,8 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
 
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="civil_status_others" class="mb-0">Specify, if Others:</label>
-              <input id="civil_status_others" name="civil_status_others" type="text" class="form-control" value="<?php echo $employee['civil_status_specify']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
+              <label for="civil-status-specify" class="mb-0">Specify, if Others:</label>
+              <input id="civil-status-specify" name="civil-status-specify" type="text" class="form-control" value="<?php echo $employee['civil_status_specify']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
         </div>
@@ -229,11 +227,11 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="dual_citizenship" class="mb-0">Dual Citizenship: <?php showAsterisk($editMode); ?></label>
+              <label for="dual-citizenship" class="mb-0">Dual Citizenship: <?php showAsterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
-                <input id="dual_citizenship" name="dual_citizenship" type="text" class="form-control" value="<?php echo $employee['dual_citizenship']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
+                <input id="dual-citizenship" name="dual-citizenship" type="text" class="form-control" value="<?php echo $employee['dual_citizenship']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
               <?php else : ?>
-                <select id="dual_citizenship" name="dual_citizenship" class="form-control" required>
+                <select id="dual-citizenship" name="dual-citizenship" class="form-control" required>
                   <option value="N/A" <?php echo setOptionSelected('N/A', $employee['dual_citizenship']); ?>>N/A</option>
                   <option value="By Birth" <?php echo setOptionSelected('By Birth', $employee['dual_citizenship']); ?>>By Birth</option>
                   <option value="By Naturalization" <?php echo setOptionSelected('By Naturalization', $employee['dual_citizenship']); ?>>By Naturalization</option>
@@ -244,8 +242,8 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
 
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="dual_citizenship_country" class="mb-0">Please Indicate Country if Dual Citizen:</label>
-              <input id="dual_citizenship_country" name="dual_citizenship_country" type="text" class="form-control" value="<?php echo $employee['country']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
+              <label for="dual-citizenship-country" class="mb-0">Please Indicate Country if Dual Citizen:</label>
+              <input id="dual-citizenship-country" name="dual-citizenship-country" type="text" class="form-control" value="<?php echo $employee['country']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
         </div>
@@ -391,7 +389,9 @@ $_SESSION[alias() . '_current_employee_photo'] = $employee['picture'];
           <div class="text-danger mb-2">* Required field</div>
 
           <div class="form-group mb-3">
-            <button class="btn btn-primary btn-block" name="UpdatePersonalInformation"><i class="fas fa-save fa-fw"></i>Update Personal Information</button>
+            <input type="hidden" name="image-verifier" value="<?php echo cipher($employee['picture']); ?>">
+            <input type="hidden" name="verifier" value="<?php echo cipher($employeeId); ?>">
+            <button class="btn btn-primary btn-block" name="update-personal-information"><i class="fas fa-save fa-fw"></i>Update Personal Information</button>
           </div>
         <?php endif; ?>
       </div><!-- .col-12 -->
