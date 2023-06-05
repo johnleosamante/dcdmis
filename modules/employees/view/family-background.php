@@ -1,18 +1,18 @@
 <?php
 // modules/employees/view/family-background.php
 
-$slast = $sfirst = $sext = $smiddle = $swork = $soffice = $soffice_address = $stelephone = $flast = $ffirst = $fext = $fmiddle = $mlast = $mfirst = $mmiddle = null;
-$family_members = family($employee['id']);
+$slast = $sfirst = $sext = $smiddle = $swork = $soffice = $sofficeAddress = $stelephone = $flast = $ffirst = $fext = $fmiddle = $mlast = $mfirst = $mmiddle = null;
+$familyMembers = family($employeeId);
 
-if (numRows($family_members) > 0) {
-  $family = fetchAssoc($family_members);
+if (numRows($familyMembers) > 0) {
+  $family = fetchAssoc($familyMembers);
   $slast = $family['slast'];
   $sfirst = $family['sfirst'];
   $sext = $family['sext'];
   $smiddle = $family['smiddle'];
   $swork = $family['swork'];
   $soffice = $family['soffice'];
-  $soffice_address = $family['soffice_address'];
+  $sofficeAddress = $family['soffice_address'];
   $stelephone = $family['stelephone'];
   $flast = $family['flast'];
   $ffirst = $family['ffirst'];
@@ -24,7 +24,7 @@ if (numRows($family_members) > 0) {
 }
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'family-background', 'show active'); ?>" id="family-background">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'family-background', 'show active'); ?>" id="family-background">
   <?php if ($editMode) : ?>
     <form action="" method="POST" role="form">
     <?php endif; ?>
@@ -83,8 +83,8 @@ if (numRows($family_members) > 0) {
         <div class="row">
           <div class="col-lg-8">
             <div class="form-group">
-              <label for="sbusiness_address" class="mb-0 small">Business Address</label>
-              <input id="sbusiness_address" name="sbusiness_address" type="text" class="form-control" value="<?php echo $soffice_address; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
+              <label for="sbusiness-address" class="mb-0 small">Business Address</label>
+              <input id="sbusiness-address" name="sbusiness-address" type="text" class="form-control" value="<?php echo $sofficeAddress; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
 
@@ -160,7 +160,8 @@ if (numRows($family_members) > 0) {
     </div><!-- .row -->
     <?php if ($editMode) : ?>
       <div class="form-group mb-3">
-        <button class="btn btn-primary btn-block " name="UpdateFamilyBackground"><i class="fas fa-save fa-fw"></i>Update Family Background</button>
+        <input type="hidden" name="verifier" value="<?php echo cipher($employeeId); ?>">
+        <button class="btn btn-primary btn-block " name="update-family-background"><i class="fas fa-save fa-fw"></i>Update Family Background</button>
       </div>
     </form>
   <?php endif; ?>
