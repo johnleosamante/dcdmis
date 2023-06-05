@@ -5,13 +5,14 @@ $employees = employee($employeeId);
 
 if (numRows($employees) > 0) {
   $employee = fetchAssoc($employees);
+  $employeeId = $employee['id'];
 } else {
   include_once(root() . '/modules/error/no-results-found.php');
   return;
 }
 
-if (!is_dir('../uploads/images/' . $employee['id'])) {
-  mkdir('../uploads/images/' . $employee['id'], 0777, true);
+if (!is_dir('../uploads/images/' . $employeeId)) {
+  mkdir('../uploads/images/' . $employeeId, 0777, true);
 }
 
 $editMode = $url === 'Edit Employee Information';
@@ -24,44 +25,44 @@ messageAlert($showPrompt, $message, $success);
   <div class="card-header py-3">
     <?php if (!$editMode) {
       $activeTab = 'personal-information';
-      contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Edit Employee Information', $employee['id']), 'Edit', 'fa-edit');
+      contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Edit Employee Information', $employeeId), 'Edit', 'fa-edit');
     } else {
-      $employeeId = $employee['id'];
+      $employeeId = $employeeId;
       $employeePhoto = $employee['picture'];
-      contentTitleWithLink('Update Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Employee Information', $employee['id']));
+      contentTitleWithLink('Update Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Employee Information', $employeeId));
     }
 
     $pdsProgress = 0;
 
-    if (numRows(employee($employee['id'])) > 0) {
+    if (numRows(employee($employeeId)) > 0) {
       $pdsProgress += 15;
     }
 
-    if (numRows(family($employee['id'])) > 0) {
+    if (numRows(family($employeeId)) > 0) {
       $pdsProgress += 10;
     }
 
-    if (numRows(educationalBackgrounds($employee['id'])) > 0) {
+    if (numRows(educationalBackgrounds($employeeId)) > 0) {
       $pdsProgress += 15;
     }
 
-    if (numRows(eligibilities($employee['id'])) > 0) {
+    if (numRows(eligibilities($employeeId)) > 0) {
       $pdsProgress += 15;
     }
 
-    if (numRows(experiences($employee['id'])) > 0) {
+    if (numRows(experiences($employeeId)) > 0) {
       $pdsProgress += 15;
     }
 
-    if (numRows(learningAndDevelopment($employee['id'])) > 0) {
+    if (numRows(learningAndDevelopment($employeeId)) > 0) {
       $pdsProgress += 15;
     }
 
-    if (numRows(specialSkills($employee['id'])) > 0) {
+    if (numRows(specialSkills($employeeId)) > 0) {
       $pdsProgress += 5;
     }
 
-    if (numRows(otherInformation($employee['id'])) > 0) {
+    if (numRows(otherInformation($employeeId)) > 0) {
       $pdsProgress += 10;
     }
     ?>
