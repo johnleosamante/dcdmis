@@ -37,6 +37,18 @@ function uri() {
   return $protocol . $_SERVER['HTTP_HOST'];
 }
 
+function restrictPublicAccess($restrict = true) {
+  if (!$restrict) return;
+
+  switch (strtolower($_SERVER['HTTP_HOST'])) {
+    case DOMAIN:
+    case PUBLIC_IP:
+      redirect(uri() . '/error');
+    default:
+      break;
+  }
+}
+
 function customUri($page, $view, $id=null) {
   $value = ($id !== null) ? '&id=' . encode($id) : '';
 
