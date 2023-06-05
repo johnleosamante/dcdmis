@@ -178,7 +178,7 @@ function modalHeader($title) { ?>
   </div>
 <?php }
 
-function modalConfirmDelete($message, $title='Delete', $buttonName='Delete') { ?>
+function modalConfirmDelete($message, $title='Delete', $buttonName='Delete', $verifier=null, $dataVerifier=null) { ?>
   <div class="modal-dialog">
     <div class="modal-content">
       <?php modalHeader($title); ?>
@@ -189,6 +189,8 @@ function modalConfirmDelete($message, $title='Delete', $buttonName='Delete') { ?
 
       <div class="modal-footer">
         <form action="" method="POST" role="form">
+          <input type="hidden" name="verifier" name="<?php echo $verifier; ?>">
+          <input type="hidden" name="data-verifier" name="<?php echo $dataVerifier; ?>">
           <input type="submit" class="btn btn-danger" name="<?php echo $buttonName; ?>" value="Yes, Continue">
           <?php cancelModalButton(); ?>
         </form>

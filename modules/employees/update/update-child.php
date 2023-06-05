@@ -5,24 +5,19 @@ include_once(root() . '/includes/database/children.php');
 include_once(root() . '/includes/layout/components.php');
 include_once(root() . '/includes/string.php');
 
-foreach ($_GET as $key => $data) {
-  $id = $_GET[$key] = decode($data);
-}
-
-$employee_id = $_SESSION[alias() . '_current_employee_id'];
-$child_id = $fname = $mname = $lname = $ext = '';
+$employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
+$childId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$fname = $mname = $lname = $ext = '';
 $bdate = date('Y-M-d');
-$_SESSION[alias() . '_current_child_id'] = '';
 $modalTitle = "Add Child Name";
 
-if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
+if (isset($childId)) {
   $modalTitle = "Edit Child Name";
-  $_SESSION[alias() . '_current_child_id'] = $id;
-  $children = child($employee_id, $id);
+  $children = child($employeeId, $childId);
 
   if (numRows($children) > 0) {
     $child = fetchArray($children);
-    $child_id = $child['no'];
+    $childId = $child['no'];
     $fname = $child['first'];
     $mname = $child['middle'];
     $lname = $child['last'];
@@ -73,6 +68,8 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
       </div><!-- .modal-body -->
 
       <div class="modal-footer">
+        <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
         <button type="submit" class="btn btn-primary" name="save-child">Save</button>
         <?php cancelModalButton(); ?>
       </div><!-- .modal-footer -->
