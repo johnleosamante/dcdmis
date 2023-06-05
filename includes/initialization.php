@@ -9,6 +9,7 @@ ini_set('max_execution_time', 300);
 ini_set('memory_limit', '1024M');
 //ini_set('display_errors', 0);
 
+$defaultImage = '/assets/img/user.png';
 $activeApp = isset($_SESSION[alias() . '_activeApp']) ? $_SESSION[alias() . '_activeApp'] : null;
 $userId = isset($_SESSION[alias() . '_userId']) ? $_SESSION[alias() . '_userId'] : null;
 $email = isset($_SESSION[alias() . '_email']) ? $_SESSION[alias() . '_email'] : null;
@@ -17,7 +18,7 @@ $code = isset($_SESSION[alias() . '_code']) ? $_SESSION[alias() . '_code'] : nul
 $stationId = isset($_SESSION[alias() . '_stationId']) ? $_SESSION[alias() . '_stationId'] : null;
 $station = isset($_SESSION[alias() . '_station']) ? $_SESSION[alias() . '_station'] : null;
 $isDescriptionEditable = isset($_SESSION[alias() . '_editableDescription']) ? $_SESSION[alias() . '_editableDescription'] : false; // DTS specific
-$activeApp = isset($_SESSION[alias() . '_activeApp']) ? $_SESSION[alias() . '_activeApp'] : null;
+$activeTab = isset($_SESSION[alias() . '_activeTab']) ? $_SESSION[alias() . '_activeTab'] : null;
 
 $isSchoolPortal = $portal === 'school_portal'; // DTS specific
 $isRecordsPortal = $portal === 'record_portal'; // DTS specific
