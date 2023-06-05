@@ -57,11 +57,12 @@ function loadData(href, id = 'modal') {
         document.getElementById(id).innerHTML = xmlhttp.responseText;
       } else {
         alert('Bad request encountered! Please refresh the page and try again.');
+        location.reload();
         return;
       }
     }
   }
 
-  xmlhttp.open('GET', href, false);
+  xmlhttp.open('GET', href);
   xmlhttp.send();
 }
