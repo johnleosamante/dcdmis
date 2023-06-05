@@ -7,6 +7,8 @@ define('USER', 'root');
 define('PASSWORD', 'dcdmis@2022');
 define('DATABASE', 'dcdmis');
 define('PORT', 3306);
+define('DOMAIN', 'depeddipolog.net');
+define('PUBLIC_IP', '120.28.189.147');
 
 define('SITE_TITLE', 'DepEd Dipolog City Schools Division');
 define('SITE_ALIAS', 'sdodipolog');
