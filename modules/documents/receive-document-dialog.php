@@ -39,7 +39,7 @@ if (numRows($documents) > 0) {
             <textarea id="description" class="form-control text-uppercase" rows="3" disabled><?php echo $description; ?></textarea>
           </div>
         <?php } else {
-          missingAlert($modalTitle, 'fa-times-circle');
+          missingAlert($modalTitle);
         } ?>
       </div>
 

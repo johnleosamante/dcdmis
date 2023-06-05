@@ -111,7 +111,7 @@ if (numRows($documents) > 0) {
             <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."><?php echo $details; ?></textarea>
           </div>
         <?php } else {
-          missingAlert($modalTitle, 'fa-times-circle');
+          missingAlert($modalTitle);
         } ?>
       </div>
 
