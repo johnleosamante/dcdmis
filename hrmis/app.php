@@ -1,5 +1,7 @@
 <?php
 // hrmis/app.php
+restrictPublicAccess();
+
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrmis';
 $page = $appTitle = "Human Resource Management Information System";
 
