@@ -189,8 +189,8 @@ function modalConfirmDelete($message, $title='Delete', $buttonName='Delete', $ve
 
       <div class="modal-footer">
         <form action="" method="POST" role="form">
-          <input type="hidden" name="verifier" name="<?php echo $verifier; ?>">
-          <input type="hidden" name="data-verifier" name="<?php echo $dataVerifier; ?>">
+          <input type="hidden" name="verifier" value="<?php echo $verifier; ?>">
+          <input type="hidden" name="data-verifier" value="<?php echo $dataVerifier; ?>">
           <input type="submit" class="btn btn-danger" name="<?php echo $buttonName; ?>" value="Yes, Continue">
           <?php cancelModalButton(); ?>
         </form>
