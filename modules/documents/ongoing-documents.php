@@ -15,8 +15,9 @@ $pageTitle = 'Ongoing Documents';
           <tr>
             <th class="align-middle" width="5%">#</th>
             <th class="align-middle" width="10%">Code</th>
-            <th class="align-middle" width="65%">Description</th>
+            <th class="align-middle" width="50%">Description</th>
             <th class="align-middle" width="15%">Posted on</th>
+            <th class="align-middle" width="15%">Status</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
@@ -32,6 +33,7 @@ $pageTitle = 'Ongoing Documents';
               <td class="align-middle"><?php echo $row['id']; ?></td>
               <td class="text-left align-middle"><?php echo $row['description']; ?></td>
               <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
+              <td class="align-middle"><?php echo $row['status']; ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
