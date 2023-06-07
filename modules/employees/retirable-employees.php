@@ -14,11 +14,12 @@ $page_title = 'Retirable Employees';
         <thead>
           <tr>
             <th class="align-middle" width="5%">Photo</th>
-            <th class="align-middle" width="25%">Name</th>
+            <th class="align-middle" width="10%">Employee Number</th>
+            <th class="align-middle" width="20%">Name</th>
             <th class="align-middle" width="5%">Sex</th>
             <th class="align-middle" width="15%">Date of Birth</th>
             <th class="align-middle" width="5%">Age</th>
-            <th class="align-middle" width="20%">Position</th>
+            <th class="align-middle" width="15%">Position</th>
             <th class="align-middle" width="20%">Station</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
@@ -37,6 +38,7 @@ $page_title = 'Retirable Employees';
                   <img width="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
                 </span>
               </td>
+              <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
               <td class="align-middle text-left"><?php echo $employeeName; ?></td>
               <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
@@ -53,7 +55,7 @@ $page_title = 'Retirable Employees';
                     linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
                     linkDropdownItem(customUri('hrmis', 'Transfer Employee', $row['id']), 'Transfer', 'fa-share', 'Transfer Employee'); ?>
                     <div class="dropdown-divider"></div>
-                    <?php linkDropdownItem(customUri('hrmis', 'Remove Employee', $row['id']), 'Remove', 'fa-times-circle', 'Remove Employee','text-danger', false);
+                    <?php linkDropdownItem(customUri('hrmis', 'Remove Employee', $row['id']), 'Remove', 'fa-times-circle', 'Remove Employee', 'text-danger', false);
                     ?>
                   </div>
                 </div>

@@ -50,11 +50,12 @@ $now = date('Y-m-d');
                 <thead>
                   <tr>
                     <th class="align-middle" width="5%">Photo</th>
-                    <th class="align-middle" width="25%">Name</th>
+                    <th class="align-middle" width="10%">Employee Number</th>
+                    <th class="align-middle" width="20%">Name</th>
                     <th class="align-middle" width="5%">Sex</th>
                     <th class="align-middle" width="15%">Date of Birth</th>
                     <th class="align-middle" width="5%">Age</th>
-                    <th class="align-middle" width="20%">Position</th>
+                    <th class="align-middle" width="15%">Position</th>
                     <th class="align-middle" width="20%">Station</th>
                     <th class="align-middle" width="5%">Action</th>
                   </tr>
@@ -73,6 +74,7 @@ $now = date('Y-m-d');
                             <img width="100%" src="<?php echo $photo; ?>" alt="<?php echo $employee_name; ?>">
                           </span>
                         </td>
+                        <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
                         <td class="align-middle text-left"><?php echo $employee_name; ?></td>
                         <td class="align-middle"><?php sex($row['sex']); ?></td>
                         <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>

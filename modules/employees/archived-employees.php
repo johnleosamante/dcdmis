@@ -14,11 +14,12 @@ $page_title = 'Archived Employees';
         <thead>
           <tr>
             <th class="align-middle" width="5%">Photo</th>
-            <th class="align-middle" width="30%">Name</th>
+            <th class="align-middle" width="10%">Employee Number</th>
+            <th class="align-middle" width="25%">Name</th>
             <th class="align-middle" width="5%">Sex</th>
             <th class="align-mdille" width="10%">Status</th>
             <th class="align-middle" width="20%">Last Position</th>
-            <th class="align-middle" width="25%">Last Station</th>
+            <th class="align-middle" width="20%">Last Station</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
@@ -36,6 +37,7 @@ $page_title = 'Archived Employees';
                   <img width="100%" src="<?php echo $photo; ?>" alt="<?php echo $employee_name; ?>">
                 </span>
               </td>
+              <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
               <td class="align-middle text-left"><?php echo $employee_name; ?></td>
               <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle">
