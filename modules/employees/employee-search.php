@@ -1,6 +1,6 @@
 <?php
 // modules/employees/employee-search.php
-$search = sanitize($_GET['id']);
+$search = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $employees = employeeSearch($search);
 
 if (numRows($employees) === 0) {
