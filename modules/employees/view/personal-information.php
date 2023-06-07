@@ -2,7 +2,7 @@
 // modules/employees/view/personal-information.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'personal-information', 'show active'); ?>" id="personal-information">
+<div class="tab-pane fade<?php echo setActiveNavigation(!isset($activeTab) || $activeTab === 'personal-information', 'show active'); ?>" id="personal-information">
   <?php if ($editMode) : ?>
     <form action="" method="POST" role="form" enctype="multipart/form-data">
     <?php endif; ?>
