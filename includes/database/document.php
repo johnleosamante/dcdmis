@@ -60,7 +60,7 @@ function isOutgoingDocument($id, $station) {
 }
 
 function ongoingDocuments($station) {
-  return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Forwarded_to AS `to`, tbl_transactions.Date_time AS `datetime`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions_log.Trans_status NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions_log.Trans_status NOT LIKE '%Cancel%' GROUP BY tbl_transactions.TransCode ORDER BY tbl_transactions_log. Date_recieved DESC;");
+  return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Forwarded_to AS `to`, tbl_transactions.Date_time AS `datetime`, tbl_transactions.Trans_Stats AS `status`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions_log.Trans_status NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions_log.Trans_status NOT LIKE '%Cancel%' GROUP BY tbl_transactions.TransCode ORDER BY tbl_transactions_log. Date_recieved DESC;");
 }
 
 function isOngoingDocument($id, $station) {
