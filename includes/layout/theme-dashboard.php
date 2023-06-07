@@ -2,10 +2,8 @@
 // includes/layout/header.php
 include_once('app.php');
 
-foreach ($_GET as $key => $data) {
-  $url = $_GET[$key] = decode($data);
-  $page = sanitize($url) . ' | ' . $appTitle;
-}
+$url = isset($_GET['v']) ? sanitize(decode($_GET['v'])) : null;
+$page = isset($url) ? $url . ' | ' . $appTitle : $appTitle;
 
 include_once(root() . '/includes/layout/components.php');
 ?>
