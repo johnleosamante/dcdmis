@@ -171,23 +171,23 @@ if (isset($_POST['delete-education'])) {
 }
 
 /* CIVIL SERVICE ELIGIBILITY */
-if (isset($_POST['SaveEligibility'])) {
-  $employeeId = $_SESSION[alias() . '_current_employee_id'];
-  $eligibility_id = !empty($_SESSION[alias() . '_current_eligibility_id']) ? $_SESSION[alias() . '_current_eligibility_id'] : '';
+if (isset($_POST['save-eligibility'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $eligibilityId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $career = sanitize($_POST['career']);
   $rating = sanitize($_POST['rating']);
-  $exam_date = sanitize($_POST['exam_date']);
-  $exam_place = sanitize($_POST['exam_place']);
+  $examDate = sanitize($_POST['exam-date']);
+  $examPlace = sanitize($_POST['exam-place']);
   $license = sanitize($_POST['license']);
-  $is_applicable = isset($_POST['isapplicable']);
+  $isApplicable = isset($_POST['is-applicable']);
   $validity = sanitize($_POST['validity']);
 
-  if (empty($eligibility_id)) {
-    createEligibility($career, $rating, $exam_date, $exam_place, $license, $is_applicable, $validity, $employeeId);
+  if (empty($eligibilityId)) {
+    createEligibility($career, $rating, $examDate, $examPlace, $license, $isApplicable, $validity, $employeeId);
 
     $message = 'Civil Service Eligibility has been added successfully!';
   } else {
-    updateEligibility($career, $rating, $exam_date, $exam_place, $license, $is_applicable, $validity, $employeeId, $eligibility_id);
+    updateEligibility($career, $rating, $examDate, $examPlace, $license, $isApplicable, $validity, $employeeId, $eligibilityId);
 
     $message = 'Civil Service Eligibility has been updated successfully!';
   }
@@ -197,15 +197,14 @@ if (isset($_POST['SaveEligibility'])) {
     $showPrompt = true;
   }
 
-  $_SESSION[alias() . '_current_eligibility_id'] = '';
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
 }
 
-if (isset($_POST['DeleteEligibility'])) {
-  $employeeId = $_SESSION[alias() . '_current_employee_id'];
-  $eligibility_id = $_SESSION[alias() . '_current_eligibility_id'];
+if (isset($_POST['delete-eligibility'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $eligibilityId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
 
-  deleteEligibility($employeeId, $eligibility_id);
+  deleteEligibility($employeeId, $eligibilityId);
 
   if (affectedRows() === 1) {
     $success = true;

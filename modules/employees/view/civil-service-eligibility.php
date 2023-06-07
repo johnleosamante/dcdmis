@@ -2,10 +2,10 @@
 // modules/employees/view/civil-service-eligibility.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'civil-service-eligibility', 'show active'); ?>" id="civil-service-eligibility">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'civil-service-eligibility', 'show active'); ?>" id="civil-service-eligibility">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() . '/modules/employees/update/update-eligibility.php', 'Add', 'fa-plus', 'Add Civil Service Eligibility', 'primary'); ?>
+      <?php modalButtonSplit(uri() .'/modules/employees/update/update-eligibility.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Civil Service Eligibility', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -50,9 +50,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-eligibility.php?id=' . encode($eligibility['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/update/update-eligibility.php?e=' . cipher($employeeId) . '&id=' . encode($eligibility['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-eligibility.php?id=' . encode($eligibility['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-eligibility.php?e=' . cipher($employeeId) . '&id=' . encode($eligibility['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>

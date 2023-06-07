@@ -6,32 +6,27 @@ include_once(root() . '/includes/database/eligibility.php');
 include_once(root() . '/includes/layout/components.php');
 include_once(root() . '/includes/string.php');
 
-foreach ($_GET as $key => $data) {
-  $id = $_GET[$key] = decode($data);
-}
-
-$employee_id = $_SESSION[alias() . '_current_employee_id'];
-$eligibility_id = $career = $rating = $exam_place = $license = '';
-$exam_date = $validity = date('Y-m-d');
-$is_applicable = true;
-$_SESSION[alias() . '_current_eligibility_id'] = '';
+$employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
+$eligibilityId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$career = $rating = $examPlace = $license = '';
+$examDate = $validity = date('Y-m-d');
+$isApplicable = true;
 $modalTitle = "Add Civil Service Eligibility";
 
-if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
+if (isset($eligibilityId)) {
   $modalTitle = "Edit Civil Service Eligibility";
-  $_SESSION[alias() . '_current_eligibility_id'] = $id;
-  $eligibilities = eligibility($employee_id, $id);
+  $eligibilities = eligibility($employeeId, $eligibilityId);
 
   if (numRows($eligibilities) > 0) {
     $eligibility = fetchArray($eligibilities);
-    $eligibility_id = $eligibility['no'];
+    $eligibilityId = $eligibility['no'];
     $career = $eligibility['eligibility'];
     $rating = $eligibility['rating'];
-    $exam_date = toDate($eligibility['date'], 'Y-m-d');
-    $exam_place = $eligibility['place'];
+    $examDate = toDate($eligibility['date'], 'Y-m-d');
+    $examPlace = $eligibility['place'];
     $license = $eligibility['license'];
-    $is_applicable = $eligibility['isapplicable'];
-    $validity = $is_applicable ? toDate($eligibility['validity'], 'Y-m-d') : date('Y-m-d');
+    $isApplicable = $eligibility['isapplicable'];
+    $validity = $isApplicable ? toDate($eligibility['validity'], 'Y-m-d') : date('Y-m-d');
   }
 }
 ?>
@@ -57,15 +52,15 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="exam_date" class="mb-0">Date of Examination / Conferment: <?php showAsterisk(); ?></label>
-              <input id="exam_date" name="exam_date" type="date" class="form-control" required value="<?php echo $exam_date; ?>">
+              <label for="exam-date" class="mb-0">Date of Examination / Conferment: <?php showAsterisk(); ?></label>
+              <input id="exam-date" name="exam-date" type="date" class="form-control" required value="<?php echo $examDate; ?>">
             </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="exam_place" class="mb-0">Place of Examination / Conferment: <?php showAsterisk(); ?></label>
-          <input id="exam_place" name="exam_place" type="text" class="form-control" required value="<?php echo $exam_place; ?>">
+          <label for="exam-place" class="mb-0">Place of Examination / Conferment: <?php showAsterisk(); ?></label>
+          <input id="exam-place" name="exam-place" type="text" class="form-control" required value="<?php echo $examPlace; ?>">
         </div>
 
         <div class="row">
@@ -84,8 +79,8 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
                 </div>
                 <div class="col-6">
                   <div class="form-check">
-                    <input class="form-check-input" id="isapplicable" type="checkbox" name="isapplicable" <?php echo setItemChecked($is_applicable); ?>>
-                    <label class="form-check-label" for="isapplicable">Applicable</label>
+                    <input class="form-check-input" id="is-applicable" type="checkbox" name="is-applicable" <?php echo setItemChecked($isApplicable); ?>>
+                    <label class="form-check-label" for="is-applicable">Applicable</label>
                   </div><!-- .form-check-->
                 </div>
               </div>
@@ -98,8 +93,10 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
       </div><!-- .modal-body -->
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="SaveEligibility">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <button type="submit" class="btn btn-primary" name="save-eligibility">Save</button>
+        <?php cancelModalButton(); ?>
       </div><!-- .modal-footer -->
     </form>
   </div><!-- .modal-content -->
