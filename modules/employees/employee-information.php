@@ -1,6 +1,6 @@
 <?php
 // modules/employees/employee-information.php
-$employeeId = isset($_GET['id']) ? sanitize($_GET['id']) : null;
+$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $employees = employee($employeeId);
 
 if (numRows($employees) > 0) {
