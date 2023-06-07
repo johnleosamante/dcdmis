@@ -1,6 +1,6 @@
 <?php
 // modules/documents/document-information.php
-$documentId = isset($_GET['id']) ? sanitize($_GET['id']) : null;
+$documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $documents = documentFrom($documentId, $station);
 $documentType = null;
 
