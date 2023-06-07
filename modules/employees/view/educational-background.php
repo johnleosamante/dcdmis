@@ -2,10 +2,10 @@
 // modules/employees/view/educational-background.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'educational-background', 'show active'); ?>" id="educational-background">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'educational-background', 'show active'); ?>" id="educational-background">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() . '/modules/employees/update/update-education.php', 'Add',  'fa-plus', 'Add Education', 'primary'); ?>
+      <?php modalButtonSplit(uri() . '/modules/employees/update/update-education.php?e='. cipher($employeeId), 'Add',  'fa-plus', 'Add Education', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -32,10 +32,10 @@
         </thead>
         <tbody>
           <?php
-          $education_background = educationalBackgrounds($employee['id']);
+          $educationalBackground = educationalBackgrounds($employeeId);
 
-          if (numRows($education_background) > 0) {
-            while ($education = fetchAssoc($education_background)) : ?>
+          if (numRows($educationalBackground) > 0) {
+            while ($education = fetchAssoc($educationalBackground)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $education['level']; ?></td>
                 <td class="align-middle"><?php echo $education['school']; ?></td>
@@ -52,9 +52,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-education.php?id=' . encode($education['no']), 'Edit', 'fa-edit', 'Edit Education'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-education.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Edit', 'fa-edit', 'Edit Education'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education.php?id=' . encode($education['no']), 'Delete', 'fa-trash', 'Delete Education', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Delete', 'fa-trash', 'Delete Education', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>

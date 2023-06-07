@@ -124,25 +124,25 @@ if (isset($_POST['delete-child'])) {
 }
 
 /* EDUCATIONAL BACKGROUND */
-if (isset($_POST['SaveEducation'])) {
-  $employeeId = $_SESSION[alias() . '_current_employee_id'];
-  $education_id = !empty($_SESSION[alias() . '_current_education_id']) ? $_SESSION[alias() . '_current_education_id'] : '';
+if (isset($_POST['save-education'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $educationId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $level = sanitize($_POST['level']);
   $school = sanitize($_POST['school']);
   $course = sanitize($_POST['course']);
   $from = sanitize($_POST['from']);
   $to = sanitize($_POST['to']);
-  $ispresent = isset($_POST['ispresent']);
+  $isPresent = isset($_POST['is-present']);
   $highest = sanitize($_POST['highest']);
-  $year = sanitize($_POST['year']);
+  $year = isset($isPresent) ? null : sanitize($_POST['year']);
   $scholarship = sanitize($_POST['scholarship']);
 
-  if (empty($education_id)) {
-    createEducation($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $employeeId);
+  if (empty($educationId)) {
+    createEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId);
 
     $message = 'Educational Background has been added successfully!';
   } else {
-    updateEducation($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $employeeId, $education_id);
+    updateEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId, $educationId);
 
     $message = 'Educational Background has been updated successfully!';
   }
@@ -152,15 +152,14 @@ if (isset($_POST['SaveEducation'])) {
     $showPrompt = true;
   }
 
-  $_SESSION[alias() . '_current_education_id'] = '';
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'educational-background';
 }
 
-if (isset($_POST['DeleteEducation'])) {
-  $employeeId = $_SESSION[alias() . '_current_employee_id'];
-  $education_id = $_SESSION[alias() . '_current_education_id'];
+if (isset($_POST['delete-education'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $educationId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
 
-  deleteEducation($employeeId, $education_id);
+  deleteEducation($employeeId, $educationId);
 
   if (affectedRows() === 1) {
     $success = true;
@@ -168,7 +167,6 @@ if (isset($_POST['DeleteEducation'])) {
     $showPrompt = true;
   }
 
-  $_SESSION[alias() . '_current_education_id'] = '';
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'educational-background';
 }
 
@@ -224,8 +222,8 @@ if (isset($_POST['SaveExperience'])) {
   $employeeId = $_SESSION[alias() . '_current_employee_id'];
   $experienceId = !empty($_SESSION[alias() . '_current_work_experience_id']) ? $_SESSION[alias() . '_current_work_experience_id'] : '';
   $from = sanitize($_POST['from']);
-  $ispresent = isset($_POST['ispresent']);
-  $to = $ispresent ? date('m/d/Y') : sanitize($_POST['to']);
+  $isPresent = isset($_POST['isPresent']);
+  $to = $isPresent ? date('m/d/Y') : sanitize($_POST['to']);
   $position = sanitize($_POST['position']);
   $organization = sanitize($_POST['organization']);
   $salary = isset($_POST['salary']) ? $_POST['salary'] : 0;
@@ -234,11 +232,11 @@ if (isset($_POST['SaveExperience'])) {
   $isgovernment = sanitize($_POST['isgovernment']);
 
   if (empty($experienceId)) {
-    createExperience($from, $to, $ispresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employeeId);
+    createExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employeeId);
 
     $message = 'Work Experience has been added successfully!';
   } else {
-    updateExperience($from, $to, $ispresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employeeId, $experienceId);
+    updateExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employeeId, $experienceId);
 
     $message = 'Work Experience has been updated successfully!';
   }

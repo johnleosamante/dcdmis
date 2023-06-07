@@ -3,11 +3,8 @@
 include_once('../../../includes/function.php');
 include_once(root() . '/includes/layout/components.php');
 
-foreach ($_GET as $key => $data) {
-  $id = $_GET[$key] = decode($data);
-}
+$employeeId = isset($_GET['e']) ? $_GET['e'] : null;
+$educationId = isset($_GET['id']) ? $_GET['id'] : null;
 
-$_SESSION[alias() . '_current_education_id'] = $id;
-
-modalConfirmDelete('Are you sure you want to continue and delete this entry?', 'Delete Education?', 'delete-education');
+modalConfirmDelete('Are you sure you want to continue and delete this entry?', 'Delete Education?', 'delete-education', $employeeId, $educationId);
 ?>

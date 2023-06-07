@@ -5,33 +5,28 @@ include_once(root() . '/includes/database/education.php');
 include_once(root() . '/includes/layout/components.php');
 include_once(root() . '/includes/string.php');
 
-foreach ($_GET as $key => $data) {
-  $id = $_GET[$key] = decode($data);
-}
-
-$employeeId = $_SESSION[alias() . '_current_employee_id'];
-$educationId = $education = $level = $school = $course = $from = $to = $highestLevel = $year_graduated = $honor_received = '';
-$ispresent = false;
-$_SESSION[alias() . '_current_education_id'] = '';
+$employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
+$educationId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$education = $level = $school = $course = $from = $to = $highestLevel = $yearGraduated = $honorReceived = '';
+$isPresent = false;
 $modalTitle = "Add Educational Background";
 
-if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
+if (isset($educationId)) {
   $modalTitle = "Edit Educational Background";
-  $_SESSION[alias() . '_current_education_id'] = $id;
-  $educational_background = educationalBackground($employee_id, $id);
+  $educationalBackground = educationalBackground($employeeId, $educationId);
 
-  if (numRows($educational_background) > 0) {
-    $education = fetchArray($educational_background);
-    $education_id = $education['no'];
+  if (numRows($educationalBackground) > 0) {
+    $education = fetchArray($educationalBackground);
+    $educationId = $education['no'];
     $level = $education['level'];
     $school = $education['school'];
     $course = $education['course'];
     $from = $education['from'];
-    $ispresent = $education['ispresent'];
-    $to = $ispresent ? date('Y') : $education['to'];
-    $highest_level = $education['highest'];
-    $year_graduated = $education['year_graduated'];
-    $honor_received = $education['scholarship'];
+    $isPresent = $education['ispresent'];
+    $to = $isPresent ? date('Y') : $education['to'];
+    $highestLevel = $education['highest'];
+    $yearGraduated = $education['year_graduated'];
+    $honorReceived = $education['scholarship'];
   }
 }
 ?>
@@ -80,7 +75,7 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
                 </div>
                 <div class="col-5">
                   <div class="form-check">
-                    <input class="form-check-input" id="ispresent" type="checkbox" name="ispresent" <?php echo setItemChecked($ispresent); ?>>
+                    <input class="form-check-input" id="ispresent" type="checkbox" name="is-present" <?php echo setItemChecked($isPresent); ?>>
                     <label class="form-check-label" for="ispresent">Present</label>
                   </div><!-- .form-check-->
                 </div>
@@ -92,24 +87,26 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
         <div class="form-group">
           <label for="highest" class="mb-0">Highest Level / Units Earned (if not graduated):</label>
-          <input id="highest" name="highest" type="text" class="form-control" value="<?php echo $highest_level; ?>">
+          <input id="highest" name="highest" type="text" class="form-control" value="<?php echo $highestLevel; ?>">
         </div>
 
         <div class="form-group">
           <label for="year" class="mb-0">Year Graduated:</label>
-          <input id="year" name="year" type="number" step="1" min="0" class="form-control" value="<?php echo $year_graduated; ?>">
+          <input id="year" name="year" type="number" step="1" min="0" class="form-control" value="<?php echo $yearGraduated; ?>">
         </div>
 
         <div class="form-group">
           <label for="scholarship" class="mb-0">Scholarship / Academic Honors Received:</label>
-          <input id="scholarship" name="scholarship" type="text" class="form-control" value="<?php echo $honor_received; ?>">
+          <input id="scholarship" name="scholarship" type="text" class="form-control" value="<?php echo $honorReceived; ?>">
         </div>
 
         <div class="text-danger mb-0">* Required field</div>
       </div><!-- .modal-body -->
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="SaveEducation">Save</button>
+        <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <button type="submit" class="btn btn-primary" name="save-education">Save</button>
         <?php cancelModalButton(); ?>
       </div><!-- .modal-footer -->
     </form>
