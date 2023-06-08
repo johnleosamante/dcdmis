@@ -388,4 +388,43 @@ if (isset($_POST['delete-special-skill'])) {
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
 }
+
+/* RECOGNITION */
+if (isset($_POST['save-recognition'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $recognitionId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $recognition = sanitize($_POST['recognition']);
+
+  if (empty($recognitionId)) {
+    createRecognition($recognition, $employeeId);
+
+    $message = 'Non-Academic Distinction / Recognition has been added successfully!';
+  } else {
+    updateRecognition($recognition, $employeeId, $recognitionId);
+
+    $message = 'Non-Academic Distinction / Recognition has been updated successfully!';
+  }
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
+}
+
+if (isset($_POST['delete-recognition'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $recognitionId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+
+  deleteRecognition($employeeId, $recognitionId);
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $message = 'Non-Academic Distinction / Recognition has been deleted successfully!';
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
+}
 ?>
