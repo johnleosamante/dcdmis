@@ -211,8 +211,7 @@ if (isset($_POST['delete-eligibility'])) {
     $message = 'Civil Service Eligibility has been deleted successfully!';
     $showPrompt = true;
   }
-
-  $_SESSION[alias() . '_current_eligibility_id'] = '';
+  
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
 }
 
