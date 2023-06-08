@@ -54,7 +54,7 @@
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                         <?php modalDropdownItem(uri() . '/modules/employees/update/update-education.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Edit', 'fa-edit', 'Edit Education'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Delete', 'fa-trash', 'Delete Education', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Delete', 'fa-trash', 'Delete Education'); ?>
                       </div>
                     </div>
                   </td>

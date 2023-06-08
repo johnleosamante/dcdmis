@@ -44,9 +44,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() .'/modules/employees/update/update-voluntary-work.php?e=' . cipher($employeeId) . '&id=' . cipher($voluntary['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/update/update-voluntary-work.php?e=' . cipher($employeeId) . '&id=' . cipher($voluntary['no']), 'Edit', 'fa-edit', 'Edit Voluntary Work'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-voluntary-work.php?e=' . cipher($employeeId) . '&id=' . cipher($voluntary['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-voluntary-work.php?e=' . cipher($employeeId) . '&id=' . cipher($voluntary['no']), 'Delete', 'fa-trash', 'Delete Voluntary Work'); ?>
                       </div>
                     </div>
                   </td>

@@ -52,7 +52,7 @@
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                         <?php modalDropdownItem(uri() . '/modules/employees/update/update-work-experience.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-work-experience.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-work-experience.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Delete', 'fa-trash', 'Delete Work Experience'); ?>
                       </div>
                     </div>
                   </td>

@@ -33,9 +33,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-special-skill.php?e=' . cipher($employeeId) . '&id=' . encode($skill['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-special-skill.php?e=' . cipher($employeeId) . '&id=' . encode($skill['no']), 'Edit', 'fa-edit', 'Edit Special Skill / Hobby'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-special-skill.php?e=' . cipher($employeeId) . '&id=' . encode($skill['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-special-skill.php?e=' . cipher($employeeId) . '&id=' . encode($skill['no']), 'Delete', 'fa-trash', 'Delete Special Skill / Hobby'); ?>
                       </div>
                     </div>
                   </td>

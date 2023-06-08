@@ -46,9 +46,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() .'/modules/employees/update/update-learning-development.php?e=' . cipher($employeeId) . '&id=' . cipher($learning['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/update/update-learning-development.php?e=' . cipher($employeeId) . '&id=' . cipher($learning['no']), 'Edit', 'fa-edit', 'Edit Learning &amp; Development'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-learning-development.php?e=' . cipher($employeeId) . '&id=' . cipher($learning['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-learning-development.php?e=' . cipher($employeeId) . '&id=' . cipher($learning['no']), 'Delete', 'fa-trash', 'Delete Learning &amp; Development'); ?>
                       </div>
                     </div>
                   </td>

@@ -37,7 +37,7 @@
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                         <?php modalDropdownItem(uri() . '/modules/employees/update/update-child.php?e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-child.php?e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-child.php?e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Delete', 'fa-trash', 'Delete Child'); ?>
                       </div>
                     </div>
                   </td>
