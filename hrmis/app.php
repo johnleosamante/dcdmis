@@ -349,4 +349,43 @@ if (isset($_POST['delete-learning-development'])) {
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'learning-development';
 }
+
+/* SPECIAL SKILLS AND HOBBIES */
+if (isset($_POST['save-special-skill'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $skillId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $skill = sanitize($_POST['skill']);
+
+  if (empty($skillId)) {
+    createSpecialSkill($skill, $employeeId);
+
+    $message = 'Special Skill / Hobby has been added successfully!';
+  } else {
+    updateSpecialSkill($skill, $employeeId, $skillId);
+
+    $message = 'Special Skill / Hobby has been updated successfully!';
+  }
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
+}
+
+if (isset($_POST['delete-special-skill'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $skillId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+
+  deleteSpecialSkill($employeeId, $skillId);
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $message = 'Special Skill / Hobby has been deleted successfully!';
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
+}
 ?>

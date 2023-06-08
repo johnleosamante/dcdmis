@@ -2,28 +2,49 @@
 // modules/employees/view/special-skills.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'special-skills', 'show active'); ?>" id="special-skills">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'special-skills', 'show active'); ?>" id="special-skills">
+  <?php if ($editMode) : ?>
+    <div class="d-sm-flex justify-content-end my-3">
+      <?php modalButtonSplit(uri() . '/modules/employees/update/update-special-skill.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Special Skill / Hobby', 'primary'); ?>
+    </div>
+  <?php endif; ?>
+
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
         <thead>
           <tr>
-            <th class="align-middle">Special Skills &amp; Hobbies</th>
+            <th class="align-middle" width="100%">Special Skills &amp; Hobbies</th>
+            <?php if ($editMode) : ?>
+              <th class="align-middle" width="5%">Action</th>
+            <?php endif; ?>
           </tr>
         </thead>
         <tbody>
           <?php
-          $skills = specialSkills($employee['id']);
+          $skills = specialSkills($employeeId);
 
           if (numRows($skills) > 0) {
             while ($skill = fetchAssoc($skills)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $skill['skill']; ?></td>
+                <?php if ($editMode) : ?>
+                  <td class="align-middle text-capitalize">
+                    <div class="dropdown no-arrow">
+                      <?php dropdownEllipsis(); ?>
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-special-skill.php?e=' . cipher($employeeId) . '&id=' . encode($skill['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
+                        <div class="dropdown-divider"></div>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-special-skill.php?e=' . cipher($employeeId) . '&id=' . encode($skill['no']), 'Delete', 'fa-trash', 'Delete Child', 'text-danger'); ?>
+                      </div>
+                    </div>
+                  </td>
+                <?php endif; ?>
               </tr>
             <?php endwhile;
           } else { ?>
             <tr>
-              <td class="align-middle">No data available in table</td>
+              <td colspan="<?php echo $editMode ? '2' : '1'; ?>" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>
