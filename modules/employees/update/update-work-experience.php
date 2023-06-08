@@ -6,26 +6,22 @@ include_once(root() . '/includes/database/experience.php');
 include_once(root() . '/includes/layout/components.php');
 include_once(root() . '/includes/string.php');
 
-foreach ($_GET as $key => $data) {
-  $id = $_GET[$key] = decode($data);
-}
-
-$employee_id = $_SESSION[alias() . '_current_employee_id'];
-$experience_id = $experience = $from = $to = $position = $organization = $salary = $grade = $status = $service = '';
-$is_present = false;
+$employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
+$experienceId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$experience = $from = $to = $position = $organization = $salary = $grade = $status = $service = '';
+$isPresent = false;
 $modalTitle = "Add Work Experience";
 
 if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
   $modalTitle = "Edit Work Experience";
-  $_SESSION[alias() . '_current_work_experience_id'] = $id;
-  $experiences = experience($employee_id, $id);
+  $experiences = experience($employeeId, $experienceId);
 
   if (numRows($experiences) > 0) {
     $experience = fetchArray($experiences);
-    $experience_id = $experience['no'];
+    $experienceId = $experience['no'];
     $from = toDate($experience['from'], 'Y-m-d');
-    $is_present = $experience['ispresent'];
-    $to = $is_present ? date('Y-m-d') : toDate($experience['to'], 'Y-m-d');
+    $isPresent = $experience['ispresent'];
+    $to = $isPresent ? date('Y-m-d') : toDate($experience['to'], 'Y-m-d');
     $position = $experience['position'];
     $organization = $experience['organization'];
     $salary = $experience['salary'];
@@ -58,8 +54,8 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
                 </div>
                 <div class="col-6">
                   <div class="form-check">
-                    <input class="form-check-input" id="ispresent" type="checkbox" name="ispresent" <?php echo setItemChecked($is_present); ?>>
-                    <label class="form-check-label" for="ispresent">Present</label>
+                    <input class="form-check-input" id="is-present" type="checkbox" name="is-present" <?php echo setItemChecked($isPresent); ?>>
+                    <label class="form-check-label" for="is-present">Present</label>
                   </div><!-- .form-check-->
                 </div>
               </div>
@@ -113,8 +109,8 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="isgovernment" class="mb-0">Government Service: <?php showAsterisk(); ?></label>
-              <select name="isgovernment" id="isgovernment" class="form-control" required>
+              <label for="is-government" class="mb-0">Government Service: <?php showAsterisk(); ?></label>
+              <select name="is-government" id="is-government" class="form-control" required>
                 <option value="Y" <?php echo setOptionSelected("Y", $service); ?>>Yes</option>
                 <option value="N" <?php echo setOptionSelected("N", $service); ?>>No</option>
               </select>
@@ -126,8 +122,10 @@ if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
       </div><!-- .modal-body -->
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="SaveExperience">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <button type="submit" class="btn btn-primary" name="save-experience">Save</button>
+        <?php cancelModalButton(); ?>
       </div><!-- .modal-footer -->
     </form>
   </div><!-- .modal-content -->

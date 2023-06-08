@@ -2,10 +2,10 @@
 // modules/employees/view/work-experience.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'work-experience', 'show active'); ?>" id="work-experience">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'work-experience', 'show active'); ?>" id="work-experience">
     <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() . '/modules/employees/update/update-work-experience.php', 'Add', 'fa-plus', 'Add Work Experience', 'primary'); ?>
+      <?php modalButtonSplit(uri() .'/modules/employees/update/update-work-experience.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Work Experience', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -32,7 +32,7 @@
         </thead>
         <tbody>
           <?php
-          $experiences = experiences($employee['id']);
+          $experiences = experiences($employeeId);
 
           if (numRows($experiences) > 0) {
             while ($experience = fetchAssoc($experiences)) : ?>
@@ -50,9 +50,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-work-experience.php?id=' . encode($experience['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-work-experience.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-work-experience.php?id=' . encode($experience['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-work-experience.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>

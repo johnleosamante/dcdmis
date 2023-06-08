@@ -218,17 +218,17 @@ if (isset($_POST['delete-eligibility'])) {
 
 /* WORK EXPERIENCE */
 if (isset($_POST['save-experience'])) {
-  $employeeId = $_SESSION[alias() . '_current_employee_id'];
-  $experienceId = !empty($_SESSION[alias() . '_current_work_experience_id']) ? $_SESSION[alias() . '_current_work_experience_id'] : '';
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $experienceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $from = sanitize($_POST['from']);
-  $isPresent = isset($_POST['isPresent']);
+  $isPresent = isset($_POST['is-present']);
   $to = $isPresent ? date('m/d/Y') : sanitize($_POST['to']);
   $position = sanitize($_POST['position']);
   $organization = sanitize($_POST['organization']);
   $salary = isset($_POST['salary']) ? $_POST['salary'] : 0;
   $sg = sanitize($_POST['sg']);
   $status = sanitize($_POST['status']);
-  $isgovernment = sanitize($_POST['isgovernment']);
+  $isgovernment = sanitize($_POST['is-government']);
 
   if (empty($experienceId)) {
     createExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employeeId);
@@ -245,13 +245,12 @@ if (isset($_POST['save-experience'])) {
     $showPrompt = true;
   }
 
-  $_SESSION[alias() . '_current_work_experience_id'] = '';
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
 }
 
-if (isset($_POST['DeleteWorkExperience'])) {
-  $employeeId = $_SESSION[alias() . '_current_employee_id'];
-  $experienceId = $_SESSION[alias() . '_current_work_experience_id'];
+if (isset($_POST['delete-work-experience'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $experienceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
 
   deleteExperience($employeeId, $experienceId);
 
