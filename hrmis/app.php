@@ -427,4 +427,43 @@ if (isset($_POST['delete-recognition'])) {
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
 }
+
+/* MEMBERSHIP */
+if (isset($_POST['save-membership'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $membershipId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $membership = sanitize($_POST['membership']);
+
+  if (empty($membershipId)) {
+    createMembership($membership, $employeeId);
+
+    $message = 'Membership in Association / Organization has been added successfully!';
+  } else {
+    updateMembership($membership, $employeeId, $membershipId);
+
+    $message = 'Membership in Association / Organization has been updated successfully!';
+  }
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
+}
+
+if (isset($_POST['delete-membership'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $membershipId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+
+  deleteMembership($employeeId, $membershipId);
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $message = 'Membership in Association / Organization has been deleted successfully!';
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
+}
 ?>

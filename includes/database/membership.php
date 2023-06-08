@@ -4,4 +4,20 @@
 function memberships($id) {
   return query("SELECT `No` AS `no`, Organization AS `organization`, Emp_ID AS id FROM tbl_membership WHERE Emp_ID='{$id}' ORDER BY Organization;");
 }
+
+function membership($id, $no) {
+  return query("SELECT `No` AS `no`, Organization AS `organization`, Emp_ID AS id FROM tbl_membership WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+}
+
+function createMembership($membership, $id) {
+  return nonQuery("INSERT INTO tbl_membership (`Organization`, `Emp_ID`) VALUES ('{$membership}', '{$id}');");
+}
+
+function updateMembership($membership, $id, $no) {
+  return nonQuery("UPDATE tbl_membership SET Organization='{$membership}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+}
+
+function deleteMembership($id, $no) {
+  return nonQuery("DELETE FROM tbl_membership WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+}
 ?>
