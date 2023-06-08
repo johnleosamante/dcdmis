@@ -54,7 +54,7 @@ messageAlert($showPrompt, $message, $success);
       $pdsProgress += 15;
     }
 
-    if (numRows(learningAndDevelopment($employeeId)) > 0) {
+    if (numRows(learningAndDevelopments($employeeId)) > 0) {
       $pdsProgress += 15;
     }
 

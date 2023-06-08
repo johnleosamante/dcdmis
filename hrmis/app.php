@@ -293,7 +293,7 @@ if (isset($_POST['save-voluntary-work'])) {
 
 if (isset($_POST['delete-voluntary-work'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-  $voluntaryId = isset($_POST['verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $voluntaryId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
 
   deleteVoluntaryWork($employeeId, $voluntaryId);
 
@@ -304,5 +304,49 @@ if (isset($_POST['delete-voluntary-work'])) {
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
+}
+
+/* LEARNING AND DEVELOPMENT INTERVENTION */
+if (isset($_POST['save-learning-development'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $learningId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $title = sanitize($_POST['title']);
+  $from = sanitize($_POST['from']);
+  $to = sanitize($_POST['to']);
+  $hours = isset($_POST['hours']) ? sanitize($_POST['hours']) : 0;
+  $type = sanitize($_POST['type']);
+  $sponsor = sanitize($_POST['sponsor']);
+
+  if (empty($learningId)) {
+    createlearningAndDevelopment($title, $from, $to, $hours, $type, $sponsor, $employeeId);
+
+    $message = 'Learning &amp; Development Intervention has been added successfully!';
+  } else {
+    updateLearningAndDevelopment($title, $from, $to, $hours, $type, $sponsor, $employeeId, $learningId);
+
+    $message = 'Learning &amp; Development Intervention has been updated successfully!';
+  }
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'learning-development';
+}
+
+if (isset($_POST['delete-learning-development'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $learningId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+
+  deleteLearningAndDevelopment($employeeId, $learningId);
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $message = 'Learning &amp; Development Intervention has been deleted successfully!';
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'learning-development';
 }
 ?>
