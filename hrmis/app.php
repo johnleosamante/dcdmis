@@ -134,7 +134,7 @@ if (isset($_POST['save-education'])) {
   $to = sanitize($_POST['to']);
   $isPresent = isset($_POST['is-present']);
   $highest = sanitize($_POST['highest']);
-  $year = isset($isPresent) ? null : sanitize($_POST['year']);
+  $year = $isPresent ? null : sanitize($_POST['year']);
   $scholarship = sanitize($_POST['scholarship']);
 
   if (empty($educationId)) {
@@ -217,7 +217,7 @@ if (isset($_POST['delete-eligibility'])) {
 }
 
 /* WORK EXPERIENCE */
-if (isset($_POST['SaveExperience'])) {
+if (isset($_POST['save-experience'])) {
   $employeeId = $_SESSION[alias() . '_current_employee_id'];
   $experienceId = !empty($_SESSION[alias() . '_current_work_experience_id']) ? $_SESSION[alias() . '_current_work_experience_id'] : '';
   $from = sanitize($_POST['from']);

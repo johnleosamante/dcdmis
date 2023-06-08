@@ -75,8 +75,8 @@ if (isset($educationId)) {
                 </div>
                 <div class="col-5">
                   <div class="form-check">
-                    <input class="form-check-input" id="ispresent" type="checkbox" name="is-present" <?php echo setItemChecked($isPresent); ?>>
-                    <label class="form-check-label" for="ispresent">Present</label>
+                    <input class="form-check-input" id="is-present" type="checkbox" name="is-present" <?php echo setItemChecked($isPresent); ?>>
+                    <label class="form-check-label" for="is-present">Present</label>
                   </div><!-- .form-check-->
                 </div>
               </div>
