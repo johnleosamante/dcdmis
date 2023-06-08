@@ -2,10 +2,10 @@
 // modules/employees/view/voluntary-work.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'voluntary-work', 'show active'); ?>" id="voluntary-work">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'voluntary-work', 'show active'); ?>" id="voluntary-work">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() . '/modules/employees/update/update-voluntary-work.php', 'Add', 'fa-plus', 'Add Voluntary Work', 'primary'); ?>
+      <?php modalButtonSplit(uri() .'/modules/employees/update/update-voluntary-work.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Voluntary Work', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -29,10 +29,10 @@
         </thead>
         <tbody>
           <?php
-          $voluntary_work = voluntaryWorks($employee['id']);
+          $voluntaryWork = voluntaryWorks($employeeId);
 
-          if (numRows($voluntary_work) > 0) {
-            while ($voluntary = fetchAssoc($voluntary_work)) : ?>
+          if (numRows($voluntaryWork) > 0) {
+            while ($voluntary = fetchAssoc($voluntaryWork)) : ?>
               <tr>
                 <td class="align-middle"><?php echo $voluntary['organization']; ?></td>
                 <td class="align-middle"><?php echo toDate($voluntary['from']); ?></td>
@@ -44,9 +44,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-voluntary-work.php?id=' . encode($voluntary['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/update/update-voluntary-work.php?e=' . cipher($employeeId) . '&id=' . cipher($voluntary['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-voluntary-work.php?id=' . encode($voluntary['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-voluntary-work.php?e=' . cipher($employeeId) . '&id=' . cipher($voluntary['no']), 'Delete', 'fa-trash', 'Delete Work Experience', 'text-danger'); ?>
                       </div>
                     </div>
                   </td>

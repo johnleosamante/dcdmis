@@ -147,7 +147,7 @@ if (isset($_POST['save-education'])) {
     $message = 'Educational Background has been updated successfully!';
   }
 
-  if (affectedRows($con) === 1) {
+  if (affectedRows() === 1) {
     $success = true;
     $showPrompt = true;
   }
@@ -192,7 +192,7 @@ if (isset($_POST['save-eligibility'])) {
     $message = 'Civil Service Eligibility has been updated successfully!';
   }
 
-  if (affectedRows($con) === 1) {
+  if (affectedRows() === 1) {
     $success = true;
     $showPrompt = true;
   }
@@ -211,7 +211,7 @@ if (isset($_POST['delete-eligibility'])) {
     $message = 'Civil Service Eligibility has been deleted successfully!';
     $showPrompt = true;
   }
-  
+
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
 }
 
@@ -227,19 +227,19 @@ if (isset($_POST['save-experience'])) {
   $salary = isset($_POST['salary']) ? $_POST['salary'] : 0;
   $sg = sanitize($_POST['sg']);
   $status = sanitize($_POST['status']);
-  $isgovernment = sanitize($_POST['is-government']);
+  $isGovernment = sanitize($_POST['is-government']);
 
   if (empty($experienceId)) {
-    createExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employeeId);
+    createExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId);
 
     $message = 'Work Experience has been added successfully!';
   } else {
-    updateExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isgovernment, $employeeId, $experienceId);
+    updateExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId, $experienceId);
 
     $message = 'Work Experience has been updated successfully!';
   }
 
-  if (affectedRows($con) === 1) {
+  if (affectedRows() === 1) {
     $success = true;
     $showPrompt = true;
   }
@@ -259,6 +259,50 @@ if (isset($_POST['delete-work-experience'])) {
     $showPrompt = true;
   }
 
-  $_SESSION[alias() . '_activeTab'] = 'work-experience';
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
+}
+
+/* VOLUNTARY WORK */
+if (isset($_POST['save-voluntary-work'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $voluntaryId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $organization = sanitize($_POST['organization']);
+  $from = sanitize($_POST['from']);
+  $isPresent = isset($_POST['is-present']);
+  $to = $isPresent ? date('m/d/Y') : sanitize($_POST['to']);
+  $hours = isset($_POST['hours']) ? $_POST['hours'] : 0;
+  $position = sanitize($_POST['position']);
+
+  if (empty($voluntaryId)) {
+    createVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId);
+
+    $message = 'Voluntary Work has been added successfully!';
+  } else {
+    updateVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId, $voluntaryId);
+
+    $message = 'Voluntary Work has been updated successfully!';
+  }
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
+}
+
+if (isset($_POST['delete-voluntary-work'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $voluntaryId = isset($_POST['verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+
+  deleteVoluntaryWork($employeeId, $voluntaryId);
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $message = 'Voluntary Work has been deleted successfully';
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
 }
 ?>

@@ -6,29 +6,26 @@ include_once(root() . '/includes/database/voluntary-work.php');
 include_once(root() . '/includes/layout/components.php');
 include_once(root() . '/includes/string.php');
 
-foreach ($_GET as $key => $data) {
-  $id = $_GET[$key] = decode($data);
-}
-
-$employee_id = $_SESSION[alias() . '_current_employee_id'];
-$voluntary_id = $organization = $from = $to = $hours = $position = '';
-$is_present = false;
+$employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
+$voluntaryId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$organization = $hours = $position = '';
+$from = $to = date('Y-m-d');
+$isPresent = false;
 $modalTitle = "Add Voluntary Work";
 
-if (isset($_GET['id']) && strlen($id) > 0) {
+if (isset($voluntaryId)) {
   $modalTitle = "Edit Voluntary Work";
-  $_SESSION[alias() . '_current_voluntary_work_id'] = $id;
-  $voluntary_works = voluntaryWork($employee_id, $id);
+  $voluntaryWorks = voluntaryWork($employeeId, $voluntaryId);
 
-  if (numRows($voluntary_works) > 0) {
-    $voluntary_work = fetchArray($voluntary_works);
-    $voluntary_id = $voluntary_work['no'];
-    $organization = $voluntary_work['organization'];
-    $from = toDate($voluntary_work['from'], 'Y-m-d');
-    $is_present = $voluntary_work['ispresent'];
-    $to = $is_present ? date('Y-m-d') : toDate($voluntary_work['to'], 'Y-m-d');
-    $hours = $voluntary_work['hours'];
-    $position = $voluntary_work['position'];
+  if (numRows($voluntaryWorks) > 0) {
+    $voluntaryWork = fetchArray($voluntaryWorks);
+    $voluntaryId = $voluntaryWork['no'];
+    $organization = $voluntaryWork['organization'];
+    $from = toDate($voluntaryWork['from'], 'Y-m-d');
+    $isPresent = $voluntaryWork['ispresent'];
+    $to = $isPresent ? date('Y-m-d') : toDate($voluntaryWork['to'], 'Y-m-d');
+    $hours = $voluntaryWork['hours'];
+    $position = $voluntaryWork['position'];
   }
 }
 ?>
@@ -59,8 +56,8 @@ if (isset($_GET['id']) && strlen($id) > 0) {
                   <label for="to" class="mb-0">Dates To: <?php showAsterisk(); ?></label>
                 </div>
                 <div class="col-6">
-                  <input class="form-check-input" id="ispresent" type="checkbox" name="ispresent" <?php echo setItemChecked($is_present); ?>>
-                  <label class="form-check-label" for="ispresent">Present</label>
+                  <input class="form-check-input" id="is-present" type="checkbox" name="is-present" <?php echo setItemChecked($isPresent); ?>>
+                  <label class="form-check-label" for="is-present">Present</label>
                 </div>
               </div>
               <input id="to" type="date" name="to" class="form-control" value="<?php echo $to; ?>">
@@ -82,8 +79,10 @@ if (isset($_GET['id']) && strlen($id) > 0) {
       </div>
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" name="SaveVoluntaryWork">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <button type="submit" class="btn btn-primary" name="save-voluntary-work">Save</button>
+        <?php cancelModalButton(); ?>
       </div><!-- .modal-footer -->
     </form>
   </div><!-- .modal-content -->
