@@ -8,7 +8,8 @@ include_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $experienceId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$experience = $from = $to = $position = $organization = $salary = $grade = $status = $service = '';
+$experience = $position = $organization = $salary = $grade = $status = $service = '';
+$from = $to = date('Y-m-d');
 $isPresent = false;
 $modalTitle = "Add Work Experience";
 

@@ -7,7 +7,8 @@ include_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $educationId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$education = $level = $school = $course = $from = $to = $highestLevel = $yearGraduated = $honorReceived = '';
+$education = $level = $school = $course =  $highestLevel = $yearGraduated = $honorReceived = '';
+$from = $to = date('Y');
 $isPresent = false;
 $modalTitle = "Add Educational Background";
 
