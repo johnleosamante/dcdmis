@@ -1,5 +1,5 @@
 <?php
-// modules/employees/update/update-learning-development.php\
+// modules/employees/update/update-learning-development.php
 include_once('../../../includes/function.php');
 include_once(root() . '/includes/database/database.php');
 include_once(root() . '/includes/database/learning-development.php');
@@ -10,10 +10,10 @@ $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $learningId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $title = $hours = $type = $sponsor = '';
 $from = $to = date('Y-m-d');
-$modalTitle = "Add Learning &amp; Development Intervention";
+$modalTitle = 'Add Learning &amp; Development Intervention';
 
 if (isset($learningId)) {
-  $modalTitle = "Edit Learning &amp; Development Intervention";
+  $modalTitle = 'Edit Learning &amp; Development Intervention';
   $trainings = learningAndDevelopment($employeeId, $learningId);
 
   if (numRows($trainings) > 0) {

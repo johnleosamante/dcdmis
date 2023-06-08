@@ -11,10 +11,10 @@ $experienceId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $experience = $position = $organization = $salary = $grade = $status = $service = '';
 $from = $to = date('Y-m-d');
 $isPresent = false;
-$modalTitle = "Add Work Experience";
+$modalTitle = 'Add Work Experience';
 
 if (isset($experienceId)) {
-  $modalTitle = "Edit Work Experience";
+  $modalTitle = 'Edit Work Experience';
   $experiences = experience($employeeId, $experienceId);
 
   if (numRows($experiences) > 0) {

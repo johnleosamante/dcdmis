@@ -11,10 +11,10 @@ $eligibilityId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $career = $rating = $examPlace = $license = '';
 $examDate = $validity = date('Y-m-d');
 $isApplicable = true;
-$modalTitle = "Add Civil Service Eligibility";
+$modalTitle = 'Add Civil Service Eligibility';
 
 if (isset($eligibilityId)) {
-  $modalTitle = "Edit Civil Service Eligibility";
+  $modalTitle = 'Edit Civil Service Eligibility';
   $eligibilities = eligibility($employeeId, $eligibilityId);
 
   if (numRows($eligibilities) > 0) {

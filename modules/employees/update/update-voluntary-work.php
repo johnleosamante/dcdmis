@@ -11,10 +11,10 @@ $voluntaryId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $organization = $hours = $position = '';
 $from = $to = date('Y-m-d');
 $isPresent = false;
-$modalTitle = "Add Voluntary Work";
+$modalTitle = 'Add Voluntary Work';
 
 if (isset($voluntaryId)) {
-  $modalTitle = "Edit Voluntary Work";
+  $modalTitle = 'Edit Voluntary Work';
   $voluntaryWorks = voluntaryWork($employeeId, $voluntaryId);
 
   if (numRows($voluntaryWorks) > 0) {

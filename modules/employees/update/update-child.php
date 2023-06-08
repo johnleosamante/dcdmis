@@ -1,4 +1,5 @@
 <?php
+// modules/employees/update/update-child.php
 include_once('../../../includes/function.php');
 include_once(root() . '/includes/database/database.php');
 include_once(root() . '/includes/database/children.php');
@@ -9,10 +10,10 @@ $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $childId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $fname = $mname = $lname = $ext = '';
 $bdate = date('Y-M-d');
-$modalTitle = "Add Child Name";
+$modalTitle = 'Add Child Name';
 
 if (isset($childId)) {
-  $modalTitle = "Edit Child Name";
+  $modalTitle = 'Edit Child Name';
   $children = child($employeeId, $childId);
 
   if (numRows($children) > 0) {

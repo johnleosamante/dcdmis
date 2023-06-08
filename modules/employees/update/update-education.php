@@ -1,4 +1,5 @@
 <?php
+// modules/employees/update/update-education.php
 include_once('../../../includes/function.php');
 include_once(root() . '/includes/database/database.php');
 include_once(root() . '/includes/database/education.php');
@@ -10,10 +11,10 @@ $educationId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $education = $level = $school = $course =  $highestLevel = $yearGraduated = $honorReceived = '';
 $from = $to = date('Y');
 $isPresent = false;
-$modalTitle = "Add Educational Background";
+$modalTitle = 'Add Educational Background';
 
 if (isset($educationId)) {
-  $modalTitle = "Edit Educational Background";
+  $modalTitle = 'Edit Educational Background';
   $educationalBackground = educationalBackground($employeeId, $educationId);
 
   if (numRows($educationalBackground) > 0) {
