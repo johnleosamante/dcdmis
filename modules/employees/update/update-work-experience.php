@@ -13,7 +13,7 @@ $from = $to = date('Y-m-d');
 $isPresent = false;
 $modalTitle = "Add Work Experience";
 
-if (isset($_GET['id']) && strlen($_GET['id']) > 0) {
+if (isset($experienceId)) {
   $modalTitle = "Edit Work Experience";
   $experiences = experience($employeeId, $experienceId);
 
