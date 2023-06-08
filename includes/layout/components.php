@@ -123,7 +123,7 @@ function showAsterisk($show = true) {
 
 function modal() { ?>
   <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog d-none">
       <div class="modal-content">
         <?php modalHeader(''); ?>
 
