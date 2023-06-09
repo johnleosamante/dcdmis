@@ -33,9 +33,9 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-recognition.php?e=' . cipher($employeeId) . '&id=' . encode($recognition['no']), 'Edit', 'fa-edit', 'Edit Recognition'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-recognition.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Edit', 'fa-edit', 'Edit Recognition'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-recognition.php?e=' . cipher($employeeId) . '&id=' . encode($recognition['no']), 'Delete', 'fa-trash', 'Delete Recognition'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-recognition.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Delete', 'fa-trash', 'Delete Recognition'); ?>
                       </div>
                     </div>
                   </td>
