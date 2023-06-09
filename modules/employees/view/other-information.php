@@ -213,7 +213,7 @@ if (numRows($other_information) > 0) {
             <td width="100%">
               <p class="mb-1">Pursuant to: (a) Indigenous People's Act (RA 8371); (b) Magna Carta for Disabled Persons (RA 7277); and (c) Solo Parents Welfare Act of 2000 (RA 8972); please answer the following items:</p>
 
-              <ol type="a" class="mb-0">
+              <ol type="a" class="mb-0 pl-3">
                 <li>Are you a member of any indigenous group?
                   <div class="my-1">
                     <input id="isIndigenousYes" type="radio" value="1" <?php echo setActiveItem($isIndigenous, '1', 'checked'); ?> disabled>
