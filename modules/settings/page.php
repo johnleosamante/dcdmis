@@ -1,6 +1,8 @@
 <?php
 // modules/settings/index.php
 include_once('app.php');
+
+messageAlert($showPrompt, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -11,12 +13,12 @@ include_once('app.php');
   <div class="card-body">
     <ul class="nav nav-tabs">
       <li class="nav-item">
-        <a class="nav-link text-secondary active" href="#change-password" data-toggle="tab">Change Password</a>
+        <a class="nav-link text-secondary active" href="#password" data-toggle="tab">Password</a>
       </li>
     </ul>
 
     <div class="tab-content pt-2 px-2">
-      <?php include_once('change-password.php'); ?>
+      <?php include_once('password.php'); ?>
     </div>
   </div>
 </div>

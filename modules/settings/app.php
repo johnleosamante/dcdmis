@@ -5,5 +5,6 @@ $pageTitle = 'Settings';
 if (isset($_POST['change-password'])) {
   $message = 'Password changed';
   $showPrompt = true;
+  $success = true;
 }
 ?>
