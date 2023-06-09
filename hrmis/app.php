@@ -467,6 +467,49 @@ if (isset($_POST['delete-membership'])) {
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
 }
 
+/* OTHER INFORMATION */
+if (isset($_POST['update-other-information'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $hasThirdDegree = sanitize($_POST['has-third-degree']);
+  $hasFourthDegree = sanitize($_POST['has-fourth-degree']);
+  $relatedDetails = sanitize($_POST['related-details']);
+  $wasGuilty = sanitize($_POST['was-guilty']);
+  $guiltyDetails = sanitize($_POST['guilty-details']);
+  $wasCharged = sanitize($_POST['was-charged']);
+  $dateFiled = sanitize($_POST['date-filed']);
+  $caseStatus = sanitize($_POST['case-status']);
+  $wasConvicted = sanitize($_POST['was-convicted']);
+  $convictedDetails = sanitize($_POST['convicted-details']);
+  $wasSeparated = sanitize($_POST['was-separated']);
+  $separatedDetails = sanitize($_POST['separated-details']);
+  $wasCandidate = sanitize($_POST['was-candidate']);
+  $candidateDetails = sanitize($_POST['candidate-details']);
+  $resigned = sanitize($_POST['resigned']);
+  $resignedDetails = sanitize($_POST['resigned-details']);
+  $immigrant = sanitize($_POST['immigrant']);
+  $immigrantCountry = sanitize($_POST['immigrant-country']);
+  $isIndigenous = sanitize($_POST['is-indigenous']);
+  $indigenousSpecify = sanitize($_POST['indigenous-specify']);
+  $isDifferentlyAbled = sanitize($_POST['is-differently-abled']);
+  $differentlyAbledSpecify = sanitize($_POST['differently-abled-specify']);
+  $isSoloParent = sanitize($_POST['is-solo-parent']);
+  $soloParentSpecify = sanitize($_POST['solo-parent-specify']);
+
+  if (numRows(otherInformation($employeeId)) === 0) {
+    createOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
+  } else {
+    updateOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
+  }
+
+  if (mysqli_affected_rows($con) === 1) {
+    $success = true;
+    $message = 'Other Information has been updated successfully!';
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'other-information';
+}
+
 /* REFERENCE */
 if (isset($_POST['save-reference'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
