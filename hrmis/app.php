@@ -466,4 +466,45 @@ if (isset($_POST['delete-membership'])) {
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
 }
+
+/* REFERENCE */
+if (isset($_POST['save-reference'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $referenceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $name = sanitize($_POST['name']);
+  $address = sanitize($_POST['address']);
+  $contact = sanitize($_POST['telephone']);
+
+  if (empty($referenceId)) {
+    createReference($name, $address, $contact, $employeeId);
+
+    $message = 'Reference has been added successfully!';
+  } else {
+    updateReference($name, $address, $contact, $employeeId, $referenceId);
+
+    $message = 'Reference has been updated successfully!';
+  }
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
+}
+
+if (isset($_POST['delete-reference'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $referenceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+
+  deleteReference($employeeId, $referenceId);
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $message = 'Reference has been deleted successfully!';
+    $showPrompt = true;
+  }
+
+  $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
+}
 ?>

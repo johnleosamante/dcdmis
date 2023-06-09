@@ -2,7 +2,13 @@
 // modules/employees/view/reference.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($_SESSION[alias() . '_pds_tab']) && $_SESSION[alias() . '_pds_tab'] === 'reference', 'show active'); ?>" id="reference">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'reference', 'show active'); ?>" id="reference">
+  <?php if ($editMode) : ?>
+    <div class="d-sm-flex justify-content-end my-3">
+      <?php modalButtonSplit(uri() . '/modules/employees/update/update-reference.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Reference', 'primary'); ?>
+    </div>
+  <?php endif; ?>
+
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
@@ -11,11 +17,14 @@
             <th class="align-middle" width="40%">Name</th>
             <th class="align-middle" width="45%">Address</th>
             <th class="align-middle" width="15%">Contact Number</th>
+            <?php if ($editMode) : ?>
+              <th class="align-middle" width="5%">Action</th>
+            <?php endif; ?>
           </tr>
         </thead>
         <tbody>
           <?php
-          $references = references($employee['id']);
+          $references = references($employeeId);
 
           if (numRows($references) > 0) {
             while ($reference = fetchAssoc($references)) : ?>
@@ -23,12 +32,24 @@
                 <td class="align-middle"><?php echo $reference['name']; ?></td>
                 <td class="align-middle"><?php echo toHandleNull($reference['address'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo toHandleNull($reference['telephone'], 'N/A'); ?></td>
+                <?php if ($editMode) : ?>
+                  <td class="align-middle text-capitalize">
+                    <div class="dropdown no-arrow">
+                      <?php dropdownEllipsis(); ?>
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-reference.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Edit', 'fa-edit', 'Edit Reference'); ?>
+                        <div class="dropdown-divider"></div>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-reference.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Delete', 'fa-trash', 'Delete Reference'); ?>
+                      </div>
+                    </div>
+                  </td>
+                <?php endif; ?>
               </tr>
             <?php
             endwhile;
           } else { ?>
             <tr>
-              <td colspan="3" class="align-middle">No data available in table</td>
+              <td colspan="<?php echo $editMode ? '4' : '3'; ?>" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>
