@@ -42,7 +42,7 @@ function toLongDate($date, $default = '') {
 }
 
 function toDatetime($date) {
-  return strtotime($date) ? date('F d, Y', strtotime($date)) . '<br>' . date('h:i:s A', strtotime($date)) : $date;
+  return strtotime($date) ? date('F j, Y', strtotime($date)) . '<br>' . date('h:i:s A', strtotime($date)) : $date;
 }
 
 function toCurrency($value, $currency='&#8369;') {
