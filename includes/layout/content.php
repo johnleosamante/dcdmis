@@ -62,7 +62,7 @@ if (!isset($url) || $url === 'dashboard') {
       $file = 'activity/activity-log';
       break;
     case 'Settings':
-      $file = 'settings/index';
+      $file = 'settings/page';
       break;
     case '404':
     default:
