@@ -2,6 +2,7 @@
 // includes/layout/header-menu.php
 $user = fetchAssoc(employee($userId));
 $displayName = toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true, true);
+$position = fetchAssoc(position($userId))['position'];
 $displayPhoto = uri() . '/' . $user['picture'];
 ?>
 <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
@@ -42,7 +43,10 @@ $displayPhoto = uri() . '/' . $user['picture'];
 
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="<?php echo strtoupper($displayName); ?>">
-        <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo strtoupper($displayName); ?></span>
+        <span class="mr-2 d-none d-md-inline">
+          <div class="text-gray-600 small"><?php echo strtoupper($displayName); ?></div>
+          <div class="text-xs text-gray-500"><?php echo strtoupper($position); ?></div>
+        </span>
         <span class="img-profile rounded-circle overflow-hidden">
           <img src="<?php echo $displayPhoto; ?>" alt="<?php echo $displayName; ?>" width="100%">
         </span>
