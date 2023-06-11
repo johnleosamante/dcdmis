@@ -1,8 +1,11 @@
 <?php
 // include/function.php
 // All custom made general function goes here.
+require_once('config.php');
 
-include_once('config.php');
+$onError = function ($level, $message, $file, $line) {
+  throw new ErrorException($message, 0, $level, $file, $line);
+};
 
 function hashString($string) {
   return sha1($string);
@@ -130,5 +133,5 @@ function getAge($year, $month, $day) {
   return $now->diff($bdate)->y;
 }
 
-include_once('initialization.php');
+require_once('initialization.php');
 ?>

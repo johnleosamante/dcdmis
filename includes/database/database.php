@@ -1,10 +1,12 @@
 <?php
 // include/database/database.php
-$con = connect(HOSTNAME, USER, PASSWORD, DATABASE, PORT);
-
-function connect($hostname, $user, $password, $database, $port) {
-  mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-  return mysqli_connect($hostname, $user, $password, $database, $port);
+try {
+  set_error_handler($onError);
+  $con = mysqli_connect(HOSTNAME, USER, PASSWORD, DATABASE, PORT);
+} catch (Throwable $throwable) {
+  redirect(uri() . '/error');
+} finally {
+  restore_error_handler();
 }
 
 function connection() {
