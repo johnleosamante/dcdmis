@@ -1,7 +1,7 @@
 <?php
 // logout/dialog.php
-include_once('../includes/function.php');
-include_once(root() . '/includes/layout/components.php');
+require_once('../includes/function.php');
+require_once(root() . '/includes/layout/components.php');
 $modalTitle = 'Logout';
 ?>
 

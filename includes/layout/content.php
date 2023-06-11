@@ -1,7 +1,7 @@
 <?php
 // includes/layout/content.php
 if (!isset($url) || $url === 'dashboard') {
-  include_once('dashboard.php');
+  require_once('dashboard.php');
 } else {
   $file = '';
 
@@ -70,6 +70,6 @@ if (!isset($url) || $url === 'dashboard') {
       break;
   }
 
-  include_once(root() . "/modules/{$file}.php");
+  require_once(root() . "/modules/{$file}.php");
 }
 ?>

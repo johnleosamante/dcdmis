@@ -1,13 +1,13 @@
 <?php
 // modules/documents/save-document-dialog.php
-include_once('../../includes/function.php');
-include_once(root() . '/includes/string.php');
-include_once(root() . '/includes/database/database.php');
-include_once(root() . '/includes/database/document.php');
-include_once(root() . '/includes/database/document-purpose.php');
-include_once(root() . '/includes/database/section.php');
-include_once(root() . '/includes/database/school.php');
-include_once(root() . '/includes/layout/components.php');
+require_once('../../includes/function.php');
+require_once(root() . '/includes/string.php');
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/document.php');
+require_once(root() . '/includes/database/document-purpose.php');
+require_once(root() . '/includes/database/section.php');
+require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/layout/components.php');
 
 $documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $documents = documentLog($documentId);

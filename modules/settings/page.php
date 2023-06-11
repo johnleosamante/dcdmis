@@ -1,6 +1,6 @@
 <?php
 // modules/settings/index.php
-include_once('app.php');
+require_once('app.php');
 
 messageAlert($showPrompt, $message, $success);
 ?>
@@ -18,7 +18,7 @@ messageAlert($showPrompt, $message, $success);
     </ul>
 
     <div class="tab-content pt-2 px-2">
-      <?php include_once('password.php'); ?>
+      <?php require_once('password.php'); ?>
     </div>
   </div>
 </div>

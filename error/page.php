@@ -8,7 +8,7 @@
     </div><!-- card-header -->
 
     <div class="card-body text-center">
-      <?php include_once(root() . '/modules/error/' . $file . '.php'); ?>
+      <?php require_once(root() . '/modules/error/' . $file . '.php'); ?>
     </div><!-- .card-body -->
   </div><!-- .card -->
 </div><!-- .col-xl-2 -->

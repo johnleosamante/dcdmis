@@ -1,10 +1,10 @@
 <?php
 // modules/employees/update/update-voluntary-work.php
-include_once('../../../includes/function.php');
-include_once(root() . '/includes/database/database.php');
-include_once(root() . '/includes/database/voluntary-work.php');
-include_once(root() . '/includes/layout/components.php');
-include_once(root() . '/includes/string.php');
+require_once('../../../includes/function.php');
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/voluntary-work.php');
+require_once(root() . '/includes/layout/components.php');
+require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $voluntaryId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;

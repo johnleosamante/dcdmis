@@ -4,7 +4,7 @@ $search = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $employees = employeeSearch($search);
 
 if (numRows($employees) === 0) {
-  include_once(root() . '/modules/error/no-results-found.php');
+  require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
 ?>

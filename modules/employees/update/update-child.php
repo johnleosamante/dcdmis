@@ -1,10 +1,10 @@
 <?php
 // modules/employees/update/update-child.php
-include_once('../../../includes/function.php');
-include_once(root() . '/includes/database/database.php');
-include_once(root() . '/includes/database/children.php');
-include_once(root() . '/includes/layout/components.php');
-include_once(root() . '/includes/string.php');
+require_once('../../../includes/function.php');
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/children.php');
+require_once(root() . '/includes/layout/components.php');
+require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $childId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;

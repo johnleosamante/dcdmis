@@ -1,6 +1,6 @@
 <?php
 // print/index.php
-include_once('../includes/function.php');
+require_once('../includes/function.php');
 
 if (!isset($_SESSION[alias() . '_userId']) || !isset($_SESSION[alias() . '_portal'])) {
   redirect(uri() . '/login');
@@ -12,14 +12,14 @@ $isSchool = $portal === 'school_portal';
 $station = $_SESSION[alias() . '_station'];
 $stationId = $_SESSION[alias() . '_stationId'];
 
-include_once(root() . '/includes/plugin/fpdf/fpdf.php');
-include_once(root() . '/includes/database/database.php');
-include_once(root() . '/includes/database/section.php');
-include_once(root() . '/includes/database/school.php');
-include_once(root() . '/includes/database/district.php');
-include_once(root() . '/includes/database/utility.php');
-include_once(root() . '/includes/string.php');
-include_once(root() . '/includes/plugin/phpqrcode/qrlib.php');
+require_once(root() . '/includes/plugin/fpdf/fpdf.php');
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/section.php');
+require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/database/district.php');
+require_once(root() . '/includes/database/utility.php');
+require_once(root() . '/includes/string.php');
+require_once(root() . '/includes/plugin/phpqrcode/qrlib.php');
 
 foreach ($_GET as $key => $data) {
   $url = $_GET[$key] = decode($data);
@@ -185,7 +185,7 @@ if (!isset($url) || $url === '') {
   $pdf->AddFont('calibri', '', 'calibri.php');
   $pdf->AddFont('calibrib', 'B', 'calibrib.php');
 
-  include_once(root() . "/print/{$file}.php");
+  require_once(root() . "/print/{$file}.php");
 
   $pdf->Output();
 }

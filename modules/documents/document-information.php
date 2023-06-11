@@ -26,7 +26,7 @@ if (numRows($documents) > 0) {
     $documentType = null;
   }
 } else {
-  include_once(root() . '/modules/error/no-results-found.php');
+  require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
 

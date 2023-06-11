@@ -1,8 +1,8 @@
 <?php
 // modules/employees/transfer-employee-dialog.php
-include_once('../../includes/function.php');
-include_once(root() . '/includes/database/database.php');
-include_once(root() . '/includes/database/employee.php');
+require_once('../../includes/function.php');
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/employee.php');
 
 $modal_title = 'Transfer Employee';
 ?>

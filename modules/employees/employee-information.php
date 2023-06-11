@@ -7,7 +7,7 @@ if (numRows($employees) > 0) {
   $employee = fetchAssoc($employees);
   $employeeId = $employee['id'];
 } else {
-  include_once(root() . '/modules/error/no-results-found.php');
+  require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
 
@@ -117,19 +117,19 @@ messageAlert($showPrompt, $message, $success);
 
     <div class="tab-content mt-2">
       <?php
-      include_once(root() . '/modules/employees/view/personal-information.php');
-      include_once(root() . '/modules/employees/view/family-background.php');
-      include_once(root() . '/modules/employees/view/children.php');
-      include_once(root() . '/modules/employees/view/educational-background.php');
-      include_once(root() . '/modules/employees/view/civil-service-eligibility.php');
-      include_once(root() . '/modules/employees/view/work-experience.php');
-      include_once(root() . '/modules/employees/view/voluntary-work.php');
-      include_once(root() . '/modules/employees/view/learning-development.php');
-      include_once(root() . '/modules/employees/view/special-skills.php');
-      include_once(root() . '/modules/employees/view/recognition.php');
-      include_once(root() . '/modules/employees/view/membership.php');
-      include_once(root() . '/modules/employees/view/other-information.php');
-      include_once(root() . '/modules/employees/view/reference.php');
+      require_once(root() . '/modules/employees/view/personal-information.php');
+      require_once(root() . '/modules/employees/view/family-background.php');
+      require_once(root() . '/modules/employees/view/children.php');
+      require_once(root() . '/modules/employees/view/educational-background.php');
+      require_once(root() . '/modules/employees/view/civil-service-eligibility.php');
+      require_once(root() . '/modules/employees/view/work-experience.php');
+      require_once(root() . '/modules/employees/view/voluntary-work.php');
+      require_once(root() . '/modules/employees/view/learning-development.php');
+      require_once(root() . '/modules/employees/view/special-skills.php');
+      require_once(root() . '/modules/employees/view/recognition.php');
+      require_once(root() . '/modules/employees/view/membership.php');
+      require_once(root() . '/modules/employees/view/other-information.php');
+      require_once(root() . '/modules/employees/view/reference.php');
       ?>
     </div><!-- .tab-content -->
   </div><!-- .card-body -->

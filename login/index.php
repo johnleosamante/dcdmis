@@ -1,10 +1,10 @@
 <?php
 // login/index.php
-include_once('../includes/function.php');
-include_once(root() . '/includes/string.php');
-include_once(root() . '/includes/database/database.php');
-include_once(root() . '/includes/database/account.php');
-include_once(root() . '/includes/database/user.php');
-include_once(root() . '/includes/database/school.php');
-include_once(root() . '/includes/layout/theme-page.php');
+require_once('../includes/function.php');
+require_once(root() . '/includes/string.php');
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/account.php');
+require_once(root() . '/includes/database/user.php');
+require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/layout/theme-page.php');
 ?>

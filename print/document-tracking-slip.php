@@ -1,8 +1,8 @@
 <?php
 // print/document-tracking-slip.php
-include_once(root() . '/includes/database/document.php');
-include_once(root() . '/includes/database/employee.php');
-include_once(root() . '/includes/database/position.php');
+require_once(root() . '/includes/database/document.php');
+require_once(root() . '/includes/database/employee.php');
+require_once(root() . '/includes/database/position.php');
 
 $document = fetchAssoc(documentOrigin($code));
 $dateCreated = toDate($document['datetime'], 'F d, Y');

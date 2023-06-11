@@ -1,18 +1,18 @@
 <?php
 // includes/layout/header.php
-include_once('app.php');
+require_once('app.php');
 
 $url = isset($_GET['v']) ? sanitize(decode($_GET['v'])) : null;
 $page = isset($url) ? $url . ' | ' . $appTitle : $appTitle;
 
-include_once(root() . '/includes/layout/components.php');
+require_once(root() . '/includes/layout/components.php');
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <?php include_once(root() . '/includes/layout/header.php'); ?>
+  <?php require_once(root() . '/includes/layout/header.php'); ?>
   <link rel="stylesheet" href="<?php echo uri(); ?>/assets/vendor/datatables/dataTables.bootstrap4.min.css">
 </head>
 
@@ -28,7 +28,7 @@ include_once(root() . '/includes/layout/components.php');
       <?php
       sidebarDivider();
       sidebarMenuItem(uri() . '/' . $activeApp, 'Dashboard', 'fa-tachometer-alt', !isset($url));
-      include_once('sidebar-menu.php');
+      require_once('sidebar-menu.php');
       sidebarDivider('3', true);
       sidebarToggle();
       ?>
@@ -36,14 +36,14 @@ include_once(root() . '/includes/layout/components.php');
 
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
-        <?php include_once(root() . '/includes/layout/header-menu.php'); ?>
+        <?php require_once(root() . '/includes/layout/header-menu.php'); ?>
 
         <div class="container-fluid my-4">
-          <?php include_once(root() . '/includes/layout/content.php'); ?>
+          <?php require_once(root() . '/includes/layout/content.php'); ?>
         </div><!-- .container-fluid -->
       </div><!-- #content -->
 
-      <?php include_once(root() . '/includes/layout/footer.php'); ?>
+      <?php require_once(root() . '/includes/layout/footer.php'); ?>
     </div><!-- #content-wrapper -->
   </div><!-- #wrapper -->
 
