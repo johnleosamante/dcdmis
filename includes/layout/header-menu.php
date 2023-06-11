@@ -65,7 +65,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
   </ul>
 </nav>
 
-<div class="banner text-uppercase text-gray-700">
+<div class="background-cover banner text-uppercase text-gray-700">
   <?php
   $schools = schoolDetailsById($stationId);
   if (numRows($schools)) {

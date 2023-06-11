@@ -39,8 +39,6 @@ input::-ms-clear, input::-ms-reveal {
 }
 
 .banner {
-  background: url('../img/background.png') no-repeat top center fixed;
-  background-size: cover;
   padding: 1.5rem 1.5rem 4.5rem;
   width: 100%;
   border-radius: 0 0 20px 20px;
