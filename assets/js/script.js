@@ -32,9 +32,17 @@ function elementExist(element) {
   return typeof(element) !== 'undefined' && element !== null;
 }
 
+let oldToggle = document.getElementById('old-eye-toggle');
+if (elementExist(oldToggle)) {
+  oldToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    eyeToggle('old-password', 'old-eye');
+  });
+}
+
 let toggle = document.getElementById('eye-toggle');
 if (elementExist(toggle)) {
-  document.getElementById('eye-toggle').addEventListener('click', (e) => {
+  toggle.addEventListener('click', (e) => {
     e.preventDefault();
     eyeToggle('password', 'eye');
   });
@@ -42,9 +50,28 @@ if (elementExist(toggle)) {
 
 let confirmToggle = document.getElementById('eye-confirm-toggle');
 if (elementExist(confirmToggle)) {
-  document.getElementById('eye-confirm-toggle').addEventListener('click', (e) => {
+  confirmToggle.addEventListener('click', (e) => {
     e.preventDefault();
     eyeToggle('password-confirm', 'eye-confirm');
+  });
+}
+
+let generateToggle = document.getElementById('generate-toggle');
+if (elementExist(generateToggle)) {
+  generateToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    let strongPassword = false;
+    let length = generateRandomNumber(10, 16);
+    let randomPassword = '';
+
+    while(!strongPassword) {
+      randomPassword = generateRandomString(length);
+      strongPassword = checkStringStrength(randomPassword);
+    }
+
+    document.getElementById('password').value = randomPassword;
+    document.getElementById('password-confirm').value = randomPassword;
+    document.getElementById('generate-password').value = randomPassword;
   });
 }
 
@@ -65,4 +92,48 @@ function loadData(href, id = 'modal') {
 
   xmlhttp.open('GET', href);
   xmlhttp.send();
+}
+
+function generateRandomString(length) {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=';
+
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return result;
+}
+
+function generateRandomNumber(min, max) {
+  const randomDecimal = Math.random();
+  const randomInRange = randomDecimal * (max - min + 1) + min;
+  const randomInteger = Math.floor(randomInRange);
+
+  return randomInteger;
+}
+
+function checkStringStrength(str) {
+  const uppercaseRegex = /[A-Z]/;
+  const lowercaseRegex = /[a-z]/;
+  const numberRegex = /[0-9]/;
+  const specialRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+
+  if (!uppercaseRegex.test(str)) {
+    return false;
+  }
+
+  if (!lowercaseRegex.test(str)) {
+    return false;
+  }
+
+  if (!numberRegex.test(str)) {
+    return false;
+  }
+
+  if (!specialRegex.test(str)) {
+    return false;
+  }
+
+  return true;
 }
