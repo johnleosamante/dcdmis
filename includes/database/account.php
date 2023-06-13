@@ -13,4 +13,8 @@ function account($email, $password=null) {
 
   return query($sql);
 }
+
+function updateAccountPassword($email, $password) {
+  nonQuery("UPDATE tbl_teacher_account SET Teacher_Password='{$password}' WHERE Teacher_TIN='{$email}' LIMIT 1;");
+}
 ?>
