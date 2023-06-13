@@ -2,6 +2,19 @@
 // modules/settings/change-password.php
 ?>
 <div class="tab-pane fade show active" id="change-password">
+  <div class="row">
+    <div class="col">
+      <div class="my-2 p-3 rounded alert-info text-left d-flex">
+        <span class="d-inline-block m-2">
+          <i class="fas fa-info fa-2x"></i>
+        </span>
+        <span class="ml-2 d-inline-block">
+          To help secure your account, please use atleast one (1) uppercase, atleast one (1) lowercase, atleast one (1) number and atleast one (1) special character to your password that should be atleast ten (10) characters long. Alternatively, you can click the generate button to get a password you can use instead.
+        </span>
+      </div>
+    </div>
+  </div>
+
   <form class="py-2" action="" method="post">
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
@@ -10,8 +23,8 @@
           <div class="input-group">
             <input id="old-password" name="old-password" type="password" class="form-control border-right-0" required>
             <div class="input-group-append">
-              <button type="button" id="eye-toggle-old" class="input-group-text border-left-0 bg-white">
-                <i id="eye" class="small fas fa-eye fa-sm"></i>
+              <button type="button" id="old-eye-toggle" class="input-group-text border-left-0 bg-white">
+                <i id="old-eye" class="small fas fa-eye fa-sm"></i>
               </button>
             </div>
           </div>
@@ -38,12 +51,28 @@
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <div class="form-group">
-          <label for="confirm-new-password" class="mb-0">Retype New Password:</label>
+          <label for="password-confirm" class="mb-0">Retype New Password:</label>
           <div class="input-group">
-            <input id="confirm-new-password" name="confirm-new-password" type="password" class="form-control border-right-0" required>
+            <input id="password-confirm" name="password-confirm" type="password" class="form-control border-right-0" required>
             <div class="input-group-append">
-              <button type="button" id="eye-toggle" class="input-group-text border-left-0 bg-white">
-                <i id="eye" class="small fas fa-eye fa-sm"></i>
+              <button type="button" id="eye-confirm-toggle" class="input-group-text border-left-0 bg-white">
+                <i id="eye-confirm" class="small fas fa-eye fa-sm"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
+        <div class="form-group">
+          <label for="generate-password" class="mb-0">Generate Password:</label>
+          <div class="input-group">
+            <input id="generate-password" name="generate-password" type="text" class="form-control" required>
+            <div class="input-group-append">
+              <button type="button" id="generate-toggle" class="input-group-text">
+                Generate
               </button>
             </div>
           </div>
