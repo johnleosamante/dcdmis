@@ -30,6 +30,11 @@ input::-ms-clear, input::-ms-reveal {
   background-color: #fff;
 }
 
+.photo-2x {
+  width: 8rem;
+  height: 8rem;
+}
+
 .text-mars {
   color: #02a3fe;
 }
