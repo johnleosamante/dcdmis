@@ -69,6 +69,6 @@ function checkPasswordStrength($password) {
   $hasLowercase = preg_match('/[a-z]/', $password);
   $hasNumber = preg_match('/\d/', $password);
   $hasSpecialCharacter = preg_match('/[^a-zA-Z\d]/', $password);
-  return !$hasUppercase || !$hasLowercase || !$hasNumber || !$hasSpecialCharacter;
+  return $hasUppercase && $hasLowercase && $hasNumber && $hasSpecialCharacter;
 }
 ?>
