@@ -33,8 +33,8 @@ $page_title = 'Archived Employees';
           ?>
             <tr class="text-uppercase">
               <td class="align-middle">
-                <span class="employee-photo rounded-circle overflow-hidden">
-                  <img width="100%" src="<?php echo $photo; ?>" alt="<?php echo $employee_name; ?>">
+                <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                  <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employee_name; ?>">
                 </span>
               </td>
               <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>

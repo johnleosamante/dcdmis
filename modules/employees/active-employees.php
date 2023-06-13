@@ -34,8 +34,8 @@ $page_title = 'Active Employees';
           ?>
             <tr class="text-uppercase">
               <td class="align-middle">
-                <span class="employee-photo rounded-circle overflow-hidden">
-                  <img width="100%" src="<?php echo $photo; ?>" alt="<?php echo $employee_name; ?>">
+                <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                  <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employee_name; ?>">
                 </span>
               </td>
               <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
@@ -51,10 +51,10 @@ $page_title = 'Active Employees';
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php
                     linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
-                    linkDropdownItem(customUri('hrmis', 'Transfer Employee', $row['id']), 'Transfer', 'fa-share', 'Transfer Employee');
+                    modalDropdownItem(uri() . '/modules/employees/transfer-employee-dialog.php?id=' . cipher($row['id']), 'Transfer', 'fa-share', 'Transfer Employee');
                     ?>
                     <div class="dropdown-divider"></div>
-                    <?php linkDropdownItem(customUri('hrmis', 'Remove Employee', $row['id']), 'Remove', 'fa-times-circle', 'Remove Employee', 'text-danger', false); ?>
+                    <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee'); ?>
                   </div>
                 </div>
               </td>

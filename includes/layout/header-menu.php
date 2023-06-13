@@ -47,8 +47,8 @@ $displayPhoto = uri() . '/' . $user['picture'];
           <div class="text-gray-600 small"><?php echo strtoupper($displayName); ?></div>
           <div class="text-xs text-gray-500"><?php echo strtoupper($position); ?></div>
         </span>
-        <span class="img-profile rounded-circle overflow-hidden">
-          <img src="<?php echo $displayPhoto; ?>" alt="<?php echo $displayName; ?>" width="100%">
+        <span class="d-flex justify-content-center align-middle img-profile rounded-circle overflow-hidden">
+          <img src="<?php echo $displayPhoto; ?>" alt="<?php echo $displayName; ?>" height="100%">
         </span>
       </a>
 
