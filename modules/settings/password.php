@@ -19,9 +19,9 @@
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <div class="form-group">
-          <label for="old-password" class="mb-0">Old Password:</label>
+          <label for="old-password" class="mb-0">Old Password: <?php showAsterisk(); ?></label>
           <div class="input-group">
-            <input id="old-password" name="old-password" type="password" class="form-control border-right-0" required>
+            <input id="old-password" name="old-password" type="password" class="form-control border-right-0" value="<?php echo $oldPassword; ?>" required>
             <div class="input-group-append">
               <button type="button" id="old-eye-toggle" class="input-group-text border-left-0 bg-white">
                 <i id="old-eye" class="small fas fa-eye fa-sm"></i>
@@ -35,9 +35,9 @@
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <div class="form-group">
-          <label for="password" class="mb-0">New Password:</label>
+          <label for="password" class="mb-0">New Password: <?php showAsterisk(); ?></label>
           <div class="input-group">
-            <input id="password" name="password" type="password" class="form-control border-right-0" required>
+            <input id="password" name="password" type="password" class="form-control border-right-0" value="<?php echo $password; ?>" required>
             <div class="input-group-append">
               <button type="button" id="eye-toggle" class="input-group-text border-left-0 bg-white">
                 <i id="eye" class="small fas fa-eye fa-sm"></i>
@@ -51,9 +51,9 @@
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <div class="form-group">
-          <label for="password-confirm" class="mb-0">Retype New Password:</label>
+          <label for="password-confirm" class="mb-0">Retype New Password: <?php showAsterisk(); ?></label>
           <div class="input-group">
-            <input id="password-confirm" name="password-confirm" type="password" class="form-control border-right-0" required>
+            <input id="password-confirm" name="password-confirm" type="password" class="form-control border-right-0" value="<?php echo $passwordConfirm; ?>" required>
             <div class="input-group-append">
               <button type="button" id="eye-confirm-toggle" class="input-group-text border-left-0 bg-white">
                 <i id="eye-confirm" class="small fas fa-eye fa-sm"></i>
@@ -69,7 +69,7 @@
         <div class="form-group">
           <label for="generate-password" class="mb-0">Generate Password:</label>
           <div class="input-group">
-            <input id="generate-password" name="generate-password" type="text" class="form-control" required>
+            <input id="generate-password" name="generate-password" type="text" class="form-control" value="<?php echo $generatePassword; ?>">
             <div class="input-group-append">
               <button type="button" id="generate-toggle" class="input-group-text">
                 Generate
