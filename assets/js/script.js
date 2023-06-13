@@ -65,8 +65,8 @@ if (elementExist(generateToggle)) {
     let randomPassword = '';
 
     while(!strongPassword) {
-      randomPassword = generateRandomString(length);
-      strongPassword = checkStringStrength(randomPassword);
+      randomPassword = generateRandomPassword(length);
+      strongPassword = checkPasswordStrength(randomPassword);
     }
 
     document.getElementById('password').value = randomPassword;
@@ -94,7 +94,7 @@ function loadData(href, id = 'modal') {
   xmlhttp.send();
 }
 
-function generateRandomString(length) {
+function generateRandomPassword(length) {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=';
 
   let result = '';
@@ -113,7 +113,7 @@ function generateRandomNumber(min, max) {
   return randomInteger;
 }
 
-function checkStringStrength(str) {
+function checkPasswordStrength(str) {
   const uppercaseRegex = /[A-Z]/;
   const lowercaseRegex = /[a-z]/;
   const numberRegex = /[0-9]/;
