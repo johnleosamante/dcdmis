@@ -1,6 +1,7 @@
 <?php
 // modules/employees/celebrant-employees.php
 $now = date('Y-m-d');
+messageAlert($showPrompt, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -87,10 +88,10 @@ $now = date('Y-m-d');
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                               <?php
                               linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
-                              linkDropdownItem(customUri('hrmis', 'Transfer Employee', $row['id']), 'Transfer', 'fa-share', 'Transfer Employee'); ?>
-                              <div class="dropdown-divider"></div>
-                              <?php linkDropdownItem(customUri('hrmis', 'Remove Employee', $row['id']), 'Remove', 'fa-times-circle', 'Remove Employee', 'text-danger', false);
+                              modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
                               ?>
+                              <div class="dropdown-divider"></div>
+                              <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee'); ?>
                             </div>
                           </div>
                         </td>

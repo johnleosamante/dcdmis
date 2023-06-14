@@ -7,6 +7,8 @@ if (numRows($employees) === 0) {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
+
+messageAlert($showPrompt, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -60,7 +62,11 @@ if (numRows($employees) === 0) {
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php
                     linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
-                    ?>
+                    if ($status === 'active') {
+                      modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee'); ?>
+                      <div class="dropdown-divider"></div>
+                      <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
+                    } ?>
                   </div>
                 </div>
               </td>
