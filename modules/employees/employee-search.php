@@ -32,17 +32,17 @@ if (numRows($employees) === 0) {
         <tbody>
           <?php
           while ($row = fetchArray($employees)) :
-            $employee_name =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
+            $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
             $photo = uri() . '/' . $row['picture'];
           ?>
             <tr class="text-uppercase">
               <td class="align-middle">
                 <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                  <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employee_name; ?>">
+                  <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
                 </span>
               </td>
               <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
-              <td class="align-middle text-left"><?php echo $employee_name; ?></td>
+              <td class="align-middle text-left"><?php echo $employeeName; ?></td>
               <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle">
                 <?php

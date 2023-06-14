@@ -154,11 +154,11 @@
 
           <div class=" col-lg-2">
             <div class="form-group">
-              <label for="blood_type" class="mb-0">Blood Type: <?php showAsterisk($editMode); ?></label>
+              <label for="blood-type" class="mb-0">Blood Type: <?php showAsterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
-                <input id="blood_type" type="text" class="form-control" value="<?php echo $employee['blood_type']; ?>" readonly>
+                <input id="blood-type" type="text" class="form-control" value="<?php echo $employee['blood_type']; ?>" readonly>
               <?php else : ?>
-                <select name="blood_type" id="blood_type" class="form-control" required>
+                <select name="blood-type" id="blood-type" class="form-control" required>
                   <option value="A+" <?php echo setOptionSelected('A+', $employee['blood_type']); ?>>A+</option>
                   <option value="A-" <?php echo setOptionSelected('A-', $employee['blood_type']); ?>>A-</option>
                   <option value="B+" <?php echo setOptionSelected('B+', $employee['blood_type']); ?>>B+</option>
@@ -211,8 +211,8 @@
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="agency_id" class="mb-0">Agency Employee No.:</label>
-              <input id="agency_id" name="agency_id" type="text" class="form-control" value="<?php echo $employee['agency_id']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
+              <label for="agency-id" class="mb-0">Agency Employee No.:</label>
+              <input id="agency-id" name="agency-id" type="text" class="form-control" value="<?php echo $employee['agency_id']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
         </div>

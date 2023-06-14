@@ -1,11 +1,10 @@
 <?php
 // modules/employees/active-employees.php
-$page_title = 'Active Employees';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitleWithLink($page_title, uri() . '/hrmis'); ?>
+    <?php contentTitleWithLink('Active Employees', uri() . '/hrmis'); ?>
   </div>
 
   <div class="card-body">
@@ -29,17 +28,17 @@ $page_title = 'Active Employees';
           <?php
           $query = activeEmployees();
           while ($row = fetchArray($query)) :
-            $employee_name =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
+            $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
             $photo = uri() . '/' . $row['picture'];
           ?>
             <tr class="text-uppercase">
               <td class="align-middle">
                 <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                  <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employee_name; ?>">
+                  <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
                 </span>
               </td>
               <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
-              <td class="align-middle text-left"><?php echo $employee_name; ?></td>
+              <td class="align-middle text-left"><?php echo $employeeName; ?></td>
               <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
               <td class="align-middle"><?php echo getAge($row['year'], $row['month'], $row['day']); ?></td>

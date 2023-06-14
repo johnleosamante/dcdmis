@@ -13,8 +13,8 @@ function createExperience($from, $to, $isPresent, $position, $organization, $sal
   nonQuery("INSERT INTO work_experience (`From`, `To`, ispresent, `Position_Title`, `Organization`, Monthly_Salary, Salary_Grade, Job_Status, Goverment, Emp_ID) VALUES ('{$from}', '{$to}', '{$isPresent}', '{$position}', '{$organization}', '{$salary}', '{$sg}', '{$status}', '{$isGovernment}', '{$id}');");
 }
 
-function updateExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isgovernment, $id, $no) {
-  nonQuery("UPDATE work_experience SET `From`='{$from}', `To`='{$to}', ispresent='{$isPresent}', `Position_Title`='{$position}', `Organization`='{$organization}', Monthly_Salary='{$salary}', Salary_Grade='{$sg}', Job_Status='{$status}', Goverment='{$isgovernment}' WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
+function updateExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $id, $no) {
+  nonQuery("UPDATE work_experience SET `From`='{$from}', `To`='{$to}', ispresent='{$isPresent}', `Position_Title`='{$position}', `Organization`='{$organization}', Monthly_Salary='{$salary}', Salary_Grade='{$sg}', Job_Status='{$status}', Goverment='{$isGovernment}' WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
 function deleteExperience($id, $no) {
