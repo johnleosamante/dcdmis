@@ -1,11 +1,10 @@
 <?php
 // modules/employees/active-employees.php
-$page_title = 'Retirable Employees';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitleWithLink($page_title, uri() . '/hrmis'); ?>
+    <?php contentTitleWithLink('Retirable Employees', uri() . '/hrmis'); ?>
   </div>
 
   <div class="card-body">

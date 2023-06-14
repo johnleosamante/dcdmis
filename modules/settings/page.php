@@ -7,7 +7,7 @@ messageAlert($showPrompt, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitle($pageTitle); ?>
+    <?php contentTitle('Settings'); ?>
   </div>
 
   <div class="card-body">

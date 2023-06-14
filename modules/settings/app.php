@@ -1,6 +1,5 @@
 <?php
 // modules/settings/app.php
-$pageTitle = 'Settings';
 $oldPassword = $password = $passwordConfirm = $generatePassword = null;
 
 if (isset($_POST['update-password'])) {

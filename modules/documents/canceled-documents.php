@@ -1,11 +1,10 @@
 <?php
 // modules/documents/completed-documents.php
-$pageTitle = 'Canceled Documents';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitleWithLink($pageTitle, uri() . '/dts'); ?>
+    <?php contentTitleWithLink('Canceled Documents', uri() . '/dts'); ?>
   </div>
 
   <div class="card-body">

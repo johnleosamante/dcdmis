@@ -1,11 +1,10 @@
 <?php
 // modules/documents/received-documents.php
-$pageTitle = 'Received Documents';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitleWithLink($pageTitle, uri() . '/dts'); ?>
+    <?php contentTitleWithLink('Received Documents', uri() . '/dts'); ?>
   </div>
 
   <div class="card-body">
