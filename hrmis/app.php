@@ -550,4 +550,28 @@ if (isset($_POST['delete-reference'])) {
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
 }
+
+/* REASSIGN EMPLOYEE */
+if (isset($_POST['reassign-employee'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $positionId = sanitize($_POST['position']);
+  $eStationId = sanitize($_POST['assignment']);
+  $date = sanitize($_POST['assignment-date']);
+
+  if (numRows(validateDeployment($eStationId, $positionId, $employeeId)) === 0) {
+    createDeployment($date, $eStationId, $positionId, $employeeId);
+  }
+
+  if (numRows(station($employeeId)) === 0) {
+    createStation($date, $eStationId, $positionId, $employeeId);
+  } else {
+    updateStation($date, $eStationId, $positionId, $employeeId);
+  }
+
+  if (affectedRows() === 1) {
+    $success = true;
+    $message = 'Employee has been successfully reassigned to new assignment!';
+    $showPrompt = true;
+  }
+}
 ?>
