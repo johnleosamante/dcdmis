@@ -17,6 +17,8 @@ if (!is_dir('../uploads/images/' . $employeeId)) {
 
 $editMode = $url === 'Edit Employee Information';
 $employeePhoto = '';
+
+messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">

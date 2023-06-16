@@ -1,5 +1,7 @@
 <?php
 // dts/dashboard.php
+messageAlert($showAlert, $message, $success);
+
 contentTitleWithModal('Dashboard', uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus');
 ?>
 

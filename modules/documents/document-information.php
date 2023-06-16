@@ -29,6 +29,8 @@ if (numRows($documents) > 0) {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
+
+messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">

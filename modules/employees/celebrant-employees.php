@@ -1,6 +1,8 @@
 <?php
 // modules/employees/celebrant-employees.php
 $now = date('Y-m-d');
+
+messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">

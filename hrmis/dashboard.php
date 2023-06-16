@@ -1,5 +1,7 @@
 <?php
 // dts/dashboard.php
+messageAlert($showAlert, $message, $success);
+
 contentTitle('Dashboard');
 ?>
 
