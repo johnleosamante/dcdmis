@@ -3,7 +3,7 @@
 // tbl_job
 // tbl_station
 function position($id) {
-  return query("SELECT tbl_station.Emp_ID AS `user`, tbl_station.Emp_Position AS position_id, tbl_job.Job_description AS `position`, tbl_station.Emp_Station AS station_id, tbl_school.SchoolName AS station FROM (`tbl_station` INNER JOIN tbl_job ON tbl_job.Job_code = tbl_station.Emp_Position) INNER JOIN `tbl_school` ON tbl_station.Emp_Station=tbl_school.SchoolID WHERE tbl_station.Emp_ID='{$id}' ORDER BY `position` DESC LIMIT 1;");
+  return query("SELECT tbl_station.Emp_ID AS `user`, tbl_station.Emp_DOA AS `date`, tbl_station.Emp_Position AS position_id, tbl_job.Job_description AS `position`, tbl_station.Emp_Station AS station_id, tbl_school.SchoolName AS station FROM (`tbl_station` INNER JOIN tbl_job ON tbl_job.Job_code = tbl_station.Emp_Position) INNER JOIN `tbl_school` ON tbl_station.Emp_Station=tbl_school.SchoolID WHERE tbl_station.Emp_ID='{$id}' ORDER BY `position` DESC LIMIT 1;");
 }
 
 function positions($id=null) {
