@@ -34,13 +34,19 @@ function roundPill($text, $bgColor='primary', $textColor='light') {
       $bgColor = 'success';
       break;
     case 'transferred':
-    case 'resigned':
-      $bgColor = 'warning';
+      $bgColor = 'info';
       break;
+    case 'suspended':
+      $bgColor = 'warning';
+      $textColor = 'secondary';
+      break;
+    case 'resigned':
     case 'retired':
+    case 'dismissed':
+      $bgColor = 'danger';
+      break;
     case 'deceased':
-    case 'none':
-      $bgcolor = 'danger';
+      $bgColor = 'dark';
       break;
     default:
       $bgColor = 'secondary';
