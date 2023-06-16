@@ -41,37 +41,22 @@
               <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle">
                 <?php
-                $color = null;
                 $status = strtolower($row['status']);
 
-                switch ($status) {
-                  case 'transferred':
-                  case 'resigned':
-                    $color = 'warning';
-                    break;
-                  case 'retired':
-                  case 'deceased':
-                    $color = 'danger';
-                    break;
-                  default:
-                    $color = 'secondary';
-                    break;
-                }
-
-                roundPill($row['status'], $color);
+                roundPill($status);
                 ?>
               </td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetchAssoc(schoolById($row['station']))['name']; ?></td>
               <td class="align-middle text-capitalize">
-                <div class="dropdown no-arrow">
-                  <?php dropdownEllipsis(); ?>
-                  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                    <?php
-                    linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
-                    ?>
+                <?php if ($status !== 'duplicate') : ?>
+                  <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis(); ?>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                      <?php linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee'); ?>
+                    </div>
                   </div>
-                </div>
+                <?php endif; ?>
               </td>
             </tr>
           <?php endwhile; ?>
