@@ -18,12 +18,14 @@ if (numRows($employees) > 0) {
   $employeeId = $employee['id'];
   $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
   $positions = fetchAssoc(position($employeeId));
+  $doa = $positions['date'];
   $stationId = $positions['station_id'];
   $station = $positions['station'];
   $positionId = $positions['position_id'];
   $position = $positions['position'];
   $picture = uri() . '/' . $employee['picture'];
   $modalTitle = 'Reassign Employee';
+  $hasEmployee = true;
 }
 ?>
 
@@ -58,16 +60,16 @@ if (numRows($employees) > 0) {
             <label for="assignment" class="mb-0">Place of Assignment</label>
             <select id="assignment" name="assignment" class="form-control" required>
               <option value="">Select place of assignment...</option>
-              <?php $assignments = schools();
+              <?php $assignments = schoolsExcept($stationId);
               while ($assignment = fetchArray($assignments)) : ?>
-                <option value="<?php echo $assignment['id']; ?>" <?php echo setOptionSelected($assignment['id'], $stationId); ?>><?php echo $assignment['name']; ?></option>
+                <option value="<?php echo $assignment['id']; ?>"><?php echo $assignment['name']; ?></option>
               <?php endwhile; ?>
             </select>
           </div>
 
           <div class="form-group mb-0">
             <label for="assignment-date" class="mb-0">Date of Assignment</label>
-            <input class="form-control" type="date" id="assignment-date" name="assignment-date" value="<?php echo date('Y-m-d'); ?>" required>
+            <input class="form-control" type="date" id="assignment-date" name="assignment-date" value="<?php echo toDate($doa, 'Y-m-d', date('Y-m-d')); ?>" required>
           </div>
         <?php } else {
           missingAlert($modalTitle);
