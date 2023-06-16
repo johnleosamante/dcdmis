@@ -1,7 +1,5 @@
 <?php
 // includes/layout/content.php
-messageAlert($showAlert, $message, $success);
-
 if (!isset($url) || $url === 'dashboard') {
   require_once('dashboard.php');
 } else {
