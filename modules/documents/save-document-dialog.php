@@ -61,7 +61,7 @@ if (numRows($documents) > 0) {
           <?php endif; ?>
 
           <div class="form-group">
-            <label for="description" class="mb-0">Description <?php showAsterisk($station === $document['from']); ?></label>
+            <label for="description" class="mb-0">Description <?php showAsterisk($isDescriptionEditable); ?></label>
             <textarea id="description" name="description" class="form-control" rows="3" placeholder="Type description..." <?php echo $attribute; ?> required><?php echo $description; ?></textarea>
           </div>
 
