@@ -574,4 +574,21 @@ if (isset($_POST['reassign-employee'])) {
     $showAlert = true;
   }
 }
+
+/* REMOVE EMPLOYEE */
+if (isset($_POST['remove-employee'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $reason = sanitize($_POST['reason']);
+
+  if (empty($employeeId) || empty($reason)) {
+    return;
+  }
+
+  if (numRows(employee($employeeId)) > 0) {
+    updateEmployeeStatus($reason, $employeeId);
+    $success = true;
+    $message = 'Employee has been successfully removed from the active employee list!';
+    $showAlert = true;
+  }
+}
 ?>
