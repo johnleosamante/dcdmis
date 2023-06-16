@@ -34,7 +34,7 @@ if (isset($skillId)) {
           <input id="skill" type="text" name="skill" class="form-control" required value="<?php echo $skill; ?>">
         </div>
 
-        <div class="text-danger mb-0">* Required field</div>
+        <?php requiredLegend(0); ?>
       </div>
 
       <div class="modal-footer">

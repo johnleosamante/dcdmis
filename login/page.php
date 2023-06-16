@@ -11,7 +11,7 @@
       <?php
       displayLogo(120, 120, '3', uri(), title());
 
-      messageAlert($showPrompt, $message, $success);
+      messageAlert($showAlert, $message, $success);
       ?>
 
       <form action="" method="POST" class="text-left">

@@ -119,7 +119,7 @@ if (isset($experienceId)) {
           </div>
         </div>
 
-        <div class="text-danger mb-0">* Required field</div>
+        <?php requiredLegend(0); ?>
       </div><!-- .modal-body -->
 
       <div class="modal-footer">

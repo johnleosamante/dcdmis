@@ -51,7 +51,7 @@ if (numRows($documents) > 0) {
           </div>
 
           <div class="form-group">
-            <label for="destination" class="mb-0">Destination</label>
+            <label for="destination" class="mb-0">Destination <?php showAsterisk(); ?></label>
             <?php if (!$forRelease) { ?>
               <select id="destination" name="destination" class="form-control" required>
                 <option value="">Select destination...</option>
@@ -75,7 +75,7 @@ if (numRows($documents) > 0) {
           </div>
 
           <div class="form-group">
-            <label for="purpose" class="mb-0">Purpose</label>
+            <label for="purpose" class="mb-0">Purpose <?php showAsterisk(); ?></label>
             <?php if (!$forRelease) : ?>
               <select id="purpose" name="purpose" class="form-control" required>
                 <option value="">Select purpose...</option>
@@ -90,10 +90,12 @@ if (numRows($documents) > 0) {
             <?php endif; ?>
           </div>
 
-          <div class="form-group mb-0">
-            <label for="details" class="mb-0">Additional details (optional)</label>
+          <div class="form-group">
+            <label for="details" class="mb-0">Additional details</label>
             <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."><?php echo $details; ?></textarea>
           </div>
+
+          <?php requiredLegend(0); ?>
         <?php } else {
           missingAlert($modalTitle);
         } ?>

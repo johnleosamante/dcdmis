@@ -34,7 +34,7 @@ if (isset($recognitionId)) {
           <input id="recognition" type="text" name="recognition" class="form-control" required value="<?php echo $recognition; ?>">
         </div>
 
-        <div class="text-danger mb-0">* Required field</div>
+        <?php requiredLegend(0); ?>
       </div>
 
       <div class="modal-footer">

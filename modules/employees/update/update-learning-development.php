@@ -77,7 +77,7 @@ if (isset($learningId)) {
           <input id="sponsor" type="text" name="sponsor" class="form-control" required value="<?php echo $sponsor; ?>">
         </div>
 
-        <div class="text-danger mb-0">* Required field</div>
+        <?php requiredLegend(0); ?>
       </div><!-- .modal-body -->
 
       <div class="modal-footer">

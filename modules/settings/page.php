@@ -1,8 +1,6 @@
 <?php
 // modules/settings/index.php
 require_once('app.php');
-
-messageAlert($showPrompt, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">

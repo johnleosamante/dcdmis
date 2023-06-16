@@ -34,7 +34,7 @@ if (isset($membershipId)) {
           <input id="membership" type="text" name="membership" class="form-control" required value="<?php echo $membership; ?>">
         </div>
 
-        <div class="text-danger mb-0">* Required field</div>
+        <?php requiredLegend(0); ?>
       </div>
 
       <div class="modal-footer">

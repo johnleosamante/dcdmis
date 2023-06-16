@@ -3,7 +3,7 @@
 $oldPassword = $password = $passwordConfirm = $generatePassword = null;
 
 if (isset($_POST['update-password'])) {
-  $showPrompt = true;
+  $showAlert = true;
   $success = false;
   $oldPassword = sanitize($_POST['old-password']);
   $password = sanitize($_POST['password']);

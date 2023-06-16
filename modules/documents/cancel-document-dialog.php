@@ -39,10 +39,12 @@ if (numRows($documents) > 0) {
             <textarea id="description" class="form-control text-uppercase" rows="3" disabled><?php echo $description; ?></textarea>
           </div>
 
-          <div class="form-group mb-0">
-            <label for="remarks" class="mb-0">Reason (required)</label>
-            <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Reason..." required></textarea>
+          <div class="form-group">
+            <label for="remarks" class="mb-0">Reason <?php showAsterisk(); ?></label>
+            <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Type reason..." required></textarea>
           </div>
+
+          <?php requiredLegend(0); ?>
         <?php } else {
           missingAlert($modalTitle);
         } ?>

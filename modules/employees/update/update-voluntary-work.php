@@ -75,7 +75,7 @@ if (isset($voluntaryId)) {
           <input id="position" type="text" name="position" class="form-control" required value="<?php echo $position; ?>">
         </div>
 
-        <div class="text-danger mb-0">* Required field</div>
+        <?php requiredLegend(0); ?>
       </div>
 
       <div class="modal-footer">

@@ -386,7 +386,7 @@
         </div>
 
         <?php if ($editMode) : ?>
-          <div class="text-danger mb-2">* Required field</div>
+          <?php requiredLegend(); ?>
 
           <div class="form-group mb-3">
             <input type="hidden" name="image-verifier" value="<?php echo cipher($employee['picture']); ?>">

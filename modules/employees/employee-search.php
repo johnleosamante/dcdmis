@@ -7,8 +7,6 @@ if (numRows($employees) === 0) {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
-
-messageAlert($showPrompt, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">

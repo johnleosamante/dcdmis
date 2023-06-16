@@ -23,7 +23,7 @@ $activeTab = isset($_SESSION[alias() . '_activeTab']) ? $_SESSION[alias() . '_ac
 $isSchoolPortal = $portal === 'school_portal'; // DTS specific
 $isRecordsPortal = $portal === 'record_portal'; // DTS specific
 $page = $appTitle = null;
-$showPrompt = false;
+$showAlert = false;
 $message = null;
 $success = true;
 ?>

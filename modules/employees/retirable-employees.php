@@ -1,6 +1,5 @@
 <?php
 // modules/employees/active-employees.php
-messageAlert($showPrompt, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">

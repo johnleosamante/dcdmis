@@ -80,6 +80,8 @@
       </div>
     </div>
 
+    <?php requiredLegend(); ?>
+
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <input name="update-password" type="submit" value="Update Password" class="btn btn-primary btn-block btn-lg">

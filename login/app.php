@@ -39,7 +39,7 @@ if (!isset($_POST['login'])) {
 
 $email = sanitize($_POST['email']);
 $password = hashPassword(sanitize($_POST['password']));
-$showPrompt = true;
+$showAlert = true;
 $success = false;
 
 if (empty($email) || empty($password)) {

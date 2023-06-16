@@ -40,7 +40,7 @@ if (isset($_POST['update-personal-information'])) {
   updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), $bmonth, $bday, $byear, sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), sanitize($_POST['dual-citizenship-country']), sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['gsis']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency-id']), $employeePhoto, $employeeId);
 
   if (affectedRows() === 1) {
-    $showPrompt = true;
+    $showAlert = true;
     $message = 'Personal Information has been updated successfully!';
   }
 
@@ -73,7 +73,7 @@ if (isset($_POST['update-family-background'])) {
   }
 
   if (affectedRows() === 1) {
-    $showPrompt = true;
+    $showAlert = true;
     $message = 'Family Background has been updated successfully!';
   }
 
@@ -102,7 +102,7 @@ if (isset($_POST['save-child'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'children';
@@ -117,7 +117,7 @@ if (isset($_POST['delete-child'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Child has been deleted successfully!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'children';
@@ -149,7 +149,7 @@ if (isset($_POST['save-education'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'educational-background';
@@ -164,7 +164,7 @@ if (isset($_POST['delete-education'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Educational Background has been deleted successfully!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'educational-background';
@@ -194,7 +194,7 @@ if (isset($_POST['save-eligibility'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
@@ -209,7 +209,7 @@ if (isset($_POST['delete-eligibility'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Civil Service Eligibility has been deleted successfully!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
@@ -241,7 +241,7 @@ if (isset($_POST['save-experience'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
@@ -256,7 +256,7 @@ if (isset($_POST['delete-work-experience'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Work Experience has been deleted successfully!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
@@ -285,7 +285,7 @@ if (isset($_POST['save-voluntary-work'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
@@ -300,7 +300,7 @@ if (isset($_POST['delete-voluntary-work'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Voluntary Work has been deleted successfully';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
@@ -329,7 +329,7 @@ if (isset($_POST['save-learning-development'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'learning-development';
@@ -344,7 +344,7 @@ if (isset($_POST['delete-learning-development'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Learning &amp; Development Intervention has been deleted successfully!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'learning-development';
@@ -368,7 +368,7 @@ if (isset($_POST['save-special-skill'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
@@ -383,7 +383,7 @@ if (isset($_POST['delete-special-skill'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Special Skill / Hobby has been deleted successfully!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
@@ -407,7 +407,7 @@ if (isset($_POST['save-recognition'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
@@ -422,7 +422,7 @@ if (isset($_POST['delete-recognition'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Non-Academic Distinction / Recognition has been deleted successfully!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
@@ -446,7 +446,7 @@ if (isset($_POST['save-membership'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
@@ -461,7 +461,7 @@ if (isset($_POST['delete-membership'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Membership in Association / Organization has been deleted successfully!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
@@ -504,7 +504,7 @@ if (isset($_POST['update-other-information'])) {
   if (mysqli_affected_rows($con) === 1) {
     $success = true;
     $message = 'Other Information has been updated successfully!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'other-information';
@@ -530,7 +530,7 @@ if (isset($_POST['save-reference'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
@@ -545,7 +545,7 @@ if (isset($_POST['delete-reference'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Reference has been deleted successfully!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
@@ -558,6 +558,10 @@ if (isset($_POST['reassign-employee'])) {
   $eStationId = sanitize($_POST['assignment']);
   $date = sanitize($_POST['assignment-date']);
 
+  if (empty($employeeId) || empty($positionId) || empty($eStationId) || empty($date)) {
+    return;
+  }
+
   if (numRows(station($employeeId)) === 0) {
     createStation($date, $eStationId, $positionId, $employeeId);
   } else {
@@ -567,7 +571,7 @@ if (isset($_POST['reassign-employee'])) {
   if (affectedRows() === 1) {
     $success = true;
     $message = 'Employee has been successfully reassigned to new assignment!';
-    $showPrompt = true;
+    $showAlert = true;
   }
 }
 ?>

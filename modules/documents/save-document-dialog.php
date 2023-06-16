@@ -61,13 +61,13 @@ if (numRows($documents) > 0) {
           <?php endif; ?>
 
           <div class="form-group">
-            <label for="description" class="mb-0">Description</label>
+            <label for="description" class="mb-0">Description <?php showAsterisk($station === $document['from']); ?></label>
             <textarea id="description" name="description" class="form-control" rows="3" placeholder="Type description..." <?php echo $attribute; ?> required><?php echo $description; ?></textarea>
           </div>
 
           <?php if (!$isSchoolPortal) : ?>
             <div class="form-group">
-              <label class="mb-0" for="destination">Destination</label>
+              <label class="mb-0" for="destination">Destination <?php showAsterisk(); ?></label>
               <?php if (!$forRelease) { ?>
                 <select name="destination" id="destination" class="form-control" required>
                   <option value="">Select destination...</option>
@@ -91,7 +91,7 @@ if (numRows($documents) > 0) {
           <?php endif; ?>
 
           <div class="form-group">
-            <label class="mb-0" for="purpose">Purpose</label>
+            <label class="mb-0" for="purpose">Purpose <?php showAsterisk(); ?></label>
             <?php if (!$forRelease) : ?>
               <select name="purpose" id="purpose" class="form-control" required>
                 <option value="">Select purpose...</option>
@@ -106,10 +106,12 @@ if (numRows($documents) > 0) {
             <?php endif; ?>
           </div>
 
-          <div class="form-group mb-0">
-            <label class="mb-0" for="details">Additional details (optional)</label>
+          <div class="form-group">
+            <label class="mb-0" for="details">Additional details</label>
             <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."><?php echo $details; ?></textarea>
           </div>
+
+          <?php requiredLegend(0); ?>
         <?php } else {
           missingAlert($modalTitle);
         } ?>

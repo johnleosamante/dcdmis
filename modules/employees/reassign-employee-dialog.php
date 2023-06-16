@@ -46,7 +46,7 @@ if (numRows($employees) > 0) {
           <hr>
 
           <div class="form-group">
-            <label for="position" class="mb-0">Position</label>
+            <label for="position" class="mb-0">Position <?php showAsterisk(); ?></label>
             <select id="position" name="position" class="form-control" required>
               <option value="">Select position...</option>
               <?php $jobPositions = positions();
@@ -57,7 +57,7 @@ if (numRows($employees) > 0) {
           </div>
 
           <div class="form-group">
-            <label for="assignment" class="mb-0">Place of Assignment</label>
+            <label for="assignment" class="mb-0">Place of Assignment <?php showAsterisk(); ?></label>
             <select id="assignment" name="assignment" class="form-control" required>
               <option value="">Select place of assignment...</option>
               <?php $assignments = schoolsExcept($stationId);
@@ -67,10 +67,12 @@ if (numRows($employees) > 0) {
             </select>
           </div>
 
-          <div class="form-group mb-0">
-            <label for="assignment-date" class="mb-0">Date of Assignment</label>
+          <div class="form-group">
+            <label for="assignment-date" class="mb-0">Date of Assignment <?php showAsterisk(); ?></label>
             <input class="form-control" type="date" id="assignment-date" name="assignment-date" value="<?php echo toDate($doa, 'Y-m-d', date('Y-m-d')); ?>" required>
           </div>
+
+          <?php requiredLegend(0); ?>
         <?php } else {
           missingAlert($modalTitle);
         } ?>
