@@ -44,4 +44,17 @@ if (isset($_POST['update-password'])) {
     $oldPassword = $password = $passwordConfirm = $generatePassword = null;
   }
 }
+
+if (isset($_POST['update-contact-details'])) {
+  $alternateEmail = sanitize($_POST['alternate-email']);
+  $alternateMobile = sanitize($_POST['alternate-mobile']);
+
+  updateEmployeeContactDetails($alternateMobile, $alternateEmail, $userId);
+
+  if (affectedRows() === 1) {
+    $showAlert = true;
+    $message = 'Your contact details have been updated successfully!';
+    $success = true;
+  }
+}
 ?>

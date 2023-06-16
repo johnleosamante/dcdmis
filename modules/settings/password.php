@@ -1,7 +1,7 @@
 <?php
-// modules/settings/change-password.php
+// modules/settings/password.php
 ?>
-<div class="tab-pane fade show active" id="change-password">
+<div class="tab-pane fade" id="password-change">
   <div class="row">
     <div class="col">
       <div class="my-2 p-3 rounded alert-info text-left d-flex">
@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <form class="py-2" action="" method="post">
+  <form class="py-2" action="" method="POST">
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <div class="form-group">
