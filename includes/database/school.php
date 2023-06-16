@@ -2,7 +2,11 @@
 // includes/database/school.php
 // tbl_school
 function schools() {
-  return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias FROM tbl_school;");
+  return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias FROM tbl_school ORDER BY SchoolName;");
+}
+
+function schoolsExcept($id) {
+  return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias FROM tbl_school WHERE SchoolName <> '{$id}' ORDER BY SchoolName;");
 }
 
 function schoolByAlias($alias) {
