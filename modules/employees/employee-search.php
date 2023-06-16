@@ -48,27 +48,28 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle">
                 <?php
-                $color = null;
                 $status = strtolower($row['status']);
 
-                roundPill($row['status']);
+                roundPill($status);
                 ?>
               </td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetchAssoc(schoolById($row['station']))['name']; ?></td>
               <td class="align-middle text-capitalize">
-                <div class="dropdown no-arrow">
-                  <?php dropdownEllipsis(); ?>
-                  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                    <?php
-                    linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
-                    if ($status === 'active') {
-                      modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee'); ?>
-                      <div class="dropdown-divider"></div>
-                      <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
-                    } ?>
+                <?php if ($status !== 'duplicate') : ?>
+                  <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis(); ?>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                      <?php
+                      linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
+                      if ($status === 'active') {
+                        modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee'); ?>
+                        <div class="dropdown-divider"></div>
+                        <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
+                      } ?>
+                    </div>
                   </div>
-                </div>
+                <?php endif; ?>
               </td>
             </tr>
           <?php endwhile; ?>
