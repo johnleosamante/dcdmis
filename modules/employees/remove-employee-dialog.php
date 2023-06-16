@@ -53,6 +53,7 @@ if (numRows($employees) > 0) {
               <option value="Retired">Retired</option>
               <option value="Suspended">Suspended</option>
               <option value="Dismissed">Dismissed</option>
+              <option value="Deceased">Deceased</option>
               <option value="Duplicate">Duplicate</option>
             </select>
           </div>
