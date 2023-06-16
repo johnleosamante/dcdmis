@@ -558,10 +558,6 @@ if (isset($_POST['reassign-employee'])) {
   $eStationId = sanitize($_POST['assignment']);
   $date = sanitize($_POST['assignment-date']);
 
-  if (numRows(validateDeployment($eStationId, $positionId, $employeeId)) === 0) {
-    createDeployment($date, $eStationId, $positionId, $employeeId);
-  }
-
   if (numRows(station($employeeId)) === 0) {
     createStation($date, $eStationId, $positionId, $employeeId);
   } else {
