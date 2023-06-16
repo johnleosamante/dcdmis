@@ -1,0 +1,1 @@
+ALTER TABLE `tbl_valid_id` ADD `Date_issued` DATE NOT NULL AFTER `Place_issued`;
