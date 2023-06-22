@@ -14,7 +14,7 @@ $modalTitle = 'Logout';
     </div>
 
     <div class="modal-footer">
-      <a class="btn btn-primary" href="<?php echo uri() . '/logout'; ?>">Logout</a>
+      <a class="btn btn-danger" href="<?php echo uri() . '/logout'; ?>">Continue</a>
       <?php cancelModalButton(); ?>
     </div>
   </div>

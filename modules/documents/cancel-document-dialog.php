@@ -53,7 +53,7 @@ if (numRows($documents) > 0) {
       <div class="modal-footer">
         <?php if ($hasDocument) : ?>
           <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
-          <button class="btn btn-primary" name="cancel-document" type="submit">Continue</button>
+          <button class="btn btn-danger" name="cancel-document" type="submit">Continue</button>
         <?php endif; ?>
         <?php cancelModalButton(); ?>
       </div>
