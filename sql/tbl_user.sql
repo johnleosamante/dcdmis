@@ -1,2 +1,20 @@
 ALTER TABLE `tbl_user` DROP PRIMARY KEY;
 ALTER TABLE `tbl_user` ADD `id` INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (`id`);
+
+UPDATE tbl_user SET Station = replace(Station, 'ACCOUNTING', 'ACC');
+UPDATE tbl_user SET Station = replace(Station, 'ADMIN', 'ADM');
+UPDATE tbl_user SET Station = replace(Station, 'ASDS', 'ASD');
+UPDATE tbl_user SET Station = replace(Station, 'BUDGET', 'BUD');
+UPDATE tbl_user SET Station = replace(Station, 'CASHIER', 'CSH');
+UPDATE tbl_user SET Station = replace(Station, 'PHYSICAL', 'GSS');
+UPDATE tbl_user SET Station = replace(Station, 'HEALTH', 'HNS');
+UPDATE tbl_user SET Station = replace(Station, 'HRMO', 'PER');
+UPDATE tbl_user SET Station = replace(Station, 'ITO', 'ICT');
+UPDATE tbl_user SET Station = replace(Station, 'LEGAL', 'LGL');
+UPDATE tbl_user SET Station = replace(Station, 'LRMDS', 'LRM');
+UPDATE tbl_user SET Station = replace(Station, 'LRMS', 'LRM');
+UPDATE tbl_user SET Station = replace(Station, 'OSDS', 'SDS');
+UPDATE tbl_user SET Station = replace(Station, 'PSDS', 'PSD');
+UPDATE tbl_user SET Station = replace(Station, 'RECORD', 'REC');
+UPDATE tbl_user SET Station = replace(Station, 'SGOD', 'SGO');
+UPDATE tbl_user SET Station = replace(Station, 'SUPPLY', 'PSS');

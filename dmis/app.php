@@ -9,7 +9,7 @@ if (!isset($userId)) {
   redirect(uri() . '/login');
 }
 
-if (numRows(userRole($userId, 'ITO')) === 0) {
+if (numRows(userRole($userId, 'ICT')) === 0) {
   redirect(uri() . '/pis');
 }
 
