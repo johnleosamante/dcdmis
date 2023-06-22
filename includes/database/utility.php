@@ -1,14 +1,25 @@
 <?php
 // includes/database/utility.php
 function stationName($id) {
-  $section = section($id, true);
+  $station = section($id, true);
 
-  if (numRows($section) > 0) {
-    return fetchAssoc($section)['name'];
+  if (numRows($station) > 0) {
+    return fetchAssoc($station)['name'];
   }
 
-  $school = schoolByAlias($id);
-  return numRows($school) > 0 ? fetchAssoc($school)['name'] : $id;
+  $station = schoolByAlias($id);
+
+  if (numRows($station) > 0) {
+    return fetchAssoc($station)['name'];
+  }
+
+  $station = schoolById($id);
+
+  if (numRows($station) > 0) {
+    return fetchAssoc($station)['name'];
+  }
+
+  return $id;
 }
 
 function userName($id) {
