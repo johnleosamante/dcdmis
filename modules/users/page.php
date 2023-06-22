@@ -53,7 +53,8 @@ messageAlert($showAlert, $message, $success);
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php
-                    modalDropdownItem(uri() . '/modules/users/view-user-dialog.php?id=' . cipher($row['id']), 'View', 'fa-edit', 'View User');
+                    modalDropdownItem(uri() . '/modules/users/view-user-dialog.php?id=' . cipher($row['id']), 'View', 'fa-eye', 'View User');
+                    modalDropdownItem(uri() . '/modules/users/reset-user-dialog.php?id=' . cipher($row['id']), 'Reset', 'fa-undo-alt', 'Reset User');
                     ?>
                     <div class="dropdown-divider"></div>
                     <?php modalDropdownItem(uri() . '/modules/users/remove-user-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove User'); ?>
