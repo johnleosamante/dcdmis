@@ -4,4 +4,8 @@
 function district($id) {
   return query("SELECT District_Name AS `name`, Emp_ID AS `psds` FROM tbl_district WHERE District_code='{$id}' LIMIT 1;");
 }
+
+function districts() {
+  return query("SELECT District_Name AS `name`, Emp_ID AS `psds` FROM tbl_district ORDER BY District_Name ASC;");
+}
 ?>
