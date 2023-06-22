@@ -17,16 +17,8 @@ if (numRows($employeeDetails) > 0) {
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <div class="form-group">
-          <label for="primary-email" class="mb-0">Primary Email</label>
+          <label for="primary-email" class="mb-0">DepEd Email Address</label>
           <input type="email" id="primary-email" class="form-control" autocomplete="false" value="<?php echo $primaryEmail; ?>" readonly>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
-        <div class="form-group">
-          <label for="alternate-email" class="mb-0">Alternate Email <?php showAsterisk(); ?></label>
-          <input type="email" id="alternate-email" name="alternate-email" class="form-control" autocomplete="false" value="<?php echo $alternateEmail; ?>" required>
         </div>
       </div>
     </div>
@@ -43,6 +35,14 @@ if (numRows($employeeDetails) > 0) {
         <div class="form-group">
           <label for="mobile" class="mb-0">Mobile Number</label>
           <input type="text" id="mobile" class="form-control" value="<?php echo $mobileNo; ?>" readonly>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
+        <div class="form-group">
+          <label for="alternate-email" class="mb-0">Alternate Email Address <?php showAsterisk(); ?></label>
+          <input type="email" id="alternate-email" name="alternate-email" class="form-control" autocomplete="false" value="<?php echo $alternateEmail; ?>" required>
         </div>
       </div>
     </div>
