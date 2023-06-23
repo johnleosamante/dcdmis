@@ -44,7 +44,7 @@ if (isset($_POST['save-document'])) {
   }
 
   if (affectedRows()) {
-    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="Document Information: ' . $documentId . '" target="_blank">' . strtoupper($documentId) . '</a>] has been ' . $status . ' successfully!';
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been ' . $status . ' successfully!';
     $showAlert = true;
   }
 }
@@ -56,7 +56,7 @@ if (isset($_POST['receive-document'])) {
 
   if (affectedRows()) {
     insertDocumentLog($documentId, $userId, $station, '-', 'Received', 'New');
-    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="Document Information: ' . $documentId . '" target="_blank">' . strtoupper($documentId) . '</a>] has been received successfully!';
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been received successfully!';
     $showAlert = true;
   }
 }
@@ -71,7 +71,7 @@ if (isset($_POST['forward-document'])) {
   if (affectedRows()) {
     insertDocumentLog($documentId, $userId, $station, sanitize($_POST['destination']), $purpose, 'New', $details);
     updateDocumentStatus($documentId, $purpose, 'Unread', $details);
-    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="Document Information: ' . $documentId . '" target="_blank">' . strtoupper($documentId) . '</a>] has been forwarded successfully!';
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been forwarded successfully!';
     $showAlert = true;
   }
 }
@@ -86,7 +86,7 @@ if (isset($_POST['complete-document'])) {
   if (affectedRows()) {
     insertDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
     updateDocumentStatus($documentId, $status, 'Read', $remarks);
-    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="Document Information: ' . $documentId . '" target="_blank">' . strtoupper($documentId) . '</a>] has been mark completed successfully.';
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been mark completed successfully.';
     $showAlert = true;
   }
 }
@@ -101,7 +101,7 @@ if (isset($_POST['cancel-document'])) {
   if (affectedRows()) {
     insertDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
     updateDocumentStatus($documentId, $status, 'Read', $remarks);
-    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="Document Information: ' . $documentId . '" target="_blank">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
     $showAlert = true;
   }
 }
