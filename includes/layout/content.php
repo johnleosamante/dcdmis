@@ -71,7 +71,7 @@ if (!isset($url) || $url === 'dashboard') {
       $file = 'sections/page';
       break;
     case 'Activity Log':
-      $file = 'activity/activity-log';
+      $file = 'activity/page';
       break;
     case 'Settings':
       $file = 'settings/page';
