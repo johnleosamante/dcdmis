@@ -17,7 +17,7 @@ function toName($lastName, $firstName, $middleName='', $extension='', $fnameFirs
   if (!$fnameFirst) {
     return $lastName . toString($firstName, ', ') . toString($extension, ' ') . $middleName;
   } else {
-    return $firstName . toString($middleName, ' ') . toString($lastName, ' ') . toString($extension, ', ');
+    return $firstName . toString($middleName) . toString($lastName, ' ') . toString($extension, ', ');
   }
 }
 
