@@ -4,7 +4,7 @@
 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
   <div class="card o-hidden border-0 shadow-lg my-5">
     <div class="card-header text-center">
-      <?php displayLogo(120, 120, '0', uri(), title()); ?>
+      <?php displayLogo(120, 120, '0', uri() . '/pis', title()); ?>
       <h3 class="text-gray-900 mb-2">Personnel Profile</h3>
     </div>
 
