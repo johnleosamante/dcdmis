@@ -55,8 +55,8 @@ $displayPhoto = uri() . '/' . $user['picture'];
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
         <?php
         linkDropdownItem(uri() . '/pis', 'Profile', 'fa-user', 'Go to user profile');
-        linkDropdownItem(customUri('dts', 'Settings'), 'Settings', 'fa-cogs', 'Go to settings');
-        linkDropdownItem(customUri('dts', 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
+        linkDropdownItem(customUri($activeApp, 'Settings'), 'Settings', 'fa-cogs', 'Go to settings');
+        linkDropdownItem(customUri($activeApp, 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
         ?>
         <div class="dropdown-divider"></div>
         <?php modalDropdownItem(uri() . '/logout/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout', 'text-danger'); ?>
@@ -77,7 +77,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
     <?php endif;
   }
 
-  if (!$isSchoolPortal) : ?>
+  if ($hasPortal && !$isSchoolPortal ) : ?>
     <div class="h2 mt-4 m-0"><?php echo stationName($station); ?></div>
   <?php endif; ?>
 </div>
