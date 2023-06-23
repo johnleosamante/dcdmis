@@ -17,6 +17,48 @@ if (isset($_POST['primary-search-button'])) {
   redirect(customUri('hrmis', 'Employee Search', sanitize($_POST['primary-search-text'])));
 }
 
+/* ADD EMPLOYEE */
+if (isset($_POST['add-employee'])) {
+  $employeeId = getDatetimeAsId();
+  $lname = sanitize($_POST['lname']);
+  $fname = sanitize($_POST['fname']);
+  $mname = sanitize($_POST['mname']);
+  $ext = sanitize($_POST['ext']);
+  $sex = sanitize($_POST['sex']);
+  $bmonth = sanitize($_POST['bmonth']);
+  $bday = sanitize($_POST['bday']);
+  $byear = sanitize($_POST['byear']);
+  $ePositionId = sanitize($_POST['position']);
+  $eStationId = sanitize($_POST['station']);
+  $email = sanitize($_POST['email']);
+  $mobile = sanitize($_POST['mobile']);
+  $image = 'assets/img/user.png';
+  $showAlert = true;
+  $employee = toName($lname, $fname, $mname, $ext, true);
+
+  if (!isValidEmail($email, 'deped.gov.ph')) {
+    $success = false;
+    $message = 'The DepEd Email Address you entered is invalid! Operation has been cancelled.';
+    return;
+  }
+
+  $names = employeeName($lname, $fname, $mname, $ext);
+
+  if (numRows($names) > 0) {
+    $name = fetchAssoc($names);
+    $success = false;
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $name['id']) . '" title="View ' . $employee . ' employee information" target="_blank">' . strtoupper($employee) . '</a>] already exist!  Operation has been cancelled.';
+    return;
+  }
+
+  createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image);
+  createStation('-', $eStationId, $ePositionId, $employeeId);
+
+  if (affectedRows() === 1) {
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information" target="_blank">' . strtoupper($employee) . '</a>] was saved successfully!';
+  }
+}
+
 /* PERSONAL INFORMATION */
 if (isset($_POST['update-personal-information'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
