@@ -20,8 +20,8 @@ $station = isset($_SESSION[alias() . '_station']) ? $_SESSION[alias() . '_statio
 $isDescriptionEditable = isset($_SESSION[alias() . '_editableDescription']) ? $_SESSION[alias() . '_editableDescription'] : false; // DTS specific
 $activeTab = isset($_SESSION[alias() . '_activeTab']) ? $_SESSION[alias() . '_activeTab'] : null;
 $hasPortal = !empty($portal);
-$isSchoolPortal = $portal === 'school_portal';
-$isRecordsPortal = $portal === 'record_portal'; // DTS specific
+$isSchoolPortal = $portal === 'sch_portal';
+$isRecordsPortal = $portal === 'rec_portal'; // DTS specific
 $page = $appTitle = null;
 $showAlert = false;
 $message = null;
