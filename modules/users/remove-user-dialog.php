@@ -10,7 +10,7 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $employees = employee($employeeId);
-$modalTitle = 'Employee not found';
+$modalTitle = 'User not found';
 $hasEmployee = false;
 
 if (numRows($employees) > 0) {
@@ -22,8 +22,9 @@ if (numRows($employees) > 0) {
   $station = $positions['station'];
   $positionId = $positions['position_id'];
   $position = $positions['position'];
+  $depedEmail = $employee['email'];
   $picture = uri() . '/' . $employee['picture'];
-  $modalTitle = 'Remove Employee';
+  $modalTitle = 'Remove User';
   $hasEmployee = true;
 }
 ?>
@@ -38,9 +39,10 @@ if (numRows($employees) > 0) {
           <div class="d-flex justify-content-center align-middle employee-photo photo-2x rounded-circle overflow-hidden mx-auto mb-3">
             <img height="100%" src="<?php echo $picture; ?>" alt="<?php echo $employeeName; ?>">
           </div>
-          <div class="text-center text-uppercase my-1 h4"><?php echo $employeeName; ?></div>
-          <div class="text-center text-uppercase my-1 h5"><?php echo $position; ?></div>
-          <div class="text-center text-uppercase my-1 h6"><?php echo $station; ?></div>
+          <div class="text-center text-uppercase h4 mt-1 mb-0"><?php echo $employeeName; ?></div>
+          <div class="text-center text-lowercase m-0 small"><?php echo $depedEmail; ?></div>
+          <div class="text-center text-uppercase h5 mt-2 mb-1"><?php echo $position; ?></div>
+          <div class="text-center text-uppercase h6 my-1"><?php echo $station; ?></div>
         <?php } else {
           missingAlert($modalTitle);
         } ?>
