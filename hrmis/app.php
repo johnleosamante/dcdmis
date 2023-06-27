@@ -55,7 +55,7 @@ if (isset($_POST['add-employee'])) {
   createStation('-', $eStationId, $ePositionId, $employeeId);
 
   if (affectedRows() === 1) {
-    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information" target="_blank">' . strtoupper($employee) . '</a>] was saved successfully!';
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information" target="_blank">' . strtoupper($employee) . '</a>] was saved successfully.';
   }
 }
 
@@ -89,7 +89,7 @@ if (isset($_POST['update-personal-information'])) {
 
   if (affectedRows() === 1) {
     $showAlert = true;
-    $message = 'Personal Information has been updated successfully!';
+    $message = 'Personal Information has been updated successfully.';
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'personal-information';
@@ -122,7 +122,7 @@ if (isset($_POST['update-family-background'])) {
 
   if (affectedRows() === 1) {
     $showAlert = true;
-    $message = 'Family Background has been updated successfully!';
+    $message = 'Family Background has been updated successfully.';
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'family-background';
@@ -141,11 +141,11 @@ if (isset($_POST['save-child'])) {
   if (numRows(child($employeeId, $childId)) === 0) {
     createChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId);
 
-    $message = 'Child has been added successfully!';
+    $message = 'Child has been added successfully.';
   } else {
     updateChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId, $childId);
 
-    $message = 'Child has been updated successfully!';
+    $message = 'Child has been updated successfully.';
   }
 
   if (affectedRows() === 1) {
@@ -164,7 +164,7 @@ if (isset($_POST['delete-child'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Child has been deleted successfully!';
+    $message = 'Child has been deleted successfully.';
     $showAlert = true;
   }
 
@@ -188,11 +188,11 @@ if (isset($_POST['save-education'])) {
   if (empty($educationId)) {
     createEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId);
 
-    $message = 'Educational Background has been added successfully!';
+    $message = 'Educational Background has been added successfully.';
   } else {
     updateEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId, $educationId);
 
-    $message = 'Educational Background has been updated successfully!';
+    $message = 'Educational Background has been updated successfully.';
   }
 
   if (affectedRows() === 1) {
@@ -211,7 +211,7 @@ if (isset($_POST['delete-education'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Educational Background has been deleted successfully!';
+    $message = 'Educational Background has been deleted successfully.';
     $showAlert = true;
   }
 
@@ -233,11 +233,11 @@ if (isset($_POST['save-eligibility'])) {
   if (empty($eligibilityId)) {
     createEligibility($career, $rating, $examDate, $examPlace, $license, $isApplicable, $validity, $employeeId);
 
-    $message = 'Civil Service Eligibility has been added successfully!';
+    $message = 'Civil Service Eligibility has been added successfully.';
   } else {
     updateEligibility($career, $rating, $examDate, $examPlace, $license, $isApplicable, $validity, $employeeId, $eligibilityId);
 
-    $message = 'Civil Service Eligibility has been updated successfully!';
+    $message = 'Civil Service Eligibility has been updated successfully.';
   }
 
   if (affectedRows() === 1) {
@@ -256,7 +256,7 @@ if (isset($_POST['delete-eligibility'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Civil Service Eligibility has been deleted successfully!';
+    $message = 'Civil Service Eligibility has been deleted successfully.';
     $showAlert = true;
   }
 
@@ -280,11 +280,11 @@ if (isset($_POST['save-experience'])) {
   if (empty($experienceId)) {
     createExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId);
 
-    $message = 'Work Experience has been added successfully!';
+    $message = 'Work Experience has been added successfully.';
   } else {
     updateExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId, $experienceId);
 
-    $message = 'Work Experience has been updated successfully!';
+    $message = 'Work Experience has been updated successfully.';
   }
 
   if (affectedRows() === 1) {
@@ -303,7 +303,7 @@ if (isset($_POST['delete-work-experience'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Work Experience has been deleted successfully!';
+    $message = 'Work Experience has been deleted successfully.';
     $showAlert = true;
   }
 
@@ -324,11 +324,11 @@ if (isset($_POST['save-voluntary-work'])) {
   if (empty($voluntaryId)) {
     createVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId);
 
-    $message = 'Voluntary Work has been added successfully!';
+    $message = 'Voluntary Work has been added successfully.';
   } else {
     updateVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId, $voluntaryId);
 
-    $message = 'Voluntary Work has been updated successfully!';
+    $message = 'Voluntary Work has been updated successfully.';
   }
 
   if (affectedRows() === 1) {
@@ -347,7 +347,7 @@ if (isset($_POST['delete-voluntary-work'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Voluntary Work has been deleted successfully';
+    $message = 'Voluntary Work has been deleted successfully.';
     $showAlert = true;
   }
 
@@ -368,11 +368,11 @@ if (isset($_POST['save-learning-development'])) {
   if (empty($learningId)) {
     createlearningAndDevelopment($title, $from, $to, $hours, $type, $sponsor, $employeeId);
 
-    $message = 'Learning &amp; Development Intervention has been added successfully!';
+    $message = 'Learning &amp; Development Intervention has been added successfully.';
   } else {
     updateLearningAndDevelopment($title, $from, $to, $hours, $type, $sponsor, $employeeId, $learningId);
 
-    $message = 'Learning &amp; Development Intervention has been updated successfully!';
+    $message = 'Learning &amp; Development Intervention has been updated successfully.';
   }
 
   if (affectedRows() === 1) {
@@ -391,7 +391,7 @@ if (isset($_POST['delete-learning-development'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Learning &amp; Development Intervention has been deleted successfully!';
+    $message = 'Learning &amp; Development Intervention has been deleted successfully.';
     $showAlert = true;
   }
 
@@ -407,11 +407,11 @@ if (isset($_POST['save-special-skill'])) {
   if (empty($skillId)) {
     createSpecialSkill($skill, $employeeId);
 
-    $message = 'Special Skill / Hobby has been added successfully!';
+    $message = 'Special Skill / Hobby has been added successfully.';
   } else {
     updateSpecialSkill($skill, $employeeId, $skillId);
 
-    $message = 'Special Skill / Hobby has been updated successfully!';
+    $message = 'Special Skill / Hobby has been updated successfully.';
   }
 
   if (affectedRows() === 1) {
@@ -430,7 +430,7 @@ if (isset($_POST['delete-special-skill'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Special Skill / Hobby has been deleted successfully!';
+    $message = 'Special Skill / Hobby has been deleted successfully.';
     $showAlert = true;
   }
 
@@ -446,11 +446,11 @@ if (isset($_POST['save-recognition'])) {
   if (empty($recognitionId)) {
     createRecognition($recognition, $employeeId);
 
-    $message = 'Non-Academic Distinction / Recognition has been added successfully!';
+    $message = 'Non-Academic Distinction / Recognition has been added successfully.';
   } else {
     updateRecognition($recognition, $employeeId, $recognitionId);
 
-    $message = 'Non-Academic Distinction / Recognition has been updated successfully!';
+    $message = 'Non-Academic Distinction / Recognition has been updated successfully.';
   }
 
   if (affectedRows() === 1) {
@@ -469,7 +469,7 @@ if (isset($_POST['delete-recognition'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Non-Academic Distinction / Recognition has been deleted successfully!';
+    $message = 'Non-Academic Distinction / Recognition has been deleted successfully.';
     $showAlert = true;
   }
 
@@ -485,11 +485,11 @@ if (isset($_POST['save-membership'])) {
   if (empty($membershipId)) {
     createMembership($membership, $employeeId);
 
-    $message = 'Membership in Association / Organization has been added successfully!';
+    $message = 'Membership in Association / Organization has been added successfully.';
   } else {
     updateMembership($membership, $employeeId, $membershipId);
 
-    $message = 'Membership in Association / Organization has been updated successfully!';
+    $message = 'Membership in Association / Organization has been updated successfully.';
   }
 
   if (affectedRows() === 1) {
@@ -508,7 +508,7 @@ if (isset($_POST['delete-membership'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Membership in Association / Organization has been deleted successfully!';
+    $message = 'Membership in Association / Organization has been deleted successfully.';
     $showAlert = true;
   }
 
@@ -551,7 +551,7 @@ if (isset($_POST['update-other-information'])) {
 
   if (mysqli_affected_rows($con) === 1) {
     $success = true;
-    $message = 'Other Information has been updated successfully!';
+    $message = 'Other Information has been updated successfully.';
     $showAlert = true;
   }
 
@@ -569,11 +569,11 @@ if (isset($_POST['save-reference'])) {
   if (empty($referenceId)) {
     createReference($name, $address, $contact, $employeeId);
 
-    $message = 'Reference has been added successfully!';
+    $message = 'Reference has been added successfully.';
   } else {
     updateReference($name, $address, $contact, $employeeId, $referenceId);
 
-    $message = 'Reference has been updated successfully!';
+    $message = 'Reference has been updated successfully.';
   }
 
   if (affectedRows() === 1) {
@@ -592,7 +592,7 @@ if (isset($_POST['delete-reference'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Reference has been deleted successfully!';
+    $message = 'Reference has been deleted successfully.';
     $showAlert = true;
   }
 
@@ -618,7 +618,7 @@ if (isset($_POST['reassign-employee'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Employee has been reassigned successfully!';
+    $message = 'Employee has been reassigned successfully.';
     $showAlert = true;
   }
 }
@@ -635,7 +635,7 @@ if (isset($_POST['remove-employee'])) {
   if (numRows(employee($employeeId)) > 0) {
     updateEmployeeStatus($reason, $employeeId);
     $success = true;
-    $message = 'Employee has been removed successfully!';
+    $message = 'Employee has been removed successfully.';
     $showAlert = true;
   }
 }

@@ -43,7 +43,7 @@ $showAlert = true;
 $success = false;
 
 if (empty($email) || empty($password)) {
-  $message = 'All fields are required!';
+  $message = 'All fields are required.';
   return;
 }
 

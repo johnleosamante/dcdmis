@@ -44,7 +44,7 @@ if (isset($_POST['save-document'])) {
   }
 
   if (affectedRows()) {
-    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been ' . $status . ' successfully!';
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been ' . $status . ' successfully.';
     $showAlert = true;
   }
 }
@@ -56,7 +56,7 @@ if (isset($_POST['receive-document'])) {
 
   if (affectedRows()) {
     insertDocumentLog($documentId, $userId, $station, '-', 'Received', 'New');
-    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been received successfully!';
+    $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been received successfully.';
     $showAlert = true;
   }
 }
