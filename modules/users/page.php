@@ -5,7 +5,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitleWithModal('Users', uri() . '/users/update-user.php', 'New User', 'fa-user-plus'); ?>
+    <?php contentTitleWithLink('Users', customUri('dmis', 'Active Employees'), 'Assign', 'fa-user-plus'); ?>
   </div>
 
   <div class="card-body">
@@ -53,7 +53,7 @@ messageAlert($showAlert, $message, $success);
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php
-                    modalDropdownItem(uri() . '/modules/users/view-user-dialog.php?id=' . cipher($row['id']), 'View', 'fa-eye', 'View User');
+                    modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit User');
                     modalDropdownItem(uri() . '/modules/users/reset-user-dialog.php?id=' . cipher($row['id']), 'Reset', 'fa-undo-alt', 'Reset User');
                     ?>
                     <div class="dropdown-divider"></div>
