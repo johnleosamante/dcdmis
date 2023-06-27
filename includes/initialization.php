@@ -9,7 +9,6 @@ ini_set('max_execution_time', 300);
 ini_set('memory_limit', '1024M');
 //ini_set('display_errors', 0);
 
-$defaultImage = '/assets/img/user.png';
 $activeApp = isset($_SESSION[alias() . '_activeApp']) ? $_SESSION[alias() . '_activeApp'] : null;
 $userId = isset($_SESSION[alias() . '_userId']) ? $_SESSION[alias() . '_userId'] : null;
 $email = isset($_SESSION[alias() . '_email']) ? $_SESSION[alias() . '_email'] : null;
