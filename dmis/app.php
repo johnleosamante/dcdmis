@@ -72,8 +72,10 @@ if (isset($_POST['edit-user'])) {
 }
 
 if (isset($_POST['reset-user'])) {
-  $employeeId = sanitize(decipher($_POST['verifier']));
-  $temporaryPassword = sanitize(decipher($_POST['data-verifier']));
+  $depedEmail = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $temporaryPassword = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+
+  updateAccountPassword($depedEmail, hashPassword($temporaryPassword));
 
   if (affectedRows() === 1) {
     $showAlert = true;
@@ -83,8 +85,14 @@ if (isset($_POST['reset-user'])) {
 }
 
 if (isset($_POST['remove-user'])) {
-  $showAlert = true;
-  $message = 'User has been removed successfully.';
-  $success = true;
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+
+  deleteUserRoles($employeeId);
+
+  if (affectedRows() === 1) {
+    $showAlert = true;
+    $message = 'User has been removed successfully.';
+    $success = true;
+  }
 }
 ?>
