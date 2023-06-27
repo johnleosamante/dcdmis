@@ -9,7 +9,7 @@ function setUserSession($userid) {
     $_SESSION[alias() . '_portal'] = $user['portal'];
     $_SESSION[alias() . '_stationId'] = $user['station_id'];
 
-    if ($user['portal'] !== 'school_portal') {
+    if ($user['portal'] !== 'sch_portal') {
       $_SESSION[alias() . '_station'] = $user['code'];
     } else {
       $school = schoolById($user['code']);
