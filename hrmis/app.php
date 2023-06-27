@@ -618,7 +618,7 @@ if (isset($_POST['reassign-employee'])) {
 
   if (affectedRows() === 1) {
     $success = true;
-    $message = 'Employee has been successfully reassigned to new assignment!';
+    $message = 'Employee has been reassigned successfully!';
     $showAlert = true;
   }
 }
@@ -635,7 +635,7 @@ if (isset($_POST['remove-employee'])) {
   if (numRows(employee($employeeId)) > 0) {
     updateEmployeeStatus($reason, $employeeId);
     $success = true;
-    $message = 'Employee has been successfully removed from the active employee list!';
+    $message = 'Employee has been removed successfully!';
     $showAlert = true;
   }
 }
