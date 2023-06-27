@@ -10,7 +10,7 @@ function userRole($id, $station) {
 }
 
 function users() {
-  return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_user.username AS email, tbl_user.Station AS code, tbl_user.Link AS portal, tbl_user.Station AS `station`, tbl_station.Emp_Position AS position, tbl_employee.Picture AS picture, tbl_employee.Emp_Status AS `status` FROM tbl_employee INNER JOIN tbl_user ON tbl_employee.Emp_ID=tbl_user.usercode INNER JOIN tbl_station ON tbl_user.usercode=tbl_station.Emp_ID GROUP BY tbl_user.username ORDER BY tbl_employee.Emp_LName ASC;");
+  return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_user.username AS email, tbl_user.Station AS code, tbl_user.Link AS portal, tbl_user.Station AS `station`, tbl_station.Emp_Station AS `assignment`, tbl_station.Emp_Position AS position, tbl_employee.Picture AS picture, tbl_employee.Emp_Status AS `status` FROM tbl_employee INNER JOIN tbl_user ON tbl_employee.Emp_ID=tbl_user.usercode INNER JOIN tbl_station ON tbl_user.usercode=tbl_station.Emp_ID GROUP BY tbl_user.username ORDER BY tbl_employee.Emp_LName ASC;");
 }
 
 function dtsUser($id) {
@@ -31,5 +31,9 @@ function updateUserRole($id, $station, $portal) {
 
 function deleteUserRole($id, $station) {
   return nonQuery("DELETE FROM tbl_user WHERE usercode='$id' AND Station='$station' LIMIT 1;");
+}
+
+function deleteUserRoles($id) {
+  return nonQuery("DELETE FROM tbl_user WHERE usercode='$id';");
 }
 ?>

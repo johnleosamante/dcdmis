@@ -41,7 +41,7 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle text-lowercase"><?php echo $row['email']; ?></td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
-              <td class="align-middle"><?php echo stationName($row['station']); ?></td>
+              <td class="align-middle"><?php echo fetchAssoc(schoolById($row['assignment']))['name']; ?></td>
               <td class="align-middle">
                 <?php
                 $status = strtolower($row['status']);
