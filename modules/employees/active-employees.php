@@ -1,11 +1,16 @@
 <?php
 // modules/employees/active-employees.php
 messageAlert($showAlert, $message, $success);
+$isHrmis = $activeApp === 'hrmis';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitleWithLink('Active Employees', uri() . '/hrmis'); ?>
+    <?php if ($isHrmis) {
+      contentTitleWithLink('Active Employees', uri() . '/hrmis');
+    } else {
+      contentTitleWithLink('Active Employees', customUri('dmis', 'Users'));
+    } ?>
   </div>
 
   <div class="card-body">
@@ -50,11 +55,15 @@ messageAlert($showAlert, $message, $success);
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php
+                    if ($isHrmis) {
                     linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
                     modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
                     ?>
                     <div class="dropdown-divider"></div>
-                    <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee'); ?>
+                    <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee'); 
+                    } else {
+                      modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Set User', 'fa-user-cog', 'Set User Access');
+                    } ?>
                   </div>
                 </div>
               </td>
