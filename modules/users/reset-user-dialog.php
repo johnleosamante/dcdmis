@@ -12,7 +12,7 @@ $employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $employees = employee($employeeId);
 $modalTitle = 'Employee not found';
 $hasEmployee = false;
-$temporaryPassword = '';
+$depedEmail = $temporaryPassword = '';
 
 if (numRows($employees) > 0) {
   $employee = fetchAssoc($employees);
@@ -54,7 +54,7 @@ if (numRows($employees) > 0) {
           <div class="text-center text-uppercase h6 my-1"><?php echo $station; ?></div>
           <hr>
           <div class="text-center bg-secondary text-light rounded p-2 h2 mt-3 mb-0"><?php echo $randomPassword; ?></div>
-          <div class="text-center m-0 small"><em>Copy temporary password above and share to user</em></div>
+          <div class="text-center mt-1 small"><em>Copy temporary password above and share to user</em></div>
         <?php } else {
           missingAlert($modalTitle);
         } ?>
@@ -62,7 +62,7 @@ if (numRows($employees) > 0) {
 
       <div class="modal-footer">
         <?php if ($hasEmployee) : ?>
-          <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
+          <input type="hidden" name="verifier" value="<?php echo cipher($depedEmail); ?>">
           <input type="hidden" name="data-verifier" value="<?php echo cipher($randomPassword); ?>">
           <button class="btn btn-danger" name="reset-user" type="submit">Continue</button>
         <?php endif;
