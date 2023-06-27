@@ -11,35 +11,35 @@ if (isset($_POST['update-password'])) {
   $generatePassword = sanitize($_POST['generate-password']);
 
   if (empty($oldPassword) || empty($password) || empty($passwordConfirm)) {
-    $message = 'All fields in asterisk (*) are required!';
+    $message = 'All fields in asterisk (*) are required.';
     return;
   }
 
   if (numRows(account($email, hashPassword($oldPassword))) === 0) {
-    $message = 'You have entered an incorrect old password!';
+    $message = 'You have entered an incorrect old password.';
     $oldPassword = $password = $passwordConfirm = $generatePassword = null;
     return;
   }
 
   if ($password !== $passwordConfirm) {
-    $message = 'The new password you entered do not match!';
+    $message = 'The new password you entered do not match.';
     return;
   }
 
   if (!checkPasswordStrength($passwordConfirm)) {
-    $message = 'The new password you entered does not meet the recommendations specified below!';
+    $message = 'The new password you entered does not meet the recommendations specified below.';
     return;
   }
 
   if ($passwordConfirm === $oldPassword) {
-    $message = 'The new password you entered matches your old password!';
+    $message = 'The new password you entered matches your old password.';
     return;
   }
 
   updateAccountPassword($email, hashPassword($passwordConfirm));
 
   if (affectedRows() === 1) {
-    $message = 'Your password has been updated successfully!';
+    $message = 'Your password has been updated successfully.';
     $success = true;
     $oldPassword = $password = $passwordConfirm = $generatePassword = null;
   }
@@ -53,7 +53,7 @@ if (isset($_POST['update-contact-details'])) {
 
   if (affectedRows() === 1) {
     $showAlert = true;
-    $message = 'Your contact details have been updated successfully!';
+    $message = 'Your contact details have been updated successfully.';
     $success = true;
   }
 }
