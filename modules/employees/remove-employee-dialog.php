@@ -67,7 +67,7 @@ if (numRows($employees) > 0) {
       <div class="modal-footer">
         <?php if ($hasEmployee) : ?>
           <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
-          <button class="btn btn-secondary" name="remove-employee" type="submit">Continue</button>
+          <button class="btn btn-danger" name="remove-employee" type="submit">Continue</button>
         <?php endif;
         cancelModalButton(); ?>
       </div>
