@@ -69,7 +69,7 @@ function celebrantEmployees($month, $station=null) {
 }
 
 function createEmployee($id, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image) {
-  nonQuery("INSERT INTO tbl_employee (Emp_ID, Emp_LName, Emp_FName, Emp_MName, Emp_Extension, Emp_Sex, Emp_Month, Emp_Day, Emp_Year, Emp_Cell_No, Emp_Email, Picture, Emp_Status) VALUES ('$id', '$lname', '$fname', '$mname', '$ext', '$sex', '$bmonth', '$bday', '$byear', '$email', '$mobile', '$image', 'Active');");
+  nonQuery("INSERT INTO tbl_employee (Emp_ID, Emp_LName, Emp_FName, Emp_MName, Emp_Extension, Emp_Sex, Emp_Month, Emp_Day, Emp_Year, Emp_Email, Emp_Cell_No, Picture, Emp_Status) VALUES ('$id', '$lname', '$fname', '$mname', '$ext', '$sex', '$bmonth', '$bday', '$byear', '$email', '$mobile', '$image', 'Active');");
 }
 
 function updateEmployee($lname, $fname, $mname, $ext, $bmonth, $bday, $byear, $pob, $sex, $civilStatus, $civilStatusSpecify, $citizenship, $dualCitizenship, $country, $rlot, $rstreet, $rsubdivision, $rbarangay, $rcity, $rprovince, $rzip, $plot, $pstreet, $psubdivision, $pbarangay, $pcity, $pprovince, $pzip, $height, $weight, $bloodType, $gsis, $pagibig, $philhealth, $sss, $telephone, $mobile, $email, $tin, $agencyId, $photo, $id) {
