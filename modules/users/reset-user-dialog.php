@@ -27,14 +27,7 @@ if (numRows($employees) > 0) {
   $picture = uri() . '/' . $employee['picture'];
   $modalTitle = 'Reset User Password';
   $hasEmployee = true;
-  $strongPassword = false;
-  $length = rand(10, 16);
-  $randomPassword = '';
-
-  while (!$strongPassword) {
-    $randomPassword = randomPassword($length);
-    $strongPassword = checkPasswordStrength($randomPassword);
-  }
+  $randomPassword = generateStrongRandomPassword();
 }
 ?>
 
