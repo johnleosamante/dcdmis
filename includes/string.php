@@ -71,4 +71,15 @@ function checkPasswordStrength($password) {
   $hasSpecialCharacter = preg_match('/[^a-zA-Z\d]/', $password);
   return $hasUppercase && $hasLowercase && $hasNumber && $hasSpecialCharacter;
 }
+
+function generateStrongRandomPassword() {
+  $strongPassword = false;
+  $randomPassword = '';
+  $length = rand(10, 16);
+
+  while (!$strongPassword) {
+    $randomPassword = randomPassword($length);
+    $strongPassword = checkPasswordStrength($randomPassword);
+  }
+}
 ?>
