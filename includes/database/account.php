@@ -15,6 +15,10 @@ function account($email, $password=null) {
   return query($sql);
 }
 
+function createAccount($email, $password) {
+  nonQuery("INSERT INTO tbl_teacher_account (`Teacher_TIN`, `Teacher_Password`) VALUES ('$email', '$password');");
+}
+
 function updateAccountPassword($email, $password) {
   nonQuery("UPDATE tbl_teacher_account SET Teacher_Password='{$password}' WHERE Teacher_TIN='{$email}' LIMIT 1;");
 }
