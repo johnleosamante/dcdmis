@@ -50,7 +50,7 @@ if (isset($_POST['edit-user'])) {
     deleteUserRole($employeeId, 'HRMIS');
   }
 
-  if ($isHrmisUser) {
+  if ($isDmisUser) {
     if (!isStationUser($employeeId, 'DMIS')) {
       createUserRole($employeeId, $userEmail, $userRole, 'DMIS');
     } 
