@@ -20,7 +20,11 @@ function checkEmployeeAccount() {
 
   while ($active = fetchAssoc($activeEmployees)) {
     if (numRows(query("SELECT * FROM tbl_teacher_account WHERE Teacher_TIN='" . $active['Emp_Email'] . "';")) === 0) {
-      echo ++$no . ' | ' . $active['Emp_ID'] . ' | ' . toName($active['Emp_LName'], $active['Emp_FName'], $active['Emp_MName'], $active['Emp_Extension']) . '<br>';
+      query("INSERT INTO tbl_teacher_account (`Teacher_TIN`, `Teacher_Password`) VALUES ('" . $active['Emp_Email'] . "', '" . hashPassword(generateStrongRandomPassword()) . "');");
+
+      if (affectedRows() === 1) {
+        echo ++$no . ' | ' . $active['Emp_ID'] . ' | ' . toName($active['Emp_LName'], $active['Emp_FName'], $active['Emp_MName'], $active['Emp_Extension']) . '<br>';
+      }
     }
   }
 }
@@ -105,5 +109,6 @@ function checkEmployeeFamily() {
 //checkEmployeeStepIncrement();
 //checkEmployeeOtherInformation();
 //checkEmployeePsipop();
+//checkEmployeeDeployment();
 //checkEmployeeFamily();
 ?>
