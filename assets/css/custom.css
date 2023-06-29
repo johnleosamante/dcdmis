@@ -48,3 +48,17 @@ input::-ms-clear, input::-ms-reveal {
   width: 100%;
   border-radius: 0 0 20px 20px;
 }
+
+.image-container {
+  position: relative;
+  max-width: 64px;
+  margin: 0 auto;
+}
+
+.sex-sign {
+  position: absolute;
+  bottom: -5px;
+  right: -12px;
+  width: 32px;
+  height: 32px;
+}
