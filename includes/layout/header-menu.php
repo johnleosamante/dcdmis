@@ -53,10 +53,28 @@ $displayPhoto = uri() . '/' . $user['picture'];
       </a>
 
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-        <?php
-        linkDropdownItem(uri() . '/pis', 'Profile', 'fa-user', 'Go to user profile');
+        <?php linkDropdownItem(uri() . '/pis', 'Profile', 'fa-user-tie', 'Personnel Information System');
+
+        if (numRows(dtsUser($userId)) > 0) {
+          linkDropdownItem(uri() . '/dts', 'Tracking', 'fa-exchange-alt', 'Document Tracking System');
+        }
+        
+        if (isStationUser($userId, 'hrmis')) {
+          linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
+        }
+
+        if (isStationUser($userId, 'hrtdms')) {
+          linkDropdownItem(uri() . '/dmis', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
+        }
+
+        if (isStationUser($userId, 'dmis')) {
+          linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-chart-line', 'Division Management Information System');
+        }
+        ?>
+        <div class="dropdown-divider"></div>
+        <?php linkDropdownItem(customUri($activeApp, 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
+
         linkDropdownItem(customUri($activeApp, 'Settings'), 'Settings', 'fa-cogs', 'Go to settings');
-        linkDropdownItem(customUri($activeApp, 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
         ?>
         <div class="dropdown-divider"></div>
         <?php modalDropdownItem(uri() . '/logout/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout', 'text-danger'); ?>
@@ -77,7 +95,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
     <?php endif;
   }
 
-  if ($hasPortal && !$isSchoolPortal ) : ?>
+  if ($hasPortal && !$isSchoolPortal) : ?>
     <div class="h2 mt-4 m-0"><?php echo stationName($station); ?></div>
   <?php endif; ?>
 </div>
