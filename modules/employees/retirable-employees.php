@@ -14,13 +14,11 @@ messageAlert($showAlert, $message, $success);
         <thead>
           <tr>
             <th class="align-middle" width="5%">Photo</th>
-            <th class="align-middle" width="10%">Employee Number</th>
-            <th class="align-middle" width="20%">Name</th>
-            <th class="align-middle" width="5%">Sex</th>
+            <th class="align-middle" width="25%">Name</th>
             <th class="align-middle" width="15%">Date of Birth</th>
             <th class="align-middle" width="5%">Age</th>
-            <th class="align-middle" width="15%">Position</th>
-            <th class="align-middle" width="20%">Station</th>
+            <th class="align-middle" width="20%">Position</th>
+            <th class="align-middle" width="25%">Station</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
@@ -34,13 +32,14 @@ messageAlert($showAlert, $message, $success);
           ?>
             <tr class="text-uppercase">
               <td class="align-middle">
-                <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                  <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
-                </span>
+                <div class="image-container">
+                  <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                    <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
+                  </span>
+                  <div class="sex-sign"><?php sex($row['sex']); ?></div>
+                </div>
               </td>
-              <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
               <td class="align-middle text-left"><?php echo $employeeName; ?></td>
-              <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
               <td class="align-middle">
                 <?php echo getAge($row['year'], $row['month'], $row['day']); ?>
