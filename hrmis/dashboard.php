@@ -7,9 +7,9 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/add-employee-dial
 
 <div class="row mt-4">
   <?php
-  card('Active Employees', customUri('hrmis', 'Active Employees'), 'fa-user-check', 'primary', number_format(numRows(activeEmployees())));
+  card('Active Employees', customUri('hrmis', 'Active Employees'), 'fa-user-check', 'primary', $countActive);
 
-  card('Retirable Employees', customUri('hrmis', 'Retirable Employees'), 'fa-user-clock', 'success', number_format(numRows(retirableEmployees())));
+  card('Retirable Employees', customUri('hrmis', 'Retirable Employees'), 'fa-user-clock', 'success', $countRetirable);
 
   card('Celebrant Employees', customUri('hrmis', 'Celebrant Employees'), 'fa-birthday-cake', 'warning');
 

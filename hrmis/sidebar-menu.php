@@ -4,9 +4,12 @@ sidebarDivider();
 
 sidebarHeading('Employees');
 
-sidebarMenuItem(customUri('hrmis', 'Active Employees'), 'Active', 'fa-user-check', isset($url) && str_contains($url, 'Active'), number_format(numRows(activeEmployees())));
+$countActive = number_format(numRows(activeEmployees()));
+$countRetirable = number_format(numRows(retirableEmployees()));
 
-sidebarMenuItem(customUri('hrmis', 'Retirable Employees'), 'Retirable','fa-user-clock',isset($url) && str_contains($url, 'Retirable'), number_format(numRows(retirableEmployees())));
+sidebarMenuItem(customUri('hrmis', 'Active Employees'), 'Active', 'fa-user-check', isset($url) && str_contains($url, 'Active'), $countActive);
+
+sidebarMenuItem(customUri('hrmis', 'Retirable Employees'), 'Retirable','fa-user-clock',isset($url) && str_contains($url, 'Retirable'), $countRetirable);
 
 sidebarMenuItem(customUri('hrmis', 'Celebrant Employees'), 'Celebrant', 'fa-birthday-cake', isset($url) && str_contains($url, 'Celebrant'));
 
