@@ -15,10 +15,9 @@ messageAlert($showAlert, $message, $success);
           <tr>
             <th class="align-middle" width="5%">Photo</th>
             <th class="align-middle" width="20%">Name</th>
-            <th class="align-middle" width="5%">Sex</th>
             <th class="align-middle" width="15%">Email Address</th>
             <th class="align-middle" width="20%">Position</th>
-            <th class="align-middle" width="20%">Station</th>
+            <th class="align-middle" width="25%">Station</th>
             <th class="align-middle" width="10%">Status</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
@@ -33,12 +32,14 @@ messageAlert($showAlert, $message, $success);
           ?>
             <tr class="text-uppercase">
               <td class="align-middle">
-                <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                  <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
-                </span>
+                <div class="image-container">
+                  <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                    <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
+                  </span>
+                  <div class="sex-sign"><?php sex($row['sex']); ?></div>
+                </div>
               </td>
               <td class="align-middle text-left"><?php echo $employeeName; ?></td>
-              <td class="align-middle"><?php sex($row['sex']); ?></td>
               <td class="align-middle text-lowercase"><?php echo $row['email']; ?></td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetchAssoc(schoolById($row['assignment']))['name']; ?></td>
