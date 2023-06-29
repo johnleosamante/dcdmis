@@ -9,7 +9,7 @@ $isHrmis = $activeApp === 'hrmis';
     <?php if ($isHrmis) {
       contentTitleWithLink('Active Employees', uri() . '/hrmis');
     } else {
-      contentTitleWithLink('Active Employees', customUri('dmis', 'Users'));
+      contentTitle('Employees');
     } ?>
   </div>
 
@@ -63,6 +63,7 @@ $isHrmis = $activeApp === 'hrmis';
                     <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee'); 
                     } else {
                       modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Set User', 'fa-user-cog', 'Set User Access');
+                      modalDropdownItem(uri() . '/modules/users/reset-user-dialog.php?id=' . cipher($row['id']), 'Reset', 'fa-undo-alt', 'Reset User');
                     } ?>
                   </div>
                 </div>
