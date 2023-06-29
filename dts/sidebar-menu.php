@@ -2,15 +2,20 @@
 // dts/sidebar-menu.php
 sidebarDivider();
 
-sidebarMenuItem(customUri('dts', 'Incoming Documents'), 'Incoming', 'fa-file-download', isset($url) && str_contains($url, 'Incoming'), number_format(numRows(incomingDocuments($station))));
+$countIncoming = number_format(numRows(incomingDocuments($station)));
+$countPending = number_format(numRows(pendingDocuments($station)));
+$countOutgoing = number_format(numRows(outgoingDocuments($station)));
+$countOngoing = number_format(numRows(ongoingDocuments($station)));
 
-sidebarMenuItem(customUri('dts', 'Pending Documents'), 'Pending', 'fa-history', isset($url) && str_contains($url, 'Pending'), number_format(numRows(pendingDocuments($station))));
+sidebarMenuItem(customUri('dts', 'Incoming Documents'), 'Incoming', 'fa-file-download', isset($url) && str_contains($url, 'Incoming'), $countIncoming);
 
-sidebarMenuItem(customUri('dts', 'Outgoing Documents'), 'Outgoing', 'fa-file-upload', isset($url) && str_contains($url, 'Outgoing'), number_format(numRows(outgoingDocuments($station))));
+sidebarMenuItem(customUri('dts', 'Pending Documents'), 'Pending', 'fa-history', isset($url) && str_contains($url, 'Pending'), $countPending);
+
+sidebarMenuItem(customUri('dts', 'Outgoing Documents'), 'Outgoing', 'fa-file-upload', isset($url) && str_contains($url, 'Outgoing'), $countOutgoing);
 
 sidebarDivider();
 
-sidebarMenuItem(customUri('dts', 'Ongoing Documents'), 'Ongoing', 'fa-tasks', isset($url) && str_contains($url, 'Ongoing'), number_format(numRows(ongoingDocuments($station))));
+sidebarMenuItem(customUri('dts', 'Ongoing Documents'), 'Ongoing', 'fa-tasks', isset($url) && str_contains($url, 'Ongoing'), $countOngoing);
 
 sidebarDivider();
 
