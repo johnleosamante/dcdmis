@@ -52,7 +52,13 @@ if (isset($_POST['add-employee'])) {
   }
 
   createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image);
+  createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $employeeId);
+  createOtherInformation(0, 0, '', 0, '', 0, '0000-00-00', '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', $employeeId);
   createStation('-', $eStationId, $ePositionId, $employeeId);
+  createPsipop('', '1', 'Permanent', '0000-00-00', '', $employeeId);
+  createStepIncrement('0000-00-00', '1', '0', $employeeId);
+  createDeployment('0000-00-00', $eStationId, $ePositionId, '0', '1', '', $employeeId);
+  createAccount($email, hashPassword(generateStrongRandomPassword()));
 
   if (affectedRows() === 1) {
     $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information" target="_blank">' . strtoupper($employee) . '</a>] was saved successfully.';
