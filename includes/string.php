@@ -81,5 +81,7 @@ function generateStrongRandomPassword() {
     $randomPassword = randomPassword($length);
     $strongPassword = checkPasswordStrength($randomPassword);
   }
+
+  return $randomPassword;
 }
 ?>
