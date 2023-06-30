@@ -3,7 +3,7 @@
 restrictPublicAccess();
 
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrmis';
-$page = $appTitle = "Human Resource Management Information System";
+$page = $appTitle = 'Human Resource Management Information System';
 
 if (!isset($userId)) {
   redirect(uri() . '/login');

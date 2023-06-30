@@ -3,7 +3,7 @@
 restrictPublicAccess();
 
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
-$page = $appTitle = "Division Management Information System";
+$page = $appTitle = 'Division Management Information System';
 
 if (!isset($userId)) {
   redirect(uri() . '/login');

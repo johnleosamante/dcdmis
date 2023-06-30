@@ -64,7 +64,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
         }
 
         if (isStationUser($userId, 'hrtdms')) {
-          linkDropdownItem(uri() . '/dmis', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
+          linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
         }
 
         if (isStationUser($userId, 'dmis')) {

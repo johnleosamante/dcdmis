@@ -1,7 +1,7 @@
 <?php
 // dts/app.php
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'dts';
-$page = $appTitle = "Document Tracking System";
+$page = $appTitle = 'Document Tracking System';
 
 if (!isset($userId)) {
   redirect(uri() . '/login');
