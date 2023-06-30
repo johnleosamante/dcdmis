@@ -1,6 +1,7 @@
 <?php
 // includes/database/learning-development.php
 // learning_and_development
+// tbl_seminar
 function learningAndDevelopments($id) {
   return query("SELECT `No` AS `no`, Title_of_Training AS `title`, `From` AS `from`, `To` AS `to`, `Number_of_Hours` AS `hours`, `Managerial` AS `type`, `Conducted` AS `sponsor`, Emp_ID AS `id` FROM learning_and_development WHERE Emp_ID='{$id}' ORDER BY `From` DESC, `To` DESC;");
 }
@@ -19,5 +20,13 @@ function updateLearningAndDevelopment($title, $from, $to, $hours, $type, $sponso
 
 function deleteLearningAndDevelopment($id, $no) {
   nonQuery("DELETE FROM learning_and_development WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+}
+
+function trainings() {
+  return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `Category` AS `category`, `conducted_by` AS `sponsor`, `TVenue` AS `venue` FROM tbl_seminar ORDER BY `From` DESC, `To` DESC;");
+}
+
+function scheduledTrainings() {
+  return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `Category` AS `category`, `conducted_by` AS `sponsor`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` > NOW() ORDER BY `From` DESC, `To` DESC;");
 }
 ?>
