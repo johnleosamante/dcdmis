@@ -4,7 +4,7 @@ sidebarDivider();
 
 sidebarHeading('Trainings');
 
-$countScheduled = '0';
+$countScheduled = number_format(numRows(scheduledTrainings()));
 
 sidebarMenuItem(customUri('hrtdms', 'Scheduled Trainings'), 'Scheduled', 'fa-calendar-alt', isset($url) && str_contains($url, 'Scheduled'), $countScheduled);
 
