@@ -62,3 +62,7 @@ input::-ms-clear, input::-ms-reveal {
   width: 32px;
   height: 32px;
 }
+
+.toggled .menu-item {
+  margin: 0 auto;
+}
