@@ -26,6 +26,18 @@ function trainings() {
   return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `Category` AS `category`, `conducted_by` AS `sponsor`, `TVenue` AS `venue` FROM tbl_seminar ORDER BY `From` DESC, `To` DESC;");
 }
 
+function training($id) {
+  return query("SELECT `Training_code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `Category` AS `category`, `conducted_by` AS `sponsor`, `TVenue` AS `venue` FROM tbl_seminar WHERE `Training_code`='{$id}' LIMIT 1;");
+}
+
+function createTraining($title, $from, $to, $type, $sponsor, $venue) {
+  return nonQuery("INSERT INTO tbl_seminar (`Title_of_training`, `covered_from`, `covered_to`, `Category`, `conducted_by`, `TVenue`) VALUES ('{$title}', '{$from}', '{$to}', '{$type}', '{$sponsor}', '{$venue}');");
+}
+
+function updateTraining($title, $from, $to, $type, $sponsor, $venue, $id) {
+  return nonQuery("UPDATE tbl_seminar SET Title_of_training='{$title}', covered_from='{$from}, covered_to='{$to}', Category='{$type}', conducted_by='{$sponsor}, TVenue='{$venue} WHERE Training_Code='{$id} LIMIT 1;");
+}
+
 function scheduledTrainings() {
   return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `Category` AS `category`, `conducted_by` AS `sponsor`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` > NOW() ORDER BY `From` DESC, `To` DESC;");
 }
