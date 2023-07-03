@@ -26,7 +26,7 @@ function isDocumentFrom($id, $station, $status='New') {
   return numRows(query("SELECT Transaction_code AS id FROM tbl_transactions_log WHERE From_office='{$station}' AND `Status`='{$status}' AND Transaction_code='{$id}';"));
 }
 
-function insertDocument($id, $description, $station, $purpose, $details='') {
+function createDocument($id, $description, $station, $purpose, $details='') {
   nonQuery("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats, details) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}', '{$details}');");
 }
 
@@ -99,7 +99,7 @@ function documentLogs($id) {
   return query("SELECT Date_recieved AS `datetime`, Recieved_by AS `user`, From_office AS `from`, Forwarded_to AS `to`, Trans_status AS `status`, tbl_transactions_log.details FROM tbl_transactions_log WHERE Transaction_code='{$id}' ORDER BY Date_recieved DESC;");
 }
 
-function insertDocumentLog($id, $user, $station, $destination, $purpose, $status='New', $details='') {
+function createDocumentLog($id, $user, $station, $destination, $purpose, $status='New', $details='') {
   nonQuery("INSERT INTO tbl_transactions_log VALUES (null, NOW(), '{$user}', '{$station}', '{$destination}', '{$purpose}', '{$id}', '{$status}', '{$details}');");
 }
 

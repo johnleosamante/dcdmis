@@ -27,8 +27,8 @@ if (isset($_POST['save-document'])) {
     $description = sanitize($_POST['description']);
     $documentId = $code . '-' . $year . '-' . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
 
-    insertDocument($documentId, $description, $station, $purpose, $details);
-    insertDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
+    createDocument($documentId, $description, $station, $purpose, $details);
+    createDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
   } else {
     $status = 'updated';
     $updateDescription = false;
@@ -55,7 +55,7 @@ if (isset($_POST['receive-document'])) {
   updateDocumentLogsDone($documentId);
 
   if (affectedRows()) {
-    insertDocumentLog($documentId, $userId, $station, '-', 'Received', 'New');
+    createDocumentLog($documentId, $userId, $station, '-', 'Received', 'New');
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been received successfully.';
     $showAlert = true;
   }
@@ -69,7 +69,7 @@ if (isset($_POST['forward-document'])) {
   updateDocumentLogsDone($documentId);
 
   if (affectedRows()) {
-    insertDocumentLog($documentId, $userId, $station, sanitize($_POST['destination']), $purpose, 'New', $details);
+    createDocumentLog($documentId, $userId, $station, sanitize($_POST['destination']), $purpose, 'New', $details);
     updateDocumentStatus($documentId, $purpose, 'Unread', $details);
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been forwarded successfully!';
     $showAlert = true;
@@ -84,7 +84,7 @@ if (isset($_POST['complete-document'])) {
   updateDocumentLogsDone($documentId);
 
   if (affectedRows()) {
-    insertDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
+    createDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
     updateDocumentStatus($documentId, $status, 'Read', $remarks);
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been mark completed successfully.';
     $showAlert = true;
@@ -99,7 +99,7 @@ if (isset($_POST['cancel-document'])) {
   updateDocumentLogsDone($documentId);
 
   if (affectedRows()) {
-    insertDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
+    createDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
     updateDocumentStatus($documentId, $status, 'Read', $remarks);
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
     $showAlert = true;
