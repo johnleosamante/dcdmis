@@ -104,6 +104,30 @@ function checkEmployeeFamily() {
   }
 }
 
+function setTransactionStatus() {
+  nonQuery("UPDATE tbl_transactions SET `Status`='Unread' WHERE Trans_Stats NOT LIKE '%Complete%' OR Trans_Stats NOT LIKE '%Cancel%';");
+  nonQuery("UPDATE tbl_transactions SET `Status`='Read' WHERE Trans_Stats LIKE '%Complete%' OR Trans_Stats LIKE '%Cancel%';");
+}
+
+function setTransactionLogStatus() {
+  nonQuery("UPDATE tbl_transactions_Log SET `Status`='Done';");
+}
+
+function setLastTransactionLogStatus() {
+  $transactions = query("SELECT * FROM tbl_transactions WHERE Trans_Stats NOT LIKE '%Complete%' OR Trans_Stats NOT LIKE '%Cancel%';");
+  $no = 0;
+
+  while ($t = fetchAssoc($transactions)) {
+    $logs = query("SELECT * FROM tbl_transactions_log WHERE Transaction_code='" . $t['TransCode'] . "' ORDER BY Date_recieved DESC LIMIT 1;");
+    $l = fetchAssoc($logs);
+    nonQuery("UPDATE tbl_transactions_log SET `Status`='New' WHERE `No`='" . $l['No'] . "' AND Trans_status NOT LIKE '%Complete%' AND Trans_status NOT LIKE '%Cancel%';");
+
+    if (affectedRows() === 1) {
+      echo ++$no . ' | ' . $t['TransCode'] . ' | ' .$t['Title'] . '<br>';
+    }
+  }
+}
+
 //checkEmployeeStation();
 //checkEmployeeAccount();
 //checkEmployeeStepIncrement();
@@ -111,4 +135,7 @@ function checkEmployeeFamily() {
 //checkEmployeePsipop();
 //checkEmployeeDeployment();
 //checkEmployeeFamily();
+//setTransactionStatus();
+//setTransactionLogStatus();
+setLastTransactionLogStatus();
 ?>
