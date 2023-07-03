@@ -5,7 +5,8 @@ require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/layout/components.php');
 
 $trainingId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$title = $type = $sponsor = $venue = $participants = '';
+$title = $type = $sponsor = $venue = '';
+$participants = 1;
 $dateFrom = $dateTo = date('Y-m-d');
 $modalTitle = 'New Training';
 $hasTraining = true;
@@ -40,7 +41,7 @@ $hasTraining = true;
 
           <div class="form-group">
             <label for="type" class="mb-0">Type <?php showAsterisk(); ?></label>
-            <input id="type" name="type" tyoe="text" class="form-control" value="<?php echo $type; ?>" required>
+            <input id="type" name="type" type="text" class="form-control" value="<?php echo $type; ?>" required>
           </div>
 
           <div class="form-group">
@@ -51,11 +52,6 @@ $hasTraining = true;
           <div class="form-group">
             <label for="venue" class="mb-0">Venue <?php showAsterisk(); ?></label>
             <input id="venue" name="venue" type="text" class="form-control" value="<?php echo $venue; ?>" required>
-          </div>
-
-          <div class="form-group">
-            <label for="participants" class="mb-0">Expected Number of Participants <?php showAsterisk(); ?></label>
-            <input id="participants" name="participants" type="number" class="form-control" value="<?php echo $participants; ?>" required>
           </div>
 
           <?php requiredLegend(0); ?>
