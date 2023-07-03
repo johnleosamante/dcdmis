@@ -20,10 +20,10 @@ function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = nu
 { ?>
   <li class="nav-item <?php echo $condition ? ' active' : ''; ?>">
     <a class="nav-link d-flex align-items-center justify-content-between" href="<?php echo $link; ?>">
-      <span>
+      <div class="menu-item">
         <i class="fas fa-fw <?php echo $icon; ?>"></i>
         <span><?php echo $title; ?></span>
-      </span>
+      </div>
       <?php if ($counter !== null) : ?>
         <span class="bg-dark px-2 rounded-pill font-weight-bold"><?php echo $counter; ?></span>
       <?php endif; ?>
