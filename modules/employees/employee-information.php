@@ -23,13 +23,17 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php if (!$editMode) {
-      $activeTab = 'personal-information';
-      contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Edit Employee Information', $employeeId), 'Edit', 'fa-edit');
+    <?php
+    if (!isset($isPis)) {
+      if (!$editMode) {
+        contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Edit Employee Information', $employeeId), 'Edit', 'fa-edit');
+      } else {
+        $employeeId = $employeeId;
+        $employeePhoto = $employee['picture'];
+        contentTitleWithLink('Update Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Employee Information', $employeeId));
+      }
     } else {
-      $employeeId = $employeeId;
-      $employeePhoto = $employee['picture'];
-      contentTitleWithLink('Update Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Employee Information', $employeeId));
+      contentTitle('Personal Data Sheet');
     }
 
     $pdsProgress = 0;
