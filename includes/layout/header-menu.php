@@ -68,7 +68,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
         }
 
         if (isStationUser($userId, 'dmis')) {
-          linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-chart-line', 'Division Management Information System');
+          linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-industry', 'Division Management Information System');
         }
         ?>
         <div class="dropdown-divider"></div>
