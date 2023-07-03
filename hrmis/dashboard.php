@@ -13,7 +13,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/add-employee-dial
 
   card('Celebrant Employees', customUri('hrmis', 'Celebrant Employees'), 'fa-birthday-cake', 'warning');
 
-  card('Archived Employees', customUri('hrmis', 'Archived Employees'), 'fa-user-lock', 'danger');
+  card('Archived Employees', customUri('hrmis', 'Archived Employees'), 'fa-archive', 'danger');
   ?>
 </div><!-- .row -->
 
