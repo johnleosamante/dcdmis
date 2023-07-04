@@ -16,7 +16,7 @@ if (numRows(userRole($userId, $activeApp)) === 0) {
 if (isset($_POST['save-training'])) {
   $trainingId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $title = sanitize($_POST['title']);
-  $from = sanitize($_POST['from']);
+  $from = isset($_POST['from']) ? sanitize($_POST['from']) : date('Y-m-d');
   $to = sanitize($_POST['to']);
   $type = sanitize($_POST['type']);
   $sponsor = sanitize($_POST['sponsor']);
@@ -24,16 +24,18 @@ if (isset($_POST['save-training'])) {
 
   if (numRows(training($trainingId)) === 0) {
     $status = 'saved';
-    createTraining($title, $from, $to, $type, $sponsor, $venue);
+    $year = toDate($from, 'y', date('y'));
+    $trainingId = 'HRTD-' . $year . '-' . sprintf("%04d", countTrainings($year) + 1);
+    createTraining($trainingId, $title, $from, $to, $type, $sponsor, $venue);
   } else {
     $status = 'updated';
-    updateTraining($title, $from, $to, $type, $sponsor, $venue, $trainingId);
+    updateTraining($trainingId, $title, $from, $to, $type, $sponsor, $venue);
   }
 
   if (affectedRows()) {
-    $showResult = true;
+    $showAlert = true;
     $success = true;
-    $message = "Training has been {$status} successfully.";
+    $message = 'Training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details" target="_blank">' . strtoupper($trainingId) . '</a>] has been ' . $status . ' successfully.';
   }
 }
 ?>
