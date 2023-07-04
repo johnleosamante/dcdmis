@@ -5,7 +5,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitleWithLink('Scheduled Trainings', uri() . '/hrtdms'); ?>
+    <?php contentTitleWithLink('Conducted Trainings', uri() . '/hrtdms'); ?>
   </div>
 
   <div class="card-body">
@@ -27,7 +27,7 @@ messageAlert($showAlert, $message, $success);
         </thead>
         <tbody>
           <?php
-          $trainings = scheduledTrainings();
+          $trainings = conductedTrainings();
 
           if (numRows($trainings) > 0) {
             while ($training = fetchAssoc($trainings)) : ?>
@@ -42,7 +42,7 @@ messageAlert($showAlert, $message, $success);
                   <div class="dropdown no-arrow">
                     <?php dropdownEllipsis(); ?>
                     <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                      <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['no']), 'View', 'fa-eye', 'View Training'); 
+                      <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['no']), 'View', 'fa-eye', 'View Training');
                       modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['no']), 'Edit', 'fa-edit', 'Edit Training'); ?>
                     </div>
                   </div>
