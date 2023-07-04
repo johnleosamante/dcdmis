@@ -12,6 +12,7 @@ $title = $type = $sponsor = $venue = '';
 $participants = 1;
 $dateFrom = $dateTo = date('Y-m-d');
 $modalTitle = 'New Training';
+$notFound  = true;
 
 if (numRows($trainings) > 0) {
   $training = fetchAssoc($trainings);
@@ -23,6 +24,7 @@ if (numRows($trainings) > 0) {
   $sponsor = $training['sponsor'];
   $venue = $training['venue'];
   $modalTitle = 'Edit Training';
+  $notFound = false;
 }
 ?>
 
@@ -32,10 +34,12 @@ if (numRows($trainings) > 0) {
 
     <form action="" method="POST">
       <div class="modal-body">
-        <div class="form-group">
-          <label for="code" class="mb-0">Code <?php showAsterisk(); ?></label>
-          <input type="text" id="code" name="code" class="form-control" value="<?php echo $trainingId; ?>" required>
-        </div>
+        <?php if (!$notFound) : ?>
+          <div class="form-group">
+            <label for="code" class="mb-0">Code <?php showAsterisk(); ?></label>
+            <input type="text" id="code" class="form-control text-uppercase" value="<?php echo $trainingId; ?>" disabled>
+          </div>
+        <?php endif; ?>
 
         <div class="form-group">
           <label for="title" class="mb-0">Title <?php showAsterisk(); ?></label>
