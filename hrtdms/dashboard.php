@@ -2,7 +2,7 @@
 // hrtdms/dashboard.php
 messageAlert($showAlert, $message, $success);
 
-contentTitleWithModal('Dashboard', uri() . '/modules/trainings/add-training-dialog.php', 'Add Training', 'fa-plus');
+contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dialog.php', 'Add Training', 'fa-plus');
 ?>
 
 <div class="row mt-4">
