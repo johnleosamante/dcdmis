@@ -8,8 +8,20 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+  if ($('#data-table-previous').length > 0) {
+    $('#data-table-previous').DataTable();
+  }
+});
+
+$(document).ready(function () {
   if ($('#data-table').length > 0) {
     $('#data-table').DataTable();
+  }
+});
+
+$(document).ready(function () {
+  if ($('#data-table-next').length > 0) {
+    $('#data-table-next').DataTable();
   }
 });
 
