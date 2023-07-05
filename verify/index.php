@@ -128,6 +128,19 @@ function setLastTransactionLogStatus() {
   }
 }
 
+function setTeacherPassword() {
+  $users = query("SELECT `username`, `password` FROM tbl_user WHERE `password` <> '';");
+  $no = 0;
+
+  while ($u = fetchAssoc($users)) {
+    nonQuery("UPDATE tbl_teacher_account SET `Teacher_Password`='" . $u['password'] . "' WHERE `Teacher_TIN`='" . $u['username'] . "';");
+
+    if (affectedRows() === 1) {
+      echo ++$no . ' | ' . $u['username'] . '<br>';
+    }
+  }
+}
+
 //checkEmployeeStation();
 //checkEmployeeAccount();
 //checkEmployeeStepIncrement();
@@ -137,5 +150,6 @@ function setLastTransactionLogStatus() {
 //checkEmployeeFamily();
 //setTransactionStatus();
 //setTransactionLogStatus();
-setLastTransactionLogStatus();
+//setLastTransactionLogStatus();
+//setTeacherPassword();
 ?>
