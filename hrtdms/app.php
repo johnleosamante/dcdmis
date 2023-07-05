@@ -38,4 +38,45 @@ if (isset($_POST['save-training'])) {
     $message = 'Training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details" target="_blank">' . strtoupper($trainingId) . '</a>] has been ' . $status . ' successfully.';
   }
 }
+
+if (isset($_POST['add-participants'])) {
+  $showAlert = true;
+
+  if (!isset($_POST['participants'])) {
+    $success = false;
+    $message = 'No training participant was added.';
+    return;
+  }
+
+  $trainingId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $participants = $_POST['participants'];
+  $no = 0;
+  
+  foreach ($participants as $participant) {
+    $id = sanitize(decipher($participant));
+    if (!isTrainingParticipant($trainingId, $id)) {
+      ++$no;
+      createTrainingParticipant($trainingId, $id);
+    }
+  }
+
+  if (affectedRows()) {
+    $noun = $no === 1 ? ' was' : 's were';
+    $success = true;
+    $message = $no . ' training participant' . $noun . ' added successfully.';
+  }
+}
+
+if (isset($_POST['remove-participant'])) {
+  $participantId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $trainingId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  
+  deleteTrainingParticipant($trainingId, $participantId);
+
+  if (affectedRows()) {
+    $showAlert = true;
+    $success = true;
+    $message = 'A participant has been removed successfully.';
+  }
+}
 ?>
