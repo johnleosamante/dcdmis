@@ -23,5 +23,6 @@ require_once(root() . '/includes/database/membership.php');
 require_once(root() . '/includes/database/other-information.php');
 require_once(root() . '/includes/database/references.php');
 require_once(root() . '/includes/database/utility.php');
+require_once(root() . '/includes/database/card-type.php');
 require_once(root() . '/includes/layout/theme-dashboard.php');
 ?>

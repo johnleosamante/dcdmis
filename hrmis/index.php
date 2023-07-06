@@ -28,5 +28,6 @@ require_once(root() . '/includes/database/station.php');
 require_once(root() . '/includes/database/psipop.php');
 require_once(root() . '/includes/database/step-increment.php');
 require_once(root() . '/includes/database/deployment-history.php');
+require_once(root() . '/includes/database/card-type.php');
 require_once(root() . '/includes/layout/theme-dashboard.php');
 ?>

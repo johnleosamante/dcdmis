@@ -12,5 +12,6 @@ require_once(root() . '/includes/database/position.php');
 require_once(root() . '/includes/database/section.php');
 require_once(root() . '/includes/database/utility.php');
 require_once(root() . '/includes/database/station.php');
+require_once(root() . '/includes/database/card-type.php');
 require_once(root() . '/includes/layout/theme-dashboard.php');
 ?>
