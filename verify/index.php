@@ -104,6 +104,21 @@ function checkEmployeeFamily() {
   }
 }
 
+function checkEmployeeValidId() {
+  $activeEmployees = query("SELECT * FROM `tbl_employee`;");
+  $no = 0;
+
+  while ($active = fetchAssoc($activeEmployees)) {
+    if (numRows(query("SELECT * FROM tbl_valid_id WHERE Emp_ID='" . $active['Emp_ID'] . "';")) === 0) {
+      query("INSERT INTO tbl_valid_id (`Government`, `ID_Number`, `Place_issued`, `Date_issued`, `Emp_ID`) VALUES ('', '', '', NOW(), '" . $active['Emp_ID'] . "');");
+
+      if (affectedRows() === 1) {
+        echo ++$no . ' | ' . $active['Emp_ID'] . ' | ' . toName($active['Emp_LName'], $active['Emp_FName'], $active['Emp_MName'], $active['Emp_Extension']) . '<br>';
+      }
+    }
+  }
+}
+
 function setTransactionStatus() {
   nonQuery("UPDATE tbl_transactions SET `Status`='Unread' WHERE Trans_Stats NOT LIKE '%Complete%' OR Trans_Stats NOT LIKE '%Cancel%';");
   nonQuery("UPDATE tbl_transactions SET `Status`='Read' WHERE Trans_Stats LIKE '%Complete%' OR Trans_Stats LIKE '%Cancel%';");
@@ -148,6 +163,7 @@ function setTeacherPassword() {
 //checkEmployeePsipop();
 //checkEmployeeDeployment();
 //checkEmployeeFamily();
+checkEmployeeValidId();
 //setTransactionStatus();
 //setTransactionLogStatus();
 //setLastTransactionLogStatus();
