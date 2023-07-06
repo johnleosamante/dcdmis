@@ -18,12 +18,16 @@ messageAlert($showAlert, $message, $success);
       <li class="nav-item">
         <a class="nav-link text-secondary" href="#password-change" data-toggle="tab">Password Change</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link text-secondary" href="#identification" data-toggle="tab">Identification Details</a>
+      </li>
     </ul>
 
     <div class="tab-content pt-2 px-2">
       <?php
       require_once('contacts.php');
       require_once('password.php');
+      require_once('identification.php');
       ?>
     </div>
   </div>
