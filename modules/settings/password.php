@@ -19,7 +19,7 @@
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <div class="form-group">
-          <label for="old-password" class="mb-0">Old Password: <?php showAsterisk(); ?></label>
+          <label for="old-password" class="mb-0">Old Password <?php showAsterisk(); ?></label>
           <div class="input-group">
             <input id="old-password" name="old-password" type="password" class="form-control border-right-0" value="<?php echo $oldPassword; ?>" required>
             <div class="input-group-append">
@@ -35,7 +35,7 @@
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <div class="form-group">
-          <label for="password" class="mb-0">New Password: <?php showAsterisk(); ?></label>
+          <label for="password" class="mb-0">New Password <?php showAsterisk(); ?></label>
           <div class="input-group">
             <input id="password" name="password" type="password" class="form-control border-right-0" value="<?php echo $password; ?>" required>
             <div class="input-group-append">
@@ -51,7 +51,7 @@
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <div class="form-group">
-          <label for="password-confirm" class="mb-0">Retype New Password: <?php showAsterisk(); ?></label>
+          <label for="password-confirm" class="mb-0">Retype New Password <?php showAsterisk(); ?></label>
           <div class="input-group">
             <input id="password-confirm" name="password-confirm" type="password" class="form-control border-right-0" value="<?php echo $passwordConfirm; ?>" required>
             <div class="input-group-append">
@@ -67,7 +67,7 @@
     <div class="row">
       <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
         <div class="form-group">
-          <label for="generate-password" class="mb-0">Generate Password:</label>
+          <label for="generate-password" class="mb-0">Generate Password</label>
           <div class="input-group">
             <input id="generate-password" name="generate-password" type="text" class="form-control" value="<?php echo $generatePassword; ?>">
             <div class="input-group-append">
