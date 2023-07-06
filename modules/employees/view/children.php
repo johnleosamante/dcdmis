@@ -28,7 +28,7 @@
           if (numRows($children) > 0) {
             while ($child = fetchAssoc($children)) : ?>
               <tr>
-                <td class="align-middle"><?php echo toName($child['last'], $child['first'], $child['middle'], $child['ext']); ?></td>
+                <td class="align-middle"><?php echo toName($child['last'], $child['first'], $child['middle'], $child['ext'], true); ?></td>
                 <td class="align-middle"><?php echo toDate($child['dob']); ?></td>
                 <?php if ($editMode) : ?>
                   <td class="align-middle text-capitalize">
