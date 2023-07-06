@@ -102,7 +102,7 @@ if (numRows($otherInformation) > 0) {
 
             <div class="form-group mb-2">
               <label for="date-filed" class="m-0">Date Filed:</label>
-              <input id="date-filed" name="date-filed" type="<?php echo $wasCharged ? 'date' : 'text'; ?>" value="<?php echo $wasCharged ? $dateFiled : ''; ?>" class="form-control" <?php echo !$editMode ? ' readonly' : ''; ?>>
+              <input id="date-filed" name="date-filed" type="date" value="<?php echo $wasCharged ? $dateFiled : date('Y-m-d'); ?>" class="form-control" <?php echo !$editMode ? ' readonly' : ''; ?>>
             </div>
 
             <div class="form-group mb-0">
@@ -202,7 +202,17 @@ if (numRows($otherInformation) > 0) {
 
         <div class="form-group mb-0">
           <label for="immigrant-country" class="m-0">If YES, give details (country):</label>
-          <input id="immigrant-country" name="immigrant-country" type="text" value="<?php echo $immigrantCountry; ?>" class="form-control" <?php echo !$editMode ? ' readonly' : ''; ?>>
+          <?php if (!$editMode) : ?>
+            <input id="immigrant-country" name="immigrant-country" type="text" value="<?php echo $immigrantCountry; ?>" class="form-control" readonly>
+          <?php else : ?>
+            <select class="form-control" id="immigrant-country" name="immigrant-country">
+              <option value="N/A">N/A</option>
+              <?php $countries = countries();
+              while ($country = fetchAssoc($countries)) : ?>
+                <option value="<?php echo $country['name']; ?>" <?php echo setOptionSelected($country['name'], $immigrantCountry); ?>><?php echo $country['name']; ?></option>
+              <?php endwhile; ?>
+            </select>
+          <?php endif; ?>
         </div>
       </div>
     </div>
