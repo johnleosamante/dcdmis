@@ -221,7 +221,18 @@
           <div class="col-lg-3">
             <div class="form-group">
               <label for="citizenship" class="mb-0">Citizenship: <?php showAsterisk($editMode); ?></label>
-              <input id="citizenship" name="citizenship" type="text" class="form-control" value="<?php echo $employee['citizenship']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
+              <?php
+              $citizenship = empty($employee['citizenship']) ? 'Filipino' : $employee['citizenship'];
+              if (!$editMode) : ?>
+              <input id="citizenship" name="citizenship" type="text" class="form-control" value="<?php echo $citizenship; ?>" readonly>
+              <?php else: ?>
+                <select class="form-control" id="citizenship" name="citizenship" required>
+                  <?php $nationalities = nationalities();
+                  while ($nationality = fetchAssoc($nationalities)) : ?>
+                    <option value="<?php echo $nationality['name']; ?>" <?php echo setOptionSelected($nationality['name'], $citizenship); ?>><?php echo $nationality['name']; ?></option>
+                  <?php endwhile; ?>
+                </select>
+              <?php endif; ?>
             </div>
           </div>
 
@@ -243,7 +254,17 @@
           <div class="col-lg-6">
             <div class="form-group">
               <label for="dual-citizenship-country" class="mb-0">Please Indicate Country if Dual Citizen:</label>
-              <input id="dual-citizenship-country" name="dual-citizenship-country" type="text" class="form-control" value="<?php echo $employee['country']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
+              <?php if (!$editMode) : ?>
+                <input id="dual-citizenship-country" name="dual-citizenship-country" type="text" class="form-control" value="<?php echo $employee['country']; ?>" readonly>
+              <?php else: ?>
+                <select class="form-control" id="dual-citizenship-country" name="dual-citizenship-country">
+                  <option value="N/A">N/A</option>
+                  <?php $countries = countries();
+                  while ($country = fetchAssoc($countries)) : ?>
+                    <option value="<?php echo $country['name']; ?>" <?php echo setOptionSelected($country['name'], $employee['country']); ?>><?php echo $country['name']; ?></option>
+                  <?php endwhile; ?>
+                </select>
+              <?php endif; ?>
             </div>
           </div>
         </div>
