@@ -38,7 +38,7 @@ if (isset($_POST['update-password'])) {
 
   updateAccountPassword($email, hashPassword($passwordConfirm));
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $message = 'Your password has been updated successfully.';
     $success = true;
     $oldPassword = $password = $passwordConfirm = $generatePassword = null;
@@ -51,9 +51,28 @@ if (isset($_POST['update-contact-details'])) {
 
   updateEmployeeContactDetails($alternateMobile, $alternateEmail, $userId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $showAlert = true;
     $message = 'Your contact details have been updated successfully.';
+    $success = true;
+  }
+}
+
+if (isset($_POST['update-identification'])) {
+  $card = sanitize($_POST['card-type']);
+  $number = sanitize($_POST['card-number']);
+  $place = sanitize($_POST['card-place']);
+  $date = sanitize($_POST['card-date']);
+
+  if (numRows(employeeIdentification($userId)) === 0) {
+    createIdentification($card, $number, $place, $date, $userId);
+  } else {
+    updateIdentification($card, $number, $place, $date, $userId);
+  }
+
+  if (affectedRows()) {
+    $showAlert = true;
+    $message = 'Your identification details have been updated successfully.';
     $success = true;
   }
 }
