@@ -44,35 +44,35 @@
 
       <div class="col-sm-12 col-md-8 col-lg-9 col-xl-10">
         <div class=" form-group">
-          <label for="lname" class="mb-0">Last Name: <?php showAsterisk($editMode); ?></label>
+          <label for="lname" class="mb-0">Last Name <?php showAsterisk($editMode); ?></label>
           <input id="lname" name="lname" type="text" class="form-control" value="<?php echo $employee['lname']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
         </div>
 
         <div class="row">
           <div class="col-lg-9">
             <div class="form-group">
-              <label for="fname" class="mb-0">First Name: <?php showAsterisk($editMode); ?></label>
+              <label for="fname" class="mb-0">First Name <?php showAsterisk($editMode); ?></label>
               <input id="fname" name="fname" type="text" class="form-control" value="<?php echo $employee['fname']; ?>" autocomplete="false" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="ext" class="mb-0">Name Extension:</label>
+              <label for="ext" class="mb-0">Name Extension</label>
               <input id="ext" name="ext" type="text" class="form-control" value="<?php echo $employee['ext']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="mname" class="mb-0">Middle Name:</label>
+          <label for="mname" class="mb-0">Middle Name</label>
           <input id="mname" name="mname" type="text" class="form-control" value="<?php echo $employee['mname']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
         </div>
 
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="dob" class="mb-0">Date of Birth: <?php showAsterisk($editMode); ?></label>
+              <label for="dob" class="mb-0">Date of Birth <?php showAsterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
                 <input id="dob" type="text" class="form-control" value="<?php echo $employee['month'] . '/' . $employee['day'] . '/' . $employee['year']; ?>" readonly>
               <?php else : ?>
@@ -83,7 +83,7 @@
 
           <div class="col-lg-9">
             <div class="form-group">
-              <label for="pob" class="mb-0">Place of Birth: <?php showAsterisk($editMode); ?></label>
+              <label for="pob" class="mb-0">Place of Birth <?php showAsterisk($editMode); ?></label>
               <input id="pob" name="pob" type="text" class="form-control" value="<?php echo $employee['pob']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
@@ -92,7 +92,7 @@
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="sex" class="mb-0">Sex: <?php showAsterisk($editMode); ?></label>
+              <label for="sex" class="mb-0">Sex <?php showAsterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
                 <input id="sex" type="text" class="form-control" value="<?php echo $employee['sex']; ?>" readonly>
               <?php else : ?>
@@ -106,7 +106,7 @@
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="civil-status" class="mb-0">Civil Status: <?php showAsterisk($editMode); ?></label>
+              <label for="civil-status" class="mb-0">Civil Status <?php showAsterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
                 <input id="civil-status" type="text" class="form-control" value="<?php echo $employee['civil_status']; ?>" readonly>
               <?php else : ?>
@@ -123,7 +123,7 @@
 
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="civil-status-specify" class="mb-0">Specify, if Others:</label>
+              <label for="civil-status-specify" class="mb-0">Specify, if Others</label>
               <input id="civil-status-specify" name="civil-status-specify" type="text" class="form-control" value="<?php echo $employee['civil_status_specify']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
@@ -132,7 +132,7 @@
         <div class="row">
           <div class="col-lg-2">
             <div class="form-group">
-              <label for="height" class="mb-0">Height (m): <?php showAsterisk($editMode); ?></label>
+              <label for="height" class="mb-0">Height (m) <?php showAsterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
                 <input id="height" type="text" class="form-control" value="<?php echo $employee['height']; ?>" readonly>
               <?php else : ?>
@@ -143,7 +143,7 @@
 
           <div class="col-lg-2">
             <div class="form-group">
-              <label for="weight" class="mb-0">Weight (kg): <?php showAsterisk($editMode); ?></label>
+              <label for="weight" class="mb-0">Weight (kg) <?php showAsterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
                 <input id="weight" type="text" class="form-control" value="<?php echo $employee['weight']; ?>" readonly>
               <?php else : ?>
@@ -154,7 +154,7 @@
 
           <div class=" col-lg-2">
             <div class="form-group">
-              <label for="blood-type" class="mb-0">Blood Type: <?php showAsterisk($editMode); ?></label>
+              <label for="blood-type" class="mb-0">Blood Type <?php showAsterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
                 <input id="blood-type" type="text" class="form-control" value="<?php echo $employee['blood_type']; ?>" readonly>
               <?php else : ?>
@@ -174,14 +174,14 @@
 
           <div class=" col-lg-3">
             <div class="form-group">
-              <label for="gsis" class="mb-0">GSIS No.:</label>
+              <label for="gsis" class="mb-0">GSIS No.</label>
               <input id="gsis" name="gsis" type="text" class="form-control" value="<?php echo $employee['gsis']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
 
           <div class=" col-lg-3">
             <div class="form-group">
-              <label for="pagibig" class="mb-0">PAGIBIG ID No.:</label>
+              <label for="pagibig" class="mb-0">PAGIBIG ID No.</label>
               <input id="pagibig" name="pagibig" type="text" class="form-control" value="<?php echo $employee['pagibig']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
@@ -190,28 +190,28 @@
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="philhealth" class="mb-0">PHILHEALTH No.:</label>
+              <label for="philhealth" class="mb-0">PHILHEALTH No.</label>
               <input id="philhealth" name="philhealth" type="text" class="form-control" value="<?php echo $employee['philhealth']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="sss" class="mb-0">SSS No.:</label>
+              <label for="sss" class="mb-0">SSS No.</label>
               <input id="sss" name="sss" type="text" class="form-control" value="<?php echo $employee['sss']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="tin" class="mb-0">TIN No.:</label>
+              <label for="tin" class="mb-0">TIN No.</label>
               <input id="tin" name="tin" type="text" class="form-control" value="<?php echo $employee['tin']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="agency-id" class="mb-0">Agency Employee No.:</label>
+              <label for="agency-id" class="mb-0">Agency Employee No.</label>
               <input id="agency-id" name="agency-id" type="text" class="form-control" value="<?php echo $employee['agency_id']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
@@ -220,16 +220,23 @@
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="citizenship" class="mb-0">Citizenship: <?php showAsterisk($editMode); ?></label>
+              <label for="citizenship" class="mb-0">Citizenship <?php showAsterisk($editMode); ?></label>
               <?php
-              $citizenship = empty($employee['citizenship']) ? 'Filipino' : $employee['citizenship'];
+              $citizenship = '1';
+              $nationalityName = 'Filipino';
+              $nationalities = nationality($employee['citizenship']);
+              if (numRows($nationalities) > 0) {
+                $nationality = fetchAssoc($nationalities);
+                $nationalityName = $nationality['name'];
+                $citizenship = $nationality['id'];
+              }
               if (!$editMode) : ?>
-              <input id="citizenship" name="citizenship" type="text" class="form-control" value="<?php echo $citizenship; ?>" readonly>
+              <input id="citizenship" name="citizenship" type="text" class="form-control" value="<?php echo $nationalityName; ?>" readonly>
               <?php else: ?>
                 <select class="form-control" id="citizenship" name="citizenship" required>
                   <?php $nationalities = nationalities();
                   while ($nationality = fetchAssoc($nationalities)) : ?>
-                    <option value="<?php echo $nationality['name']; ?>" <?php echo setOptionSelected($nationality['name'], $citizenship); ?>><?php echo $nationality['name']; ?></option>
+                    <option value="<?php echo $nationality['id']; ?>" <?php echo setOptionSelected($nationality['id'], $citizenship); ?>><?php echo $nationality['name']; ?></option>
                   <?php endwhile; ?>
                 </select>
               <?php endif; ?>
@@ -238,7 +245,7 @@
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="dual-citizenship" class="mb-0">Dual Citizenship: <?php showAsterisk($editMode); ?></label>
+              <label for="dual-citizenship" class="mb-0">Dual Citizenship <?php showAsterisk($editMode); ?></label>
               <?php if (!$editMode) : ?>
                 <input id="dual-citizenship" name="dual-citizenship" type="text" class="form-control" value="<?php echo $employee['dual_citizenship']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
               <?php else : ?>
@@ -253,15 +260,23 @@
 
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="dual-citizenship-country" class="mb-0">Please Indicate Country if Dual Citizen:</label>
+              <label for="dual-citizenship-country" class="mb-0">Please Indicate Country if Dual Citizen</label>
               <?php if (!$editMode) : ?>
-                <input id="dual-citizenship-country" name="dual-citizenship-country" type="text" class="form-control" value="<?php echo $employee['country']; ?>" readonly>
+                <?php
+                  $countryName = 'N/A';
+                  $countries = country($employee['country']);
+                  if (numRows($countries) > 0) {
+                    $country = fetchAssoc($countries);
+                    $countryName = $country['name'];
+                  }
+                ?>
+                <input id="dual-citizenship-country" name="dual-citizenship-country" type="text" class="form-control" value="<?php echo $countryName; ?>" readonly>
               <?php else: ?>
                 <select class="form-control" id="dual-citizenship-country" name="dual-citizenship-country">
                   <option value="N/A">N/A</option>
                   <?php $countries = countries();
                   while ($country = fetchAssoc($countries)) : ?>
-                    <option value="<?php echo $country['name']; ?>" <?php echo setOptionSelected($country['name'], $employee['country']); ?>><?php echo $country['name']; ?></option>
+                    <option value="<?php echo $country['id']; ?>" <?php echo setOptionSelected($country['id'], $employee['country']); ?>><?php echo $country['name']; ?></option>
                   <?php endwhile; ?>
                 </select>
               <?php endif; ?>
@@ -269,7 +284,7 @@
           </div>
         </div>
 
-        <div>Residential Address:</div>
+        <div>Residential Address</div>
 
         <hr class="mt-2">
 
@@ -326,7 +341,7 @@
           </div>
         </div>
 
-        <div>Permanent Address:</div>
+        <div>Permanent Address</div>
 
         <hr class="mt-2">
 
@@ -386,21 +401,21 @@
         <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="telephone" class="mb-0">Telephone Number:</label>
+              <label for="telephone" class="mb-0">Telephone Number</label>
               <input id="telephone" name="telephone" type="text" class="form-control" value="<?php echo $employee['telephone']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="mobile" class="mb-0">Mobile Number: <?php showAsterisk($editMode); ?></label>
+              <label for="mobile" class="mb-0">Mobile Number <?php showAsterisk($editMode); ?></label>
               <input id="mobile" name="mobile" type="text" class="form-control" value="<?php echo $employee['mobile']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="form-group">
-              <label for="email" class="mb-0">Email Address: <?php showAsterisk($editMode); ?></label>
+              <label for="email" class="mb-0">Email Address <?php showAsterisk($editMode); ?></label>
               <input id="email" name="email" type="email" class="form-control" value="<?php echo $employee['email']; ?>" autocomplete="false" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
               <input type="hidden" name="data-verifier" value="<?php echo cipher($employee['email']); ?>">
             </div>

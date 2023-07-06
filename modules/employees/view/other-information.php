@@ -203,13 +203,21 @@ if (numRows($otherInformation) > 0) {
         <div class="form-group mb-0">
           <label for="immigrant-country" class="m-0">If YES, give details (country):</label>
           <?php if (!$editMode) : ?>
-            <input id="immigrant-country" name="immigrant-country" type="text" value="<?php echo $immigrantCountry; ?>" class="form-control" readonly>
+            <?php
+              $immigrantCountryName = 'N/A';
+              $immigrantCountries = country($immigrantCountry);
+              if (numRows($immigrantCountries) > 0) {
+                $immigrantCountry = fetchAssoc($immigrantCountries);
+                $immigrantCountryName = $immigrantCountry['name'];
+              }
+            ?>
+            <input id="immigrant-country" name="immigrant-country" type="text" value="<?php echo $immigrantCountryName; ?>" class="form-control" readonly>
           <?php else : ?>
             <select class="form-control" id="immigrant-country" name="immigrant-country">
-              <option value="N/A">N/A</option>
+              <option value="">N/A</option>
               <?php $countries = countries();
               while ($country = fetchAssoc($countries)) : ?>
-                <option value="<?php echo $country['name']; ?>" <?php echo setOptionSelected($country['name'], $immigrantCountry); ?>><?php echo $country['name']; ?></option>
+                <option value="<?php echo $country['id']; ?>" <?php echo setOptionSelected($country['id'], $immigrantCountry); ?>><?php echo $country['name']; ?></option>
               <?php endwhile; ?>
             </select>
           <?php endif; ?>
