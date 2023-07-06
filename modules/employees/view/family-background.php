@@ -30,7 +30,7 @@ if (numRows($familyMembers) > 0) {
     <?php endif; ?>
     <div class="row mt-3">
       <div class="col">
-        <div>Spouse:</div>
+        <div>Spouse's Name</div>
 
         <hr class="mt-2">
 
@@ -96,7 +96,7 @@ if (numRows($familyMembers) > 0) {
           </div>
         </div>
 
-        <div>Father:</div>
+        <div>Father's Name</div>
 
         <hr class="mt-2">
 
@@ -130,7 +130,7 @@ if (numRows($familyMembers) > 0) {
           </div>
         </div>
 
-        <div>Mother:</div>
+        <div>Mother's Name</div>
 
         <hr class="mt-2">
 
