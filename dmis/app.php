@@ -69,6 +69,7 @@ if (isset($_POST['edit-user'])) {
   $showAlert = true;
   $message = 'User assignment has been set successfully.';
   $success = true;
+  createSystemLog($stationId, $userId, 'Assigned user privileges', $employeeId, clientIp());
 }
 
 if (isset($_POST['reset-user'])) {
@@ -81,6 +82,7 @@ if (isset($_POST['reset-user'])) {
     $showAlert = true;
     $message = 'User password has been reset successfully.';
     $success = true;
+    createSystemLog($stationId, $userId, 'Reset user password', $employeeId, clientIp());
   }
 }
 
@@ -93,6 +95,7 @@ if (isset($_POST['remove-user'])) {
     $showAlert = true;
     $message = 'User has been removed successfully.';
     $success = true;
+    createSystemLog($stationId, $userId, 'Removed user privileges', $employeeId, clientIp());
   }
 }
 ?>
