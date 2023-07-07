@@ -20,6 +20,7 @@ if (isset($_POST['save-document'])) {
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
   $destination = $isSchoolPortal ? 'RECORD' :  sanitize($_POST['destination']);
+  $logMessage = '';
 
   if (numRows(document($documentId)) === 0) {
     $status = 'saved';
@@ -29,7 +30,8 @@ if (isset($_POST['save-document'])) {
 
     createDocument($documentId, $description, $station, $purpose, $details);
     createDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
-    createSystemLog($stationId, $userId, 'Created document', $documentId, clientIp());
+    createSystemLog($stationId, $userId, $logMessage, $documentId, clientIp());
+    $logMessage = 'Created document';
   } else {
     $status = 'updated';
     $updateDescription = false;
@@ -42,12 +44,13 @@ if (isset($_POST['save-document'])) {
 
     updateDocument($documentId, $description, $purpose, $details, $updateDescription);
     updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
-    createSystemLog($stationId, $userId, 'Updated document', $documentId, clientIp());
+    $logMessage = 'Updated document';
   }
 
   if (affectedRows()) {
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been ' . $status . ' successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $documentId, clientIp());
   }
 }
 
@@ -58,9 +61,9 @@ if (isset($_POST['receive-document'])) {
 
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, '-', 'Received', 'New');
-    createSystemLog($stationId, $userId, 'Received document', $documentId, clientIp());
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been received successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Received document', $documentId, clientIp());
   }
 }
 
@@ -74,9 +77,9 @@ if (isset($_POST['forward-document'])) {
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, sanitize($_POST['destination']), $purpose, 'New', $details);
     updateDocumentStatus($documentId, $purpose, 'Unread', $details);
-    createSystemLog($stationId, $userId, 'Forwarded document', $documentId, clientIp());
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been forwarded successfully!';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Forwarded document', $documentId, clientIp());
   }
 }
 
@@ -90,9 +93,9 @@ if (isset($_POST['complete-document'])) {
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
     updateDocumentStatus($documentId, $status, 'Read', $remarks);
-    createSystemLog($stationId, $userId, $status . ' document', $documentId, clientIp());
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been mark completed successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, $status . ' document', $documentId, clientIp());
   }
 }
 
@@ -106,9 +109,9 @@ if (isset($_POST['cancel-document'])) {
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
     updateDocumentStatus($documentId, $status, 'Read', $remarks);
-    createSystemLog($stationId, $userId, $status . ' document', $documentId, clientIp());
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information" target="_blank">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, $status . ' document', $documentId, clientIp());
   }
 }
 ?>
