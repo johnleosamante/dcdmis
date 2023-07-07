@@ -60,8 +60,9 @@ if (isset($_POST['add-employee'])) {
   createDeployment('0000-00-00', $eStationId, $ePositionId, '0', '1', '', $employeeId);
   createAccount($email, hashPassword(generateStrongRandomPassword()));
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information" target="_blank">' . strtoupper($employee) . '</a>] was saved successfully.';
+    createSystemLog($stationId, $userId, 'Registered employee', $employeeId, clientIp());
   }
 }
 
@@ -93,9 +94,10 @@ if (isset($_POST['update-personal-information'])) {
 
   updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), $bmonth, $bday, $byear, sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), sanitize($_POST['dual-citizenship-country']), sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['gsis']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), $email, sanitize($_POST['tin']), sanitize($_POST['agency-id']), $employeePhoto, $employeeId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $showAlert = true;
     $message = 'Personal Information has been updated successfully.';
+    createSystemLog($stationId, $userId, 'Updated employee personal information', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'personal-information';
@@ -126,9 +128,10 @@ if (isset($_POST['update-family-background'])) {
     updateFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId);
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $showAlert = true;
     $message = 'Family Background has been updated successfully.';
+    createSystemLog($stationId, $userId, 'Updated employee family background', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'family-background';
@@ -143,20 +146,22 @@ if (isset($_POST['save-child'])) {
   $cext = sanitize($_POST['cext']);
   $cmiddle = sanitize($_POST['cmiddle']);
   $cdob = sanitize($_POST['cdob']);
+  $logMessage = '';
 
   if (numRows(child($employeeId, $childId)) === 0) {
     createChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId);
-
+    $logMessage = 'Added employee child';
     $message = 'Child has been added successfully.';
   } else {
     updateChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId, $childId);
-
+    $logMessage = 'Updated employee child';
     $message = 'Child has been updated successfully.';
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'children';
@@ -168,10 +173,11 @@ if (isset($_POST['delete-child'])) {
 
   deleteChild($employeeId, $childId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Child has been deleted successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Deleted employee child', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'children';
@@ -190,20 +196,22 @@ if (isset($_POST['save-education'])) {
   $highest = sanitize($_POST['highest']);
   $year = $isPresent ? null : sanitize($_POST['year']);
   $scholarship = sanitize($_POST['scholarship']);
+  $logMessage = '';
 
   if (empty($educationId)) {
     createEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId);
-
+    $logMessage = 'Added employee education';
     $message = 'Educational Background has been added successfully.';
   } else {
     updateEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId, $educationId);
-
+    $logMessage = 'Updated employee education';
     $message = 'Educational Background has been updated successfully.';
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'educational-background';
@@ -215,10 +223,11 @@ if (isset($_POST['delete-education'])) {
 
   deleteEducation($employeeId, $educationId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Educational Background has been deleted successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Deleted employee education', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'educational-background';
@@ -235,20 +244,22 @@ if (isset($_POST['save-eligibility'])) {
   $license = sanitize($_POST['license']);
   $isApplicable = isset($_POST['is-applicable']);
   $validity = sanitize($_POST['validity']);
+  $logMessage = '';
 
   if (empty($eligibilityId)) {
     createEligibility($career, $rating, $examDate, $examPlace, $license, $isApplicable, $validity, $employeeId);
-
+    $logMessage = 'Added employee eligibility';
     $message = 'Civil Service Eligibility has been added successfully.';
   } else {
     updateEligibility($career, $rating, $examDate, $examPlace, $license, $isApplicable, $validity, $employeeId, $eligibilityId);
-
+    $logMessage = 'Updated employee eligibility';
     $message = 'Civil Service Eligibility has been updated successfully.';
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
@@ -260,10 +271,11 @@ if (isset($_POST['delete-eligibility'])) {
 
   deleteEligibility($employeeId, $eligibilityId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Civil Service Eligibility has been deleted successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Deleted employee eligibility', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
@@ -282,20 +294,22 @@ if (isset($_POST['save-experience'])) {
   $sg = sanitize($_POST['sg']);
   $status = sanitize($_POST['status']);
   $isGovernment = sanitize($_POST['is-government']);
+  $logMessage = '';
 
   if (empty($experienceId)) {
     createExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId);
-
+    $logMessage = 'Added employee experience';
     $message = 'Work Experience has been added successfully.';
   } else {
     updateExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId, $experienceId);
-
+    $logMessage = 'Updated employee experience';
     $message = 'Work Experience has been updated successfully.';
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
@@ -307,10 +321,11 @@ if (isset($_POST['delete-work-experience'])) {
 
   deleteExperience($employeeId, $experienceId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Work Experience has been deleted successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Deleted employee experience', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
@@ -326,20 +341,22 @@ if (isset($_POST['save-voluntary-work'])) {
   $to = $isPresent ? date('m/d/Y') : sanitize($_POST['to']);
   $hours = isset($_POST['hours']) ? $_POST['hours'] : 0;
   $position = sanitize($_POST['position']);
+  $logMessage = '';
 
   if (empty($voluntaryId)) {
     createVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId);
-
+    $logMessage = 'Added employee voluntary work';
     $message = 'Voluntary Work has been added successfully.';
   } else {
     updateVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId, $voluntaryId);
-
+    $logMessage = 'Updated employee voluntary work';
     $message = 'Voluntary Work has been updated successfully.';
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
@@ -351,10 +368,11 @@ if (isset($_POST['delete-voluntary-work'])) {
 
   deleteVoluntaryWork($employeeId, $voluntaryId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Voluntary Work has been deleted successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Deleted employee voluntary work', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
@@ -370,20 +388,22 @@ if (isset($_POST['save-learning-development'])) {
   $hours = isset($_POST['hours']) ? sanitize($_POST['hours']) : 0;
   $type = sanitize($_POST['type']);
   $sponsor = sanitize($_POST['sponsor']);
+  $logMessage = '';
 
   if (empty($learningId)) {
     createlearningAndDevelopment($title, $from, $to, $hours, $type, $sponsor, $employeeId);
-
+    $logMessage = 'Added employee learning development';
     $message = 'Learning &amp; Development Intervention has been added successfully.';
   } else {
     updateLearningAndDevelopment($title, $from, $to, $hours, $type, $sponsor, $employeeId, $learningId);
-
+    $logMessage = 'Updated employee learning development';
     $message = 'Learning &amp; Development Intervention has been updated successfully.';
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'learning-development';
@@ -395,10 +415,11 @@ if (isset($_POST['delete-learning-development'])) {
 
   deleteLearningAndDevelopment($employeeId, $learningId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Learning &amp; Development Intervention has been deleted successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Deleted employee learning development', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'learning-development';
@@ -409,20 +430,22 @@ if (isset($_POST['save-special-skill'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $skillId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $skill = sanitize($_POST['skill']);
+  $logMessage = '';
 
   if (empty($skillId)) {
     createSpecialSkill($skill, $employeeId);
-
+    $logMessage = 'Added employee special skill';
     $message = 'Special Skill / Hobby has been added successfully.';
   } else {
     updateSpecialSkill($skill, $employeeId, $skillId);
-
+    $logMessage = 'Updated employee special skill';
     $message = 'Special Skill / Hobby has been updated successfully.';
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
@@ -434,10 +457,11 @@ if (isset($_POST['delete-special-skill'])) {
 
   deleteSpecialSkill($employeeId, $skillId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Special Skill / Hobby has been deleted successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Deleted employee special skill', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
@@ -448,20 +472,22 @@ if (isset($_POST['save-recognition'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $recognitionId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $recognition = sanitize($_POST['recognition']);
+  $logMessage = '';
 
   if (empty($recognitionId)) {
     createRecognition($recognition, $employeeId);
-
+    $logMessage = 'Added employee recognition';
     $message = 'Non-Academic Distinction / Recognition has been added successfully.';
   } else {
     updateRecognition($recognition, $employeeId, $recognitionId);
-
+    $logMessage = 'Updated employee recognition';
     $message = 'Non-Academic Distinction / Recognition has been updated successfully.';
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
@@ -473,10 +499,11 @@ if (isset($_POST['delete-recognition'])) {
 
   deleteRecognition($employeeId, $recognitionId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Non-Academic Distinction / Recognition has been deleted successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Deleted employee recognition', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
@@ -487,20 +514,22 @@ if (isset($_POST['save-membership'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $membershipId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $membership = sanitize($_POST['membership']);
+  $logMessage = '';
 
   if (empty($membershipId)) {
     createMembership($membership, $employeeId);
-
+    $logMessage = 'Added employee membership';
     $message = 'Membership in Association / Organization has been added successfully.';
   } else {
     updateMembership($membership, $employeeId, $membershipId);
-
+    $logMessage = 'Updated employee membership';
     $message = 'Membership in Association / Organization has been updated successfully.';
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
@@ -512,10 +541,11 @@ if (isset($_POST['delete-membership'])) {
 
   deleteMembership($employeeId, $membershipId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Membership in Association / Organization has been deleted successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Deleted employee membership', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
@@ -555,10 +585,11 @@ if (isset($_POST['update-other-information'])) {
     updateOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
   }
 
-  if (mysqli_affected_rows($con) === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Other Information has been updated successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Updated employee other information', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'other-information';
@@ -571,20 +602,22 @@ if (isset($_POST['save-reference'])) {
   $name = sanitize($_POST['name']);
   $address = sanitize($_POST['address']);
   $contact = sanitize($_POST['telephone']);
+  $logMessage = '';
 
   if (empty($referenceId)) {
     createReference($name, $address, $contact, $employeeId);
-
+    $logMessage = 'Added employee reference';
     $message = 'Reference has been added successfully.';
   } else {
     updateReference($name, $address, $contact, $employeeId, $referenceId);
-
+    $logMessage = 'Updated employee reference';
     $message = 'Reference has been updated successfully.';
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
@@ -596,10 +629,11 @@ if (isset($_POST['delete-reference'])) {
 
   deleteReference($employeeId, $referenceId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Reference has been deleted successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Deleted employee reference', $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
@@ -622,10 +656,11 @@ if (isset($_POST['reassign-employee'])) {
     updateStation($date, $eStationId, $positionId, $employeeId);
   }
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $success = true;
     $message = 'Employee has been reassigned successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Reassigned employee', $employeeId, clientIp());
   }
 }
 
@@ -643,6 +678,7 @@ if (isset($_POST['remove-employee'])) {
     $success = true;
     $message = 'Employee has been removed successfully.';
     $showAlert = true;
+    createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
   }
 }
 ?>
