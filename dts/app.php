@@ -30,7 +30,6 @@ if (isset($_POST['save-document'])) {
 
     createDocument($documentId, $description, $station, $purpose, $details);
     createDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
-    createSystemLog($stationId, $userId, $logMessage, $documentId, clientIp());
     $logMessage = 'Created document';
   } else {
     $status = 'updated';
