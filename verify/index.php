@@ -156,6 +156,32 @@ function setTeacherPassword() {
   }
 }
 
+function setActivityStatus($filter, $replacement) {
+  nonQuery("UPDATE tbl_system_logs SET `Status`='{$replacement}' WHERE `Status`='{$filter}';");
+
+  echo affectedRows();
+}
+
+function setLoginTargetId() {
+  $logs = query("SELECT `Emp_ID` AS `id` FROM tbl_system_logs WHERE `Status`='Logged in';");
+
+  while($log = fetchAssoc($logs)) {
+    nonQuery("UPDATE tbl_system_logs SET `target_id`='" . $log['id'] . "' WHERE `Status`='Logged in' AND Emp_ID='" . $log['id'] . "';");
+  }
+}
+
+function setCreatedDocumentTargetId() {
+  $logs = query("SELECT TransCode AS `id`, Date_time AS `datetime` FROM tbl_transactions;");
+  $no = 0;
+
+  while ($log = fetchAssoc($logs)) {
+    nonQuery("UPDATE tbl_system_logs SET `target_id`='" . $log['id'] . "' WHERE `Status`='Created document' AND Time_Log='" . $log['datetime'] . "';");
+    if (affectedRows()) {
+      echo ++$no . ' | ' . $log['id'] . '<br>';
+    }
+  }
+}
+
 //checkEmployeeStation();
 //checkEmployeeAccount();
 //checkEmployeeStepIncrement();
@@ -168,4 +194,8 @@ function setTeacherPassword() {
 //setTransactionLogStatus();
 //setLastTransactionLogStatus();
 //setTeacherPassword();
+//setActivityStatus('Login', 'Logged in');
+//setActivityStatus('Transaction', 'Created document');
+//setLoginTargetId();
+setCreatedDocumentTargetId();
 ?>
