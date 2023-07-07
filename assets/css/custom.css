@@ -66,3 +66,9 @@ input::-ms-clear, input::-ms-reveal {
 .toggled .menu-item {
   margin: 0 auto;
 }
+
+@media only screen and (max-width: 767px) {
+  .sidebar .menu-item {
+    margin: 0 auto;
+  }
+}
