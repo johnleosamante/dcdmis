@@ -42,6 +42,7 @@ if (isset($_POST['update-password'])) {
     $message = 'Your password has been updated successfully.';
     $success = true;
     $oldPassword = $password = $passwordConfirm = $generatePassword = null;
+    createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
   }
 }
 
@@ -55,6 +56,7 @@ if (isset($_POST['update-contact-details'])) {
     $showAlert = true;
     $message = 'Your contact details have been updated successfully.';
     $success = true;
+    createSystemLog($stationId, $userId, 'Updated contact details', $userId, clientIp());
   }
 }
 
@@ -74,6 +76,7 @@ if (isset($_POST['update-identification'])) {
     $showAlert = true;
     $message = 'Your identification details have been updated successfully.';
     $success = true;
+    createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
   }
 }
 ?>
