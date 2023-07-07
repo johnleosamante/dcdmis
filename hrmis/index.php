@@ -23,6 +23,7 @@ require_once(root() . '/includes/database/membership.php');
 require_once(root() . '/includes/database/other-information.php');
 require_once(root() . '/includes/database/references.php');
 require_once(root() . '/includes/database/section.php');
+require_once(root() . '/includes/database/district.php');
 require_once(root() . '/includes/database/utility.php');
 require_once(root() . '/includes/database/station.php');
 require_once(root() . '/includes/database/psipop.php');

@@ -11,11 +11,21 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/add-employee-dial
 
   card('Retirable Employees', customUri('hrmis', 'Retirable Employees'), 'fa-user-clock', 'success', $countRetirable);
 
-  card('Celebrant Employees', customUri('hrmis', 'Celebrant Employees'), 'fa-birthday-cake', 'warning');
+  card('Celebrant Employees', customUri('hrmis', 'Celebrant Employees'), 'fa-birthday-cake', 'info');
 
   card('Archived Employees', customUri('hrmis', 'Archived Employees'), 'fa-archive', 'danger');
   ?>
 </div><!-- .row -->
+
+<div class="row">
+  <?php
+  card('Districts', customUri('dmis', 'Districts'), 'fa-map-marked-alt', 'info', $districtCount);
+
+  card('Schools', customUri('dmis', 'Schools'), 'fa-school', 'warning', $schoolCount);
+
+  card('Sections', customUri('dmis', 'Sections'), 'fa-map-signs', 'primary', $sectionCount);
+  ?>
+</div>
 
 <script src="<?php echo uri(); ?>/assets/vendor/chart.js/Chart.min.js"></script>
 <script src="<?php echo uri(); ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
