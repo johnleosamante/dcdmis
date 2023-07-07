@@ -60,7 +60,7 @@ function createTrainingParticipant($no, $id) {
 }
 
 function deleteTrainingParticipant($no, $id) {
-  nonQuery("DELETE FROM tbl_seminar_participant WHERE `Training_Code`='{$no}' AND `Emp_ID`='{$id};");
+  nonQuery("DELETE FROM tbl_seminar_participant WHERE `Training_Code`='{$no}' AND `Emp_ID`='{$id}';");
 }
 
 function isConductedTraining($no) {
