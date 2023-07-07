@@ -21,13 +21,16 @@ if (isset($_POST['save-training'])) {
   $type = sanitize($_POST['type']);
   $sponsor = sanitize($_POST['sponsor']);
   $venue = sanitize($_POST['venue']);
+  $logMessage = '';
 
   if (numRows(training($trainingId)) === 0) {
+    $logMessage = 'Added training';
     $status = 'saved';
     $year = toDate($from, 'y', date('y'));
     $trainingId = 'HRTD-' . $year . '-' . sprintf("%04d", countTrainings($year) + 1);
     createTraining($trainingId, $title, $from, $to, $type, $sponsor, $venue);
   } else {
+    $logMessage = 'Updated training';
     $status = 'updated';
     updateTraining($trainingId, $title, $from, $to, $type, $sponsor, $venue);
   }
@@ -36,6 +39,7 @@ if (isset($_POST['save-training'])) {
     $showAlert = true;
     $success = true;
     $message = 'Training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details" target="_blank">' . strtoupper($trainingId) . '</a>] has been ' . $status . ' successfully.';
+    createSystemLog($stationId, $userId, $logMessage, $trainingId, clientIp());
   }
 }
 
@@ -64,11 +68,12 @@ if (isset($_POST['add-participants'])) {
     $noun = $no === 1 ? ' was' : 's were';
     $success = true;
     $message = $no . ' training participant' . $noun . ' added successfully.';
+    createSystemLog($stationId, $userId, 'Added ' . $no . ' training participants', $trainingId, clientIp());
   }
 }
 
 if (isset($_POST['remove-participant'])) {
-  $participantId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $participantId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $trainingId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   
   deleteTrainingParticipant($trainingId, $participantId);
@@ -77,6 +82,7 @@ if (isset($_POST['remove-participant'])) {
     $showAlert = true;
     $success = true;
     $message = 'A participant has been removed successfully.';
+    createSystemLog($stationId, $userId, 'Removed training participant', $trainingId, clientIp());
   }
 }
 ?>
