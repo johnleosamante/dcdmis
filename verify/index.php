@@ -163,7 +163,7 @@ function setTeacherPassword() {
 //checkEmployeePsipop();
 //checkEmployeeDeployment();
 //checkEmployeeFamily();
-checkEmployeeValidId();
+//checkEmployeeValidId();
 //setTransactionStatus();
 //setTransactionLogStatus();
 //setLastTransactionLogStatus();
