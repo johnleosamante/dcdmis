@@ -78,7 +78,8 @@ if (isset($_POST['reset-user'])) {
 
   updateAccountPassword($depedEmail, hashPassword($temporaryPassword));
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
+    $employeeId = fetchAssoc(account($depedEmail))['id'];
     $showAlert = true;
     $message = 'User password has been reset successfully.';
     $success = true;
@@ -91,7 +92,7 @@ if (isset($_POST['remove-user'])) {
 
   deleteUserRoles($employeeId);
 
-  if (affectedRows() === 1) {
+  if (affectedRows()) {
     $showAlert = true;
     $message = 'User has been removed successfully.';
     $success = true;
