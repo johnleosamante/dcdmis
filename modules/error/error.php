@@ -3,7 +3,7 @@
 ?>
 
 <div class="text-center py-0">
-  <div class="error mx-auto w-100">Ooops!</div>
+  <div class="error mx-auto w-100">Oops!</div>
   <p class="lead text-gray-800 mt-1 mb-0">Unexpected error</p>
   <p class="text-gray-500 mb-4">It seems you have encountered a glitch in the system...</p>
 
