@@ -43,11 +43,10 @@ if (isset($educationId)) {
           <label for="level" class="mb-0">Level: <?php showAsterisk(); ?></label>
           <select id="level" name="level" class="form-control" required>
             <option value="Elementary" <?php echo setOptionSelected("Elementary", $level); ?>>Elementary</option>
-            <option value="High School" <?php echo setOptionSelected("High School", $level); ?>>High School</option>
-            <option value="College" <?php echo setOptionSelected("College", $level); ?>>College</option>
+            <option value="Secondary" <?php echo setOptionSelected("Secondary", $level); ?>>Secondary</option>
             <option value="Vocational" <?php echo setOptionSelected("Vocational", $level); ?>>Vocational</option>
-            <option value="Masteral" <?php echo setOptionSelected("Masteral", $level); ?>>Masteral</option>
-            <option value="Doctoral" <?php echo setOptionSelected("Doctoral", $level); ?>>Doctoral</option>
+            <option value="College" <?php echo setOptionSelected("College", $level); ?>>College</option>
+            <option value="Graduate Studies" <?php echo setOptionSelected("Graduate Studies", $level); ?>>Graduate Studies</option>
           </select>
         </div>
 
