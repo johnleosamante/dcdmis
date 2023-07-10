@@ -1,5 +1,5 @@
 <?php
-// modules/trainings/add-training-dialog.php
+// modules/trainings/save-training-dialog.php
 require_once('../../includes/function.php');
 require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/database/database.php');
@@ -9,7 +9,6 @@ require_once(root() . '/includes/layout/components.php');
 $trainingId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $trainings = training($trainingId);
 $title = $type = $sponsor = $venue = '';
-$participants = 1;
 $dateFrom = $dateTo = date('Y-m-d');
 $modalTitle = 'New Training';
 $notFound  = true;
