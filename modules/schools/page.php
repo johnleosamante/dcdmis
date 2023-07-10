@@ -64,7 +64,7 @@ messageAlert($showAlert, $message, $success);
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php
-                      linkDropdownItem(customUri('dmis', 'School Information', $row['id']), 'View', 'fa-eye', 'View School');
+                      linkDropdownItem(customUri($activeApp, 'School Information', $row['id']), 'View', 'fa-eye', 'View School');
                     ?>
                   </div>
                 </div>
