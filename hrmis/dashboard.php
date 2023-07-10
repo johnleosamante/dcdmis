@@ -19,11 +19,11 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/add-employee-dial
 
 <div class="row">
   <?php
-  card('Districts', customUri('dmis', 'Districts'), 'fa-map-marked-alt', 'info', $districtCount);
+  card('Districts', customUri('hrmis', 'Districts'), 'fa-map-marked-alt', 'info', $districtCount);
 
-  card('Schools', customUri('dmis', 'Schools'), 'fa-school', 'warning', $schoolCount);
+  card('Schools', customUri('hrmis', 'Schools'), 'fa-school', 'warning', $schoolCount);
 
-  card('Sections', customUri('dmis', 'Sections'), 'fa-map-signs', 'primary', $sectionCount);
+  card('Sections', customUri('hrmis', 'Sections'), 'fa-map-signs', 'primary', $sectionCount);
   ?>
 </div>
 
