@@ -13,6 +13,10 @@ if (numRows(userRole($userId, $activeApp)) === 0) {
   redirect(uri() . '/pis');
 }
 
+if (isset($_POST['primary-search-button'])) {
+  redirect(customUri('hrtdms', 'Search', sanitize($_POST['primary-search-text'])));
+}
+
 if (isset($_POST['save-training'])) {
   $trainingId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $title = sanitize($_POST['title']);
