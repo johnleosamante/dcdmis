@@ -20,8 +20,8 @@ messageAlert($showAlert, $message, $success);
       <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th class="align-middle" width="5%">#</th>
             <th class="align-middle" width="5%">Photo</th>
+            <th class="align-middle" width="5%">Employee Number</th>
             <th class="align-middle" width="20%">Name</th>
             <th class="align-mdille" width="10%">Status</th>
             <th class="align-middle" width="15%">Date of Birth</th>
@@ -39,7 +39,6 @@ messageAlert($showAlert, $message, $success);
             $photo = uri() . '/' . $row['picture'];
           ?>
             <tr class="text-uppercase">
-              <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
               <td class="align-middle">
                 <div class="image-container">
                   <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
@@ -48,6 +47,7 @@ messageAlert($showAlert, $message, $success);
                   <div class="sex-sign"><?php sex($row['sex']); ?></div>
                 </div>
               </td>
+              <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
               <td class="align-middle text-left"><?php echo $employeeName; ?></td>
               <td class="align-middle">
                 <?php
