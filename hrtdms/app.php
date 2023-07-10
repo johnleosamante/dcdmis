@@ -14,7 +14,7 @@ if (numRows(userRole($userId, $activeApp)) === 0) {
 }
 
 if (isset($_POST['primary-search-button'])) {
-  redirect(customUri('hrtdms', 'Search', sanitize($_POST['primary-search-text'])));
+  redirect(customUri('hrtdms', 'Training Details', sanitize($_POST['primary-search-text'])));
 }
 
 if (isset($_POST['save-training'])) {
