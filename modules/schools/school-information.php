@@ -19,6 +19,7 @@ if (numRows($schools) > 0) {
   $website = $school['website'];
   $fbPage = $school['fb_page'];
   $personnel = $school['total'];
+  $logo = uri() . '/' . $school['logo'];
 } else {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
@@ -39,57 +40,64 @@ messageAlert($showAlert, $message, $success);
   </div>
 
   <div class="card-body">
-    <div class="table-responsive">
-      <table cellspacing="0">
-        <tr>
-          <th class="pr-5" scoper="row">School ID</th>
-          <td class="text-uppercase"><?php echo $schoolId; ?></td>
-        </tr>
-        <tr>
-          <th class="pr-5" scoper="row">Name</th>
-          <td class="text-uppercase"><?php echo $schoolName . ' (' . $alias . ')'; ?></td>
-        </tr>
-        <tr>
-          <th class="pr-5" scoper="row">Address</th>
-          <td class="text-uppercase"><?php echo $address; ?></td>
-        </tr>
-        <tr>
-          <th class="pr-5" scoper="row">District</th>
-          <td class="text-uppercase"><?php echo $district; ?></td>
-        </tr>
-        <tr>
-          <th class="pr-5" scoper="row">Head of Office</th>
-          <td class="text-uppercase"><?php echo userName($head); ?></td>
-        </tr>
-        <?php if (!empty($telephone)) : ?>
-          <tr>
-            <th class="pr-5" scoper="row">Telephone</th>
-            <td class="text-uppercase"><?php echo $telephone; ?></td>
-          </tr>
-        <?php endif; ?>
-        <?php if (!empty($email)) : ?>
-          <tr>
-            <th class="pr-5" scoper="row">Email Address</th>
-            <td class="text-lowercase"><?php echo $email; ?></td>
-          </tr>
-        <?php endif; ?>
-        <?php if (!empty($website)) : ?>
-          <tr>
-            <th class="pr-5" scoper="row">Website</th>
-            <td class="text-lowercase"><?php echo $website; ?></td>
-          </tr>
-        <?php endif; ?>
-        <?php if (!empty($fbPage)) : ?>
-          <tr>
-            <th class="pr-5" scoper="row">Facebook Page</th>
-            <td class="text-lowercase"><?php echo $fbPage; ?></td>
-          </tr>
-        <?php endif; ?>
-        <tr>
-          <th class="pr-5" scoper="row">Personnel</th>
-          <td class="text-lowercase"><?php echo $personnel; ?></td>
-        </tr>
-      </table>
+    <div class="row">
+      <div class="col-sm-12 col-md-2 col-lg-2 col-xl-2">
+        <img src="<?php echo $logo; ?>" width="100%">
+      </div>
+      <div class="col-sm-12 col-md-10 col-lg-10 col-xl-10">
+        <div class="table-responsive pt-3">
+          <table cellspacing="0">
+            <tr>
+              <th class="pr-5 align-top" scoper="row">School ID</th>
+              <td class="text-uppercase"><?php echo $schoolId; ?></td>
+            </tr>
+            <tr>
+              <th class="pr-5 align-top" scoper="row">Name</th>
+              <td class="text-uppercase"><?php echo $schoolName . ' (' . $alias . ')'; ?></td>
+            </tr>
+            <tr>
+              <th class="pr-5 align-top" scoper="row">Address</th>
+              <td class="text-uppercase"><?php echo $address; ?></td>
+            </tr>
+            <tr>
+              <th class="pr-5 align-top" scoper="row">District</th>
+              <td class="text-uppercase"><?php echo $district; ?></td>
+            </tr>
+            <tr>
+              <th class="pr-5 align-top" scoper="row">Head of Office</th>
+              <td class="text-uppercase"><?php echo userName($head); ?></td>
+            </tr>
+            <?php if (!empty($telephone)) : ?>
+              <tr>
+                <th class="pr-5 align-top" scoper="row">Telephone</th>
+                <td class="text-uppercase"><?php echo $telephone; ?></td>
+              </tr>
+            <?php endif; ?>
+            <?php if (!empty($email)) : ?>
+              <tr>
+                <th class="pr-5 align-top" scoper="row">Email Address</th>
+                <td class="text-lowercase"><?php echo $email; ?></td>
+              </tr>
+            <?php endif; ?>
+            <?php if (!empty($website)) : ?>
+              <tr>
+                <th class="pr-5 align-top" scoper="row">Website</th>
+                <td class="text-lowercase"><?php echo $website; ?></td>
+              </tr>
+            <?php endif; ?>
+            <?php if (!empty($fbPage)) : ?>
+              <tr>
+                <th class="pr-5 align-top" scoper="row">Facebook Page</th>
+                <td class="text-lowercase"><?php echo $fbPage; ?></td>
+              </tr>
+            <?php endif; ?>
+            <tr>
+              <th class="pr-5 align-top" scoper="row">Personnel</th>
+              <td class="text-lowercase"><?php echo $personnel; ?></td>
+            </tr>
+          </table>
+        </div>
+      </div>
     </div>
 
     <div class="table-responsive mt-3">
