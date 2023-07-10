@@ -7,4 +7,8 @@ $isPis = true;
 if (!isset($userId)) {
   redirect(uri() . '/login');
 }
+
+if (isset($_POST['primary-search-button'])) {
+  redirect(customUri('pis', 'Search', sanitize($_POST['primary-search-text'])));
+}
 ?>
