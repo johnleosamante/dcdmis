@@ -80,6 +80,9 @@ if (!isset($url) || $url === 'dashboard') {
     case 'Schools':
       $file = 'schools/page';
       break;
+    case 'School Information':
+      $file = 'schools/school-information';
+      break;
     case 'Sections':
       $file = 'sections/page';
       break;
