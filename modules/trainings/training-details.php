@@ -30,7 +30,7 @@ messageAlert($showAlert, $message, $success);
     <div class="table-responsive">
       <table cellspacing="0">
         <tr>
-          <th class="align-top pr-5" scope="row">Code</th>
+          <th class="pr-5" scope="row">Code</th>
           <td class="text-uppercase"><?php echo $training['no']; ?></td>
         </tr>
         <tr>
