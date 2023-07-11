@@ -161,7 +161,7 @@ messageAlert($showAlert, $message, $success);
                       <?php
                       linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee', true);
                       modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                      ?>
+                      modalDropdownItem(uri() .'/modules/schools/assign-school-head-dialog.php?e=' . cipher($schoolId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set Head of Office'); ?>
                       <div class="dropdown-divider"></div>
                       <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee'); ?>
                     </div>
