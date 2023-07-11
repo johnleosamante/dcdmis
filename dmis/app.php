@@ -17,21 +17,23 @@ if (isset($_POST['primary-search-button'])) {
   redirect(customUri('dmis', 'Search', sanitize($_POST['primary-search-text'])));
 }
 
-// School Management (Not Implemented)
+// School Management
 if (isset($_POST['save-school'])) {
   $referenceSchoolId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $schoolId = sanitize($_POST['school-id']);
   $schoolName = sanitize($_POST['school-name']);
+  $alias = sanitize($_POST['alias']);
   $address = sanitize($_POST['address']);
   $districtCode = sanitize($_POST['district']);
   $category = sanitize($_POST['category']);
   $status = 'saved';
   $logMessage = 'Added school';
+  $logo = 'assets/img/division.png';
 
   if (numRows(schoolById($referenceSchoolId)) === 0) {
-    createSchool($schoolId, $schoolName, $address, $districtCode, $category);
+    createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $logo);
   } else {
-    updateSchool($schoolId, $schoolName, $address, $districtCode, $category, $referenceSchoolId);
+    updateSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $referenceSchoolId);
     $status = 'updated';
     $logMessage = 'Updated school';
   }
