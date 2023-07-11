@@ -2,11 +2,11 @@
 // includes/database/school.php
 // tbl_school
 function schools() {
-  return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias, `Address` AS `address`, Incharg_ID AS `head`, District_code AS district, SchoolLogo AS logo FROM tbl_school ORDER BY SchoolName;");
+  return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias, `Address` AS `address`, Incharg_ID AS `head`, District_code AS district, School_Category AS category, SchoolLogo AS logo FROM tbl_school ORDER BY SchoolName;");
 }
 
 function districtSchools($id) {
-  return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias, `Address` AS `address`, Incharg_ID AS `head`, District_code AS district, SchoolLogo AS logo FROM tbl_school WHERE District_code='{$id}' ORDER BY SchoolName;");
+  return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias, `Address` AS `address`, Incharg_ID AS `head`, District_code AS district, School_Category AS category, SchoolLogo AS logo FROM tbl_school WHERE District_code='{$id}' ORDER BY SchoolName;");
 }
 
 function schoolsExcept($id) {
