@@ -77,6 +77,9 @@ if (!isset($url) || $url === 'dashboard') {
     case 'Districts':
       $file = 'districts/page';
       break;
+    case 'District Information':
+      $file = 'districts/district-information';
+      break;
     case 'Schools':
       $file = 'schools/page';
       break;
