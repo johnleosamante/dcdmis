@@ -1,14 +1,15 @@
 <?php
-// modules/schools/save-training-dialog.php
+// modules/schools/save-training-dialog.php (Not implemented)
 require_once('../../includes/function.php');
 require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/database/district.php');
 require_once(root() . '/includes/layout/components.php');
 
 $schoolId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $schools = schoolDetailsById($schoolId);
-$school = $schoolName = $address = $category = $district = $alias = null;
+$school = $schoolName = $address = $category = $districtCode = $alias = null;
 $modalTitle = 'New School';
 $notFound = true;
 
@@ -17,7 +18,7 @@ if (numRows($schools) > 0) {
   $schoolName = $school['name'];
   $address = $school['address'];
   $category = $school['category'];
-  $district = $school['district'];
+  $districtCode = $school['district'];
   $alias = $school['alias'];
   $modalTitle = 'Edit School';
 }
@@ -47,11 +48,23 @@ if (numRows($schools) > 0) {
         </div>
         <div class="form-group">
           <label for="district" class="mb-0">District <?php showAsterisk(); ?></label>
-          <input type="text" id="district" name="district" class="form-control" value="<?php echo $district; ?>" required>
+          <select id="district" name="district" class="form-control" required>
+            <option value="">Select district...</option>
+            <?php $districts = districts();
+            while ($district = fetchAssoc($districts)) : ?>
+              <option value="<?php echo $district['id']; ?>" <?php echo setOptionSelected($district['id'], $districtCode); ?>><?php echo $district['name']; ?></option>
+            <?php endwhile; ?>
+          </select>
         </div>
         <div class="form-group">
           <label for="category" class="mb-0">Category <?php showAsterisk(); ?></label>
-          <input type="text" id="category" name="category" class="form-control" value="<?php echo $category; ?>" required>
+          <select id="category" name="category" class="form-control" required>
+            <option value="">Select category...</option>
+            <option value="Elementary" <?php echo setOptionSelected('Elementary', $category); ?>>Elementary</option>
+            <option value="Secondary" <?php echo setOptionSelected('Secondary', $category); ?>>Secondary</option>
+            <option value="Integrated" <?php echo setOptionSelected('Integrated', $category); ?>>Integrated</option>
+            <option value="Office" <?php echo setOptionSelected('Office', $category); ?>>Office</option>
+          </select>
         </div>
         <?php requiredLegend(0); ?>
       </div>
