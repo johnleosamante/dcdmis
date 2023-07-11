@@ -19,8 +19,9 @@ messageAlert($showAlert, $message, $success);
         <thead>
           <tr>
             <th class="align-middle" rowspan="2" width="5%">Logo</th>
-            <th class="align-middle" rowspan="2" width="40%">School Name / Alias / ID / Address</th>
+            <th class="align-middle" rowspan="2" width="25%">School Name / Alias / ID / Address</th>
             <th class="align-middle" rowspan="2" width="15%">District</th>
+            <th class="align-middle" rowspan="2" width="15%">Category</th>
             <th class="align-middle" rowspan="2" width="20%">Head of Office</th>
             <th class="align-middle" colspan="3" width="15%">Personnel Count</th>
             <th class="align-middle" rowspan="2" width="5%">Action</th>
@@ -58,6 +59,7 @@ messageAlert($showAlert, $message, $success);
                 echo numRows($districts) > 0 ? fetchAssoc($districts)['name'] : '';
                 ?>
               </td>
+              <td class="align-middle"><?php echo $row['category']; ?></td>
               <td class="align-middle">
                 <div><?php echo userName($row['head']); ?></div>
                 <?php
