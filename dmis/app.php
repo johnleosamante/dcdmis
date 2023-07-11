@@ -17,6 +17,33 @@ if (isset($_POST['primary-search-button'])) {
   redirect(customUri('dmis', 'Search', sanitize($_POST['primary-search-text'])));
 }
 
+// School Management (Not Implemented)
+if (isset($_POST['save-school'])) {
+  $referenceSchoolId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $schoolId = sanitize($_POST['school-id']);
+  $schoolName = sanitize($_POST['school-name']);
+  $address = sanitize($_POST['address']);
+  $districtCode = sanitize($_POST['district']);
+  $category = sanitize($_POST['category']);
+  $status = 'saved';
+  $logMessage = 'Added school';
+
+  if (numRows(schoolById($referenceSchoolId)) === 0) {
+    createSchool($schoolId, $schoolName, $address, $districtCode, $category);
+  } else {
+    updateSchool($schoolId, $schoolName, $address, $districtCode, $category, $referenceSchoolId);
+    $status = 'updated';
+    $logMessage = 'Updated school';
+  }
+
+  if (affectedRows()) {
+    $message = 'School [<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . '] information" target="_blank">' . $schoolName . '</a> has been ' . $status . ' successfully.';
+    $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $schoolId, clientIp());
+  }
+}
+
+// User management
 if (isset($_POST['edit-user'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $userEmail = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
