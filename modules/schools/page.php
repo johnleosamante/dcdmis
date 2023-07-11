@@ -5,7 +5,12 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitle('Schools'); ?>
+    <?php if ($activeApp === 'dmis') {
+      contentTitleWithModal('Schools', uri() . '/modules/schools/save-school-dialog.php', 'Add', 'fa-plus');
+    } else {
+      contentTitle('Schools');
+    }
+    ?>
   </div>
 
   <div class="card-body">
@@ -30,10 +35,10 @@ messageAlert($showAlert, $message, $success);
 
         <tbody>
           <?php
-          $query = schoolDetails();
+          $query = schools();
           while ($row = fetchArray($query)) :
             $logo = uri() . '/' . $row['logo'];
-            $schoolName = $row['school'];
+            $schoolName = $row['name'];
           ?>
             <tr class="text-uppercase">
               <td class="align-middle">
@@ -47,21 +52,38 @@ messageAlert($showAlert, $message, $success);
                 <div><?php echo $schoolName . ' (' . $row['alias'] . ')'; ?></div>
                 <div class="small"><?php echo $row['id'] . ' | ' . $row['address']; ?></div>
               </td>
-              <td class="align-middle"><?php echo $row['district']; ?></td>
+              <td class="align-middle"><?php
+                                        $districts = district($row['district']);
+                                        echo numRows($districts) > 0 ? fetchAssoc($districts)['name'] : '';
+                                        ?></td>
               <td class="align-middle">
                 <div><?php echo userName($row['head']); ?></div>
-                <div class="small"><?php echo fetchAssoc(position($row['head']))['position']; ?></div>
+                <?php
+                $positions = position($row['head']);
+                echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
+                ?>
               </td>
-              <td class="align-middle"><?php echo $row['male']; ?></td>
-              <td class="align-middle"><?php echo $row['female']; ?></td>
-              <td class="align-middle"><?php echo $row['total']; ?></td>
+
+              <?php
+              $employeeCount = schoolEmployeeCount($row['id']);
+              $male = $female = $total = 0;
+
+              if (numRows($employeeCount) > 0) {
+                $count = fetchAssoc($employeeCount);
+                $male = $count['male'];
+                $female = $count['female'];
+                $total = $count['total'];
+              }
+              ?>
+
+              <td class="align-middle"><?php echo $male; ?></td>
+              <td class="align-middle"><?php echo $female; ?></td>
+              <td class="align-middle"><?php echo $total; ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                    <?php
-                      linkDropdownItem(customUri($activeApp, 'School Information', $row['id']), 'View', 'fa-eye', 'View School');
-                    ?>
+                    <?php linkDropdownItem(customUri($activeApp, 'School Information', $row['id']), 'View', 'fa-eye', 'View School'); ?>
                   </div>
                 </div>
               </td>
