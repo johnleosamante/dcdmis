@@ -5,11 +5,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php if ($activeApp === 'dmis') {
-      contentTitleWithModal('Schools', uri() . '/modules/schools/save-school-dialog.php', 'Add', 'fa-plus');
-    } else {
-      contentTitle('Schools');
-    } ?>
+    <?php contentTitle('Schools'); ?>
   </div>
 
   <div class="card-body">
@@ -18,7 +14,7 @@ messageAlert($showAlert, $message, $success);
         <thead>
           <tr>
             <th class="align-middle" rowspan="2" width="5%">Logo</th>
-            <th class="align-middle" rowspan="2" width="40%">School Name / ID / Address</th>
+            <th class="align-middle" rowspan="2" width="40%">School Name / Alias / ID / Address</th>
             <th class="align-middle" rowspan="2" width="15%">District</th>
             <th class="align-middle" rowspan="2" width="20%">Head of Office</th>
             <th class="align-middle" colspan="3" width="15%">Personnel Count</th>
@@ -48,8 +44,8 @@ messageAlert($showAlert, $message, $success);
                 </div>
               </td>
               <td class="align-middle text-left">
-                <div><?php echo $schoolName . ' (' . $row['id'] . ')'; ?></div>
-                <div class="small"><?php echo $row['address']; ?></div>
+                <div><?php echo $schoolName . ' (' . $row['alias'] . ')'; ?></div>
+                <div class="small"><?php echo $row['id'] . ' | ' . $row['address']; ?></div>
               </td>
               <td class="align-middle"><?php echo $row['district']; ?></td>
               <td class="align-middle">
