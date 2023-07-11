@@ -1,25 +1,26 @@
 <?php
 // modules/schools/school-information.php
 $schoolId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$schools = schoolDetails($schoolId);
+$schools = schoolDetailsById($schoolId);
 $school = $schoolName = $alias = $address = $district = $head = $telephone = $email = $website = $fbPage = null;
 $personnel = 0;
 $isHrmis = $activeApp === 'hrmis';
 
 if (numRows($schools) > 0) {
   $school = fetchAssoc($schools);
-  $schoolId = $school['id'];
-  $schoolName = $school['school'];
+  $schoolName = $school['name'];
   $alias = $school['alias'];
   $address = $school['address'];
-  $district = $school['district'];
+  $districts = district($school['district']);
+  $district = numRows($districts) > 0 ? fetchAssoc($districts)['name'] : '';
   $category = $school['category'];
   $head = $school['head'];
   $telephone = $school['telephone'];
   $email = $school['email'];
   $website = $school['website'];
   $fbPage = $school['fb_page'];
-  $personnel = $school['total'];
+  $count = schoolEmployeeCount($schoolId);
+  $personnel = numRows($count) > 0 ? fetchAssoc($count)['total'] : 0;
   $logo = uri() . '/' . $school['logo'];
 } else {
   require_once(root() . '/modules/error/no-results-found.php');
@@ -31,7 +32,12 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitle('School Information'); ?>
+    <?php
+    if ($activeApp === 'dmis') {
+      contentTitleWithModal('School Information', uri() . '/modules/schools/save-school-dialog.php?id=' . cipher($schoolId), 'Edit', 'fa-edit');
+    } else {
+      contentTitle('School Information');
+    } ?>
   </div>
 
   <div class="card-body">
@@ -62,10 +68,18 @@ messageAlert($showAlert, $message, $success);
               <th class="pr-5 align-top" scoper="row">Category</th>
               <td class="text-uppercase"><?php echo $category; ?></td>
             </tr>
-            <tr>
-              <th class="pr-5 align-top" scoper="row">Head of Office</th>
-              <td class="text-uppercase"><?php echo userName($head); ?></td>
-            </tr>
+            <?php if (!empty($head)) : ?>
+              <tr>
+                <th class="pr-5 align-top" scoper="row">Head of Office</th>
+                <td class="text-uppercase">
+                  <div><?php echo userName($head); ?></div>
+                  <?php
+                  $positions = position($head);
+                  echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
+                  ?>
+                </td>
+              </tr>
+            <?php endif; ?>
             <?php if (!empty($telephone)) : ?>
               <tr>
                 <th class="pr-5 align-top" scoper="row">Telephone</th>
