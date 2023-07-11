@@ -1,5 +1,5 @@
 <?php
-// modules/schools/save-training-dialog.php (Not implemented)
+// modules/schools/save-training-dialog.php
 require_once('../../includes/function.php');
 require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/database/database.php');
