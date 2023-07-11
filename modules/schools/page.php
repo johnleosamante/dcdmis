@@ -52,10 +52,12 @@ messageAlert($showAlert, $message, $success);
                 <div><?php echo $schoolName . ' (' . $row['alias'] . ')'; ?></div>
                 <div class="small"><?php echo $row['id'] . ' | ' . $row['address']; ?></div>
               </td>
-              <td class="align-middle"><?php
-                                        $districts = district($row['district']);
-                                        echo numRows($districts) > 0 ? fetchAssoc($districts)['name'] : '';
-                                        ?></td>
+              <td class="align-middle">
+                <?php
+                $districts = district($row['district']);
+                echo numRows($districts) > 0 ? fetchAssoc($districts)['name'] : '';
+                ?>
+              </td>
               <td class="align-middle">
                 <div><?php echo userName($row['head']); ?></div>
                 <?php
