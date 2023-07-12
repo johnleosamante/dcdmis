@@ -16,9 +16,9 @@
             <th class="align-middle" width="20%">Name</th>
             <th class="align-mdille" width="10%">Status</th>
             <th class="align-middle" width="15%">Date of Birth</th>
-            <th class="align-middle" width="5%">Age</th>
-            <th class="align-middle" width="20%">Position</th>
+            <th class="align-middle" width="15%">Position</th>
             <th class="align-middle" width="20%">Station</th>
+            <th class="align-middle" width="10%">Progress</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
@@ -47,9 +47,9 @@
                 ?>
               </td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
-              <td class="align-middle"><?php echo getAge($row['year'], $row['month'], $row['day']); ?></td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetchAssoc(schoolById($row['station']))['name']; ?></td>
+              <td class="align-middle"><?php progressBar(pdsProgress($row['id'])); ?></td>
               <td class="align-middle text-capitalize">
                 <?php if ($status !== 'duplicate') : ?>
                   <div class="dropdown no-arrow">
