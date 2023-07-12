@@ -34,9 +34,9 @@ messageAlert($showAlert, $message, $success);
   <div class="card-header py-3">
     <?php
     if ($activeApp === 'dmis') {
-      contentTitleWithModal('School Information', uri() . '/modules/schools/save-school-dialog.php?id=' . cipher($schoolId), 'Edit', 'fa-edit');
+      contentTitleWithModal('School Information: ' . strtoupper($schoolName), uri() . '/modules/schools/save-school-dialog.php?id=' . cipher($schoolId), 'Edit', 'fa-edit');
     } else {
-      contentTitle('School Information');
+      contentTitle('School Information: ' . strtoupper($schoolName));
     } ?>
   </div>
 

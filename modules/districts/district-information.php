@@ -19,9 +19,9 @@ messageAlert($showAlert, $message, $success);
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
     <?php if ($activeApp === 'dmis') {
-      contentTitleWithModal('District Information', uri() . '/modules/districts/save-district-dialog.php?id=' . cipher($districtId), 'Edit', 'fa-edit');
+      contentTitleWithModal('District Information: ' . strtoupper($districtName), uri() . '/modules/districts/save-district-dialog.php?id=' . cipher($districtId), 'Edit', 'fa-edit');
     } else {
-      contentTitle('District Information');
+      contentTitle('District Information: ' . strtoupper($districtName));
     } ?>
   </div>
 
