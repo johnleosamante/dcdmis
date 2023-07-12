@@ -22,8 +22,9 @@ $isHrmis = $activeApp === 'hrmis';
             <th class="align-middle" width="25%">Name</th>
             <th class="align-middle" width="15%">Date of Birth</th>
             <th class="align-middle" width="5%">Age</th>
-            <th class="align-middle" width="20%">Position</th>
-            <th class="align-middle" width="25%">Station</th>
+            <th class="align-middle" width="15%">Position</th>
+            <th class="align-middle" width="20%">Station</th>
+            <th class="align-middle" width="10%">Progress</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
@@ -49,6 +50,9 @@ $isHrmis = $activeApp === 'hrmis';
               <td class="align-middle"><?php echo getAge($row['year'], $row['month'], $row['day']); ?></td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetchAssoc(schoolById($row['station']))['name']; ?></td>
+              <td class="align-middle">
+                <?php progressBar(pdsProgress($row['id'])); ?>
+              </td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
