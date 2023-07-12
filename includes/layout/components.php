@@ -242,4 +242,10 @@ function missingAlert($text, $icon = 'fa-times-circle', $color = 'text-danger')
 function requiredLegend($marginBottom = 2)
 { ?>
   <div class="text-danger mb-<?php echo $marginBottom; ?>">* Required field</div>
+<?php } 
+
+function progressBar($value, $min=35) { ?>
+  <div class="progress mt-1" title="<?php echo $value; ?>% Complete">
+    <div class="progress-bar bg-<?php echo $value > $min ? 'success' : 'danger'; ?>" role="progressbar" aria-valuenow="<?php echo $value; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $value; ?>%"></div>
+  </div>
 <?php } ?>
