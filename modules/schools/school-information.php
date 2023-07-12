@@ -124,10 +124,13 @@ messageAlert($showAlert, $message, $success);
             <th class="align-middle" width="5%">Age</th>
             <th class="align-middle" width="20%">Position</th>
             <th class="align-middle" width="15%">Email Address</th>
-            <th class="align-middle" width="10%">Contact #</th>
             <?php if ($isHrmis) : ?>
+              <th class="align-middel" width="10%">Progress</th>
               <th class="align-middle" width="5%">Action</th>
+            <?php else : ?>
+              <th class="align-middle" width="10%">Contact #</th>
             <?php endif; ?>
+
           </tr>
         </thead>
         <tbody>
@@ -152,8 +155,10 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle"><?php echo getAge($row['year'], $row['month'], $row['day']); ?></td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle text-lowercase"><?php echo $row['email']; ?></td>
-              <td class="align-middle"><?php echo $row['mobile']; ?></td>
               <?php if ($isHrmis) { ?>
+                <td class="align-middle">
+                  <?php progressBar(pdsProgress($row['id'])); ?>
+                </td>
                 <td class="align-middle text-capitalize">
                   <div class="dropdown no-arrow">
                     <?php dropdownEllipsis(); ?>
@@ -161,12 +166,14 @@ messageAlert($showAlert, $message, $success);
                       <?php
                       linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee', true);
                       modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                      modalDropdownItem(uri() .'/modules/schools/assign-school-head-dialog.php?e=' . cipher($schoolId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set Head of Office'); ?>
+                      modalDropdownItem(uri() . '/modules/schools/assign-school-head-dialog.php?e=' . cipher($schoolId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set Head of Office'); ?>
                       <div class="dropdown-divider"></div>
                       <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee'); ?>
                     </div>
                   </div>
                 </td>
+              <?php } else { ?>
+                <td class="align-middle"><?php echo $row['mobile']; ?></td>
               <?php } ?>
             </tr>
           <?php endwhile; ?>
