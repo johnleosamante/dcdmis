@@ -36,44 +36,8 @@ messageAlert($showAlert, $message, $success);
       contentTitle('Personal Data Sheet');
     }
 
-    $pdsProgress = 0;
-
-    if (numRows(employee($employeeId)) > 0) {
-      $pdsProgress += 15;
-    }
-
-    if (numRows(family($employeeId)) > 0) {
-      $pdsProgress += 10;
-    }
-
-    if (numRows(educationalBackgrounds($employeeId)) > 0) {
-      $pdsProgress += 15;
-    }
-
-    if (numRows(eligibilities($employeeId)) > 0) {
-      $pdsProgress += 15;
-    }
-
-    if (numRows(experiences($employeeId)) > 0) {
-      $pdsProgress += 15;
-    }
-
-    if (numRows(learningAndDevelopments($employeeId)) > 0) {
-      $pdsProgress += 15;
-    }
-
-    if (numRows(specialSkills($employeeId)) > 0) {
-      $pdsProgress += 5;
-    }
-
-    if (numRows(otherInformation($employeeId)) > 0) {
-      $pdsProgress += 10;
-    }
+    progressBar(pdsProgress($employeeId));
     ?>
-
-    <div class="progress mt-1" title="<?php echo $pdsProgress; ?>% Complete">
-      <div class="progress-bar bg-success" role="progressbar" aria-valuenow="<?php echo $pdsProgress; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $pdsProgress; ?>%"></div>
-    </div><!-- .progress -->
   </div>
 
   <div class="card-body pb-2">
