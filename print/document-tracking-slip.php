@@ -36,7 +36,7 @@ $pdf->Ln(5);
 $pdf->SetFont('calibri', '', 11);
 $pdf->Cell($innerPage / 2, 0, $employeePosition, 0, 0, 'C');
 
-$sectionHead = $isSchool ? $school : fetchAssoc(section($document['from']));
+$sectionHead = $isSchoolPortal ? $school : fetchAssoc(section($document['from']));
 
 if ($document['user'] !== $sectionHead['head']) {
   $stationHead = strtoupper(userName($sectionHead['head']));
