@@ -1,7 +1,7 @@
 <?php
 // modules/employees/view/government-id.php
 $card = $number = $place = $date = '';
-$employeeIdentifications = employeeIdentification($userId);
+$employeeIdentifications = employeeIdentification($employeeId);
 
 if (numRows($employeeIdentifications) > 0) {
   $identification = fetchAssoc($employeeIdentifications);
