@@ -6,6 +6,10 @@ function cardTypes() {
   return query("SELECT `id`, `card` AS `name` FROM tbl_card_type ORDER BY `card`;");
 }
 
+function cardType($id) {
+  return query("SELECT `card` AS `name` FROM tbl_card_type WHERE `id`='{$id}' LIMIT 1;");
+}
+
 function employeeIdentification($id) {
   return query("SELECT `Government` AS `card`, `ID_Number` AS `number`, `Place_issued` AS `place`, `Date_issued` AS `date`, `Emp_ID` AS `id` FROM tbl_valid_id WHERE Emp_ID='{$id}';");
 }
