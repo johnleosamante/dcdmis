@@ -89,6 +89,9 @@ if (!isset($url) || $url === 'dashboard') {
     case 'Sections':
       $file = 'sections/page';
       break;
+    case 'Section Information':
+      $file = 'sections/section-information';
+      break;
     case 'Activity Log':
       $file = 'activity/page';
       break;
