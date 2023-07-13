@@ -34,14 +34,7 @@ function userName($id) {
 }
 
 function pdsProgress($id) {
-  $progress = 0;
-  if (numRows(employee($id)) > 0) {
-    $progress += 15;
-  }
-
-  if (numRows(family($id)) > 0) {
-    $progress += 10;
-  }
+  $progress = 35;
 
   if (numRows(educationalBackgrounds($id)) > 0) {
     $progress += 15;
@@ -61,10 +54,6 @@ function pdsProgress($id) {
 
   if (numRows(specialSkills($id)) > 0) {
     $progress += 5;
-  }
-
-  if (numRows(otherInformation($id)) > 0) {
-    $progress += 10;
   }
 
   return $progress;
