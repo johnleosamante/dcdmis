@@ -23,7 +23,7 @@ if (numRows($employees) > 0) {
   $employeeId = $employee['id'];
   $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
   $positions = fetchAssoc(position($employeeId));
-  $stationId = $positions['station_id'];
+  $userStationId = $positions['station_id'];
   $station = $positions['station'];
   $positionId = $positions['position_id'];
   $position = $positions['position'];
@@ -32,11 +32,11 @@ if (numRows($employees) > 0) {
   $modalTitle = 'Edit User';
   $hasUser = true;
   $dts = dtsUser($employeeId);
+  $dtsDivisionUser = $userStationId === '143';
 
   if (numRows($dts) > 0) {
     $dtsUser = true;
     $userData = fetchArray($dts);
-    $dtsDivisionUser = $stationId === '143';
     $dtsUserStation = $userData['station'];
   }
 
