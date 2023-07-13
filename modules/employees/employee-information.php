@@ -81,6 +81,9 @@ messageAlert($showAlert, $message, $success);
       <li class="nav-item">
         <a class="nav-link text-secondary<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'reference'); ?>" href="#reference" data-toggle="tab">References</a>
       </li><!-- .nav-item -->
+      <li class="nav-item">
+        <a class="nav-link text-secondary<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'government-id'); ?>" href="#government-id" data-toggle="tab">Government Issued ID</a>
+      </li><!-- .nav-item -->
     </ul><!-- .nav-tabs -->
 
     <div class="tab-content mt-2">
@@ -98,6 +101,7 @@ messageAlert($showAlert, $message, $success);
       require_once(root() . '/modules/employees/view/membership.php');
       require_once(root() . '/modules/employees/view/other-information.php');
       require_once(root() . '/modules/employees/view/reference.php');
+      require_once(root() . '/modules/employees/view/government-id.php');
       ?>
     </div><!-- .tab-content -->
   </div><!-- .card-body -->
