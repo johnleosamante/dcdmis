@@ -1,14 +1,12 @@
 <?php
 // includes/layout/components.php
-function displayLogo($width, $height, $marginBottom = '3', $url = '', $text = '')
-{ ?>
+function displayLogo($width, $height, $marginBottom = '3', $url = '', $text = '') { ?>
   <a href="<?php echo $url; ?>" title="<?php echo $text; ?>" class="d-inline-block mx-auto mb-<?php echo $marginBottom; ?>">
     <img src="<?php echo uri(); ?>/assets/img/division.png" width="<?php echo $width; ?>" height="<?php echo $height; ?>" alt="<?php echo $text; ?>">
   </a>
-  <?php }
+<?php }
 
-function messageAlert($show, $message, $success = true, $align = 'left')
-{
+function messageAlert($show, $message, $success = true, $align = 'left') {
   if ($show) : ?>
     <div class="alert alert-<?php echo $success ? 'success' : 'danger'; ?> text-<?php echo $align; ?>">
       <?php echo $message; ?>
@@ -16,8 +14,7 @@ function messageAlert($show, $message, $success = true, $align = 'left')
   <?php endif;
 }
 
-function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = null)
-{ ?>
+function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = null) { ?>
   <li class="nav-item <?php echo $condition ? ' active' : ''; ?>">
     <a class="nav-link d-flex align-items-center justify-content-between" href="<?php echo $link; ?>">
       <div class="menu-item">
@@ -31,8 +28,7 @@ function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = nu
   </li>
 <?php }
 
-function roundPill($text, $bgColor = 'primary', $textColor = 'light')
-{
+function roundPill($text, $bgColor = 'primary', $textColor = 'light') {
   switch (strtolower($text)) {
     case 'active':
       $bgColor = 'success';
@@ -59,54 +55,46 @@ function roundPill($text, $bgColor = 'primary', $textColor = 'light')
   <span class="py-1 px-3 small bg-<?php echo $bgColor; ?> rounded-pill text-<?php echo $textColor; ?>"><?php echo $text; ?></span>
 <?php }
 
-function sidebarDivider($marginBottom = '0', $autoHide = false)
-{ ?>
+function sidebarDivider($marginBottom = '0', $autoHide = false) { ?>
   <hr class="sidebar-divider mb-<?php echo $marginBottom; ?> <?php echo $autoHide ? 'd-none d-md-block' : ''; ?>">
 <?php }
 
-function sidebarHeading($text)
-{ ?>
+function sidebarHeading($text) { ?>
   <div class="sidebar-heading mt-3"><?php echo $text; ?></div>
 <?php }
 
-function sidebarToggle()
-{ ?>
+function sidebarToggle() { ?>
   <div class="text-center d-none d-md-inline">
     <button class="rounded-circle border-0" id="sidebarToggle"></button>
   </div>
 <?php }
 
-function sex($sex)
-{
+function sex($sex) {
   $sign = strtolower($sex) === 'male' ? 'mars' : 'venus'; ?>
   <i class="<?php echo "fas fa-{$sign} text-{$sign} fa-2x"; ?>"></i>
 <?php }
 
-function contentTitle($title)
-{ ?>
+function contentTitle($title) { ?>
   <div class="d-sm-flex">
     <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
   </div>
 <?php }
 
-function contentTitleWithLink($title, $link, $text = 'Back', $icon = 'fa-arrow-circle-left', $color = 'primary')
-{ ?>
+function contentTitleWithLink($title, $link, $text = 'Back', $icon = 'fa-arrow-circle-left', $color = 'primary') { ?>
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
     <?php linkButtonSplit($link, $text, $icon, $text, $color); ?>
   </div>
 <?php }
 
-function contentTitleWithModal($title, $link, $text, $icon, $color = 'primary')
-{ ?>
+function contentTitleWithModal($title, $link, $text, $icon, $color = 'primary') { ?>
   <div class="d-sm-flex align-items-center justify-content-between">
     <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
     <?php modalButtonSplit($link, $text, $icon, $text, $color); ?>
   </div>
 <?php }
 
-function card($title, $link, $icon, $color = 'primary', $counter = '&nbsp;')
-{ ?>
+function card($title, $link, $icon, $color = 'primary', $counter = '&nbsp;') { ?>
   <div class="col-xl-3 col-md-6 mb-4">
     <div class="card border-left-<?php echo $color; ?> shadow h-100">
       <div class="card-body">
@@ -129,20 +117,17 @@ function card($title, $link, $icon, $color = 'primary', $counter = '&nbsp;')
   </div>
 <?php }
 
-function scrollToTop()
-{ ?>
+function scrollToTop() { ?>
   <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
   <?php }
 
-function showAsterisk($show = true)
-{
+function showAsterisk($show = true) {
   if ($show) : ?>
     <span class="text-danger"> *</span>
   <?php endif;
 }
 
-function modal()
-{ ?>
+function modal() { ?>
   <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog d-none">
       <div class="modal-content">
@@ -160,53 +145,46 @@ function modal()
   </div>
 <?php }
 
-function linkButtonSplit($link, $text, $icon, $title = '', $color = 'primary', $newTab = false)
-{ ?>
+function linkButtonSplit($link, $text, $icon, $title = '', $color = 'primary', $newTab = false) { ?>
   <a href="<?php echo $link; ?>" class="btn btn-<?php echo $color; ?> btn-icon-split btn-sm my-1" title="<?php echo $title; ?>" target="<?php echo $newTab ? '_blank' : '_self'; ?>">
     <span class="icon text-white-50"><i class="fas <?php echo $icon; ?> fa-fw"></i></span>
     <span class="text"><?php echo $text; ?></span>
   </a>
 <?php }
 
-function modalButtonSplit($link, $text, $icon, $title = '', $color = 'primary')
-{ ?>
+function modalButtonSplit($link, $text, $icon, $title = '', $color = 'primary') { ?>
   <a href='#' data-toggle="modal" data-target="#modal" class="btn btn-<?php echo $color; ?>  btn-icon-split btn-sm my-1" title="<?php echo $title; ?>" onclick="loadData('<?php echo $link; ?>')">
     <span class="icon text-white-50"><i class="fas <?php echo $icon; ?> fa-fw"></i></span>
     <span class="text"><?php echo $text; ?></span>
   </a>
 <?php }
 
-function linkDropdownItem($link, $text, $icon, $title = '', $newTab = false)
-{ ?>
+function linkDropdownItem($link, $text, $icon, $title = '', $newTab = false) { ?>
   <a href="<?php echo $link; ?>" class="dropdown-item" title="<?php echo $title; ?>" target="<?php echo $newTab ? '_blank' : '_self'; ?>">
     <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i><?php echo $text; ?>
   </a>
 <?php }
 
-function modalDropdownItem($link, $text, $icon, $title = '')
-{ ?>
+function modalDropdownItem($link, $text, $icon, $title = '') { ?>
   <a href="#" data-toggle="modal" data-target="#modal" class="dropdown-item" title="<?php echo $title; ?>" onclick="loadData('<?php echo $link; ?>')">
     <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i><?php echo $text; ?>
   </a>
 <?php }
 
-function dropdownEllipsis()
-{ ?>
+function dropdownEllipsis() { ?>
   <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-600"></i>
   </a>
 <?php }
 
-function modalHeader($title)
-{ ?>
+function modalHeader($title) { ?>
   <div class="modal-header">
     <h5 class="modal-title"><?php echo $title; ?></h5>
     <button id="close-modal-button" type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
   </div>
 <?php }
 
-function modalConfirmDelete($message, $title = 'Delete', $buttonName = 'Delete', $verifier = null, $dataVerifier = null)
-{ ?>
+function modalConfirmDelete($message, $title = 'Delete', $buttonName = 'Delete', $verifier = null, $dataVerifier = null) { ?>
   <div class="modal-dialog">
     <div class="modal-content">
       <?php modalHeader($title); ?>
@@ -227,24 +205,21 @@ function modalConfirmDelete($message, $title = 'Delete', $buttonName = 'Delete',
   </div>
 <?php }
 
-function cancelModalButton()
-{ ?>
+function cancelModalButton() { ?>
   <button id="cancel-modal-button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 <?php }
 
-function missingAlert($text, $icon = 'fa-times-circle', $color = 'text-danger')
-{ ?>
+function missingAlert($text, $icon = 'fa-times-circle', $color = 'text-danger') { ?>
   <div class="error mx-auto text-center <?php echo $color; ?>"><i class="fas <?php echo $icon; ?> fa-fw"></i></div>
   <p class="lead text-center text-gray-800 mt-1 mb-0"><?php echo $text; ?></p>
   <p class="text-center text-gray-500 mb-0">Sorry, we couldn't find what you're looking for...</p>
 <?php }
 
-function requiredLegend($marginBottom = 2)
-{ ?>
+function requiredLegend($marginBottom = 2) { ?>
   <div class="text-danger mb-<?php echo $marginBottom; ?>">* Required field</div>
 <?php } 
 
-function progressBar($value, $min=35) { ?>
+function progressBar($value, $min=50) { ?>
   <div class="progress mt-1" title="<?php echo $value; ?>% Complete">
     <div class="progress-bar bg-<?php echo $value > $min ? 'success' : 'danger'; ?>" role="progressbar" aria-valuenow="<?php echo $value; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $value; ?>%"></div>
   </div>
