@@ -23,7 +23,7 @@ messageAlert($showAlert, $message, $success);
             <th class="align-middle" rowspan="2" width="15%">District</th>
             <th class="align-middle" rowspan="2" width="15%">Category</th>
             <th class="align-middle" rowspan="2" width="20%">Head of Office</th>
-            <th class="align-middle" colspan="3" width="15%">Personnel Count</th>
+            <th class="align-middle" colspan="3" width="15%">Personnel</th>
             <th class="align-middle" rowspan="2" width="5%">Action</th>
           </tr>
 
