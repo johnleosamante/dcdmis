@@ -78,7 +78,7 @@ messageAlert($showAlert, $message, $success);
                 </div>
               </td>
               <td class="align-middle text-left">
-                <div><?php echo $schoolName . ' (' . $row['alias'] . ')'; ?></div>
+                <div><?php linkItem(customUri($activeApp, 'School Information', $row['id']), $schoolName . ' (' . $row['alias'] . ')'); ?></div>
                 <div class="small"><?php echo $row['id'] . ' | ' . $row['address']; ?></div>
               </td>
               <td class="align-middle">

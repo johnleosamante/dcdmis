@@ -5,7 +5,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-        <?php if ($activeApp === 'dmis') {
+    <?php if ($activeApp === 'dmis') {
       contentTitleWithModal('Sections', uri() . '/modules/districts/save-section-dialog.php', 'Add', 'fa-plus');
     } else {
       contentTitle('Sections');
@@ -17,8 +17,9 @@ messageAlert($showAlert, $message, $success);
       <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
+            <th class="align-middle" rowspan="2" width="5%">#</th>
             <th class="align-middle" rowspan="2" width="30%">Section</th>
-            <th class="align-middle" rowspan="2" width="50%">Section Head</th>
+            <th class="align-middle" rowspan="2" width="45%">Section Head</th>
             <th class="align-middle" colspan="3" width="15%">Personnel</th>
             <th class="align-middle" rowspan="2" width="5%">Action</th>
           </tr>
@@ -33,9 +34,11 @@ messageAlert($showAlert, $message, $success);
         <tbody>
           <?php
           $query = sections();
+          $no = 0;
           while ($row = fetchAssoc(($query))) : ?>
             <tr class="text-uppercase">
-              <td class="align-middle"><?php echo $row['name']; ?></td>
+              <td class="align-middle"><?php echo ++$no; ?></td>
+              <td class="align-middle text-left"><?php linkItem(customUri($activeApp, 'Section Information', $row['id']), $row['name']); ?></td>
               <td class="align-middle">
                 <div><?php echo userName($row['head']); ?></div>
                 <div class="small"><?php echo fetchAssoc(position($row['head']))['position']; ?></div>
