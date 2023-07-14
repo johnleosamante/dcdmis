@@ -39,7 +39,7 @@ messageAlert($showAlert, $message, $success);
                   <div class="sex-sign"><?php sex($row['sex']); ?></div>
                 </div>
               </td>
-              <td class="align-middle text-left"><?php echo $employeeName; ?></td>
+              <td class="align-middle text-left"><?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName); ?></td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
               <td class="align-middle">
                 <?php echo getAge($row['year'], $row['month'], $row['day']); ?>
