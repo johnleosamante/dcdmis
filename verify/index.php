@@ -296,6 +296,7 @@ function addUserPrivilege($id, $email, $station) {
 // alterEducationalBackground();
 // alterSystemLogs();
 // alterVoluntaryWork();
+// alterWorkExperience();
 
 // checkEmployeeStation();
 // checkEmployeeAccount();

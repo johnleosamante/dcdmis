@@ -145,6 +145,10 @@ function modal() { ?>
   </div>
 <?php }
 
+function linkItem($link, $text, $newTab=false) { ?>
+  <a href="<?php echo $link; ?>" class="text-uppercase" target="<?php echo $newTab ? '_blank' : '_self'; ?>"><?php echo $text; ?></a>
+<?php }
+
 function linkButtonSplit($link, $text, $icon, $title = '', $color = 'primary', $newTab = false) { ?>
   <a href="<?php echo $link; ?>" class="btn btn-<?php echo $color; ?> btn-icon-split btn-sm my-1" title="<?php echo $title; ?>" target="<?php echo $newTab ? '_blank' : '_self'; ?>">
     <span class="icon text-white-50"><i class="fas <?php echo $icon; ?> fa-fw"></i></span>

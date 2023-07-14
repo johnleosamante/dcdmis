@@ -28,7 +28,7 @@
           while ($row = fetchArray($query)) : ?>
             <tr class="text-uppercase">
               <td class="align-middle"><?php echo ++$no; ?></td>
-              <td class="align-middle"><?php echo $row['id']; ?></td>
+              <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']); ?></td>
               <td class="text-left align-middle"><?php echo $row['description']; ?></td>
               <td class="align-middle"><?php echo toDatetime($row['postedon']); ?></td>
               <td class="align-middle"><?php echo toDatetime($row['canceledon']); ?></td>

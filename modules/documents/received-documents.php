@@ -28,14 +28,14 @@
           ?>
             <tr class="text-uppercase">
               <td class="align-middle"><?php echo ++$no; ?></td>
-              <td class="align-middle"><?php echo $row['id']; ?></td>
+              <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']); ?></td>
               <td class="text-left align-middle"><?php echo $row['description']; ?></td>
               <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                    <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');?>
+                    <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information'); ?>
                   </div>
                 </div>
               </td>
