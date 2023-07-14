@@ -3,7 +3,39 @@ require_once('../includes/function.php');
 require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/database/database.php');
 
+function alterCivilService() {
+  echo 'Altering Civil Service...<br>';
+  nonQuery("ALTER TABLE `civil_service` ADD `isapplicabledate` BOOLEAN NOT NULL AFTER `Number_of_Hour`;");
+  echo 'Completed...<br><br>';
+}
+
+function alterEducationalBackground() {
+  echo 'Altering Educational Background...<br>';
+  nonQuery("ALTER TABLE `educational_background` ADD `ispresent` BOOLEAN NOT NULL AFTER `To`;");
+  echo 'Completed...<br><br>';
+}
+
+function alterSystemLogs() {
+  echo 'Altering System Logs...<br>';
+  nonQuery("ALTER TABLE `tbl_system_logs` ADD `target_id` VARCHAR(30) NOT NULL AFTER `Status`;");
+  echo 'Completed...<br><br>';
+}
+
+function alterVoluntaryWork() {
+  echo 'Altering Voluntary Work...<br>';
+  nonQuery("ALTER TABLE `voluntary_work` ADD `ispresent` BOOLEAN NOT NULL AFTER `To`;");
+  echo 'Completed...<br><br>';
+}
+
+function alterWorkExperience() {
+  echo 'Altering Work Experience...<br>';
+  nonQuery("ALTER TABLE `work_experience` ADD `ispresent` BOOLEAN NOT NULL AFTER `To`;");
+  echo 'Completed...<br><br>';
+}
+
 function checkEmployeeStation() {
+  echo 'Checking employee station...<br>';
+
   $activeEmployees = query("SELECT * FROM tbl_employee;");
   $no = 0;
 
@@ -12,9 +44,13 @@ function checkEmployeeStation() {
       echo ++$no . ' | ' . $active['Emp_ID'] . ' | ' . toName($active['Emp_LName'], $active['Emp_FName'], $active['Emp_MName'], $active['Emp_Extension']) . '<br>';
     }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 function checkEmployeeAccount() {
+  echo 'Checking employee account...<br>';
+
   $activeEmployees = query("SELECT * FROM tbl_employee;");
   $no = 0;
 
@@ -22,14 +58,18 @@ function checkEmployeeAccount() {
     if (numRows(query("SELECT * FROM tbl_teacher_account WHERE Teacher_TIN='" . $active['Emp_Email'] . "';")) === 0) {
       query("INSERT INTO tbl_teacher_account (`Teacher_TIN`, `Teacher_Password`) VALUES ('" . $active['Emp_Email'] . "', '" . hashPassword(generateStrongRandomPassword()) . "');");
 
-      if (affectedRows() === 1) {
+      if (affectedRows()) {
         echo ++$no . ' | ' . $active['Emp_ID'] . ' | ' . toName($active['Emp_LName'], $active['Emp_FName'], $active['Emp_MName'], $active['Emp_Extension']) . '<br>';
       }
     }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 function checkEmployeeStepIncrement() {
+  echo 'Checking employee step increment...<br>';
+
   $activeEmployees = query("SELECT * FROM tbl_employee;");
   $no = 0;
 
@@ -37,14 +77,18 @@ function checkEmployeeStepIncrement() {
     if (numRows(query("SELECT * FROM tbl_step_increment WHERE Emp_ID='" . $active['Emp_ID'] . "';")) === 0) {
       query("INSERT INTO tbl_step_increment (`Date_last_step`, `Step_No`, `No_of_year`, `Emp_ID`) VALUES ('1', '1', '0', '" . $active['Emp_ID'] . "');");
 
-      if (affectedRows() === 1) {
+      if (affectedRows()) {
         echo ++$no . ' | ' . $active['Emp_ID'] . ' | ' . toName($active['Emp_LName'], $active['Emp_FName'], $active['Emp_MName'], $active['Emp_Extension']) . '<br>';
       }
     }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 function checkEmployeeOtherInformation() {
+  echo 'Checking employee other information...<br>';
+
   $activeEmployees = query("SELECT * FROM tbl_employee;");
   $no = 0;
 
@@ -57,9 +101,12 @@ function checkEmployeeOtherInformation() {
       }
     }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 function checkEmployeePsipop() {
+  echo 'Checking employee psipop...<br>';
   $activeEmployees = query("SELECT * FROM tbl_employee;");
   $no = 0;
 
@@ -72,9 +119,13 @@ function checkEmployeePsipop() {
       }
     }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 function checkEmployeeDeployment() {
+  echo 'Checking employee deployment...<br>';
+
   $activeEmployees = query("SELECT tbl_employee.Emp_ID, tbl_employee.Emp_LName, tbl_employee.Emp_FName, tbl_employee.Emp_MName, tbl_employee.Emp_Extension, tbl_station.Emp_Station, tbl_station.Emp_Position FROM `tbl_employee` INNER JOIN `tbl_station` ON tbl_employee.Emp_ID = tbl_station.Emp_ID;");
   $no = 0;
 
@@ -87,9 +138,13 @@ function checkEmployeeDeployment() {
       }
     }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 function checkEmployeeFamily() {
+  echo 'Checking employee family...<br>';
+
   $activeEmployees = query("SELECT * FROM `tbl_employee`;");
   $no = 0;
 
@@ -102,9 +157,13 @@ function checkEmployeeFamily() {
       }
     }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 function checkEmployeeValidId() {
+  echo 'Checking employee valid id...<br>';
+
   $activeEmployees = query("SELECT * FROM `tbl_employee`;");
   $no = 0;
 
@@ -117,18 +176,50 @@ function checkEmployeeValidId() {
       }
     }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
+}
+
+function checkTeacherPassword() {
+  echo 'Setting teacher password...<br>';
+
+  $users = query("SELECT `username`, `password` FROM tbl_user WHERE `password` <> '';");
+  $no = 0;
+
+  while ($u = fetchAssoc($users)) {
+    nonQuery("UPDATE tbl_teacher_account SET `Teacher_Password`='" . $u['password'] . "' WHERE `Teacher_TIN`='" . $u['username'] . "';");
+
+    if (affectedRows() === 1) {
+      echo ++$no . ' | ' . $u['username'] . '<br>';
+    }
+  }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 function setTransactionStatus() {
+  echo 'Setting transaction status...<br>';
+
+  $no = 0;
   nonQuery("UPDATE tbl_transactions SET `Status`='Unread' WHERE Trans_Stats NOT LIKE '%Complete%' OR Trans_Stats NOT LIKE '%Cancel%';");
+  $no = affectedRows();
   nonQuery("UPDATE tbl_transactions SET `Status`='Read' WHERE Trans_Stats LIKE '%Complete%' OR Trans_Stats LIKE '%Cancel%';");
+  $no = $no + affectedRows();
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 function setTransactionLogStatus() {
+  echo 'Setting transaction log status...<br>';
+
   nonQuery("UPDATE tbl_transactions_Log SET `Status`='Done';");
+
+  echo '(' . affectedRows(). ') Completed...<br><br>';
 }
 
 function setLastTransactionLogStatus() {
+  echo 'Setting last transaction log status...<br>';
+
   $transactions = query("SELECT * FROM tbl_transactions WHERE Trans_Stats NOT LIKE '%Complete%' OR Trans_Stats NOT LIKE '%Cancel%';");
   $no = 0;
 
@@ -141,36 +232,37 @@ function setLastTransactionLogStatus() {
       echo ++$no . ' | ' . $t['TransCode'] . ' | ' .$t['Title'] . '<br>';
     }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
-function setTeacherPassword() {
-  $users = query("SELECT `username`, `password` FROM tbl_user WHERE `password` <> '';");
-  $no = 0;
+function setActivityStatus($value, $reference) {
+  echo 'Setting activity status (' . $value . ')...<br>';
 
-  while ($u = fetchAssoc($users)) {
-    nonQuery("UPDATE tbl_teacher_account SET `Teacher_Password`='" . $u['password'] . "' WHERE `Teacher_TIN`='" . $u['username'] . "';");
+  nonQuery("UPDATE tbl_system_logs SET `Status`='{$value}' WHERE `Status`='{$reference}';");
 
-    if (affectedRows() === 1) {
-      echo ++$no . ' | ' . $u['username'] . '<br>';
-    }
-  }
-}
-
-function setActivityStatus($filter, $replacement) {
-  nonQuery("UPDATE tbl_system_logs SET `Status`='{$replacement}' WHERE `Status`='{$filter}';");
-
-  echo affectedRows();
+  echo '(' . affectedRows() . ') Completed...<br><br>';
 }
 
 function setLoginTargetId() {
+  echo 'Setting login target id...<br>';
+
   $logs = query("SELECT `Emp_ID` AS `id` FROM tbl_system_logs WHERE `Status`='Logged in';");
+  $no = 0;
 
   while($log = fetchAssoc($logs)) {
     nonQuery("UPDATE tbl_system_logs SET `target_id`='" . $log['id'] . "' WHERE `Status`='Logged in' AND Emp_ID='" . $log['id'] . "';");
+    if (affectedRows()) {
+      ++$no;
+    }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 function setCreatedDocumentTargetId() {
+  echo 'Setting created document target id...<br>';
+
   $logs = query("SELECT TransCode AS `id`, Date_time AS `datetime` FROM tbl_transactions;");
   $no = 0;
 
@@ -180,22 +272,55 @@ function setCreatedDocumentTargetId() {
       echo ++$no . ' | ' . $log['id'] . '<br>';
     }
   }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
-//checkEmployeeStation();
-//checkEmployeeAccount();
-//checkEmployeeStepIncrement();
-//checkEmployeeOtherInformation();
-//checkEmployeePsipop();
-//checkEmployeeDeployment();
-//checkEmployeeFamily();
-//checkEmployeeValidId();
-//setTransactionStatus();
-//setTransactionLogStatus();
-//setLastTransactionLogStatus();
-//setTeacherPassword();
-//setActivityStatus('Login', 'Logged in');
-//setActivityStatus('Transaction', 'Created document');
-//setLoginTargetId();
-setCreatedDocumentTargetId();
+function updateEducationalBackgroundLevel($value, $reference) {
+  echo 'Updating educational background level (' . $value . ')...<br>';
+
+  nonQuery("UPDATE `educational_background` SET `Level`='{$value}' WHERE `Level`='{$reference}';");
+
+  echo '(' . affectedRows() . ') Completed...<br><br>';
+}
+
+function addUserPrivilege($id, $email, $station) {
+  echo 'Adding user privilege (' . $email . ')...<br>';
+
+  nonQuery("INSERT INTO tbl_user (`usercode`, `username`, `Station`) VALUES ('{$id}', '{$email}', '{$station}');");
+
+  echo '(' . affectedRows() . ') Completed...<br><br>';
+}
+
+// alterCivilService();
+// alterEducationalBackground();
+// alterSystemLogs();
+// alterVoluntaryWork();
+
+// checkEmployeeStation();
+// checkEmployeeAccount();
+// checkEmployeeStepIncrement();
+// checkEmployeeOtherInformation();
+// checkEmployeePsipop();
+// checkEmployeeDeployment();
+// checkEmployeeFamily();
+// checkEmployeeValidId();
+// checkTeacherPassword();
+
+// setTransactionStatus();
+// setTransactionLogStatus();
+// setLastTransactionLogStatus();
+
+// setActivityStatus('Login', 'Logged in');
+// setActivityStatus('Transaction', 'Created document');
+// setLoginTargetId();
+// setCreatedDocumentTargetId();
+
+// updateEducationalBackgroundLevel('Graduate Studies', 'Masteral');
+// updateEducationalBackgroundLevel('Graduate Studies', 'Doctoral');
+// updateEducationalBackgroundLevel('Secondary', 'High School');
+
+// addUserPrivilege('221024040000', 'johnleo.samante@deped.gov.ph', 'HRMIS');
+// addUserPrivilege('221024040000', 'johnleo.samante@deped.gov.ph', 'DMIS');
+// addUserPrivilege('221024040000', 'johnleo.samante@deped.gov.ph', 'HRTDMS');
 ?>

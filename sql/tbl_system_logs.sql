@@ -1,1 +1,0 @@
-ALTER TABLE `tbl_system_logs` ADD `target_id` VARCHAR(30) NOT NULL AFTER `Status`;

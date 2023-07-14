@@ -1,1 +1,0 @@
-ALTER TABLE `voluntary_work` ADD `ispresent` BOOLEAN NOT NULL AFTER `To`;
