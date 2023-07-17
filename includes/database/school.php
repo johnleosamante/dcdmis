@@ -25,6 +25,10 @@ function schoolDetailsById($id) {
   return query("SELECT Abraviate AS alias, SchoolName AS `name`, `Address` AS `address`, Incharg_ID AS `head`, District_code AS `district`, School_Category AS category, SchoolLogo AS `logo`, telephone, email, website, fb_page FROM tbl_school WHERE SchoolID='{$id}' LIMIT 1;");
 }
 
+function updateSchoolHead($schoolId, $headId) {
+  nonQuery("UPDATE tbl_school SET `Incharg_ID`='{$headId}' WHERE `SchoolID`='{$schoolId}';");
+}
+
 function schoolEmployeeCount($id) {
   return query("SELECT SUM(CASE WHEN tbl_employee.Emp_Sex = 'Male' THEN 1 ELSE 0 END) as male, SUM(CASE WHEN tbl_employee.Emp_Sex = 'Female' THEN 1 ELSE 0 END) as female, COUNT(*) as `total` FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_school ON tbl_station.Emp_Station=tbl_school.SchoolID WHERE tbl_employee.Emp_Status='Active' AND tbl_school.SchoolID='{$id}' GROUP BY tbl_school.SchoolName ORDER BY tbl_school.SchoolName;");
 }
