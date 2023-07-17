@@ -675,10 +675,29 @@ if (isset($_POST['remove-employee'])) {
 
   if (numRows(employee($employeeId)) > 0) {
     updateEmployeeStatus($reason, $employeeId);
+  }
+
+  if (affectedRows()) {
     $success = true;
     $message = 'Employee has been removed successfully.';
     $showAlert = true;
     createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
+  }
+}
+
+if (isset($_POST['set-school-head'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $schoolId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+
+  if (numRows(employee($employeeId)) > 0) {
+    updateSchoolHead($schoolId, $employeeId);
+  }
+
+  if (affectedRows()) {
+    $success = true;
+    $message = 'Employee has been set as school head successfully.';
+    $showAlert = true;
+    createSystemLog($stationId, $userId, 'Set School Head', $employeeId, clientIp());
   }
 }
 ?>
