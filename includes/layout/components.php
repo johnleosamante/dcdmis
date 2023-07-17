@@ -148,6 +148,10 @@ function modal() { ?>
 function linkItem($link, $text, $newTab=false) { ?>
   <a href="<?php echo $link; ?>" class="text-uppercase" target="<?php echo $newTab ? '_blank' : '_self'; ?>"><?php echo $text; ?></a>
 <?php }
+  
+function linkModal($link, $text) { ?>
+  <a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData('<?php echo $link; ?>')"><?php echo $text; ?></a>
+<?php }
 
 function linkButtonSplit($link, $text, $icon, $title = '', $color = 'primary', $newTab = false) { ?>
   <a href="<?php echo $link; ?>" class="btn btn-<?php echo $color; ?> btn-icon-split btn-sm my-1" title="<?php echo $title; ?>" target="<?php echo $newTab ? '_blank' : '_self'; ?>">
@@ -157,7 +161,7 @@ function linkButtonSplit($link, $text, $icon, $title = '', $color = 'primary', $
 <?php }
 
 function modalButtonSplit($link, $text, $icon, $title = '', $color = 'primary') { ?>
-  <a href='#' data-toggle="modal" data-target="#modal" class="btn btn-<?php echo $color; ?>  btn-icon-split btn-sm my-1" title="<?php echo $title; ?>" onclick="loadData('<?php echo $link; ?>')">
+  <a href="#" data-toggle="modal" data-target="#modal" class="btn btn-<?php echo $color; ?>  btn-icon-split btn-sm my-1" title="<?php echo $title; ?>" onclick="loadData('<?php echo $link; ?>')">
     <span class="icon text-white-50"><i class="fas <?php echo $icon; ?> fa-fw"></i></span>
     <span class="text"><?php echo $text; ?></span>
   </a>
