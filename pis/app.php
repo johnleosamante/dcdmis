@@ -1,5 +1,7 @@
 <?php
 // pis/app.php
+$isPublic = restrictPublicAccess();
+
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'pis';
 $page = $appTitle = 'Personnel Information System';
 $isPis = true;
