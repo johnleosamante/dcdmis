@@ -24,7 +24,7 @@ if (numRows($documents) > 0) {
   $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['from'] === $station && $documentLogs['to'] === '-';
   $modalTitle = $hasDocument ? 'Forward Document' : $modalTitle;
 
-  if (strtolower($document['status']) === 'for release' && $portal === 'record_portal') {
+  if (strtolower($document['status']) === 'for release' && $portal === 'rec_portal') {
     $forRelease = true;
     $destination = $document['from'];
     $purpose = $document['status'];
