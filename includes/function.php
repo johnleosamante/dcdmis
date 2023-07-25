@@ -45,6 +45,7 @@ function restrictPublicAccess() {
     case DOMAIN:
     case PUBLIC_IP:
       redirect(uri() . '/error');
+      break;
     default:
       break;
   }
