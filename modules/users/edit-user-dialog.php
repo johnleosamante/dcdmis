@@ -83,7 +83,7 @@ if (numRows($employees) > 0) {
               </select>
             </div>
           <?php else : ?>
-            <input type="hidden" name="dts-verifier" value="<?php echo $stationId; ?>">
+            <input type="hidden" name="dts-verifier" value="<?php echo $userStationId; ?>">
           <?php endif; ?>
 
 
