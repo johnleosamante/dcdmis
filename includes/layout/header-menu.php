@@ -53,22 +53,27 @@ $displayPhoto = uri() . '/' . $user['picture'];
       </a>
 
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-        <?php linkDropdownItem(uri() . '/pis', 'Profile', 'fa-user-tie', 'Personnel Information System');
+        <?php
+        if (!$isPublic) {
+          linkDropdownItem(uri() . '/pis', 'Profile', 'fa-user-tie', 'Personnel Information System');
+        }
 
         if (numRows(dtsUser($userId)) > 0) {
           linkDropdownItem(uri() . '/dts', 'Tracking', 'fa-exchange-alt', 'Document Tracking System');
         }
         
-        if (isStationUser($userId, 'hrmis')) {
-          linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
-        }
+        if (!$isPublic) {
+          if (isStationUser($userId, 'hrmis')) {
+            linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
+          }
 
-        if (isStationUser($userId, 'hrtdms')) {
-          linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
-        }
+          if (isStationUser($userId, 'hrtdms')) {
+            linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
+          }
 
-        if (isStationUser($userId, 'dmis')) {
-          linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-industry', 'Division Management Information System');
+          if (isStationUser($userId, 'dmis')) {
+            linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-industry', 'Division Management Information System');
+          }
         }
         ?>
         <div class="dropdown-divider"></div>
