@@ -27,7 +27,7 @@ function isDocumentFrom($id, $station, $status='New') {
 }
 
 function createDocument($id, $description, $station, $purpose, $details='') {
-  nonQuery("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats, details) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}', '{$details}');");
+  nonQuery("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats, `Status`, details) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}', 'Unread', '{$details}');");
 }
 
 function updateDocument($id, $description, $purpose, $details='', $updateDescription=true) {
