@@ -40,9 +40,7 @@ function uri() {
   return $protocol . $_SERVER['HTTP_HOST'];
 }
 
-function restrictPublicAccess($restrict = true) {
-  if (!$restrict) return;
-
+function restrictPublicAccess() {
   switch (strtolower($_SERVER['HTTP_HOST'])) {
     case DOMAIN:
     case PUBLIC_IP:
@@ -50,6 +48,8 @@ function restrictPublicAccess($restrict = true) {
     default:
       break;
   }
+
+  return false;
 }
 
 function customUri($page, $view, $id=null) {
