@@ -19,7 +19,7 @@ if (isset($_POST['save-document'])) {
   $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
-  $destination = $isSchoolPortal ? 'RECORD' :  sanitize($_POST['destination']);
+  $destination = $isSchoolPortal ? 'REC' :  sanitize($_POST['destination']);
   $logMessage = '';
 
   if (numRows(document($documentId)) === 0) {
