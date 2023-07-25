@@ -4,11 +4,10 @@ function setUserSession($userid) {
   $users = user($userid);
 
   if (numRows($users) === 1) {
-    global $stationId;
     $user = fetchAssoc($users);
+    $_SESSION[alias() . '_stationId'] = $user['station_id'];
     $_SESSION[alias() . '_code'] = $user['code'];
     $_SESSION[alias() . '_portal'] = $user['portal'];
-    $stationId = $_SESSION[alias() . '_stationId'] = $user['station_id'];
 
     if ($user['portal'] !== 'sch_portal') {
       $_SESSION[alias() . '_station'] = $user['code'];
