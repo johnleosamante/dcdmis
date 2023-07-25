@@ -1,6 +1,6 @@
 <?php
 // dmis/app.php
-restrictPublicAccess();
+$isPublic = restrictPublicAccess();
 
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
 $page = $appTitle = 'Division Management Information System';
