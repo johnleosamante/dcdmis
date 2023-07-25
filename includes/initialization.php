@@ -25,4 +25,5 @@ $page = $appTitle = null;
 $showAlert = false;
 $message = null;
 $success = true;
+$isPublic = true;
 ?>
