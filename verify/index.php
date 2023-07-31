@@ -312,8 +312,8 @@ function addUserPrivilege($id, $email, $station) {
 // setTransactionLogStatus();
 // setLastTransactionLogStatus();
 
-// setActivityStatus('Login', 'Logged in');
-// setActivityStatus('Transaction', 'Created document');
+// setActivityStatus('Logged in', 'Login');
+// setActivityStatus('Created document', 'Transaction');
 // setLoginTargetId();
 // setCreatedDocumentTargetId();
 
