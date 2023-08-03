@@ -54,29 +54,27 @@ $displayPhoto = uri() . '/' . $user['picture'];
 
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
         <?php
-        if (!$isPublic) {
-          linkDropdownItem(uri() . '/pis', 'Profile', 'fa-user-tie', 'Personnel Information System');
-        }
+        linkDropdownItem(uri() . '/pis', 'Profile', 'fa-user-tie', 'Personnel Information System');
 
         if (numRows(dtsUser($userId)) > 0) {
           linkDropdownItem(uri() . '/dts', 'Tracking', 'fa-exchange-alt', 'Document Tracking System');
         }
         
-        if (!$isPublic) {
-          if (isStationUser($userId, 'hrmis')) {
-            linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
-          }
+        if (isStationUser($userId, 'hrmis')) {
+          linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
+        }
 
-          if (isStationUser($userId, 'hrtdms')) {
-            linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
-          }
+        if (isStationUser($userId, 'hrtdms')) {
+          linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
+        }
 
-          if (isStationUser($userId, 'dmis')) {
-            linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-industry', 'Division Management Information System');
-          }
+        if (isStationUser($userId, 'dmis')) {
+          linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-industry', 'Division Management Information System');
         }
         ?>
+
         <div class="dropdown-divider"></div>
+        
         <?php linkDropdownItem(customUri($activeApp, 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
 
         linkDropdownItem(customUri($activeApp, 'Settings'), 'Settings', 'fa-cogs', 'Go to settings');
