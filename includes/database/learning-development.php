@@ -44,11 +44,11 @@ function updateTraining($no, $title, $from, $to, $type, $sponsor, $venue) {
 }
 
 function scheduledTrainings() {
-  return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `Category` AS `type`, `conducted_by` AS `sponsor`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` > NOW() ORDER BY `From` DESC, `To` DESC;");
+  return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `Category` AS `type`, `conducted_by` AS `sponsor`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` >= CURDATE() ORDER BY `From` DESC, `To` DESC;");
 }
 
 function conductedTrainings() {
-  return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `Category` AS `type`, `conducted_by` AS `sponsor`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` < NOW() ORDER BY `From` DESC, `To` DESC;");
+  return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `Category` AS `type`, `conducted_by` AS `sponsor`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` < CURDATE() ORDER BY `From` DESC, `To` DESC;");
 }
 
 function trainingParticipants($no) {
@@ -64,7 +64,7 @@ function deleteTrainingParticipant($no, $id) {
 }
 
 function isConductedTraining($no) {
-  return numRows(query("SELECT `Training_Code` AS `no` FROM tbl_seminar WHERE `Training_Code`='{$no}' AND `covered_to` < NOW() LIMIT 1;")) > 0;
+  return numRows(query("SELECT `Training_Code` AS `no` FROM tbl_seminar WHERE `Training_Code`='{$no}' AND `covered_to` < CURDATE() LIMIT 1;")) > 0;
 }
 
 function isTrainingParticipant($no, $id) {
