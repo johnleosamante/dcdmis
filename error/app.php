@@ -13,7 +13,7 @@ switch ($code) {
     break;
   default:
     $file = 'error';
-    $error = 'Ooops!';
+    $error = 'Oops!';
     break;
 }
 
