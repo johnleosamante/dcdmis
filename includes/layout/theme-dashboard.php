@@ -1,5 +1,9 @@
 <?php
 // includes/layout/header.php
+$isHoliday = hasHoliday();
+
+restrictPublicAccess($isHoliday);
+
 require_once('app.php');
 
 $url = isset($_GET['v']) ? sanitize(decode($_GET['v'])) : null;
