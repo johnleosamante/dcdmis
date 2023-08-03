@@ -1,7 +1,5 @@
 <?php
 // hrtdms/app.php
-$isPublic = restrictPublicAccess();
-
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrtdms';
 $page = $appTitle = 'Human Resource Training &amp; Development Management System';
 
