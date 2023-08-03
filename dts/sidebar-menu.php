@@ -7,6 +7,8 @@ $countPending = number_format(numRows(pendingDocuments($station)));
 $countOutgoing = number_format(numRows(outgoingDocuments($station)));
 $countOngoing = number_format(numRows(ongoingDocuments($station)));
 
+sidebarModalItem(uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus');
+
 sidebarMenuItem(customUri('dts', 'Incoming Documents'), 'Incoming', 'fa-file-download', isset($url) && str_contains($url, 'Incoming'), $countIncoming);
 
 sidebarMenuItem(customUri('dts', 'Pending Documents'), 'Pending', 'fa-history', isset($url) && str_contains($url, 'Pending'), $countPending);
