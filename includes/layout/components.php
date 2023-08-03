@@ -14,20 +14,6 @@ function messageAlert($show, $message, $success = true, $align = 'left') {
   <?php endif;
 }
 
-function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = null) { ?>
-  <li class="nav-item <?php echo $condition ? ' active' : ''; ?>">
-    <a class="nav-link d-flex align-items-center justify-content-between" href="<?php echo $link; ?>">
-      <div class="menu-item">
-        <i class="fas fa-fw <?php echo $icon; ?>"></i>
-        <span><?php echo $title; ?></span>
-      </div>
-      <?php if ($counter !== null) : ?>
-        <span class="bg-dark px-2 rounded-pill font-weight-bold"><?php echo $counter; ?></span>
-      <?php endif; ?>
-    </a>
-  </li>
-<?php }
-
 function roundPill($text, $bgColor = 'primary', $textColor = 'light') {
   switch (strtolower($text)) {
     case 'active':
@@ -74,26 +60,6 @@ function sex($sex) {
   <i class="<?php echo "fas fa-{$sign} text-{$sign} fa-2x"; ?>"></i>
 <?php }
 
-function contentTitle($title) { ?>
-  <div class="d-sm-flex">
-    <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
-  </div>
-<?php }
-
-function contentTitleWithLink($title, $link, $text = 'Back', $icon = 'fa-arrow-circle-left', $color = 'primary') { ?>
-  <div class="d-sm-flex align-items-center justify-content-between">
-    <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
-    <?php linkButtonSplit($link, $text, $icon, $text, $color); ?>
-  </div>
-<?php }
-
-function contentTitleWithModal($title, $link, $text, $icon, $color = 'primary') { ?>
-  <div class="d-sm-flex align-items-center justify-content-between">
-    <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
-    <?php modalButtonSplit($link, $text, $icon, $text, $color); ?>
-  </div>
-<?php }
-
 function card($title, $link, $icon, $color = 'primary', $counter = '&nbsp;') { ?>
   <div class="col-xl-3 col-md-6 mb-4">
     <div class="card border-left-<?php echo $color; ?> shadow h-100">
@@ -119,7 +85,7 @@ function card($title, $link, $icon, $color = 'primary', $counter = '&nbsp;') { ?
 
 function scrollToTop() { ?>
   <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
-  <?php }
+<?php }
 
 function showAsterisk($show = true) {
   if ($show) : ?>
@@ -143,6 +109,54 @@ function modal() { ?>
       </div>
     </div>
   </div>
+<?php }
+
+function contentTitle($title) { ?>
+  <div class="d-sm-flex">
+    <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
+  </div>
+<?php }
+
+function contentTitleWithLink($title, $link, $text = 'Back', $icon = 'fa-arrow-circle-left', $color = 'primary') { ?>
+  <div class="d-sm-flex align-items-center justify-content-between">
+    <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
+    <?php linkButtonSplit($link, $text, $icon, $text, $color); ?>
+  </div>
+<?php }
+
+function contentTitleWithModal($title, $link, $text, $icon, $color = 'primary') { ?>
+  <div class="d-sm-flex align-items-center justify-content-between">
+    <h3 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h3>
+    <?php modalButtonSplit($link, $text, $icon, $text, $color); ?>
+  </div>
+<?php }
+
+function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = null) { ?>
+  <li class="nav-item <?php echo $condition ? ' active' : ''; ?>">
+    <a class="nav-link d-flex align-items-center justify-content-between" href="<?php echo $link; ?>">
+      <div class="menu-item">
+        <i class="fas fa-fw <?php echo $icon; ?>"></i>
+        <span><?php echo $title; ?></span>
+      </div>
+      <?php if ($counter !== null) : ?>
+        <span class="bg-dark px-2 rounded-pill font-weight-bold"><?php echo $counter; ?></span>
+      <?php endif; ?>
+    </a>
+  </li>
+<?php }
+
+function sidebarModalItem($link, $title, $icon, $counter = null) { ?>
+  <li class="nav-item">
+    <a class="nav-link d-flex align-items-center justify-content-between" href="#" data-toggle="modal" data-target="#modal" onclick="loadData('<?php echo $link; ?>')">
+      <div class="menu-item">
+        <i class="fas fa-fw <?php echo $icon; ?>"></i>
+        <span><?php echo $title; ?></span>
+      </div>
+      <?php if ($counter !== null) : ?>
+        <span class="bg-dark px-2 rounded-pill font-weight-bold"><?php echo $counter; ?></span>
+      <?php endif; ?>
+    </a>
+  </li>
 <?php }
 
 function linkItem($link, $text, $newTab=false) { ?>
