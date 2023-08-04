@@ -4,6 +4,7 @@ require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/position.php');
 require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/layout/components.php');
 ?>
 
@@ -73,9 +74,10 @@ require_once(root() . '/includes/layout/components.php');
           <label for="station" class="mb-0">Station <?php showAsterisk(); ?></label>
           <select id="station" name="station" class="form-control" required>
             <option value="">Select station...</option>
-            <?php $assignments = schoolsExcept($stationId);
+            <?php echo $currentStation = isset($_GET['s']) ? sanitize(decode($_GET['s'])) : '';
+            $assignments = schoolsExcept($stationId);
             while ($assignment = fetchArray($assignments)) : ?>
-              <option value="<?php echo $assignment['id']; ?>"><?php echo $assignment['name']; ?></option>
+              <option value="<?php echo $assignment['id']; ?>" <?php echo setOptionSelected($assignment['id'], $currentStation); ?>><?php echo $assignment['name']; ?></option>
             <?php endwhile; ?>
           </select>
         </div>
