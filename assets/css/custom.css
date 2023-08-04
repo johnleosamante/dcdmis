@@ -67,6 +67,31 @@ input::-ms-clear, input::-ms-reveal {
   margin: 0 auto;
 }
 
+#calendar.card-body {
+  height: 450px !important;
+  overflow-y: scroll;
+}
+
+@media only screen and (max-width: 767px) {
+  #main-content {
+    flex-direction: column-reverse;
+  }
+
+  #main-content #calendar-panel .card {
+    margin-top: 0 !important;
+  }
+
+  #main-content #login-panel .card {
+    margin-bottom: 2rem !important;
+  }
+
+  #calendar.card-body {
+    height: auto !important;
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+}
+
 @media only screen and (max-width: 767px) {
   .sidebar .menu-item {
     margin: 0 auto;
