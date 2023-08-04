@@ -34,22 +34,27 @@ function userName($id) {
 }
 
 function pdsProgress($id) {
-  $progress = 35;
+  $progress = 15;
+  $education = numRows(educationalBackgrounds($id));
 
-  if (numRows(educationalBackgrounds($id)) > 0) {
+  if ($education === 1) {
+    $progress += 5;
+  } elseif ($education === 2) {
     $progress += 15;
+  } elseif ($education >= 3) {
+    $progress += 25;
   }
 
   if (numRows(eligibilities($id)) > 0) {
-    $progress += 15;
+    $progress += 25;
   }
 
   if (numRows(experiences($id)) > 0) {
-    $progress += 15;
+    $progress += 20;
   }
 
   if (numRows(learningAndDevelopments($id)) > 0) {
-    $progress += 15;
+    $progress += 10;
   }
 
   if (numRows(specialSkills($id)) > 0) {
