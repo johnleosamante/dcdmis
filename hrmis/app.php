@@ -23,9 +23,10 @@ if (isset($_POST['add-employee'])) {
   $mname = sanitize($_POST['mname']);
   $ext = sanitize($_POST['ext']);
   $sex = sanitize($_POST['sex']);
-  $bmonth = sanitize($_POST['bmonth']);
-  $bday = sanitize($_POST['bday']);
-  $byear = sanitize($_POST['byear']);
+  $bdate = strtotime(sanitize($_POST['bdate']));
+  $bmonth = date('m', $bdate);
+  $bday = date('d', $bdate);
+  $byear = date('Y', $bdate);
   $ePositionId = sanitize($_POST['position']);
   $eStationId = sanitize($_POST['station']);
   $email = sanitize($_POST['email']);
