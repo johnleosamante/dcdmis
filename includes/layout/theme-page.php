@@ -13,8 +13,8 @@ require_once(root() . '/includes/layout/components.php');
 
 <body id="page-top" class="background-cover">
   <div id="layout">
-    <div id="layout-content" class="container">
-      <div class="row justify-content-center">
+    <div id="layout-content" class="container-xl">
+      <div id="main-content" class="row justify-content-center">
         <?php require_once('page.php'); ?>
       </div>
     </div><!-- .row -->
