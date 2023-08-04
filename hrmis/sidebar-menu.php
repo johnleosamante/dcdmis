@@ -10,6 +10,8 @@ $districtCount = number_format(numRows(districts()));
 $schoolCount = number_format(numRows(schools()));
 $sectionCount = number_format(numRows(sections()));
 
+sidebarModalItem(uri() . '/modules/employees/new-employee-dialog.php', 'New Employee', 'fa-plus');
+
 sidebarMenuItem(customUri('hrmis', 'Active Employees'), 'Active', 'fa-user-check', isset($url) && str_contains($url, 'Active'), $countActive);
 
 sidebarMenuItem(customUri('hrmis', 'Retirable Employees'), 'Retirable','fa-user-clock',isset($url) && str_contains($url, 'Retirable'), $countRetirable);
