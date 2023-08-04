@@ -1,7 +1,9 @@
 <?php
 // login/page.php
 ?>
-<div class="col-xl-4 col-lg-5 col-md-8 col-sm-12">
+<?php require_once(root() . '/modules/calendar/page.php'); ?>
+
+<div id="login-panel" class="col-xl-4 col-lg-4 col-md-5 col-sm-12">
   <div class="card o-hidden border-0 shadow-lg my-5">
     <div class="card-header">
       <h3 class="text-center text-gray-900 my-2"><?php echo $page; ?></h3>
@@ -43,4 +45,4 @@
       </form>
     </div><!-- .card-body -->
   </div><!-- .card -->
-</div><!-- .col-xl-2 -->
+</div><!-- #login-panel -->
