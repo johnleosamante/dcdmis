@@ -1,5 +1,5 @@
 <?php
-// modules/employee/add-employee-dialog.php
+// modules/employee/new-employee-dialog.php
 require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/position.php');
@@ -9,7 +9,7 @@ require_once(root() . '/includes/layout/components.php');
 
 <div class="modal-dialog">
   <div class="modal-content">
-    <?php modalHeader('Add Employee'); ?>
+    <?php modalHeader('New Employee'); ?>
 
     <form action="" method="POST">
       <div class="modal-body">
@@ -38,47 +38,22 @@ require_once(root() . '/includes/layout/components.php');
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="sex" class="mb-0">Sex <?php showAsterisk(); ?></label>
-          <select name="sex" class="form-control" id="sex" required>
-            <option value="">Select sex...</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
-
         <div class="row">
-          <div class="col-4">
+          <div class="col-5">
             <div class="form-group">
-              <label for="bmonth" class="mb-0">Birth Month <?php showAsterisk(); ?></label>
-              <select name="bmonth" class="form-control" id="bmonth" required>
-                <?php $cmonth = date('m'); ?>
-                <option value="01" <?php echo SetOptionSelected('01', $cmonth); ?>>January</option>
-                <option value="02" <?php echo SetOptionSelected('02', $cmonth); ?>>February</option>
-                <option value="03" <?php echo SetOptionSelected('03', $cmonth); ?>>March</option>
-                <option value="04" <?php echo SetOptionSelected('04', $cmonth); ?>>April</option>
-                <option value="05" <?php echo SetOptionSelected('05', $cmonth); ?>>May</option>
-                <option value="06" <?php echo SetOptionSelected('06', $cmonth); ?>>June</option>
-                <option value="07" <?php echo SetOptionSelected('07', $cmonth); ?>>July</option>
-                <option value="08" <?php echo SetOptionSelected('08', $cmonth); ?>>August</option>
-                <option value="09" <?php echo SetOptionSelected('09', $cmonth); ?>>September</option>
-                <option value="10" <?php echo SetOptionSelected('10', $cmonth); ?>>October</option>
-                <option value="11" <?php echo SetOptionSelected('11', $cmonth); ?>>November</option>
-                <option value="12" <?php echo SetOptionSelected('12', $cmonth); ?>>December</option>
+              <label for="sex" class="mb-0">Sex <?php showAsterisk(); ?></label>
+              <select name="sex" class="form-control" id="sex" required>
+                <option value="">Select sex...</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
               </select>
             </div>
           </div>
-          <div class="col-4">
+
+          <div class="col-7">
             <div class="form-group">
-              <label for="bday" class="mb-0">Birth Day <?php showAsterisk(); ?></label>
-              <input class="form-control" id="bday" name="bday" type="number" min="1" max="31" step="1" value="<?php echo date('d'); ?>" required>
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="form-group">
-              <?php $max = date('Y'); ?>
-              <label for="byear" class="mb-0">Birth Year <?php showAsterisk(); ?></label>
-              <input class="form-control" id="byear" name="byear" type="number" max="<?php echo $max; ?>" min="0" value="<?php echo $max; ?>" step="1" required>
+              <label for="bdate" class="mb-0">Date of Birth <?php showAsterisk(); ?></label>
+              <input type="date" id="bdate" name="bdate" value="<?php echo date('Y-m-d'); ?>" class="form-control" required>
             </div>
           </div>
         </div>
