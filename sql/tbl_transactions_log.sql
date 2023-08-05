@@ -11,9 +11,9 @@ UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'AD
 UPDATE tbl_transactions_log SET From_office='ADM' WHERE From_office='ADMIN';
 UPDATE tbl_transactions_log SET Forwarded_to='ADM' WHERE Forwarded_to='ADMIN';
 
-UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'ASDS', 'ASD');
-UPDATE tbl_transactions_log SET From_office='ASD' WHERE From_office='ASDS';
-UPDATE tbl_transactions_log SET Forwarded_to='ASD' WHERE Forwarded_to='ASDS';
+UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'ASDS', 'ADS');
+UPDATE tbl_transactions_log SET From_office='ADS' WHERE From_office='ASDS';
+UPDATE tbl_transactions_log SET Forwarded_to='ADS' WHERE Forwarded_to='ASDS';
 
 UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'BUDGET', 'BUD');
 UPDATE tbl_transactions_log SET From_office='BUD' WHERE From_office='BUDGET';
@@ -55,17 +55,17 @@ UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'OS
 UPDATE tbl_transactions_log SET From_office='SDS' WHERE From_office='OSDS';
 UPDATE tbl_transactions_log SET Forwarded_to='SDS' WHERE Forwarded_to='OSDS';
 
-UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'PSDS', 'PSD');
-UPDATE tbl_transactions_log SET From_office='PSD' WHERE From_office='PSDS';
-UPDATE tbl_transactions_log SET Forwarded_to='PSD' WHERE Forwarded_to='PSDS';
+UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'PSDS', 'PDS');
+UPDATE tbl_transactions_log SET From_office='PDS' WHERE From_office='PSDS';
+UPDATE tbl_transactions_log SET Forwarded_to='PDS' WHERE Forwarded_to='PSDS';
 
 UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'RECORD', 'REC');
 UPDATE tbl_transactions_log SET From_office='REC' WHERE From_office='RECORD';
 UPDATE tbl_transactions_log SET Forwarded_to='REC' WHERE Forwarded_to='RECORD';
 
-UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'SGOD', 'SGO');
-UPDATE tbl_transactions_log SET From_office='SGO' WHERE From_office='SGOD';
-UPDATE tbl_transactions_log SET Forwarded_to='SGO' WHERE Forwarded_to='SGOD';
+UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'SGOD', 'SGD');
+UPDATE tbl_transactions_log SET From_office='SGD' WHERE From_office='SGOD';
+UPDATE tbl_transactions_log SET Forwarded_to='SGD' WHERE Forwarded_to='SGOD';
 
 UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'SUPPLY', 'PSS');
 UPDATE tbl_transactions_log SET From_office='PSS' WHERE From_office='SUPPLY';

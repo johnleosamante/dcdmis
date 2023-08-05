@@ -3,7 +3,7 @@ ALTER TABLE `tbl_user` ADD `id` INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY K
 
 UPDATE tbl_user SET Station = replace(Station, 'ACCOUNTING', 'ACC');
 UPDATE tbl_user SET Station = replace(Station, 'ADMIN', 'ADM');
-UPDATE tbl_user SET Station = replace(Station, 'ASDS', 'ASD');
+UPDATE tbl_user SET Station = replace(Station, 'ASDS', 'ADS');
 UPDATE tbl_user SET Station = replace(Station, 'BUDGET', 'BUD');
 UPDATE tbl_user SET Station = replace(Station, 'CASHIER', 'CSH');
 UPDATE tbl_user SET Station = replace(Station, 'PHYSICAL', 'GSS');
@@ -14,14 +14,14 @@ UPDATE tbl_user SET Station = replace(Station, 'LEGAL', 'LGL');
 UPDATE tbl_user SET Station = replace(Station, 'LRMDS', 'LRM');
 UPDATE tbl_user SET Station = replace(Station, 'LRMS', 'LRM');
 UPDATE tbl_user SET Station = replace(Station, 'OSDS', 'SDS');
-UPDATE tbl_user SET Station = replace(Station, 'PSDS', 'PSD');
+UPDATE tbl_user SET Station = replace(Station, 'PSDS', 'PDS');
 UPDATE tbl_user SET Station = replace(Station, 'RECORD', 'REC');
-UPDATE tbl_user SET Station = replace(Station, 'SGOD', 'SGO');
+UPDATE tbl_user SET Station = replace(Station, 'SGOD', 'SGD');
 UPDATE tbl_user SET Station = replace(Station, 'SUPPLY', 'PSS');
 
 UPDATE tbl_user SET Link = replace(Link, 'accounting_portal', 'acc_portal');
 UPDATE tbl_user SET Link = replace(Link, 'admin_portal', 'adm_portal');
-UPDATE tbl_user SET Link = replace(Link, 'asds_portal', 'asd_portal');
+UPDATE tbl_user SET Link = replace(Link, 'asds_portal', 'ads_portal');
 UPDATE tbl_user SET Link = replace(Link, 'budget_portal', 'bud_portal');
 UPDATE tbl_user SET Link = replace(Link, 'cashier_portal', 'csh_portal');
 UPDATE tbl_user SET Link = replace(Link, 'physical_portal', 'gss_portal');
@@ -31,8 +31,8 @@ UPDATE tbl_user SET Link = replace(Link, 'ito_portal', 'ict_portal');
 UPDATE tbl_user SET Link = replace(Link, 'legal_portal', 'lgl_portal');
 UPDATE tbl_user SET Link = replace(Link, 'lrms_portal', 'lrm_portal');
 UPDATE tbl_user SET Link = replace(Link, 'osds_portal', 'sds_portal');
-UPDATE tbl_user SET Link = replace(Link, 'psds_portal', 'psd_portal');
+UPDATE tbl_user SET Link = replace(Link, 'psds_portal', 'pds_portal');
 UPDATE tbl_user SET Link = replace(Link, 'record_portal', 'rec_portal');
 UPDATE tbl_user SET Link = replace(Link, 'school_portal', 'sch_portal');
-UPDATE tbl_user SET Link = replace(Link, 'sgod_portal', 'sgo_portal');
+UPDATE tbl_user SET Link = replace(Link, 'sgod_portal', 'sgd_portal');
 UPDATE tbl_user SET Link = replace(Link, 'supply_portal', 'pss_portal');

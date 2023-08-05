@@ -9,8 +9,8 @@ UPDATE tbl_transactions SET Trans_from = 'ACC' WHERE Trans_from = 'ACCOUNTING';
 UPDATE tbl_transactions SET TransCode = replace(TransCode, 'ADMIN', 'ADM');
 UPDATE tbl_transactions SET Trans_from = 'ADM' WHERE Trans_from = 'ADMIN';
 
-UPDATE tbl_transactions SET TransCode = replace(TransCode, 'ASDS', 'ASD');
-UPDATE tbl_transactions SET Trans_from = 'ASD' WHERE Trans_from = 'ASDS';
+UPDATE tbl_transactions SET TransCode = replace(TransCode, 'ASDS', 'ADS');
+UPDATE tbl_transactions SET Trans_from = 'ADS' WHERE Trans_from = 'ASDS';
 
 UPDATE tbl_transactions SET TransCode = replace(TransCode, 'BUDGET', 'BUD');
 UPDATE tbl_transactions SET Trans_from = 'BUD' WHERE Trans_from = 'BUDGET';
@@ -42,14 +42,14 @@ UPDATE tbl_transactions SET Trans_from = 'LRM' WHERE Trans_from = 'LRMS';
 UPDATE tbl_transactions SET TransCode = replace(TransCode, 'OSDS', 'SDS');
 UPDATE tbl_transactions SET Trans_from = 'SDS' WHERE Trans_from = 'OSDS';
 
-UPDATE tbl_transactions SET TransCode = replace(TransCode, 'PSDS', 'PSD');
-UPDATE tbl_transactions SET Trans_from = 'PSD' WHERE Trans_from = 'PSDS';
+UPDATE tbl_transactions SET TransCode = replace(TransCode, 'PSDS', 'PDS');
+UPDATE tbl_transactions SET Trans_from = 'PDS' WHERE Trans_from = 'PSDS';
 
 UPDATE tbl_transactions SET TransCode = replace(TransCode, 'RECORD', 'REC');
 UPDATE tbl_transactions SET Trans_from = 'REC' WHERE Trans_from = 'RECORD';
 
-UPDATE tbl_transactions SET TransCode = replace(TransCode, 'SGOD', 'SGO');
-UPDATE tbl_transactions SET Trans_from = 'SGO' WHERE Trans_from = 'SGOD';
+UPDATE tbl_transactions SET TransCode = replace(TransCode, 'SGOD', 'SGD');
+UPDATE tbl_transactions SET Trans_from = 'SGD' WHERE Trans_from = 'SGOD';
 
 UPDATE tbl_transactions SET TransCode = replace(TransCode, 'SUPPLY', 'PSS');
 UPDATE tbl_transactions SET Trans_from = 'PSS' WHERE Trans_from = 'SUPPLY';
