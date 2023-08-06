@@ -1,9 +1,16 @@
 <?php
+if (!isset($_GET['v'])) {
+  return;
+}
+
 require_once('../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/string.php');
 
-$fileName = $dataType . '-' . date('Y-m-d') . '.xls';
+$request = sanitize(decode($_GET['v']));
+$identifier = isset($_GET['id']) ? sanitize(decode($_GET['id'])) . '-' : '';
+
+$fileName = $request . '-' . $identifier . date('Y-m-d') . '.xls';
 header("Content-Type: application/vnd.ms-excel");
 header("Content-Disposition: attachment; Filename=" . $fileName);
 ?>
@@ -17,4 +24,4 @@ header("Content-Disposition: attachment; Filename=" . $fileName);
   }
 </style>
 
-<?php require_once($dataType . '.php'); ?>
+<?php require_once($request . '.php'); ?>
