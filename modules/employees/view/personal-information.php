@@ -174,20 +174,27 @@
 
           <div class=" col-lg-3">
             <div class="form-group">
-              <label for="gsis" class="mb-0">GSIS No.</label>
-              <input id="gsis" name="gsis" type="text" class="form-control" value="<?php echo $employee['gsis']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
+              <label for="crn" class="mb-0">GSIS CRN No.</label>
+              <input id="crn" name="crn" type="text" class="form-control" value="<?php echo $employee['crn']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
 
+          <div class=" col-lg-3">
+            <div class="form-group">
+              <label for="bp" class="mb-0">GSIS BP No.</label>
+              <input id="bp" name="bp" type="text" class="form-control" value="<?php echo $employee['bp']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
           <div class=" col-lg-3">
             <div class="form-group">
               <label for="pagibig" class="mb-0">PAGIBIG ID No.</label>
               <input id="pagibig" name="pagibig" type="text" class="form-control" value="<?php echo $employee['pagibig']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
-        </div>
 
-        <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
               <label for="philhealth" class="mb-0">PHILHEALTH No.</label>
@@ -208,16 +215,16 @@
               <input id="tin" name="tin" type="text" class="form-control" value="<?php echo $employee['tin']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
+        </div>
 
+        <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
               <label for="agency-id" class="mb-0">Agency Employee No.</label>
               <input id="agency-id" name="agency-id" type="text" class="form-control" value="<?php echo $employee['agency_id']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
-        </div>
 
-        <div class="row">
           <div class="col-lg-3">
             <div class="form-group">
               <label for="citizenship" class="mb-0">Citizenship <?php showAsterisk($editMode); ?></label>
@@ -231,8 +238,8 @@
                 $citizenship = $nationality['id'];
               }
               if (!$editMode) : ?>
-              <input id="citizenship" name="citizenship" type="text" class="form-control" value="<?php echo $nationalityName; ?>" readonly>
-              <?php else: ?>
+                <input id="citizenship" name="citizenship" type="text" class="form-control" value="<?php echo $nationalityName; ?>" readonly>
+              <?php else : ?>
                 <select class="form-control" id="citizenship" name="citizenship" required>
                   <?php $nationalities = nationalities();
                   while ($nationality = fetchAssoc($nationalities)) : ?>
@@ -258,20 +265,20 @@
             </div>
           </div>
 
-          <div class="col-lg-6">
+          <div class="col-lg-3">
             <div class="form-group">
               <label for="dual-citizenship-country" class="mb-0">Please Indicate Country if Dual Citizen</label>
               <?php if (!$editMode) : ?>
                 <?php
-                  $countryName = 'N/A';
-                  $countries = country($employee['country']);
-                  if (numRows($countries) > 0) {
-                    $country = fetchAssoc($countries);
-                    $countryName = $country['name'];
-                  }
+                $countryName = 'N/A';
+                $countries = country($employee['country']);
+                if (numRows($countries) > 0) {
+                  $country = fetchAssoc($countries);
+                  $countryName = $country['name'];
+                }
                 ?>
                 <input id="dual-citizenship-country" name="dual-citizenship-country" type="text" class="form-control" value="<?php echo $countryName; ?>" readonly>
-              <?php else: ?>
+              <?php else : ?>
                 <select class="form-control" id="dual-citizenship-country" name="dual-citizenship-country">
                   <option value="N/A">N/A</option>
                   <?php $countries = countries();
