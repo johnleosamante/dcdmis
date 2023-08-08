@@ -6,7 +6,7 @@
 // tbl_school
 // tbl_job
 function employee($id) {
-  return query("SELECT Emp_ID AS id, Emp_LName AS lname, Emp_FName AS fname, Emp_MName AS mname, Emp_Extension AS ext, Emp_Month AS `month`, Emp_Day AS `day`, Emp_Year AS `year`, Emp_place_of_birth AS `pob`, Emp_Sex AS sex, Emp_Res_Lot AS rlot, Emp_Res_Street AS rstreet, Emp_Res_Subdivision AS rsubdivision, Emp_Res_Barangay AS rbarangay, Emp_Res_City AS rcity, Emp_Address AS rprovince, Emp_Res_ZIP AS rzip, Emp_Per_Lot AS plot, Emp_Per_Street AS pstreet, Emp_Per_Subdivision AS psubdivision, Emp_Per_Barangay AS pbarangay, Emp_Per_City AS pcity, Emp_Per_Province AS pprovince, Emp_Per_ZIP AS pzip, Emp_Telephone AS telephone, Emp_CS AS civil_status, Emp_CS_Others AS civil_status_specify, Emp_Citizen AS citizenship, Emp_Dual_Citizenship AS dual_citizenship, Emp_Country AS country, Emp_Height AS height, Emp_Weight AS `weight`, Emp_Blood_type AS blood_type, Emp_GSIS AS crn, Emp_GSIS_BP AS bp, Emp_PAGIBIG AS pagibig, Emp_PHILHEALTH AS philhealth, Emp_SSS AS sss, Emp_Cell_No AS mobile, Emp_Email AS email, Picture AS picture, Emp_TIN AS tin, Emp_Status AS `status`, EmpNo AS agency_id FROM tbl_employee WHERE Emp_ID='{$id}' LIMIT 1;");
+  return query("SELECT Emp_ID AS id, Emp_LName AS lname, Emp_FName AS fname, Emp_MName AS mname, Emp_Extension AS ext, Emp_Month AS `month`, Emp_Day AS `day`, Emp_Year AS `year`, Emp_place_of_birth AS `pob`, Emp_Sex AS sex, Emp_Res_Lot AS rlot, Emp_Res_Street AS rstreet, Emp_Res_Subdivision AS rsubdivision, Emp_Res_Barangay AS rbarangay, Emp_Res_City AS rcity, Emp_Address AS rprovince, Emp_Res_ZIP AS rzip, Emp_Per_Lot AS plot, Emp_Per_Street AS pstreet, Emp_Per_Subdivision AS psubdivision, Emp_Per_Barangay AS pbarangay, Emp_Per_City AS pcity, Emp_Per_Province AS pprovince, Emp_Per_ZIP AS pzip, Emp_Telephone AS telephone, Emp_CS AS civil_status, Emp_CS_Others AS civil_status_specify, Emp_Citizen AS citizenship, Emp_Dual_Citizenship AS dual_citizenship, Emp_Country AS country, Emp_Height AS height, Emp_Weight AS `weight`, Emp_Blood_type AS blood_type, Emp_GSIS AS crn, Emp_GSIS_BP AS bp, Emp_PAGIBIG AS pagibig, Emp_PHILHEALTH AS philhealth, Emp_SSS AS sss, Emp_Cell_No AS mobile, Emp_Email AS email, Picture AS picture, Emp_TIN AS tin, Emp_Status AS `status`, beforeTitle AS btitle, afterTitle AS atitle, EmpNo AS agency_id FROM tbl_employee WHERE Emp_ID='{$id}' LIMIT 1;");
 }
 
 function employees() {
@@ -80,6 +80,10 @@ function updateEmployee($lname, $fname, $mname, $ext, $bmonth, $bday, $byear, $p
 }
 
 function updateEmployeeStatus($status, $id) {
-  nonQuery("UPDATE tbl_employee SET Emp_Status='$status' WHERE Emp_ID='{$id}' LIMIT 1;");
+  nonQuery("UPDATE tbl_employee SET Emp_Status='{$status}' WHERE Emp_ID='{$id}' LIMIT 1;");
+}
+
+function updateProfessionalTitles($before, $after, $id) {
+  nonQuery("UPDATE tbl_employee SET beforeTitle='{$before}', afterTitle='{$after}' WHERE Emp_ID='{$id}' LIMIT 1;");
 }
 ?>
