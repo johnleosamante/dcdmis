@@ -1,9 +1,10 @@
 <?php // export/active-employees.php 
 ?>
-
 <table>
   <tr>
     <td>#</td>
+    <td>School/Office</td>
+    <td>Position</td>
     <td>Employee ID</td>
     <td>Last Name</td>
     <td>First Name</td>
@@ -20,8 +21,6 @@
     <td>Contact No.</td>
     <td>Email Address</td>
     <td>Residential Address</td>
-    <td>Position</td>
-    <td>School/Office</td>
   </tr>
   <?php
   $i = 1;
@@ -29,6 +28,8 @@
   foreach ($rows as $row) : ?>
     <tr>
       <td><?php echo $i++; ?></td>
+      <td><?php echo strtoupper($row['school']); ?></td>
+      <td><?php echo strtoupper($row['position']); ?></td>
       <td><?php echo $row['id']; ?></td>
       <td><?php echo strtoupper($row['lname']); ?></td>
       <td><?php echo strtoupper($row['fname']); ?></td>
@@ -45,8 +46,6 @@
       <td><?php echo $row['contact']; ?></td>
       <td><?php echo strtolower($row['email']); ?></td>
       <td><?php echo strtoupper(toAddress('', $row['street'], $row['subdivision'], $row['barangay'], $row['city'], $row['province'])); ?></td>
-      <td><?php echo strtoupper($row['position']); ?></td>
-      <td><?php echo strtoupper($row['school']); ?></td>
     </tr>
   <?php endforeach; ?>
 </table>
