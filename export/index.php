@@ -1,11 +1,15 @@
 <?php
 // export/index.php
+require_once('../includes/function.php');
 
-if (!isset($_GET['v'])) {
-  return;
+if (!isset($userId)) {
+  redirect(uri() . '/login');
 }
 
-require_once('../includes/function.php');
+if (!isset($_GET['v'])) {
+  redirect(uri() . '/' . $activeApp);
+}
+
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/string.php');
 
