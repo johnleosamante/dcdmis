@@ -1,5 +1,4 @@
-<?php // export/active-employees.php 
-?>
+<?php // export/active-employees.php ?>
 <table>
   <tr>
     <td>#</td>
