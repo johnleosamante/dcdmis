@@ -31,7 +31,7 @@ if (isset($membershipId)) {
       <div class="modal-body">
         <div class="form-group">
           <label for="membership" class="mb-0">Membership in Association / Organization: <?php showAsterisk(); ?></label>
-          <input id="membership" type="text" name="membership" class="form-control" required value="<?php echo $membership; ?>">
+          <input id="membership" type="text" name="membership" class="form-control" title="Required field" value="<?php echo $membership; ?>" required>
         </div>
 
         <?php requiredLegend(0); ?>

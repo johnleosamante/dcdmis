@@ -31,7 +31,7 @@ if (isset($recognitionId)) {
       <div class="modal-body">
         <div class="form-group">
           <label for="recognition" class="mb-0">Non-Academic Distinction / Recognition: <?php showAsterisk(); ?></label>
-          <input id="recognition" type="text" name="recognition" class="form-control" required value="<?php echo $recognition; ?>">
+          <input id="recognition" type="text" name="recognition" class="form-control" title="Required field" value="<?php echo $recognition; ?>" required>
         </div>
 
         <?php requiredLegend(0); ?>

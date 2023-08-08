@@ -39,35 +39,35 @@ if (isset($eligibilityId)) {
       <div class="modal-body">
         <div class="form-group">
           <label for="career" class="mb-0">Career Service / RA 1080 (Board/Bar) / Under Special Laws / CES / CSEE / Barangay Eligibility / Driver's License: <?php showAsterisk(); ?></label>
-          <input id="career" name="career" type="text" class="form-control" value="<?php echo $career; ?>" required>
+          <input id="career" name="career" type="text" class="form-control" title="Required field" value="<?php echo $career; ?>" required>
         </div>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label for="rating" class="mb-0">Rating <br>(if applicable):</label>
-              <input id="rating" name="rating" type="number" class="form-control" min="0" step="0.01" value="<?php echo $rating; ?>">
+              <input id="rating" name="rating" type="number" class="form-control" min="0" step="0.01" title="Leave blank if not applicable" value="<?php echo $rating; ?>">
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
               <label for="exam-date" class="mb-0">Date of Examination / Conferment: <?php showAsterisk(); ?></label>
-              <input id="exam-date" name="exam-date" type="date" class="form-control" required value="<?php echo $examDate; ?>">
+              <input id="exam-date" name="exam-date" type="date" class="form-control" title="Required field" value="<?php echo $examDate; ?>" required>
             </div>
           </div>
         </div>
 
         <div class="form-group">
           <label for="exam-place" class="mb-0">Place of Examination / Conferment: <?php showAsterisk(); ?></label>
-          <input id="exam-place" name="exam-place" type="text" class="form-control" required value="<?php echo $examPlace; ?>">
+          <input id="exam-place" name="exam-place" type="text" class="form-control" title="Required field" value="<?php echo $examPlace; ?>" required>
         </div>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label for="license" class="mb-0">License No. (if applicable):</label>
-              <input id="license" type="text" name="license" class="form-control" value="<?php echo $license; ?>">
+              <input id="license" type="text" name="license" class="form-control" title="Leave blank if not applicable" value="<?php echo $license; ?>">
             </div>
           </div>
 
@@ -78,7 +78,7 @@ if (isset($eligibilityId)) {
                   <label for="validity" class="mb-0">Validity:</label>
                 </div>
                 <div class="col-6">
-                  <div class="form-check">
+                  <div class="form-check" title="Check if validity is applicable">
                     <input class="form-check-input" id="is-applicable" type="checkbox" name="is-applicable" <?php echo setItemChecked($isApplicable); ?>>
                     <label class="form-check-label" for="is-applicable">Applicable</label>
                   </div><!-- .form-check-->

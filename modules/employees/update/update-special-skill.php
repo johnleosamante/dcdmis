@@ -31,7 +31,7 @@ if (isset($skillId)) {
       <div class="modal-body">
         <div class="form-group">
           <label for="skill" class="mb-0">Special Skill / Hobby: <?php showAsterisk(); ?></label>
-          <input id="skill" type="text" name="skill" class="form-control" required value="<?php echo $skill; ?>">
+          <input id="skill" type="text" name="skill" class="form-control" title="Required field" value="<?php echo $skill; ?>" required>
         </div>
 
         <?php requiredLegend(0); ?>

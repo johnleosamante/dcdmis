@@ -37,21 +37,21 @@ if (isset($learningId)) {
       <div class="modal-body">
         <div class="form-group">
           <label for="title" class="mb-0">Learning &amp; Development Intervention / Training Programs<br>(Write in full): <?php showAsterisk(); ?></label>
-          <textarea id="title" name="title" class="form-control" required rows="3"><?php echo $title; ?></textarea>
+          <textarea id="title" name="title" class="form-control" title="Required field" rows="3" required><?php echo $title; ?></textarea>
         </div>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label for="from" class="mb-0">Inclusive Date From: <?php showAsterisk(); ?></label>
-              <input id="from" type="date" name="from" class="form-control" required value="<?php echo $from; ?>">
+              <input id="from" type="date" name="from" class="form-control" title="Required field" value="<?php echo $from; ?>" required>
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
               <label for="to" class="mb-0">Inclusive Date To: <?php showAsterisk(); ?></label>
-              <input id="to" type="date" name="to" class="form-control" required value="<?php echo $to; ?>">
+              <input id="to" type="date" name="to" class="form-control" title="Required field" value="<?php echo $to; ?>" required>
             </div>
           </div>
         </div>
@@ -60,21 +60,21 @@ if (isset($learningId)) {
           <div class="col-md-6">
             <div class="form-group">
               <label for="hours" class="mb-0">Number of <br>Hours: <?php showAsterisk(); ?></label>
-              <input id="hours" type="number" min="0" steps="0.01" name="hours" class="form-control" required value="<?php echo $hours; ?>">
+              <input id="hours" type="number" min="0" steps="0.01" name="hours" class="form-control" title="Required field" value="<?php echo $hours; ?>" required>
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
               <label for="type" class="mb-0">Type of Learning &amp; Development: <?php showAsterisk(); ?></label>
-              <input id="type" type="text" name="type" class="form-control" required value="<?php echo $type; ?>">
+              <input id="type" type="text" name="type" class="form-control" title="Required field" value="<?php echo $type; ?>" required>
             </div>
           </div>
         </div>
 
         <div class="form-group">
           <label for="sponsor" class="mb-0">Conducted / Sponsored by (Write in full): <?php showAsterisk(); ?></label>
-          <input id="sponsor" type="text" name="sponsor" class="form-control" required value="<?php echo $sponsor; ?>">
+          <input id="sponsor" type="text" name="sponsor" class="form-control" title="Required field" value="<?php echo $sponsor; ?>" required>
         </div>
 
         <?php requiredLegend(0); ?>

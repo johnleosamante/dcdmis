@@ -41,7 +41,7 @@ if (isset($educationId)) {
       <div class="modal-body">
         <div class="form-group">
           <label for="level" class="mb-0">Level: <?php showAsterisk(); ?></label>
-          <select id="level" name="level" class="form-control" required>
+          <select id="level" name="level" class="form-control" title="Required field" required>
             <option value="Elementary" <?php echo setOptionSelected("Elementary", $level); ?>>Elementary</option>
             <option value="Secondary" <?php echo setOptionSelected("Secondary", $level); ?>>Secondary</option>
             <option value="Vocational" <?php echo setOptionSelected("Vocational", $level); ?>>Vocational</option>
@@ -52,19 +52,19 @@ if (isset($educationId)) {
 
         <div class="form-group">
           <label for="school" class="mb-0">Name of School (Write in full): <?php showAsterisk(); ?></label>
-          <input id="school" name="school" type="text" class="form-control" required value="<?php echo $school; ?>">
+          <input id="school" name="school" type="text" class="form-control" title="Required field" required value="<?php echo $school; ?>">
         </div>
 
         <div class="form-group">
           <label for="course" class="mb-0">Basic Education / Degree / Course (Write in full):</label>
-          <input id="course" name="course" type="text" class="form-control" value="<?php echo $course; ?>">
+          <input id="course" name="course" type="text" class="form-control" title="Leave blank if not applicable" value="<?php echo $course; ?>">
         </div>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label for="from" class="mb-0">Attendance from: <?php showAsterisk(); ?></label>
-              <input id="from" name="from" type="number" step="1" min="0" class="form-control" required value="<?php echo $from; ?>">
+              <input id="from" name="from" type="number" step="1" min="0" class="form-control" title="Required field" value="<?php echo $from; ?>" required>
             </div>
           </div>
 
@@ -75,30 +75,36 @@ if (isset($educationId)) {
                   <label for="to" class="mb-0">Attendance to: <?php showAsterisk(); ?></label>
                 </div>
                 <div class="col-5">
-                  <div class="form-check">
+                  <div class="form-check" title="Check if present education">
                     <input class="form-check-input" id="is-present" type="checkbox" name="is-present" <?php echo setItemChecked($isPresent); ?>>
                     <label class="form-check-label" for="is-present">Present</label>
                   </div><!-- .form-check-->
                 </div>
               </div>
-              <input id="to" name="to" type="number" step="1" min="0" class="form-control" value="<?php echo $to; ?>" required>
+              <input id="to" name="to" type="number" step="1" min="0" class="form-control" title="Required field" value="<?php echo $to; ?>" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="highest" class="mb-0">Highest Level / Units Earned <br>(if not graduated):</label>
+              <input id="highest" name="highest" type="text" class="form-control" title="Leave blank if not applicable" value="<?php echo $highestLevel; ?>">
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="year" class="mb-0">Year Graduated:<br>(if graduated)</label>
+              <input id="year" name="year" type="number" step="1" min="0" class="form-control" title="Leave blank if not applicable" value="<?php echo $yearGraduated; ?>">
             </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="highest" class="mb-0">Highest Level / Units Earned (if not graduated):</label>
-          <input id="highest" name="highest" type="text" class="form-control" value="<?php echo $highestLevel; ?>">
-        </div>
-
-        <div class="form-group">
-          <label for="year" class="mb-0">Year Graduated:</label>
-          <input id="year" name="year" type="number" step="1" min="0" class="form-control" value="<?php echo $yearGraduated; ?>">
-        </div>
-
-        <div class="form-group">
           <label for="scholarship" class="mb-0">Scholarship / Academic Honors Received:</label>
-          <input id="scholarship" name="scholarship" type="text" class="form-control" value="<?php echo $honorReceived; ?>">
+          <input id="scholarship" name="scholarship" type="text" class="form-control" title="Leave blank if not applicable" value="<?php echo $honorReceived; ?>">
         </div>
 
         <?php requiredLegend(0); ?>

@@ -33,17 +33,17 @@ if (isset($referenceId)) {
       <div class="modal-body">
         <div class="form-group">
           <label for="name" class="mb-0">Name: <?php showAsterisk(); ?></label>
-          <input type="text" id="name" name="name" class="form-control" required value="<?php echo $name; ?>">
+          <input type="text" id="name" name="name" class="form-control" title="Required field" value="<?php echo $name; ?>" required>
         </div>
 
         <div class="form-group">
           <label for="address" class="mb-0">Address: <?php showAsterisk(); ?></label>
-          <input type="text" id="address" name="address" class="form-control" required value="<?php echo $address; ?>">
+          <input type="text" id="address" name="address" class="form-control" title="Required field" value="<?php echo $address; ?>" required>
         </div>
 
         <div class="form-group">
           <label for="telephone" class="mb-0">Contact Number: <?php showAsterisk(); ?></label>
-          <input type="text" id="telephone" name="telephone" class="form-control" required value="<?php echo $contact; ?>">
+          <input type="text" id="telephone" name="telephone" class="form-control" title="Required field" value="<?php echo $contact; ?>" required>
         </div>
 
         <?php requiredLegend(0); ?>

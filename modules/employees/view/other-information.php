@@ -67,7 +67,7 @@ if (numRows($otherInformation) > 0) {
 
       <div class="form-group mb-0 pl-3">
         <label for="related-details" class="m-0">If YES, give details:</label>
-        <input id="related-details" name="related-details" type="text" value="<?php echo $relatedDetails; ?>" class="form-control" <?php echo !$editMode ? ' readonly' : ''; ?>></label>
+        <input id="related-details" name="related-details" type="text" value="<?php echo $relatedDetails; ?>" class="form-control" title="Leave blank if NO" <?php echo !$editMode ? ' readonly' : ''; ?>></label>
       </div>
     </div>
 
@@ -85,7 +85,7 @@ if (numRows($otherInformation) > 0) {
 
             <div class="form-group">
               <label for="guilty-details" class="m-0">If YES, give details:</label>
-              <input id="guilty-details" name="guilty-details" type="text" value="<?php echo $guiltyDetails; ?>" class="form-control" <?php  echo !$editMode ? ' readonly' : ''; ?>>
+              <input id="guilty-details" name="guilty-details" type="text" value="<?php echo $guiltyDetails; ?>" class="form-control" title="Leave blank if NO" <?php echo !$editMode ? ' readonly' : ''; ?>>
             </div>
           </div>
         </li>
@@ -102,12 +102,12 @@ if (numRows($otherInformation) > 0) {
 
             <div class="form-group mb-2">
               <label for="date-filed" class="m-0">Date Filed:</label>
-              <input id="date-filed" name="date-filed" type="date" value="<?php echo $wasCharged ? $dateFiled : date('Y-m-d'); ?>" class="form-control" <?php echo !$editMode ? ' readonly' : ''; ?>>
+              <input id="date-filed" name="date-filed" type="date" value="<?php echo $wasCharged ? $dateFiled : date('Y-m-d'); ?>" class="form-control" title="Required field if YES" <?php echo !$editMode ? ' readonly' : ''; ?>>
             </div>
 
             <div class="form-group mb-0">
               <label for="case-status" class="m-0">Status of Case/s:</label>
-              <input id="case-status" name="case-status" type="text" value="<?php echo $caseStatus; ?>" class="form-control" <?php echo !$editMode ? ' readonly' : ''; ?>>
+              <input id="case-status" name="case-status" type="text" value="<?php echo $caseStatus; ?>" class="form-control" title="Leave blank if NO" <?php echo !$editMode ? ' readonly' : ''; ?>>
             </div>
           </div>
         </li>
@@ -128,7 +128,7 @@ if (numRows($otherInformation) > 0) {
 
         <div class="form-group mb-0">
           <label for="convicted-details" class="mb-0">If YES, give details:</label>
-          <input id="convicted-details" name="convicted-details" type="text" value="<?php echo $convictedDetails; ?>" class="form-control" <?php echo !$editMode ? ' readonly' : ''; ?>>
+          <input id="convicted-details" name="convicted-details" type="text" value="<?php echo $convictedDetails; ?>" class="form-control" title="Leave blank if NO" <?php echo !$editMode ? ' readonly' : ''; ?>>
         </div>
       </div>
     </div>
@@ -147,7 +147,7 @@ if (numRows($otherInformation) > 0) {
 
         <div class="form-group mb-0">
           <label for="separated-details" class="mb-0">If YES, give details:</label>
-          <input id="separated-details" name="separated-details" type="text" value="<?php echo $separatedDetails; ?>" class="form-control" <?php echo !$editMode ? ' readonly' : ''; ?>>
+          <input id="separated-details" name="separated-details" type="text" value="<?php echo $separatedDetails; ?>" class="form-control" title="Leave blank if NO" <?php echo !$editMode ? ' readonly' : ''; ?>>
         </div>
       </div>
     </div>
@@ -166,7 +166,7 @@ if (numRows($otherInformation) > 0) {
 
             <div class="form-group">
               <label for="candidate-details" class="m-0">If YES, give details:</label>
-              <input id="candidate-details" name="candidate-details" type="text" value="<?php echo $candidateDetails; ?>" class="form-control" <?php  echo !$editMode ? ' readonly' : ''; ?>>
+              <input id="candidate-details" name="candidate-details" type="text" value="<?php echo $candidateDetails; ?>" class="form-control" title="Leave blank if NO" <?php  echo !$editMode ? ' readonly' : ''; ?>>
             </div>
           </div>
         </li>
@@ -181,7 +181,7 @@ if (numRows($otherInformation) > 0) {
 
             <div class="form-group mb-0">
               <label for="resigned-details" class="m-0">If YES, give details:</label>
-              <input id="resigned-details" name="resigned-details" type="text" value="<?php echo $resignedDetails; ?>" class="form-control" <?php echo !$editMode ? ' readonly' : ''; ?>>
+              <input id="resigned-details" name="resigned-details" type="text" value="<?php echo $resignedDetails; ?>" class="form-control" title="Leave blank if NO" <?php echo !$editMode ? ' readonly' : ''; ?>>
             </div>
           </div>
         </li>
@@ -211,9 +211,9 @@ if (numRows($otherInformation) > 0) {
                 $immigrantCountryName = $immigrantCountry['name'];
               }
             ?>
-            <input id="immigrant-country" name="immigrant-country" type="text" value="<?php echo $immigrantCountryName; ?>" class="form-control" readonly>
+            <input id="immigrant-country" name="immigrant-country" type="text" value="<?php echo $immigrantCountryName; ?>" class="form-control" title="Leave N/A if NO" readonly>
           <?php else : ?>
-            <select class="form-control" id="immigrant-country" name="immigrant-country">
+            <select class="form-control" id="immigrant-country" name="immigrant-country"  title="Leave N/A if NO">
               <option value="">N/A</option>
               <?php $countries = countries();
               while ($country = fetchAssoc($countries)) : ?>
@@ -241,7 +241,7 @@ if (numRows($otherInformation) > 0) {
 
             <div class="form-group mb-0">
               <label for="indigenous-specify" class="m-0">If YES, please specify:</label>
-              <input id="indigenous-specify" name="indigenous-specify" type="text" value="<?php echo $isIndigenousSpecify; ?>" class="form-control" <?php  echo !$editMode ? ' readonly' : ''; ?>>
+              <input id="indigenous-specify" name="indigenous-specify" type="text" value="<?php echo $isIndigenousSpecify; ?>" title="Leave blank if NO" class="form-control" <?php  echo !$editMode ? ' readonly' : ''; ?>>
             </div>
           </div>
         </li>
@@ -255,7 +255,7 @@ if (numRows($otherInformation) > 0) {
 
             <div class="form-group mb-0">
               <label for="differently-abled-specify" class="m-0">If YES, please specify ID No:</label>
-              <input id="differently-abled-specify" name="differently-abled-specify" type="text" value="<?php echo $isDifferentlyAbledSpecify; ?>" class="form-control" <?php  echo !$editMode ? ' readonly' : ''; ?>>
+              <input id="differently-abled-specify" name="differently-abled-specify" type="text" value="<?php echo $isDifferentlyAbledSpecify; ?>" title="Leave blank if NO" class="form-control" <?php  echo !$editMode ? ' readonly' : ''; ?>>
             </div>
           </div>
         </li>
@@ -269,7 +269,7 @@ if (numRows($otherInformation) > 0) {
 
             <div class="form-group mb-0">
               <label for="solo-parent-specify" class="m-0">If YES, please specify ID No:</label>
-              <input id="solo-parent-specify" name="solo-parent-specify" type="text" value="<?php echo $soloParentSpecify; ?>" class="form-control" <?php echo !$editMode ? ' readonly' : ''; ?>>
+              <input id="solo-parent-specify" name="solo-parent-specify" type="text" value="<?php echo $soloParentSpecify; ?>" class="form-control" title="Leave blank if NO" <?php echo !$editMode ? ' readonly' : ''; ?>>
             </div>
           </div>
         </li>
