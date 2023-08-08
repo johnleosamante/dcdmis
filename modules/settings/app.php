@@ -79,4 +79,18 @@ if (isset($_POST['update-identification'])) {
     createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
   }
 }
+
+if (isset($_POST['update-professional-titles'])) {
+  $before = sanitize($_POST['before-title']);
+  $after = sanitize($_POST['after-title']);
+
+  updateProfessionalTitles($before, $after, $userId);
+
+  if (affectedRows()) {
+    $showAlert = true;
+    $message = 'Your professional titles have been updated successfully.';
+    $success = true;
+    createSystemLog($stationId, $userId, 'Updated professional titles', $userId, clientIp());
+  }
+}
 ?>

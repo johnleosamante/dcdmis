@@ -21,6 +21,9 @@ messageAlert($showAlert, $message, $success);
       <li class="nav-item">
         <a class="nav-link text-secondary" href="#identification" data-toggle="tab">Identification Details</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link text-secondary" href="#professional-title" data-toggle="tab">Professional Titles</a>
+      </li>
     </ul>
 
     <div class="tab-content pt-2 px-2">
@@ -28,6 +31,7 @@ messageAlert($showAlert, $message, $success);
       require_once('contacts.php');
       require_once('password.php');
       require_once('identification.php');
+      require_once('professional-title.php');
       ?>
     </div>
   </div>
