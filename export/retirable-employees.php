@@ -9,7 +9,6 @@ if (!isset($_GET['v'])) {
     <tr>
       <th>#</th>
       <th>School/Office</th>
-      <th>Position</th>
       <th>Employee ID</th>
       <th>Last Name</th>
       <th>First Name</th>
@@ -18,6 +17,7 @@ if (!isset($_GET['v'])) {
       <th>Sex</th>
       <th>Date of Birth</th>
       <th>Age</th>
+      <th>Position</th>
       <th>GSIS CRN No.</th>
       <th>GSIS BP No.</th>
       <th>PAGIBIG ID No.</th>
@@ -37,7 +37,6 @@ if (!isset($_GET['v'])) {
       <tr>
         <td><?php echo $i++; ?></td>
         <td><?php echo strtoupper($row['school']); ?></td>
-        <td><?php echo strtoupper($row['position']); ?></td>
         <td><?php echo $row['id']; ?></td>
         <td><?php echo strtoupper($row['lname']); ?></td>
         <td><?php echo strtoupper($row['fname']); ?></td>
@@ -47,6 +46,7 @@ if (!isset($_GET['v'])) {
         <td><?php echo $row['byear'] . '-' . $row['bmonth'] . '-' . $row['bday']; ?></td>
         <td><?php echo getAge($row['byear'], $row['bmonth'], $row['bday']); ?></td>
         </td>
+        <td><?php echo strtoupper($row['position']); ?></td>
         <td><?php echo $row['crn']; ?></td>
         <td><?php echo $row['bp']; ?></td>
         <td><?php echo $row['pagibig']; ?></td>

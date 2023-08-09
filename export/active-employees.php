@@ -12,7 +12,6 @@ $filter = isset($_GET['id']) ? $filter . " AND tbl_station.Emp_Station='" . sani
     <tr>
       <th>#</th>
       <th>School/Office</th>
-      <th>Position</th>
       <th>Employee ID</th>
       <th>Last Name</th>
       <th>First Name</th>
@@ -20,6 +19,7 @@ $filter = isset($_GET['id']) ? $filter . " AND tbl_station.Emp_Station='" . sani
       <th>Ext Name</th>
       <th>Sex</th>
       <th>Date of Birth</th>
+      <th>Position</th>
       <th>GSIS CRN No.</th>
       <th>GSIS BP No.</th>
       <th>PAGIBIG ID No.</th>
@@ -40,7 +40,6 @@ $filter = isset($_GET['id']) ? $filter . " AND tbl_station.Emp_Station='" . sani
       <tr>
         <td><?php echo $i++; ?></td>
         <td><?php echo strtoupper($row['school']); ?></td>
-        <td><?php echo strtoupper($row['position']); ?></td>
         <td><?php echo $row['id']; ?></td>
         <td><?php echo strtoupper($row['lname']); ?></td>
         <td><?php echo strtoupper($row['fname']); ?></td>
@@ -48,6 +47,7 @@ $filter = isset($_GET['id']) ? $filter . " AND tbl_station.Emp_Station='" . sani
         <td><?php echo strtoupper($row['ext']); ?></td>
         <td><?php echo strtoupper($row['sex'])[0]; ?></td>
         <td><?php echo $row['byear'] . '-' . $row['bmonth'] . '-' . $row['bday']; ?></td>
+        <td><?php echo strtoupper($row['position']); ?></td>
         <td><?php echo $row['crn']; ?></td>
         <td><?php echo $row['bp']; ?></td>
         <td><?php echo $row['pagibig']; ?></td>
