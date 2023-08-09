@@ -1,6 +1,7 @@
 <?php
 // modules/schools/page.php
 messageAlert($showAlert, $message, $success);
+$isHrmis = $activeApp === 'hrmis';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -14,29 +15,48 @@ messageAlert($showAlert, $message, $success);
   </div>
 
   <div class="card-body">
+    <?php if ($isHrmis) { ?>
+      <div class="d-sm-flex align-items-center flex-row-reverse my-2">
+        <div class="d-inline-block">
+          <?php linkButtonSplit(customUri('export', 'schools'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+        </div>
+      </div>
+    <?php } ?>
+
     <div class="table-responsive">
       <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th class="align-middle" rowspan="2" width="5%">Logo</th>
-            <th class="align-middle" rowspan="2" width="25%">School Name / Alias / ID / Address</th>
-            <th class="align-middle" rowspan="2" width="15%">District</th>
-            <th class="align-middle" rowspan="2" width="15%">Category</th>
-            <th class="align-middle" rowspan="2" width="20%">Head of Office</th>
-            <th class="align-middle" colspan="3" width="15%">Personnel</th>
-            <th class="align-middle" rowspan="2" width="5%">Action</th>
+            <th class="align-middle" rowspan="3" width="5%">Logo</th>
+            <th class="align-middle" rowspan="3" width="25%">School Name / Alias / ID / Address</th>
+            <th class="align-middle" rowspan="3" width="10%">District</th>
+            <th class="align-middle" rowspan="3" width="10%">Category</th>
+            <th class="align-middle" rowspan="3" width="20%">Head of Office</th>
+            <th class="align-middle" colspan="9" width="15%">Personnel</th>
+            <th class="align-middle" rowspan="3" width="5%">Action</th>
           </tr>
 
           <tr>
-            <th class="align-middle text-mars" width="5%"><i class="fa fa-user fw"></i></th>
-            <th class="align-middle text-venus" width="5%"><i class="fa fa-user fw"></i></th>
-            <th class="align-middle" width="5%"><i class="fa fa-user-friends fw"></i></th>
+            <th class="align-middle text-mars" colspan="4" width="5%"><i class="fa fa-user fw"></i> Male</th>
+            <th class="align-middle text-venus" colspan="4" width="5%"><i class="fa fa-user fw"></i> Female</th>
+            <th class="align-middle" rowspan="2" width="5%" title="Total Personnel"><i class="fa fa-user-friends fw"></i> Total</th>
+          </tr>
+
+          <tr>
+            <th class="align-middle text-mars" title="Male Teaching Personnel">T</th>
+            <th class="align-middle text-mars" title="Male Teaching-Related Personnel">TR</th>
+            <th class="align-middle text-mars" title="Male Non-Teaching Personnel">NT</th>
+            <th class="align-middle text-mars" title="Total Male Personnel">Total</th>
+            <th class="align-middle text-venus" title="Female Teaching Personnel">T</th>
+            <th class="align-middle text-venus" title="Female Teaching-Related Personnel">TR</th>
+            <th class="align-middle text-venus" title="Female Non-Teaching Personnel">NT</th>
+            <th class="align-middle text-venus" title="Total Female Personnel">Total</th>
           </tr>
         </thead>
 
         <tbody>
           <?php
-          $query = schools();
+          $query = schoolEmployeeCount();
           while ($row = fetchArray($query)) :
             $logo = uri() . '/' . $row['logo'];
             $schoolName = $row['name'];
@@ -53,12 +73,7 @@ messageAlert($showAlert, $message, $success);
                 <div><?php linkItem(customUri($activeApp, 'School Information', $row['id']), $schoolName . ' (' . $row['alias'] . ')'); ?></div>
                 <div class="small"><?php echo $row['id'] . ' | ' . $row['address']; ?></div>
               </td>
-              <td class="align-middle">
-                <?php
-                $districts = district($row['district']);
-                echo numRows($districts) > 0 ? fetchAssoc($districts)['name'] : '';
-                ?>
-              </td>
+              <td class="align-middle"><?php echo $row['district']; ?></td>
               <td class="align-middle"><?php echo $row['category']; ?></td>
               <td class="align-middle">
                 <div><?php echo userName($row['head']); ?></div>
@@ -67,22 +82,15 @@ messageAlert($showAlert, $message, $success);
                 echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
                 ?>
               </td>
-
-              <?php
-              $employeeCount = schoolEmployeeCount($row['id']);
-              $male = $female = $total = 0;
-
-              if (numRows($employeeCount) > 0) {
-                $count = fetchAssoc($employeeCount);
-                $male = $count['male'];
-                $female = $count['female'];
-                $total = $count['total'];
-              }
-              ?>
-
-              <td class="align-middle"><?php echo $male; ?></td>
-              <td class="align-middle"><?php echo $female; ?></td>
-              <td class="align-middle"><?php echo $total; ?></td>
+              <td class="align-middle"><?php echo $row['tmale']; ?></td>
+              <td class="align-middle"><?php echo $row['trmale']; ?></td>
+              <td class="align-middle"><?php echo $row['ntmale']; ?></td>
+              <td class="align-middle text-mars"><strong><?php echo $row['male']; ?></strong></td>
+              <td class="align-middle"><?php echo $row['tfemale']; ?></td>
+              <td class="align-middle"><?php echo $row['trfemale']; ?></td>
+              <td class="align-middle"><?php echo $row['ntfemale']; ?></td>
+              <td class="align-middle text-venus"><strong><?php echo $row['female']; ?></strong></td>
+              <td class="align-middle"><strong><?php echo $row['total']; ?></strong></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
