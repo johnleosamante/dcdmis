@@ -115,6 +115,14 @@ messageAlert($showAlert, $message, $success);
       </div>
     </div>
 
+    <?php if ($isHrmis) { ?>
+      <div class="d-sm-flex align-items-center flex-row-reverse my-2">
+        <div class="d-inline-block">
+          <?php linkButtonSplit(customUri('export', 'active-employees', $schoolId), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+        </div>
+      </div>
+    <?php } ?>
+
     <div class="table-responsive mt-3">
       <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
@@ -156,7 +164,7 @@ messageAlert($showAlert, $message, $success);
                 <?php if ($isHrmis) {
                   linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName, true);
                 } else {
-                  echo $employeeName; 
+                  echo $employeeName;
                 } ?>
               </td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
