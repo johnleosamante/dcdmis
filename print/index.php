@@ -62,5 +62,5 @@ $pdf->AddFont('calibrib', 'B', 'calibrib.php');
 
 require_once(root() . "/print/{$file}.php");
 
-$pdf->Output();
+$pdf->Output("{$title}.pdf", "I");
 ?>
