@@ -73,7 +73,7 @@ function restrictPublicAccess($isHoliday) {
 function customUri($page, $view, $id=null) {
   $value = ($id !== null) ? '&id=' . encode($id) : '';
 
-  return uri() . "/{$page}?{$value}&v=" . encode($view);
+  return uri() . "/{$page}?&v=" . encode($view) . $value;
 }
 
 function title($page=null) {
