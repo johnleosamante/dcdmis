@@ -1,7 +1,7 @@
 <?php
 // login/page.php
+require_once(root() . '/modules/calendar/page.php');
 ?>
-<?php require_once(root() . '/modules/calendar/page.php'); ?>
 
 <div id="login-panel" class="col-xl-4 col-lg-4 col-md-5 col-sm-12">
   <div class="card o-hidden border-0 shadow-lg my-5">
