@@ -19,7 +19,7 @@
       <form action="" method="POST" class="text-left">
         <div class="form-group">
           <label for="email" class="text-gray-900 font-weight-bold mb-1">Email Address</label>
-          <input class="form-control" id="email" name="email" type="email" placeholder="name@deped.gov.ph" autofocus required>
+          <input class="form-control" id="email" name="email" type="email" placeholder="juan.delacruz@deped.gov.ph" autofocus required>
         </div><!-- .form-group -->
 
         <div class="form-group">
