@@ -1,12 +1,10 @@
 <?php
 // modules/settings/professional-title.php
 $title = fetchAssoc(employee($userId));
-
-$before = !empty($title['btitle']) ? $title['btitle']: '';
-$after = !empty($title['atitle']) ? $title['atitle'] : '';
-$name = toName($title['lname'], $title['fname'], $title['mname'], $title['ext'], true, true);
-$beforeFormat = !empty($before) ? $before . ' ' : '';
-$professionalName = toString($name, $beforeFormat, $after);
+$before = $title['btitle'];
+$after = $title['atitle'];
+$professionalName = toString($before, '', ' ') .
+toName($title['lname'], $title['fname'], $title['mname'], $title['ext'], true, true) . toString($after, ', ');
 ?>
 
 <div class="tab-pane fade" id="professional-title">
