@@ -27,7 +27,7 @@ function userName($id) {
 
   if (numRows($users) > 0) {
     $user = fetchAssoc($users);
-    return toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true);
+    return toString($user['btitle'], '', ' ') . toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true) . toString($user['atitle'], ', ');
   }
   
   return $id;
