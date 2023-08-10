@@ -12,6 +12,7 @@ require_once(root() . '/includes/layout/components.php');
 $documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $documents = documentLog($documentId);
 $description = $destination = $purpose = $details = $attribute = '';
+$isDescriptionEditable = true;
 $modalTitle = 'New Document';
 $hasDocument = true;
 $forRelease = false;
