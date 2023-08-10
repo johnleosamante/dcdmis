@@ -1,6 +1,6 @@
 <?php
 // error/app.php
-$code = http_response_code();
+$code = !isset($_GET['e']) ? http_response_code() : $_GET['e'];
 
 switch ($code) {
   case '403':
