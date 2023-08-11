@@ -42,19 +42,19 @@ messageAlert($showAlert, $message, $success);
     <div class="table-responsive">
       <table cellspacing="0">
         <tr>
-          <th class="align-top pr-5" scope="row">Description:</th>
+          <th class="align-top pr-3" scope="row">Description:</th>
           <td class="text-uppercase"><?php echo $document['description']; ?></td>
         </tr>
         <tr>
-          <th class="pr-5" scope="row">Created on:</th>
+          <th class="align-top pr-3" scope="row">Created on:</th>
           <td class="text-uppercase"><?php echo toDate($document['datetime'], 'F d, Y h:i:s A'); ?></td>
         </tr>
         <tr>
-          <th class="pr-5" scope="row">From:</th>
+          <th class="align-top pr-3" scope="row">From:</th>
           <td class="text-uppercase"><?php echo stationName($document['from']); ?></td>
         </tr>
         <tr>
-          <th class="align-top pr-5" scope="row">Status:</th>
+          <th class="align-top pr-3" scope="row">Status:</th>
           <td class="text-uppercase">
             <?php
             echo strlen($document['details']) === 0 ? $document['status'] : $document['status'] . ' - ' . $document['details'];
@@ -74,18 +74,18 @@ messageAlert($showAlert, $message, $success);
         switch ($documentType) {
           case 'Incoming Documents':
             if (!isDocument($documentId, 'Cancel')) {
-              modalButtonSplit(uri() . '/modules/documents/receive-document-dialog.php?id=' . cipher($documentId), 'Receive', 'fa-hand-holding-medical','Receive Document', 'success');
+              modalButtonSplit(uri() . '/modules/documents/receive-document-dialog.php?id=' . cipher($documentId), 'Receive', 'fa-hand-holding-medical', 'Receive Document', 'success');
             }
             break;
           case 'Pending Documents':
             if (!$isSchoolPortal) {
               modalButtonSplit(uri() . '/modules/documents/forward-document-dialog.php?id=' . cipher($documentId), 'Forward', 'fa-share', 'Forward Document', 'info');
             }
-            modalButtonSplit(uri() .'/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
+            modalButtonSplit(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
             break;
           case 'Outgoing Documents':
             if (!isDocument($documentId, 'Complete') && !isDocument($documentId, 'Cancel')) {
-              modalButtonSplit(uri() .'/modules/documents/save-document-dialog.php?id=' . cipher($documentId), 'Edit', 'fa-edit','Edit Document', 'info');
+              modalButtonSplit(uri() . '/modules/documents/save-document-dialog.php?id=' . cipher($documentId), 'Edit', 'fa-edit', 'Edit Document', 'info');
             }
             break;
           default:
@@ -97,14 +97,14 @@ messageAlert($showAlert, $message, $success);
             if ($isSchoolPortal) {
               break;
             }
-            
+
             if (isDocumentFrom($documentId, $station) && $document['from'] === $station && !isDocument($documentId, 'Cancel')) {
               modalButtonSplit(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($documentId), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
             }
             break;
           case 'Outgoing Documents':
             if (isDocumentFrom($documentId, $station) && $document['from'] === $station && !isDocument($documentId, 'Cancel')) {
-              modalButtonSplit(uri() .'/modules/documents/cancel-document-dialog.php?id=' . cipher($documentId), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
+              modalButtonSplit(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($documentId), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
             }
             break;
           default:
@@ -138,14 +138,14 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle"><?php echo stationName($log['to']); ?></td>
               <td class="align-middle">
                 <?php
-                  $status = $log['status'];
-                  $details = $log['details'];
+                $status = $log['status'];
+                $details = $log['details'];
 
-                  if (strlen($details) > 0) {
-                    echo $status . ' - ' . $details;
-                  } else {
-                    echo $status;
-                  }
+                if (strlen($details) > 0) {
+                  echo $status . ' - ' . $details;
+                } else {
+                  echo $status;
+                }
                 ?>
               </td>
             </tr>
