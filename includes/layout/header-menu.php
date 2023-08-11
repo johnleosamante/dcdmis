@@ -99,6 +99,6 @@ $displayPhoto = uri() . '/' . $user['picture'];
   }
 
   if ($hasPortal && !$isSchoolPortal) : ?>
-    <div class="h2 mt-4 m-0"><?php echo stationName($station); ?></div>
+    <div id="station-name" class="h2 mt-4 m-0"><?php echo stationName($station); ?></div>
   <?php endif; ?>
 </div>
