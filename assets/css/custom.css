@@ -68,16 +68,31 @@ input::-ms-clear, input::-ms-reveal {
 }
 
 #calendar.card-body {
-  height: 450px !important;
+  max-height: 400px !important;
   overflow-y: scroll;
 }
 
+@media only screen and (max-width: 991px) {
+  #calendar-panel.card {
+    margin-top: 1.5rem;
+  }
+}
+
 @media only screen and (max-width: 767px) {
-  #main-content {
+  .sidebar .menu-item {
+    margin: 0 auto;
+  }
+
+  #station-name {
+    display: none;
+  }
+
+  #main-content,
+  #main-content #services-panel .card-body .row {
     flex-direction: column-reverse;
   }
 
-  #main-content #calendar-panel .card {
+  #main-content #services-panel .card {
     margin-top: 0 !important;
   }
 
@@ -90,10 +105,8 @@ input::-ms-clear, input::-ms-reveal {
     max-height: 400px;
     overflow-y: scroll;
   }
-}
 
-@media only screen and (max-width: 767px) {
-  .sidebar .menu-item {
-    margin: 0 auto;
+  #calendar-panel.card {
+    margin-bottom: 1.5rem;
   }
 }
