@@ -146,11 +146,11 @@ messageAlert($showAlert, $message, $success);
           $icon = 'check';
         }
 
-        if ($logCount === 1 && !$hasDestination && $isCompleted) {
+        if ($logCount === 1 && $isCompleted) {
           $icon = 'trophy';
         }
 
-        if ($logCount === 1 && !$hasDestination && $isCanceled) {
+        if ($logCount === 1 && $isCanceled) {
           $icon = 'times';
           $bgColor = 'bg-danger';
         }
