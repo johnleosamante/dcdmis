@@ -35,7 +35,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitle("Document Information : " . strtoupper($documentId)); ?>
+    <?php contentTitle("Document Information: " . strtoupper($documentId)); ?>
   </div>
 
   <div class="card-body">
@@ -170,7 +170,7 @@ messageAlert($showAlert, $message, $success);
                 <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase">
                   <?php echo $from; ?>
                 </h5>
-                <?php echo $hasDestination ? '<div>Forwarding to ' . strtoupper($to) . '</div>' : ''; ?>
+                <?php echo $hasDestination ? '<div>Forwarded to ' . strtoupper($to) . '</div>' : ''; ?>
                 <div><?php echo $status; ?></div>
                 <?php echo !empty($details) ? '<div>' . $details . '</div>' : ''; ?>
                 <div class="text-uppercase"><?php echo userName($log['user']); ?></div>
