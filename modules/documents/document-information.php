@@ -39,32 +39,30 @@ messageAlert($showAlert, $message, $success);
   </div>
 
   <div class="card-body">
-    <div class="table-responsive">
-      <table cellspacing="0">
-        <tr>
-          <th class="align-top pr-3" scope="row">Description:</th>
-          <td class="text-uppercase"><?php echo $document['description']; ?></td>
-        </tr>
-        <tr>
-          <th class="align-top pr-3" scope="row">Created on:</th>
-          <td class="text-uppercase"><?php echo toDate($document['datetime'], 'F d, Y h:i:s A'); ?></td>
-        </tr>
-        <tr>
-          <th class="align-top pr-3" scope="row">From:</th>
-          <td class="text-uppercase"><?php echo stationName($document['from']); ?></td>
-        </tr>
-        <tr>
-          <th class="align-top pr-3" scope="row">Status:</th>
-          <td class="text-uppercase">
-            <?php
-            echo strlen($document['details']) === 0 ? $document['status'] : $document['status'] . ' - ' . $document['details'];
-            ?>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <table cellspacing="0">
+      <tr>
+        <th class="align-top pr-3" scope="row">Description:</th>
+        <td class="text-uppercase"><?php echo $document['description']; ?></td>
+      </tr>
+      <tr>
+        <th class="align-top pr-3" scope="row">Created on:</th>
+        <td class="text-uppercase"><?php echo toDate($document['datetime'], 'F d, Y h:i:s A'); ?></td>
+      </tr>
+      <tr>
+        <th class="align-top pr-3" scope="row">From:</th>
+        <td class="text-uppercase"><?php echo stationName($document['from']); ?></td>
+      </tr>
+      <tr>
+        <th class="align-top pr-3" scope="row">Status:</th>
+        <td class="text-uppercase">
+          <?php
+          echo strlen($document['details']) === 0 ? $document['status'] : $document['status'] . ' - ' . $document['details'];
+          ?>
+        </td>
+      </tr>
+    </table>
 
-    <div class="d-sm-flex align-items-center flex-row-reverse my-2">
+    <div class="d-flex align-items-center flex-row-reverse mt-2 mb-3">
       <div class="d-inline-block">
         <?php
         if ($station === $document['from']) {
@@ -114,44 +112,73 @@ messageAlert($showAlert, $message, $success);
       </div>
     </div>
 
-    <div class="table-responsive">
-      <table class="table table-striped table-hover table-bordered mb-0 text-center" width="100%" cellspacing="0">
-        <thead>
-          <tr>
-            <th class="align-middle" width="15%">Date &amp; Time</th>
-            <th class="align-middle" width="20%">Processed by</th>
-            <th class="align-middle" width="25%">From</th>
-            <th class="align-middle" width="25%">To</th>
-            <th class="align-middle" width="15%">Status</th>
-          </tr>
-        </thead>
+    <div class="timeline">
+      <?php
+      $logs = documentLogs($documentId);
+      $totalLogs = numRows($logs);
+      $logCount = 0;
 
-        <tbody>
-          <?php
-          $logs = documentLogs($documentId);
-          while ($log = fetchArray($logs)) {
-          ?>
-            <tr class="text-uppercase">
-              <td class="align-middle"><?php echo toDatetime($log['datetime']); ?></td>
-              <td class="align-middle"><?php echo userName($log['user']); ?></td>
-              <td class="align-middle"><?php echo stationName($log['from']); ?></td>
-              <td class="align-middle"><?php echo stationName($log['to']); ?></td>
-              <td class="align-middle">
-                <?php
-                $status = $log['status'];
-                $details = $log['details'];
+      while ($log = fetchAssoc($logs)) {
+        $logCount++;
+        $from = stationName($log['from']);
+        $to = stationName($log['to']);
+        $icon = 'flag';
+        $hasDestination = !empty($to) && $to !== '-';
+        $status = $log['status'];
+        $details = $log['details'];
+        $isCompleted = str_contains(strtolower($status), 'complete');
+        $isCanceled = str_contains(strtolower($status), 'cancel');
+        $bgColor = '';
 
-                if (strlen($details) > 0) {
-                  echo $status . ' - ' . $details;
-                } else {
-                  echo $status;
-                }
-                ?>
-              </td>
-            </tr>
-          <?php } ?>
-        </tbody>
-      </table>
+        if ($logCount === 1) {
+          $bgColor = 'bg-success';
+        }
+
+        if ($logCount === 1 && $hasDestination) {
+          $icon = 'truck';
+        }
+
+        if ($logCount > 1 && $hasDestination) {
+          $icon = 'flag';
+        }
+
+        if ($logCount > 1 && !$hasDestination) {
+          $icon = 'check';
+        }
+
+        if ($logCount === 1 && !$hasDestination && $isCompleted) {
+          $icon = 'trophy';
+        }
+
+        if ($logCount === 1 && !$hasDestination && $isCanceled) {
+          $icon = 'times';
+          $bgColor = 'bg-danger';
+        }
+      ?>
+        <div class="timeline-item">
+          <div class="timeline-item-marker">
+            <div class="timeline-item-marker-text text-uppercase">
+              <?php echo date('M d, Y', strtotime($log['datetime'])) . '<br>' . date('h:i:s A', strtotime($log['datetime']));?>
+            </div>
+            <div class="timeline-item-marker-indicator <?php echo $bgColor; ?>">
+              <i class="fas fa-<?php echo $icon; ?>"></i>
+            </div>
+          </div>
+          <div class="timeline-item-content pt-0">
+            <div class="card">
+              <div class="card-body p-3">
+                <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase">
+                  <?php echo $from; ?>
+                </h5>
+                <?php echo $hasDestination ? '<div>Forwarding to ' . strtoupper($to) . '</div>' : ''; ?>
+                <div><?php echo $status; ?></div>
+                <?php echo !empty($details) ? '<div>' . $details . '</div>' : ''; ?>
+                <div class="text-uppercase"><?php echo userName($log['user']); ?></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php } ?>
     </div>
   </div>
 </div>
