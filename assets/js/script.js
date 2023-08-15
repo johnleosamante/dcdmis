@@ -7,21 +7,31 @@ $(document).ready(function () {
   $('div.alert').fadeIn(300).delay(60000).fadeOut(300);
 });
 
+let dtProps = {
+  "responsive": true,
+  "pagingType": "full",
+  "lengthMenu": [[25, 50, 75, 100, -1], [25, 50, 75, 100, "All"]],
+  "paging": true,
+  "ordering": false,
+  "autoWidth": false, 
+  "info": true,
+};
+
 $(document).ready(function () {
   if ($('#data-table-previous').length > 0) {
-    $('#data-table-previous').DataTable();
+    $('#data-table-previous').DataTable(dtProps);
   }
 });
 
 $(document).ready(function () {
   if ($('#data-table').length > 0) {
-    $('#data-table').DataTable();
+    $('#data-table').DataTable(dtProps);
   }
 });
 
 $(document).ready(function () {
   if ($('#data-table-next').length > 0) {
-    $('#data-table-next').DataTable();
+    $('#data-table-next').DataTable(dtProps);
   }
 });
 
