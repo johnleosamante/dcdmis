@@ -18,6 +18,7 @@ require_once(root() . '/includes/layout/components.php');
 <head>
   <?php require_once(root() . '/includes/layout/header.php'); ?>
   <link rel="stylesheet" href="<?php echo uri(); ?>/assets/vendor/datatables/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="<?php echo uri(); ?>/assets/vendor/datatables-responsive/css/responsive.bootstrap4.min.css">
 </head>
 
 <body id="page-top">
@@ -28,7 +29,7 @@ require_once(root() . '/includes/layout/components.php');
           <img class="sidebar-brand-icon" src="<?php echo uri(); ?>/assets/img/division.png" alt="<?php echo title(); ?>" width="60">
         </a>
       </div>
-      
+
       <?php
       sidebarDivider();
       sidebarMenuItem(uri() . '/' . $activeApp, 'Dashboard', 'fa-tachometer-alt', !isset($url));
@@ -62,6 +63,8 @@ require_once(root() . '/includes/layout/components.php');
   <script src="<?php echo uri(); ?>/assets/js/sb-admin-2.min.js"></script>
   <script src="<?php echo uri(); ?>/assets/vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="<?php echo uri(); ?>/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+  <script src="<?php echo uri(); ?>/assets/vendor/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="<?php echo uri(); ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
   <script src="<?php echo uri(); ?>/assets/js/script.js"></script>
 </body>
 
