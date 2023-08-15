@@ -13,8 +13,7 @@ messageAlert($showAlert, $message, $success);
       <table class="table table-striped table-bordered table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th class="align-middle" width="5%" rowspan="2">#</th>
-            <th class="align-middle" width="10%" rowspan="2">Code</th>
+            <th class="align-middle" width="15%" rowspan="2">Code</th>
             <th class="align-middle" width="30%" rowspan="2">Title of Learning &amp; Development Interventions / Training Programs</th>
             <th class="align-middle" width="10%" colspan="2">Inclusive Dates</th>
             <th class="align-middle" width="15%" rowspan="2">Type of Learning &amp; Development</th>
@@ -29,12 +28,9 @@ messageAlert($showAlert, $message, $success);
         <tbody>
           <?php
           $trainings = conductedTrainings();
-          $no = 0;
-
           if (numRows($trainings) > 0) {
             while ($training = fetchAssoc($trainings)) : ?>
               <tr>
-                <td class="align-middle"><?php echo ++$no; ?></td>
                 <td class="align-middle"><?php echo $training['no']; ?></td>
                 <td class="align-middle text-left"><?php echo $training['title']; ?></td>
                 <td class="align-middle"><?php echo toDate($training['from']); ?></td>

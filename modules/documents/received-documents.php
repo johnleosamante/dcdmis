@@ -12,9 +12,8 @@
       <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th class="align-middle" width="5%">#</th>
             <th class="align-middle" width="15%">Code</th>
-            <th class="align-middle" width="60">Description</th>
+            <th class="align-middle" width="65">Description</th>
             <th class="align-middle" width="15%">Received on</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
@@ -22,12 +21,10 @@
 
         <tbody>
           <?php
-          $no = 0;
           $query = receivedDocuments($station);
           while ($row = fetchArray($query)) {
           ?>
             <tr class="text-uppercase">
-              <td class="align-middle"><?php echo ++$no; ?></td>
               <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']); ?></td>
               <td class="text-left align-middle"><?php echo $row['description']; ?></td>
               <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>

@@ -17,8 +17,7 @@ messageAlert($showAlert, $message, $success);
       <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th class="align-middle" rowspan="2" width="5%">#</th>
-            <th class="align-middle" rowspan="2" width="25%">District</th>
+            <th class="align-middle" rowspan="2" width="30%">District</th>
             <th class="align-middle" rowspan="2" width="45%">Supervisor</th>
             <th class="align-middle" colspan="4" width="20%">Schools</th>
             <th class="align-middle" rowspan="2" width="5%">Action</th>
@@ -35,11 +34,9 @@ messageAlert($showAlert, $message, $success);
         <tbody>
           <?php
           $query = districts();
-          $no = 0;
           while ($row = fetchAssoc(($query))) : ?>
             <tr class="text-uppercase">
-              <td class="align-middle"><?php echo ++$no; ?></td>
-              <td class="align-middle text-left"><?php linkItem(customUri($activeApp, 'District Information', $row['id']), $row['name']); ?></td>
+              <td class="align-middle text-center"><?php linkItem(customUri($activeApp, 'District Information', $row['id']), $row['name']); ?></td>
               <td class="align-middle">
                 <div><?php echo userName($row['psds']); ?></div>
                 <div class="small"><?php echo fetchAssoc(position($row['psds']))['position']; ?></div>
