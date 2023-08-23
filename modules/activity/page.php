@@ -29,7 +29,7 @@
               <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
               <td class="text-left align-middle"><?php echo $row['activity']; ?></td>
               <td class="text-center align-middle">
-                <?php echo $userId === $row['target'] ? 'YOUR ACCOUNT' : userName($row['target']); ?>
+                <?php echo $userId === $row['target'] ? 'YOU' : userName($row['target']); ?>
               </td>
             </tr>
           <?php endwhile; ?>
