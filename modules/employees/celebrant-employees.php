@@ -61,6 +61,7 @@ messageAlert($showAlert, $message, $success);
                     <th class="align-middle" width="5%">Action</th>
                   </tr>
                 </thead>
+                
                 <tbody>
                   <?php
                   $query = celebrantEmployees($bmonth);
@@ -106,6 +107,18 @@ messageAlert($showAlert, $message, $success);
                     </tr>
                   <?php } ?>
                 </tbody>
+
+                <tfoot>
+                  <tr>
+                    <th class="align-middle" width="5%">Photo</th>
+                    <th class="align-middle" width="25%">Name</th>
+                    <th class="align-middle" width="15%">Date of Birth</th>
+                    <th class="align-middle" width="5%">Age</th>
+                    <th class="align-middle" width="20%">Position</th>
+                    <th class="align-middle" width="25%">Station</th>
+                    <th class="align-middle" width="5%">Action</th>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           </div>

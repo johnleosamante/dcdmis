@@ -50,6 +50,17 @@
             </tr>
           <?php } ?>
         </tbody>
+
+        <tfoot>
+          <tr>
+            <th class="align-middle" width="15%">Code</th>
+            <th class="align-middle" width="30%">Description</th>
+            <th class="align-middle" width="20%">From</th>
+            <th class="align-middle" width="15%">Date</th>
+            <th class="align-middle" width="15%">Purpose</th>
+            <th class="align-middle" width="5%">Action</th>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>

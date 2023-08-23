@@ -102,6 +102,35 @@ $isHrmis = $activeApp === 'hrmis';
             </tr>
           <?php endwhile; ?>
         </tbody>
+
+        <tfoot>
+          <tr>
+            <th class="align-middle" rowspan="3" width="5%">Logo</th>
+            <th class="align-middle" rowspan="3" width="25%">School Name / Alias / ID / Address</th>
+            <th class="align-middle" rowspan="3" width="10%">District</th>
+            <th class="align-middle" rowspan="3" width="10%">Category</th>
+            <th class="align-middle" rowspan="3" width="20%">Head of Office</th>
+            <th class="align-middle text-mars" title="Male Teaching Personnel">T</th>
+            <th class="align-middle text-mars" title="Male Teaching-Related Personnel">TR</th>
+            <th class="align-middle text-mars" title="Male Non-Teaching Personnel">NT</th>
+            <th class="align-middle text-mars" title="Total Male Personnel">Total</th>
+            <th class="align-middle text-venus" title="Female Teaching Personnel">T</th>
+            <th class="align-middle text-venus" title="Female Teaching-Related Personnel">TR</th>
+            <th class="align-middle text-venus" title="Female Non-Teaching Personnel">NT</th>
+            <th class="align-middle text-venus" title="Total Female Personnel">Total</th>
+            <th class="align-middle" rowspan="2" width="5%" title="Total Personnel"><i class="fa fa-user-friends fw"></i> Total</th>
+            <th class="align-middle" rowspan="3" width="5%">Action</th>
+          </tr>
+
+          <tr>
+            <th class="align-middle text-mars" colspan="4" width="5%"><i class="fa fa-user fw"></i> Male</th>
+            <th class="align-middle text-venus" colspan="4" width="5%"><i class="fa fa-user fw"></i> Female</th>
+          </tr>
+
+          <tr>
+            <th class="align-middle" colspan="9" width="15%">Personnel</th>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>

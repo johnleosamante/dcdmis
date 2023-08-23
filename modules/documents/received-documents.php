@@ -39,6 +39,15 @@
             </tr>
           <?php } ?>
         </tbody>
+
+        <tfoot>
+          <tr>
+            <th class="align-middle" width="15%">Code</th>
+            <th class="align-middle" width="65">Description</th>
+            <th class="align-middle" width="15%">Received on</th>
+            <th class="align-middle" width="5%">Action</th>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>

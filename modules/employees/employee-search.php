@@ -78,6 +78,20 @@ messageAlert($showAlert, $message, $success);
             </tr>
           <?php endwhile; ?>
         </tbody>
+
+        <tfoot>
+          <tr>
+            <th class="align-middle" width="5%">Photo</th>
+            <th class="align-middle" width="5%">Employee Number</th>
+            <th class="align-middle" width="20%">Name</th>
+            <th class="align-mdille" width="10%">Status</th>
+            <th class="align-middle" width="15%">Date of Birth</th>
+            <th class="align-middle" width="5%">Age</th>
+            <th class="align-middle" width="15%">Position</th>
+            <th class="align-middle" width="20%">Station</th>
+            <th class="align-middle" width="5%">Action</th>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>

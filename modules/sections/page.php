@@ -51,8 +51,8 @@ messageAlert($showAlert, $message, $success);
                 $total = $count['total'];
               }
               ?>
-              <td class="align-middle"><?php echo $male; ?></td>
-              <td class="align-middle"><?php echo $female; ?></td>
+              <td class="align-middle text-mars"><?php echo $male; ?></td>
+              <td class="align-middle text-venus"><?php echo $female; ?></td>
               <td class="align-middle"><?php echo $total; ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
@@ -65,6 +65,21 @@ messageAlert($showAlert, $message, $success);
             </tr>
           <?php endwhile; ?>
         </tbody>
+
+        <tfoot>
+          <tr>
+            <th class="align-middle" rowspan="2" width="30%">Section</th>
+            <th class="align-middle" rowspan="2" width="50%">Section Head</th>
+            <th class="align-middle text-mars" width="5%"><i class="fa fa-user fw"></i></th>
+            <th class="align-middle text-venus" width="5%"><i class="fa fa-user fw"></i></th>
+            <th class="align-middle" width="5%"><i class="fa fa-user-friends fw"></i></th>
+            <th class="align-middle" rowspan="2" width="5%">Action</th>
+          </tr>
+
+          <tr>
+            <th class="align-middle" colspan="3" width="15%">Personnel</th>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
