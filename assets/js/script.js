@@ -9,7 +9,7 @@ $(document).ready(function () {
 
 let dtProps = {
   "responsive": true,
-  "pagingType": "full",
+  "pagingType": "simple",
   "lengthMenu": [[25, 50, 75, 100, -1], [25, 50, 75, 100, "All"]],
   "paging": true,
   "ordering": false,
