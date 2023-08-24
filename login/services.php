@@ -36,7 +36,7 @@
             </div><!-- .card-header -->
 
             <div class="card-body">
-              Quality assured educational and learning materials accessible to a dedicated learning resource <a href="https://sites.google.com/deped.gov.ph/sdodipologlrms/home" title="SDO Dipolog Learning Resource Portal">portal</a>.
+              Quality assured educational and learning materials accessible through a dedicated learning resource <a href="https://sites.google.com/deped.gov.ph/sdodipologlrms/home" title="SDO Dipolog Learning Resource Portal">portal</a>.
             </div><!-- .card-body -->
           </div>
         </div>
