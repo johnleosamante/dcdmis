@@ -72,7 +72,6 @@ function restrictPublicAccess($isHoliday) {
   if (isWeekend() || !isOfficialTime() || $isHoliday) {
     redirect(uri() . '/error');
   }
-  return false;
 }
 
 function customUri($page, $view, $id=null) {
