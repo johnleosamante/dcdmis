@@ -35,6 +35,11 @@ input::-ms-clear, input::-ms-reveal {
   height: 8rem;
 }
 
+.photo-4x {
+  width: 128px;
+  height: 128px;
+}
+
 .text-mars {
   color: #02a3fe;
 }
@@ -51,7 +56,8 @@ input::-ms-clear, input::-ms-reveal {
 
 .image-container {
   position: relative;
-  max-width: 64px;
+  min-width: 64px;
+  max-width: 128px;
   margin: 0 auto;
 }
 
