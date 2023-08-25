@@ -41,6 +41,10 @@ function roundPill($text, $bgColor = 'primary', $textColor = 'light') {
   <span class="py-1 px-3 small bg-<?php echo $bgColor; ?> rounded-pill text-<?php echo $textColor; ?>"><?php echo $text; ?></span>
 <?php }
 
+function newFeatureMark() { ?>
+  <span class="new-feature bg-danger px-2 small ml-1 text-light font-weight-light text-capitalize rounded-pill">New</span>
+<?php }
+
 function sidebarDivider($marginBottom = '0', $autoHide = false) { ?>
   <hr class="sidebar-divider mb-<?php echo $marginBottom; ?> <?php echo $autoHide ? 'd-none d-md-block' : ''; ?>">
 <?php }
@@ -60,14 +64,19 @@ function sex($sex) {
   <i class="<?php echo "fas fa-{$sign} text-{$sign} fa-2x"; ?>"></i>
 <?php }
 
-function card($title, $link, $icon, $color = 'primary', $counter = '&nbsp;') { ?>
+function card($title, $link, $icon, $color = 'primary', $counter = null, $newFeature = false) { ?>
   <div class="col-xl-3 col-md-6 mb-4">
     <div class="card border-left-<?php echo $color; ?> shadow h-100">
       <div class="card-body">
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
-            <div class="font-weight-bold text-<?php echo $color; ?> text-uppercase mb-1"><?php echo $title; ?></div>
-            <div class="h3 mb-0 font-weight-bold text-gray-800"><?php echo $counter; ?></div>
+            <div class="font-weight-bold text-<?php echo $color; ?> text-uppercase mb-1">
+              <?php echo $title; 
+              if ($newFeature) {
+                newFeatureMark();
+              } ?>
+            </div>
+            <div class="h3 mb-0 font-weight-bold text-gray-800"><?php echo $counter !== null ? $counter : '&nbsp;'; ?></div>
           </div>
 
           <div class="col-auto">
@@ -131,12 +140,17 @@ function contentTitleWithModal($title, $link, $text, $icon, $color = 'primary') 
   </div>
 <?php }
 
-function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = null) { ?>
+function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = null, $newFeature = false) { ?>
   <li class="nav-item <?php echo $condition ? ' active' : ''; ?>">
     <a class="nav-link d-flex align-items-center justify-content-between" href="<?php echo $link; ?>">
       <div class="menu-item">
         <i class="fas fa-fw <?php echo $icon; ?>"></i>
-        <span><?php echo $title; ?></span>
+        <span>
+          <?php echo $title; 
+          if ($newFeature) {
+            newFeatureMark();
+          } ?>
+        </span>
       </div>
       <?php if ($counter !== null) : ?>
         <span class="bg-dark px-2 rounded-pill font-weight-bold"><?php echo $counter; ?></span>
@@ -145,12 +159,17 @@ function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = nu
   </li>
 <?php }
 
-function sidebarModalItem($link, $title, $icon, $counter = null) { ?>
+function sidebarModalItem($link, $title, $icon, $counter = null, $newFeature = false) { ?>
   <li class="nav-item">
     <a class="nav-link d-flex align-items-center justify-content-between" href="#" data-toggle="modal" data-target="#modal" onclick="loadData('<?php echo $link; ?>')">
       <div class="menu-item">
         <i class="fas fa-fw <?php echo $icon; ?>"></i>
-        <span><?php echo $title; ?></span>
+        <span>
+          <?php echo $title; 
+          if ($newFeature) {
+            newFeatureMark();
+          } ?>
+        </span>
       </div>
       <?php if ($counter !== null) : ?>
         <span class="bg-dark px-2 rounded-pill font-weight-bold"><?php echo $counter; ?></span>
@@ -181,15 +200,23 @@ function modalButtonSplit($link, $text, $icon, $title = '', $color = 'primary') 
   </a>
 <?php }
 
-function linkDropdownItem($link, $text, $icon, $title = '', $newTab = false) { ?>
+function linkDropdownItem($link, $text, $icon, $title = '', $newTab = false, $newFeature = false) { ?>
   <a href="<?php echo $link; ?>" class="dropdown-item" title="<?php echo $title; ?>" target="<?php echo $newTab ? '_blank' : '_self'; ?>">
-    <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i><?php echo $text; ?>
+    <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i>
+    <?php echo $text; 
+      if ($newFeature) {
+        newFeatureMark();
+    } ?>
   </a>
 <?php }
 
-function modalDropdownItem($link, $text, $icon, $title = '') { ?>
+function modalDropdownItem($link, $text, $icon, $title = '', $newFeature = false) { ?>
   <a href="#" data-toggle="modal" data-target="#modal" class="dropdown-item" title="<?php echo $title; ?>" onclick="loadData('<?php echo $link; ?>')">
-    <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i><?php echo $text; ?>
+    <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i>
+    <?php echo $text; 
+      if ($newFeature) {
+        newFeatureMark();
+    } ?>
   </a>
 <?php }
 
