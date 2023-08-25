@@ -24,6 +24,7 @@ if (isset($_POST['primary-search-button'])) {
 // School Management
 if (isset($_POST['save-school'])) {
   $referenceSchoolId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $referenceAlias = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $schoolId = sanitize($_POST['school-id']);
   $schoolName = sanitize($_POST['school-name']);
   $alias = sanitize($_POST['alias']);
@@ -38,6 +39,10 @@ if (isset($_POST['save-school'])) {
     createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $logo);
   } else {
     updateSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $referenceSchoolId);
+    updateStationID($schoolId, $referenceSchoolId);
+    updateTransactionLogFrom($alias, $referenceAlias);
+    updateTransactionLogTo($alias, $referenceAlias);
+    updateTransactionFrom($schoolId, $alias, $referenceSchoolId, $referenceAlias);
     $status = 'updated';
     $logMessage = 'Updated school';
   }
