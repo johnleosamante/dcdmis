@@ -1,6 +1,6 @@
 <?php
 // modules/error/error.php
-$isAccessible = !isWeekend() && isOfficialTime() && !$isHoliday;
+$isAccessible = !isWeekend() && isOfficialTime() && !hasHoliday();
 ?>
 
 <div class="text-center py-0">
