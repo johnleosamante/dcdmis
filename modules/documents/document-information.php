@@ -142,7 +142,7 @@ messageAlert($showAlert, $message, $success);
           $icon = 'flag';
         }
 
-        if ($logCount > 1 && !$hasDestination) {
+        if ($logCount >= 1  && !$hasDestination) {
           $icon = 'check';
         }
 
