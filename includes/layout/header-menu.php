@@ -80,7 +80,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
         linkDropdownItem(customUri($activeApp, 'Settings'), 'Settings', 'fa-cogs', 'Go to settings');
         ?>
         <div class="dropdown-divider"></div>
-        <?php modalDropdownItem(uri() . '/logout/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout', 'text-danger'); ?>
+        <?php modalDropdownItem(uri() . '/logout/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout'); ?>
       </div>
     </li>
   </ul>
@@ -99,6 +99,6 @@ $displayPhoto = uri() . '/' . $user['picture'];
   }
 
   if ($hasPortal && !$isSchoolPortal) : ?>
-    <div id="station-name" class="h2 mt-4 m-0"><?php echo stationName($station); ?></div>
+    <div class="h2 mt-4 m-0"><?php echo stationName($station); ?></div>
   <?php endif; ?>
 </div>
