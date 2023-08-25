@@ -115,4 +115,16 @@ function updateDocumentLogsDone($id) {
 function updateDocumentStatus($id, $purpose, $status='Unread', $details='') {
   nonQuery("UPDATE tbl_transactions SET Trans_Stats='{$purpose}', `Status`='{$status}', details='{$details}' WHERE TransCode='{$id}' LIMIT 1;");
 }
+
+function updateTransactionLogFrom($newAlias, $oldAlias) {
+  nonQuery("UPDATE tbl_transactions_log SET `From_office`='{$newAlias}' WHERE `From_office`='{$oldAlias}';");
+}
+
+function updateTransactionLogTo($newAlias, $oldAlias) {
+  nonQuery("UPDATE tbl_transactions_log SET `Forwarded_To`='{$newAlias}' WHERE `Forwarded_To`='{$oldAlias}';");
+}
+
+function updateTransactionFrom($newStationId, $newAlias, $oldStationId, $oldAlias) {
+  nonQuery("UPDATE tbl_transactions SET `Trans_from`='{$newAlias}', `SchoolID`='{$newStationId}' WHERE `Trans_from`='{$oldAlias}' AND `SchoolID`='{$oldStationId}';");
+}
 ?>
