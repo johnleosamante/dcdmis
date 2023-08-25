@@ -40,6 +40,10 @@ function uri() {
   return $protocol . $_SERVER['HTTP_HOST'];
 }
 
+function isPublicDomain() {
+  return ($_SERVER['HTTP_HOST'] === DOMAIN || $_SERVER['HTTP_HOST'] === PUBLIC_IP);
+}
+
 function isWeekend() {
   $day = date('w');
 
@@ -68,6 +72,7 @@ function restrictPublicAccess($isHoliday) {
   if (isWeekend() || !isOfficialTime() || $isHoliday) {
     redirect(uri() . '/error');
   }
+  return false;
 }
 
 function customUri($page, $view, $id=null) {
