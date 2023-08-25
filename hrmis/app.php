@@ -1,5 +1,11 @@
 <?php
 // hrmis/app.php
+if (isPublicDomain()) {
+  redirect(uri() . '/error?e=403');
+}
+
+restrictPublicAccess(hasHoliday());
+
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrmis';
 $page = $appTitle = 'Human Resource Management Information System';
 

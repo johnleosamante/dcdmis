@@ -1,5 +1,11 @@
 <?php
 // pis/app.php
+if (isPublicDomain()) {
+  redirect(uri() . '/error?e=403');
+}
+
+restrictPublicAccess(hasHoliday());
+
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'pis';
 $page = $appTitle = 'Personnel Information System';
 $isPis = true;

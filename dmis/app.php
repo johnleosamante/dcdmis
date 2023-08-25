@@ -1,5 +1,11 @@
 <?php
 // dmis/app.php
+if (isPublicDomain()) {
+  redirect(uri() . '/error?e=403');
+}
+
+restrictPublicAccess(hasHoliday());
+
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
 $page = $appTitle = 'Division Management Information System';
 

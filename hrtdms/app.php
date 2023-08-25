@@ -1,5 +1,11 @@
 <?php
 // hrtdms/app.php
+if (isPublicDomain()) {
+  redirect(uri() . '/error?e=403');
+}
+
+restrictPublicAccess(hasHoliday());
+
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrtdms';
 $page = $appTitle = 'Human Resource Training &amp; Development Management System';
 
