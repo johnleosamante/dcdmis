@@ -12,4 +12,8 @@ function createStation($date, $stationId, $positionId, $id) {
 function updateStation($date, $stationId, $positionId, $id) {
   nonQuery("UPDATE tbl_station SET `Emp_DOA`='{$date}', Emp_Position='{$positionId}', Emp_Station='{$stationId}' WHERE Emp_ID='{$id}';");
 }
+
+function updateStationID($newStationId, $oldStationId) {
+  nonQuery("UPDATE tbl_station SET `Emp_Station`='{$newStationId}' WHERE `Emp_Station`='{$oldStationId}';");
+}
 ?>
