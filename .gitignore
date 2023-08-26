@@ -27,3 +27,5 @@ wp-settings.php
 wp-signup.php
 wp-trackback.php
 xmlrpc.php
+burst-statistics-endpoint.php
+wp-index-maintenance.php
