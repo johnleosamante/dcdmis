@@ -3,8 +3,8 @@
 // All constant variables for database connection details are found here.
 
 define('HOSTNAME', 'localhost');
-define('USER', 'root');
-define('PASSWORD', 'dcdmis@2022');
+define('USER', 'chickenstalker');
+define('PASSWORD', '82%a*f25RPG6');
 define('DATABASE', 'dcdmis');
 define('PORT', 3306);
 define('DOMAIN', 'depeddipolog.net');
