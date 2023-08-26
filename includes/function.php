@@ -70,7 +70,7 @@ function isOfficialTime() {
 
 function restrictPublicAccess($isHoliday) {
   if (isWeekend() || !isOfficialTime() || $isHoliday) {
-    redirect(uri() . '/error');
+    redirect(uri() . '/oops');
   }
 }
 
@@ -153,6 +153,12 @@ function getAge($year, $month, $day) {
   $now = new DateTime();
   $bdate = new DateTime("{$year}-{$month}-{$day}");
   return $now->diff($bdate)->y;
+}
+
+if (!function_exists('str_contains')) {
+  function str_contains($haystack, $needle) {
+    return $needle !== '' && mb_strpos($haystack, $needle) !== false;
+  }
 }
 
 require_once('initialization.php');
