@@ -1,7 +1,7 @@
 <?php
 // hrtdms/app.php
 if (isPublicDomain()) {
-  redirect(uri() . '/error?e=403');
+  redirect(uri() . '/oops?e=403');
 }
 
 restrictPublicAccess(hasHoliday());
