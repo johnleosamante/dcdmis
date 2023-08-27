@@ -6,6 +6,8 @@ $school = $schoolName = $alias = $address = $district = $head = $telephone = $em
 $personnel = 0;
 $isHrmis = $activeApp === 'hrmis';
 
+messageAlert($showAlert, $message, $success);
+
 if (numRows($schools) > 0) {
   $school = fetchAssoc($schools);
   $schoolName = $school['name'];
@@ -26,8 +28,6 @@ if (numRows($schools) > 0) {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
-
-messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
