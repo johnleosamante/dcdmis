@@ -38,11 +38,12 @@ if (isset($_POST['save-school'])) {
   if (numRows(schoolById($referenceSchoolId)) === 0) {
     createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $logo);
   } else {
-    updateSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $referenceSchoolId);
+    updateUsersStation($schoolId, $referenceSchoolId);
     updateStationID($schoolId, $referenceSchoolId);
     updateTransactionLogFrom($alias, $referenceAlias);
     updateTransactionLogTo($alias, $referenceAlias);
     updateTransactionFrom($schoolId, $alias, $referenceSchoolId, $referenceAlias);
+    updateSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $referenceSchoolId);
     $status = 'updated';
     $logMessage = 'Updated school';
   }
