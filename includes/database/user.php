@@ -22,7 +22,7 @@ function isStationUser($id, $station) {
 }
 
 function createUserRole($id, $email, $role, $station, $portal=null) {
-  return nonQuery("INSERT INTO tbl_user (`usercode`, `username`, `position`, `Station`, `Link`) VALUES ('$id', '$email', '$role', '$station', '$portal');");
+  nonQuery("INSERT INTO tbl_user (`usercode`, `username`, `position`, `Station`, `Link`) VALUES ('$id', '$email', '$role', '$station', '$portal');");
 }
 
 function updateUserRole($id, $station, $portal) {
@@ -30,14 +30,18 @@ function updateUserRole($id, $station, $portal) {
 }
 
 function deleteUserRole($id, $station) {
-  return nonQuery("DELETE FROM tbl_user WHERE usercode='$id' AND Station='$station' LIMIT 1;");
+  nonQuery("DELETE FROM tbl_user WHERE usercode='$id' AND Station='$station' LIMIT 1;");
 }
 
 function deleteUserRoles($id) {
-  return nonQuery("DELETE FROM tbl_user WHERE usercode='$id';");
+  nonQuery("DELETE FROM tbl_user WHERE usercode='$id';");
 }
 
 function sectionUsers($id) {
   return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS `month`, tbl_employee.Emp_Day AS `day`, tbl_employee.Emp_Year AS `year`, tbl_employee.EmpNo AS agency_id, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Email AS email, tbl_employee.Emp_Cell_No AS mobile FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID INNER JOIN tbl_user ON tbl_employee.Emp_ID=tbl_user.usercode WHERE tbl_employee.Emp_Status='Active' AND tbl_user.Station='{$id}' ORDER BY tbl_employee.Emp_LName ASC;");
+}
+
+function updateUsersStation($newStation, $oldStation) {
+  nonQuery("UPDATE tbl_user SET Station='$newStation' WHERE Station='$oldStation';");
 }
 ?>
