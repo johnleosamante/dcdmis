@@ -2,6 +2,7 @@
 // modules/schools/page.php
 messageAlert($showAlert, $message, $success);
 $isHrmis = $activeApp === 'hrmis';
+$isDmis = $activeApp === 'dmis';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -15,7 +16,7 @@ $isHrmis = $activeApp === 'hrmis';
   </div>
 
   <div class="card-body">
-    <?php if ($isHrmis) { ?>
+    <?php if ($isHrmis || $isDmis) { ?>
       <div class="d-sm-flex align-items-center flex-row-reverse my-2">
         <div class="d-inline-block">
           <?php linkButtonSplit(customUri('export', 'schools'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
