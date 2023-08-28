@@ -10,14 +10,14 @@ function membership($id, $no) {
 }
 
 function createMembership($membership, $id) {
-  return nonQuery("INSERT INTO tbl_membership (`Organization`, `Emp_ID`) VALUES ('{$membership}', '{$id}');");
+  nonQuery("INSERT INTO tbl_membership (`Organization`, `Emp_ID`) VALUES ('{$membership}', '{$id}');");
 }
 
 function updateMembership($membership, $id, $no) {
-  return nonQuery("UPDATE tbl_membership SET Organization='{$membership}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+  nonQuery("UPDATE tbl_membership SET Organization='{$membership}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
 function deleteMembership($id, $no) {
-  return nonQuery("DELETE FROM tbl_membership WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+  nonQuery("DELETE FROM tbl_membership WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 ?>

@@ -10,14 +10,14 @@ function reference($id, $no) {
 }
 
 function createReference($name, $address, $telephone, $id) {
-  return nonQuery("INSERT INTO reference (`Name`, `Address`, Tel_No, Emp_ID) VALUES ('{$name}', '{$address}', '{$telephone}', '{$id}');");
+  nonQuery("INSERT INTO reference (`Name`, `Address`, Tel_No, Emp_ID) VALUES ('{$name}', '{$address}', '{$telephone}', '{$id}');");
 }
 
 function updateReference($name, $address, $telephone, $id, $no) {
-  return nonQuery("UPDATE reference SET `Name`='{$name}', `Address`='{$address}', Tel_No='{$telephone}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+  nonQuery("UPDATE reference SET `Name`='{$name}', `Address`='{$address}', Tel_No='{$telephone}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
 function deleteReference($id, $no) {
-  return nonQuery("DELETE FROM reference WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+  nonQuery("DELETE FROM reference WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 ?>

@@ -10,14 +10,14 @@ function recognition($id, $no) {
 }
 
 function createRecognition($recognition, $id) {
-  return nonQuery("INSERT INTO tbl_recognition (`Recognition`, Emp_ID) VALUES ('{$recognition}', '{$id}');");
+  nonQuery("INSERT INTO tbl_recognition (`Recognition`, Emp_ID) VALUES ('{$recognition}', '{$id}');");
 }
 
 function updateRecognition($recognition, $id, $no) {
-  return nonQuery("UPDATE tbl_recognition SET Recognition='{$recognition}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+  nonQuery("UPDATE tbl_recognition SET Recognition='{$recognition}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
 function deleteRecognition($id, $no) {
-  return nonQuery("DELETE FROM tbl_recognition WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+  nonQuery("DELETE FROM tbl_recognition WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 ?>

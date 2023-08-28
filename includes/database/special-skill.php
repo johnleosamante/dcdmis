@@ -10,14 +10,14 @@ function specialSkill($id, $no) {
 }
 
 function createSpecialSkill($skill, $id) {
-  return nonQuery("INSERT INTO tbl_special_skills (`Special_Skills`, Emp_ID) VALUES ('{$skill}', '{$id}');");
+  nonQuery("INSERT INTO tbl_special_skills (`Special_Skills`, Emp_ID) VALUES ('{$skill}', '{$id}');");
 }
 
 function updateSpecialSkill($skill, $id, $no) {
-  return nonQuery("UPDATE tbl_special_skills SET Special_Skills='{$skill}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+  nonQuery("UPDATE tbl_special_skills SET Special_Skills='{$skill}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
 function deleteSpecialSkill($id, $no) {
-  return nonQuery("DELETE FROM tbl_special_skills WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+  nonQuery("DELETE FROM tbl_special_skills WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 ?>

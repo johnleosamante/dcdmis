@@ -36,11 +36,11 @@ function countTrainings($year) {
 }
 
 function createTraining($no, $title, $from, $to, $type, $sponsor, $venue) {
-  return nonQuery("INSERT INTO tbl_seminar (`Training_Code`, `Title_of_training`, `covered_from`, `covered_to`, `Category`, `conducted_by`, `TVenue`) VALUES ('{$no}', '{$title}', '{$from}', '{$to}', '{$type}', '{$sponsor}', '{$venue}');");
+  nonQuery("INSERT INTO tbl_seminar (`Training_Code`, `Title_of_training`, `covered_from`, `covered_to`, `Category`, `conducted_by`, `TVenue`) VALUES ('{$no}', '{$title}', '{$from}', '{$to}', '{$type}', '{$sponsor}', '{$venue}');");
 }
 
 function updateTraining($no, $title, $from, $to, $type, $sponsor, $venue) {
-  return nonQuery("UPDATE tbl_seminar SET Title_of_training='{$title}', covered_from='{$from}', covered_to='{$to}', Category='{$type}', conducted_by='{$sponsor}', TVenue='{$venue}' WHERE Training_Code='{$no}' LIMIT 1;");
+  nonQuery("UPDATE tbl_seminar SET Title_of_training='{$title}', covered_from='{$from}', covered_to='{$to}', Category='{$type}', conducted_by='{$sponsor}', TVenue='{$venue}' WHERE Training_Code='{$no}' LIMIT 1;");
 }
 
 function scheduledTrainings() {
