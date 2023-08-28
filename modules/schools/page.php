@@ -64,7 +64,7 @@ $isHrmis = $activeApp === 'hrmis';
             <tr class="text-uppercase">
               <td class="align-middle">
                 <div class="image-container">
-                  <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                  <span class="d-flex justify-content-center align-middle school-logo overflow-hidden">
                     <img height="100%" src="<?php echo $logo; ?>" alt="<?php echo $schoolName; ?>">
                   </span>
                 </div>

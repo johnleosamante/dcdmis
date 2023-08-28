@@ -30,6 +30,12 @@ input::-ms-clear, input::-ms-reveal {
   background-color: #fff;
 }
 
+.school-logo {
+  width: 4rem;
+  height: 4rem;
+  display: inline-block;
+}
+
 .photo-2x {
   width: 8rem;
   height: 8rem;
