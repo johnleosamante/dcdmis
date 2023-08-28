@@ -1,5 +1,8 @@
-uploads/
+backup/
+sql/
 temp/
+uploads/
+validate/
 *.png-errors.txt
 .well-known/
 cgi-bin/
