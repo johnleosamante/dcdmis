@@ -4,6 +4,8 @@ $documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $documents = documentFrom($documentId, $station);
 $documentType = null;
 
+messageAlert($showAlert, $message, $success);
+
 if (numRows($documents) > 0) {
   $document = fetchAssoc($documents);
   $documentId = $document['id'];
@@ -29,8 +31,6 @@ if (numRows($documents) > 0) {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
-
-messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">

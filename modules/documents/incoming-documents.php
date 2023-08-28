@@ -1,5 +1,6 @@
 <?php
 // modules/documents/incoming-documents.php
+messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
