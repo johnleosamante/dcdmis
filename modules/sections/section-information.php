@@ -5,6 +5,8 @@ $sections = section($sectionId);
 $section = $sectionName = $head = null;
 $isHrmis = $activeApp === 'hrmis';
 
+messageAlert($showAlert, $message, $success);
+
 if (numRows($sections) > 0) {
   $section = fetchAssoc($sections);
   $sectionName = $section['name'];
@@ -16,8 +18,6 @@ if (numRows($sections) > 0) {
 
 $query = sectionUsers($sectionId);
 $personnel = numRows($query);
-
-messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">

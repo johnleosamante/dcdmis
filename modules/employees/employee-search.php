@@ -3,12 +3,12 @@
 $search = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $employees = employeeSearch($search);
 
+messageAlert($showAlert, $message, $success);
+
 if (numRows($employees) === 0) {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
-
-messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">

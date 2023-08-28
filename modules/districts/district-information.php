@@ -4,6 +4,8 @@ $districtId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $districts = district($districtId);
 $district = $districtName = $psds = null;
 
+messageAlert($showAlert, $message, $success);
+
 if (numRows($districts) > 0) {
   $district = fetchAssoc($districts);
   $districtName = $district['name'];
@@ -12,8 +14,6 @@ if (numRows($districts) > 0) {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
-
-messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
