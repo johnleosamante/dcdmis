@@ -38,6 +38,8 @@ messageAlert($showAlert, $message, $success);
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 
+                    modalDropdownItem(uri() . '/modules/documents/save-document-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Document', true);
+
                     if ($row['station'] === $station) {
                       linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
                     }
