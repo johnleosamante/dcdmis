@@ -37,8 +37,13 @@ messageAlert($showAlert, $message, $success);
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 
+                    modalDropdownItem(uri() . '/documents/forward-document/dialog.php?id=' . cipher($row['id']), 'Forward', 'fa-share', 'Forward Document', true);
+
+                    modalDropdownItem(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($row['id']), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', true);
+
                     if ($row['station'] === $station) {
                       linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
+                      modalDropdownItem(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($row['id']), 'Cancel', 'fa-trash-alt', 'Cancel Document', true);
                     }
                     ?>
                   </div>
