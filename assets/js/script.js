@@ -12,7 +12,7 @@ let dtProps = {
   "pagingType": "simple",
   "lengthMenu": [[25, 50, 75, 100, -1], [25, 50, 75, 100, "All"]],
   "paging": true,
-  "ordering": false,
+  "order": [],
   "autoWidth": false, 
   "info": true,
 };
