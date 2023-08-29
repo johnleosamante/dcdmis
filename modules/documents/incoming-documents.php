@@ -40,6 +40,8 @@ messageAlert($showAlert, $message, $success);
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
+                    
+                    modalDropdownItem(uri() . '/modules/documents/receive-document-dialog.php?id=' . cipher($row['id']), 'Receive', 'fa-hand-holding-medical', 'Receive Document', true);
 
                     if ($row['station'] === $station) {
                       linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
