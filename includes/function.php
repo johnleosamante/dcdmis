@@ -62,8 +62,8 @@ function isWeekend() {
 }
 
 function isOfficialTime() {
-  $startTime = '07:00:00';
-  $endTime = '18:00:00';
+  $startTime = '06:30:00';
+  $endTime = '18:30:00';
 
   return (time() >= strtotime($startTime) && time() <= strtotime($endTime));
 }
