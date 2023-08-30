@@ -46,7 +46,7 @@ if (isset($_POST['save-training'])) {
   if (affectedRows()) {
     $showAlert = true;
     $success = true;
-    $message = 'Training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details" target="_blank">' . strtoupper($trainingId) . '</a>] has been ' . $status . ' successfully.';
+    $message = 'Training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>] has been ' . $status . ' successfully.';
     createSystemLog($stationId, $userId, $logMessage, $trainingId, clientIp());
   }
 }

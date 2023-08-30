@@ -49,7 +49,7 @@ if (isset($_POST['save-school'])) {
   }
 
   if (affectedRows()) {
-    $message = 'School [<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information" target="_blank">' . $schoolName . '</a>] has been ' . $status . ' successfully.';
+    $message = 'School [<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . $schoolName . '</a>] has been ' . $status . ' successfully.';
     $showAlert = true;
     createSystemLog($stationId, $userId, $logMessage, $schoolId, clientIp());
   }

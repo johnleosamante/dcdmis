@@ -52,7 +52,7 @@ if (isset($_POST['add-employee'])) {
   if (numRows($names) > 0) {
     $name = fetchAssoc($names);
     $success = false;
-    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $name['id']) . '" title="View ' . $employee . ' employee information" target="_blank">' . strtoupper($employee) . '</a>] already exist!  Operation has been cancelled.';
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $name['id']) . '" title="View ' . $employee . ' employee information">' . strtoupper($employee) . '</a>] already exist!  Operation has been cancelled.';
     return;
   }
 
@@ -66,7 +66,7 @@ if (isset($_POST['add-employee'])) {
   createAccount($email, hashPassword(generateStrongRandomPassword()));
 
   if (affectedRows()) {
-    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information" target="_blank">' . strtoupper($employee) . '</a>] was saved successfully.';
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information">' . strtoupper($employee) . '</a>] was saved successfully.';
     createSystemLog($stationId, $userId, 'Registered employee', $employeeId, clientIp());
   }
 }
