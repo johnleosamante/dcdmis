@@ -204,11 +204,11 @@ if (isset($_POST['save-education'])) {
   $logMessage = '';
 
   if (empty($educationId)) {
-    createEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId);
+    // createEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId);
     $logMessage = 'Added employee education';
     $message = 'Educational Background has been added successfully.';
   } else {
-    updateEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId, $educationId);
+    // updateEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId, $educationId);
     $logMessage = 'Updated employee education';
     $message = 'Educational Background has been updated successfully.';
   }
@@ -216,7 +216,7 @@ if (isset($_POST['save-education'])) {
   if (affectedRows()) {
     $success = true;
     $showAlert = true;
-    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
+    // createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'educational-background';
@@ -302,11 +302,11 @@ if (isset($_POST['save-experience'])) {
   $logMessage = '';
 
   if (empty($experienceId)) {
-    createExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId);
+    // createExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId);
     $logMessage = 'Added employee experience';
     $message = 'Work Experience has been added successfully.';
   } else {
-    updateExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId, $experienceId);
+    // updateExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId, $experienceId);
     $logMessage = 'Updated employee experience';
     $message = 'Work Experience has been updated successfully.';
   }
@@ -314,7 +314,7 @@ if (isset($_POST['save-experience'])) {
   if (affectedRows()) {
     $success = true;
     $showAlert = true;
-    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
+    // createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
@@ -349,11 +349,11 @@ if (isset($_POST['save-voluntary-work'])) {
   $logMessage = '';
 
   if (empty($voluntaryId)) {
-    createVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId);
+    // createVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId);
     $logMessage = 'Added employee voluntary work';
     $message = 'Voluntary Work has been added successfully.';
   } else {
-    updateVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId, $voluntaryId);
+    // updateVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId, $voluntaryId);
     $logMessage = 'Updated employee voluntary work';
     $message = 'Voluntary Work has been updated successfully.';
   }
@@ -361,7 +361,7 @@ if (isset($_POST['save-voluntary-work'])) {
   if (affectedRows()) {
     $success = true;
     $showAlert = true;
-    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
+    // createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
   }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
