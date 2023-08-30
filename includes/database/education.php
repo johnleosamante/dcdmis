@@ -10,7 +10,7 @@ function educationalBackground($id, $no) {
 }
 
 function createEducation($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $id) {
-  nonQuery("INSERT INTO educational_background (`Level`, `Name_of_School`, `Course`, `From`, `To`, `ispresent`, Highest_Level, Year_Graduated, Honor_Recieved, Emp_ID) VaLUES ('{$level}', '{$school}', '{$course}', '{$from}', '{$to}', '{$ispresent}', '{$highest}', '{$year}', '{$scholarship}', '{$id}');");
+  nonQuery("INSERT INTO educational_background (`Level`, `Name_of_School`, `Course`, `From`, `To`, `ispresent`, Highest_Level, Year_Graduated, Honor_Recieved, Emp_ID) VALUES ('{$level}', '{$school}', '{$course}', '{$from}', '{$to}', '{$ispresent}', '{$highest}', '{$year}', '{$scholarship}', '{$id}');");
 }
 
 function updateEducation($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $id, $no) {
