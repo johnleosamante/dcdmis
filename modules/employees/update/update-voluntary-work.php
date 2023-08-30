@@ -22,7 +22,8 @@ if (isset($voluntaryId)) {
     $voluntaryId = $voluntaryWork['no'];
     $organization = $voluntaryWork['organization'];
     $from = toDate($voluntaryWork['from'], 'Y-m-d');
-    $isPresent = $voluntaryWork['ispresent'];
+    $isPresent = $voluntaryWork['ispresent'] ? '1' : 
+    '0';
     $to = $isPresent ? date('Y-m-d') : toDate($voluntaryWork['to'], 'Y-m-d');
     $hours = $voluntaryWork['hours'];
     $position = $voluntaryWork['position'];
@@ -56,7 +57,7 @@ if (isset($voluntaryId)) {
                   <label for="to" class="mb-0">Dates To: <?php showAsterisk(); ?></label>
                 </div>
                 <div class="col-6" title="Check if present voluntary work">
-                  <input class="form-check-input" id="is-present" type="checkbox" name="is-present" <?php echo setItemChecked($isPresent); ?>>
+                  <input class="form-check-input" id="is-present" type="checkbox" name="is-present" value="1" <?php echo setItemChecked($isPresent); ?>>
                   <label class="form-check-label" for="is-present">Present</label>
                 </div>
               </div>

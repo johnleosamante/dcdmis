@@ -197,7 +197,7 @@ if (isset($_POST['save-education'])) {
   $course = sanitize($_POST['course']);
   $from = sanitize($_POST['from']);
   $to = sanitize($_POST['to']);
-  $isPresent = isset($_POST['is-present']);
+  $isPresent = isset($_POST['is-present']) ? '1' : '0';
   $highest = sanitize($_POST['highest']);
   $year = $isPresent ? null : sanitize($_POST['year']);
   $scholarship = sanitize($_POST['scholarship']);
@@ -247,7 +247,7 @@ if (isset($_POST['save-eligibility'])) {
   $examDate = sanitize($_POST['exam-date']);
   $examPlace = sanitize($_POST['exam-place']);
   $license = sanitize($_POST['license']);
-  $isApplicable = isset($_POST['is-applicable']);
+  $isApplicable = isset($_POST['is-applicable']) ? '1' : '0';
   $validity = sanitize($_POST['validity']);
   $logMessage = '';
 
@@ -291,7 +291,7 @@ if (isset($_POST['save-experience'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $experienceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $from = sanitize($_POST['from']);
-  $isPresent = isset($_POST['is-present']);
+  $isPresent = isset($_POST['is-present']) ? '1' : '0';
   $to = $isPresent ? date('m/d/Y') : sanitize($_POST['to']);
   $position = sanitize($_POST['position']);
   $organization = sanitize($_POST['organization']);
@@ -342,7 +342,7 @@ if (isset($_POST['save-voluntary-work'])) {
   $voluntaryId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $organization = sanitize($_POST['organization']);
   $from = sanitize($_POST['from']);
-  $isPresent = isset($_POST['is-present']);
+  $isPresent = isset($_POST['is-present']) ? '1' : '0';
   $to = $isPresent ? date('m/d/Y') : sanitize($_POST['to']);
   $hours = isset($_POST['hours']) ? $_POST['hours'] : 0;
   $position = sanitize($_POST['position']);
