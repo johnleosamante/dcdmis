@@ -23,7 +23,7 @@ $personnel = numRows($query);
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
     <?php if ($activeApp === 'dmis') {
-      contentTitleWithModal('Section Information: ' . strtoupper($sectionName), uri() . '/modules/districts/save-section-dialog.php?id=' . cipher($sectionId), 'Edit', 'fa-edit');
+      contentTitleWithModal('Section Information: ' . strtoupper($sectionName), uri() . '/modules/sections/save-section-dialog.php?id=' . cipher($sectionId), 'Edit', 'fa-edit');
     } else {
       contentTitle('Section Information: ' . strtoupper($sectionName));
     } ?>
