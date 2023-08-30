@@ -55,6 +55,30 @@ if (isset($_POST['save-school'])) {
   }
 }
 
+if (isset($_POST['save-section'])) {
+  $referenceSectionId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $alias = sanitize($_POST['alias']);
+  $section = sanitize($_POST['section']);
+  $division = sanitize($_POST['division']);
+  $head = sanitize($_POST['head']);
+  $status = 'saved';
+  $logMessage = 'Added section';
+
+  if (numRows(section($alias)) === 0) {
+    createSection($alias, $head, $section, $division);
+  } else {
+    updateSection($alias, $head, $section, $division, $referenceSectionId);
+    $status = 'updated';
+    $logMessage = 'Updated section';
+  }
+
+  if (affectedRows()) {
+    $message = 'Section [<a href="' . customUri('dmis', 'Section Information', $alias) . '" title="View ' . $section . ' information">' . $section . '</a>] has been ' . $status . ' successfully.';
+    $showAlert = true;
+    createSystemLog($stationId, $userId, $logMessage, $alias, clientIp());
+  }
+}
+
 // User management
 if (isset($_POST['edit-user'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
