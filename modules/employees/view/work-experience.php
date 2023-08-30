@@ -42,7 +42,7 @@
                 <td class="align-middle"><?php echo $experience['position']; ?></td>
                 <td class="align-middle"><?php echo $experience['organization']; ?></td>
                 <td class="align-middle"><?php echo toCurrency($experience['salary']); ?></td>
-                <td class="align-middle"><?php echo $experience['sg']; ?></td>
+                <td class="align-middle"><?php echo toHandleNull($experience['sg'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo $experience['status']; ?></td>
                 <td class="align-middle"><?php echo $experience['isgovernment']; ?></td>
                 <?php if ($editMode) : ?>
