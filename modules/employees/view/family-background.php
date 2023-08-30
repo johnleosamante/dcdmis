@@ -130,7 +130,7 @@ if (numRows($familyMembers) > 0) {
           </div>
         </div>
 
-        <div>Mother's Name</div>
+        <div>Mother's Maiden Name</div>
 
         <hr class="mt-2">
 
