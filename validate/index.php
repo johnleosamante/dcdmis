@@ -292,6 +292,29 @@ function addUserPrivilege($id, $email, $station) {
   echo '(' . affectedRows() . ') Completed...<br><br>';
 }
 
+require_once(root() . '/includes/database/document.php');
+require_once(root() . '/includes/database/employee.php');
+require_once(root() . '/includes/database/utility.php');
+
+function addUserToTransaction() {
+  $logs = query("SELECT TransCode AS `id`, Date_time AS `datetime` FROM tbl_transactions ORDER BY TransCode, Date_time;");
+  $no = 0;
+
+  while ($log = fetchAssoc($logs)) {
+    $user = fetchAssoc(documentOrigin($log['id']))['user'];
+    // nonQuery("UPDATE tbl_transactions SET `SchoolID`='$user' WHERE `TransCode`='" . $log['id'] . "' LIMIT 1;");
+    // if (affectedRows()) {
+      echo ++$no . ' | Code: ' . $log['id'] . ' | Created by: ' . userName($user) . ' (' . $user . ') | ' . $log['datetime'] . ' <br>';
+    // } else {
+    //   echo ++$no . ' | Code: ' . $log['id'] . ' | Created by: ' . userName($user) . ' not set.<br>';
+    // }
+  }
+}
+
+function setHeadToTransaction($schoolId, $headId) {
+  echo $schoolId . ' | ' . $headId;
+}
+
 // alterCivilService();
 // alterEducationalBackground();
 // alterSystemLogs();
@@ -324,4 +347,52 @@ function addUserPrivilege($id, $email, $station) {
 // addUserPrivilege('221024040000', 'johnleo.samante@deped.gov.ph', 'HRMIS');
 // addUserPrivilege('221024040000', 'johnleo.samante@deped.gov.ph', 'DMIS');
 // addUserPrivilege('221024040000', 'johnleo.samante@deped.gov.ph', 'HRTDMS');
+
+addUserToTransaction();
+
+setHeadToTransaction('125962-', '221111570000');
+setHeadToTransaction('125963-', '221111160000');
+setHeadToTransaction('125965-', '221111080000');
+// setHeadToTransaction('125966-', ''); // LugdunganES
+setHeadToTransaction('125967-', '221111090000');
+setHeadToTransaction('125968-', '221111350000');
+setHeadToTransaction('125969-', '221111540000');
+// setHeadToTransaction('125970-', ''); // TurnoES
+setHeadToTransaction('125972-', '221111380000');
+setHeadToTransaction('125973-', '221111170000');
+setHeadToTransaction('125974-', '221111230000');
+setHeadToTransaction('125977-', '221111520000');
+setHeadToTransaction('125979-', '221111310000');
+setHeadToTransaction('125980-', '221111020000');
+setHeadToTransaction('125982-', '221111000000');
+setHeadToTransaction('125983-', '221111240000');
+setHeadToTransaction('125984-', '221111060000');
+setHeadToTransaction('125986-', '221111360000');
+// setHeadToTransaction('125987', ''); // DiwanES
+setHeadToTransaction('125989-', '221111030000');
+setHeadToTransaction('125990-', '221111070000');
+setHeadToTransaction('125991-', '221111370000');
+setHeadToTransaction('125992-', '221111470000');
+setHeadToTransaction('125993-', '221111590000');
+setHeadToTransaction('125994-', '221111530000');
+setHeadToTransaction('125996-', '221111420000');
+setHeadToTransaction('125997-', '221111460000');
+setHeadToTransaction('125999-', '221111150000');
+// setHeadToTransaction('197501-', '') // DSPEDC
+setHeadToTransaction('303885-', '221111330000');
+setHeadToTransaction('303886-', '221111140000');
+setHeadToTransaction('303887-', '221111490000');
+setHeadToTransaction('303888-', '221111320000');
+setHeadToTransaction('303890-', '221111040000');
+setHeadToTransaction('303891-', '221111100000');
+setHeadToTransaction('303892-', '221111010000');
+setHeadToTransaction('303893-', '221111280000');
+setHeadToTransaction('3038931-', '221111280000');
+setHeadToTransaction('3038932-', '221111580000');
+setHeadToTransaction('306189-', '221111580000');
+setHeadToTransaction('305638-', '221111190000');
+setHeadToTransaction('500046-', '221111050000');
+setHeadToTransaction('500242-', '20221217141601');
+setHeadToTransaction('501111-', '221111430000');
+// add sections
 ?>
