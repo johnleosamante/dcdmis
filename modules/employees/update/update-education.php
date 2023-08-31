@@ -24,7 +24,7 @@ if (isset($educationId)) {
     $school = $education['school'];
     $course = $education['course'];
     $from = $education['from'];
-    $isPresent = $education['ispresent'];
+    $isPresent = $education['ispresent'] === '1';
     $to = $isPresent ? date('Y') : $education['to'];
     $highestLevel = $education['highest'];
     $yearGraduated = $education['year_graduated'];
@@ -76,7 +76,7 @@ if (isset($educationId)) {
                 </div>
                 <div class="col-5">
                   <div class="form-check" title="Check if present education">
-                    <input class="form-check-input" id="is-present" type="checkbox" name="is-present" <?php echo setItemChecked($isPresent); ?>>
+                    <input class="form-check-input" id="is-present" type="checkbox" name="is-present" value="1" <?php echo setItemChecked($isPresent); ?>>
                     <label class="form-check-label" for="is-present">Present</label>
                   </div><!-- .form-check-->
                 </div>

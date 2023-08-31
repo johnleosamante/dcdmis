@@ -1,5 +1,6 @@
 <?php
 // login/app.php
+restrictPublicAccess(hasHoliday());
 
 function setUserSession($userid) {
   $users = user($userid);

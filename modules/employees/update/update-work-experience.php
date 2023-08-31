@@ -21,7 +21,7 @@ if (isset($experienceId)) {
     $experience = fetchArray($experiences);
     $experienceId = $experience['no'];
     $from = toDate($experience['from'], 'Y-m-d');
-    $isPresent = $experience['ispresent'];
+    $isPresent = $experience['ispresent'] === '1';
     $to = $isPresent ? date('Y-m-d') : toDate($experience['to'], 'Y-m-d');
     $position = $experience['position'];
     $organization = $experience['organization'];
@@ -55,7 +55,7 @@ if (isset($experienceId)) {
                 </div>
                 <div class="col-6">
                   <div class="form-check" title="Check if present work">
-                    <input class="form-check-input" id="is-present" type="checkbox" name="is-present" <?php echo setItemChecked($isPresent); ?>>
+                    <input class="form-check-input" id="is-present" type="checkbox" name="is-present" value="1" <?php echo setItemChecked($isPresent); ?>>
                     <label class="form-check-label" for="is-present">Present</label>
                   </div><!-- .form-check-->
                 </div>

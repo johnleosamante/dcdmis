@@ -25,7 +25,7 @@ if (isset($eligibilityId)) {
     $examDate = toDate($eligibility['date'], 'Y-m-d');
     $examPlace = $eligibility['place'];
     $license = $eligibility['license'];
-    $isApplicable = $eligibility['isapplicable'];
+    $isApplicable = $eligibility['isapplicable'] === 'y';
     $validity = $isApplicable ? toDate($eligibility['validity'], 'Y-m-d') : date('Y-m-d');
   }
 }
@@ -79,7 +79,7 @@ if (isset($eligibilityId)) {
                 </div>
                 <div class="col-6">
                   <div class="form-check" title="Check if validity is applicable">
-                    <input class="form-check-input" id="is-applicable" type="checkbox" name="is-applicable" <?php echo setItemChecked($isApplicable); ?>>
+                    <input class="form-check-input" id="is-applicable" type="checkbox" name="is-applicable" value="1" <?php echo setItemChecked($isApplicable); ?>>
                     <label class="form-check-label" for="is-applicable">Applicable</label>
                   </div><!-- .form-check-->
                 </div>
