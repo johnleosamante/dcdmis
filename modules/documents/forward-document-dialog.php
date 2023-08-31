@@ -7,6 +7,7 @@ require_once(root() . '/includes/database/document.php');
 require_once(root() . '/includes/database/document-purpose.php');
 require_once(root() . '/includes/database/section.php');
 require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/database/functional-division.php');
 require_once(root() . '/includes/layout/components.php');
 
 $documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
@@ -56,9 +57,18 @@ if (numRows($documents) > 0) {
               <select id="destination" name="destination" class="form-control" required>
                 <option value="">Select destination...</option>
                 <?php
-                $sections = sectionsExcept($station);
-                while ($section = fetchArray($sections)) : ?>
-                  <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
+                $divisions = functionalDivisions();
+                while ($division = fetchAssoc($divisions)) : ?>
+                  <optgroup label="<?php echo $division['name']; ?>">
+                    <?php
+                    $sections = sections($division['id']);
+                    while ($section = fetchAssoc($sections)) {
+                      if ($section['id'] !== $station) { ?>
+                        <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
+                    <?php
+                      } 
+                    } ?>
+                  </optgroup>
                 <?php endwhile; ?>
               </select>
             <?php } else {
