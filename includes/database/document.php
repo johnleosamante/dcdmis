@@ -19,7 +19,7 @@ function documentFrom($id, $station) {
 }
 
 function documentOrigin($id) {
-  return query("SELECT tbl_transactions.TransCode AS `id`, tbl_transactions.Title AS `description`, tbl_transactions.Date_time AS `datetime`, tbl_transactions_log.Recieved_by AS `user`, tbl_transactions_log.From_office AS `from` FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' ORDER BY tbl_transactions_log.Date_recieved ASC LIMIT 1;");
+  return query("SELECT tbl_transactions.TransCode AS `id`, tbl_transactions.Title AS `description`, tbl_transactions.Trans_Stats AS `status`, tbl_transactions.Date_time AS `datetime`, tbl_transactions_log.Recieved_by AS `user`, tbl_transactions_log.From_office AS `from` FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' ORDER BY tbl_transactions_log.Date_recieved ASC LIMIT 1;");
 }
 
 function isDocumentFrom($id, $station, $status='New') {
