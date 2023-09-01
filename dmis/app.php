@@ -86,7 +86,7 @@ if (isset($_POST['edit-user'])) {
   $userRole = 'Administrator';
   $isDtsUser = isset($_POST['dts']);
   $dtsStation = isset($_POST['dts-verifier']) ? sanitize($_POST['dts-verifier']) : null;
-  $dtsPortal = numRows(section($dtsStation)) > 0 ? strtoupper($dtsStation . '_portal') : 'sch_portal';
+  $dtsPortal = numRows(section($dtsStation)) > 0 ? strtolower($dtsStation . '_portal') : 'sch_portal';
   $isHrmisUser = isset($_POST['hrmis']);
   $isDmisUser = isset($_POST['dmis']);
   $isHrtdmsUser = isset($_POST['hrtdms']);
