@@ -7,7 +7,7 @@ if (!isset($userId)) {
   redirect(uri() . '/login');
 }
 
-if (!isset($portal)) {
+if (!isset($portal) || empty($portal)) {
   redirect(uri() . '/pis');
 }
 
