@@ -5,8 +5,6 @@ require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/activity.php');
 require_once(root() . '/includes/database/system-log.php');
 
-restrictPublicAccess(hasHoliday());
-
 if (isset($_SESSION[alias() . '_userId'])) {
   createSystemLog($stationId, $userId, 'Logged out', $userId, clientIp());
   session_destroy();
