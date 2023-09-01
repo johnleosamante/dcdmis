@@ -1,6 +1,5 @@
 <?php
 // modules/calendar/page.php
-messageAlert($showAlert, $message, $success);
 ?>
 
 <div id="calendar-panel" class="card">
