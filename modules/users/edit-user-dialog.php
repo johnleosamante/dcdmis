@@ -7,6 +7,7 @@ require_once(root() . '/includes/database/position.php');
 require_once(root() . '/includes/database/section.php');
 require_once(root() . '/includes/database/user.php');
 require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/database/functional-division.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
@@ -81,9 +82,19 @@ if (numRows($employees) > 0) {
             <div class="form-group pl-3 mt-n3">
               <select name="dts-verifier" class="form-control">
                 <option value="">Select section...</option>
-                <?php $sections = sectionsExcept($station);
-                while ($section = fetchArray($sections)) : ?>
-                  <option value="<?php echo $section['id']; ?>" <?php echo setOptionSelected($section['id'], $dtsUserStation); ?>><?php echo $section['name']; ?></option>
+                <?php
+                $divisions = functionalDivisions();
+                while ($division = fetchAssoc($divisions)) : ?>
+                  <optgroup label="<?php echo $division['name']; ?>">
+                    <?php
+                    $sections = sections($division['id']);
+                    while ($section = fetchAssoc($sections)) {
+                      if ($section['id'] !== $station) { ?>
+                        <option value="<?php echo $section['id']; ?>" <?php echo setOptionSelected($section['id'], $dtsUserStation); ?>><?php echo $section['name']; ?></option>
+                    <?php
+                      } 
+                    } ?>
+                  </optgroup>
                 <?php endwhile; ?>
               </select>
             </div>
