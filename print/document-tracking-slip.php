@@ -39,7 +39,7 @@ $pdf->Cell($innerPage / 2, 0, $employeePosition, 0, 0, 'C');
 $sectionHead = $isSchoolPortal ? $school : fetchAssoc(section($document['from']));
 
 if ($document['user'] !== $sectionHead['head']) {
-  $stationHead = strtoupper(userName($sectionHead['head']));
+  $stationHead = userName($sectionHead['head'], true);
   $stationHeadPosition = fetchAssoc(position($sectionHead['head']))['position'];
 
   $pdf->Ln(10);
