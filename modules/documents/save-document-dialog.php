@@ -81,7 +81,7 @@ if (numRows($documents) > 0) {
                       $sections = sections($division['id']);
                       while ($section = fetchAssoc($sections)) {
                         if ($section['id'] !== $station) { ?>
-                          <option value="<?php echo $section['id']; ?>"><?php echo $section['name']; ?></option>
+                          <option value="<?php echo $section['id']; ?>" <?php echo setOptionSelected($section['id'], $destination); ?>><?php echo $section['name']; ?></option>
                       <?php
                         } 
                       } ?>
