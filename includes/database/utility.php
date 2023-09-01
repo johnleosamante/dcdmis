@@ -22,12 +22,13 @@ function stationName($id) {
   return $id;
 }
 
-function userName($id) {
+function userName($id, $uppercase = false) {
   $users = employee($id);
 
   if (numRows($users) > 0) {
     $user = fetchAssoc($users);
-    return toString($user['btitle'], '', ' ') . toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true) . toString($user['atitle'], ', ');
+    $name = $uppercase ? strtoupper(toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true)) : toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true);
+    return toString($user['btitle'], '', ' ') . $name . toString($user['atitle'], ', ');
   }
   
   return $id;
