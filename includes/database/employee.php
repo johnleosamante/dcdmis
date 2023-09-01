@@ -10,7 +10,7 @@ function employee($id) {
 }
 
 function employees() {
-  return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Status AS status FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID ORDER BY tbl_employee.Emp_LName;");
+  return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Status AS status FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID WHERE tbl_employee.Emp_Status <> 'Duplicate' ORDER BY tbl_employee.Emp_LName;");
 }
 function employeeName($lname, $fname, $mname, $ext) {
   return query("SELECT Emp_ID AS id, Emp_LName AS lname, Emp_FName AS fname, Emp_MName AS mname, Emp_Extension AS ext FROM tbl_employee WHERE Emp_LName='$lname' AND Emp_FName='$fname' AND Emp_MName='$mname' AND Emp_Extension='$ext' LIMIT 1;");
