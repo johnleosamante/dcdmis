@@ -89,7 +89,7 @@ if (isset($_POST['remove-participant'])) {
   if (affectedRows()) {
     $showAlert = true;
     $success = true;
-    $message = 'A participant has been removed successfully from training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
+    $message = 'Employee [<a href="#" title="View ' . userName($participantId) . ' employee information">' . userName($participantId) . '</a>] has been successfully removed as participant from training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
     createSystemLog($stationId, $userId, 'Removed training participant', $trainingId, clientIp());
   }
 }
