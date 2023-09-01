@@ -17,6 +17,7 @@ if (numRows($employees) > 0) {
   $employee = fetchAssoc($employees);
   $employeeId = $employee['id'];
   $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
+  $sex = $employee['sex'];
   $positions = fetchAssoc(position($employeeId));
   $doa = $positions['date'];
   $stationId = $positions['station_id'];
@@ -36,9 +37,13 @@ if (numRows($employees) > 0) {
     <form action="" method="POST">
       <div class="modal-body">
         <?php if ($hasEmployee) { ?>
-          <div class="d-flex justify-content-center align-middle employee-photo photo-2x rounded-circle overflow-hidden mx-auto mb-3">
-            <img height="100%" src="<?php echo $picture; ?>" alt="<?php echo $employeeName; ?>">
+          <div class="image-container">
+            <span class="d-flex justify-content-center align-middle employee-photo photo-4x rounded-circle overflow-hidden">
+              <img height="100%" src="<?php echo $picture; ?>" alt="<?php echo $employeeName; ?>">
+            </span>
+            <div class="sex-sign"><?php sex($sex); ?></div>
           </div>
+
           <div class="text-center text-uppercase my-1 h4"><?php echo $employeeName; ?></div>
           <div class="text-center text-uppercase my-1 h5"><?php echo $position; ?></div>
           <div class="text-center text-uppercase my-1 h6"><?php echo $station; ?></div>

@@ -54,7 +54,6 @@ if (numRows($employees) > 0) {
     <form action="" method="POST">
       <div class="modal-body">
         <?php if ($hasUser) { ?>
-
           <div class="image-container">
             <span class="d-flex justify-content-center align-middle employee-photo photo-4x rounded-circle overflow-hidden">
               <img height="100%" src="<?php echo $picture; ?>" alt="<?php echo $employeeName; ?>">
