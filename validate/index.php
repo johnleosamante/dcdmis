@@ -350,7 +350,7 @@ function setHeadToTransaction($stationId, $headId) {
 // addUserPrivilege('221024040000', 'johnleo.samante@deped.gov.ph', 'DMIS');
 // addUserPrivilege('221024040000', 'johnleo.samante@deped.gov.ph', 'HRTDMS');
 
- addUserToTransaction();
+// addUserToTransaction();
 
 // setHeadToTransaction('125962-', '221111570000');
 // setHeadToTransaction('125963-', '221111160000');
