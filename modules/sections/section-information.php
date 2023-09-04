@@ -39,7 +39,13 @@ $personnel = numRows($query);
         <tr>
           <th class="pr-5 align-top" scope="row">Section Head</th>
           <td class="text-uppercase">
-            <div><?php echo userName($head); ?></div>
+            <div>
+              <?php if ($isHrmis) {
+                linkItem(customUri('hrmis', 'Employee Information', $head), userName($head));
+              } else {
+                echo userName($head);
+              } ?>
+            </div>
             <div class="small"><?php echo fetchAssoc(position($head))['position']; ?></div>
           </td>
         </tr>
@@ -85,7 +91,13 @@ $personnel = numRows($query);
                 </div>
               </td>
               <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
-              <td class="align-middle text-left"><?php echo $employeeName; ?></td>
+              <td class="align-middle text-left">
+                <?php if ($isHrmis) {
+                  linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
+                } else {
+                  echo $employeeName;
+                } ?>
+              </td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
               <td class="align-middle"><?php echo getAge($row['year'], $row['month'], $row['day']); ?></td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>

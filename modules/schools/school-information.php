@@ -74,7 +74,13 @@ if (numRows($schools) > 0) {
               <tr>
                 <th class="pr-5 align-top" scoper="row">Head of Office</th>
                 <td class="text-uppercase">
-                  <div><?php echo userName($head); ?></div>
+                  <div>
+                    <?php if ($isHrmis) {
+                      linkItem(customUri('hrmis', 'Employee Information', $head), userName($head));
+                    } else {
+                      echo userName($head);
+                    } ?>
+                  </div>
                   <?php
                   $positions = position($head);
                   echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';

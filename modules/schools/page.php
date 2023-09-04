@@ -77,7 +77,13 @@ $isDmis = $activeApp === 'dmis';
               <td class="align-middle"><?php echo $row['district']; ?></td>
               <td class="align-middle"><?php echo $row['category']; ?></td>
               <td class="align-middle">
-                <div><?php echo userName($row['head']); ?></div>
+                <div>
+                  <?php if ($isHrmis) {
+                    linkItem(customUri('hrmis', 'Employee Information', $row['head']), userName($row['head']));
+                  } else {
+                    echo userName($row['head']);
+                  } ?>
+                </div>
                 <?php
                 $positions = position($row['head']);
                 echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';

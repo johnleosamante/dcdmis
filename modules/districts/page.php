@@ -1,6 +1,7 @@
 <?php
 // modules/districts/page.php
 messageAlert($showAlert, $message, $success);
+$isHrmis = $activeApp === 'hrmis';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -38,7 +39,13 @@ messageAlert($showAlert, $message, $success);
             <tr class="text-uppercase">
               <td class="align-middle text-center"><?php linkItem(customUri($activeApp, 'District Information', $row['id']), $row['name']); ?></td>
               <td class="align-middle">
-                <div><?php echo userName($row['psds']); ?></div>
+                <div>
+                  <?php if ($isHrmis) {
+                    linkItem(customUri('hrmis', 'Employee Information', $row['psds']), userName($row['psds']));
+                  } else {
+                    echo userName($row['psds']);
+                  } ?>
+                </div>
                 <div class="small"><?php echo fetchAssoc(position($row['psds']))['position']; ?></div>
               </td>
               <?php

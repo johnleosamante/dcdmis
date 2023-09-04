@@ -5,6 +5,7 @@ $districts = district($districtId);
 $district = $districtName = $psds = null;
 
 messageAlert($showAlert, $message, $success);
+$isHrmis = $activeApp === 'hrmis';
 
 if (numRows($districts) > 0) {
   $district = fetchAssoc($districts);
@@ -35,7 +36,13 @@ if (numRows($districts) > 0) {
         <tr>
           <th class="pr-5 align-top" scope="row">Supervisor</th>
           <td class="text-uppercase">
-            <div><?php echo userName($psds); ?></div>
+            <div>
+              <?php if ($isHrmis) {
+                linkItem(customUri('hrmis', 'Employee Information', $psds), userName($psds));
+              } else {
+                echo userName($psds);
+              } ?>
+            </div>
             <div class="small"><?php echo fetchAssoc(position($psds))['position']; ?></div>
           </td>
         </tr>
@@ -89,7 +96,13 @@ if (numRows($districts) > 0) {
               </td>
               <td class="align-middle"><?php echo $row['category']; ?></td>
               <td class="align-middle">
-                <div><?php echo userName($row['head']); ?></div>
+                <div>
+                  <?php if ($isHrmis) {
+                    linkItem(customUri('hrmis', 'Employee Information', $row['head']), userName($row['head']));
+                  } else {
+                    echo userName($row['head']);
+                  } ?>
+                </div>
                 <?php
                 $positions = position($row['head']);
                 echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';

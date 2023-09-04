@@ -4,6 +4,7 @@ $search = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $employees = employeeSearch($search);
 
 messageAlert($showAlert, $message, $success);
+$isHrmis = $activeApp === 'hrmis';
 
 if (numRows($employees) === 0) {
   require_once(root() . '/modules/error/no-results-found.php');
@@ -48,7 +49,13 @@ if (numRows($employees) === 0) {
                 </div>
               </td>
               <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
-              <td class="align-middle text-left"><?php echo $employeeName; ?></td>
+              <td class="align-middle text-left">
+                <?php if ($isHrmis) {
+                  linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
+                } else {
+                  echo $employeeName;
+                } ?>
+              </td>
               <td class="align-middle">
                 <?php
                 $status = strtolower($row['status']);

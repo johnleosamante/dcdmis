@@ -1,6 +1,8 @@
 <?php
 // modules/sections/page.php
 messageAlert($showAlert, $message, $success);
+$isHrmis = $activeApp === 'hrmis';
+$isDmis = $activeApp === 'dmis';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -39,7 +41,13 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle text-center"><?php linkItem(customUri($activeApp, 'Section Information', $row['id']), $row['name']); ?></td>
               <td class="align-middle text-center"><?php echo $row['division']; ?></td>
               <td class="align-middle">
-                <div><?php echo userName($row['head']); ?></div>
+                <div>
+                  <?php if ($isHrmis) {
+                    linkItem(customUri('hrmis', 'Employee Information', $row['head']), userName($row['head']));
+                  } else {
+                    echo userName($row['head']);
+                  } ?>
+                </div>
                 <div class="small"><?php echo fetchAssoc(position($row['head']))['position']; ?></div>
               </td>
               <?php
