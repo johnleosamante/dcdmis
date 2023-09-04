@@ -85,7 +85,9 @@ messageAlert($showAlert, $message, $success);
                           <?php echo getAge($row['year'], $row['month'], $row['day']); ?>
                         </td>
                         <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
-                        <td class="align-middle"><?php echo fetchAssoc(schoolById($row['station']))['name']; ?></td>
+                        <td class="align-middle">
+                          <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']); ?>
+                        </td>
                         <td class="align-middle text-capitalize">
                           <div class="dropdown no-arrow">
                             <?php dropdownEllipsis(); ?>
