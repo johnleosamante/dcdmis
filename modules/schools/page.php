@@ -74,7 +74,9 @@ $isDmis = $activeApp === 'dmis';
                 <div><?php linkItem(customUri($activeApp, 'School Information', $row['id']), $schoolName . ' (' . $row['alias'] . ')'); ?></div>
                 <div class="small"><?php echo $row['id'] . ' | ' . $row['address']; ?></div>
               </td>
-              <td class="align-middle"><?php echo $row['district']; ?></td>
+              <td class="align-middle">
+              <?php linkItem(customUri($activeApp, 'District Information', $row['districtId']), $row['district']); ?>
+              </td>
               <td class="align-middle"><?php echo $row['category']; ?></td>
               <td class="align-middle">
                 <div>

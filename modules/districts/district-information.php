@@ -91,8 +91,10 @@ if (numRows($districts) > 0) {
               <td class="align-middle">
                 <?php
                 $districts = district($row['district']);
-                echo numRows($districts) > 0 ? fetchAssoc($districts)['name'] : '';
-                ?>
+                if (numRows($districts) > 0) {
+                  $district = fetchAssoc($districts);
+                  linkItem(customUri($activeApp, 'District Information', $district['id']), $district['name']);
+                } ?>
               </td>
               <td class="align-middle"><?php echo $row['category']; ?></td>
               <td class="align-middle">
