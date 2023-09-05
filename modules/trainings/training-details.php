@@ -43,11 +43,11 @@ messageAlert($showAlert, $message, $success);
         </tr>
         <tr>
           <th class="pr-5" scope="row">Type</th>
-          <td class="text-uppercase"><?php echo $training['type']; ?></td>
+          <td class="text-uppercase"><?php echo trainingType($training['type']); ?></td>
         </tr>
         <tr>
           <th class="align-top pr-5" scope="row">Sponsor</th>
-          <td class="text-uppercase"><?php echo $training['sponsor']; ?></td>
+          <td class="text-uppercase"><?php echo trainingSponsor($training['sponsor']); ?></td>
         </tr>
         <tr>
           <th class="align-top pr-5" scope="row">Venue</th>
