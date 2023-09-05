@@ -36,18 +36,9 @@ if (numRows($employees) > 0) {
 
     <form action="" method="POST">
       <div class="modal-body">
-        <?php if ($hasEmployee) { ?>
-          <div class="image-container">
-            <span class="d-flex justify-content-center align-middle employee-photo photo-4x rounded-circle overflow-hidden">
-              <img height="100%" src="<?php echo $picture; ?>" alt="<?php echo $employeeName; ?>">
-            </span>
-            <div class="sex-sign"><?php sex($sex); ?></div>
-          </div>
-          <div class="text-center text-uppercase h4 mt-1 mb-0"><?php echo $employeeName; ?></div>
-          <div class="text-center text-lowercase m-0 small"><?php echo $depedEmail; ?></div>
-          <div class="text-center text-uppercase h5 mt-2 mb-1"><?php echo $position; ?></div>
-          <div class="text-center text-uppercase h6 my-1"><?php echo $station; ?></div>
-        <?php } else {
+        <?php if ($hasEmployee) {
+          employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station);
+        } else {
           missingAlert($modalTitle);
         } ?>
       </div>
