@@ -42,7 +42,9 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle text-left"><?php modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName); ?></td>
               <td class="align-middle text-lowercase"><?php echo $row['email']; ?></td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
-              <td class="align-middle"><?php echo fetchAssoc(schoolById($row['assignment']))['name']; ?></td>
+              <td class="align-middle">
+              <?php linkItem(customUri($activeApp, 'School Information', $row['assignment']), fetchAssoc(schoolById($row['assignment']))['name']); ?>
+              </td>
               <td class="align-middle">
                 <?php
                 $status = strtolower($row['status']);
