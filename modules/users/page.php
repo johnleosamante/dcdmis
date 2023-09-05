@@ -39,7 +39,7 @@ messageAlert($showAlert, $message, $success);
                   <div class="sex-sign"><?php sex($row['sex']); ?></div>
                 </div>
               </td>
-              <td class="align-middle text-left"><?php echo $employeeName; ?></td>
+              <td class="align-middle text-left"><?php modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName); ?></td>
               <td class="align-middle text-lowercase"><?php echo $row['email']; ?></td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
               <td class="align-middle"><?php echo fetchAssoc(schoolById($row['assignment']))['name']; ?></td>
