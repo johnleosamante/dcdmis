@@ -42,14 +42,14 @@ if (isset($_POST['save-school'])) {
     updateStationID($schoolId, $referenceSchoolId);
     updateTransactionLogFrom($alias, $referenceAlias);
     updateTransactionLogTo($alias, $referenceAlias);
-    updateTransactionFrom($schoolId, $alias, $referenceSchoolId, $referenceAlias);
+    updateTransactionFrom($alias, $referenceAlias);
     updateSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $referenceSchoolId);
     $status = 'updated';
     $logMessage = 'Updated school';
   }
 
   if (affectedRows()) {
-    $message = 'School [<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . $schoolName . '</a>] has been ' . $status . ' successfully.';
+    $message = 'School [<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . strtoupper($schoolName) . '</a>] has been ' . $status . ' successfully.';
     $showAlert = true;
     createSystemLog($stationId, $userId, $logMessage, $schoolId, clientIp());
   }
@@ -64,16 +64,20 @@ if (isset($_POST['save-section'])) {
   $status = 'saved';
   $logMessage = 'Added section';
 
-  if (numRows(section($alias)) === 0) {
+  if (numRows(section($referenceSectionId)) === 0) {
     createSection($alias, $head, $section, $division);
   } else {
+    updateUsersStation($alias, $referenceSectionId, strtolower($alias . '_portal'));
+    updateTransactionLogFrom($alias, $referenceSectionId);
+    updateTransactionLogTo($alias, $referenceSectionId);
+    updateTransactionFrom($alias, $referenceSectionId);
     updateSection($alias, $head, $section, $division, $referenceSectionId);
     $status = 'updated';
     $logMessage = 'Updated section';
   }
 
   if (affectedRows()) {
-    $message = 'Section [<a href="' . customUri('dmis', 'Section Information', $alias) . '" title="View ' . $section . ' information">' . $section . '</a>] has been ' . $status . ' successfully.';
+    $message = 'Section [<a href="' . customUri('dmis', 'Section Information', $alias) . '" title="View ' . $section . ' information">' . strtoupper($section) . '</a>] has been ' . $status . ' successfully.';
     $showAlert = true;
     createSystemLog($stationId, $userId, $logMessage, $alias, clientIp());
   }
