@@ -43,7 +43,7 @@ $isHrmis = $activeApp === 'hrmis';
                   <?php if ($isHrmis) {
                     linkItem(customUri('hrmis', 'Employee Information', $row['psds']), userName($row['psds']));
                   } else {
-                    echo userName($row['psds']);
+                    modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['psds']), userName($row['psds']));
                   } ?>
                 </div>
                 <div class="small"><?php echo fetchAssoc(position($row['psds']))['position']; ?></div>

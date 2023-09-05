@@ -95,7 +95,7 @@ $personnel = numRows($query);
                 <?php if ($isHrmis) {
                   linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
                 } else {
-                  echo $employeeName;
+                  modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName);;
                 } ?>
               </td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>

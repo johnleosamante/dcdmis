@@ -102,7 +102,7 @@ if (numRows($districts) > 0) {
                   <?php if ($isHrmis) {
                     linkItem(customUri('hrmis', 'Employee Information', $row['head']), userName($row['head']));
                   } else {
-                    echo userName($row['head']);
+                    modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['head']), userName($row['head']));
                   } ?>
                 </div>
                 <?php
