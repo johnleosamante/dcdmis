@@ -182,7 +182,7 @@ function linkItem($link, $text, $newTab=false) { ?>
   <a href="<?php echo $link; ?>" class="text-uppercase" target="<?php echo $newTab ? '_blank' : '_self'; ?>"><?php echo $text; ?></a>
 <?php }
   
-function linkModal($link, $text) { ?>
+function modalItem($link, $text) { ?>
   <a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData('<?php echo $link; ?>')"><?php echo $text; ?></a>
 <?php }
 
@@ -272,4 +272,18 @@ function progressBar($value, $min=50) { ?>
   <div class="progress mt-1" title="<?php echo $value; ?>% Complete">
     <div class="progress-bar bg-<?php echo $value > $min ? 'success' : 'danger'; ?>" role="progressbar" aria-valuenow="<?php echo $value; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $value; ?>%"></div>
   </div>
+<?php }
+
+function employeeProfile($picture, $name, $sex, $email, $position, $station) { ?>
+  <div class="image-container">
+    <span class="d-flex justify-content-center align-middle employee-photo photo-4x rounded-circle overflow-hidden">
+      <img height="100%" src="<?php echo $picture; ?>" alt="<?php echo $name; ?>">
+    </span>
+    <div class="sex-sign"><?php sex($sex); ?></div>
+  </div>
+
+  <div class="text-center text-uppercase h4 mt-3 mb-0"><?php echo $name; ?></div>
+  <div class="text-center text-lowercase m-0 small"><?php echo $email; ?></div>
+  <div class="text-center text-uppercase h5 mt-2 mb-1"><?php echo $position; ?></div>
+  <div class="text-center text-uppercase h6 my-1"><?php echo $station; ?></div>
 <?php } ?>
