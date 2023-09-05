@@ -24,8 +24,9 @@ if (isset($_POST['primary-search-button'])) {
 if (isset($_POST['save-training'])) {
   $trainingId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $title = sanitize($_POST['title']);
-  $from = isset($_POST['from']) ? sanitize($_POST['from']) : date('Y-m-d');
+  $from = sanitize($_POST['from']);
   $to = sanitize($_POST['to']);
+  $hours = sanitize($_POST['hours']);
   $type = sanitize($_POST['type']);
   $sponsor = sanitize($_POST['sponsor']);
   $venue = sanitize($_POST['venue']);
@@ -36,11 +37,11 @@ if (isset($_POST['save-training'])) {
     $status = 'saved';
     $year = toDate($from, 'y', date('y'));
     $trainingId = 'HRTD-' . $year . '-' . sprintf("%04d", countTrainings($year) + 1);
-    createTraining($trainingId, $title, $from, $to, $type, $sponsor, $venue);
+    createTraining($trainingId, $title, $from, $to, $hours, $type, $sponsor, $venue);
   } else {
     $logMessage = 'Updated training';
     $status = 'updated';
-    updateTraining($trainingId, $title, $from, $to, $type, $sponsor, $venue);
+    updateTraining($trainingId, $title, $from, $to, $hours, $type, $sponsor, $venue);
   }
 
   if (affectedRows()) {

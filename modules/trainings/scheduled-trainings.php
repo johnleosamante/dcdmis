@@ -32,12 +32,14 @@ messageAlert($showAlert, $message, $success);
           if (numRows($trainings) > 0) {
             while ($training = fetchAssoc($trainings)) : ?>
               <tr>
-                <td class="align-middle"><?php echo $training['no']; ?></td>
+                <td class="align-middle">
+                  <?php linkItem(customUri('hrtdms', 'Training Details', $training['no']), $training['no']); ?>
+                </td>
                 <td class="align-middle text-left"><?php echo $training['title']; ?></td>
                 <td class="align-middle"><?php echo toDate($training['from']); ?></td>
                 <td class="align-middle"><?php echo toDate($training['to']); ?></td>
-                <td class="align-middle"><?php echo $training['type']; ?></td>
-                <td class="align-middle"><?php echo $training['sponsor']; ?></td>
+                <td class="align-middle"><?php echo trainingType($training['type']); ?></td>
+                <td class="align-middle"><?php echo trainingSponsor($training['sponsor']); ?></td>
                 <td class="align-middle text-capitalize">
                   <div class="dropdown no-arrow">
                     <?php dropdownEllipsis(); ?>

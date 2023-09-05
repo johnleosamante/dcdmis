@@ -8,7 +8,7 @@ require_once(root() . '/includes/layout/components.php');
 
 $trainingId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $trainings = training($trainingId);
-$title = $type = $sponsor = $venue = '';
+$title = $hours = $trainingType = $trainingSponsor = $venue = '';
 $dateFrom = $dateTo = date('Y-m-d');
 $modalTitle = 'New Training';
 $notFound  = true;
@@ -19,8 +19,9 @@ if (numRows($trainings) > 0) {
   $title = $training['title'];
   $dateFrom = $training['from'];
   $dateTo = $training['to'];
-  $type = $training['type'];
-  $sponsor = $training['sponsor'];
+  $hours = $training['hours'];
+  $trainingType = $training['type'];
+  $trainingSponsor = $training['sponsor'];
   $venue = $training['venue'];
   $modalTitle = 'Edit Training';
   $notFound = false;
@@ -42,7 +43,7 @@ if (numRows($trainings) > 0) {
 
         <div class="form-group">
           <label for="title" class="mb-0">Title <?php showAsterisk(); ?></label>
-          <textarea id="title" name="title" class="form-control" rows="3" required><?php echo $title; ?></textarea>
+          <textarea id="title" name="title" class="form-control" rows="3" placeholder="Type title..."><?php echo $title; ?></textarea>
         </div>
 
         <div class="row">
@@ -60,19 +61,44 @@ if (numRows($trainings) > 0) {
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="type" class="mb-0">Type <?php showAsterisk(); ?></label>
-          <input id="type" name="type" type="text" class="form-control" value="<?php echo $type; ?>" required>
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="hours" class="mb-0">Number of hours <?php showAsterisk(); ?></label>
+              <input type="number" name="hours" id="hours" class="form-control" placeholder="Type hours..." value="<?php echo $hours; ?>" required>
+            </div>
+          </div>
+
+          <div class="col-8">
+            <div class="form-group">
+              <label for="type" class="mb-0">Type <?php showAsterisk(); ?></label>
+              <select id="type" name="type" class="form-control" required>
+                <option value="">Select type...</option>
+                <?php
+                $types = trainingTypes();
+                while ($type = fetchAssoc($types)) : ?>
+                  <option value="<?php echo $type['id']; ?>" <?php echo setOptionSelected($type['id'], $trainingType); ?>><?php echo $type['type']; ?></option>
+                <?php endwhile; ?>
+              </select>
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
           <label for="sponsor" class="mb-0">Sponsor <?php showAsterisk(); ?></label>
-          <input id="sponsor" name="sponsor" type="text" class="form-control" value="<?php echo $sponsor; ?>" required>
+          <select id="sponsor" name="sponsor" class="form-control" required>
+            <option value="">Select sponsor...</option>
+            <?php
+              $sponsors = trainingSponsors();
+              while ($sponsor = fetchAssoc($sponsors)) : ?>
+                <option value="<?php echo $sponsor['id']; ?>" <?php echo setOptionSelected($sponsor['id'], $trainingSponsor); ?>><?php echo $sponsor['sponsor']; ?></option>
+            <?php endwhile; ?>
+          </select>
         </div>
 
         <div class="form-group">
           <label for="venue" class="mb-0">Venue <?php showAsterisk(); ?></label>
-          <input id="venue" name="venue" type="text" class="form-control" value="<?php echo $venue; ?>" required>
+          <input id="venue" name="venue" type="text" class="form-control" placeholder="Type venue..." value="<?php echo $venue; ?>" required>
         </div>
 
         <?php requiredLegend(0); ?>

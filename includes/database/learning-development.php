@@ -35,8 +35,8 @@ function countTrainings($year) {
   return numRows(query("SELECT `Training_code` AS `no` FROM tbl_seminar WHERE `Training_code` LIKE '%-{$year}-%';"));
 }
 
-function createTraining($no, $title, $from, $to, $type, $sponsor, $venue) {
-  nonQuery("INSERT INTO tbl_seminar (`Training_Code`, `Title_of_training`, `covered_from`, `covered_to`, `hours`, `Category`, `conducted_by`, `TVenue`) VALUES ('{$no}', '{$title}', '{$from}', '{$to}', '{$type}', '{$sponsor}', '{$venue}');");
+function createTraining($no, $title, $from, $to, $hours, $type, $sponsor, $venue) {
+  nonQuery("INSERT INTO tbl_seminar (`Training_Code`, `Title_of_training`, `covered_from`, `covered_to`, `hours`, `Category`, `conducted_by`, `TVenue`) VALUES ('{$no}', '{$title}', '{$from}', '{$to}', '{$hours}', '{$type}', '{$sponsor}', '{$venue}');");
 }
 
 function updateTraining($no, $title, $from, $to, $hours, $type, $sponsor, $venue) {
@@ -69,5 +69,23 @@ function isConductedTraining($no) {
 
 function isTrainingParticipant($no, $id) {
   return numRows(query("SELECT `Training_Code` AS `no`, `Emp_ID` AS `id` FROM tbl_seminar_participant WHERE `Training_Code`='{$no}' AND `Emp_ID`='{$id}' LIMIT 1;")) > 0;
+}
+
+function trainingTypes() {
+  return query("SELECT `id`, `type` FROM tbl_training_type;");
+}
+
+function trainingType($id) {
+  $types = query("SELECT `type` FROM tbl_training_type WHERE `id`='{$id}';");
+  return numRows($types) > 0 ? fetchAssoc($types)['type'] : '';
+}
+
+function trainingSponsors() {
+  return query("SELECT `id`, `sponsor` FROM tbl_training_sponsor;");
+}
+
+function trainingSponsor($id) {
+  $sponsors = query("SELECT `sponsor` FROM tbl_training_sponsor WHERE `id`='{$id}';");
+  return numRows($sponsors) > 0 ? fetchAssoc($sponsors)['sponsor'] : '';
 }
 ?>
