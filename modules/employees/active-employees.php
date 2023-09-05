@@ -2,6 +2,7 @@
 // modules/employees/active-employees.php
 messageAlert($showAlert, $message, $success);
 $isHrmis = $activeApp === 'hrmis';
+$isDmis = $activeApp === 'dmis';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -58,8 +59,10 @@ $isHrmis = $activeApp === 'hrmis';
               <td class="align-middle text-left">
                 <?php if ($isHrmis) {
                   linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
+                } elseif ($isDmis) {
+                  modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName);
                 } else {
-                  echo $employeeName;
+                  modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                 } ?>
               </td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
