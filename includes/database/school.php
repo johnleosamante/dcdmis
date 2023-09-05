@@ -14,11 +14,11 @@ function schoolsExcept($id) {
 }
 
 function schoolByAlias($alias) {
-  return query("SELECT SchoolID AS id, SchoolName AS `name` FROM tbl_school WHERE Abraviate='{$alias}' LIMIT 1;");
+  return query("SELECT SchoolID AS id, SchoolName AS `name`, Incharg_ID AS `head` FROM tbl_school WHERE Abraviate='{$alias}' LIMIT 1;");
 }
 
 function schoolById($id) {
-  return query("SELECT Abraviate AS alias, SchoolName AS `name` FROM tbl_school WHERE SchoolID='{$id}' LIMIT 1;");
+  return query("SELECT Abraviate AS alias, SchoolName AS `name`, Incharg_ID AS `head` FROM tbl_school WHERE SchoolID='{$id}' LIMIT 1;");
 }
 
 function schoolDetailsById($id) {
