@@ -15,3 +15,5 @@ UPDATE `tbl_div_section` SET `Section_Code` = replace(`Section_Code`, 'PSDS', 'P
 UPDATE `tbl_div_section` SET `Section_Code` = replace(`Section_Code`, 'RECORD', 'REC');
 UPDATE `tbl_div_section` SET `Section_Code` = replace(`Section_Code`, 'SGOD', 'SGD');
 UPDATE `tbl_div_section` SET `Section_Code` = replace(`Section_Code`, 'SUPPLY', 'PSS');
+
+/* DONE */

@@ -56,3 +56,5 @@ UPDATE tbl_transactions SET Trans_from = 'PSS' WHERE Trans_from = 'SUPPLY';
 UPDATE `tbl_transactions` SET `SchoolID`='143' WHERE `SchoolID`='123131';
 
 ALTER TABLE `tbl_transactions` ADD `details` VARCHAR(500) NOT NULL AFTER `Attachfile`;
+
+/* DONE */

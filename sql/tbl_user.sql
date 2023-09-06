@@ -36,3 +36,15 @@ UPDATE tbl_user SET Link = replace(Link, 'record_portal', 'rec_portal');
 UPDATE tbl_user SET Link = replace(Link, 'school_portal', 'sch_portal');
 UPDATE tbl_user SET Link = replace(Link, 'sgod_portal', 'sgd_portal');
 UPDATE tbl_user SET Link = replace(Link, 'supply_portal', 'pss_portal');
+
+/* DONE */
+
+ALTER TABLE `tbl_user`
+  DROP `username`,
+  DROP `password`,
+  DROP `Status`,
+  DROP `Last_login`,
+  DROP `Current_Status`;
+
+UPDATE `tbl_user` SET `Link`=NULL WHERE `Link`='';
+UPDATE `tbl_user` SET `position`='Administrator';

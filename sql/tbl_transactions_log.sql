@@ -68,3 +68,5 @@ UPDATE tbl_transactions_log SET Forwarded_to='SGD' WHERE Forwarded_to='SGOD';
 -- UPDATE tbl_transactions_log SET Transaction_code = replace(Transaction_code, 'SUPPLY', 'PSS');
 UPDATE tbl_transactions_log SET From_office='PSS' WHERE From_office='SUPPLY';
 UPDATE tbl_transactions_log SET Forwarded_to='PSS' WHERE Forwarded_to='SUPPLY';
+
+/* DONE */
