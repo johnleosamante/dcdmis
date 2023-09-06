@@ -296,25 +296,30 @@ require_once(root() . '/includes/database/document.php');
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/utility.php');
 
-function addUserToTransaction() {
-  $logs = query("SELECT TransCode AS `id`, Date_time AS `datetime` FROM tbl_transactions ORDER BY TransCode, Date_time;");
-  $no = 0;
 
-  while ($log = fetchAssoc($logs)) {
-    $user = fetchAssoc(documentOrigin($log['id']))['user'];
-    // nonQuery("UPDATE tbl_transactions SET `SchoolID`='$user' WHERE `TransCode`='" . $log['id'] . "' LIMIT 1;");
-    // if (affectedRows()) {
-      echo ++$no . ' | Code: ' . $log['id'] . ' | Created by: ' . userName($user) . ' (' . $user . ') | ' . $log['datetime'] . ' <br>';
-    // } else {
-    //   echo ++$no . ' | Code: ' . $log['id'] . ' | Created by: ' . userName($user) . ' not set.<br>';
-    // }
-  }
+function setHeadToTransaction($stationId, $headId, $startDate=null, $endDate=null) {
+  echo "Setting station [$stationId] and station head [" . userName($headId) . "]...<br>";
+
+  $filter = !empty($startDate) && !empty($endDate) ? "AND Date_time BETWEEN '{$startDate}' AND '{$endDate}'" : '';
+
+  nonQuery("UPDATE tbl_transactions SET `SchoolID`='{$headId}' WHERE TransCode LIKE '" . $stationId . "%' {$filter} ORDER BY Date_time ASC;");
+  echo affectedRows() . ' affected rows...<br>';
 }
 
-function setHeadToTransaction($stationId, $headId) {
-  echo "Setting station [$stationId] and station head [" . userName($headId) . "]...<br>";
-  nonQuery("UPDATE tbl_transactions SET `SchoolID`='{$headId}' WHERE TransCode LIKE '" . $stationId . "%';");
-  echo affectedRows() . ' affected rows...<br>';
+function setEmailToUserId() {
+  echo "Setting email to employeeid...<br>";
+
+  $employees = query("SELECT Emp_ID AS `id`, Emp_Email AS `email` FROM tbl_employee;");
+  $no = 0;
+
+  while ($employee = fetchAssoc($employees)) {
+    nonQuery("UPDATE tbl_teacher_account SET `Teacher_TIN`='" . $employee['id'] . "' WHERE `Teacher_TIN`='" . $employee['email'] . "';");
+    if (affectedRows()) {
+      echo ++$no . ' | ' . $employee['id'] . ' | ' . $employee['email'] . '<br>';
+    }
+  }
+
+  echo '(' . $no . ') Completed...<br><br>';
 }
 
 // alterCivilService();
@@ -350,16 +355,21 @@ function setHeadToTransaction($stationId, $headId) {
 // addUserPrivilege('221024040000', 'johnleo.samante@deped.gov.ph', 'DMIS');
 // addUserPrivilege('221024040000', 'johnleo.samante@deped.gov.ph', 'HRTDMS');
 
-// addUserToTransaction();
+/* DONE */
 
+// setEmailToUserID();
+
+// // add schools
 // setHeadToTransaction('125962-', '221111570000');
 // setHeadToTransaction('125963-', '221111160000');
 // setHeadToTransaction('125965-', '221111080000');
-// // setHeadToTransaction('125966-', ''); // LugdunganES
+// setHeadToTransaction('125966-', '221111340000'); // LugdunganES Cubalan
+// setHeadToTransaction('125966-', '221109280000', '2023-08-31', '2023-09-30'); // LugdunganES Torres
 // setHeadToTransaction('125967-', '221111090000');
 // setHeadToTransaction('125968-', '221111350000');
 // setHeadToTransaction('125969-', '221111540000');
-// // setHeadToTransaction('125970-', ''); // TurnoES
+// setHeadToTransaction('125970-', '221111550000'); // TurnoES Redillas
+// setHeadToTransaction('125970-', '221111440000', '2023-02-14', '2023-09-30'); // TurnoES Macute
 // setHeadToTransaction('125972-', '221111380000');
 // setHeadToTransaction('125973-', '221111170000');
 // setHeadToTransaction('125974-', '221111230000');
@@ -370,7 +380,8 @@ function setHeadToTransaction($stationId, $headId) {
 // setHeadToTransaction('125983-', '221111240000');
 // setHeadToTransaction('125984-', '221111060000');
 // setHeadToTransaction('125986-', '221111360000');
-// // setHeadToTransaction('125987', ''); // DiwanES
+// setHeadToTransaction('125987-', '221109280000'); // DiwanES Torres
+// setHeadToTransaction('125987-', '20221219083010', '2023-08-31', '2023-09-30'); // DiwanES Catipay
 // setHeadToTransaction('125989-', '221111030000');
 // setHeadToTransaction('125990-', '221111070000');
 // setHeadToTransaction('125991-', '221111370000');
@@ -380,7 +391,8 @@ function setHeadToTransaction($stationId, $headId) {
 // setHeadToTransaction('125996-', '221111420000');
 // setHeadToTransaction('125997-', '221111460000');
 // setHeadToTransaction('125999-', '221111150000');
-// // setHeadToTransaction('197501-', '') // DSPEDC
+// setHeadToTransaction('197501-', '221111440000'); // DSPEDC Macute
+// setHeadToTransaction('197501-', '221111000000', '2023-12-14', '2023-09-30'); // DSPEDC Gabonada
 // setHeadToTransaction('303885-', '221111330000');
 // setHeadToTransaction('303886-', '221111140000');
 // setHeadToTransaction('303887-', '221111490000');
@@ -396,13 +408,15 @@ function setHeadToTransaction($stationId, $headId) {
 // setHeadToTransaction('500046-', '221111050000');
 // setHeadToTransaction('500242-', '20221217141601');
 // setHeadToTransaction('501111-', '221111430000');
+
 // // add sections
-// setHeadToTransaction('ACC-', '20230823101248');
-// // setHeadToTransaction('ACCOUNTING-', '');
-// setHeadToTransaction('ADM-', '221110470000');
-// setHeadToTransaction('ADMIN-', '221110470000');
-// setHeadToTransaction('ADS', '202211190000');
-// setHeadToTransaction('ASDS-', '202211190000');
+// setHeadToTransaction('ACCOUNTING-', '221110380000'); // Cabilin
+// setHeadToTransaction('ACCOUNTING-', '221115150000', '2023-06-26', '2023-08-14'); // Capulan
+// setHeadToTransaction('ACCOUNTING-', '20230823101248', '2023-08-14', '2023-08-26'); // Lanat
+// setHeadToTransaction('ACC-', '20230823101248'); // Lanat
+// setHeadToTransaction('ADMIN-', '221111180000', '2022-12-14', '2023-02-13'); // Ricafort
+// setHeadToTransaction('ADMIN-', '221110470000', '2023-02-14', '2023-09-30'); // Geraga
+// setHeadToTransaction('ADM-', '221110470000'); // Geraga
 // setHeadToTransaction('BAC-', '202211190000');
 // setHeadToTransaction('BUD-', '221110470000');
 // setHeadToTransaction('BUDGET-', '221110470000');
@@ -415,8 +429,11 @@ function setHeadToTransaction($stationId, $headId) {
 // setHeadToTransaction('ICT-', '221027100000');
 // setHeadToTransaction('LRM-', '221115440000');
 // setHeadToTransaction('LRMS-', '221115440000');
-// setHeadToTransaction('SDS-', '20230403142138');
-// // setHeadToTransaction('OSDS-', '');
+// setHeadToTransaction('OSDS-', '221109270000', '2022-12-14', '2023-04-02'); // Cordova
+// setHeadToTransaction('OSDS-', '20230403142138', '2023-04-03', '2023-09-30'); // Tabilon
+// setHeadToTransaction('SDS-', '20230403142138'); // Tabilon
+// setHeadToTransaction('ADS', '202211190000');
+// setHeadToTransaction('ASDS-', '202211190000');
 // setHeadToTransaction('PHYSICAL-', '221117390000');
 // setHeadToTransaction('PSDS-', '221111450000');
 // setHeadToTransaction('PDS-', '221111450000');
