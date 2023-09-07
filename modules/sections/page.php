@@ -68,8 +68,11 @@ $isDmis = $activeApp === 'dmis';
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                    <?php linkDropdownItem(customUri($activeApp, 'Section Information', $row['id']), 'View', 'fa-eye', 'View Section');
+                    <?php
+                    linkDropdownItem(customUri($activeApp, 'Section Information', $row['id']), 'View', 'fa-eye', 'View Section');
+                    if ($isDmis) {
                       modalDropdownItem(uri() . '/modules/sections/save-section-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Section');
+                    }
                     ?>
                   </div>
                 </div>
