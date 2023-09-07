@@ -104,7 +104,11 @@ $isDmis = $activeApp === 'dmis';
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                    <?php linkDropdownItem(customUri($activeApp, 'School Information', $row['id']), 'View', 'fa-eye', 'View School'); ?>
+                    <?php linkDropdownItem(customUri($activeApp, 'School Information', $row['id']), 'View', 'fa-eye', 'View School');
+                    
+                    if ($isDmis) {
+                      modalDropdownItem(uri() . '/modules/schools/save-school-dialog.php?id=' . cipher($row['id']) . '&e=' . cipher($row['alias']), 'Edit', 'fa-edit', 'Edit School');
+                    }?>
                   </div>
                 </div>
               </td>
