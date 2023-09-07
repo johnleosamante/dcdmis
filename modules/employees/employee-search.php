@@ -75,6 +75,7 @@ if (numRows($employees) === 0) {
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                       <?php
                       linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
+                      linkDropdownItem(customUri('hrmis', 'Edit Employee Information', $row['id']), 'Edit', 'fa-edit', 'Edit Employee');
                       if ($status === 'active') {
                         modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee'); ?>
                         <div class="dropdown-divider"></div>

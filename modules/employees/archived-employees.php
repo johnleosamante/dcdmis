@@ -58,7 +58,8 @@ messageAlert($showAlert, $message, $success);
                   <div class="dropdown no-arrow">
                     <?php dropdownEllipsis(); ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                      <?php linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee'); ?>
+                      <?php linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee');
+                      linkDropdownItem(customUri('hrmis', 'Edit Employee Information', $row['id']), 'Edit', 'fa-edit', 'Edit Employee'); ?>
                     </div>
                   </div>
                 <?php endif; ?>
