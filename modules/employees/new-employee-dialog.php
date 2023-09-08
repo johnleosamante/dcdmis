@@ -4,6 +4,7 @@ require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/position.php');
 require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/database/district.php');
 require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/layout/components.php');
 ?>
@@ -16,25 +17,25 @@ require_once(root() . '/includes/layout/components.php');
       <div class="modal-body">
         <div class="form-group">
           <label for="lname" class="mb-0">Last Name <?php showAsterisk(); ?></label>
-          <input id="lname" name="lname" class="form-control" type="text" title="Required field" required>
+          <input id="lname" name="lname" class="form-control" type="text" placeholder="Last name..." required>
         </div>
 
         <div class="form-group">
           <label for="fname" class="mb-0">First Name <?php showAsterisk(); ?></label>
-          <input id="fname" name="fname" class="form-control" type="text" title="Required field" required>
+          <input id="fname" name="fname" class="form-control" type="text" placeholder="First name..." required>
         </div>
 
         <div class="row">
-          <div class="col-9">
+          <div class="col-8">
             <div class="form-group">
               <label for="mname" class="mb-0">Middle Name</label>
-              <input id="mname" name="mname" class="form-control" title="Leave blank if not applicable" type="text">
+              <input id="mname" name="mname" class="form-control" title="Leave blank if not applicable" placeholder="Middle name..." type="text">
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-4">
             <div class="form-group">
               <label for="ext" class="mb-0">Extension</label>
-              <input id="ext" name="ext" class="form-control" title="Example: Jr., Sr., III (Leave blank if not applicable)" type="text">
+              <input id="ext" name="ext" class="form-control" title="Example: Jr., Sr., III (Leave blank if not applicable)"  placeholder="Extension..."  type="text">
             </div>
           </div>
         </div>
@@ -43,7 +44,7 @@ require_once(root() . '/includes/layout/components.php');
           <div class="col-5">
             <div class="form-group">
               <label for="sex" class="mb-0">Sex <?php showAsterisk(); ?></label>
-              <select name="sex" class="form-control" id="sex" title="Required field" required>
+              <select name="sex" class="form-control" id="sex" required>
                 <option value="">Select sex...</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -54,28 +55,34 @@ require_once(root() . '/includes/layout/components.php');
           <div class="col-7">
             <div class="form-group">
               <label for="bdate" class="mb-0">Date of Birth <?php showAsterisk(); ?></label>
-              <input type="date" id="bdate" name="bdate" value="<?php echo date('Y-m-d'); ?>" class="form-control" title="Required field" required>
+              <input type="date" id="bdate" name="bdate" value="<?php echo date('Y-m-d'); ?>" class="form-control" required>
             </div>
           </div>
         </div>
 
         <div class="form-group">
           <label for="email" class="mb-0">DepEd Email Address <?php showAsterisk(); ?></label>
-          <input id="email" name="email" class="form-control" type="email" title="Required field" placeholder="juan.delacruz@deped.gov.ph" required>
+          <input id="email" name="email" class="form-control" type="email" title="Example: juan.delacruz@deped.gov.ph" pattern="[a-z0-9._%+\-]+@deped.gov.ph" placeholder="juan.delacruz@deped.gov.ph" required>
         </div>
 
         <div class="form-group">
           <label for="mobile" class="mb-0">Mobile Number <?php showAsterisk(); ?></label>
-          <input id="mobile" name="mobile" class="form-control" type="text" title="Required field" placeholder="XXXX-XXX-XXXX" required>
+          <input id="mobile" name="mobile" class="form-control" type="text" title="Required field, Format: 09XX-XXX-XXXX" pattern="\d{4}[\-]\d{3}[\-]\d{4}" placeholder="09XX-XXX-XXXX" required>
         </div>
 
         <div class="form-group">
           <label for="position" class="mb-0">Position <?php showAsterisk(); ?></label>
           <select id="position" name="position" class="form-control" title="Required field" required>
             <option value="">Select position...</option>
-            <?php $jobPositions = positions();
-            while ($jobPosition = fetchArray($jobPositions)) : ?>
-              <option value="<?php echo $jobPosition['id']; ?>"><?php echo $jobPosition['position']; ?></option>
+            <?php
+            $categories = positionCategories();
+            while ($category = fetchAssoc($categories)) : ?>
+              <optgroup label="<?php echo $category['category']; ?>">
+                <?php $jobPositions = positionsByCategory($category['category']);
+                while ($jobPosition = fetchArray($jobPositions)) : ?>
+                  <option value="<?php echo $jobPosition['id']; ?>"><?php echo $jobPosition['position']; ?></option>
+                <?php endwhile; ?>
+              </optgroup>
             <?php endwhile; ?>
           </select>
         </div>
@@ -84,11 +91,32 @@ require_once(root() . '/includes/layout/components.php');
           <label for="station" class="mb-0">Station <?php showAsterisk(); ?></label>
           <select id="station" name="station" class="form-control" title="Required field" required>
             <option value="">Select station...</option>
-            <?php echo $currentStation = isset($_GET['s']) ? sanitize(decode($_GET['s'])) : '';
-            $assignments = schoolsExcept($stationId);
-            while ($assignment = fetchArray($assignments)) : ?>
-              <option value="<?php echo $assignment['id']; ?>" <?php echo setOptionSelected($assignment['id'], $currentStation); ?>><?php echo $assignment['name']; ?></option>
+            <?php
+            $districts = districts();
+            while ($district = fetchAssoc($districts)) : ?>
+              <optgroup label="<?php echo $district['name']; ?>">
+                <?php
+                $currentStation = isset($_GET['s']) ? sanitize(decode($_GET['s'])) : '';
+                $schools = schoolsByDistrict($district['id']);
+                while ($school = fetchAssoc($schools)) : ?>
+                  <option value="<?php echo $school['id']; ?>" <?php echo setOptionSelected($school['id'], $currentStation); ?>><?php echo $school['name']; ?></option>
+                <?php endwhile; ?>
+              </optgroup>
             <?php endwhile; ?>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="status" class="mb-0">Status <?php showAsterisk(); ?></label>
+          <select id="status" name="status" class="form-control" required>
+            <option value="">Select status...</option>
+            <option value="Active">Active</option>
+            <option value="Transferred">Transferred</option>
+            <option value="Resigned">Resigned</option>
+            <option value="Retired">Retired</option>
+            <option value="Suspended">Suspended</option>
+            <option value="Dismissed">Dismissed</option>
+            <option value="Deceased">Deceased</option>
           </select>
         </div>
 
