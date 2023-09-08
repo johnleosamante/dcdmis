@@ -9,6 +9,10 @@ $dateCreated = toDate($document['datetime'], 'F d, Y');
 $description = $document['description'];
 $employee = strtoupper(userName($document['user']));
 $employeePosition = fetchAssoc(position($document['user']))['position'];
+$documentStatus = strtolower($document['status']);
+$status = '';
+$status = str_contains($documentStatus, 'complete') ? ' (Completed)' : $status;
+$status = str_contains($documentStatus, 'cancel') ? ' (Canceled)' : $status;
 
 $pdf->SetFont('calibrib',  'B', 18);
 $pdf->Cell(0, 0, 'DOCUMENT TRACKING SLIP', 0, 0, 'C');
@@ -20,7 +24,7 @@ $pdf->SetFont('calibri',  '', 11);
 $pdf->Cell(0, 0, $dateCreated, 0, 0, 'R');
 $pdf->Ln(10);
 $pdf->SetFont('calibrib',  'B', 17);
-$pdf->Cell(0, 0, $code);
+$pdf->Cell(0, 0, $code . $status);
 $pdf->Ln(10);
 $pdf->SetFont('calibri',  '', 11);
 $pdf->Write(5, $description);
@@ -36,11 +40,9 @@ $pdf->Ln(5);
 $pdf->SetFont('calibri', '', 11);
 $pdf->Cell($innerPage / 2, 0, $employeePosition, 0, 0, 'C');
 
-$sectionHead = $isSchoolPortal ? $school : fetchAssoc(section($document['from']));
-
-if ($document['user'] !== $sectionHead['head']) {
-  $stationHead = userName($sectionHead['head'], true);
-  $stationHeadPosition = fetchAssoc(position($sectionHead['head']))['position'];
+if ($document['user'] !== $document['head']) {
+  $stationHead = userName($document['head'], true);
+  $stationHeadPosition = fetchAssoc(position($document['head']))['position'];
 
   $pdf->Ln(10);
   $pdf->SetX($width / 2);
