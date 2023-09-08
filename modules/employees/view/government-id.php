@@ -1,6 +1,6 @@
 <?php
 // modules/employees/view/government-id.php
-$card = $number = $place = $date = '';
+$card = $number = $place = $date = 'N/A';
 $employeeIdentifications = employeeIdentification($employeeId);
 
 if (numRows($employeeIdentifications) > 0) {
