@@ -19,15 +19,15 @@ function documentFrom($id, $station) {
 }
 
 function documentOrigin($id) {
-  return query("SELECT tbl_transactions.TransCode AS `id`, tbl_transactions.Title AS `description`, tbl_transactions.Trans_Stats AS `status`, tbl_transactions.Date_time AS `datetime`, tbl_transactions_log.Recieved_by AS `user`, tbl_transactions_log.From_office AS `from` FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' ORDER BY tbl_transactions_log.Date_recieved ASC LIMIT 1;");
+  return query("SELECT tbl_transactions.TransCode AS `id`, tbl_transactions.Title AS `description`, tbl_transactions.Trans_Stats AS `status`, tbl_transactions.Date_time AS `datetime`, tbl_transactions.SchoolID AS `head`, tbl_transactions_log.Recieved_by AS `user`, tbl_transactions_log.From_office AS `from` FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' ORDER BY tbl_transactions_log.Date_recieved ASC LIMIT 1;");
 }
 
 function isDocumentFrom($id, $station, $status='New') {
   return numRows(query("SELECT Transaction_code AS id FROM tbl_transactions_log WHERE From_office='{$station}' AND `Status`='{$status}' AND Transaction_code='{$id}';"));
 }
 
-function createDocument($id, $description, $station, $purpose, $details='') {
-  nonQuery("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats, `Status`, details) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}', 'Unread', '{$details}');");
+function createDocument($id, $description, $station, $purpose, $headId, $details='') {
+  nonQuery("INSERT INTO tbl_transactions (TransCode, Title, Date_time, Trans_from, Trans_Stats, `Status`, `SchoolID`, details) VALUES ('{$id}', '{$description}', NOW(), '{$station}', '{$purpose}', 'Unread', '{$headId}', '{$details}');");
 }
 
 function updateDocument($id, $description, $purpose, $details='', $updateDescription=true) {
@@ -124,7 +124,7 @@ function updateTransactionLogTo($newAlias, $oldAlias) {
   nonQuery("UPDATE tbl_transactions_log SET `Forwarded_To`='{$newAlias}' WHERE `Forwarded_To`='{$oldAlias}';");
 }
 
-function updateTransactionFrom($newStationId, $newAlias, $oldStationId, $oldAlias) {
-  nonQuery("UPDATE tbl_transactions SET `Trans_from`='{$newAlias}', `SchoolID`='{$newStationId}' WHERE `Trans_from`='{$oldAlias}' AND `SchoolID`='{$oldStationId}';");
+function updateTransactionFrom($newAlias, $oldAlias) {
+  nonQuery("UPDATE tbl_transactions SET `Trans_from`='{$newAlias}' WHERE `Trans_from`='{$oldAlias}';");
 }
 ?>
