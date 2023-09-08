@@ -2,12 +2,12 @@
 // login/app.php
 restrictPublicAccess(hasHoliday());
 
-function setUserSession($userid) {
-  $users = user($userid);
+function setUserSession($userId) {
+  $users = user($userId);
 
   if (numRows($users) === 1) {
     $user = fetchAssoc($users);
-    $_SESSION[alias() . '_stationId'] = $user['station_id'];
+    $stationId = $_SESSION[alias() . '_stationId'] = $user['station_id'];
     $_SESSION[alias() . '_code'] = $user['code'];
     $_SESSION[alias() . '_portal'] = $user['portal'];
 
@@ -17,6 +17,10 @@ function setUserSession($userid) {
       $school = schoolById($user['code']);
       $_SESSION[alias() . '_station'] = numRows($school) ? fetchAssoc($school)['alias'] : '';
     }
+
+    $logMessage = isset($_POST['login']) ? 'Logged in' : 'Resumed login';
+
+    createSystemLog($stationId, $userId, $logMessage, $userId, clientIp());
   }
 }
 
@@ -30,11 +34,11 @@ if (isset($_COOKIE[alias() . '_login'])) {
   }
 }
 
-$page = 'Login';
-
 if (isset($userId)) {
   redirect(uri() . '/' . $activeApp);
 }
+
+$page = 'Login';
 
 if (!isset($_POST['login'])) {
   return;
@@ -55,7 +59,7 @@ if (!isValidEmail($email, 'deped.gov.ph')) {
   return;
 }
 
-$accounts = account($email, $password);
+$accounts = account($email);
 
 if (numRows($accounts) === 0) {
   $message = 'Invalid login details! Try again.';
@@ -63,6 +67,13 @@ if (numRows($accounts) === 0) {
 }
 
 $account = fetchAssoc($accounts);
+$passwords = accountPassword($account['id'], $password);
+
+if (numRows($passwords) === 0) {
+  $message = 'Invalid login details! Try again.';
+  return;
+}
+
 $userId = $_SESSION[alias() . '_userId'] = $account['id'];
 $email = $_SESSION[alias() . '_email'] = $account['email'];
 
@@ -71,7 +82,5 @@ if (isset($_POST['remember']) && $_POST['remember'] === true) {
 }
 
 setUserSession($userId);
-createSystemLog($stationId, $userId, 'Logged in', $userId, clientIp());
-
 redirect(uri() . '/' . $activeApp);
 ?>
