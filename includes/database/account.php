@@ -3,31 +3,19 @@
 // tbl_employee
 // tbl_teacher_account
 // tbl_user
-function account($email, $password=null) {
-  $sql = "SELECT `tbl_employee`.`Emp_ID` AS `id`, `tbl_teacher_account`.`Teacher_TIN` AS `email`, `tbl_employee`.`Emp_Status` AS `status` FROM `tbl_teacher_account` JOIN `tbl_employee` ON `tbl_teacher_account`.`Teacher_TIN` = `tbl_employee`.`Emp_Email` WHERE `tbl_employee`.`Emp_Status`='Active' AND `tbl_teacher_account`.`Teacher_TIN`='{$email}'";
-
-  if ($password === null) {
-    $sql .= " LIMIT 1;";
-  } else {
-    $sql .= " AND `tbl_teacher_account`.`Teacher_Password`='{$password}' LIMIT 1;";
-  }
-
-  return query($sql);
+function account($email) {
+  return query("SELECT `Emp_ID` AS `id`, `Emp_Email` AS `email` FROM `tbl_employee` WHERE `Emp_Status`='Active' AND `Emp_Email`='{$email}' LIMIT 1;");
 }
 
-function createAccount($email, $password) {
-  nonQuery("INSERT INTO tbl_teacher_account (`Teacher_TIN`, `Teacher_Password`) VALUES ('$email', '$password');");
+function accountPassword($id, $password) {
+  return query("SELECT `Teacher_TIN` AS `id` FROM tbl_teacher_account WHERE `Teacher_TIN`='{$id}' AND Teacher_Password='{$password}';");
 }
 
-function updateAccountPassword($email, $password) {
-  nonQuery("UPDATE tbl_teacher_account SET Teacher_Password='{$password}' WHERE Teacher_TIN='{$email}' LIMIT 1;");
+function createAccount($id, $password) {
+  nonQuery("INSERT INTO tbl_teacher_account (`Teacher_TIN`, `Teacher_Password`) VALUES ('$id', '$password');");
 }
 
-function updateAccountEmail($newEmail, $oldEmail) {
-  nonQuery("UPDATE tbl_teacher_account SET Teacher_TIN='{$newEmail}' WHERE Teacher_TIN='{$oldEmail}' LIMIT 1;");
-}
-
-function updateUserRoleEmail($email, $id) {
-  nonQuery("UPDATE tbl_user SET username='{$email}' WHERE usercode='{$id}';");
+function updateAccountPassword($id, $password) {
+  nonQuery("UPDATE tbl_teacher_account SET Teacher_Password='{$password}' WHERE Teacher_TIN='{$id}' LIMIT 1;");
 }
 ?>
