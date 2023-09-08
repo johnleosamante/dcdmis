@@ -424,7 +424,6 @@
             <div class="form-group">
               <label for="email" class="mb-0">Email Address <?php showAsterisk($editMode); ?></label>
               <input id="email" name="email" type="email" class="form-control" <?php echo setActiveNavigation($editMode, 'title="Required field" placeholder="juan.delacruz@deped.gov.ph"'); ?> value="<?php echo $employee['email']; ?>" autocomplete="false" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
-              <input type="hidden" name="data-verifier" value="<?php echo cipher($employee['email']); ?>">
             </div>
           </div>
         </div>
