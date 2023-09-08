@@ -44,11 +44,14 @@ if (isset($_POST['save-training'])) {
     updateTraining($trainingId, $title, $from, $to, $hours, $type, $sponsor, $venue);
   }
 
+  $showAlert = true;
+
   if (affectedRows()) {
-    $showAlert = true;
-    $success = true;
     $message = 'Training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>] has been ' . $status . ' successfully.';
     createSystemLog($stationId, $userId, $logMessage, $trainingId, clientIp());
+  } else {
+    $message = $status === 'saved' ? 'No new training has been created.' : 'No training has been updated';
+    $success = false;
   }
 }
 
@@ -56,8 +59,8 @@ if (isset($_POST['add-participants'])) {
   $showAlert = true;
 
   if (!isset($_POST['participants'])) {
-    $success = false;
     $message = 'No training participant was added to training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
+    $success = false;
     return;
   }
 
@@ -75,9 +78,11 @@ if (isset($_POST['add-participants'])) {
 
   if (affectedRows()) {
     $noun = $no === 1 ? ' was' : 's were';
-    $success = true;
     $message = $no . ' training participant' . $noun . ' added successfully to training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
     createSystemLog($stationId, $userId, 'Added ' . $no . ' training participants', $trainingId, clientIp());
+  } else {
+    $message = 'No training participant was added to training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
+    $success = false;
   }
 }
 
@@ -87,11 +92,14 @@ if (isset($_POST['remove-participant'])) {
   
   deleteTrainingParticipant($trainingId, $participantId);
 
+  $showAlert = true;
+
   if (affectedRows()) {
-    $showAlert = true;
-    $success = true;
     $message = 'Employee [<a href="#" title="View ' . userName($participantId) . ' employee information">' . userName($participantId) . '</a>] has been successfully removed as participant from training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
     createSystemLog($stationId, $userId, 'Removed training participant', $trainingId, clientIp());
+  } else {
+    $message = 'Employee [<a href="#" title="View ' . userName($participantId) . ' employee information">' . userName($participantId) . '</a>] was not removed as participant from training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
+    $success = false;
   }
 }
 ?>
