@@ -9,7 +9,7 @@ if (numRows($employeeIdentifications) > 0) {
   $card = sanitize($identification['card']);
   $number = sanitize($identification['number']);
   $place = sanitize($identification['place']);
-  $date = $identification['date'];
+  $date = !empty($card) && (!empty($number) && !empty($place)) ? $identification['date'] : date('Y-m-d');
 }
 ?>
 <div class="tab-pane fade" id="identification">
