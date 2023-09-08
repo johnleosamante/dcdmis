@@ -22,7 +22,7 @@ messageAlert($showAlert, $message, $success);
         <a class="nav-link text-secondary" href="#identification" data-toggle="tab">Identification Details</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#professional-title" data-toggle="tab">Professional Titles</a>
+        <a class="nav-link text-secondary" href="#professional-title" data-toggle="tab">Professional Title</a>
       </li>
     </ul>
 
