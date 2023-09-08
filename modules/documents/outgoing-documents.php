@@ -42,6 +42,7 @@ messageAlert($showAlert, $message, $success);
 
                     if ($row['station'] === $station) {
                       linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
+                      modalDropdownItem(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($row['id']), 'Cancel', 'fa-trash-alt', 'Cancel Document');
                     }
                     ?>
                   </div>
