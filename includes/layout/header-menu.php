@@ -94,13 +94,16 @@ $displayPhoto = uri() . '/' . $user['picture'];
   if (numRows($schools)) {
     $school = fetchAssoc($schools);
   ?>
-    <div class="h3 m-0"><?php echo $school['name']; ?></div>
+    <h1 class="h3 m-0"><?php echo $school['name']; ?></h1>
     <?php if (!empty($school['address'])) : ?>
       <div class="small m-0"><?php echo $school['address']; ?></div>
     <?php endif;
-  }
+  } ?>
 
+  <h2 class="h1 m-0 mt-4"><?php echo strtoupper($appTitle); ?></h2>
+
+  <?php
   if ($hasPortal && !$isSchoolPortal) : ?>
-    <div class="h2 mt-4 m-0"><?php echo stationName($station); ?></div>
+    <h3 class="h4 m-0"><?php echo stationName($station); ?></h3>
   <?php endif; ?>
 </div>
