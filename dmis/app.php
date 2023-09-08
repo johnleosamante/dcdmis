@@ -6,22 +6,21 @@ if (isPublicDomain()) {
 
 restrictPublicAccess(hasHoliday());
 
-$activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
-$page = $appTitle = 'Division Management Information System';
-
 if (!isset($userId)) {
   redirect(uri() . '/login');
 }
 
-if (numRows(userRole($userId, $activeApp)) === 0) {
+if (numRows(userRole($userId, 'dmis')) === 0) {
   redirect(uri() . '/pis');
 }
+
+$activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
+$page = $appTitle = 'Division Management Information System';
 
 if (isset($_POST['primary-search-button'])) {
   redirect(customUri('dmis', 'Search', sanitize($_POST['primary-search-text'])));
 }
 
-// School Management
 if (isset($_POST['save-school'])) {
   $referenceSchoolId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $referenceAlias = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
@@ -48,10 +47,15 @@ if (isset($_POST['save-school'])) {
     $logMessage = 'Updated school';
   }
 
+  $showAlert = true;
+  $link = '[<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . strtoupper($schoolName) . '</a>]';
+
   if (affectedRows()) {
-    $message = 'School [<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . strtoupper($schoolName) . '</a>] has been ' . $status . ' successfully.';
-    $showAlert = true;
+    $message = 'School ' . $link . ' has been ' . $status . ' successfully.';
     createSystemLog($stationId, $userId, $logMessage, $schoolId, clientIp());
+  } else {
+    $message = 'No changes have been made to school ' . $link . '.';
+    $success = false;
   }
 }
 
@@ -76,14 +80,18 @@ if (isset($_POST['save-section'])) {
     $logMessage = 'Updated section';
   }
 
+  $showAlert = true;
+  $link = '[<a href="' . customUri('dmis', 'Section Information', $alias) . '" title="View ' . $section . ' information">' . strtoupper($section) . '</a>]';
+
   if (affectedRows()) {
-    $message = 'Section [<a href="' . customUri('dmis', 'Section Information', $alias) . '" title="View ' . $section . ' information">' . strtoupper($section) . '</a>] has been ' . $status . ' successfully.';
-    $showAlert = true;
+    $message = 'Section ' . $link . ' has been ' . $status . ' successfully.';
     createSystemLog($stationId, $userId, $logMessage, $alias, clientIp());
+  } else {
+    $message = 'No changes have been made to section ' . $link . '.';
+    $success = false;
   }
 }
 
-// User management
 if (isset($_POST['edit-user'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $userEmail = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
@@ -103,7 +111,7 @@ if (isset($_POST['edit-user'])) {
     if (numRows(dtsUser($employeeId)) > 0) {
       updateUserRole($employeeId, $dtsStation, $dtsPortal);
     } else {
-      createUserRole($employeeId, $userEmail, $userRole, $dtsStation, $dtsPortal);
+      createUserRole($employeeId, $userRole, $dtsStation, $dtsPortal);
     }
   } else {
     deleteUserRole($employeeId, $dtsStation);
@@ -111,7 +119,7 @@ if (isset($_POST['edit-user'])) {
 
   if ($isHrmisUser) {
     if (!isStationUser($employeeId, 'HRMIS')) {
-      createUserRole($employeeId, $userEmail, $userRole, 'HRMIS');
+      createUserRole($employeeId, $userRole, 'HRMIS');
     } 
   } else {
     deleteUserRole($employeeId, 'HRMIS');
@@ -119,7 +127,7 @@ if (isset($_POST['edit-user'])) {
 
   if ($isDmisUser) {
     if (!isStationUser($employeeId, 'DMIS')) {
-      createUserRole($employeeId, $userEmail, $userRole, 'DMIS');
+      createUserRole($employeeId, $userRole, 'DMIS');
     } 
   } else {
     deleteUserRole($employeeId, 'DMIS');
@@ -127,30 +135,33 @@ if (isset($_POST['edit-user'])) {
 
   if ($isHrtdmsUser) {
     if (!isStationUser($employeeId, 'HRTDMS')) {
-      createUserRole($employeeId, $userEmail, $userRole, 'HRTDMS');
+      createUserRole($employeeId, $userRole, 'HRTDMS');
     } 
   } else {
     deleteUserRole($employeeId, 'HRTDMS');
   }
 
   $showAlert = true;
-  $message = 'User assignment has been set successfully.';
-  $success = true;
+  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'https://localhost/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')">' . userName($employeeId, true) . '</a>';
+  $message = 'Employee [' . $employee . '] user assignment has been set successfully.';
   createSystemLog($stationId, $userId, 'Assigned user privileges', $employeeId, clientIp());
 }
 
 if (isset($_POST['reset-user'])) {
-  $depedEmail = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $temporaryPassword = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
 
-  updateAccountPassword($depedEmail, hashPassword($temporaryPassword));
+  updateAccountPassword($employeeId, hashPassword($temporaryPassword));
+
+  $showAlert = true;
+  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'https://localhost/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')">' . userName($employeeId, true) . '</a>';
 
   if (affectedRows()) {
-    $employeeId = fetchAssoc(account($depedEmail))['id'];
-    $showAlert = true;
-    $message = 'User password has been reset successfully.';
-    $success = true;
+    $message = 'Employee [' . $employee . '] password has been reset successfully.';
     createSystemLog($stationId, $userId, 'Reset user password', $employeeId, clientIp());
+  } else {
+    $message = 'No changes have been made to employee [' . $employee . ']  password.';
+    $success = false;
   }
 }
 
@@ -159,11 +170,15 @@ if (isset($_POST['remove-user'])) {
 
   deleteUserRoles($employeeId);
 
+  $showAlert = true;
+  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'https://localhost/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')">' . userName($employeeId, true) . '</a>';
+
   if (affectedRows()) {
-    $showAlert = true;
-    $message = 'User has been removed successfully.';
-    $success = true;
+    $message = 'Employee [' . $employee . '] user privileges have been removed successfully.';
     createSystemLog($stationId, $userId, 'Removed user privileges', $employeeId, clientIp());
+  } else {
+    $message = 'No changes have been made to employee [' . $employee . '] user privileges.';
+    $success = false;
   }
 }
 ?>
