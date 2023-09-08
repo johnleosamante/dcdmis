@@ -15,7 +15,7 @@ if (isset($_POST['update-password'])) {
     return;
   }
 
-  if (numRows(account($email, hashPassword($oldPassword))) === 0) {
+  if (numRows(accountPassword($userId, hashPassword($oldPassword))) === 0) {
     $message = 'You have entered an incorrect old password.';
     $oldPassword = $password = $passwordConfirm = $generatePassword = null;
     return;
@@ -36,13 +36,15 @@ if (isset($_POST['update-password'])) {
     return;
   }
 
-  updateAccountPassword($email, hashPassword($passwordConfirm));
+  updateAccountPassword($userId, hashPassword($passwordConfirm));
 
   if (affectedRows()) {
     $message = 'Your password has been updated successfully.';
     $success = true;
     $oldPassword = $password = $passwordConfirm = $generatePassword = null;
     createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
+  } else {
+    $message = 'No changes have been made to your password.';
   }
 }
 
@@ -52,11 +54,14 @@ if (isset($_POST['update-contact-details'])) {
 
   updateEmployeeContactDetails($alternateMobile, $alternateEmail, $userId);
 
+  $showAlert = true;
+
   if (affectedRows()) {
-    $showAlert = true;
     $message = 'Your contact details have been updated successfully.';
-    $success = true;
     createSystemLog($stationId, $userId, 'Updated contact details', $userId, clientIp());
+  } else {
+    $message = 'No changes have been made to your contact details.';
+    $success = false;
   }
 }
 
@@ -72,11 +77,14 @@ if (isset($_POST['update-identification'])) {
     updateIdentification($card, $number, $place, $date, $userId);
   }
 
+  $showAlert = true;
+
   if (affectedRows()) {
-    $showAlert = true;
     $message = 'Your identification details have been updated successfully.';
-    $success = true;
     createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
+  } else {
+    $message = 'No changes have been made to your identification details.';
+    $success = false;
   }
 }
 
@@ -86,11 +94,14 @@ if (isset($_POST['update-professional-titles'])) {
 
   updateProfessionalTitles($before, $after, $userId);
 
+  $showAlert = true;
+
   if (affectedRows()) {
-    $showAlert = true;
-    $message = 'Your professional titles have been updated successfully.';
-    $success = true;
+    $message = 'Your professional title have been updated successfully.';
     createSystemLog($stationId, $userId, 'Updated professional titles', $userId, clientIp());
+  } else {
+    $message = 'No changes have been made to your professional title.';
+    $success = false;
   }
 }
 ?>
