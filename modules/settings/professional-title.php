@@ -14,14 +14,14 @@ toName($title['lname'], $title['fname'], $title['mname'], $title['ext'], true, t
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="before-title" class="mb-0">Before</label>
+              <label for="before-title" class="mb-0">Prefix</label>
               <input type="text" class="form-control" id="before-title" name="before-title" value="<?php echo $before; ?>" title="Leave blank if not applicable">
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="after-title" class="mb-0">After</label>
+              <label for="after-title" class="mb-0">Suffix</label>
               <input type="text" class="form-control" id="after-title" name="after-title" value="<?php echo $after; ?>" title="Leave blank if not applicable">
             </div>
           </div>
