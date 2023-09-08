@@ -71,8 +71,8 @@ function celebrantEmployees($month, $station=null) {
   return query("SELECT * FROM (SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS `month`, tbl_employee.Emp_Day AS `day`, tbl_employee.Emp_Year AS `year`, tbl_employee.EmpNo AS agency_id, YEAR(CURRENT_DATE) - CONVERT(tbl_employee.Emp_Year, DECIMAL) AS year_age, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_station.Emp_Station AS station_code, tbl_employee.Picture AS picture FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID WHERE tbl_employee.Emp_Status='Active') AS employee WHERE `month`='{$month}' {$filter} ORDER BY `day` ASC;");
 }
 
-function createEmployee($id, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image) {
-  nonQuery("INSERT INTO tbl_employee (Emp_ID, Emp_LName, Emp_FName, Emp_MName, Emp_Extension, Emp_Sex, Emp_Month, Emp_Day, Emp_Year, Emp_Email, Emp_Cell_No, Picture, Emp_Status) VALUES ('$id', '$lname', '$fname', '$mname', '$ext', '$sex', '$bmonth', '$bday', '$byear', '$email', '$mobile', '$image', 'Active');");
+function createEmployee($id, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status) {
+  nonQuery("INSERT INTO tbl_employee (Emp_ID, Emp_LName, Emp_FName, Emp_MName, Emp_Extension, Emp_Sex, Emp_Month, Emp_Day, Emp_Year, Emp_Email, Emp_Cell_No, Picture, Emp_Status) VALUES ('$id', '$lname', '$fname', '$mname', '$ext', '$sex', '$bmonth', '$bday', '$byear', '$email', '$mobile', '$image', '$status');");
 }
 
 function updateEmployee($lname, $fname, $mname, $ext, $bmonth, $bday, $byear, $pob, $sex, $civilStatus, $civilStatusSpecify, $citizenship, $dualCitizenship, $country, $rlot, $rstreet, $rsubdivision, $rbarangay, $rcity, $rprovince, $rzip, $plot, $pstreet, $psubdivision, $pbarangay, $pcity, $pprovince, $pzip, $height, $weight, $bloodType, $crn, $bp, $pagibig, $philhealth, $sss, $telephone, $mobile, $email, $tin, $agencyId, $photo, $id) {
