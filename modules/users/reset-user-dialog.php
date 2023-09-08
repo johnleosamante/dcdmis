@@ -49,7 +49,7 @@ if (numRows($employees) > 0) {
 
       <div class="modal-footer">
         <?php if ($hasEmployee) : ?>
-          <input type="hidden" name="verifier" value="<?php echo cipher($depedEmail); ?>">
+          <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
           <input type="hidden" name="data-verifier" value="<?php echo cipher($randomPassword); ?>">
           <button class="btn btn-danger" name="reset-user" type="submit">Continue</button>
         <?php endif;
