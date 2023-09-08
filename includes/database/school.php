@@ -25,6 +25,10 @@ function schoolDetailsById($id) {
   return query("SELECT Abraviate AS alias, SchoolName AS `name`, `Address` AS `address`, Incharg_ID AS `head`, District_code AS `district`, School_Category AS category, SchoolLogo AS `logo`, telephone, email, website, fb_page FROM tbl_school WHERE SchoolID='{$id}' LIMIT 1;");
 }
 
+function schoolsByDistrict($district) {
+  return query("SELECT SchoolID AS `id`, SchoolName AS `name` FROM tbl_school WHERE District_code='{$district}' ORDER BY SchoolName;");
+}
+
 function updateSchoolHead($schoolId, $headId) {
   nonQuery("UPDATE tbl_school SET `Incharg_ID`='{$headId}' WHERE `SchoolID`='{$schoolId}';");
 }
