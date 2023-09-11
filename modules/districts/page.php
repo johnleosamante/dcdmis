@@ -59,15 +59,20 @@ messageAlert($showAlert, $message, $success);
                 $total = $count['total'];
               }
               ?>
-              <td class="align-middle"><?php echo $es; ?></td>
-              <td class="align-middle"><?php echo $hs; ?></td>
-              <td class="align-middle"><?php echo $is; ?></td>
+              <td class="align-middle"><?php echo toHandleNull($es, '0'); ?></td>
+              <td class="align-middle"><?php echo toHandleNull($hs, '0'); ?></td>
+              <td class="align-middle"><?php echo toHandleNull($is, '0'); ?></td>
               <td class="align-middle"><?php echo $total; ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                    <?php linkDropdownItem(customUri($activeApp, 'District Information', $row['id']), 'View', 'fa-eye', 'View District'); ?>
+                    <?php
+                    linkDropdownItem(customUri($activeApp, 'District Information', $row['id']), 'View', 'fa-eye', 'View District');
+                    if ($isDmis) {
+                      modalDropdownItem(uri() . '/modules/districts/save-district-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit District');
+                    }
+                    ?>
                   </div>
                 </div>
               </td>
