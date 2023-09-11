@@ -21,6 +21,7 @@ if (numRows($sections) > 0) {
   $sectionName = $section['name'];
   $sectionHead = $section['head'];
   $sectionDivision = $section['division'];
+  $modalTitle = 'Edit Section';
 }
 ?>
 
