@@ -1,12 +1,11 @@
 <?php
 // modules/districts/page.php
 messageAlert($showAlert, $message, $success);
-$isHrmis = $activeApp === 'hrmis';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php if ($activeApp === 'dmis') {
+    <?php if ($isDmis) {
       contentTitleWithModal('Districts', uri() . '/modules/districts/save-district-dialog.php', 'Add', 'fa-plus');
     } else {
       contentTitle('Districts');
