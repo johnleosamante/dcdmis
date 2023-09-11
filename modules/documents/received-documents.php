@@ -29,7 +29,12 @@ messageAlert($showAlert, $message, $success);
             <tr class="text-uppercase">
               <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']); ?></td>
               <td class="text-left align-middle"><?php echo $row['description']; ?></td>
-              <td class="align-middle"><?php echo userName($row['receiver']); ?></td>
+              <td class="align-middle">
+                <div>
+                  <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['receiver']), userName($row['receiver'])); ?>
+                </div>
+                <div class="small"><?php echo fetchAssoc(position($row['receiver']))['position']; ?></div>
+              </td>
               <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
