@@ -12,4 +12,12 @@ function districts() {
 function districtSchoolCount($id) {
   return query("SELECT SUM(CASE WHEN tbl_school.School_Category='Elementary' THEN 1 ELSE 0 END) AS es, SUM(CASE WHEN tbl_school.School_Category='Secondary' THEN 1 ELSE 0 END) AS hs, SUM(CASE WHEN tbl_school.School_Category='Integrated' THEN 1 ELSE 0 END) AS `is`, COUNT(*) AS `total` FROM tbl_school INNER JOIN tbl_district ON tbl_school.District_code=tbl_district.District_code WHERE tbl_school.District_code='{$id}' LIMIT 1;");
 }
+
+function createDistrict($id, $district, $head) {
+  nonQuery("INSERT INTO tbl_district (`District_code`, `District_Name`, `Emp_ID`) VALUES ('{$id}', '{$district}', '{$head}');");
+}
+
+function updateDistrict($newCode, $district, $head, $oldCode) {
+  nonQuery("UPDATE tbl_district SET `District_code`='{$newCode}', `District_Name`='{$district}', `Emp_ID`='{$head}' WHERE `District_code`='{$oldCode}' LIMIT 1;");
+}
 ?>
