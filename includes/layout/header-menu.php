@@ -5,6 +5,7 @@ $displayName = toName($user['lname'], $user['fname'], $user['mname'], $user['ext
 $position = fetchAssoc(position($userId))['position'];
 $displayPhoto = uri() . '/' . $user['picture'];
 ?>
+
 <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
   <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
     <i class="fa fa-bars"></i>
@@ -13,6 +14,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
   <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-0 my-2 my-md-0 mw-100 navbar-search" method="POST" action="">
     <div class="input-group">
       <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search" name="primary-search-text" autofocus required>
+
       <div class="input-group-append">
         <button class="btn btn-primary" type="submit" name="primary-search-button">
           <i class="fas fa-search fa-sm"></i>
@@ -31,6 +33,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
         <form class="form-inline mr-auto w-100 navbar-search" method="POST" action="">
           <div class="input-group">
             <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search" name="primary-search-text" required>
+            
             <div class="input-group-append">
               <button class="btn btn-primary" type="submit" name="primary-search-button">
                 <i class="fas fa-search fa-sm"></i>
@@ -45,8 +48,10 @@ $displayPhoto = uri() . '/' . $user['picture'];
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="<?php echo strtoupper($displayName); ?>">
         <span class="mr-2 d-none d-md-inline">
           <div class="text-gray-600 small"><?php echo strtoupper($displayName); ?></div>
+          
           <div class="text-xs text-gray-500"><?php echo strtoupper($position); ?></div>
         </span>
+
         <span class="d-flex justify-content-center align-middle img-profile rounded-circle overflow-hidden">
           <img src="<?php echo $displayPhoto; ?>" alt="<?php echo $displayName; ?>" height="100%">
         </span>
@@ -77,11 +82,14 @@ $displayPhoto = uri() . '/' . $user['picture'];
 
         <div class="dropdown-divider"></div>
         
-        <?php linkDropdownItem(customUri($activeApp, 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
+        <?php
+        linkDropdownItem(customUri($activeApp, 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
 
         linkDropdownItem(customUri($activeApp, 'Settings'), 'Settings', 'fa-cogs', 'Go to settings');
         ?>
+
         <div class="dropdown-divider"></div>
+        
         <?php modalDropdownItem(uri() . '/logout/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout'); ?>
       </div>
     </li>
@@ -91,19 +99,19 @@ $displayPhoto = uri() . '/' . $user['picture'];
 <div class="background-cover banner text-uppercase text-gray-700">
   <?php
   $schools = schoolDetailsById($stationId);
-  if (numRows($schools)) {
-    $school = fetchAssoc($schools);
-  ?>
+
+  if (numRows($schools)) :
+    $school = fetchAssoc($schools); ?>
     <h1 class="h3 m-0"><?php echo $school['name']; ?></h1>
+
     <?php if (!empty($school['address'])) : ?>
       <div class="small m-0"><?php echo $school['address']; ?></div>
     <?php endif;
-  } ?>
+  endif; ?>
 
   <h2 class="h1 m-0 mt-4"><?php echo strtoupper($appTitle); ?></h2>
 
-  <?php
-  if ($hasPortal && !$isSchoolPortal) : ?>
+  <?php if ($hasPortal && !$isSchoolPortal) : ?>
     <h3 class="h4 m-0"><?php echo stationName($station); ?></h3>
   <?php endif; ?>
 </div>
