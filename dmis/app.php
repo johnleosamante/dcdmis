@@ -92,6 +92,34 @@ if (isset($_POST['save-section'])) {
   }
 }
 
+if (isset($_POST['save-district'])) {
+  $referenceDistrictId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $districtCode = sanitize($_POST['code']);
+  $districtName = sanitize($_POST['district']);
+  $districtHead = sanitize($_POST['head']);
+  $status = 'saved';
+  $logMessage = 'Added district';
+
+  if (numRows(district($referenceDistrictId)) === 0) {
+    createDistrict($districtCode, $districtName, $districtHead);
+  } else {
+    updateDistrict($districtCode, $districtName, $districtHead, $referenceDistrictId);
+    $status = 'updated';
+    $logMessage = 'Updated district';
+  }
+
+  $showAlert = true;
+  $link = '[<a href="' . customUri('dmis', 'District Information', $districtCode) . '" title="View ' . $districtName . ' information">' . strtoupper($districtName) . '</a>]';
+
+  if (affectedRows()) {
+    $message = 'District ' . $link . ' has been ' . $status . ' successfully.';
+    createSystemLog($stationId, $userId, $logMessage, $districtCode, clientIp());
+  } else {
+    $message = 'No changes have been made to district ' . $link . '.';
+    $success = false;
+  }
+}
+
 if (isset($_POST['edit-user'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $userEmail = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
