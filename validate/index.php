@@ -2,6 +2,9 @@
 require_once('../includes/function.php');
 require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/document.php');
+require_once(root() . '/includes/database/employee.php');
+require_once(root() . '/includes/database/utility.php');
 
 function alterCivilService() {
   echo 'Altering Civil Service...<br>';
@@ -107,6 +110,7 @@ function checkEmployeeOtherInformation() {
 
 function checkEmployeePsipop() {
   echo 'Checking employee psipop...<br>';
+
   $activeEmployees = query("SELECT * FROM tbl_employee;");
   $no = 0;
 
@@ -201,9 +205,13 @@ function setTransactionStatus() {
   echo 'Setting transaction status...<br>';
 
   $no = 0;
+
   nonQuery("UPDATE tbl_transactions SET `Status`='Unread' WHERE Trans_Stats NOT LIKE '%Complete%' OR Trans_Stats NOT LIKE '%Cancel%';");
+
   $no = affectedRows();
+
   nonQuery("UPDATE tbl_transactions SET `Status`='Read' WHERE Trans_Stats LIKE '%Complete%' OR Trans_Stats LIKE '%Cancel%';");
+
   $no = $no + affectedRows();
 
   echo '(' . $no . ') Completed...<br><br>';
@@ -211,9 +219,7 @@ function setTransactionStatus() {
 
 function setTransactionLogStatus() {
   echo 'Setting transaction log status...<br>';
-
   nonQuery("UPDATE tbl_transactions_Log SET `Status`='Done';");
-
   echo '(' . affectedRows(). ') Completed...<br><br>';
 }
 
@@ -226,6 +232,7 @@ function setLastTransactionLogStatus() {
   while ($t = fetchAssoc($transactions)) {
     $logs = query("SELECT * FROM tbl_transactions_log WHERE Transaction_code='" . $t['TransCode'] . "' ORDER BY Date_recieved DESC LIMIT 1;");
     $l = fetchAssoc($logs);
+
     nonQuery("UPDATE tbl_transactions_log SET `Status`='New' WHERE `No`='" . $l['No'] . "' AND Trans_status NOT LIKE '%Complete%' AND Trans_status NOT LIKE '%Cancel%';");
 
     if (affectedRows() === 1) {
@@ -238,9 +245,7 @@ function setLastTransactionLogStatus() {
 
 function setActivityStatus($value, $reference) {
   echo 'Setting activity status (' . $value . ')...<br>';
-
   nonQuery("UPDATE tbl_system_logs SET `Status`='{$value}' WHERE `Status`='{$reference}';");
-
   echo '(' . affectedRows() . ') Completed...<br><br>';
 }
 
@@ -252,6 +257,7 @@ function setLoginTargetId() {
 
   while($log = fetchAssoc($logs)) {
     nonQuery("UPDATE tbl_system_logs SET `target_id`='" . $log['id'] . "' WHERE `Status`='Logged in' AND Emp_ID='" . $log['id'] . "';");
+
     if (affectedRows()) {
       ++$no;
     }
@@ -268,6 +274,7 @@ function setCreatedDocumentTargetId() {
 
   while ($log = fetchAssoc($logs)) {
     nonQuery("UPDATE tbl_system_logs SET `target_id`='" . $log['id'] . "' WHERE `Status`='Created document' AND Time_Log='" . $log['datetime'] . "';");
+
     if (affectedRows()) {
       echo ++$no . ' | ' . $log['id'] . '<br>';
     }
@@ -278,24 +285,15 @@ function setCreatedDocumentTargetId() {
 
 function updateEducationalBackgroundLevel($value, $reference) {
   echo 'Updating educational background level (' . $value . ')...<br>';
-
   nonQuery("UPDATE `educational_background` SET `Level`='{$value}' WHERE `Level`='{$reference}';");
-
   echo '(' . affectedRows() . ') Completed...<br><br>';
 }
 
 function addUserPrivilege($id, $email, $station) {
   echo 'Adding user privilege (' . $email . ')...<br>';
-
   nonQuery("INSERT INTO tbl_user (`usercode`, `username`, `Station`) VALUES ('{$id}', '{$email}', '{$station}');");
-
   echo '(' . affectedRows() . ') Completed...<br><br>';
 }
-
-require_once(root() . '/includes/database/document.php');
-require_once(root() . '/includes/database/employee.php');
-require_once(root() . '/includes/database/utility.php');
-
 
 function setHeadToTransaction($stationId, $headId, $startDate=null, $endDate=null) {
   echo "Setting station [$stationId] and station head [" . userName($headId) . "]...<br>";
@@ -359,7 +357,7 @@ function setEmailToUserId() {
 
 // setEmailToUserID();
 
-// // add schools
+// // Schools
 // setHeadToTransaction('125962-', '221111570000');
 // setHeadToTransaction('125963-', '221111160000');
 // setHeadToTransaction('125965-', '221111080000');
@@ -409,7 +407,7 @@ function setEmailToUserId() {
 // setHeadToTransaction('500242-', '20221217141601');
 // setHeadToTransaction('501111-', '221111430000');
 
-// // add sections
+// // Sections
 // setHeadToTransaction('ACCOUNTING-', '221110380000'); // Cabilin
 // setHeadToTransaction('ACCOUNTING-', '221115150000', '2023-06-26', '2023-08-14'); // Capulan
 // setHeadToTransaction('ACCOUNTING-', '20230823101248', '2023-08-14', '2023-08-26'); // Lanat
