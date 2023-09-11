@@ -1,6 +1,13 @@
 <?php
 // modules/error/error.php
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/activity.php');
+
 $isAccessible = !isWeekend() && isOfficialTime() && !hasHoliday();
+
+if ($isAccessible) { 
+  redirect(uri() . '/login');
+}
 ?>
 
 <div class="text-center py-0">
