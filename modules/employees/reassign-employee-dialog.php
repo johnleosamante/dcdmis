@@ -5,6 +5,7 @@ require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/position.php');
 require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/database/district.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
@@ -54,9 +55,15 @@ if (numRows($employees) > 0) {
             <label for="position" class="mb-0">Position <?php showAsterisk(); ?></label>
             <select id="position" name="position" class="form-control" required>
               <option value="">Select position...</option>
-              <?php $jobPositions = positions();
-              while ($jobPosition = fetchArray($jobPositions)) : ?>
-                <option value="<?php echo $jobPosition['id']; ?>" <?php echo setOptionSelected($jobPosition['id'], $positionId); ?>><?php echo $jobPosition['position']; ?></option>
+              <?php
+              $categories = positionCategories();
+              while ($category = fetchAssoc($categories)) : ?>
+                <optgroup label="<?php echo $category['category']; ?>">
+                  <?php $jobPositions = positionsByCategory($category['category']);
+                  while ($jobPosition = fetchArray($jobPositions)) : ?>
+                    <option value="<?php echo $jobPosition['id']; ?>" <?php echo setOptionSelected($jobPosition['id'], $positionId); ?>><?php echo $jobPosition['position']; ?></option>
+                  <?php endwhile; ?>
+                </optgroup>
               <?php endwhile; ?>
             </select>
           </div>
@@ -65,9 +72,16 @@ if (numRows($employees) > 0) {
             <label for="assignment" class="mb-0">Place of Assignment <?php showAsterisk(); ?></label>
             <select id="assignment" name="assignment" class="form-control" required>
               <option value="">Select place of assignment...</option>
-              <?php $assignments = schoolsExcept($stationId);
-              while ($assignment = fetchArray($assignments)) : ?>
-                <option value="<?php echo $assignment['id']; ?>"><?php echo $assignment['name']; ?></option>
+              <?php
+              $districts = districts();
+              while ($district = fetchAssoc($districts)) : ?>
+                <optgroup label="<?php echo $district['name']; ?>">
+                  <?php
+                  $schools = schoolsByDistrict($district['id']);
+                  while ($school = fetchAssoc($schools)) : ?>
+                    <option value="<?php echo $school['id']; ?>" <?php echo setOptionSelected($school['id'], $stationId); ?>><?php echo $school['name']; ?></option>
+                  <?php endwhile; ?>
+                </optgroup>
               <?php endwhile; ?>
             </select>
           </div>
