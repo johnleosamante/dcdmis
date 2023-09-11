@@ -98,6 +98,11 @@ $displayPhoto = uri() . '/' . $user['picture'];
 
 <div class="background-cover banner text-uppercase text-gray-700">
   <?php
+  $isPis = $activeApp === 'pis';
+  $isDts = $activeApp === 'dts';
+  $isHrmis = $activeApp = 'hrmis';
+  $isHrtdms = $activeApp = 'hrtdms';
+  $isDmis = $activeApp = 'dmis';
   $schools = schoolDetailsById($stationId);
 
   if (numRows($schools)) :
@@ -111,7 +116,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
 
   <h2 class="h1 m-0 mt-4"><?php echo strtoupper($appTitle); ?></h2>
 
-  <?php if ($hasPortal && !$isSchoolPortal) : ?>
+  <?php if ($hasPortal && !$isSchoolPortal && $isDts) : ?>
     <h3 class="h4 m-0"><?php echo stationName($station); ?></h3>
   <?php endif; ?>
 </div>
