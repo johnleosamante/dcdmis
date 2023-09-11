@@ -4,6 +4,12 @@ $user = fetchAssoc(employee($userId));
 $displayName = toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true, true);
 $position = fetchAssoc(position($userId))['position'];
 $displayPhoto = uri() . '/' . $user['picture'];
+
+$isPis = $activeApp === 'pis';
+$isDts = $activeApp === 'dts';
+$isHrmis = $activeApp === 'hrmis';
+$isHrtdms = $activeApp === 'hrtdms';
+$isDmis = $activeApp === 'dmis';
 ?>
 
 <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
@@ -11,6 +17,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
     <i class="fa fa-bars"></i>
   </button>
 
+  <?php if ($isDts || $isHrmis || $isHrtdms) : ?>
   <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-0 my-2 my-md-0 mw-100 navbar-search" method="POST" action="">
     <div class="input-group">
       <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search" name="primary-search-text" autofocus required>
@@ -22,8 +29,10 @@ $displayPhoto = uri() . '/' . $user['picture'];
       </div>
     </div>
   </form>
+  <?php endif; ?>
 
   <ul class="navbar-nav ml-auto">
+    <?php if ($isDts || $isHrmis || $isHrtdms) : ?>
     <li class="nav-item dropdown no-arrow d-sm-none">
       <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-search fa-fw"></i>
@@ -43,6 +52,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
         </form>
       </div>
     </li>
+    <?php endif; ?>
 
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="<?php echo strtoupper($displayName); ?>">
@@ -98,11 +108,6 @@ $displayPhoto = uri() . '/' . $user['picture'];
 
 <div class="background-cover banner text-uppercase text-gray-700">
   <?php
-  $isPis = $activeApp === 'pis';
-  $isDts = $activeApp === 'dts';
-  $isHrmis = $activeApp === 'hrmis';
-  $isHrtdms = $activeApp === 'hrtdms';
-  $isDmis = $activeApp === 'dmis';
   $schools = schoolDetailsById($stationId);
 
   if (numRows($schools)) :
