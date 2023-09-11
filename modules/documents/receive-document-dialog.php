@@ -16,6 +16,7 @@ if (numRows($documents) > 0) {
   $document = fetchAssoc($documents);
   $documentId = $document['id'];
   $description = $document['description'];
+  $details = $document['details'];
   $documentLogs = fetchAssoc(documentLogs($documentId));
   $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['to'] === $station;
   $modalTitle = $hasDocument ? 'Receive Document' : $modalTitle;
@@ -34,9 +35,14 @@ if (numRows($documents) > 0) {
             <input id="code" type="text" value="<?php echo $documentId ?>" class="form-control text-uppercase" disabled>
           </div>
 
-          <div class="form-group mb-0">
+          <div class="form-group">
             <label for="description" class="mb-0">Description</label>
             <textarea id="description" class="form-control text-uppercase" rows="3" disabled><?php echo $description; ?></textarea>
+          </div>
+
+          <div class="form-group mb-0">
+            <label for="details" class="mb-0">Additional details</label>
+            <textarea id="details" class="form-control text-uppercase" rows="2" disabled><?php echo $details; ?></textarea>
           </div>
         <?php } else {
           missingAlert($modalTitle);
