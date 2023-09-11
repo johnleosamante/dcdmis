@@ -100,9 +100,9 @@ $displayPhoto = uri() . '/' . $user['picture'];
   <?php
   $isPis = $activeApp === 'pis';
   $isDts = $activeApp === 'dts';
-  $isHrmis = $activeApp = 'hrmis';
-  $isHrtdms = $activeApp = 'hrtdms';
-  $isDmis = $activeApp = 'dmis';
+  $isHrmis = $activeApp === 'hrmis';
+  $isHrtdms = $activeApp === 'hrtdms';
+  $isDmis = $activeApp === 'dmis';
   $schools = schoolDetailsById($stationId);
 
   if (numRows($schools)) :
