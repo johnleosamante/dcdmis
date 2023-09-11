@@ -17,25 +17,25 @@ require_once(root() . '/includes/layout/components.php');
       <div class="modal-body">
         <div class="form-group">
           <label for="lname" class="mb-0">Last Name <?php showAsterisk(); ?></label>
-          <input id="lname" name="lname" class="form-control" type="text" placeholder="Last name..." required>
+          <input id="lname" name="lname" class="form-control" type="text" title="ex. DELA CRUZ" placeholder="ex. DELA CRUZ" required>
         </div>
 
         <div class="form-group">
           <label for="fname" class="mb-0">First Name <?php showAsterisk(); ?></label>
-          <input id="fname" name="fname" class="form-control" type="text" placeholder="First name..." required>
+          <input id="fname" name="fname" class="form-control" type="text" title="ex. JUAN"  placeholder="ex. JUAN" required>
         </div>
 
         <div class="row">
           <div class="col-8">
             <div class="form-group">
               <label for="mname" class="mb-0">Middle Name</label>
-              <input id="mname" name="mname" class="form-control" title="Leave blank if not applicable" placeholder="Middle name..." type="text">
+              <input id="mname" name="mname" class="form-control" title="ex. BAUTISTA, Leave blank if not applicable" placeholder="ex. BAUTISTA" type="text">
             </div>
           </div>
           <div class="col-4">
             <div class="form-group">
               <label for="ext" class="mb-0">Extension</label>
-              <input id="ext" name="ext" class="form-control" title="Example: Jr., Sr., III (Leave blank if not applicable)"  placeholder="Extension..."  type="text">
+              <input id="ext" name="ext" class="form-control" title="ex. JR., SR., III, Leave blank if not applicable"  placeholder="ex. JR."  type="text">
             </div>
           </div>
         </div>
@@ -62,12 +62,12 @@ require_once(root() . '/includes/layout/components.php');
 
         <div class="form-group">
           <label for="email" class="mb-0">DepEd Email Address <?php showAsterisk(); ?></label>
-          <input id="email" name="email" class="form-control" type="email" title="Example: juan.delacruz@deped.gov.ph" pattern="[a-z0-9._%+\-]+@deped.gov.ph" placeholder="juan.delacruz@deped.gov.ph" required>
+          <input id="email" name="email" class="form-control" type="email" title="ex. juan.delacruz@deped.gov.ph" pattern="[a-z0-9._%+\-]+@deped.gov.ph" placeholder="ex. juan.delacruz@deped.gov.ph" required>
         </div>
 
         <div class="form-group">
           <label for="mobile" class="mb-0">Mobile Number <?php showAsterisk(); ?></label>
-          <input id="mobile" name="mobile" class="form-control" type="text" title="Required field, Format: 09XX-XXX-XXXX" pattern="\d{4}[\-]\d{3}[\-]\d{4}" placeholder="09XX-XXX-XXXX" required>
+          <input id="mobile" name="mobile" class="form-control" type="text" title="ex. 09XX-XXX-XXXX" pattern="\d{4}[\-]\d{3}[\-]\d{4}" placeholder="ex. 09XX-XXX-XXXX" required>
         </div>
 
         <div class="form-group">
