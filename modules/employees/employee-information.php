@@ -28,7 +28,6 @@ $employeePhoto = '';
       if (!$editMode) {
         contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Edit Employee Information', $employeeId), 'Edit', 'fa-edit');
       } else {
-        $employeeId = $employeeId;
         $employeePhoto = $employee['picture'];
         contentTitleWithLink('Update Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Employee Information', $employeeId));
       }
