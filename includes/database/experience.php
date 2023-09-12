@@ -1,6 +1,7 @@
 <?php
 // includes/database/experience.php
 // work_experience
+// tbl_service_records
 function experiences($id) {
   return query("SELECT `No` AS `no`, `From` AS `from`, `To` AS `to`, `ispresent`, `Position_Title` AS `position`, Organization AS organization, Monthly_Salary AS salary, Salary_Grade AS sg, Job_Status AS `status`, Goverment AS isgovernment, Emp_ID AS id FROM work_experience WHERE Emp_ID='{$id}' ORDER BY `From` DESC, `To` DESC;");
 }
@@ -19,5 +20,13 @@ function updateExperience($from, $to, $isPresent, $position, $organization, $sal
 
 function deleteExperience($id, $no) {
   nonQuery("DELETE FROM work_experience WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+}
+
+function serviceRecords($id) {
+  return query("SELECT `No` AS `no`, `date_from` AS `from`, `date_to` AS `to`, `position`, `work_status` AS `status`, `salary`, `station`, `Emp_ID` AS `id` FROM `tbl_service_records` WHERE `Emp_ID`='{$id}' ORDER BY `date_from` ASC;");
+}
+
+function serviceRecord($id, $no) {
+  return query("SELECT `No` AS `no`, `date_from` AS `from`, `date_to` AS `to`, `position`, `work_status` AS `status`, `salary`, `station`, `Emp_ID` AS `id` FROM `tbl_service_records` WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 ?>
