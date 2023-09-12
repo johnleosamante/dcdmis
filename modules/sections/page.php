@@ -5,7 +5,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php if ($activeApp === 'dmis') {
+    <?php if ($isDmis) {
       contentTitleWithModal('Sections', uri() . '/modules/sections/save-section-dialog.php', 'Add', 'fa-plus');
     } else {
       contentTitle('Sections');
