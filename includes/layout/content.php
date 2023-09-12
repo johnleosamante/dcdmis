@@ -53,6 +53,9 @@ if (!isset($url) || $url === 'dashboard') {
     case 'Edit Employee Information':
       $file = 'employees/employee-information';
       break;
+    case 'Service Record':
+      $file = 'service-record/page';
+      break;
     case 'Employee Search':
       $file = 'employees/employee-search';
       break;
