@@ -8,7 +8,7 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $experienceId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$experience = $position = $organization = $salary = $grade = $status = $service = '';
+$experience = $position = $organization = $salary = $grade = $status = $service = null;
 $from = $to = date('Y-m-d');
 $isPresent = false;
 $modalTitle = 'Add Work Experience';
@@ -37,7 +37,7 @@ if (isset($experienceId)) {
   <div class="modal-content">
     <?php modalHeader($modalTitle); ?>
 
-    <form method="post" role="form" action="">
+    <form method="POST" action="">
       <div class="modal-body">
         <div class="row">
           <div class="col-md-6">
@@ -57,7 +57,7 @@ if (isset($experienceId)) {
                   <div class="form-check" title="Check if present work">
                     <input class="form-check-input" id="is-present" type="checkbox" name="is-present" value="1" <?php echo setItemChecked($isPresent); ?>>
                     <label class="form-check-label" for="is-present">Present</label>
-                  </div><!-- .form-check-->
+                  </div>
                 </div>
               </div>
               <input id="to" type="date" name="to" class="form-control" title="Required field" value="<?php echo $to; ?>" required>
@@ -120,14 +120,14 @@ if (isset($experienceId)) {
         </div>
 
         <?php requiredLegend(0); ?>
-      </div><!-- .modal-body -->
+      </div>
 
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
         <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-        <button type="submit" class="btn btn-primary" name="save-experience">Save</button>
+        <button type="submit" class="btn btn-primary" name="save-experience">Continue</button>
         <?php cancelModalButton(); ?>
-      </div><!-- .modal-footer -->
+      </div>
     </form>
-  </div><!-- .modal-content -->
-</div><!-- .modal-dialog -->
+  </div>
+</div>
