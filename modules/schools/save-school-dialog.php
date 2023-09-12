@@ -4,7 +4,6 @@ require_once('../../includes/function.php');
 require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/school.php');
-require_once(root() . '/includes/database/district.php');
 require_once(root() . '/includes/layout/components.php');
 
 $schoolId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
