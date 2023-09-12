@@ -1,5 +1,5 @@
 <?php
-// modules/employee/new-employee-dialog.php
+// modules/employee/save-employee-dialog.php
 require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/position.php');
@@ -11,7 +11,7 @@ require_once(root() . '/includes/layout/components.php');
 
 <div class="modal-dialog">
   <div class="modal-content">
-    <?php modalHeader('New Employee'); ?>
+    <?php modalHeader('Add Employee'); ?>
 
     <form action="" method="POST">
       <div class="modal-body">
