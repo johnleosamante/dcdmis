@@ -77,6 +77,7 @@ if (isset($_POST['receive-document'])) {
 
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, '-', 'Received', 'New');
+
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been received successfully.';
 
     createSystemLog($stationId, $userId, 'Received document', $documentId, clientIp());
@@ -98,6 +99,7 @@ if (isset($_POST['forward-document'])) {
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, sanitize($_POST['destination']), $purpose, 'New', $details);
     updateDocumentStatus($documentId, $purpose, 'Unread', $details);
+
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been forwarded successfully!';
 
     createSystemLog($stationId, $userId, 'Forwarded document', $documentId, clientIp());
@@ -141,6 +143,7 @@ if (isset($_POST['cancel-document'])) {
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
     updateDocumentStatus($documentId, $status, 'Read', $remarks);
+    
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
 
     createSystemLog($stationId, $userId, $status . ' document', $documentId, clientIp());
