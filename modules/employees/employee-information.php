@@ -13,8 +13,10 @@ if (numRows($employees) > 0) {
   return;
 }
 
-if (!is_dir(root() . '/uploads/images/' . $employeeId)) {
-  mkdir(root() . '/uploads/images/' . $employeeId, 0777, true);
+$uploadDirectory = root() . '/uploads/images/' . $employeeId;
+
+if (!is_dir($uploadDirectory)) {
+  mkdir($uploadDirectory, 0777, true);
 }
 
 $editMode = $url === 'Edit Employee Information';
