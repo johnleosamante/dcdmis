@@ -1,28 +1,22 @@
 <?php
 // dts/dashboard.php
 messageAlert($showAlert, $message, $success);
-
-contentTitleWithModal('Dashboard', uri() . '/modules/employees/new-employee-dialog.php', 'New Employee', 'fa-plus');
+contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dialog.php', 'New Employee', 'fa-plus');
 ?>
 
 <div class="row mt-4">
   <?php
   card('Active Employees', customUri('hrmis', 'Active Employees'), 'fa-user-check', 'primary', $countActive);
-
   card('Retirable Employees', customUri('hrmis', 'Retirable Employees'), 'fa-user-clock', 'success', $countRetirable);
-
   card('Celebrant Employees', customUri('hrmis', 'Celebrant Employees'), 'fa-birthday-cake', 'info');
-
   card('Archived Employees', customUri('hrmis', 'Archived Employees'), 'fa-archive', 'danger');
   ?>
-</div><!-- .row -->
+</div>
 
 <div class="row">
   <?php
   card('Districts', customUri('hrmis', 'Districts'), 'fa-map-marked-alt', 'info', $districtCount);
-
   card('Schools', customUri('hrmis', 'Schools'), 'fa-school', 'warning', $schoolCount);
-
   card('Sections', customUri('hrmis', 'Sections'), 'fa-map-signs', 'primary', $sectionCount);
   ?>
 </div>
@@ -46,7 +40,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/new-employee-dial
         </div>
       </div>
     </div>
-  </div><!-- .col-xl-3 -->
+  </div>
 
   <div class="col-xl-9 col-lg-12 mb-4">
     <div class="card shadow">
@@ -62,8 +56,8 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/new-employee-dial
         </div>
       </div>
     </div>
-  </div><!-- .col-xl-9 -->
-</div><!-- .row -->
+  </div>
+</div>
 
 <div class="row">
   <div class="col-xl-3 col-lg-12 mb-4">
@@ -75,15 +69,13 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/new-employee-dial
         <div class="chart-pie py-2">
           <canvas id="category-doughnut-chart"></canvas>
           <script>
-            <?php
-            $employeeCategory = employeeCategory();
-            ?>
+            <?php $employeeCategory = employeeCategory(); ?>
             generatePieChart(<?php echo json_encode(fetchAllAssoc($employeeCategory)); ?>, generateColorPallete(<?php echo numRows($employeeCategory); ?>), 'category-doughnut-chart');
           </script>
         </div>
       </div>
     </div>
-  </div><!-- .col-xl-3 -->
+  </div>
 
   <div class="col-xl-9 col-lg-12 mb-4">
     <div class="card shadow">
@@ -94,16 +86,14 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/new-employee-dial
         <div class="chart-bar h-auto">
           <canvas id="position-bar-chart"></canvas>
           <script>
-            <?php
-            $employeePositions = employeePosition();
-            ?>
+            <?php $employeePositions = employeePosition(); ?>
             generateBarChart(<?php echo json_encode(fetchAllAssoc($employeePositions)); ?>, generateColorPallete(<?php echo numRows($employeePositions); ?>), 'position-bar-chart');
           </script>
         </div>
       </div>
     </div>
-  </div><!-- .col-xl-9 -->
-</div><!-- .row -->
+  </div>
+</div>
 
 <div class="row">
   <div class="col-xl-3 col-lg-12 mb-4">
@@ -115,15 +105,13 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/new-employee-dial
         <div class="chart-pie py-2">
           <canvas id="district-polar-area-chart"></canvas>
           <script>
-            <?php
-            $districtEmployees = districtEmployee();
-            ?>
+            <?php $districtEmployees = districtEmployee(); ?>
             generatePolarAreaChart(<?php echo json_encode(fetchAllAssoc($districtEmployees)); ?>, generateColorPallete(<?php echo numRows($districtEmployees); ?>), 'district-polar-area-chart');
           </script>
         </div>
       </div>
     </div>
-  </div><!-- .col-xl-3 -->
+  </div>
 
   <div class="col-xl-9 col-lg-12">
     <div class="card shadow">
@@ -134,13 +122,11 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/new-employee-dial
         <div class="chart-bar h-auto">
           <canvas id="station-bar-chart"></canvas>
           <script>
-            <?php
-            $employeeStations = employeeStation();
-            ?>
+            <?php $employeeStations = employeeStation(); ?>
             generateBarChart(<?php echo json_encode(fetchAllAssoc($employeeStations)); ?>, generateColorPallete(<?php echo numRows($employeeStations); ?>), 'station-bar-chart');
           </script>
         </div>
       </div>
     </div>
-  </div><!-- .col-xl-9 -->
-</div><!-- .row -->
+  </div>
+</div>
