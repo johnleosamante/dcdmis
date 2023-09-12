@@ -8,19 +8,12 @@ $countOutgoing = number_format(numRows(outgoingDocuments($station)));
 $countOngoing = number_format(numRows(ongoingDocuments($station)));
 
 sidebarModalItem(uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus');
-
 sidebarMenuItem(customUri('dts', 'Incoming Documents'), 'Incoming', 'fa-file-download', isset($url) && str_contains($url, 'Incoming'), $countIncoming);
-
 sidebarMenuItem(customUri('dts', 'Pending Documents'), 'Pending', 'fa-history', isset($url) && str_contains($url, 'Pending'), $countPending);
-
 sidebarMenuItem(customUri('dts', 'Outgoing Documents'), 'Outgoing', 'fa-file-upload', isset($url) && str_contains($url, 'Outgoing'), $countOutgoing);
-
 sidebarDivider();
-
 sidebarMenuItem(customUri('dts', 'Ongoing Documents'), 'Ongoing', 'fa-tasks', isset($url) && str_contains($url, 'Ongoing'), $countOngoing);
-
 sidebarDivider();
-
 sidebarMenuItem(customUri('dts', 'Completed Documents'), 'Completed', 'fa-check-circle', isset($url) && str_contains($url, 'Completed'));
 
 if (!$isSchoolPortal) {
