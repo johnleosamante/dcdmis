@@ -10,8 +10,7 @@ $description = $document['description'];
 $employee = strtoupper(userName($document['user']));
 $employeePosition = fetchAssoc(position($document['user']))['position'];
 $documentStatus = strtolower($document['status']);
-$status = '';
-$status = str_contains($documentStatus, 'complete') ? ' (Completed)' : $status;
+$status = str_contains($documentStatus, 'complete') ? ' (Completed)' : '';
 $status = str_contains($documentStatus, 'cancel') ? ' (Canceled)' : $status;
 
 $pdf->SetFont('calibrib',  'B', 18);
