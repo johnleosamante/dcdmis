@@ -43,6 +43,7 @@ if (isset($_POST['save-school'])) {
     updateTransactionLogTo($alias, $referenceAlias);
     updateTransactionFrom($alias, $referenceAlias);
     updateSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $referenceSchoolId);
+
     $status = 'updated';
     $logMessage = 'Updated school';
   }
@@ -52,6 +53,7 @@ if (isset($_POST['save-school'])) {
 
   if (affectedRows()) {
     $message = 'School ' . $link . ' has been ' . $status . ' successfully.';
+
     createSystemLog($stationId, $userId, $logMessage, $schoolId, clientIp());
   } else {
     $message = 'No changes have been made to school ' . $link . '.';
@@ -76,6 +78,7 @@ if (isset($_POST['save-section'])) {
     updateTransactionLogTo($alias, $referenceSectionId);
     updateTransactionFrom($alias, $referenceSectionId);
     updateSection($alias, $head, $section, $division, $referenceSectionId);
+
     $status = 'updated';
     $logMessage = 'Updated section';
   }
@@ -85,6 +88,7 @@ if (isset($_POST['save-section'])) {
 
   if (affectedRows()) {
     $message = 'Section ' . $link . ' has been ' . $status . ' successfully.';
+
     createSystemLog($stationId, $userId, $logMessage, $alias, clientIp());
   } else {
     $message = 'No changes have been made to section ' . $link . '.';
@@ -104,6 +108,7 @@ if (isset($_POST['save-district'])) {
     createDistrict($districtCode, $districtName, $districtHead);
   } else {
     updateDistrict($districtCode, $districtName, $districtHead, $referenceDistrictId);
+
     $status = 'updated';
     $logMessage = 'Updated district';
   }
@@ -113,6 +118,7 @@ if (isset($_POST['save-district'])) {
 
   if (affectedRows()) {
     $message = 'District ' . $link . ' has been ' . $status . ' successfully.';
+
     createSystemLog($stationId, $userId, $logMessage, $districtCode, clientIp());
   } else {
     $message = 'No changes have been made to district ' . $link . '.';
@@ -172,6 +178,7 @@ if (isset($_POST['edit-user'])) {
   $showAlert = true;
   $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'https://localhost/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')">' . userName($employeeId, true) . '</a>';
   $message = 'Employee [' . $employee . '] user assignment has been set successfully.';
+
   createSystemLog($stationId, $userId, 'Assigned user privileges', $employeeId, clientIp());
 }
 
@@ -186,6 +193,7 @@ if (isset($_POST['reset-user'])) {
 
   if (affectedRows()) {
     $message = 'Employee [' . $employee . '] password has been reset successfully.';
+    
     createSystemLog($stationId, $userId, 'Reset user password', $employeeId, clientIp());
   } else {
     $message = 'No changes have been made to employee [' . $employee . ']  password.';
@@ -203,6 +211,7 @@ if (isset($_POST['remove-user'])) {
 
   if (affectedRows()) {
     $message = 'Employee [' . $employee . '] user privileges have been removed successfully.';
+    
     createSystemLog($stationId, $userId, 'Removed user privileges', $employeeId, clientIp());
   } else {
     $message = 'No changes have been made to employee [' . $employee . '] user privileges.';
