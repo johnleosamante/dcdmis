@@ -1,6 +1,15 @@
 <?php
 // includes/database/section.php
 // tbl_div_section
+// tbl_functional_division
+function functionalDivisions() {
+  return query("SELECT Div_Code AS id, Division_Name AS `name` FROM tbl_division ORDER BY `name` ASC;");
+}
+
+function functionalDivision($id) {
+  return query("SELECT Div_Code AS id, Division_Name AS `name` FROM tbl_division WHERE Div_Code='{$id}' LIMIT 1;");
+}
+
 function sectionsExcept($id) {
   return query("SELECT Section_Code AS id, Section_Incharge AS `head`, Section_Office AS `name`, functional_division AS division FROM tbl_div_section WHERE Section_Code <> '{$id}' ORDER BY Section_Office ASC;");
 }
