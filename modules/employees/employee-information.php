@@ -1,9 +1,9 @@
 <?php
 // modules/employees/employee-information.php
+messageAlert($showAlert, $message, $success);
+
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $employees = employee($employeeId);
-
-messageAlert($showAlert, $message, $success);
 
 if (numRows($employees) > 0) {
   $employee = fetchAssoc($employees);
@@ -13,8 +13,8 @@ if (numRows($employees) > 0) {
   return;
 }
 
-if (!is_dir('../uploads/images/' . $employeeId)) {
-  mkdir('../uploads/images/' . $employeeId, 0777, true);
+if (!is_dir(root() . '/uploads/images/' . $employeeId)) {
+  mkdir(root() . '/uploads/images/' . $employeeId, 0777, true);
 }
 
 $editMode = $url === 'Edit Employee Information';
