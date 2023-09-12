@@ -1,7 +1,7 @@
 <?php
 // dts/dashboard.php
 messageAlert($showAlert, $message, $success);
-contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dialog.php', 'New Employee', 'fa-plus');
+contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-plus');
 ?>
 
 <div class="row mt-4">
