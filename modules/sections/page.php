@@ -1,8 +1,6 @@
 <?php
 // modules/sections/page.php
 messageAlert($showAlert, $message, $success);
-$isHrmis = $activeApp === 'hrmis';
-$isDmis = $activeApp === 'dmis';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
