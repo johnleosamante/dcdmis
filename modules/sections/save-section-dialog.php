@@ -6,7 +6,6 @@ require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/position.php');
 require_once(root() . '/includes/database/section.php');
-require_once(root() . '/includes/database/functional-division.php');
 require_once(root() . '/includes/database/utility.php');
 require_once(root() . '/includes/layout/components.php');
 
