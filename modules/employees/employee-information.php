@@ -24,7 +24,7 @@ $employeePhoto = '';
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
     <?php
-    if (!isset($isPis)) {
+    if (!$isPis) {
       if (!$editMode) {
         contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Edit Employee Information', $employeeId), 'Edit', 'fa-edit');
       } else {
