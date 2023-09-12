@@ -2,6 +2,11 @@
 // includes/database/document.php
 // tbl_transactions
 // tbl_transactions_log
+// tbl_document_purpose
+function documentPurpose() {
+  return query("SELECT `purpose` FROM tbl_document_purpose;");
+}
+
 function document($id) {
   return query("SELECT TransCode AS id, Title AS `description`, Date_time AS `datetime`, Trans_from AS `from`, Trans_Stats AS `status`, details FROM tbl_transactions WHERE TransCode='{$id}' LIMIT 1;");
 }
