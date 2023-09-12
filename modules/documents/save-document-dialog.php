@@ -4,10 +4,8 @@ require_once('../../includes/function.php');
 require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/document.php');
-require_once(root() . '/includes/database/document-purpose.php');
 require_once(root() . '/includes/database/section.php');
 require_once(root() . '/includes/database/school.php');
-require_once(root() . '/includes/database/functional-division.php');
 require_once(root() . '/includes/layout/components.php');
 
 $documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
