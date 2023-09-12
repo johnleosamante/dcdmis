@@ -735,10 +735,10 @@ if (isset($_POST['reassign-employee'])) {
   $showAlert = true;
 
   if (affectedRows()) {
-    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId) . '</a>] has been reassigned successfully to [<a href="#" title="View ' . stationName($eStationId) . ' information">' . strtoupper(stationName($eStationId)) . '</a>].';
+    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been reassigned successfully to [<a href="#" title="View ' . stationName($eStationId) . ' information">' . strtoupper(stationName($eStationId)) . '</a>].';
     createSystemLog($stationId, $userId, 'Reassigned employee', $employeeId, clientIp());
   } else {
-    $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId) . '</a>] assignment has been made.';
+    $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] assignment has been made.';
     $success = false;
   }
 }
@@ -759,10 +759,10 @@ if (isset($_POST['remove-employee'])) {
   $showAlert = true;
 
   if (affectedRows()) {
-    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId) . '</a>] has been removed successfully.';
+    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
     createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
   } else {
-    $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId) . '</a>] status has been made.';
+    $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.';
     $success = false;
   }
 }
@@ -779,10 +779,10 @@ if (isset($_POST['set-school-head'])) {
 
   if (affectedRows()) {
     $success = true;
-    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId) . '</a>] has been successfully set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . stationName($schoolId) . '</a>].';
+    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been successfully set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . stationName($schoolId) . '</a>].';
     createSystemLog($stationId, $userId, 'Set School Head', $employeeId, clientIp());
   } else {
-    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId) . '</a>] was not set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . stationName($schoolId) . '</a>].';
+    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] was not set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . stationName($schoolId) . '</a>].';
     $success = false;
   }
 }
