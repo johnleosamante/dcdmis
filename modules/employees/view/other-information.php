@@ -1,6 +1,5 @@
 <?php
 // modules/employees/view/other-information.php
-
 $otherInformation = otherInformation($employeeId);
 $hasThirdDegree = $hasFourthDegree = $wasGuilty = $wasCharged = $wasConvicted = $wasSeparated = $wasCandidate = $resigned = $immigrant = $isIndigenous = $isDifferentlyAbled = $isSoloParent = '0';
 $relatedDetails = $guiltyDetails = $caseStatus = $convictedDetails = $separatedDetails = $candidateDetails = $resignedDetails = $immigrantCountry = $isIndigenousSpecify = $isDifferentlyAbledSpecify = $soloParentSpecify = '';
@@ -37,8 +36,8 @@ if (numRows($otherInformation) > 0) {
 
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'other-information', 'show active'); ?>" id="other-information">
   <?php if ($editMode) : ?>
-    <form action="" method="POST" role="form">
-    <?php endif; ?>
+    <form action="" method="POST">
+  <?php endif; ?>
 
     <div class="mt-3">
       <p class="mb-1">Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau or office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed,</p>
@@ -276,11 +275,11 @@ if (numRows($otherInformation) > 0) {
       </ol>
     </div>
 
-    <?php if ($editMode) : ?>
+  <?php if ($editMode) : ?>
       <div class="form-group mb-3">
         <input type="hidden" name="verifier" value="<?php echo cipher($employeeId); ?>">
         <button class="btn btn-primary btn-block" name="update-other-information"><i class="fas fa-save fa-fw"></i>Update Other Information</button>
       </div>
     </form>
   <?php endif; ?>
-</div><!-- .tab-pane -->
+</div>
