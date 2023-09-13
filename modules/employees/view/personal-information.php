@@ -4,8 +4,8 @@
 
 <div class="tab-pane fade<?php echo setActiveNavigation(!isset($activeTab) || $activeTab === 'personal-information', 'show active'); ?>" id="personal-information">
   <?php if ($editMode) : ?>
-    <form action="" method="POST" role="form" enctype="multipart/form-data">
-    <?php endif; ?>
+    <form action="" method="POST" enctype="multipart/form-data">
+  <?php endif; ?>
     <div class="row mt-3">
       <div class="col-sm-12 col-md-4 col-lg-3 col-xl-2 mb-4">
         <img src="<?php echo uri() . '/' . $employee['picture']; ?>" width="100%" class="border rounded" id="employee-photo">
@@ -437,9 +437,9 @@
             <button class="btn btn-primary btn-block" name="update-personal-information"><i class="fas fa-save fa-fw"></i>Update Personal Information</button>
           </div>
         <?php endif; ?>
-      </div><!-- .col-12 -->
-    </div><!-- .row -->
-    <?php if ($editMode) : ?>
-    </form>
+      </div>
+    </div>
+  <?php if ($editMode) : ?>
+  </form>
   <?php endif; ?>
-</div><!-- .tab-pane -->
+</div>
