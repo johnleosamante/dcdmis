@@ -5,7 +5,7 @@
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'recognition', 'show active'); ?>" id="recognition">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() . '/modules/employees/update/update-recognition.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Recogntion', 'primary'); ?>
+      <?php modalButtonSplit(uri() . '/modules/employees/save/save-recognition.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Recogntion', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -33,7 +33,7 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-recognition.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Edit', 'fa-edit', 'Edit Recognition'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-recognition.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Edit', 'fa-edit', 'Edit Recognition'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-recognition.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Delete', 'fa-trash', 'Delete Recognition'); ?>
                       </div>
@@ -50,5 +50,5 @@
         </tbody>
       </table>
     </div>
-  </div><!-- .row -->
-</div><!-- .tab-pane -->
+  </div>
+</div>
