@@ -5,7 +5,7 @@
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'civil-service-eligibility', 'show active'); ?>" id="civil-service-eligibility">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() .'/modules/employees/update/update-eligibility.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Civil Service Eligibility', 'primary'); ?>
+      <?php modalButtonSplit(uri() .'/modules/employees/save/save-eligibility.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Civil Service Eligibility', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -50,7 +50,7 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() .'/modules/employees/update/update-eligibility.php?e=' . cipher($employeeId) . '&id=' . cipher($eligibility['no']), 'Edit', 'fa-edit', 'Edit Eligibility'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/save/save-eligibility.php?e=' . cipher($employeeId) . '&id=' . cipher($eligibility['no']), 'Edit', 'fa-edit', 'Edit Eligibility'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-eligibility.php?e=' . cipher($employeeId) . '&id=' . cipher($eligibility['no']), 'Delete', 'fa-trash', 'Delete Eligibility'); ?>
                       </div>
@@ -67,5 +67,5 @@
         </tbody>
       </table>
     </div>
-  </div><!-- .row -->
-</div><!-- .tab-pane -->
+  </div>
+</div>
