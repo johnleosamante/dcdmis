@@ -54,7 +54,7 @@ if (numRows($documents) > 0) {
           <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
           <button class="btn btn-primary" type="submit" name="receive-document">Continue</button>
         <?php endif; ?>
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <?php cancelModalButton(); ?>
       </div>
     </form>
   </div>
