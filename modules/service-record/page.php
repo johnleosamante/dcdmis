@@ -19,7 +19,7 @@ if (numRows($employees) > 0) {
     <?php if ($isHrmis) {
       contentTitleWithModal('Service Record : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/service-record/save-service-record-dialog.php', 'Add', 'fa-plus');
     } else {
-      contentTitle('Service Record');
+      contentTitleWithLink('Service Record', uri() . '/pis');
     } ?>
   </div>
 
