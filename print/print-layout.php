@@ -8,7 +8,6 @@ class PDF extends FPDF {
     global $isSchoolPortal;
     global $section;
     global $address;
-    global $district;
     global $lineY;
     $this->Image(root() . '/assets/img/department.png', ($width / 2) - ($logoSize / 2), 8, $logoSize);
     $this->AddFont('OLDENGL', '', 'OLDENGL.php');
@@ -19,15 +18,10 @@ class PDF extends FPDF {
     $this->SetFont('OLDENGL', '', 18);
     $this->Cell(0, 0, 'Department of Education', 0, 0, 'C');
     $this->Ln(6);
-    $this->SetFont('TrajanPro-Regular', '', 11);
+    $this->SetFont('TrajanPro-Regular', '', 10);
     $this->Cell(0, 0, 'REGION IX - ZAMBOANGA PENINSULA', 0, 0, 'C');
     $this->Ln(5);
     $this->Cell(0, 0, 'SCHOOLS DIVISION OF DIPOLOG CITY', 0, 0, 'C');
-
-    if ($isSchoolPortal) {
-      $this->Ln(5);
-      $this->Cell(0, 0, strtoupper($district), 0, 0, 'C');
-    }
 
     if (!empty($section)) {
       $this->Ln(5);
@@ -37,7 +31,7 @@ class PDF extends FPDF {
     if ($isSchoolPortal) {
       $this->Ln(5);
       $this->Cell(0, 0, strtoupper($address), 0, 0, 'C');
-      $lineY = 70;
+      $lineY = $lineY + 5;
     }
 
     $this->Line($margin, $lineY, $width - $margin, $lineY);
