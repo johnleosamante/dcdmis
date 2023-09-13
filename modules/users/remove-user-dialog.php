@@ -48,6 +48,7 @@ if (numRows($employees) > 0) {
           <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
           <button class="btn btn-danger" name="remove-user" type="submit">Continue</button>
         <?php endif;
+        
         cancelModalButton(); ?>
       </div>
     </form>
