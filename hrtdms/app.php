@@ -7,7 +7,6 @@ if (isPublicDomain()) {
 restrictPublicAccess(hasHoliday());
 
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrtdms';
-$page = $appTitle = 'Human Resource Training &amp; Development Management System';
 
 if (!isset($userId)) {
   redirect(uri() . '/login');
@@ -16,6 +15,8 @@ if (!isset($userId)) {
 if (numRows(userRole($userId, $activeApp)) === 0) {
   redirect(uri() . '/pis');
 }
+
+$page = $appTitle = 'Human Resource Training &amp; Development Management System';
 
 if (isset($_POST['primary-search-button'])) {
   redirect(customUri('hrtdms', 'Training Details', sanitize($_POST['primary-search-text'])));
