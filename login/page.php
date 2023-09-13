@@ -7,12 +7,11 @@ require_once('services.php');
   <div class="card o-hidden border-0 shadow-lg my-5">
     <div class="card-header">
       <h3 class="text-center my-2"><?php echo $page; ?></h3>
-    </div><!-- card-header -->
+    </div>
 
     <div class="card-body text-center">
       <?php
       displayLogo(120, 120, '3', uri(), title());
-
       messageAlert($showAlert, $message, $success);
       ?>
 
@@ -20,7 +19,7 @@ require_once('services.php');
         <div class="form-group">
           <label for="email" class="font-weight-bold mb-1">Email Address</label>
           <input class="form-control" id="email" name="email" type="email" placeholder="juan.delacruz@deped.gov.ph" autofocus required>
-        </div><!-- .form-group -->
+        </div>
 
         <div class="form-group">
           <label for="password" class="font-weight-bold mb-1">Password</label>
@@ -32,17 +31,17 @@ require_once('services.php');
               </button>
             </div>
           </div>
-        </div><!-- .form-group -->
+        </div>
 
         <div class="form-group">
           <div class="form-check small">
             <input class="form-check-input" id="remember" type="checkbox" name="remember">
             <label class="form-check-label" for="remember">Remember me</label>
-          </div><!-- .form-check-->
-        </div><!-- .form-group -->
+          </div>
+        </div>
 
         <button type="submit" class="btn btn-primary btn-block" name="login">Login</button>
       </form>
-    </div><!-- .card-body -->
-  </div><!-- .card -->
-</div><!-- #login-panel -->
+    </div>
+  </div>
+</div>
