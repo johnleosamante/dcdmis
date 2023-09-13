@@ -12,6 +12,7 @@ if (numRows($employeeIdentifications) > 0) {
   $date = !empty($card) && (!empty($number) && !empty($place)) ? $identification['date'] : date('Y-m-d');
 }
 ?>
+
 <div class="tab-pane fade" id="identification">
   <form class="py-2" action="" method="POST">
     <div class="row">
