@@ -35,7 +35,7 @@ if (isset($voluntaryId)) {
   <div class="modal-content">
     <?php modalHeader($modalTitle); ?>
 
-    <form method="post" role="form" action="">
+    <form method="POST" action="">
       <div class="modal-body">
         <div class="form-group">
           <label for="organization" class="mb-0">Name & Address of Organization (Write in full): <?php showAsterisk(); ?></label>
@@ -82,9 +82,9 @@ if (isset($voluntaryId)) {
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
         <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-        <button type="submit" class="btn btn-primary" name="save-voluntary-work">Save</button>
+        <button type="submit" class="btn btn-primary" name="save-voluntary-work">Continue</button>
         <?php cancelModalButton(); ?>
-      </div><!-- .modal-footer -->
+      </div>
     </form>
-  </div><!-- .modal-content -->
-</div><!-- .modal-dialog -->
+  </div>
+</div>
