@@ -1,6 +1,5 @@
 <?php
 // include/function.php
-// All custom made general function goes here.
 require_once('config.php');
 
 $onError = function ($level, $message, $file, $line) {
