@@ -5,7 +5,6 @@ $districts = district($districtId);
 $district = $districtName = $psds = null;
 
 messageAlert($showAlert, $message, $success);
-$isHrmis = $activeApp === 'hrmis';
 
 if (numRows($districts) > 0) {
   $district = fetchAssoc($districts);
@@ -19,7 +18,7 @@ if (numRows($districts) > 0) {
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php if ($activeApp === 'dmis') {
+    <?php if ($isDmis) {
       contentTitleWithModal('District Information: ' . strtoupper($districtName), uri() . '/modules/districts/save-district-dialog.php?id=' . cipher($districtId), 'Edit', 'fa-edit');
     } else {
       contentTitle('District Information: ' . strtoupper($districtName));
