@@ -1,7 +1,7 @@
 <?php
 // includes/database/system-log.php
+// tbl_employee
 // tbl_system_logs
-
 function userLog($id) {
   return query("SELECT `Time_Log` AS `datetime`, `Status` AS `activity`, `target_id` AS `target`, `IPAddress` AS `ip` FROM tbl_system_logs WHERE Emp_ID='{$id}' ORDER BY `Time_Log` DESC;");
 }
