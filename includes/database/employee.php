@@ -13,7 +13,7 @@ function employees() {
   return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Status AS status FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID WHERE tbl_employee.Emp_Status <> 'Duplicate' ORDER BY tbl_employee.Emp_LName;");
 }
 function employeeName($lname, $fname, $mname, $ext) {
-  return query("SELECT Emp_ID AS id, Emp_LName AS lname, Emp_FName AS fname, Emp_MName AS mname, Emp_Extension AS ext FROM tbl_employee WHERE Emp_LName='$lname' AND Emp_FName='$fname' AND Emp_MName='$mname' AND Emp_Extension='$ext' LIMIT 1;");
+  return query("SELECT Emp_ID AS id, Emp_LName AS lname, Emp_FName AS fname, Emp_MName AS mname, Emp_Extension AS ext FROM tbl_employee WHERE Emp_LName='{$lname}' AND Emp_FName='{$fname}' AND Emp_MName='{$mname}' AND Emp_Extension='{$ext}' LIMIT 1;");
 }
 
 function employeeContactDetails($id) {
@@ -76,7 +76,7 @@ function celebrantEmployees($month, $station=null) {
 }
 
 function createEmployee($id, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status) {
-  nonQuery("INSERT INTO tbl_employee (Emp_ID, Emp_LName, Emp_FName, Emp_MName, Emp_Extension, Emp_Sex, Emp_Month, Emp_Day, Emp_Year, Emp_Email, Emp_Cell_No, Picture, Emp_Status) VALUES ('$id', '$lname', '$fname', '$mname', '$ext', '$sex', '$bmonth', '$bday', '$byear', '$email', '$mobile', '$image', '$status');");
+  nonQuery("INSERT INTO tbl_employee (Emp_ID, Emp_LName, Emp_FName, Emp_MName, Emp_Extension, Emp_Sex, Emp_Month, Emp_Day, Emp_Year, Emp_Email, Emp_Cell_No, Picture, Emp_Status) VALUES ('{$id}', '{$lname}', '{$fname}', '{$mname}', '{$ext}', '{$sex}', '{$bmonth}', '{$bday}', '{$byear}', '{$email}', '{$mobile}', '{$image}', '{$status}');");
 }
 
 function updateEmployee($lname, $fname, $mname, $ext, $bmonth, $bday, $byear, $pob, $sex, $civilStatus, $civilStatusSpecify, $citizenship, $dualCitizenship, $country, $rlot, $rstreet, $rsubdivision, $rbarangay, $rcity, $rprovince, $rzip, $plot, $pstreet, $psubdivision, $pbarangay, $pcity, $pprovince, $pzip, $height, $weight, $bloodType, $crn, $bp, $pagibig, $philhealth, $sss, $telephone, $mobile, $email, $tin, $agencyId, $photo, $id) {
