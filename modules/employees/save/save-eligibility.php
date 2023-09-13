@@ -35,7 +35,7 @@ if (isset($eligibilityId)) {
   <div class="modal-content">
     <?php modalHeader($modalTitle); ?>
 
-    <form method="post" role="form" action="">
+    <form method="POST" action="">
       <div class="modal-body">
         <div class="form-group">
           <label for="career" class="mb-0">Career Service / RA 1080 (Board/Bar) / Under Special Laws / CES / CSEE / Barangay Eligibility / Driver's License: <?php showAsterisk(); ?></label>
@@ -81,7 +81,7 @@ if (isset($eligibilityId)) {
                   <div class="form-check" title="Check if validity is applicable">
                     <input class="form-check-input" id="is-applicable" type="checkbox" name="is-applicable" value="1" <?php echo setItemChecked($isApplicable); ?>>
                     <label class="form-check-label" for="is-applicable">Applicable</label>
-                  </div><!-- .form-check-->
+                  </div>
                 </div>
               </div>
               <input id="validity" name="validity" type="date" class="form-control" value="<?php echo $validity; ?>">
@@ -90,14 +90,14 @@ if (isset($eligibilityId)) {
         </div>
 
         <?php requiredLegend(0); ?>
-      </div><!-- .modal-body -->
+      </div>
 
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
         <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-        <button type="submit" class="btn btn-primary" name="save-eligibility">Save</button>
+        <button type="submit" class="btn btn-primary" name="save-eligibility">Continue</button>
         <?php cancelModalButton(); ?>
-      </div><!-- .modal-footer -->
+      </div>
     </form>
-  </div><!-- .modal-content -->
-</div><!-- .modal-dialog -->
+  </div>
+</div>
