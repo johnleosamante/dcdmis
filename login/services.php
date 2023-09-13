@@ -1,4 +1,5 @@
-<?php // login/services.php 
+<?php
+// login/services.php 
 ?>
 
 <div id="services-panel" class="col-xl-8 col-lg-8 col-md-6 col-sm-12">
@@ -13,31 +14,31 @@
           <div class="card mb-4">
             <div class="card-header text-uppercase text-center font-weight-bold">
               Document Tracking System
-            </div><!-- .card-header -->
+            </div>
 
             <div class="card-body">
               Track paper trail of documents created by schools, sections and offices within the schools division.
-            </div><!-- .card-body -->
-          </div><!-- .card -->
+            </div>
+          </div>
 
           <div class="card mb-4">
             <div class="card-header text-uppercase text-center font-weight-bold">
               Personnel Information System
-            </div><!-- .card-header -->
+            </div>
 
             <div class="card-body">
               Monitor individual details of teaching, teaching-related and non-teaching employees of the schools division.
-            </div><!-- .card-body -->
-          </div><!-- .card -->
+            </div>
+          </div>
 
           <div class="card">
             <div class="card-header text-uppercase text-center font-weight-bold">
               Learning Resource Materials
-            </div><!-- .card-header -->
+            </div>
 
             <div class="card-body">
               Quality assured educational and learning materials accessible through a dedicated learning resource <a href="https://sites.google.com/deped.gov.ph/sdodipologlrms/home" title="SDO Dipolog Learning Resource Portal" target="_blank">portal</a>.
-            </div><!-- .card-body -->
+            </div>
           </div>
         </div>
 
