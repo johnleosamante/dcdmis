@@ -33,7 +33,7 @@ if (isset($learningId)) {
   <div class="modal-content">
     <?php modalHeader($modalTitle); ?>
 
-    <form method="post" role="form" action="">
+    <form method="POST" action="">
       <div class="modal-body">
         <div class="form-group">
           <label for="title" class="mb-0">Learning &amp; Development Intervention / Training Programs<br>(Write in full): <?php showAsterisk(); ?></label>
@@ -78,14 +78,14 @@ if (isset($learningId)) {
         </div>
 
         <?php requiredLegend(0); ?>
-      </div><!-- .modal-body -->
+      </div>
 
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
         <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-        <button type="submit" class="btn btn-primary" name="save-learning-development">Save</button>
+        <button type="submit" class="btn btn-primary" name="save-learning-development">Continue</button>
         <?php cancelModalButton(); ?>
-      </div><!-- .modal-footer -->
+      </div>
     </form>
-  </div><!-- .modal-content -->
-</div><!-- .modal-dialog -->
+  </div>
+</div>
