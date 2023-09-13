@@ -29,30 +29,27 @@ messageAlert($showAlert, $message, $success);
         <tbody>
           <?php
           $trainings = conductedTrainings();
-          if (numRows($trainings) > 0) {
-            while ($training = fetchAssoc($trainings)) : ?>
-              <tr>
-                <td class="align-middle">
-                  <?php linkItem(customUri('hrtdms', 'Training Details', $training['no']), $training['no']); ?>
-                </td>
-                <td class="align-middle text-left"><?php echo $training['title']; ?></td>
-                <td class="align-middle"><?php echo toDate($training['from']); ?></td>
-                <td class="align-middle"><?php echo toDate($training['to']); ?></td>
-                <td class="align-middle"><?php echo trainingType($training['type']); ?></td>
-                <td class="align-middle"><?php echo trainingSponsor($training['sponsor']); ?></td>
-                <td class="align-middle text-capitalize">
-                  <div class="dropdown no-arrow">
-                    <?php dropdownEllipsis(); ?>
-                    <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                      <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['no']), 'View', 'fa-eye', 'View Training');
-                      modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['no']), 'Edit', 'fa-edit', 'Edit Training'); ?>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-          <?php endwhile;
-          }
-          ?>
+          while ($training = fetchAssoc($trainings)) : ?>
+          <tr>
+            <td class="align-middle">
+              <?php linkItem(customUri('hrtdms', 'Training Details', $training['no']), $training['no']); ?>
+            </td>
+            <td class="align-middle text-left"><?php echo $training['title']; ?></td>
+            <td class="align-middle"><?php echo toDate($training['from']); ?></td>
+            <td class="align-middle"><?php echo toDate($training['to']); ?></td>
+            <td class="align-middle"><?php echo trainingType($training['type']); ?></td>
+            <td class="align-middle"><?php echo trainingSponsor($training['sponsor']); ?></td>
+            <td class="align-middle text-capitalize">
+              <div class="dropdown no-arrow">
+                <?php dropdownEllipsis(); ?>
+                <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
+                  <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['no']), 'View', 'fa-eye', 'View Training');
+                  modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['no']), 'Edit', 'fa-edit', 'Edit Training'); ?>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <?php endwhile; ?>
         </tbody>
 
         <tfoot>
