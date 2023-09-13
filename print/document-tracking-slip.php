@@ -1,5 +1,32 @@
 <?php
 // print/document-tracking-slip.php
+$logoSize = 19.5;
+$margin = 25.4;
+$width = 210;
+$height = 297;
+$lineY = 55;
+$multiplePage = true;
+$section = strtoupper(stationName($station));
+$school = fetchArray(schoolDetailsById($stationId));
+$district = fetchAssoc(district($school['district']))['name'];
+$stationLogo = root() . '/' . $school['logo'];
+$address = $school['address'];
+$telephone = $school['telephone'];
+$email = $school['email'];
+$website = $school['website'];
+$fbPage = $school['fb_page'];
+
+require_once(root() . '/print/print-layout.php');
+
+$pdf = new PDF('P', 'mm', array($width, $height));
+$pdf->SetTitle($title);
+$pdf->AliasNbPages();
+$pdf->SetMargins($margin, 11 + $logoSize, $margin);
+$pdf->SetAutoPageBreak(true, 35);
+$pdf->AddPage();
+$pdf->AddFont('calibri', '', 'calibri.php');
+$pdf->AddFont('calibrib', 'B', 'calibrib.php');
+
 require_once(root() . '/includes/database/document.php');
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/position.php');
