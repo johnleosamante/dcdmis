@@ -88,4 +88,12 @@ function trainingSponsor($id) {
   $sponsors = query("SELECT `sponsor` FROM tbl_training_sponsor WHERE `id`='{$id}';");
   return numRows($sponsors) > 0 ? fetchAssoc($sponsors)['sponsor'] : '';
 }
+
+function attendedTrainings($id) {
+  return query("SELECT `tbl_seminar`.`Training_Code` AS `no`, `tbl_seminar`.`Title_of_training` AS `title`, `tbl_seminar`.`covered_from` AS `from`, `tbl_seminar`.`covered_to` AS `to`, `tbl_training_sponsor`.`sponsor`, `tbl_seminar`.`TVenue` AS `venue`, `tbl_training_type`.`type`, `tbl_seminar`.`hours`, `tbl_seminar_participant`.`Emp_ID` AS `id` FROM `tbl_seminar` INNER JOIN `tbl_seminar_participant` ON `tbl_seminar`.`Training_Code`=`tbl_seminar_participant`.`Training_Code` INNER JOIN `tbl_training_type` ON `tbl_seminar`.`Category`=`tbl_training_type`.`id` INNER JOIN `tbl_training_sponsor` ON `tbl_seminar`.`conducted_by`=`tbl_training_sponsor`.`id` WHERE `tbl_seminar_participant`.`Emp_ID`='{$id}' ORDER BY `tbl_seminar`.`covered_to`;");
+}
+
+function attendedTraining($no, $id) {
+  return query("SELECT `tbl_seminar`.`Training_Code` AS `no`, `tbl_seminar`.`Title_of_training` AS `title`, `tbl_seminar`.`covered_from` AS `from`, `tbl_seminar`.`covered_to` AS `to`, `tbl_training_sponsor`.`sponsor`, `tbl_seminar`.`TVenue` AS `venue`, `tbl_training_type`.`type`, `tbl_seminar`.`hours`, `tbl_seminar_participant`.`Emp_ID` AS `id` FROM `tbl_seminar` INNER JOIN `tbl_seminar_participant` ON `tbl_seminar`.`Training_Code`=`tbl_seminar_participant`.`Training_Code` INNER JOIN `tbl_training_type` ON `tbl_seminar`.`Category`=`tbl_training_type`.`id` INNER JOIN `tbl_training_sponsor` ON `tbl_seminar`.`conducted_by`=`tbl_training_sponsor`.`id` WHERE `tbl_seminar`.`Training_Code`='{$no}' AND `tbl_seminar_participant`.`Emp_ID`='{$id}' LIMIT 1;");
+}
 ?>
