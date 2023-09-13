@@ -5,7 +5,7 @@
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'reference', 'show active'); ?>" id="reference">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() . '/modules/employees/update/update-reference.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Reference', 'primary'); ?>
+      <?php modalButtonSplit(uri() . '/modules/employees/save/save-reference.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Reference', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -37,7 +37,7 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-reference.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Edit', 'fa-edit', 'Edit Reference'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-reference.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Edit', 'fa-edit', 'Edit Reference'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-reference.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Delete', 'fa-trash', 'Delete Reference'); ?>
                       </div>
@@ -55,5 +55,5 @@
         </tbody>
       </table>
     </div>
-  </div><!-- .row -->
-</div><!-- .tab-pane -->
+  </div>
+</div>
