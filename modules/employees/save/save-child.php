@@ -2,7 +2,7 @@
 // modules/employees/update/update-child.php
 require_once('../../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
-require_once(root() . '/includes/database/children.php');
+require_once(root() . '/includes/database/family-background.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
@@ -32,7 +32,7 @@ if (isset($childId)) {
   <div class="modal-content">
     <?php modalHeader($modalTitle); ?>
 
-    <form method="post" role="form" action="">
+    <form method="POST" action="">
       <div class="modal-body">
         <div class="form-group">
           <label for="clast" class="mb-0">Last Name: <?php showAsterisk(); ?></label>
@@ -66,14 +66,14 @@ if (isset($childId)) {
         </div>
 
         <?php requiredLegend(0); ?>
-      </div><!-- .modal-body -->
+      </div>
 
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
         <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-        <button type="submit" class="btn btn-primary" name="save-child">Save</button>
+        <button type="submit" class="btn btn-primary" name="save-child">Continue</button>
         <?php cancelModalButton(); ?>
-      </div><!-- .modal-footer -->
+      </div>
     </form>
-  </div><!-- .modal-content -->
-</div><!-- .modal-dialog -->
+  </div>
+</div>
