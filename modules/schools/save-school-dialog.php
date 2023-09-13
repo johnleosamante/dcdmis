@@ -9,7 +9,7 @@ require_once(root() . '/includes/layout/components.php');
 $schoolId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $schools = schoolDetailsById($schoolId);
 $school = $schoolName = $address = $category = $districtCode = $alias = null;
-$modalTitle = 'New School';
+$modalTitle = 'Add School';
 $notFound = true;
 
 if (numRows($schools) > 0) {
