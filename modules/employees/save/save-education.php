@@ -37,7 +37,7 @@ if (isset($educationId)) {
   <div class="modal-content">
     <?php modalHeader($modalTitle); ?>
 
-    <form method="post" role="form" action="">
+    <form method="POST" action="">
       <div class="modal-body">
         <div class="form-group">
           <label for="level" class="mb-0">Level: <?php showAsterisk(); ?></label>
@@ -78,7 +78,7 @@ if (isset($educationId)) {
                   <div class="form-check" title="Check if present education">
                     <input class="form-check-input" id="is-present" type="checkbox" name="is-present" value="1" <?php echo setItemChecked($isPresent); ?>>
                     <label class="form-check-label" for="is-present">Present</label>
-                  </div><!-- .form-check-->
+                  </div>
                 </div>
               </div>
               <input id="to" name="to" type="number" step="1" min="0" class="form-control" title="Required field" value="<?php echo $to; ?>" required>
@@ -108,14 +108,14 @@ if (isset($educationId)) {
         </div>
 
         <?php requiredLegend(0); ?>
-      </div><!-- .modal-body -->
+      </div>
 
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
         <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-        <button type="submit" class="btn btn-primary" name="save-education">Save</button>
+        <button type="submit" class="btn btn-primary" name="save-education">Continue</button>
         <?php cancelModalButton(); ?>
-      </div><!-- .modal-footer -->
+      </div>
     </form>
-  </div><!-- .modal-content -->
-</div><!-- .modal-dialog -->
+  </div>
+</div>
