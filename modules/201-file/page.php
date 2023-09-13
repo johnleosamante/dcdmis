@@ -25,7 +25,7 @@ if (!is_dir($uploadDirectory)) {
     <?php if ($isHrmis) {
       contentTitleWithModal('201 File : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/201-file/save-201-file-dialog.php', 'Add', 'fa-plus');
     } else {
-      contentTitle('201 File');
+      contentTitleWithLink('201 File', uri() . '/pis');
     } ?>
   </div>
 
