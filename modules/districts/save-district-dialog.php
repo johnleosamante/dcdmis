@@ -12,7 +12,7 @@ require_once(root() . '/includes/layout/components.php');
 $districtCode = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $districts = district($districtCode);
 $districtName = $districtHead = null;
-$modalTitle = 'New District';
+$modalTitle = 'Add District';
 $notFound = true;
 
 if (numRows($districts) > 0) {
