@@ -27,7 +27,7 @@ if (isset($membershipId)) {
   <div class="modal-content">
     <?php modalHeader($modalTitle); ?>
 
-    <form method="post" role="form" action="">
+    <form method="POST" action="">
       <div class="modal-body">
         <div class="form-group">
           <label for="membership" class="mb-0">Membership in Association / Organization: <?php showAsterisk(); ?></label>
@@ -40,9 +40,9 @@ if (isset($membershipId)) {
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
         <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-        <button type="submit" class="btn btn-primary" name="save-membership">Save</button>
+        <button type="submit" class="btn btn-primary" name="save-membership">Continue</button>
         <?php cancelModalButton(); ?>
-      </div><!-- .modal-footer -->
+      </div>
     </form>
-  </div><!-- .modal-content -->
-</div><!-- .modal-dialog -->
+  </div>
+</div>
