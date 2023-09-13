@@ -12,7 +12,6 @@ $employeePosition = fetchAssoc(position($document['user']))['position'];
 $documentStatus = strtolower($document['status']);
 $status = str_contains($documentStatus, 'complete') ? ' (Completed)' : '';
 $status = str_contains($documentStatus, 'cancel') ? ' (Canceled)' : $status;
-
 $pdf->SetFont('calibrib',  'B', 18);
 $pdf->Cell(0, 0, 'DOCUMENT TRACKING SLIP', 0, 0, 'C');
 $pdf->Ln(5);
@@ -28,9 +27,7 @@ $pdf->Ln(10);
 $pdf->SetFont('calibri',  '', 11);
 $pdf->Write(5, $description);
 $pdf->Ln(20);
-
 $innerPage = $width - ($margin * 2);
-
 $pdf->Cell($innerPage / 2, 0, 'Prepared by:');
 $pdf->Ln(15);
 $pdf->SetFont('calibrib', 'B', 11);
@@ -42,7 +39,6 @@ $pdf->Cell($innerPage / 2, 0, $employeePosition, 0, 0, 'C');
 if ($document['user'] !== $document['head']) {
   $stationHead = userName($document['head'], true);
   $stationHeadPosition = fetchAssoc(position($document['head']))['position'];
-
   $pdf->Ln(10);
   $pdf->SetX($width / 2);
   $pdf->Cell($innerPage / 2, 0, 'Noted by:');
