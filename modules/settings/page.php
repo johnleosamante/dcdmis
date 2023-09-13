@@ -1,7 +1,6 @@
 <?php
 // modules/settings/index.php
 require_once('app.php');
-
 messageAlert($showAlert, $message, $success);
 ?>
 
