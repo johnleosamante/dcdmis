@@ -1,5 +1,7 @@
 <?php
 // dts/app.php
+$activeApp = $_SESSION[alias() . '_activeApp'] = 'dts';
+
 if (!isset($userId)) {
   redirect(uri() . '/login');
 }
@@ -8,7 +10,6 @@ if (!isset($portal) || empty($portal)) {
   redirect(uri() . '/pis');
 }
 
-$activeApp = $_SESSION[alias() . '_activeApp'] = 'dts';
 $page = $appTitle = 'Document Tracking System';
 
 if (isset($_POST['primary-search-button'])) {
