@@ -55,7 +55,7 @@ if (isset($serviceRecordId)) {
                   <div class="form-check" title="Check if present work">
                     <input class="form-check-input" id="is-present" type="checkbox" name="is-present" value="1" <?php echo setItemChecked($isPresent); ?>>
                     <label class="form-check-label" for="is-present">Present</label>
-                  </div><!-- .form-check-->
+                  </div>
                 </div>
               </div>
               <input id="to" type="date" name="to" class="form-control" title="Required field" value="<?php echo $to; ?>" required>
@@ -125,7 +125,7 @@ if (isset($serviceRecordId)) {
         <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
         <button type="submit" class="btn btn-primary" name="save-experience">Save</button>
         <?php cancelModalButton(); ?>
-      </div><!-- .modal-footer -->
+      </div>
     </form>
   </div>
 </div>
