@@ -10,7 +10,7 @@ $trainingId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $trainings = training($trainingId);
 $title = $hours = $trainingType = $trainingSponsor = $venue = '';
 $dateFrom = $dateTo = date('Y-m-d');
-$modalTitle = 'New Training';
+$modalTitle = 'Add Training';
 $notFound  = true;
 
 if (numRows($trainings) > 0) {
