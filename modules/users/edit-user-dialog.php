@@ -91,7 +91,6 @@ if (numRows($employees) > 0) {
             <input type="hidden" name="dts-verifier" value="<?php echo $userStationId; ?>">
           <?php endif; ?>
 
-
           <div class="form-group">
             <div class="form-check">
               <input class="form-check-input" id="hrmis" type="checkbox" name="hrmis" <?php echo setActiveItem($hrmisUser, true, 'checked'); ?>>
