@@ -19,12 +19,12 @@ switch ($url) {
     break;
   case 'Certificate of Participation':
     if (!isset($_GET['id']) || !isset($_GET['p'])) {
-      redirect(uri() . '/login');
+      redirect(customUri($activeApp, '404'));
     }
     $file = 'certificate-of-participation';
     break;
   default:
-    redirect(customUri('dts', '404'));
+    redirect(customUri($activeApp, '404'));
     break;
 }
 
