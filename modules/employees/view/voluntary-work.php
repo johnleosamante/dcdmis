@@ -5,7 +5,7 @@
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'voluntary-work', 'show active'); ?>" id="voluntary-work">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() .'/modules/employees/update/update-voluntary-work.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Voluntary Work', 'primary'); ?>
+      <?php modalButtonSplit(uri() .'/modules/employees/save/save-voluntary-work.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Voluntary Work', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -44,7 +44,7 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() .'/modules/employees/update/update-voluntary-work.php?e=' . cipher($employeeId) . '&id=' . cipher($voluntary['no']), 'Edit', 'fa-edit', 'Edit Voluntary Work'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/save/save-voluntary-work.php?e=' . cipher($employeeId) . '&id=' . cipher($voluntary['no']), 'Edit', 'fa-edit', 'Edit Voluntary Work'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-voluntary-work.php?e=' . cipher($employeeId) . '&id=' . cipher($voluntary['no']), 'Delete', 'fa-trash', 'Delete Voluntary Work'); ?>
                       </div>
@@ -62,5 +62,5 @@
         </tbody>
       </table>
     </div>
-  </div><!-- .row -->
-</div><!-- .tab-pane -->
+  </div>
+</div>
