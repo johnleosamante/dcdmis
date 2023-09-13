@@ -14,14 +14,14 @@ messageAlert($showAlert, $message, $success);
     <ul class="nav nav-tabs mb-3">
       <li class="nav-item">
         <a class="nav-link text-secondary" href="#previous-month" data-toggle="tab"><?php echo date('F Y', strtotime($now . ' - 1 month')); ?></a>
-      </li><!-- .nav-item -->
+      </li>
       <li class="nav-item">
         <a class="nav-link text-secondary active" href="#current-month" data-toggle="tab"><?php echo date('F Y'); ?></a>
-      </li><!-- .nav-item -->
+      </li>
       <li class="nav-item">
         <a class="nav-link text-secondary" href="#next-month" data-toggle="tab"><?php echo date('F Y', strtotime($now . ' + 1 month')); ?></a>
-      </li><!-- .nav-item -->
-    </ul><!-- nav-tabs -->
+      </li>
+    </ul>
 
     <div class="tab-content">
       <?php
