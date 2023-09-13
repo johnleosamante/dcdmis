@@ -5,7 +5,7 @@
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'learning-development', 'show active'); ?>" id="learning-development">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() .'/modules/employees/update/update-learning-development.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Learning &amp; Development', 'primary'); ?>
+      <?php modalButtonSplit(uri() .'/modules/employees/save/save-learning-development.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Learning &amp; Development', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -46,7 +46,7 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() .'/modules/employees/update/update-learning-development.php?e=' . cipher($employeeId) . '&id=' . cipher($learning['no']), 'Edit', 'fa-edit', 'Edit Learning &amp; Development'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/save/save-learning-development.php?e=' . cipher($employeeId) . '&id=' . cipher($learning['no']), 'Edit', 'fa-edit', 'Edit Learning &amp; Development'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-learning-development.php?e=' . cipher($employeeId) . '&id=' . cipher($learning['no']), 'Delete', 'fa-trash', 'Delete Learning &amp; Development'); ?>
                       </div>
@@ -63,5 +63,5 @@
         </tbody>
       </table>
     </div>
-  </div><!-- .row -->
-</div><!-- .tab-pane -->
+  </div>
+</div>
