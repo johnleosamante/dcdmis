@@ -5,7 +5,7 @@
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'work-experience', 'show active'); ?>" id="work-experience">
     <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() .'/modules/employees/update/update-work-experience.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Work Experience', 'primary'); ?>
+      <?php modalButtonSplit(uri() .'/modules/employees/save/save-work-experience.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Work Experience', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -50,7 +50,7 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-work-experience.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-work-experience.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-work-experience.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Delete', 'fa-trash', 'Delete Work Experience'); ?>
                       </div>
@@ -67,5 +67,5 @@
         </tbody>
       </table>
     </div>
-  </div><!-- .row -->
-</div><!-- .tab-pane -->
+  </div>
+</div>
