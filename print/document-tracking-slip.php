@@ -52,7 +52,7 @@ $pdf->SetFont('calibrib',  'B', 17);
 $pdf->Cell(0, 0, $code . $status);
 $pdf->Ln(10);
 $pdf->SetFont('calibri',  '', 11);
-$pdf->Write(5, $description);
+$pdf->Write(5, html_entity_decode($description, ENT_QUOTES));
 $pdf->Ln(20);
 $innerPage = $width - ($margin * 2);
 $pdf->Cell($innerPage / 2, 0, 'Prepared by:');
