@@ -68,6 +68,9 @@ if (!isset($url) || $url === 'dashboard') {
     case 'Users':
       $file = 'users/page';
       break;
+      case 'Trainings':
+        $file = 'trainings/attended-trainings';
+        break;
     case 'Scheduled Trainings':
       $file = 'trainings/scheduled-trainings';
       break;
