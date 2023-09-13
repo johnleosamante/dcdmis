@@ -4,12 +4,6 @@ $user = fetchAssoc(employee($userId));
 $displayName = toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true, true);
 $position = fetchAssoc(position($userId))['position'];
 $displayPhoto = uri() . '/' . $user['picture'];
-
-$isPis = $activeApp === 'pis';
-$isDts = $activeApp === 'dts';
-$isHrmis = $activeApp === 'hrmis';
-$isHrtdms = $activeApp === 'hrtdms';
-$isDmis = $activeApp === 'dmis';
 ?>
 
 <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
