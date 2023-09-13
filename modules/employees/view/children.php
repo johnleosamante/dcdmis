@@ -5,7 +5,7 @@
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'children', 'show active'); ?>" id="children">
   <?php if ($editMode) : ?>
     <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() . '/modules/employees/update/update-child.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Child', 'primary'); ?>
+      <?php modalButtonSplit(uri() . '/modules/employees/save/save-child.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Child', 'primary'); ?>
     </div>
   <?php endif; ?>
 
@@ -35,7 +35,7 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/update/update-child.php?e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-child.php?e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Edit', 'fa-edit', 'Edit Child'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-child.php?e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Delete', 'fa-trash', 'Delete Child'); ?>
                       </div>
@@ -51,6 +51,6 @@
           <?php } ?>
         </tbody>
       </table>
-    </div><!-- .col -->
-  </div><!-- .row -->
-</div><!-- .tab-pane -->
+    </div>
+  </div>
+</div>
