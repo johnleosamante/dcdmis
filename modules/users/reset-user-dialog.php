@@ -53,6 +53,7 @@ if (numRows($employees) > 0) {
           <input type="hidden" name="data-verifier" value="<?php echo cipher($randomPassword); ?>">
           <button class="btn btn-danger" name="reset-user" type="submit">Continue</button>
         <?php endif;
+        
         cancelModalButton(); ?>
       </div>
     </form>
