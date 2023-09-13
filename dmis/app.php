@@ -6,6 +6,8 @@ if (isPublicDomain()) {
 
 restrictPublicAccess(hasHoliday());
 
+$activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
+
 if (!isset($userId)) {
   redirect(uri() . '/login');
 }
@@ -14,7 +16,6 @@ if (numRows(userRole($userId, 'dmis')) === 0) {
   redirect(uri() . '/pis');
 }
 
-$activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
 $page = $appTitle = 'Division Management Information System';
 
 if (isset($_POST['primary-search-button'])) {
