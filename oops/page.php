@@ -5,10 +5,10 @@
   <div class="card o-hidden border-0 shadow-lg my-5">
     <div class="card-header text-center">
       <?php displayLogo(120, 120, '0', uri(), title()); ?>
-    </div><!-- card-header -->
+    </div>
 
     <div class="card-body text-center">
       <?php require_once(root() . '/modules/error/' . $file . '.php'); ?>
-    </div><!-- .card-body -->
-  </div><!-- .card -->
-</div><!-- .col-xl-2 -->
+    </div>
+  </div>
+</div>
