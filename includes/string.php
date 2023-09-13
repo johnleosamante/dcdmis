@@ -14,6 +14,7 @@ function toName($lastName, $firstName, $middleName='', $extension='', $fnameFirs
   } else {
     $middleName = '';
   }
+
   if (!$fnameFirst) {
     return $lastName . toString($firstName, ', ') . toString($extension, ' ') . $middleName;
   } else {
@@ -58,9 +59,11 @@ function randomPassword($length) {
   $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:<>?-=[]\;,./';
   $charLength = strlen($characters);
   $randomString = '';
+
   for ($i = 0; $i < $length; $i++) {
     $randomString .= $characters[rand(0, $charLength - 1)];
   }
+  
   return $randomString;
 }
 
