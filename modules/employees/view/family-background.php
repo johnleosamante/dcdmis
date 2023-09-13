@@ -26,8 +26,8 @@ if (numRows($familyMembers) > 0) {
 
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'family-background', 'show active'); ?>" id="family-background">
   <?php if ($editMode) : ?>
-    <form action="" method="POST" role="form">
-    <?php endif; ?>
+  <form action="" method="POST">
+  <?php endif; ?>
     <div class="row mt-3">
       <div class="col">
         <div>Spouse's Name</div>
@@ -155,14 +155,14 @@ if (numRows($familyMembers) > 0) {
               <input id="mmiddle" name="mmiddle" type="text" class="form-control" <?php echo setActiveNavigation($editMode, 'title="Leave blank if not applicable"'); ?> value="<?php echo $mmiddle; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
-        </div><!-- .row -->
-      </div><!-- .col -->
-    </div><!-- .row -->
-    <?php if ($editMode) : ?>
-      <div class="form-group mb-3">
-        <input type="hidden" name="verifier" value="<?php echo cipher($employeeId); ?>">
-        <button class="btn btn-primary btn-block " name="update-family-background"><i class="fas fa-save fa-fw"></i>Update Family Background</button>
+        </div>
       </div>
-    </form>
+    </div>
+  <?php if ($editMode) : ?>
+    <div class="form-group mb-3">
+      <input type="hidden" name="verifier" value="<?php echo cipher($employeeId); ?>">
+      <button class="btn btn-primary btn-block " name="update-family-background"><i class="fas fa-save fa-fw"></i>Update Family Background</button>
+    </div>
+  </form>
   <?php endif; ?>
-</div><!-- .tab-pane -->
+</div>
