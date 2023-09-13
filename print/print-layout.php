@@ -12,26 +12,31 @@ class PDF extends FPDF {
     global $lineY;
     $this->Image(root() . '/assets/img/department.png', ($width / 2) - ($logoSize / 2), 8, $logoSize);
     $this->AddFont('OLDENGL', '', 'OLDENGL.php');
-    $this->AddFont('tahomabd', 'B', 'tahomabd.php');
+    $this->AddFont('TrajanPro-Regular', '', 'TrajanPro-Regular.php');
     $this->SetFont('OLDENGL', '', 12);
     $this->Cell(0, 0, 'Republic of the Philippines', 0, 0, 'C');
     $this->Ln(6);
     $this->SetFont('OLDENGL', '', 18);
     $this->Cell(0, 0, 'Department of Education', 0, 0, 'C');
     $this->Ln(6);
-    $this->SetFont('tahomabd', 'B', 11);
+    $this->SetFont('TrajanPro-Regular', '', 11);
     $this->Cell(0, 0, 'REGION IX - ZAMBOANGA PENINSULA', 0, 0, 'C');
     $this->Ln(5);
-    $this->Cell(0, 0, 'DIPOLOG CITY SCHOOLS DIVISION', 0, 0, 'C');
-    $this->Ln(5);
-    $this->SetFont('tahomabd',  'B', 11);
-    $this->Cell(0, 0, $section, 0, 0, 'C');
+    $this->Cell(0, 0, 'SCHOOLS DIVISION OF DIPOLOG CITY', 0, 0, 'C');
+
+    if ($isSchoolPortal) {
+      $this->Ln(5);
+      $this->Cell(0, 0, strtoupper($district), 0, 0, 'C');
+    }
+
+    if (!empty($section)) {
+      $this->Ln(5);
+      $this->Cell(0, 0, $section, 0, 0, 'C');
+    }
 
     if ($isSchoolPortal) {
       $this->Ln(5);
       $this->Cell(0, 0, strtoupper($address), 0, 0, 'C');
-      $this->Ln(5);
-      $this->Cell(0, 0, strtoupper($district), 0, 0, 'C');
       $lineY = 70;
     }
 
@@ -55,6 +60,7 @@ class PDF extends FPDF {
     global $height;
     global $width;
     global $code;
+    global $multiplePage;
     $footerSpace = 27;
     $this->Line($margin, $height - 33, $width - $margin, $height - 33);
     $this->Image($stationLogo, $margin, $height - 32, $logoSize);
@@ -111,8 +117,10 @@ class PDF extends FPDF {
       $this->Image($filename, $width - $margin - $logoSize, $height - 32, $logoSize);
     }
 
-    $this->SetY(-6);
-    $this->Cell(0, 0, 'Page ' . $this->PageNo() . ' of {nb}', 0, 0, 'C');
+    if ($multiplePage) {
+      $this->SetY(-6);
+      $this->Cell(0, 0, 'Page ' . $this->PageNo() . ' of {nb}', 0, 0, 'C');
+    }
   }
 }
 ?>
