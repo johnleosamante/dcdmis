@@ -1,6 +1,5 @@
 <?php
 // print/print-layout.php
-
 class PDF extends FPDF {
   function Header() {
     global $logoSize;
@@ -27,6 +26,7 @@ class PDF extends FPDF {
     $this->Ln(5);
     $this->SetFont('tahomabd',  'B', 11);
     $this->Cell(0, 0, $section, 0, 0, 'C');
+
     if ($isSchoolPortal) {
       $this->Ln(5);
       $this->Cell(0, 0, strtoupper($address), 0, 0, 'C');
@@ -34,6 +34,7 @@ class PDF extends FPDF {
       $this->Cell(0, 0, strtoupper($district), 0, 0, 'C');
       $lineY = 70;
     }
+
     $this->Line($margin, $lineY, $width - $margin, $lineY);
     $this->Ln(15);
   }
@@ -55,7 +56,6 @@ class PDF extends FPDF {
     global $width;
     global $code;
     $footerSpace = 27;
-
     $this->Line($margin, $height - 33, $width - $margin, $height - 33);
     $this->Image($stationLogo, $margin, $height - 32, $logoSize);
     $this->SetY(-28);
