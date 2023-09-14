@@ -26,24 +26,7 @@
               <?php echo $calendar['activity']; ?>
             </span>
 
-            <?php
-            $from = strtotime($calendar['from']);
-            $to = strtotime($calendar['to']);
-            $sameDay = $from === $to;
-            $sameYear = date('Y', $from) === date('Y', $to);
-            $sameMonth = date('m', $from) === date('m', $to);
-
-            if ($sameDay) {
-              $date = date('F j, Y', strtotime($calendar['from']));
-            } elseif ($sameYear && $sameMonth) {
-              $date = date('F j', $from) . '-' . date('j, Y', $to);
-            } elseif ($sameYear && !$sameMonth) {
-              $date = date('M j', $from) . ' - ' . date('M j, Y', $to);
-            } else {
-              $date = date('M j, Y', $from) . ' - ' . date('M j, Y', $to);
-            }
-            ?>
-            <div class="small"><?php echo $date; ?></div>
+            <div class="small"><?php echo toDateRange(strtotime($calendar['from']), strtotime($calendar['to'])); ?></div>
           </li>
         <?php } ?>
       </ul>
