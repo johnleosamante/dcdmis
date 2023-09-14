@@ -26,17 +26,28 @@ $employeeId = isset($_GET['p']) ? sanitize(decode($_GET['p'])) : null;
 $trainings = attendedTraining($code, $employeeId);
 
 if (numRows($trainings) === 0) {
-  redirect(customUri($activeApp, '404'));
+  redirect(customUri($activeApp, 'Certificate of Participation'));
 }
 
 $employee = fetchAssoc(employee($employeeId));
-$employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
+$employeeName = strtoupper(toHandleEncoding(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true)));
 $pronoun = $employee['sex'] === 'Male' ? 'his' : 'her';
 $training = fetchAssoc($trainings);
-$trainingTitle = $training['title'];
-$trainingDate = 'November 9-11, 2022';
-$trainingVenue = $training['venue'];
-$givenDate = '11th day of November, 2022';
+$trainingTitle = toHandleEncoding($training['title']);
+$trainingDate = empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']);
+$trainingVenue = toHandleEncoding($training['venue']);
+$lastDate = strtotime($training['to']);
+$lastDay = toOrdinal(date('d', $lastDate));
+$givenDate = $lastDay . ' day of ' . date('F, Y', $lastDate);
+$signatory = $training['signatory'];
+
+if (empty($signatory)) {
+  redirect(customUri($activeApp, 'Certificate of Participation'));
+}
+
+$signatoryName = toHandleEncoding(userName($signatory, true));
+$signatureWidth = 45;
+$position = toHandleEncoding(fetchAssoc(position($signatory))['position']);
 
 $pdf = new PDF('L', 'mm', array($width, $height));
 $pdf->SetTitle($title);
@@ -53,22 +64,30 @@ $pdf->Cell(0, 0, 'Certificate of Participation', 0, 0, 'C');
 $pdf->Ln(10);
 $pdf->SetFont('calibri', '', 11);
 $pdf->Cell(0, 0, 'is presented to', 0, 0, 'C');
-$pdf->Ln(15);
-$pdf->SetFont('timesb', 'B', 26);
-$pdf->Cell(0, 0, strtoupper($employeeName), 0, 0, 'C');
-$pdf->Ln(10);
+$pdf->Ln(12);
+$pdf->SetFont('timesb', 'B', 28);
+$pdf->Cell(0, 0, $employeeName, 0, 0, 'C');
+$pdf->Ln(12);
 $pdf->SetFont('calibri', '', 11);
 $pdf->Cell(0, 0, "for {$pronoun} participation during the", 0, 0, 'C');
-$pdf->Ln(2);
-$pdf->SetFont('timesb', 'B', 12);
-$pdf->MultiCell(0, 6, html_entity_decode(strtoupper($trainingTitle), ENT_QUOTES), 0, 'C');
-$pdf->Ln(2);
+$pdf->Ln(3);
+$pdf->SetFont('timesb', 'B', 14);
+$pdf->MultiCell(0, 6, strtoupper($trainingTitle), 0, 'C');
+$pdf->Ln(3);
 $pdf->SetFont('calibri', '', 11);
-$pdf->Cell(0, 0, "held on {$trainingDate} at", 0, 0, 'C');
+$pdf->Cell(0, 0, "held on {$trainingDate}", 0, 0, 'C');
 $pdf->Ln(5);
-$pdf->Cell(0, 0, html_entity_decode($trainingVenue, ENT_QUOTES) . '.', 0, 0, 'C');
-$pdf->Ln(10);
+$pdf->Cell(0, 0, 'at ' . $trainingVenue . '.', 0, 0, 'C');
+$pdf->Ln(9);
 $pdf->Cell(0, 0, "Given this {$givenDate}", 0, 0, 'C');
 $pdf->Ln(5);
-$pdf->Cell(0, 0, 'at ' . html_entity_decode($trainingVenue, ENT_QUOTES) . '.', 0, 0, 'C');
+$pdf->Cell(0, 0, 'at ' . $trainingVenue . '.', 0, 0, 'C');
+$currentOrdinate = $pdf->GetY();
+$pdf->Image(root() . '/uploads/signature/' . $signatory . '/' . $signatory . '.png', ($width / 2) - ($signatureWidth / 2), $currentOrdinate, $signatureWidth);
+$pdf->Ln(20);
+$pdf->SetFont('timesb', 'B', 14);
+$pdf->Cell(0, 0, $signatoryName, 0, 0, 'C');
+$pdf->Ln(5);
+$pdf->SetFont('calibri', '', 10);
+$pdf->Cell(0, 0, $position, 0, 0, 'C');
 ?>
