@@ -40,12 +40,14 @@ messageAlert($showAlert, $message, $success);
             <td class="align-middle"><?php echo $training['sponsor']; ?></td>
             <td class="align-middle"><?php echo $training['venue']; ?></td>
             <td class="align-middle text-capitalize">
+            <?php if ($training['generate_certificate'] === '1') : ?>
               <div class="dropdown no-arrow">
                 <?php dropdownEllipsis(); ?>
                 <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                   <?php linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($userId), 'Download', 'fa-download', 'Download Certificate', true); ?>
                 </div>
               </div>
+            <?php endif; ?>
             </td>
           </tr>
         <?php endwhile; ?>
