@@ -55,6 +55,10 @@ function sanitize($input) {
   return isset($input) ? htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES) : '';
 }
 
+function toHandleEncoding($string) {
+  return mb_convert_encoding(html_entity_decode($string, ENT_QUOTES), 'ISO-8859-1', 'UTF-8');
+}
+
 function randomPassword($length) {
   $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:<>?-=[]\;,./';
   $charLength = strlen($characters);
@@ -86,5 +90,32 @@ function generateStrongRandomPassword() {
   }
 
   return $randomPassword;
+}
+
+function toDateRange($from, $to) {
+  $from = strtotime($from);
+  $to = strtotime($to);
+  $sameDay = $from === $to;
+  $sameYear = date('Y', $from) === date('Y', $to);
+  $sameMonth = date('m', $from) === date('m', $to);
+
+  if ($sameDay) {
+    return date('F j, Y', strtotime($from));
+  } elseif ($sameYear && $sameMonth) {
+    return date('F j', $from) . '-' . date('j, Y', $to);
+  } elseif ($sameYear && !$sameMonth) {
+    return date('M j', $from) . ' - ' . date('M j, Y', $to);
+  } else {
+    return date('M j, Y', $from) . ' - ' . date('M j, Y', $to);
+  }
+}
+
+function toOrdinal($number) {
+  $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+  if ((($number % 100) >= 11) && (($number%100) <= 13)) {
+    return $number. 'th';
+  } else {
+    return $number. $ends[$number % 10];
+  }
 }
 ?>
