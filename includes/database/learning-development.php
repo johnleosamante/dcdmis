@@ -35,12 +35,12 @@ function countTrainings($year) {
   return numRows(query("SELECT `Training_code` AS `no` FROM tbl_seminar WHERE `Training_code` LIKE '%-{$year}-%';"));
 }
 
-function createTraining($no, $title, $from, $to, $hours, $type, $sponsor, $venue, $unconsecutiveDate=null, $signatory=null, $hasCertificate=false) {
+function createTraining($no, $title, $from, $to, $hours, $type, $sponsor, $venue, $unconsecutiveDate, $signatory, $hasCertificate) {
   nonQuery("INSERT INTO tbl_seminar (`Training_Code`, `Title_of_training`, `covered_from`, `covered_to`, `hours`, `Category`, `conducted_by`, `TVenue`, `signatory`, `unconsecutive_date`, `generate_certificate`) VALUES ('{$no}', '{$title}', '{$from}', '{$to}', '{$hours}', '{$type}', '{$sponsor}', '{$venue}', '{$signatory}', '{$unconsecutiveDate}', '{$hasCertificate}');");
 }
 
-function updateTraining($no, $title, $from, $to, $hours, $type, $sponsor, $venue,$unconsecutiveDate=null, $hasCertificate=false) {
-  nonQuery("UPDATE tbl_seminar SET Title_of_training='{$title}', covered_from='{$from}', covered_to='{$to}', `hours`='{$hours}', Category='{$type}', conducted_by='{$sponsor}', TVenue='{$venue}', `unconsecutive_training`='{$unconsecutiveDate}', `generate_certificate`='{$hasCertificate}' WHERE Training_Code='{$no}' LIMIT 1;");
+function updateTraining($no, $title, $from, $to, $hours, $type, $sponsor, $venue,$unconsecutiveDate, $signatory, $hasCertificate) {
+  nonQuery("UPDATE tbl_seminar SET Title_of_training='{$title}', covered_from='{$from}', covered_to='{$to}', `hours`='{$hours}', Category='{$type}', conducted_by='{$sponsor}', TVenue='{$venue}', `unconsecutive_date`='{$unconsecutiveDate}', `signatory`='{$signatory}', `generate_certificate`='{$hasCertificate}' WHERE Training_Code='{$no}' LIMIT 1;");
 }
 
 function scheduledTrainings() {
