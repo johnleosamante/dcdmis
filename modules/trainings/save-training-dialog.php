@@ -8,8 +8,9 @@ require_once(root() . '/includes/layout/components.php');
 
 $trainingId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $trainings = training($trainingId);
-$title = $hours = $trainingType = $trainingSponsor = $venue = '';
+$title = $hours = $trainingType = $trainingSponsor = $venue = $unconsecutiveDates = '';
 $dateFrom = $dateTo = date('Y-m-d');
+$generateCertificate = false;
 $modalTitle = 'Add Training';
 $notFound  = true;
 
@@ -23,6 +24,8 @@ if (numRows($trainings) > 0) {
   $trainingType = $training['type'];
   $trainingSponsor = $training['sponsor'];
   $venue = $training['venue'];
+  $unconsecutiveDates = $training['unconsecutive_date'];
+  $generateCertificate = $training['generate_certificate'] === '1';
   $modalTitle = 'Edit Training';
   $notFound = false;
 }
@@ -59,6 +62,11 @@ if (numRows($trainings) > 0) {
               <input type="date" name="to" id="to" class="form-control" value="<?php echo $dateTo; ?>" required>
             </div>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label for="unconsecutive-dates" class="mb-0">For non-consecutive days, please specify</label>
+          <input type="text" name="unconsecutive-dates" id="unconsecutive-dates" class="form-control" value="<?php echo $unconsecutiveDates; ?>">
         </div>
 
         <div class="row">
@@ -99,6 +107,11 @@ if (numRows($trainings) > 0) {
         <div class="form-group">
           <label for="venue" class="mb-0">Venue <?php showAsterisk(); ?></label>
           <input id="venue" name="venue" type="text" class="form-control" placeholder="Type venue..." value="<?php echo $venue; ?>" required>
+        </div>
+
+        <div class="form-check mb-3">
+          <input class="form-check-input" id="has-certificate" type="checkbox" name="has-certificate" value="1" <?php echo setItemChecked($generateCertificate); ?>>
+          <label class="form-check-label" for="has-certificate">Generate certificate</label>
         </div>
 
         <?php requiredLegend(0); ?>
