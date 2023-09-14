@@ -32,6 +32,10 @@ if (isset($_POST['save-training'])) {
   $sponsor = sanitize($_POST['sponsor']);
   $venue = sanitize($_POST['venue']);
   $logMessage = '';
+  $unconsecutiveDates = sanitize($_POST['unconsecutive-dates']);
+  $hasCertificate = isset($_POST['has-certificate']) ? '1' : '0';
+
+  $signatory = isset($_POST['has-certificate']) ? fetchAssoc(section('SDS'))['head'] : null;
 
   if (numRows(training($trainingId)) === 0) {
     $logMessage = 'Added training';
@@ -39,12 +43,12 @@ if (isset($_POST['save-training'])) {
     $year = toDate($from, 'y', date('y'));
     $trainingId = 'HRTD-' . $year . '-' . sprintf("%04d", countTrainings($year) + 1);
 
-    createTraining($trainingId, $title, $from, $to, $hours, $type, $sponsor, $venue);
+    createTraining($trainingId, $title, $from, $to, $hours, $type, $sponsor, $venue, $unconsecutiveDates, $signatory, $hasCertificate);
   } else {
     $logMessage = 'Updated training';
     $status = 'updated';
 
-    updateTraining($trainingId, $title, $from, $to, $hours, $type, $sponsor, $venue);
+    updateTraining($trainingId, $title, $from, $to, $hours, $type, $sponsor, $venue, $unconsecutiveDates, $signatory, $hasCertificate);
   }
 
   $showAlert = true;
