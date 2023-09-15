@@ -48,7 +48,7 @@ if (numRows($schools) > 0) {
         <img src="<?php echo $logo; ?>" width="100%">
       </div>
       <div class="col-sm-12 col-md-12 col-lg-8 col-xl-10">
-        <div class="table-responsive pt-3">
+        <div class="table-responsive">
           <table cellspacing="0">
             <tr>
               <th class="pr-5 align-top" scoper="row">School ID</th>
