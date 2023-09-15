@@ -6,6 +6,8 @@ $width = 297;
 $height = 210;
 $lineY = 55;
 $multiplePage = false;
+$showQR = true;
+$showStationInfo = true;
 $isSchoolPortal = false;
 $section = $district = null;
 $school = fetchArray(schoolDetailsById('143'));
@@ -17,7 +19,6 @@ $website = $school['website'];
 $fbPage = $school['fb_page'];
 
 require_once(root() . '/print/print-layout.php');
-
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/learning-development.php');
 require_once(root() . '/includes/database/position.php');
