@@ -9,7 +9,7 @@ class PDF extends FPDF {
     global $section;
     global $address;
     global $lineY;
-    $this->Image(root() . '/assets/img/department.png', ($width / 2) - ($logoSize / 2), 8, $logoSize);
+    $this->Image(root() . '/uploads/division/deped-seal.png', ($width / 2) - ($logoSize / 2), 8, $logoSize);
     $this->AddFont('OLDENGL', '', 'OLDENGL.php');
     $this->AddFont('TrajanPro-Regular', '', 'TrajanPro-Regular.php');
     $this->SetFont('OLDENGL', '', 12);
@@ -53,45 +53,58 @@ class PDF extends FPDF {
     global $margin;
     global $height;
     global $width;
+    global $showQR;
     global $code;
     global $multiplePage;
-    $footerSpace = 27;
-    $this->Line($margin, $height - 33, $width - $margin, $height - 33);
-    $this->Image($stationLogo, $margin, $height - 32, $logoSize);
-    $this->SetY(-28);
-    $this->AddFont('calibri', '', 'calibri.php');
-    $this->SetFont('calibri', '', 10);
+    global $isSchoolPortal;
+    global $showStationInfo;
 
-    if (strlen($address) > 0) {
-      $this->SetX($logoSize + $footerSpace);
-      $this->Cell(0, 0, "Address: {$address}");
-      $this->Ln(4);
+    if ($isSchoolPortal) {
+      $this->Image(root() . '/uploads/division/footer-logos-schools.png', $margin, $height - 32, 0, $logoSize);
+      //$this->Image($stationLogo, 108, $height - 32, $logoSize);
+      $this->SetY(-28);
+      $footerSpace = 100;
+    } else {
+      $this->Image(root() . '/uploads/division/footer-logos.png', $margin, $height - 32, 0, $logoSize);
+      $footerSpace = 149;
     }
 
-    if (strlen($telephone) > 0) {
-      $this->SetX($logoSize + $footerSpace);
-      $this->Cell(0, 0, "Telephone No: {$telephone}");
-      $this->Ln(4);
+    if ($showStationInfo) {
+      $this->SetY(-28);
+      $this->AddFont('calibri', '', 'calibri.php');
+      $this->SetFont('calibri', '', 10);
+
+      if (strlen($address) > 0) {
+        $this->SetX($footerSpace);
+        $this->Cell(0, 0, "Address: {$address}");
+        $this->Ln(4);
+      }
+
+      if (strlen($telephone) > 0) {
+        $this->SetX($footerSpace);
+        $this->Cell(0, 0, "Telephone No: {$telephone}");
+        $this->Ln(4);
+      }
+
+      if (strlen($email) > 0) {
+        $this->SetX($footerSpace);
+        $this->Cell(0, 0, "Email Address: {$email}");
+        $this->Ln(4);
+      }
+
+      if (strlen($website) > 0) {
+        $this->SetX($footerSpace);
+        $this->Cell(0, 0, "Website: {$website}");
+        $this->Ln(4);
+      }
+
+      if (strlen($fbPage) > 0) {
+        $this->SetX($footerSpace);
+        $this->Cell(0, 0, "FB Page: {$fbPage}");
+      }
     }
 
-    if (strlen($email) > 0) {
-      $this->SetX($logoSize + $footerSpace);
-      $this->Cell(0, 0, "Email Address: {$email}");
-      $this->Ln(4);
-    }
-
-    if (strlen($website) > 0) {
-      $this->SetX($logoSize + $footerSpace);
-      $this->Cell(0, 0, "Website: {$website}");
-      $this->Ln(4);
-    }
-
-    if (strlen($fbPage) > 0) {
-      $this->SetX($logoSize + $footerSpace);
-      $this->Cell(0, 0, "FB Page: {$fbPage}");
-    }
-
-    if (!empty($code)) {
+    if ($showQR) {
       $pngTempDirRoot = root() . '/temp';
       $pngTempDir = root() . '/temp/qr';
       $errorCorrectionLevel = 'L';
@@ -108,7 +121,8 @@ class PDF extends FPDF {
 
       QRcode::png($code, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
 
-      $this->Image($filename, $width - $margin - $logoSize, $height - 32, $logoSize);
+      $this->Image($filename, $width - $margin - $logoSize, $height - 33, $logoSize + 2);
+      $this->Line($margin, $height - 33, $width - $margin, $height - 33);
     }
 
     if ($multiplePage) {
