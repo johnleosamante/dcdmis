@@ -9,7 +9,7 @@ class PDF extends FPDF {
     global $section;
     global $address;
     global $lineY;
-    $this->Image(root() . '/uploads/division/deped-seal.png', ($width / 2) - ($logoSize / 2), 8, $logoSize);
+    $this->Image(root() . '/uploads/division/deped-seal.png', ($width / 2) - ($logoSize / 2), 6, $logoSize);
     $this->AddFont('OLDENGL', '', 'OLDENGL.php');
     $this->AddFont('TrajanPro-Regular', '', 'TrajanPro-Regular.php');
     $this->SetFont('OLDENGL', '', 12);
