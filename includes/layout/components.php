@@ -2,7 +2,7 @@
 // includes/layout/components.php
 function displayLogo($width, $height, $marginBottom = '3', $url = '', $text = '') { ?>
   <a href="<?php echo $url; ?>" title="<?php echo $text; ?>" class="d-inline-block mx-auto mb-<?php echo $marginBottom; ?>">
-    <img src="<?php echo uri(); ?>/assets/img/division.png" width="<?php echo $width; ?>" height="<?php echo $height; ?>" alt="<?php echo $text; ?>">
+    <img src="<?php echo uri(); ?>/uploads/division/division.png" width="<?php echo $width; ?>" height="<?php echo $height; ?>" alt="<?php echo $text; ?>">
   </a>
 <?php }
 
