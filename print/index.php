@@ -3,16 +3,12 @@
 require_once('../includes/function.php');
 require_once(root() . '/includes/string.php');
 
-if (!isset($_SESSION[alias() . '_userId'])) {
-  redirect(uri() . '/login');
-}
-
 $page = $url = sanitize(decode($_GET['v']));
 $file = $title = '';
 
 switch ($url) {
   case 'Document Tracking Slip':
-    if (!isset($_SESSION[alias() . '_portal'])) {
+    if (!isset($_SESSION[alias() . '_userId']) || !isset($_SESSION[alias() . '_portal'])) {
       redirect(uri() . '/login');
     }
     $file = 'document-tracking-slip';
