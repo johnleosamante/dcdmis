@@ -49,6 +49,7 @@ if (empty($signatory)) {
 $signatoryName = toHandleEncoding(userName($signatory, true));
 $signatureWidth = 45;
 $position = toHandleEncoding(fetchAssoc(position($signatory))['position']);
+$code = customUri('print', 'Certificate of Participation', $code) . '&p=' . encode($employeeId);
 
 $pdf = new PDF('L', 'mm', array($width, $height));
 $pdf->SetTitle($title);
