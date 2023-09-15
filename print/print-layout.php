@@ -61,7 +61,11 @@ class PDF extends FPDF {
 
     if ($isSchoolPortal) {
       $this->Image(root() . '/uploads/division/footer-logos-schools.png', $margin, $height - 32, 0, $logoSize);
-      //$this->Image($stationLogo, 108, $height - 32, $logoSize);
+      
+      if (!empty($stationLogo)) {
+        $this->Image($stationLogo, 112, $height - 32, $logoSize);
+      }
+
       $this->SetY(-28);
       $footerSpace = 100;
     } else {
