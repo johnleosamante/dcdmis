@@ -107,7 +107,7 @@ if (isset($_POST['update-personal-information'])) {
   } else {
     $message = 'No changes have been made to personal information.';
     $success = false;
-;  }
+  }
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'personal-information';
 }
@@ -757,7 +757,7 @@ if (isset($_POST['reassign-employee'])) {
   $showAlert = true;
 
   if (affectedRows()) {
-    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been reassigned successfully to [<a href="#" title="View ' . stationName($eStationId) . ' information">' . strtoupper(stationName($eStationId)) . '</a>].';
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been reassigned successfully to [<a href="' . customUri('hrmis', 'School Information', $eStationId) . '" title="View ' . stationName($eStationId) . ' information">' . strtoupper(stationName($eStationId)) . '</a>].';
 
     createSystemLog($stationId, $userId, 'Reassigned employee', $employeeId, clientIp());
   } else {
