@@ -59,7 +59,7 @@ $isDmis = $activeApp === 'dmis';
           <?php
           $query = schoolEmployeeCount();
           while ($row = fetchArray($query)) :
-            $logo = uri() . '/' . $row['logo'];
+            $logo = !empty($row['logo']) ? uri() . '/' . $row['logo'] : uri() . '/uploads/division/division.png';
             $schoolName = $row['name'];
           ?>
             <tr class="text-uppercase">
