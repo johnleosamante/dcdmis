@@ -33,10 +33,9 @@ if (isset($_POST['save-school'])) {
   $category = sanitize($_POST['category']);
   $status = 'saved';
   $logMessage = 'Added school';
-  $logo = 'assets/img/division.png';
 
   if (numRows(schoolById($referenceSchoolId)) === 0) {
-    createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $logo);
+    createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, '');
   } else {
     updateUsersStation($schoolId, $referenceSchoolId);
     updateStationID($schoolId, $referenceSchoolId);
