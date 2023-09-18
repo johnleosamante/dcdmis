@@ -49,7 +49,7 @@ if (numRows($employees) > 0) {
           $services = serviceRecords($employeeId);
 
           while ($service = fetchAssoc($services)) : ?>
-            <tr class="text-uppercase">
+            <tr>
               <td class="align-middle"><?php echo toDate($service['from']); ?></td>
               <td class="align-middle"><?php echo $service['ispresent'] ? 'PRESENT' : toDate($service['to']); ?></td>
               <td class="align-middle"><?php echo $service['position']; ?></td>
