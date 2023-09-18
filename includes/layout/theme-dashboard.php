@@ -26,7 +26,7 @@ require_once(root() . '/includes/layout/components.php');
       <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
         <div class="sidebar-brand d-flex align-items-center justify-content-center">
           <a href="<?php echo uri(); ?>" title="<?php echo title(); ?>">
-            <img class="sidebar-brand-icon" src="<?php echo uri(); ?>/assets/img/division.png" alt="<?php echo title(); ?>" width="60">
+            <img class="sidebar-brand-icon" src="<?php echo uri(); ?>/uploads/division/division.png" alt="<?php echo title(); ?>" width="60">
           </a>
         </div>
 
