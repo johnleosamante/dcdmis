@@ -322,10 +322,10 @@ if (isset($_POST['save-experience'])) {
   $experienceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $from = sanitize($_POST['from']);
   $isPresent = isset($_POST['is-present']) ? '1' : '0';
-  $to = $isPresent ? date('m/d/Y') : sanitize($_POST['to']);
+  $to = sanitize($_POST['to']);
   $position = sanitize($_POST['position']);
   $organization = sanitize($_POST['organization']);
-  $salary = isset($_POST['salary']) ? $_POST['salary'] : 0;
+  $salary = isset($_POST['salary']) ? sanitize($_POST['salary']) : 0;
   $sg = sanitize($_POST['sg']);
   $status = sanitize($_POST['status']);
   $isGovernment = sanitize($_POST['is-government']);
@@ -381,7 +381,7 @@ if (isset($_POST['save-voluntary-work'])) {
   $organization = sanitize($_POST['organization']);
   $from = sanitize($_POST['from']);
   $isPresent = isset($_POST['is-present']) ? '1' : '0';
-  $to = $isPresent ? date('m/d/Y') : sanitize($_POST['to']);
+  $to = sanitize($_POST['to']);
   $hours = isset($_POST['hours']) ? $_POST['hours'] : 0;
   $position = sanitize($_POST['position']);
   $logMessage = '';
@@ -807,6 +807,61 @@ if (isset($_POST['set-school-head'])) {
     createSystemLog($stationId, $userId, 'Set School Head', $employeeId, clientIp());
   } else {
     $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] was not set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . stationName($schoolId) . '</a>].';
+    $success = false;
+  }
+}
+
+if (isset($_POST['save-service-record'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $serviceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $from = sanitize($_POST['from']);
+  $isPresent = isset($_POST['is-present']) ? '1' : '0';
+  $to = sanitize($_POST['to']);
+  $position = sanitize($_POST['position']);
+  $station = sanitize($_POST['station']);
+  $grade = isset($_POST['grade']) ? sanitize($_POST['grade']) : '1';
+  $step = isset($_POST['step']) ? sanitize($_POST['step']) : '1';
+  $salary = isset($_POST['salary']) ? sanitize($_POST['salary']) : '0';
+  $status = sanitize($_POST['status']);
+  $isGovernment = sanitize($_POST['is-government']);
+  $logMessage = '';
+
+  if (empty($serviceId)) {
+    createServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $employeeId);
+
+    $logMessage = 'Added service record';
+    $message = 'Service record has been added successfully.';
+  } else {
+    updateServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $employeeId, $serviceId);
+
+    $logMessage = 'Updated service record';
+    $message = 'Service record has been updated successfully.';
+  }
+
+  $showAlert = true;
+
+  if (affectedRows()) {
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
+  } else {
+    $message = 'No changes have been made to service record.';
+    $success = false;
+  }
+}
+
+if (isset($_POST['delete-service-record'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $serviceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+
+  deleteServiceRecord($employeeId, $serviceId);
+
+  $showAlert = true;
+
+  if (affectedRows()) {
+    $message = 'Service record has been deleted successfully.';
+
+    createSystemLog($stationId, $userId, 'Deleted employee service record', $employeeId, clientIp());
+  } else {
+    $message = 'No changes have been made to service record.';
     $success = false;
   }
 }
