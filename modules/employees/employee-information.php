@@ -91,6 +91,7 @@ $employeePhoto = '';
       <?php
       require_once(root() . '/modules/employees/view/personal-information.php');
       require_once(root() . '/modules/employees/view/family-background.php');
+      require_once(root() . '/modules/employees/view/children.php');
       require_once(root() . '/modules/employees/view/educational-background.php');
       require_once(root() . '/modules/employees/view/civil-service-eligibility.php');
       require_once(root() . '/modules/employees/view/work-experience.php');
