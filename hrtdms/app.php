@@ -87,8 +87,12 @@ if (isset($_POST['add-participants'])) {
   }
 
   if (affectedRows()) {
-    $noun = $no === 1 ? ' was' : 's were';
-    $message = $no . ' training participant' . $noun . ' added successfully to training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
+    if ($no > 1) {
+      $message = $no . ' training participant' . $noun . ' added successfully to training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
+    } else {
+      $participantId = sanitize(decipher($participants[0]));
+      $message = 'Employee [<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($participantId) . '\')" title="View ' . userName($participantId) . ' employee information">' . userName($participantId, true) . '</a>] has been added successfully as participant to training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
+    }
 
     createSystemLog($stationId, $userId, 'Added ' . $no . ' training participants', $trainingId, clientIp());
   } else {
@@ -106,11 +110,11 @@ if (isset($_POST['remove-participant'])) {
   $showAlert = true;
 
   if (affectedRows()) {
-    $message = 'Employee [<a href="#" title="View ' . userName($participantId) . ' employee information">' . userName($participantId) . '</a>] has been successfully removed as participant from training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
+    $message = 'Employee [<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($participantId) . '\')" title="View ' . userName($participantId) . ' employee information">' . userName($participantId, true) . '</a>] has been successfully removed as participant from training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
     
     createSystemLog($stationId, $userId, 'Removed training participant', $trainingId, clientIp());
   } else {
-    $message = 'Employee [<a href="#" title="View ' . userName($participantId) . ' employee information">' . userName($participantId) . '</a>] was not removed as participant from training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
+    $message = 'Employee [<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($participantId) . '\')" title="View ' . userName($participantId) . ' employee information">' . userName($participantId, true) . '</a>] was not removed as participant from training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
     $success = false;
   }
 }
