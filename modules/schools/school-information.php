@@ -23,7 +23,7 @@ if (numRows($schools) > 0) {
   $fbPage = $school['fb_page'];
   $count = schoolEmployeeCount($schoolId);
   $personnel = numRows($count) > 0 ? fetchAssoc($count)['total'] : 0;
-  $logo = uri() . '/' . $school['logo'];
+  $logo = !empty($school['logo']) ? uri() . '/' . $school['logo'] : uri() . '/uploads/division/division.png';
 } else {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
