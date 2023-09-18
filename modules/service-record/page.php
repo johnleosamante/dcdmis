@@ -17,7 +17,7 @@ if (numRows($employees) > 0) {
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
     <?php if ($isHrmis) {
-      contentTitleWithModal('Service Record : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/service-record/save-service-record-dialog.php', 'Add', 'fa-plus');
+      contentTitleWithModal('Service Record : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus');
     } else {
       contentTitleWithLink('Service Record', uri() . '/pis');
     } ?>
@@ -46,22 +46,22 @@ if (numRows($employees) > 0) {
 
         <tbody>
           <?php
-          $results = serviceRecords($employeeId);
+          $services = serviceRecords($employeeId);
 
-          while ($row = fetchAssoc($results)) : ?>
+          while ($service = fetchAssoc($services)) : ?>
             <tr class="text-uppercase">
-              <td class="align-middle"><?php echo $row['from']; ?></td>
-              <td class="align-middle"><?php echo $row['to']; ?></td>
-              <td class="align-middle"><?php echo $row['position']; ?></td>
-              <td class="align-middle"><?php echo $row['status']; ?></td>
-              <td class="align-middle"><?php echo number_format($row['salary'], 2); ?></td>
-              <td class="align-middle"><?php echo $row['station']; ?></td>
+              <td class="align-middle"><?php echo toDate($service['from']); ?></td>
+              <td class="align-middle"><?php echo $service['ispresent'] ? 'PRESENT' : toDate($service['to']); ?></td>
+              <td class="align-middle"><?php echo $service['position']; ?></td>
+              <td class="align-middle"><?php echo $service['status']; ?></td>
+              <td class="align-middle"><?php echo toCurrency($service['salary'] * 12); ?></td>
+              <td class="align-middle"><?php echo $service['station']; ?></td>
               <?php if ($isHrmis) : ?>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                    <?php linkDropdownItem(customUri('hrmis', 'Edit Employee Information', $row['id']), 'Edit', 'fa-edit', 'Edit Employee'); ?>
+                  <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Edit', 'fa-edit', 'Edit Service Record'); ?>
                   </div>
                 </div>
               </td>
