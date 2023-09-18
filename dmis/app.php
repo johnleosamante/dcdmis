@@ -177,7 +177,7 @@ if (isset($_POST['edit-user'])) {
   }
 
   $showAlert = true;
-  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'https://localhost/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')">' . userName($employeeId, true) . '</a>';
+  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
   $message = 'Employee [' . $employee . '] user assignment has been set successfully.';
 
   createSystemLog($stationId, $userId, 'Assigned user privileges', $employeeId, clientIp());
@@ -190,7 +190,7 @@ if (isset($_POST['reset-user'])) {
   updateAccountPassword($employeeId, hashPassword($temporaryPassword));
 
   $showAlert = true;
-  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'https://localhost/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')">' . userName($employeeId, true) . '</a>';
+  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 
   if (affectedRows()) {
     $message = 'Employee [' . $employee . '] password has been reset successfully.';
@@ -208,7 +208,7 @@ if (isset($_POST['remove-user'])) {
   deleteUserRoles($employeeId);
 
   $showAlert = true;
-  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'https://localhost/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')">' . userName($employeeId, true) . '</a>';
+  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 
   if (affectedRows()) {
     $message = 'Employee [' . $employee . '] user privileges have been removed successfully.';
