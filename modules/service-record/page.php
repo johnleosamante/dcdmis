@@ -41,6 +41,7 @@ messageAlert($showAlert, $message, $success);
             <th class="align-middle" colspan="2" width="10%">Service<br>(Inclusive Dates)</th>
             <th class="align-middle" colspan="3" width="35%">Record of Appointment</th>
             <th class="align-middle" rowspan="2" width="20%">Office Entity/Division/Station/Place/Branch of Assignment</th>
+            <th class="align-middle" rowspan="2" width="5%">Remarks</th>
             <?php if ($isHrmis) : ?>
               <th class="align-middle" rowspan="2" width="5%">Actions</th>
             <?php endif; ?>
@@ -66,6 +67,7 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle"><?php echo $service['status']; ?></td>
               <td class="align-middle"><?php echo toCurrency($service['salary'] * 12); ?></td>
               <td class="align-middle"><?php echo $service['station']; ?></td>
+              <td class="align-middle"><?php echo 'SG ' . $service['grade'] . ', STEP ' . $service['step']; ?></td>
               <?php if ($isHrmis) : ?>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
@@ -90,6 +92,7 @@ messageAlert($showAlert, $message, $success);
             <th class="align-middle" width="10%">Employment Status</th>
             <th class="align-middle" width="10%">Salary</th>
             <th class="align-middle" rowspan="2" width="20%">Office Entity/Division/Station/Place/Branch of Assignment</th>
+            <th class="align-middle" rowspan="2" width="5%">Remarks</th>
             <?php if ($isHrmis) : ?>
               <th class="align-middle" rowspan="2" width="5%">Actions</th>
             <?php endif; ?>
