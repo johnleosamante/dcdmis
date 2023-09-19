@@ -7,6 +7,7 @@ $height = 297;
 $lineY = 55;
 $multiplePage = true;
 $showQR = true;
+$showStationInfo = false;
 $isSchoolPortal = $stationId !== '143';
 $section = strtoupper(stationName($station));
 $school = fetchArray(schoolDetailsById($stationId));
