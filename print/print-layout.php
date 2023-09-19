@@ -58,19 +58,20 @@ class PDF extends FPDF {
     global $multiplePage;
     global $isSchoolPortal;
     global $showStationInfo;
+    $logoSize = 19.5;
 
     if ($isSchoolPortal) {
       $this->Image(root() . '/uploads/division/footer-logos-schools.png', $margin, $height - 32, 0, $logoSize);
       
       if (!empty($stationLogo)) {
-        $this->Image($stationLogo, 112, $height - 32, $logoSize);
+        $this->Image($stationLogo, $margin + 86.5, $height - 32, $logoSize);
+        $footerSpace = $margin + 107;
+      } else {
+        $footerSpace = $margin + 86.5;
       }
-
-      $this->SetY(-28);
-      $footerSpace = 100;
     } else {
       $this->Image(root() . '/uploads/division/footer-logos.png', $margin, $height - 32, 0, $logoSize);
-      $footerSpace = 149;
+      $footerSpace = $margin + 100;
     }
 
     if ($showStationInfo) {
@@ -126,8 +127,9 @@ class PDF extends FPDF {
       QRcode::png($code, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
 
       $this->Image($filename, $width - $margin - $logoSize, $height - 33, $logoSize + 2);
-      $this->Line($margin, $height - 33, $width - $margin, $height - 33);
     }
+
+    $this->Line($margin, $height - 33, $width - $margin, $height - 33);
 
     if ($multiplePage) {
       $this->SetY(-6);
