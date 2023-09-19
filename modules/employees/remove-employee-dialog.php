@@ -1,5 +1,5 @@
 <?php
-// modules/employees/transfer-employee-dialog.php
+// modules/employees/remove-employee-dialog.php
 require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/employee.php');
@@ -23,6 +23,7 @@ if (numRows($employees) > 0) {
   $station = $positions['station'];
   $positionId = $positions['position_id'];
   $position = $positions['position'];
+  $depedEmail = $employee['email'];
   $picture = uri() . '/' . $employee['picture'];
   $modalTitle = 'Remove Employee';
   $hasEmployee = true;
@@ -35,20 +36,10 @@ if (numRows($employees) > 0) {
 
     <form action="" method="POST">
       <div class="modal-body">
-        <?php if ($hasEmployee) { ?>
-          <div class="image-container">
-            <span class="d-flex justify-content-center align-middle employee-photo photo-4x rounded-circle overflow-hidden">
-              <img height="100%" src="<?php echo $picture; ?>" alt="<?php echo $employeeName; ?>">
-            </span>
-            <div class="sex-sign"><?php sex($sex); ?></div>
-          </div>
-          
-          <div class="text-center text-uppercase my-1 h4"><?php echo $employeeName; ?></div>
-          <div class="text-center text-uppercase my-1 h5"><?php echo $position; ?></div>
-          <div class="text-center text-uppercase my-1 h6"><?php echo $station; ?></div>
-
+        <?php if ($hasEmployee) {
+          employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station); 
+        ?>
           <hr>
-
           <div class="form-group">
             <label for="reason" class="mb-0">Reason <?php showAsterisk(); ?></label>
             <select id="reason" name="reason" class="form-control" required>
@@ -74,6 +65,7 @@ if (numRows($employees) > 0) {
           <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
           <button class="btn btn-danger" name="remove-employee" type="submit">Continue</button>
         <?php endif;
+        
         cancelModalButton(); ?>
       </div>
     </form>
