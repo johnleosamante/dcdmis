@@ -16,6 +16,8 @@ $telephone = $school['telephone'];
 $email = $school['email'];
 $website = $school['website'];
 $fbPage = $school['fb_page'];
+$code = strtoupper(sanitize(decode($_GET['id'])));
+$title = $url . ' : ' . $code;
 
 require_once(root() . '/print/print-layout.php');
 
