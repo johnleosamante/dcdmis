@@ -1,0 +1,113 @@
+<?php
+// print/service-record.php
+$logoSize = 19.5;
+$margin = 12.7;
+$width = 215.9;
+$height = 330.2;
+$lineY = 50;
+$multiplePage = true;
+$showQR = false;
+$showStationInfo = true;
+$isSchoolPortal = false;
+$section = null;
+$school = fetchArray(schoolDetailsById('143'));
+$stationLogo = root() . '/' . $school['logo'];
+$address = $school['address'];
+$telephone = $school['telephone'];
+$email = $school['email'];
+$website = $school['website'];
+$fbPage = $school['fb_page'];
+$footerSpace = 0;
+
+require_once(root() . '/print/print-layout.php');
+require_once(root() . '/includes/database/employee.php');
+require_once(root() . '/includes/database/experience.php');
+require_once(root() . '/includes/database/position.php');
+
+$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+
+if (numRows(employee($employeeId)) === 0) {
+  redirect(customUri($activeApp, 'Service Record'));
+}
+
+$employee = fetchAssoc(employee($employeeId));
+$lname = $employee['lname'];
+$fname = $employee['fname'];
+$mname = $employee['mname'];
+$ext = $employee['ext'];
+$title = $url . ' | ' . toName($lname, $fname, $mname, $ext, true) . ' | ' . date('Y-m-d');
+$bp = toHandleNull($employee['bp']);
+$agencyId = toHandleNull($employee['agency_id']);
+$bmonth = $employee['month'];
+$bday = $employee['day'];
+$byear = $employee['year'];
+$bdate = date('F d, Y', strtotime("$byear-$bmonth-$bday"));
+$bplace = $employee['pob'];
+
+$pdf = new PDF('P', 'mm', array($width, $height));
+$pdf->SetTitle($title);
+$pdf->AliasNbPages();
+$pdf->SetMargins($margin, 11 + $logoSize, $margin);
+$pdf->SetAutoPageBreak(true, 35);
+$pdf->AddPage();
+$pdf->AddFont('calibri', '', 'calibri.php');
+$pdf->AddFont('calibrib', 'B', 'calibrib.php');
+$pdf->AddFont('calibrii', 'I', 'calibrii.php');
+$pdf->AddFont('timesb', 'B', 'timesb.php');
+$pdf->Ln(0);
+$pdf->SetFont('timesb', 'B', 16);
+$pdf->Cell(0, 0, 'STATEMENT OF SERVICE RECORD IN THE GOVERNMENT', 0, 0, 'C');
+$pdf->Ln(5);
+$pdf->SetFont('calibrii', 'I', 9);
+$pdf->Cell(0, 0, '(To Be Accomplished By Employer)', 0, 0, 'C');
+$pdf->Ln(10);
+$pdf->SetFont('calibrib', 'B', 10);
+$pdf->Cell(35, 4, $bp, 0, 0, 'C');
+$currentY = $pdf->GetY();
+$pdf->Line($margin, $currentY + 4, $margin + 35, $currentY + 4);
+$pdf->SetX($width - $margin - 35);
+$pdf->Cell(35, 4, $agencyId, 0, 0, 'C');
+$pdf->Line($width - $margin - 35, $currentY + 4, $width - $margin, $currentY + 4);
+$pdf->SetFont('calibri', '', 10);
+$pdf->Ln(4);
+$pdf->Cell(35, 4, 'BP Number', 0, 0, 'C');
+$pdf->SetX($width - $margin - 35);
+$pdf->Cell(35, 4, 'Employee Number', 0, 0, 'C');
+$pdf->Ln(15);
+$pdf->SetX($margin + 3);
+$pdf->Cell(15, 4, 'NAME:', 0, 0, 'L');
+$pdf->SetFont('calibrib', 'B', 10);
+$pdf->Cell(40, 4, strtoupper($lname), 0, 0, 'C');
+$pdf->Cell(40, 4, strtoupper($fname), 0, 0, 'C');
+$pdf->Cell(40, 4, strtoupper(toHandleNull($mname, 'N/A')), 0, 0, 'C');
+$pdf->SetFont('calibri', '', 9);
+$pdf->Cell(0, 4, '(If married women give also full maiden)', 0, 0, 'L');
+$currentY = $pdf->GetY();
+$pdf->Line($margin + 18, $currentY + 4, $margin + 138, $currentY + 4);
+$pdf->Ln(4);
+$pdf->SetX($margin + 18);
+$pdf->Cell(40, 4, '(Surname)', 0, 0, 'C');
+$pdf->Cell(40, 4, '(Given Name)', 0, 0, 'C');
+$pdf->Cell(40, 4, '(Middle Name)', 0, 0, 'C');
+$pdf->Ln(10);
+$pdf->SetX($margin + 3);
+$pdf->Cell(15, 4, 'BIRTH:', 0, 0, 'L');
+$pdf->SetFont('calibrib', 'B', 10);
+$pdf->Cell(35, 4, strtoupper($bdate), 0, 0, 'C');
+$pdf->Cell(85, 4, strtoupper(toHandleNull($bplace, 'N/A')), 0, 0, 'C');
+$currentY = $pdf->GetY();
+$pdf->Line($margin + 18, $currentY + 4, $margin + 138, $currentY + 4);
+$pdf->SetFont('calibri', '', 9);
+$pdf->Cell(55, 4, '(Data herein should be checked from birth', 0, 0, 'L');
+$pdf->Ln(4);
+$pdf->SetX($margin + 18);
+$pdf->Cell(35, 4, 'DATE', 0, 0, 'C');
+$pdf->Cell(85, 4, 'PLACE', 0, 0, 'C');
+$pdf->Cell(55, 4, 'or baptismal certificate or some other)', 0, 0, 'L');
+$pdf->Ln(15);
+$pdf->SetFont('calibri', '', 10);
+$pdf->SetX($margin + 18);
+$pdf->Cell($width - (($margin * 2) + 18), 4, 'This is to certify that the employee named herein above actually rendered services in this Office as shown by the service');
+$pdf->Ln(5);
+$pdf->Cell($width - ($margin * 2), 4, 'record below, each line of which is supported by appointment and other papers actually issued by this Office.');
+?>
