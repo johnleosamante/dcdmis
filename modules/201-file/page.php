@@ -33,9 +33,9 @@ if (!is_dir($uploadDirectory)) {
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
     <?php if ($isHrmis) {
-      contentTitleWithModal('201 File : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/201-file/save-201-file-dialog.php', 'Add', 'fa-plus');
+      contentTitleWithModal('201 Files : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/201-file/save-201-file-dialog.php', 'Add', 'fa-plus');
     } else {
-      contentTitleWithLink('201 File', uri() . '/pis');
+      contentTitleWithLink('201 Files', uri() . '/pis');
     } ?>
   </div>
 

@@ -8,7 +8,7 @@ contentTitle('Dashboard');
   <?php
   card('Personal Data Sheet', customUri('pis', 'Personal Data Sheet', $userId), 'fa-user-tie', 'primary');
   card('Service Record', customUri('pis', 'Service Record', $userId), 'fa-file-alt', 'success');
-  card('201 File', customUri('pis', '201 File', $userId), 'fa-folder-open', 'info');
+  card('201 Files', customUri('pis', '201 Files', $userId), 'fa-folder-open', 'info');
   card('Certificates', customUri('pis', 'Certificates', $userId), 'fa-certificate', 'warning');
   card('Trainings', customUri('pis', 'Trainings', $userId), 'fa-chalkboard-teacher', 'danger');
   card('Payslip', customUri('pis', 'Payslip', $userId), 'fa-money-check', 'secondary');
