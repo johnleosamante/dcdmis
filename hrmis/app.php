@@ -781,11 +781,30 @@ if (isset($_POST['remove-employee'])) {
   $showAlert = true;
 
   if (affectedRows()) {
-    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
 
     createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
   } else {
-    $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.';
+    $message = 'No changes to employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.';
+    $success = false;
+  }
+}
+
+if (isset($_POST['restore-employee'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+
+  if (numRows(employee($employeeId)) > 0) {
+    updateEmployeeStatus('Active', $employeeId);
+  }
+
+  $showAlert = true;
+
+  if (affectedRows()) {
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been restored successfully.';
+
+    createSystemLog($stationId, $userId, 'Restored employee', $employeeId, clientIp());
+  } else {
+    $message = 'No changes to employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.';
     $success = false;
   }
 }
@@ -802,11 +821,11 @@ if (isset($_POST['set-school-head'])) {
 
   if (affectedRows()) {
     $success = true;
-    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been successfully set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . stationName($schoolId) . '</a>].';
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been successfully set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . strtoupper(stationName($schoolId)) . '</a>].';
     
     createSystemLog($stationId, $userId, 'Set School Head', $employeeId, clientIp());
   } else {
-    $message = 'Employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] was not set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . stationName($schoolId) . '</a>].';
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] was not set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . strtoupper(stationName($schoolId)) . '</a>].';
     $success = false;
   }
 }
