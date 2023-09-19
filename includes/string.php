@@ -104,18 +104,18 @@ function toDateRange($from, $to) {
   } elseif ($sameYear && $sameMonth) {
     return date('F j', $from) . '-' . date('j, Y', $to);
   } elseif ($sameYear && !$sameMonth) {
-    return date('M j', $from) . ' - ' . date('M j, Y', $to);
+    return date('F j', $from) . ' - ' . date('F j, Y', $to);
   } else {
-    return date('M j, Y', $from) . ' - ' . date('M j, Y', $to);
+    return date('F j, Y', $from) . ' - ' . date('F j, Y', $to);
   }
 }
 
 function toOrdinal($number) {
   $ends = array('th','st','nd','rd','th','th','th','th','th','th');
   if ((($number % 100) >= 11) && (($number%100) <= 13)) {
-    return $number. 'th';
+    return $number . 'th';
   } else {
-    return $number. $ends[$number % 10];
+    return $number . $ends[$number % 10];
   }
 }
 ?>
