@@ -17,6 +17,8 @@ $telephone = $school['telephone'];
 $email = $school['email'];
 $website = $school['website'];
 $fbPage = $school['fb_page'];
+$code = strtoupper(sanitize(decode($_GET['id'])));
+$title = $url . ' : ' . $code;
 
 require_once(root() . '/print/print-layout.php');
 require_once(root() . '/includes/database/employee.php');
@@ -38,7 +40,7 @@ $trainingTitle = toHandleEncoding($training['title']);
 $trainingDate = empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']);
 $trainingVenue = toHandleEncoding($training['venue']);
 $lastDate = strtotime($training['to']);
-$lastDay = toOrdinal(date('d', $lastDate));
+$lastDay = toOrdinal(date('j', $lastDate));
 $givenDate = $lastDay . ' day of ' . date('F, Y', $lastDate);
 $signatory = $training['signatory'];
 
