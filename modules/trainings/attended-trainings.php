@@ -1,11 +1,36 @@
 <?php
 // modules/trainings/attended-trainings.php
+$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+
+if ($isPis && $userId !== $employeeId) {
+  require_once(root() . '/modules/error/no-results-found.php');
+  return;
+}
+
+$employees = employee($employeeId);
+
+if (numRows($employees) > 0) {
+  $employee = fetchAssoc($employees);
+  $employeeId = $employee['id'];
+} else {
+  require_once(root() . '/modules/error/no-results-found.php');
+  return;
+}
+
+if ($isHrmis) {
+  require_once(root() . '/modules/employees/employee-tabs.php');
+}
+
 messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitleWithLink('Trainings', uri() . '/pis'); ?>
+    <?php if ($isHrmis) {
+      contentTitle('Trainings : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])));
+    } else {
+      contentTitleWithLink('Trainings', uri() . '/pis');
+    } ?>
   </div>
 
   <div class="card-body">
@@ -29,7 +54,7 @@ messageAlert($showAlert, $message, $success);
 
         <tbody>
         <?php
-        $trainings = attendedTrainings($userId);
+        $trainings = attendedTrainings($employeeId);
         while ($training = fetchAssoc($trainings)) : ?>
           <tr>
             <td class="align-middle"><?php echo $training['title']; ?></td>
@@ -44,7 +69,7 @@ messageAlert($showAlert, $message, $success);
               <div class="dropdown no-arrow">
                 <?php dropdownEllipsis(); ?>
                 <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                  <?php linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($userId), 'Download', 'fa-download', 'Download Certificate', true); ?>
+                  <?php linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($employeeId), 'Download', 'fa-download', 'Download Certificate', true); ?>
                 </div>
               </div>
             <?php endif; ?>

@@ -1,8 +1,12 @@
 <?php
 // modules/service-record/page.php
-messageAlert($showAlert, $message, $success);
-
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+
+if ($isPis && $userId !== $employeeId) {
+  require_once(root() . '/modules/error/no-results-found.php');
+  return;
+}
+
 $employees = employee($employeeId);
 
 if (numRows($employees) > 0) {
@@ -12,6 +16,12 @@ if (numRows($employees) > 0) {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
+
+if ($isHrmis) {
+  require_once(root() . '/modules/employees/employee-tabs.php');
+}
+
+messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -62,6 +72,8 @@ if (numRows($employees) > 0) {
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                   <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Edit', 'fa-edit', 'Edit Service Record'); ?>
+                  <div class="dropdown-divider"></div>
+                  <?php modalDropdownItem(uri() .'/modules/service-record/delete-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Delete', 'fa-trash', 'Delete Service Record'); ?>
                   </div>
                 </div>
               </td>

@@ -1,8 +1,12 @@
 <?php
 // modules/employees/employee-information.php
-messageAlert($showAlert, $message, $success);
-
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+
+if ($isPis && $userId !== $employeeId) {
+  require_once(root() . '/modules/error/no-results-found.php');
+  return;
+}
+
 $employees = employee($employeeId);
 
 if (numRows($employees) > 0) {
@@ -12,6 +16,12 @@ if (numRows($employees) > 0) {
   require_once(root() . '/modules/error/no-results-found.php');
   return;
 }
+
+if ($isHrmis) {
+  require_once(root() . '/modules/employees/employee-tabs.php');
+}
+
+messageAlert($showAlert, $message, $success);
 
 $uploadDirectory = root() . '/uploads/images/' . $employeeId;
 
