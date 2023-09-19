@@ -18,7 +18,6 @@ $email = $school['email'];
 $website = $school['website'];
 $fbPage = $school['fb_page'];
 $code = strtoupper(sanitize(decode($_GET['id'])));
-$title = $url . ' : ' . $code;
 
 require_once(root() . '/print/print-layout.php');
 require_once(root() . '/includes/database/employee.php');
@@ -34,6 +33,7 @@ if (numRows($trainings) === 0) {
 
 $employee = fetchAssoc(employee($employeeId));
 $employeeName = strtoupper(toHandleEncoding(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true)));
+$title = $url . ' | ' . $code . ' - ' . $employeeName;
 $pronoun = $employee['sex'] === 'Male' ? 'his' : 'her';
 $training = fetchAssoc($trainings);
 $trainingTitle = toHandleEncoding($training['title']);
