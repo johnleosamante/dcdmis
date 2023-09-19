@@ -19,13 +19,13 @@ switch ($url) {
     }
     $file = 'certificate-of-participation';
     break;
+  case 'Service Record':
+    $file = 'service-record';
+    break;
   default:
     redirect(customUri($activeApp, '404'));
     break;
 }
-
-$code = strtoupper(sanitize(decode($_GET['id'])));
-$title = $url . ' : ' . $code;
 
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/section.php');
@@ -35,5 +35,5 @@ require_once(root() . '/includes/plugin/fpdf/fpdf.php');
 require_once(root() . '/includes/plugin/phpqrcode/qrlib.php');
 require_once(root() . "/print/{$file}.php");
 
-$pdf->Output("{$title}.pdf", "I");
+$pdf->Output("I", "{$title}.pdf");
 ?>
