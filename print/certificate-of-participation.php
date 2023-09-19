@@ -9,7 +9,7 @@ $multiplePage = false;
 $showQR = true;
 $showStationInfo = true;
 $isSchoolPortal = false;
-$section = $district = null;
+$section = null;
 $school = fetchArray(schoolDetailsById('143'));
 $stationLogo = root() . '/' . $school['logo'];
 $address = $school['address'];

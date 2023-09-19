@@ -10,7 +10,6 @@ $showQR = true;
 $isSchoolPortal = $stationId !== '143';
 $section = strtoupper(stationName($station));
 $school = fetchArray(schoolDetailsById($stationId));
-$district = fetchAssoc(district($school['district']))['name'];
 $stationLogo = !empty($school['logo']) ? root() . '/' . $school['logo'] : null;
 $address = $school['address'];
 $telephone = $school['telephone'];
