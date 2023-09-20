@@ -8,11 +8,11 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $serviceRecordId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$service = $position = $organization = $status = $isgovernment = null;
+$service = $position = $organization = $status = $isgovernment = $leave = $separationCause = null;
 $grade = $step = 1;
 $salary = 0;
-$from = $to = date('Y-m-d');
-$isPresent = false;
+$from = $to = $separationDate = date('Y-m-d');
+$isPresent = $isSeparation =  false;
 $modalTitle = 'Add Service Record';
 
 if (isset($serviceRecordId)) {
@@ -26,12 +26,16 @@ if (isset($serviceRecordId)) {
     $isPresent = $service['ispresent'] === '1';
     $to = $isPresent ? date('Y-m-d') : toDate($service['to'], 'Y-m-d');
     $position = $service['position'];
-    $organization = $service['station'];
-    $salary = $service['salary'];
+    $isgovernment = $service['isgovernment'];
     $grade = $service['grade'];
     $step = $service['step'];
+    $salary = $service['salary'];
+    $organization = $service['station'];
     $status = $service['status'];
-    $isgovernment = $service['isgovernment'];
+    $leave = $service['leave_dates'];
+    $isSeparation = $service['isseparation'];
+    $separationDate = toDate($service['separation_date'], 'Y-m-d');
+    $separationCause = $service['separation_cause'];
   }
 }
 ?>
@@ -42,7 +46,7 @@ if (isset($serviceRecordId)) {
 
     <form method="POST" action="">
       <div class="modal-body">
-      <div class="row">
+        <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label for="from" class="mb-0">Inclusive Dates From <?php showAsterisk(); ?></label>
@@ -69,42 +73,14 @@ if (isset($serviceRecordId)) {
         </div>
 
         <div class="form-group">
-          <label for="position" class="mb-0">Position <?php showAsterisk(); ?></label>
+          <label for="position" class="mb-0">Designation <?php showAsterisk(); ?></label>
           <input id="position" type="text" name="position" class="form-control" title="Required field" value="<?php echo $position; ?>" required>
         </div>
 
-        <div class="form-group">
-          <label for="station" class="mb-0">Department / Agency / Office / Company <?php showAsterisk(); ?></label>
-          <input id="station" type="text" name="station" class="form-control" title="Required field" value="<?php echo $organization; ?>" required>
-        </div>
-
-        <div class="row">
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="grade" class="mb-0">Salary<br>Grade</label>
-              <input id="grade" type="number" name="grade" class="form-control" min="1" max="33" step="1" title="Leave blank if not applicable" value="<?php echo $grade; ?>">
-            </div>
-          </div>
-
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="step" class="mb-0">Step<br>Increment</label>
-              <input id="step" type="number" name="step" class="form-control" min="1" max="8" step="1" title="Leave blank if not applicable" value="<?php echo $step; ?>">
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="salary" class="mb-0">Monthly<br>Salary</label>
-              <input id="salary" type="number" name="salary" class="form-control" min="0" step="1" title="Leave blank if not applicable" value="<?php echo $salary; ?>">
-            </div>
-          </div>
-        </div>
-
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="status" class="mb-0">Status of Appointment <?php showAsterisk(); ?></label>
+              <label for="status" class="mb-0">Employment Status <?php showAsterisk(); ?></label>
               <select name="status" id="status" class="form-control" title="Required field" required>
                 <option value="Permanent" <?php echo setOptionSelected("Permanent", $status); ?>>Permanent</option>
                 <option value="Temporary" <?php echo setOptionSelected("Temporary", $status); ?>>Temporary</option>
@@ -125,6 +101,60 @@ if (isset($serviceRecordId)) {
                 <option value="Y" <?php echo setOptionSelected("Y", $isgovernment); ?>>Yes</option>
                 <option value="N" <?php echo setOptionSelected("N", $isgovernment); ?>>No</option>
               </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="grade" class="mb-0">Salary Grade</label>
+              <input id="grade" type="number" name="grade" class="form-control" min="1" max="33" step="1" title="Leave blank if not applicable" value="<?php echo $grade; ?>">
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="step" class="mb-0">Step</label>
+              <input id="step" type="number" name="step" class="form-control" min="1" max="8" step="1" title="Leave blank if not applicable" value="<?php echo $step; ?>">
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="salary" class="mb-0">Annual Salary</label>
+              <input id="salary" type="number" name="salary" class="form-control" min="0" step="1" title="Leave blank if not applicable" value="<?php echo $salary; ?>">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="station" class="mb-0">Office Entity / Division / Station / Place / Branch of Assignment <?php showAsterisk(); ?></label>
+          <input id="station" type="text" name="station" class="form-control" title="Required field" value="<?php echo $organization; ?>" required>
+        </div>
+
+        <div class="form-group">
+          <label for="leave" class="mb-0">Leave Without Pay</label>
+          <input id="leave" type="text" name="leave" class="form-control" title="Leave blank if not applicable" value="<?php echo $leave; ?>">
+        </div>
+
+        <div class="form-check mb-2" title="Check for separation">
+          <input class="form-check-input" id="is-separation" type="checkbox" name="is-separation" value="1" <?php echo setItemChecked($isSeparation); ?>>
+          <label class="form-check-label" for="is-separation">Separation</label>
+        </div>
+
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-group">
+              <label for="separation-date" class="mb-0">Date</label>
+              <input id="separation-date" type="date" name="separation-date" class="form-control" title="Leave blank if not applicable" value="<?php echo $separationDate; ?>">
+            </div>
+          </div>
+
+          <div class="col-md-7">
+            <div class="form-group">
+              <label for="separation-cause" class="mb-0">Cause</label>
+              <input id="separation-cause" type="text" name="separation-cause" class="form-control" title="Leave blank if not applicable" value="<?php echo $separationCause; ?>">
             </div>
           </div>
         </div>
