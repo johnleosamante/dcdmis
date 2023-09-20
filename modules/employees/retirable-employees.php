@@ -64,7 +64,7 @@ $isHrmis = $activeApp === 'hrmis';
                     <?php
                     linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
                     linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
-                    linkDropdownItem(customUri('hrmis', '201 File', $row['id']), '201 File', 'fa-folder-open', '201 File');
+                    linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
                     ?>
                     <div class="dropdown-divider"></div>
                     <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee'); 
