@@ -1,7 +1,7 @@
 <?php
 // print/service-record.php
 $logoSize = 19.5;
-$margin = 12.7;
+$margin = 8.89;
 $width = 215.9;
 $height = 330.2;
 $lineY = 50;
@@ -23,6 +23,8 @@ require_once(root() . '/print/print-layout.php');
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/experience.php');
 require_once(root() . '/includes/database/position.php');
+require_once(root() . '/includes/database/section.php');
+require_once(root() . '/includes/database/utility.php');
 
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 
@@ -43,7 +45,8 @@ $bday = $employee['day'];
 $byear = $employee['year'];
 $bdate = date('F d, Y', strtotime("$byear-$bmonth-$bday"));
 $bplace = $employee['pob'];
-
+$signatory = fetchAssoc(section('PER'))['head'];
+$position = fetchAssoc(position($signatory))['position'];
 $pdf = new PDF('P', 'mm', array($width, $height));
 $pdf->SetTitle($title);
 $pdf->AliasNbPages();
@@ -73,7 +76,7 @@ $pdf->Ln(4);
 $pdf->Cell(35, 4, 'BP Number', 0, 0, 'C');
 $pdf->SetX($width - $margin - 35);
 $pdf->Cell(35, 4, 'Employee Number', 0, 0, 'C');
-$pdf->Ln(15);
+$pdf->Ln(10);
 $pdf->SetX($margin + 3);
 $pdf->Cell(15, 4, 'NAME:', 0, 0, 'L');
 $pdf->SetFont('calibrib', 'B', 10);
@@ -104,10 +107,99 @@ $pdf->SetX($margin + 18);
 $pdf->Cell(35, 4, 'DATE', 0, 0, 'C');
 $pdf->Cell(85, 4, 'PLACE', 0, 0, 'C');
 $pdf->Cell(55, 4, 'or baptismal certificate or some other)', 0, 0, 'L');
-$pdf->Ln(15);
+$pdf->Ln(10);
 $pdf->SetFont('calibri', '', 10);
-$pdf->SetX($margin + 18);
-$pdf->Cell($width - (($margin * 2) + 18), 4, 'This is to certify that the employee named herein above actually rendered services in this Office as shown by the service');
-$pdf->Ln(5);
-$pdf->Cell($width - ($margin * 2), 4, 'record below, each line of which is supported by appointment and other papers actually issued by this Office.');
+$tableWidth = $width - ($margin * 2);
+$lineHeight = 8;
+$pdf->MultiCell($tableWidth, $lineHeight / 2, '            This is to certify that the above named employee actually rendered services in this Office as shown by the service record below, each line of which is supported by appointments and other papers actually issued and approved by the authorities concerned.');
+$pdf->Ln($lineHeight / 2);
+$pdf->SetFont('calibrib', 'B', 9);
+$colOne = $tableWidth * 0.12;
+$colTwo = $tableWidth * 0.37;
+$colThree = $tableWidth * 0.2;
+$colFour = $tableWidth * 0.12;
+$colFive = $tableWidth * 0.12;
+$colSix = $tableWidth * 0.07;
+$pdf->MultiCell($colOne, $lineHeight / 2, "SERVICE\n(Inclusive Dates)", 1, 'C');
+$pdf->SetY($pdf->GetY() - $lineHeight);
+$pdf->SetX($margin + $colOne);
+$pdf->Cell($colTwo, $lineHeight, 'RECORDS OF APPOINTMENT', 1, 0, 'C');
+$pdf->Cell($colThree, $lineHeight, 'OFFICE ENTITY / DIVISION', 1, 0, 'C');
+$pdf->MultiCell($colFour, $lineHeight / 2, "LEAVE\nWITHOUT PAY", 1, 'C');
+$pdf->SetY($pdf->GetY() - $lineHeight);
+$pdf->SetX($margin + $colOne + $colTwo + $colThree + $colFour);
+$pdf->Cell($colFive, $lineHeight, 'SEPARATION', 1, 0, 'C');
+$pdf->SetX($margin + $colOne + $colTwo + $colThree + $colFour + $colFive);
+$pdf->Cell($colSix, $lineHeight * 2, 'REMARKS', 1, 0, 'C');
+$pdf->Ln($lineHeight);
+$pdf->Cell($colOne / 2, $lineHeight, 'From', 1, 0, 'C');
+$pdf->Cell($colOne / 2, $lineHeight, 'To', 1, 0, 'C');
+$pdf->Cell($colTwo / 3, $lineHeight, 'Designation', 1, 0, 'C');
+$pdf->MultiCell($colTwo / 3, $lineHeight / 2, "Employment\nStatus", 1, 'C');
+$pdf->SetY($pdf->GetY() - $lineHeight);
+$pdf->SetX($margin + $colOne + (($colTwo / 3) * 2));
+$pdf->MultiCell($colTwo / 3, $lineHeight / 2, "Annual\nSalary", 1, 'C');
+$pdf->SetY($pdf->GetY() - $lineHeight);
+$pdf->SetX($margin + $colOne + $colTwo);
+$pdf->MultiCell($colThree, $lineHeight / 2, "Station/Place/Branch of\n Assignment", 1, 'C');
+$pdf->SetY($pdf->GetY() - $lineHeight);
+$pdf->SetX($margin + $colOne + $colTwo + $colThree);
+$pdf->Cell($colFour / 2, $lineHeight, 'From', 1, 0, 'C');
+$pdf->Cell($colFour / 2, $lineHeight, 'To', 1, 0, 'C');
+$pdf->Cell($colFive / 2, $lineHeight, 'Date', 1, 0, 'C');
+$pdf->Cell($colFive / 2, $lineHeight, 'Cause', 1, 0, 'C');
+$pdf->Ln($lineHeight);
+$services = governmentService($employeeId);
+
+if (numRows($services) > 0) {
+  while($service = fetchAssoc($services)) {
+    $pdf->SetFont('calibri', '', 8);
+    $pdf->Cell($colOne / 2, $lineHeight - 2, toDate($service['from'], 'm/d/y'), 1, 0, 'C');
+    $pdf->Cell($colOne / 2, $lineHeight - 2, $service['ispresent'] ? 'PRESENT' : toDate($service['to'], 'm/d/y'), 1, 0, 'C');
+    $pdf->Cell($colTwo / 3, $lineHeight - 2, $service['position'], 1, 0, 'C');
+    $pdf->Cell($colTwo / 3, $lineHeight - 2, strtoupper($service['status']), 1, 0, 'C');
+    $pdf->Cell($colTwo / 3, $lineHeight - 2, toCurrency($service['salary'], ''), 1, 0, 'C');
+    $pdf->Cell($colThree, $lineHeight - 2, $service['station'], 1, 0, 'C');
+    $pdf->Cell($colFour, $lineHeight - 2, toHandleNull($service['leave_dates'], 'N/A'), 1, 0, 'C');
+    $pdf->Cell($colFive / 2, $lineHeight - 2, $service['isseparation'] === '1' ? toDate($service['separation_date'], 'm/d/y') : 'N/A', 1, 0, 'C');
+    $pdf->Cell($colFive / 2, $lineHeight - 2, $service['isseparation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A', 1, 0, 'C');
+    $pdf->Cell($colSix, $lineHeight - 2, $service['isgovernment'] === 'Y' ? $service['grade'] . '-' . $service['step'] : 'N/A', 1, 0, 'C');
+    $pdf->Ln($lineHeight - 2);
+  }
+} else {
+  $pdf->SetFontSize(10);
+  $pdf->Cell($tableWidth, $lineHeight * 2, '----- NO DATA AVAILABLE -----', 1, 0, 'C');
+}
+
+$pdf->Ln($lineHeight / 2);
+$pdf->SetFont('calibri', '', 10);
+$pdf->MultiCell($tableWidth, $lineHeight / 2, '            Issued in compliance with Executive Order No. 54 dated August 10, 1954 and in accordance with Circular No. 58 dated August 10, 1954 of the System.');
+$pdf->Ln($lineHeight);
+$pdf->Cell(0, 0, 'Verified and found correct:');
+$pdf->Ln($lineHeight);
+$pdf->SetFont('timesb', 'B', 10);
+$pdf->Cell($tableWidth / 3 + 5, $lineHeight, userName($signatory, true), 0, 0, 'C');
+$pdf->Line($margin, $pdf->GetY() + $lineHeight-2, $margin + $tableWidth / 3 + 5, $pdf->GetY() + $lineHeight-2);
+$pdf->SetFont('calibri', '', 10);
+$pdf->SetX($tableWidth / 3 * 2);
+$pdf->Cell(40, $lineHeight, date('F j, Y'), 0, 0, 'C');
+$pdf->Line(($tableWidth / 3) * 2, $pdf->GetY() + $lineHeight-2, (($tableWidth / 3) * 2) + 40, $pdf->GetY() + $lineHeight-2);
+$pdf->Ln($lineHeight / 2);
+$pdf->SetFont('calibrii', 'I', '9');
+$pdf->Cell($tableWidth / 3 + 5, $lineHeight, '(Chief or Head of Office)', 0, 0, 'C');
+$pdf->SetFont('calibri', '', 10);
+$pdf->SetX($tableWidth / 3 * 2);
+$pdf->Cell(40, $lineHeight, 'Date', 0, 0, 'C');
+$pdf->Ln($lineHeight - 2);
+$pdf->AddFont('times', '', 'times.php');
+$pdf->SetFont('times', '', 10);
+$pdf->Cell($tableWidth / 3 + 5, $lineHeight, $position . ' (Personnel Officer)', 0, 0, 'C');
+$pdf->Line($margin, $pdf->GetY() + $lineHeight-2, $margin + $tableWidth / 3 + 5, $pdf->GetY() + $lineHeight-2);
+$pdf->Line(($tableWidth / 3) * 2, $pdf->GetY() + $lineHeight-2, (($tableWidth / 3) * 2) + 40, $pdf->GetY() + $lineHeight-2);
+$pdf->Ln($lineHeight / 2);
+$pdf->SetFont('calibrii', 'I', '9');
+$pdf->Cell($tableWidth / 3 + 5, $lineHeight, '(Designation)', 0, 0, 'C');
+$pdf->SetFont('calibri', '', 10);
+$pdf->SetX($tableWidth / 3 * 2);
+$pdf->Cell(40, $lineHeight, 'Control No.', 0, 0, 'C');
 ?>
