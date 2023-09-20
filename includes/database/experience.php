@@ -23,19 +23,19 @@ function deleteExperience($id, $no) {
 }
 
 function serviceRecords($id) {
-  return query("SELECT `No` AS `no`, `date_from` AS `from`, `date_to` AS `to`, `ispresent`, `position`, `station`, `grade`, `step`, `salary`, `work_status` AS `status`, `isgovernment`, `Emp_ID` AS `id` FROM `tbl_service_records` WHERE `Emp_ID`='{$id}' ORDER BY `date_from` DESC;");
+  return query("SELECT `No` AS `no`, `date_from` AS `from`, `date_to` AS `to`, `ispresent`, `position`, `station`, `grade`, `step`, `salary`, `work_status` AS `status`, `isgovernment`, `leave_dates`, `isseparation`, `separation_date`, `separation_cause`, `Emp_ID` AS `id` FROM `tbl_service_records` WHERE `Emp_ID`='{$id}' ORDER BY `date_from` DESC;");
 }
 
 function serviceRecord($id, $no) {
-  return query("SELECT `No` AS `no`, `date_from` AS `from`, `date_to` AS `to`, `ispresent`, `position`, `station`, `grade`, `step`, `salary`, `work_status` AS `status`, `isgovernment`, `Emp_ID` AS `id` FROM `tbl_service_records` WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
+  return query("SELECT `No` AS `no`, `date_from` AS `from`, `date_to` AS `to`, `ispresent`, `position`, `station`, `grade`, `step`, `salary`, `work_status` AS `status`, `isgovernment`, `leave_dates`, `isseparation`, `separation_date`, `separation_cause`, `Emp_ID` AS `id` FROM `tbl_service_records` WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
-function createServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $id) {
-  nonQuery("INSERT INTO tbl_service_records (`date_from`, `date_to`, `ispresent`, `position`, `station`, `grade`, `step`, `salary`, `work_status`, `isgovernment`, `Emp_ID`) VALUES ('{$from}', '{$to}', '{$isPresent}', '{$position}', '{$station}', '{$grade}', '{$step}', '{$salary}', '{$status}', '{$isGovernment}', '{$id}');");
+function createServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $leaveDates, $isSeparation, $separationDate, $separationCause, $id) {
+  nonQuery("INSERT INTO tbl_service_records (`date_from`, `date_to`, `ispresent`, `position`, `station`, `grade`, `step`, `salary`, `work_status`, `isgovernment`, `leave_dates`, `isseparation`, `separation_date`, `separation_cause`, `Emp_ID`) VALUES ('{$from}', '{$to}', '{$isPresent}', '{$position}', '{$station}', '{$grade}', '{$step}', '{$salary}', '{$status}', '{$isGovernment}', '{$leaveDates}', '{$isSeparation}', '{$separationDate}', '{$separationCause}', '{$id}');");
 }
 
-function updateServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $id, $no) {
-  nonQuery("UPDATE tbl_service_records SET `date_from`='{$from}', `date_to`='{$to}', `ispresent`='{$isPresent}', `position`='{$position}', `station`='{$station}', `grade`='{$grade}', `step`='{$step}', `salary`='{$salary}', `work_status`='{$status}', `isgovernment`='{$isGovernment}' WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
+function updateServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $leaveDates, $isSeparation, $separationDate, $separationCause, $id, $no) {
+  nonQuery("UPDATE tbl_service_records SET `date_from`='{$from}', `date_to`='{$to}', `ispresent`='{$isPresent}', `position`='{$position}', `station`='{$station}', `grade`='{$grade}', `step`='{$step}', `salary`='{$salary}', `work_status`='{$status}', `isgovernment`='{$isGovernment}', `leave_dates`='{$leaveDates}', `isseparation`='{$isSeparation}', `separation_date`='{$separationDate}', `separation_cause`='{$separationCause}' WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
 function deleteServiceRecord($id, $no) {
