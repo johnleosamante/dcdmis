@@ -843,15 +843,24 @@ if (isset($_POST['save-service-record'])) {
   $salary = isset($_POST['salary']) ? sanitize($_POST['salary']) : '0';
   $status = sanitize($_POST['status']);
   $isGovernment = sanitize($_POST['is-government']);
+  $leaveDates = sanitize($_POST['leave']);
+  $isSeparation = isset($_POST['is-separation']) ? '1' : '0';
+  $separationDate = $separationCause = null;
+  
+  if ($isSeparation === '1') {
+    $separationDate = sanitize($_POST['separation-date']);
+    $separationCause = sanitize($_POST['separation-cause']);
+  }
+
   $logMessage = '';
 
   if (empty($serviceId)) {
-    createServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $employeeId);
+    createServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId);
 
     $logMessage = 'Added service record';
     $message = 'Service record has been added successfully.';
   } else {
-    updateServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $employeeId, $serviceId);
+    updateServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId, $serviceId);
 
     $logMessage = 'Updated service record';
     $message = 'Service record has been updated successfully.';
