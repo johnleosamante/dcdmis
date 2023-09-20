@@ -11,6 +11,5 @@ contentTitle('Dashboard');
   card('201 Files', customUri('pis', '201 Files', $userId), 'fa-folder-open', 'info');
   card('Certificates', customUri('pis', 'Certificates', $userId), 'fa-certificate', 'warning');
   card('Trainings', customUri('pis', 'Trainings', $userId), 'fa-chalkboard-teacher', 'danger');
-  card('Payslip', customUri('pis', 'Payslip', $userId), 'fa-money-check', 'secondary');
   ?>
 </div>

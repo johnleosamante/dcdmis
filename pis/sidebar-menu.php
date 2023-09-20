@@ -7,5 +7,4 @@ sidebarMenuItem(customUri('pis', '201 Files', $userId), '201 Files', 'fa-folder-
 sidebarDivider();
 sidebarMenuItem(customUri('pis', 'Certificates', $userId), 'Certificates', 'fa-certificate', isset($url) && str_contains($url, 'Certificates'));
 sidebarMenuItem(customUri('pis', 'Trainings', $userId), 'Trainings', 'fa-chalkboard-teacher', isset($url) && str_contains($url, 'Trainings'));
-sidebarMenuItem(customUri('pis', 'Payslip', $userId), 'Payslip', 'fa-money-check', isset($url) && str_contains($url, 'Payslip'));
 ?>
