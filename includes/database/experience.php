@@ -41,4 +41,8 @@ function updateServiceRecord($from, $to, $isPresent, $position, $station, $grade
 function deleteServiceRecord($id, $no) {
   nonQuery("DELETE FROM tbl_service_records WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
+
+function governmentService($id) {
+  return query("SELECT `No` AS `no`, `date_from` AS `from`, `date_to` AS `to`, `ispresent`, `position`, `station`, `grade`, `step`, `salary`, `work_status` AS `status`, `isgovernment`, `leave_dates`, `isseparation`, `separation_date`, `separation_cause`, `Emp_ID` AS `id` FROM `tbl_service_records` WHERE `Emp_ID`='{$id}' AND `isgovernment`='Y' ORDER BY `date_from` DESC;");
+}
 ?>
