@@ -87,13 +87,7 @@ messageAlert($showAlert, $message, $success);
                 <?php echo $service['isseparation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A'; ?>
               </td>
               <td class="align-middle">
-                <?php
-                if ($service['isgovernment'] === 'Y') {
-                  echo $service['grade'] . '-' . $service['step']; 
-                } else {
-                  echo 'N/A'; 
-                }
-                ?>
+                <?php echo $service['isgovernment'] === 'Y' ? $service['grade'] . '-' . $service['step'] : 'N/A'; ?>
               </td>
               <?php if ($isHrmis) : ?>
               <td class="align-middle text-capitalize">
