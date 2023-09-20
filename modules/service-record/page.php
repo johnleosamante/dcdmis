@@ -48,7 +48,9 @@ messageAlert($showAlert, $message, $success);
           <tr>
             <th class="align-middle" colspan="2" width="10%">Service<br>(Inclusive Dates)</th>
             <th class="align-middle" colspan="3" width="30%">Record of Appointment</th>
-            <th class="align-middle" rowspan="2" width="20%">Office Entity/Division<br>Station/Place/Branch of Assignment</th>
+            <th class="align-middle" rowspan="2" width="15%">Office Entity/Division<br>Station/Place/Branch of Assignment</th>
+            <th class="align-middle" rowspan="2" width="10%">Leave Without Pay</th>
+            <th class="align-middle" colspan="2" width="10%">Separation</th>
             <th class="align-middle" rowspan="2" width="5%">Remarks</th>
             <?php if ($isHrmis) : ?>
               <th class="align-middle" rowspan="2" width="5%">Actions</th>
@@ -60,6 +62,8 @@ messageAlert($showAlert, $message, $success);
             <th class="align-middle" width="10%">Designation</th>
             <th class="align-middle" width="10%">Employment Status</th>
             <th class="align-middle" width="10%">Salary</th>
+            <th class="align-middle" width="5%">Date</th>
+            <th class="align-middle" width="5%">Cause</th>
           </tr>
         </thead>
 
@@ -75,7 +79,22 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle"><?php echo $service['status']; ?></td>
               <td class="align-middle"><?php echo toCurrency($service['salary']); ?></td>
               <td class="align-middle"><?php echo $service['station']; ?></td>
-              <td class="align-middle"><?php echo 'SG ' . $service['grade'] . ', STEP ' . $service['step']; ?></td>
+              <td class="align-middle"><?php echo toHandleNull($service['leave_dates'], 'N/A'); ?></td>
+              <td class="align-middle">
+                <?php echo $service['isseparation'] === '1' ? toDate($service['separation_date']) : 'N/A'; ?>
+              </td>
+              <td class="align-middle">
+                <?php echo $service['isseparation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A'; ?>
+              </td>
+              <td class="align-middle">
+                <?php
+                if ($service['isgovernment'] === 'Y') {
+                  echo $service['grade'] . '-' . $service['step']; 
+                } else {
+                  echo 'N/A'; 
+                }
+                ?>
+              </td>
               <?php if ($isHrmis) : ?>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
@@ -100,6 +119,9 @@ messageAlert($showAlert, $message, $success);
             <th class="align-middle" width="10%">Employment Status</th>
             <th class="align-middle" width="10%">Salary</th>
             <th class="align-middle" rowspan="2" width="20%">Office Entity/Division/Station/Place/Branch of Assignment</th>
+            <th class="align-middle" rowspan="2" width="10%">Leave Without Pay</th>
+            <th class="align-middle" width="5%">Date</th>
+            <th class="align-middle" width="5%">Cause</th>
             <th class="align-middle" rowspan="2" width="5%">Remarks</th>
             <?php if ($isHrmis) : ?>
               <th class="align-middle" rowspan="2" width="5%">Actions</th>
@@ -108,6 +130,7 @@ messageAlert($showAlert, $message, $success);
           <tr>
             <th class="align-middle" colspan="2" width="10%">Service<br>(Inclusive Dates)</th>
             <th class="align-middle" colspan="3" width="30%">Record of Appointment</th>
+            <th class="align-middle" colspan="2" width="10%">Separation</th>
           </tr>
         </tfoot>
       </table>
