@@ -47,8 +47,8 @@ messageAlert($showAlert, $message, $success);
         <thead>
           <tr>
             <th class="align-middle" colspan="2" width="10%">Service<br>(Inclusive Dates)</th>
-            <th class="align-middle" colspan="3" width="35%">Record of Appointment</th>
-            <th class="align-middle" rowspan="2" width="20%">Office Entity/Division/Station/Place/Branch of Assignment</th>
+            <th class="align-middle" colspan="3" width="30%">Record of Appointment</th>
+            <th class="align-middle" rowspan="2" width="20%">Office Entity/Division<br>Station/Place/Branch of Assignment</th>
             <th class="align-middle" rowspan="2" width="5%">Remarks</th>
             <?php if ($isHrmis) : ?>
               <th class="align-middle" rowspan="2" width="5%">Actions</th>
@@ -57,7 +57,7 @@ messageAlert($showAlert, $message, $success);
           <tr>
             <th class="align-middle" width="5%">From</th>
             <th class="align-middle" width="5%">To</th>
-            <th class="align-middle" width="15%">Designation</th>
+            <th class="align-middle" width="10%">Designation</th>
             <th class="align-middle" width="10%">Employment Status</th>
             <th class="align-middle" width="10%">Salary</th>
           </tr>
@@ -73,7 +73,7 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle"><?php echo $service['ispresent'] ? 'PRESENT' : toDate($service['to']); ?></td>
               <td class="align-middle"><?php echo $service['position']; ?></td>
               <td class="align-middle"><?php echo $service['status']; ?></td>
-              <td class="align-middle"><?php echo toCurrency($service['salary'] * 12); ?></td>
+              <td class="align-middle"><?php echo toCurrency($service['salary']); ?></td>
               <td class="align-middle"><?php echo $service['station']; ?></td>
               <td class="align-middle"><?php echo 'SG ' . $service['grade'] . ', STEP ' . $service['step']; ?></td>
               <?php if ($isHrmis) : ?>
@@ -96,7 +96,7 @@ messageAlert($showAlert, $message, $success);
           <tr>
             <th class="align-middle" width="5%">From</th>
             <th class="align-middle" width="5%">To</th>
-            <th class="align-middle" width="15%">Designation</th>
+            <th class="align-middle" width="10%">Designation</th>
             <th class="align-middle" width="10%">Employment Status</th>
             <th class="align-middle" width="10%">Salary</th>
             <th class="align-middle" rowspan="2" width="20%">Office Entity/Division/Station/Place/Branch of Assignment</th>
@@ -107,7 +107,7 @@ messageAlert($showAlert, $message, $success);
           </tr>
           <tr>
             <th class="align-middle" colspan="2" width="10%">Service<br>(Inclusive Dates)</th>
-            <th class="align-middle" colspan="3" width="35%">Record of Appointment</th>
+            <th class="align-middle" colspan="3" width="30%">Record of Appointment</th>
           </tr>
         </tfoot>
       </table>
