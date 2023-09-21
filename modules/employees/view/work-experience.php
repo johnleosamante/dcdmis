@@ -3,12 +3,6 @@
 ?>
 
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'work-experience', 'show active'); ?>" id="work-experience">
-    <?php if ($editMode) : ?>
-    <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() .'/modules/employees/save/save-work-experience.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Work Experience', 'primary'); ?>
-    </div>
-  <?php endif; ?>
-
   <div class="row my-3">
     <div class="col table-responsive">
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
@@ -21,9 +15,6 @@
             <th class="align-middle" width="10%" rowspan="2">Salary / Job / Pay Grade &amp; Step Increment</th>
             <th class="align-middle" width="10%" rowspan="2">Status of Appointment</th>
             <th class="align-middle" width="10%" rowspan="2">Government Service</th>
-            <?php if ($editMode) : ?>
-              <th class="align-middle" width="5%" rowspan="2">Action</th>
-            <?php endif; ?>
           </tr>
           <tr>
             <th class="align-middle" width="5%">From</th>
@@ -41,27 +32,15 @@
                 <td class="align-middle"><?php echo $experience['ispresent'] ? 'PRESENT' : toDate($experience['to']); ?></td>
                 <td class="align-middle"><?php echo $experience['position']; ?></td>
                 <td class="align-middle"><?php echo $experience['organization']; ?></td>
-                <td class="align-middle"><?php echo toCurrency($experience['salary']); ?></td>
+                <td class="align-middle"><?php echo !empty($experience['salary']) ? toCurrency($experience['salary'] / 12) : 'N/A'; ?></td>
                 <td class="align-middle"><?php echo toHandleNull($experience['sg'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo $experience['status']; ?></td>
                 <td class="align-middle"><?php echo $experience['isgovernment']; ?></td>
-                <?php if ($editMode) : ?>
-                  <td class="align-middle text-capitalize">
-                    <div class="dropdown no-arrow">
-                      <?php dropdownEllipsis(); ?>
-                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-work-experience.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Edit', 'fa-edit', 'Edit Work Experience'); ?>
-                        <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-work-experience.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Delete', 'fa-trash', 'Delete Work Experience'); ?>
-                      </div>
-                    </div>
-                  </td>
-                <?php endif; ?>
               </tr>
             <?php endwhile;
           } else { ?>
             <tr>
-              <td colspan="<?php echo $editMode ? '9' : '8'; ?>" class="align-middle">No data available in table</td>
+              <td colspan="8" class="align-middle">No data available in table</td>
             </tr>
           <?php } ?>
         </tbody>
