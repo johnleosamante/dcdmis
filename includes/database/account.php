@@ -43,8 +43,9 @@ function createUserRole($id, $role, $station, $portal=null) {
   nonQuery("INSERT INTO tbl_user (`usercode`, `position`, `Station`, `Link`) VALUES ('$id', '$role', '$station', '$portal');");
 }
 
-function updateUserRole($id, $station, $portal) {
-  nonQuery("UPDATE tbl_user SET Station='$station', Link='$portal' WHERE usercode='$id' AND Link LIKE '%_portal%';");
+function updateUserRole($id, $station, $portal=null) {
+  $filter = !empty($portal) ? ", Link='{$portal}'" : '';
+  nonQuery("UPDATE tbl_user SET Station='{$station}'{$filter} WHERE usercode='$id' AND Link LIKE '%_portal%';");
 }
 
 function deleteUserRole($id, $station) {
