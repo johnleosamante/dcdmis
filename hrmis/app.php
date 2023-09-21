@@ -372,61 +372,6 @@ if (isset($_POST['delete-voluntary-work'])) {
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
 }
 
-if (isset($_POST['save-learning-development'])) {
-  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-  $learningId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
-  $title = sanitize($_POST['title']);
-  $from = sanitize($_POST['from']);
-  $to = sanitize($_POST['to']);
-  $hours = isset($_POST['hours']) ? sanitize($_POST['hours']) : 0;
-  $type = sanitize($_POST['type']);
-  $sponsor = sanitize($_POST['sponsor']);
-  $logMessage = '';
-
-  if (empty($learningId)) {
-    createlearningAndDevelopment($title, $from, $to, $hours, $type, $sponsor, $employeeId);
-
-    $logMessage = 'Added employee learning development';
-    $message = 'Learning &amp; development intervention has been added successfully.';
-  } else {
-    updateLearningAndDevelopment($title, $from, $to, $hours, $type, $sponsor, $employeeId, $learningId);
-
-    $logMessage = 'Updated employee learning development';
-    $message = 'Learning &amp; development intervention has been updated successfully.';
-  }
-
-  $showAlert = true;
-
-  if (affectedRows()) {
-    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-  } else {
-    $message = 'No changes have been made to learning &amp; development intervention.';
-    $success = false;
-  }
-
-  $activeTab = $_SESSION[alias() . '_activeTab'] = 'learning-development';
-}
-
-if (isset($_POST['delete-learning-development'])) {
-  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-  $learningId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
-
-  deleteLearningAndDevelopment($employeeId, $learningId);
-
-  $showAlert = true;
-
-  if (affectedRows()) {
-    $message = 'Learning &amp; development intervention has been deleted successfully.';
-
-    createSystemLog($stationId, $userId, 'Deleted employee learning development', $employeeId, clientIp());
-  } else {
-    $message = 'No changes have been made to learning &amp; development intervention.';
-    $success = false;
-  }
-
-  $activeTab = $_SESSION[alias() . '_activeTab'] = 'learning-development';
-}
-
 if (isset($_POST['save-special-skill'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $skillId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
