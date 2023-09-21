@@ -21,7 +21,7 @@
         </thead>
         <tbody>
           <?php
-          $learnings = learningAndDevelopments($employeeId);
+          $learnings = attendedTrainings($employeeId);
 
           if (numRows($learnings) > 0) {
             while ($learning = fetchAssoc($learnings)) : ?>
