@@ -317,64 +317,6 @@ if (isset($_POST['delete-eligibility'])) {
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
 }
 
-if (isset($_POST['save-experience'])) {
-  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-  $experienceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
-  $from = sanitize($_POST['from']);
-  $isPresent = isset($_POST['is-present']) ? '1' : '0';
-  $to = sanitize($_POST['to']);
-  $position = sanitize($_POST['position']);
-  $organization = sanitize($_POST['organization']);
-  $salary = isset($_POST['salary']) ? sanitize($_POST['salary']) : 0;
-  $sg = sanitize($_POST['sg']);
-  $status = sanitize($_POST['status']);
-  $isGovernment = sanitize($_POST['is-government']);
-  $logMessage = '';
-
-  if (empty($experienceId)) {
-    createExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId);
-
-    $logMessage = 'Added employee experience';
-    $message = 'Work experience has been added successfully.';
-  } else {
-    updateExperience($from, $to, $isPresent, $position, $organization, $salary, $sg, $status, $isGovernment, $employeeId, $experienceId);
-
-    $logMessage = 'Updated employee experience';
-    $message = 'Work experience has been updated successfully.';
-  }
-
-  $showAlert = true;
-
-  if (affectedRows()) {
-    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-  } else {
-    $message = 'No changes have been made to work experience.';
-    $success = false;
-  }
-
-  $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
-}
-
-if (isset($_POST['delete-work-experience'])) {
-  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-  $experienceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
-
-  deleteExperience($employeeId, $experienceId);
-
-  $showAlert = true;
-
-  if (affectedRows()) {
-    $message = 'Work experience has been deleted successfully.';
-
-    createSystemLog($stationId, $userId, 'Deleted employee experience', $employeeId, clientIp());
-  } else {
-    $message = 'No changes have been made to work experience.';
-    $success = false;
-  }
-
-  $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
-}
-
 if (isset($_POST['save-voluntary-work'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $voluntaryId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
@@ -837,12 +779,13 @@ if (isset($_POST['save-service-record'])) {
   $isPresent = isset($_POST['is-present']) ? '1' : '0';
   $to = sanitize($_POST['to']);
   $position = sanitize($_POST['position']);
-  $station = sanitize($_POST['station']);
-  $grade = isset($_POST['grade']) ? sanitize($_POST['grade']) : '1';
-  $step = isset($_POST['step']) ? sanitize($_POST['step']) : '1';
-  $salary = isset($_POST['salary']) ? sanitize($_POST['salary']) : '0';
+  $positionCode = sanitize($_POST['position-code']);
   $status = sanitize($_POST['status']);
   $isGovernment = sanitize($_POST['is-government']);
+  $sg = sanitize($_POST['sg-step']);
+  $salary = isset($_POST['salary']) ? sanitize($_POST['salary']) : '0';
+  $station = sanitize($_POST['station']);
+  $stationAlias = sanitize($_POST['station-alias']);
   $leaveDates = sanitize($_POST['leave']);
   $isSeparation = isset($_POST['is-separation']) ? '1' : '0';
   $separationDate = $separationCause = null;
@@ -855,12 +798,12 @@ if (isset($_POST['save-service-record'])) {
   $logMessage = '';
 
   if (empty($serviceId)) {
-    createServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId);
+    createExperience($from, $to, $isPresent, $position, $positionCode, $status, $isGovernment, $sg, $salary, $station, $stationAlias, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId);
 
     $logMessage = 'Added service record';
     $message = 'Service record has been added successfully.';
   } else {
-    updateServiceRecord($from, $to, $isPresent, $position, $station, $grade, $step, $salary, $status, $isGovernment, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId, $serviceId);
+    updateExperience($from, $to, $isPresent, $position, $positionCode, $status, $isGovernment, $sg, $salary, $station, $stationAlias, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId, $serviceId);
 
     $logMessage = 'Updated service record';
     $message = 'Service record has been updated successfully.';
@@ -880,7 +823,7 @@ if (isset($_POST['delete-service-record'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $serviceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
 
-  deleteServiceRecord($employeeId, $serviceId);
+  deleteExperience($employeeId, $serviceId);
 
   $showAlert = true;
 
