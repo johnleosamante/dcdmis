@@ -1,7 +1,6 @@
 <?php
 // includes/database/experience.php
 // work_experience
-// tbl_service_records
 function experiences($id) {
   return query("SELECT `No` AS `no`, `From` AS `from`, `To` AS `to`, `ispresent`, `Position_Title` AS `position`, `position_code`, Job_Status AS `status`, Goverment AS isgovernment, Salary_Grade AS sg, Monthly_Salary AS salary, Organization AS organization, `organization_alias`, `leave_dates`, `isseparation`, `separation_date`, `separation_cause`, Emp_ID AS id FROM work_experience WHERE Emp_ID='{$id}' ORDER BY `From` DESC, `To` DESC;");
 }
