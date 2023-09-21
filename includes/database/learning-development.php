@@ -1,16 +1,7 @@
 <?php
 // includes/database/learning-development.php
-// learning_and_development
 // tbl_seminar
 // tbl_seminar_participant
-function learningAndDevelopments($id) {
-  return query("SELECT `No` AS `no`, Title_of_Training AS `title`, `From` AS `from`, `To` AS `to`, `Number_of_Hours` AS `hours`, `Managerial` AS `type`, `Conducted` AS `sponsor`, Emp_ID AS `id` FROM learning_and_development WHERE Emp_ID='{$id}' ORDER BY `From` DESC, `To` DESC;");
-}
-
-function learningAndDevelopment($id, $no) {
-  return query("SELECT `No` AS `no`, Title_of_Training AS `title`, `From` AS `from`, `To` AS `to`, `Number_of_Hours` AS `hours`, `Managerial` AS `type`, `Conducted` AS `sponsor`, Emp_ID AS `id` FROM learning_and_development WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
-}
-
 function trainings() {
   return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `hours`, `Category` AS `type`, `conducted_by` AS `sponsor`, `TVenue` AS `venue` FROM tbl_seminar ORDER BY `From` DESC, `To` DESC;");
 }
