@@ -59,6 +59,9 @@ if (!isset($url) || $url === 'dashboard') {
     case '201 Files':
       $file = '201-file/page';
       break;
+    case 'Certificates':
+      $file = 'certificates/page';
+      break;
     case 'Employee Search':
       $file = 'employees/employee-search';
       break;
