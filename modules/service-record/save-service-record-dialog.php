@@ -8,8 +8,7 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $serviceRecordId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$service = $position = $organization = $status = $isgovernment = $leave = $separationCause = null;
-$grade = $step = 1;
+$service = $position = $positionCode = $organization = $organizationAlias = $status = $isgovernment = $leave = $separationCause = $sg = null;
 $salary = 0;
 $from = $to = $separationDate = date('Y-m-d');
 $isPresent = $isSeparation =  false;
@@ -17,7 +16,7 @@ $modalTitle = 'Add Service Record';
 
 if (isset($serviceRecordId)) {
   $modalTitle = 'Edit Service Record';
-  $services = serviceRecord($employeeId, $serviceRecordId);
+  $services = experience($employeeId, $serviceRecordId);
 
   if (numRows($services) > 0) {
     $service = fetchAssoc($services);
@@ -26,15 +25,16 @@ if (isset($serviceRecordId)) {
     $isPresent = $service['ispresent'] === '1';
     $to = $isPresent ? date('Y-m-d') : toDate($service['to'], 'Y-m-d');
     $position = $service['position'];
+    $positionCode = $service['position_code'];
     $isgovernment = $service['isgovernment'];
-    $grade = $service['grade'];
-    $step = $service['step'];
+    $sg = $service['sg'];
     $salary = $service['salary'];
-    $organization = $service['station'];
+    $organization = $service['organization'];
+    $organizationAlias = $service['organization_alias'];
     $status = $service['status'];
     $leave = $service['leave_dates'];
     $isSeparation = $service['isseparation'];
-    $separationDate = toDate($service['separation_date'], 'Y-m-d');
+    $separationDate = !empty($service['separation_date']) ? toDate($service['separation_date'], 'Y-m-d') : date('Y-m-d');
     $separationCause = $service['separation_cause'];
   }
 }
@@ -72,9 +72,19 @@ if (isset($serviceRecordId)) {
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="position" class="mb-0">Designation <?php showAsterisk(); ?></label>
-          <input id="position" type="text" name="position" class="form-control" title="Required field" value="<?php echo $position; ?>" required>
+        <div class="row">
+          <div class="col-8">
+            <div class="form-group">
+              <label for="position" class="mb-0">Designation <?php showAsterisk(); ?></label>
+              <input id="position" type="text" name="position" class="form-control" title="Required field" value="<?php echo $position; ?>" required>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="position-code" class="mb-0">Alias <?php showAsterisk(); ?></label>
+              <input id="position-code" type="text" name="position-code" class="form-control" title="Required field" value="<?php echo $positionCode; ?>" required>
+            </div>
+          </div>
         </div>
 
         <div class="row">
@@ -106,32 +116,37 @@ if (isset($serviceRecordId)) {
         </div>
 
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-6">
             <div class="form-group">
-              <label for="grade" class="mb-0">Salary Grade</label>
-              <input id="grade" type="number" name="grade" class="form-control" min="1" max="33" step="1" title="Leave blank if not applicable" value="<?php echo $grade; ?>">
-            </div>
-          </div>
-
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="step" class="mb-0">Step</label>
-              <input id="step" type="number" name="step" class="form-control" min="1" max="8" step="1" title="Leave blank if not applicable" value="<?php echo $step; ?>">
+              <label for="sg-step" class="mb-0">Salary Grade &amp; Step Increment</label>
+              <input id="sg-step" type="text" name="sg-step" class="form-control" title="Leave blank if not applicable" value="<?php echo $sg; ?>">
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="salary" class="mb-0">Annual Salary</label>
+              <label for="salary" class="mb-0">Annual<br>Salary</label>
               <input id="salary" type="number" name="salary" class="form-control" min="0" step="1" title="Leave blank if not applicable" value="<?php echo $salary; ?>">
             </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="station" class="mb-0">Office Entity / Division / Station / Place / Branch of Assignment <?php showAsterisk(); ?></label>
-          <input id="station" type="text" name="station" class="form-control" title="Required field" value="<?php echo $organization; ?>" required>
+        <div class="row">
+          <div class="col-8">
+            <div class="form-group">
+              <label for="station" class="mb-0">Office Entity / Division / Station / Place / Branch of Assignment <?php showAsterisk(); ?></label>
+              <input id="station" type="text" name="station" class="form-control" title="Required field" value="<?php echo $organization; ?>" required>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="station-alias" class="mb-0">Assignment<br>Alias <?php showAsterisk(); ?></label>
+              <input id="station-alias" type="text" name="station-alias" class="form-control" title="Required field" value="<?php echo $organizationAlias; ?>" required>
+            </div>
+          </div>
         </div>
+
+
 
         <div class="form-group">
           <label for="leave" class="mb-0">Leave Without Pay</label>
