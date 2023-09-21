@@ -69,16 +69,16 @@ messageAlert($showAlert, $message, $success);
 
         <tbody>
           <?php
-          $services = serviceRecords($employeeId);
+          $services = experiences($employeeId);
 
           while ($service = fetchAssoc($services)) : ?>
             <tr>
               <td class="align-middle"><?php echo toDate($service['from']); ?></td>
               <td class="align-middle"><?php echo $service['ispresent'] ? 'PRESENT' : toDate($service['to']); ?></td>
-              <td class="align-middle"><?php echo $service['position']; ?></td>
+              <td class="align-middle"><?php echo $service['position_code']; ?></td>
               <td class="align-middle"><?php echo $service['status']; ?></td>
-              <td class="align-middle"><?php echo toCurrency($service['salary']); ?></td>
-              <td class="align-middle"><?php echo $service['station']; ?></td>
+              <td class="align-middle"><?php echo !empty($service['salary']) ? toCurrency($service['salary']) : 'N/A'; ?></td>
+              <td class="align-middle"><?php echo $service['organization_alias']; ?></td>
               <td class="align-middle"><?php echo toHandleNull($service['leave_dates'], 'N/A'); ?></td>
               <td class="align-middle">
                 <?php echo $service['isseparation'] === '1' ? toDate($service['separation_date']) : 'N/A'; ?>
@@ -87,7 +87,7 @@ messageAlert($showAlert, $message, $success);
                 <?php echo $service['isseparation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A'; ?>
               </td>
               <td class="align-middle">
-                <?php echo $service['isgovernment'] === 'Y' ? $service['grade'] . '-' . $service['step'] : 'N/A'; ?>
+                <?php echo toHandleNull($service['sg']); ?>
               </td>
               <?php if ($isHrmis) : ?>
               <td class="align-middle text-capitalize">
