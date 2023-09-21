@@ -54,7 +54,7 @@ function pdsProgress($id) {
     $progress += 20;
   }
 
-  if (numRows(learningAndDevelopments($id)) > 0) {
+  if (numRows(attendedTrainings($id)) > 0) {
     $progress += 15;
   }
 
