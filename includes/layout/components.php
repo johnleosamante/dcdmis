@@ -114,6 +114,28 @@ function cardMini($title, $link, $icon, $color = 'primary') { ?>
   </div>
 <?php }
 
+function cardMiniModal($title, $link, $icon, $color = 'primary') { ?>
+  <div class="col-xl-2 col-md-4 mb-4">
+    <div class="card border-left-<?php echo $color; ?> shadow h-100">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-auto">
+            <i class="fas <?php echo $icon; ?> fa-3x text-<?php echo $color; ?>" aria="hidden"></i>
+          </div>
+
+          <div class="col">
+            <div class="font-weight-bold text-uppercase mb-1">
+              <a class="text-<?php echo $color; ?>" href="#" data-toggle="modal" data-target="#modal" onclick="loadData('<?php echo $link; ?>')">
+                <?php echo $title; ?>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<?php }
+
 function scrollToTop() { ?>
   <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
 <?php }
