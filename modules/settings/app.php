@@ -36,7 +36,7 @@ if (isset($_POST['update-password'])) {
     return;
   }
 
-  updateAccountPassword($userId, hashPassword($passwordConfirm));
+  updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
 
   if (affectedRows()) {
     $message = 'Your password has been updated successfully.';

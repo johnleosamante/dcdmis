@@ -186,7 +186,7 @@ if (isset($_POST['reset-user'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $temporaryPassword = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
 
-  updateAccountPassword($employeeId, hashPassword($temporaryPassword));
+  updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
 
   $showAlert = true;
   $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
