@@ -38,7 +38,7 @@ messageAlert($showAlert, $message, $success);
             <td class="align-middle"><?php echo toDate($training['from']); ?></td>
             <td class="align-middle"><?php echo toDate($training['to']); ?></td>
             <td class="align-middle"><?php echo trainingType($training['type']); ?></td>
-            <td class="align-middle"><?php echo trainingSponsor($training['sponsor']); ?></td>
+            <td class="align-middle"><?php echo $training['sponsor']; ?></td>
             <td class="align-middle text-capitalize">
               <div class="dropdown no-arrow">
                 <?php dropdownEllipsis(); ?>
