@@ -630,9 +630,7 @@ if (isset($_POST['reassign-employee'])) {
   }
 
   if (numRows(user($employeeId)) > 0) {
-    $link = $eStationId !== '143' ? 'sch_portal' : null;
-
-    updateUserRole($employeeId, $eStationId, $link);
+    deleteUserRoles($employeeId);
   }
 
   if (numRows(station($employeeId)) === 0) {
