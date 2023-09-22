@@ -8,6 +8,6 @@
   cardMini('Service Record', customUri('hrmis', 'Service Record', $employeeId), 'fa-file-alt', 'success');
   cardMini('201 Files', customUri('hrmis', '201 Files', $employeeId), 'fa-folder-open', 'info');
   cardMini('Trainings', customUri('hrmis', 'Trainings', $employeeId), 'fa-chalkboard-teacher', 'warning');
-  cardMini('PSIPOP', customUri('hrmis', 'PSIPOP', $employeeId), 'fa-file-contract', 'danger');
+  cardMiniModal('PSIPOP', uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($employeeId), 'fa-file-contract', 'danger');
   ?>
 </div>
