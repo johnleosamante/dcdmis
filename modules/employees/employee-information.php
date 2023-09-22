@@ -44,7 +44,7 @@ $employeePhoto = '';
         contentTitleWithLink('Update Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Employee Information', $employeeId));
       }
     } else {
-      contentTitleWithLink('Personal Data Sheet', uri() . '/pis');
+      contentTitleWithLink('Employee Information', uri() . '/pis');
     }
 
     progressBar(pdsProgress($employeeId));
