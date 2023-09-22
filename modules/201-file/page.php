@@ -44,9 +44,8 @@ if (!is_dir($uploadDirectory)) {
       <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th class="align-middle" width="5%">#</th>
-            <th class="align-middle" width="20%">Uploaded on</th>
-            <th class="align-middle" width="70%">Description</th>
+            <th class="align-middle" width="25%">Uploaded on</th>
+            <th class="align-middle" width="75%">Description</th>
             <?php if ($isHrmis) : ?>
               <th class="align-middle" width="5%">Action</th>
             <?php endif; ?>
@@ -55,13 +54,11 @@ if (!is_dir($uploadDirectory)) {
 
         <tbody>
           <?php
-          $no = 0;
           $results = fileAttachments($employeeId);
 
           while ($row = fetchAssoc($results)) : ?>
             <tr class="text-uppercase">
-              <td class="align-middle"><?php echo ++$no; ?></td>
-              <td class="align-middle"><?php echo $row['datetime']; ?></td>
+              <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
               <td class="align-middle"><?php echo $row['description']; ?></td>
               <?php if ($isHrmis) : ?>
                 <td class="align-middle"></td>
@@ -72,9 +69,8 @@ if (!is_dir($uploadDirectory)) {
 
         <tfoot>
           <tr>
-            <th class="align-middle" width="5%">#</th>
-            <th class="align-middle" width="20%">Uploaded on</th>
-            <th class="align-middle" width="70%">Description</th>
+            <th class="align-middle" width="25%">Uploaded on</th>
+            <th class="align-middle" width="75%">Description</th>
             <?php if ($isHrmis) : ?>
               <th class="align-middle" width="5%">Action</th>
             <?php endif; ?>
