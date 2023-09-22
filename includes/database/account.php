@@ -15,8 +15,9 @@ function createAccount($id, $password) {
   nonQuery("INSERT INTO tbl_teacher_account (`Teacher_TIN`, `Teacher_Password`) VALUES ('{$id}', '{$password}');");
 }
 
-function updateAccountPassword($id, $password) {
-  nonQuery("UPDATE tbl_teacher_account SET Teacher_Password='{$password}' WHERE Teacher_TIN='{$id}' LIMIT 1;");
+function updateAccountPassword($id, $password, $status=null) {
+  $filter = !empty($status) ? ", Pass_status='{$status}'" : '';
+  nonQuery("UPDATE tbl_teacher_account SET Teacher_Password='{$password}'{$filter} WHERE Teacher_TIN='{$id}' LIMIT 1;");
 }
 
 function user($id) {
