@@ -61,6 +61,8 @@ messageAlert($showAlert, $message, $success);
                       <?php linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
                       linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
                       linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
+                      linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
+                      modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel');
                       
                       switch ($status) {
                         case 'resigned':
@@ -69,7 +71,7 @@ messageAlert($showAlert, $message, $success);
                         case 'suspended': ?>
                         <div class="dropdown-divider"></div>
                       <?php
-                          modalDropdownItem(uri() . '/modules/employees/restore-employee-dialog.php?id=' . cipher($row['id']), 'Restore', 'fa-undo', 'Restore Employee', true);
+                          modalDropdownItem(uri() . '/modules/employees/restore-employee-dialog.php?id=' . cipher($row['id']), 'Restore', 'fa-undo', 'Restore Employee');
                           break;
                         default:
                           break;
