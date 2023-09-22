@@ -781,4 +781,28 @@ if (isset($_POST['delete-service-record'])) {
     $success = false;
   }
 }
+
+if (isset($_POST['save-psipop'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $item = sanitize($_POST['item']);
+  $sg = sanitize($_POST['salary-grade']);
+  $step = sanitize($_POST['step']);
+  $doa = sanitize($_POST['doa']);
+  $dlp = sanitize($_POST['dlp']);
+  $status = sanitize($_POST['status']);
+  $eligibility = sanitize($_POST['eligibility']);
+  $showAlert = true;
+
+  updateOriginalAppointment($employeeId, $doa);
+  updatePsipop($item, $sg, $step, $status, $dlp, $eligibility, $employeeId);
+
+  if (affectedRows()) {
+    $message = 'Employee PSIPOP information has been updated successfully.';
+
+    createSystemLog($stationId, $userId, 'Updated PSIPOP', $employeeId, clientIp());
+  } else {
+    $message = 'No changes have been made to employee PSIPOP information.';
+    $success = false;
+  }
+}
 ?>
