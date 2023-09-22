@@ -8,7 +8,7 @@ require_once(root() . '/includes/layout/components.php');
 
 $trainingId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $trainings = training($trainingId);
-$title = $hours = $trainingType = $trainingSponsor = $venue = $unconsecutiveDates = '';
+$title = $hours = $trainingType = $trainingLevel = $sponsorName =  $venue = $unconsecutiveDates = '';
 $dateFrom = $dateTo = date('Y-m-d');
 $generateCertificate = false;
 $modalTitle = 'Add Training';
@@ -22,7 +22,8 @@ if (numRows($trainings) > 0) {
   $dateTo = $training['to'];
   $hours = $training['hours'];
   $trainingType = $training['type'];
-  $trainingSponsor = $training['sponsor'];
+  $trainingLevel = $training['level'];
+  $sponsorName = $training['sponsor'];
   $venue = $training['venue'];
   $unconsecutiveDates = $training['unconsecutive_date'];
   $generateCertificate = $training['generate_certificate'] === '1';
@@ -92,16 +93,26 @@ if (numRows($trainings) > 0) {
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="sponsor" class="mb-0">Sponsor <?php showAsterisk(); ?></label>
-          <select id="sponsor" name="sponsor" class="form-control" required>
-            <option value="">Select sponsor...</option>
-            <?php
-              $sponsors = trainingSponsors();
-              while ($sponsor = fetchAssoc($sponsors)) : ?>
-                <option value="<?php echo $sponsor['id']; ?>" <?php echo setOptionSelected($sponsor['id'], $trainingSponsor); ?>><?php echo $sponsor['sponsor']; ?></option>
-            <?php endwhile; ?>
-          </select>
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="level" class="mb-0">Level <?php showAsterisk(); ?></label>
+              <select id="level" name="level" class="form-control" required>
+                <option value="">Select level...</option>
+                <?php
+                $sponsors = trainingSponsors();
+                while ($sponsor = fetchAssoc($sponsors)) : ?>
+                  <option value="<?php echo $sponsor['id']; ?>" <?php echo setOptionSelected($sponsor['id'], $trainingLevel); ?>><?php echo $sponsor['sponsor']; ?></option>
+                <?php endwhile; ?>
+              </select>
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="form-group">
+              <label for="sponsor" class="mb-0">Sponsor <?php showAsterisk(); ?></label>
+              <input type="text" id="sponsor" name="sponsor" class="form-control" value="<?php echo $sponsorName; ?>" required>
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
