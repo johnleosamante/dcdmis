@@ -1,0 +1,55 @@
+<?php
+// modules/employees/update/update-education.php
+require_once('../../includes/function.php');
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/201-file.php');
+require_once(root() . '/includes/layout/components.php');
+require_once(root() . '/includes/string.php');
+
+$employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
+$attachmentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$description = null;
+$filename = 'assets/img/nopreview.png';
+$modalTitle = 'Add 201 File';
+
+if (isset($attachmentId)) {
+  $modalTitle = 'Edit 201 File';
+  $attachments = fileAttachment($employeeId, $attachmentId);
+
+  if (numRows($attachments) > 0) {
+    $attachment = fetchAssoc($attachments);
+    $attachmentId = $attachment['no'];
+    $description = $attachment['description'];
+    $filename = $attachment['filename'];
+  }
+}
+?>
+
+<div class="modal-dialog">
+  <div class="modal-content">
+    <?php modalHeader($modalTitle); ?>
+
+    <form method="POST" action="">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="btn btn-success position-absolute" for="upload" title="Choose file">Choose file</label>
+          <input id="upload" type="file" class="pl-1 my-1 border-0">
+        </div>
+
+        <div class="form-group">
+          <label for="description" class="mb-0">Description <?php showAsterisk(); ?></label>
+          <textarea id="description" name="description" class="form-control" placeholder="Type description..." rows="3" required></textarea>
+        </div>
+
+        <?php requiredLegend(); ?>
+      </div>
+
+      <div class="modal-footer">
+        <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <button type="submit" class="btn btn-primary" name="save-201-file">Continue</button>
+        <?php cancelModalButton(); ?>
+      </div>
+    </form>
+  </div>
+</div>
