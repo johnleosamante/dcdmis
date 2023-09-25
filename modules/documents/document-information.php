@@ -1,7 +1,7 @@
 <?php
 // modules/documents/document-information.php
 $documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$documents = documentFrom($documentId, $station);
+$documents = document($documentId);
 $documentType = null;
 
 messageAlert($showAlert, $message, $success);
