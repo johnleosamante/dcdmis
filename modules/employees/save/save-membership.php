@@ -8,11 +8,12 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $membershipId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
 $membership = '';
 $modalTitle = 'Add Membership in Association / Organization';
 
 if (isset($membershipId)) {
-  $modalTitle = 'Edit Membership in Association / Organization';
+  $modalTitle = $employeeId === $copiedId ? 'Copy Membership in Association / Organization' : 'Edit Membership in Association / Organization';
   $membershipDataSet = membership($employeeId, $membershipId);
 
   if (numRows($membershipDataSet) > 0) {
@@ -39,7 +40,11 @@ if (isset($membershipId)) {
 
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
-        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <?php
+        $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+        $verifier = $employeeId === $copiedId ? null : $verifier; 
+        ?>
+        <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
         <button type="submit" class="btn btn-primary" name="save-membership">Continue</button>
         <?php cancelModalButton(); ?>
       </div>

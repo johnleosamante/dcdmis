@@ -8,13 +8,14 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $voluntaryId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
 $organization = $hours = $position = '';
 $from = $to = date('Y-m-d');
 $isPresent = false;
 $modalTitle = 'Add Voluntary Work';
 
 if (isset($voluntaryId)) {
-  $modalTitle = 'Edit Voluntary Work';
+  $modalTitle = $employeeId === $copiedId ? 'Copy Voluntary Work' : 'Edit Voluntary Work';
   $voluntaryWorks = voluntaryWork($employeeId, $voluntaryId);
 
   if (numRows($voluntaryWorks) > 0) {
@@ -81,7 +82,11 @@ if (isset($voluntaryId)) {
 
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
-        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <?php
+        $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+        $verifier = $employeeId === $copiedId ? null : $verifier; 
+        ?>
+        <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
         <button type="submit" class="btn btn-primary" name="save-voluntary-work">Continue</button>
         <?php cancelModalButton(); ?>
       </div>

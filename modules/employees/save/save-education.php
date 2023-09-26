@@ -8,13 +8,14 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $educationId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
 $education = $level = $school = $course =  $highestLevel = $yearGraduated = $honorReceived = '';
 $from = $to = date('Y');
 $isPresent = false;
 $modalTitle = 'Add Educational Background';
 
 if (isset($educationId)) {
-  $modalTitle = 'Edit Educational Background';
+  $modalTitle = $employeeId === $copiedId ? 'Copy Educational Background' : 'Edit Educational Background';
   $educationalBackground = educationalBackground($employeeId, $educationId);
 
   if (numRows($educationalBackground) > 0) {
@@ -112,7 +113,11 @@ if (isset($educationId)) {
 
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
-        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <?php
+        $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+        $verifier = $employeeId === $copiedId ? null : $verifier; 
+        ?>
+        <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
         <button type="submit" class="btn btn-primary" name="save-education">Continue</button>
         <?php cancelModalButton(); ?>
       </div>

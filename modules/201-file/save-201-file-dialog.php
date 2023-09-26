@@ -8,11 +8,12 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $attachmentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
 $description = $filename = null;
 $modalTitle = 'Add 201 File';
 
 if (isset($attachmentId)) {
-  $modalTitle = 'Edit 201 File';
+  $modalTitle = $employeeId === $copiedId ? 'Copy 201 File' : 'Edit 201 File';
   $attachments = fileAttachment($employeeId, $attachmentId);
 
   if (numRows($attachments) > 0) {
@@ -44,7 +45,11 @@ if (isset($attachmentId)) {
 
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
-        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <?php
+        $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+        $verifier = $employeeId === $copiedId ? null : $verifier; 
+        ?>
+        <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
         <input type="hidden" name="file-verifier" value="<?php echo cipher($filename); ?>">
         <button type="submit" class="btn btn-primary" name="save-201-file">Continue</button>
         <?php cancelModalButton(); ?>

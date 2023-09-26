@@ -8,11 +8,12 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $recognitionId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
 $recognition = '';
 $modalTitle = 'Add Recognition';
 
 if (isset($recognitionId)) {
-  $modalTitle = 'Edit Recognition';
+  $modalTitle = $employeeId === $copiedId ? 'Copy Recognition' : 'Edit Recognition';
   $recognitionDataSet = recognition($employeeId, $recognitionId);
 
   if (numRows($recognitionDataSet) > 0) {
@@ -39,7 +40,11 @@ if (isset($recognitionId)) {
 
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
-        <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <?php
+        $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+        $verifier = $employeeId === $copiedId ? null : $verifier; 
+        ?>
+        <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
         <button type="submit" class="btn btn-primary" name="save-recognition">Continue</button>
         <?php cancelModalButton(); ?>
       </div>
