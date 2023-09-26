@@ -42,6 +42,7 @@ if (isset($_POST['add-employee'])) {
   $showAlert = true;
   $employee = toName($lname, $fname, $mname, $ext, true);
   $success = false;
+  $today = date('Y-m-d');
 
   if (!isValidEmail($email, 'deped.gov.ph')) {
     $message = 'The DepEd Email Address you entered is invalid! Operation has been cancelled.';
@@ -59,11 +60,11 @@ if (isset($_POST['add-employee'])) {
   createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status);
   createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $employeeId);
   createOtherInformation(0, 0, '', 0, '', 0, '0000-00-00', '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', $employeeId);
-  createStation('-', $eStationId, $ePositionId, $employeeId);
-  createPsipop('', '1', 'Permanent', '0000-00-00', '', $employeeId);
-  createStepIncrement('0000-00-00', '1', '0', $employeeId);
-  createDeployment('0000-00-00', $eStationId, $ePositionId, '0', '1', '', $employeeId);
-  createIdentification('', '', '', date('Y-m-d'), $employeeId);
+  createStation($today, $eStationId, $ePositionId, $employeeId);
+  createPsipop('', '1', 'Permanent', $today, '', $employeeId);
+  createStepIncrement($today, '1', '0', $employeeId);
+  createDeployment($today, $eStationId, $ePositionId, '0', '1', '', $employeeId);
+  createIdentification('', '', '', $today, $employeeId);
   createAccount($employeeId, hashPassword(generateStrongRandomPassword()));
 
   if (affectedRows()) {
