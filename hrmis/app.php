@@ -790,17 +790,23 @@ if (isset($_POST['save-201-file'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $fileId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $description = sanitize($_POST['description']);
-  $fileName = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
+  $filename = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
   $logMessage = '';
+  $message = 'No changes have been made to 201 file.';
+  $showAlert = true;
 
   if ($_FILES['file-upload']['size'] > 0 && $_FILES['file-upload']['error'] === 0) {
     $fileUpload = $_FILES['file-upload']['name'];
     $temp = $_FILES['file-upload']['tmp_name'];
     $type = $_FILES['file-upload']['type'];
     $ext = pathinfo($fileUpload, PATHINFO_EXTENSION);
-    $filename = 'upload/201_files/' . $employeeId . '/' . $employeeId . '-' . date('YmdHis') . '.' . $ext;
+    $filename = 'uploads/201_files/' . $employeeId . '/' . $employeeId . '-' . date('YmdHis') . '.' . $ext;
 
-    move_uploaded_file($temp, '../' . $fileName);
+    move_uploaded_file($temp, '../' . $filename);
+  } else {
+    $message = 'No changes have been made to 201 file.';
+    $success = false;
+    return;
   }
 
   if (numRows(fileAttachment($employeeId, $fileId)) === 0) {
@@ -809,13 +815,11 @@ if (isset($_POST['save-201-file'])) {
     $logMessage = 'Added 201 file';
     $message = '201 file has been added successfully.';
   } else {
-    updateFileAttachment($description, $filename, $employeeId, $no);
+    updateFileAttachment($description, $filename, $employeeId, $fileId);
 
     $logMessage = 'Updated 201 file';
     $message = '201 file has been updated successfully.';
   }
-
-  $showAlert = true;
 
   if (affectedRows()) {
     createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
@@ -828,13 +832,20 @@ if (isset($_POST['save-201-file'])) {
 if (isset($_POST['delete-201-file'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $fileId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
-
-  deleteFileAttachment($employeeId, $fileId);
-
   $showAlert = true;
+  $filename = null;
+  $files = fileAttachment($employeeId, $fileId);
+
+  if (numRows($files) > 0) {
+    $file = fetchAssoc($files);
+    $filename = $file['filename'];
+    deleteFileAttachment($employeeId, $fileId);
+  } 
 
   if (affectedRows()) {
-    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
+    createSystemLog($stationId, $userId, 'Deleted employee 201 file', $employeeId, clientIp());
+    unlink(root() . '/' . $filename);
+    $message = '201 file has been deleted successfully.';
   } else {
     $message = 'No changes have been made to 201 file.';
     $success = false;
