@@ -8,8 +8,7 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $attachmentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$description = null;
-$filename = 'assets/img/nopreview.png';
+$description = $filename = null;
 $modalTitle = 'Add 201 File';
 
 if (isset($attachmentId)) {
@@ -32,12 +31,12 @@ if (isset($attachmentId)) {
     <form method="POST" action="" enctype="multipart/form-data">
       <div class="modal-body">
         <div class="form-group">
-          <input id="file-upload" name="file-upload" type="file" class="w-100" required>
+          <input id="file-upload" name="file-upload" type="file" class="w-100">
         </div>
 
         <div class="form-group">
           <label for="description" class="mb-0">Description <?php showAsterisk(); ?></label>
-          <textarea id="description" name="description" class="form-control" placeholder="Type description..." rows="3" required></textarea>
+          <textarea id="description" name="description" class="form-control" placeholder="Type description..." rows="3" required><?php echo $description; ?></textarea>
         </div>
 
         <?php requiredLegend(); ?>
