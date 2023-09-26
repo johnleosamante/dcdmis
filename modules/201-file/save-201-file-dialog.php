@@ -29,10 +29,10 @@ if (isset($attachmentId)) {
   <div class="modal-content">
     <?php modalHeader($modalTitle); ?>
 
-    <form method="POST" action="">
+    <form method="POST" action="" enctype="multipart/form-data">
       <div class="modal-body">
         <div class="form-group">
-          <input id="file-upload" name="file-upload" type="file" class="w-100">
+          <input id="file-upload" name="file-upload" type="file" class="w-100" required>
         </div>
 
         <div class="form-group">
