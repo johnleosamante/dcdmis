@@ -46,9 +46,7 @@ if (!is_dir($uploadDirectory)) {
           <tr>
             <th class="align-middle" width="25%">Uploaded on</th>
             <th class="align-middle" width="75%">Description</th>
-            <?php if ($isHrmis) : ?>
-              <th class="align-middle" width="5%">Action</th>
-            <?php endif; ?>
+            <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
 
@@ -60,18 +58,21 @@ if (!is_dir($uploadDirectory)) {
             <tr class="text-uppercase">
               <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
               <td class="align-middle text-left"><?php echo $row['description']; ?></td>
-              <?php if ($isHrmis) : ?>
-                <td class="align-middle text-capitalize">
-                  <div class="dropdown no-arrow">
-                    <?php dropdownEllipsis(); ?>
-                    <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                      <?php modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Edit', 'fa-edit', 'Edit 201 File'); ?>
-                      <div class="dropdown-divider"></div>
-                      <?php modalDropdownItem(uri() . '/modules/201-file/delete-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Delete', 'fa-trash', 'Delete 201 File'); ?>
-                    </div>
+              <td class="align-middle text-capitalize">
+                <div class="dropdown no-arrow">
+                  <?php dropdownEllipsis(); ?>
+                  <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
+                    <?php
+                    linkDropdownItem(uri() . '/' . $row['filename'], 'Download', 'fa-download', 'Download file', true);
+
+                    if ($isHrmis) {
+                      modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Edit', 'fa-edit', 'Edit 201 File'); ?>
+                    <div class="dropdown-divider"></div>
+                    <?php modalDropdownItem(uri() . '/modules/201-file/delete-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Delete', 'fa-trash', 'Delete 201 File');
+                    } ?>
                   </div>
-                </td>
-              <?php endif; ?>
+                </div>
+              </td>
             </tr>
           <?php endwhile; ?>
         </tbody>
@@ -80,9 +81,7 @@ if (!is_dir($uploadDirectory)) {
           <tr>
             <th class="align-middle" width="25%">Uploaded on</th>
             <th class="align-middle" width="75%">Description</th>
-            <?php if ($isHrmis) : ?>
-              <th class="align-middle" width="5%">Action</th>
-            <?php endif; ?>
+            <th class="align-middle" width="5%">Action</th>
           </tr>
         </tfoot>
       </table>
