@@ -36,7 +36,7 @@ if (numRows($schools) > 0) {
     if ($activeApp === 'dmis') {
       contentTitleWithModal('School Information: ' . strtoupper($schoolName), uri() . '/modules/schools/save-school-dialog.php?id=' . cipher($schoolId) . '&e=' . cipher($alias), 'Edit', 'fa-edit');
     } elseif ($activeApp === 'hrmis') {
-      contentTitleWithModal('School Information: ' . strtoupper($schoolName), uri() . '/modules/employees/new-employee-dialog.php?s=' . cipher($schoolId), 'New Employee', 'fa-user-plus');
+      contentTitleWithModal('School Information: ' . strtoupper($schoolName), uri() . '/modules/employees/save-employee-dialog.php?s=' . cipher($schoolId), 'Add Employee', 'fa-user-plus');
     } else {
       contentTitle('School Information: ' . strtoupper($schoolName));
     } ?>
