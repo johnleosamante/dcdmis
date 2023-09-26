@@ -636,6 +636,7 @@ if (isset($_POST['reassign-employee'])) {
   if (numRows(station($employeeId)) === 0) {
     createStation($date, $eStationId, $positionId, $employeeId);
   } else {
+    updateEmployeeStatus('Active', $employeeId);
     updateStation($date, $eStationId, $positionId, $employeeId);
   }
 
@@ -669,25 +670,6 @@ if (isset($_POST['remove-employee'])) {
     $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
 
     createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
-  } else {
-    $message = 'No changes to employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.';
-    $success = false;
-  }
-}
-
-if (isset($_POST['restore-employee'])) {
-  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-
-  if (numRows(employee($employeeId)) > 0) {
-    updateEmployeeStatus('Active', $employeeId);
-  }
-
-  $showAlert = true;
-
-  if (affectedRows()) {
-    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been restored successfully.';
-
-    createSystemLog($stationId, $userId, 'Restored employee', $employeeId, clientIp());
   } else {
     $message = 'No changes to employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.';
     $success = false;
@@ -802,5 +784,9 @@ if (isset($_POST['save-psipop'])) {
     $message = 'No changes have been made to employee PSIPOP information.';
     $success = false;
   }
+}
+
+if (isset($_POST['save-201-file'])) {
+
 }
 ?>
