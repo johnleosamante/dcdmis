@@ -66,7 +66,8 @@ if (!is_dir($uploadDirectory)) {
                     linkDropdownItem(uri() . '/' . $row['filename'], 'Download', 'fa-download', 'Download file', true);
 
                     if ($isHrmis) {
-                      modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Edit', 'fa-edit', 'Edit 201 File'); ?>
+                      modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Edit', 'fa-edit', 'Edit 201 File');
+                      modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Copy', 'fa-copy', 'Copy 201 File'); ?>
                     <div class="dropdown-divider"></div>
                     <?php modalDropdownItem(uri() . '/modules/201-file/delete-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Delete', 'fa-trash', 'Delete 201 File');
                     } ?>

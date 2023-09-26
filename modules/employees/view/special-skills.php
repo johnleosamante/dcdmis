@@ -33,7 +33,8 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-special-skill.php?e=' . cipher($employeeId) . '&id=' . cipher($skill['no']), 'Edit', 'fa-edit', 'Edit Special Skill / Hobby'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-special-skill.php?e=' . cipher($employeeId) . '&id=' . cipher($skill['no']), 'Edit', 'fa-edit', 'Edit Special Skill / Hobby');
+                        modalDropdownItem(uri() . '/modules/employees/save/save-special-skill.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($skill['no']), 'Copy', 'fa-copy', 'Copy Special Skill / Hobby'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-special-skill.php?e=' . cipher($employeeId) . '&id=' . cipher($skill['no']), 'Delete', 'fa-trash', 'Delete Special Skill / Hobby'); ?>
                       </div>

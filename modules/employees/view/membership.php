@@ -33,9 +33,10 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-membership.php?e=' . cipher($employeeId) . '&id=' . cipher($membership['no']), 'Edit', 'fa-edit', 'Edit Special Skill / Hobby'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-membership.php?e=' . cipher($employeeId) . '&id=' . cipher($membership['no']), 'Edit', 'fa-edit', 'Edit Membership');
+                        modalDropdownItem(uri() . '/modules/employees/save/save-membership.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($membership['no']), 'Copy', 'fa-copy', 'Copy Membership'); ?>
                         <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-membership.php?e=' . cipher($employeeId) . '&id=' . cipher($membership['no']), 'Delete', 'fa-trash', 'Delete Special Skill / Hobby'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-membership.php?e=' . cipher($employeeId) . '&id=' . cipher($membership['no']), 'Delete', 'fa-trash', 'Delete Membership'); ?>
                       </div>
                     </div>
                   </td>

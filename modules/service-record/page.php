@@ -94,7 +94,8 @@ messageAlert($showAlert, $message, $success);
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                  <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Edit', 'fa-edit', 'Edit Service Record'); ?>
+                  <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Edit', 'fa-edit', 'Edit Service Record');
+                  modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Copy', 'fa-copy', 'Copy Service Record'); ?>
                   <div class="dropdown-divider"></div>
                   <?php modalDropdownItem(uri() .'/modules/service-record/delete-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Delete', 'fa-trash', 'Delete Service Record'); ?>
                   </div>

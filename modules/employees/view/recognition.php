@@ -33,7 +33,8 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-recognition.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Edit', 'fa-edit', 'Edit Recognition'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-recognition.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Edit', 'fa-edit', 'Edit Recognition');
+                        modalDropdownItem(uri() . '/modules/employees/save/save-recognition.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Copy', 'fa-copy', 'Copy Recognition'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-recognition.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Delete', 'fa-trash', 'Delete Recognition'); ?>
                       </div>

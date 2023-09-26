@@ -50,7 +50,8 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() .'/modules/employees/save/save-eligibility.php?e=' . cipher($employeeId) . '&id=' . cipher($eligibility['no']), 'Edit', 'fa-edit', 'Edit Eligibility'); ?>
+                        <?php modalDropdownItem(uri() .'/modules/employees/save/save-eligibility.php?e=' . cipher($employeeId) . '&id=' . cipher($eligibility['no']), 'Edit', 'fa-edit', 'Edit Eligibility');
+                        modalDropdownItem(uri() .'/modules/employees/save/save-eligibility.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($eligibility['no']), 'Copy', 'fa-copy', 'Copy Eligibility'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() .'/modules/employees/delete/delete-eligibility.php?e=' . cipher($employeeId) . '&id=' . cipher($eligibility['no']), 'Delete', 'fa-trash', 'Delete Eligibility'); ?>
                       </div>

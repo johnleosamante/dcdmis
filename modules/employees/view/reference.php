@@ -37,7 +37,8 @@
                     <div class="dropdown no-arrow">
                       <?php dropdownEllipsis(); ?>
                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-reference.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Edit', 'fa-edit', 'Edit Reference'); ?>
+                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-reference.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Edit', 'fa-edit', 'Edit Reference');
+                        modalDropdownItem(uri() . '/modules/employees/save/save-reference.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Copy', 'fa-copy', 'Copy Reference'); ?>
                         <div class="dropdown-divider"></div>
                         <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-reference.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Delete', 'fa-trash', 'Delete Reference'); ?>
                       </div>
