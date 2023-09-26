@@ -48,6 +48,31 @@ $displayPhoto = uri() . '/' . $user['picture'];
     </li>
     <?php endif; ?>
 
+    <li class="nav-item dropdown no-arrow mx-1">
+      <a class="nav-link dropdown-toggle" href="#" id="completionDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-tasks fa-fw"></i>
+      </a>
+
+      <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="completionDropdown">
+        <h6 class="dropdown-header bg-dark border-dark">
+          My Employee Information Status
+        </h6>
+
+        <a class="dropdown-item py-3" href="<?php echo customUri('pis', 'Employee Information', $userId); ?>">
+          <div class="font-weight-bold text-left pb-1">
+            <?php
+            $pdsProgress = pdsProgress($userId);
+            echo "$pdsProgress% Complete"; 
+            ?>
+          </div>
+
+          <?php progressBar($pdsProgress); ?>
+        </a>
+      </div>
+    </li>
+
+    <div class="topbar-divider d-none d-sm-block"></div>
+
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="<?php echo strtoupper($displayName); ?>">
         <span class="mr-2 d-none d-md-inline">
