@@ -80,7 +80,7 @@ if (isset($_POST['update-personal-information'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $employeePhoto = isset($_POST['image-verifier']) ? sanitize(decipher($_POST['image-verifier'])) : $defaultImage;
 
-  if ($_FILES['image-upload']['size'] > 0 && $_FILES['image-upload']['error'] == 0) {
+  if ($_FILES['image-upload']['size'] > 0 && $_FILES['image-upload']['error'] === 0) {
     $fileUpload = $_FILES['image-upload']['name'];
     $temp = $_FILES['image-upload']['tmp_name'];
     $type = $_FILES['image-upload']['type'];
@@ -787,6 +787,57 @@ if (isset($_POST['save-psipop'])) {
 }
 
 if (isset($_POST['save-201-file'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $fileId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $description = sanitize($_POST['description']);
+  $fileName = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
+  $logMessage = '';
 
+  if ($_FILES['file-upload']['size'] > 0 && $_FILES['file-upload']['error'] === 0) {
+    $fileUpload = $_FILES['file-upload']['name'];
+    $temp = $_FILES['file-upload']['tmp_name'];
+    $type = $_FILES['file-upload']['type'];
+    $ext = pathinfo($fileUpload, PATHINFO_EXTENSION);
+    $filename = 'upload/201_files/' . $employeeId . '/' . $employeeId . '-' . date('YmdHis') . '.' . $ext;
+
+    move_uploaded_file($temp, '../' . $fileName);
+  }
+
+  if (numRows(fileAttachment($employeeId, $fileId)) === 0) {
+    createFileAttachment($description, $filename, $employeeId);
+
+    $logMessage = 'Added 201 file';
+    $message = '201 file has been added successfully.';
+  } else {
+    updateFileAttachment($description, $filename, $employeeId, $no);
+
+    $logMessage = 'Updated 201 file';
+    $message = '201 file has been updated successfully.';
+  }
+
+  $showAlert = true;
+
+  if (affectedRows()) {
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
+  } else {
+    $message = 'No changes have been made to 201 file.';
+    $success = false;
+  }
+}
+
+if (isset($_POST['delete-201-file'])) {
+  $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $fileId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+
+  deleteFileAttachment($employeeId, $fileId);
+
+  $showAlert = true;
+
+  if (affectedRows()) {
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
+  } else {
+    $message = 'No changes have been made to 201 file.';
+    $success = false;
+  }
 }
 ?>
