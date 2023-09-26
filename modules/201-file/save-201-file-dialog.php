@@ -32,8 +32,7 @@ if (isset($attachmentId)) {
     <form method="POST" action="">
       <div class="modal-body">
         <div class="form-group">
-          <label class="btn btn-success position-absolute" for="upload" title="Choose file">Choose file</label>
-          <input id="upload" type="file" class="pl-1 my-1 border-0">
+          <input id="file-upload" name="file-upload" type="file" class="w-100">
         </div>
 
         <div class="form-group">
@@ -47,6 +46,7 @@ if (isset($attachmentId)) {
       <div class="modal-footer">
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
         <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+        <input type="hidden" name="file-verifier" value="<?php echo cipher($filename); ?>">
         <button type="submit" class="btn btn-primary" name="save-201-file">Continue</button>
         <?php cancelModalButton(); ?>
       </div>
