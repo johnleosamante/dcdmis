@@ -8,11 +8,11 @@ function account($email) {
 }
 
 function accountPassword($id, $password) {
-  return query("SELECT `Teacher_TIN` AS `id` FROM tbl_teacher_account WHERE `Teacher_TIN`='{$id}' AND Teacher_Password='{$password}';");
+  return query("SELECT `Teacher_TIN` AS `id`, `Pass_status` AS `status` FROM tbl_teacher_account WHERE `Teacher_TIN`='{$id}' AND Teacher_Password='{$password}';");
 }
 
 function createAccount($id, $password) {
-  nonQuery("INSERT INTO tbl_teacher_account (`Teacher_TIN`, `Teacher_Password`) VALUES ('{$id}', '{$password}');");
+  nonQuery("INSERT INTO tbl_teacher_account (`Teacher_TIN`, `Teacher_Password`, `Pass_status`) VALUES ('{$id}', '{$password}', 'Default');");
 }
 
 function updateAccountPassword($id, $password, $status=null) {
