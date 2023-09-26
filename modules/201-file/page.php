@@ -33,7 +33,7 @@ if (!is_dir($uploadDirectory)) {
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
     <?php if ($isHrmis) {
-      contentTitleWithModal('201 Files : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/201-file/save-201-file-dialog.php', 'Add', 'fa-plus');
+      contentTitleWithModal('201 Files : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus');
     } else {
       contentTitleWithLink('201 Files', uri() . '/pis');
     } ?>
@@ -59,9 +59,18 @@ if (!is_dir($uploadDirectory)) {
           while ($row = fetchAssoc($results)) : ?>
             <tr class="text-uppercase">
               <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
-              <td class="align-middle"><?php echo $row['description']; ?></td>
+              <td class="align-middle text-left"><?php echo $row['description']; ?></td>
               <?php if ($isHrmis) : ?>
-                <td class="align-middle"></td>
+                <td class="align-middle text-capitalize">
+                  <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis(); ?>
+                    <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
+                      <?php modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Edit', 'fa-edit', 'Edit 201 File'); ?>
+                      <div class="dropdown-divider"></div>
+                      <?php modalDropdownItem(uri() . '/modules/201-file/delete-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Delete', 'fa-trash', 'Delete 201 File'); ?>
+                    </div>
+                  </div>
+                </td>
               <?php endif; ?>
             </tr>
           <?php endwhile; ?>
