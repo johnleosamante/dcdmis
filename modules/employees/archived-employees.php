@@ -71,7 +71,7 @@ messageAlert($showAlert, $message, $success);
                         case 'suspended': ?>
                         <div class="dropdown-divider"></div>
                       <?php
-                          modalDropdownItem(uri() . '/modules/employees/restore-employee-dialog.php?id=' . cipher($row['id']), 'Restore', 'fa-undo', 'Restore Employee');
+                          modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
                           break;
                         default:
                           break;
