@@ -109,7 +109,7 @@ require_once(root() . '/includes/layout/components.php');
           <label for="status" class="mb-0">Status <?php showAsterisk(); ?></label>
           <select id="status" name="status" class="form-control" required>
             <option value="">Select status...</option>
-            <option value="Active" selected>Active</option>
+            <option value="Active">Active</option>
             <option value="Transferred">Transferred</option>
             <option value="Resigned">Resigned</option>
             <option value="Retired">Retired</option>
