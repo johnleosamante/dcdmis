@@ -15,22 +15,18 @@ messageAlert($showAlert, $message, $success);
         <a class="nav-link text-secondary active" href="#contact-details" data-toggle="tab">Contact Details</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-secondary" href="#password-change" data-toggle="tab">Password Change</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-secondary" href="#identification" data-toggle="tab">Identification Details</a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link text-secondary" href="#professional-title" data-toggle="tab">Professional Title</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-secondary" href="#password-change" data-toggle="tab">Password Change</a>
       </li>
     </ul>
 
     <div class="tab-content pt-2 px-2">
       <?php
       require_once('contacts.php');
-      require_once('password.php');
-      require_once('identification.php');
       require_once('professional-title.php');
+      require_once('password.php');
       ?>
     </div>
   </div>
