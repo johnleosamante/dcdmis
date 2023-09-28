@@ -27,10 +27,10 @@ if (isset($_POST['update-identification'])) {
   $showAlert = true;
 
   if (affectedRows()) {
-    $message = 'Your identification details have been updated successfully.';
+    $message = 'Government issued ID has been updated successfully.';
     createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
   } else {
-    $message = 'No changes have been made to your identification details.';
+    $message = 'No changes have been made to government issued ID.';
     $success = false;
   }
 }
