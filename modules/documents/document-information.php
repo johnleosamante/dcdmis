@@ -1,7 +1,7 @@
 <?php
 // modules/documents/document-information.php
 $documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$documents = $isSchoolPortal ? documentFrom($documentId, $station) : document($documentId);
+$documents = document($documentId);
 $documentType = null;
 
 messageAlert($showAlert, $message, $success);
