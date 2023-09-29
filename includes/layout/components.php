@@ -14,7 +14,9 @@ function messageAlert($show, $message, $success = true, $align = 'left') {
   <?php endif;
 }
 
-function roundPill($text, $bgColor = 'primary', $textColor = 'light') {
+function roundPill($text) {
+  $bgColor = 'primary';
+  $textColor = 'light';
   switch (strtolower($text)) {
     case 'active':
       $bgColor = 'success';
@@ -318,7 +320,7 @@ function progressBar($value, $min=50) { ?>
   </div>
 <?php }
 
-function employeeProfile($picture, $name, $sex, $email, $position, $station) { ?>
+function employeeProfile($picture, $name, $sex, $email, $position, $station, $status) { ?>
   <div class="image-container">
     <span class="d-flex justify-content-center align-middle employee-photo photo-4x rounded-circle overflow-hidden">
       <img height="100%" src="<?php echo $picture; ?>" alt="<?php echo $name; ?>">
@@ -328,6 +330,7 @@ function employeeProfile($picture, $name, $sex, $email, $position, $station) { ?
 
   <div class="text-center text-uppercase h4 mt-3 mb-0"><?php echo $name; ?></div>
   <div class="text-center text-lowercase m-0 small"><?php echo $email; ?></div>
-  <div class="text-center text-uppercase h5 mt-2 mb-1"><?php echo $position; ?></div>
+  <div class="text-center text-uppercase my-1"><?php roundPill($status); ?></div>
+  <div class="text-center text-uppercase h5 mt-3 mb-1"><?php echo $position; ?></div>
   <div class="text-center text-uppercase h6 my-1"><?php echo $station; ?></div>
 <?php } ?>
