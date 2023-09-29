@@ -23,6 +23,7 @@ if (numRows($employees) > 0) {
   $employeeId = $employee['id'];
   $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
   $sex = $employee['sex'];
+  $status = $employee['status'];
   $positions = fetchAssoc(position($employeeId));
   $userStationId = $positions['station_id'];
   $station = $positions['station'];
@@ -54,7 +55,7 @@ if (numRows($employees) > 0) {
     <form action="" method="POST">
       <div class="modal-body">
         <?php if ($hasUser) {
-          employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station); ?>
+          employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status); ?>
 
           <hr>
 

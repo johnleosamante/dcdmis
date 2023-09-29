@@ -19,6 +19,7 @@ if (numRows($employees) > 0) {
   $employeeId = $employee['id'];
   $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
   $sex = $employee['sex'];
+  $status = $employee['status'];
   $positions = fetchAssoc(position($employeeId));
   $stationId = $positions['station_id'];
   $station = $positions['station'];
@@ -39,7 +40,7 @@ if (numRows($employees) > 0) {
     <form action="" method="POST">
       <div class="modal-body">
         <?php if ($hasEmployee) { 
-          employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station); 
+          employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status); 
         ?>
           <hr>
           <div class="text-center bg-secondary text-light rounded p-2 h2 mt-3 mb-0"><?php echo $randomPassword; ?></div>
