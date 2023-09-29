@@ -47,7 +47,8 @@ if (isset($attachmentId)) {
         <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
         <?php
         $verifier = isset($_GET['id']) ? $_GET['id'] : null;
-        $verifier = $employeeId === $copiedId ? null : $verifier; 
+        $verifier = $employeeId === $copiedId ? null : $verifier;
+        $filename = !isset($_GET['c']) ? $filename : null;
         ?>
         <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
         <input type="hidden" name="file-verifier" value="<?php echo cipher($filename); ?>">
