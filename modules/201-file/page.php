@@ -63,7 +63,7 @@ if (!is_dir($uploadDirectory)) {
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                     <?php
-                    linkDropdownItem(uri() . '/' . $row['filename'], 'Download', 'fa-download', 'Download file', true);
+                    downloadLinkDropdownItem(uri() . '/' . $row['filename'], 'Download', 'fa-download', 'Download ' . $row['description'], $row['description'] . '.' . $row['ext'], true);
 
                     if ($isHrmis) {
                       modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['no']), 'Edit', 'fa-edit', 'Edit 201 File');
