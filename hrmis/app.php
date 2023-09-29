@@ -801,22 +801,31 @@ if (isset($_POST['save-201-file'])) {
     $temp = $_FILES['file-upload']['tmp_name'];
     $type = $_FILES['file-upload']['type'];
     $ext = pathinfo($fileUpload, PATHINFO_EXTENSION);
+
+    if (!empty($filename) && file_exists(root() . '/' . $filename)) {
+      unlink(root() . '/' . $filename);
+    }
+
     $filename = 'uploads/201_files/' . $employeeId . '/' . $employeeId . '-' . date('YmdHis') . '.' . $ext;
 
     move_uploaded_file($temp, '../' . $filename);
-  } else {
+  }
+
+  if (empty($filename)) {
     $message = 'No changes have been made to 201 file.';
     $success = false;
     return;
+  } else {
+    $ext = pathinfo($filename, PATHINFO_EXTENSION);
   }
 
   if (numRows(fileAttachment($employeeId, $fileId)) === 0) {
-    createFileAttachment($description, $filename, $employeeId);
+    createFileAttachment($description, $filename, $ext, $employeeId);
 
     $logMessage = 'Added 201 file';
     $message = '201 file has been added successfully.';
   } else {
-    updateFileAttachment($description, $filename, $employeeId, $fileId);
+    updateFileAttachment($description, $filename, $ext, $employeeId, $fileId);
 
     $logMessage = 'Updated 201 file';
     $message = '201 file has been updated successfully.';
