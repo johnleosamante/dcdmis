@@ -39,8 +39,14 @@ messageAlert($showAlert, $message, $success);
         </tr>
         <tr>
           <th class="pr-5" scope="row">Date</th>
-          <td class="text-uppercase"><?php echo toLongDate($training['from']) . ' - ' . toLongDate($training['to']); ?></td>
+          <td class="text-uppercase"><?php echo empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']; ?></td>
         </tr>
+        <?php if (!empty($training['hours'])) : ?>
+        <tr>
+          <th class="pr-5" scope="row">Hours</th>
+          <td class="text-uppercase"><?php echo $training['hours']; ?></td>
+        </tr>
+        <?php endif; ?>
         <tr>
           <th class="pr-5" scope="row">Type</th>
           <td class="text-uppercase"><?php echo trainingType($training['type']); ?></td>
@@ -49,14 +55,18 @@ messageAlert($showAlert, $message, $success);
           <th class="pr-5" scope="row">Level</th>
           <td class="text-uppercase"><?php echo trainingSponsor($training['level']); ?></td>
         </tr>
+        <?php if (!empty($training['sponsor'])) : ?>
         <tr>
           <th class="align-top pr-5" scope="row">Sponsor</th>
           <td class="text-uppercase"><?php echo $training['sponsor']; ?></td>
         </tr>
+        <?php endif; ?>
+        <?php if (!empty($training['venue'])) : ?>
         <tr>
           <th class="align-top pr-5" scope="row">Venue</th>
           <td class="text-uppercase"><?php echo $training['venue']; ?></td>
         </tr>
+        <?php endif; ?>
         <tr>
           <th class="align-top pr-5" scope="row">Participants</th>
           <td class="text-uppercase"><?php echo numRows($participants); ?></td>
