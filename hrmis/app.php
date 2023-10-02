@@ -80,12 +80,31 @@ if (isset($_POST['add-employee'])) {
 if (isset($_POST['update-personal-information'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $employeePhoto = isset($_POST['image-verifier']) ? sanitize(decipher($_POST['image-verifier'])) : $defaultImage;
+  $showAlert = true;
+  $success = false;
 
-  if ($_FILES['image-upload']['size'] > 0 && $_FILES['image-upload']['error'] === 0) {
-    $fileUpload = $_FILES['image-upload']['name'];
+  if (is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
     $temp = $_FILES['image-upload']['tmp_name'];
-    $type = $_FILES['image-upload']['type'];
-    $ext = pathinfo($fileUpload, PATHINFO_EXTENSION);
+
+    if ($_FILES['image-upload']['size'] > 2621440) {
+      $message = 'The choosen file exceeds the upload file limit (2.5 MB). No changes have been made to personal information.';
+      return;
+    }
+
+    $mimeType = mime_content_type($temp);
+    $allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif'];
+
+    if (!in_array($mimeType, $allowedFileTypes)) {
+      $message = 'The choosen file is not an image file. No changes have been made to personal information.';
+      return;
+    }
+
+    $ext = pathinfo($temp, PATHINFO_EXTENSION);
+
+    if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto)) {
+      unlink(root() . '/' . $employeePhoto);
+    }
+
     $employeePhoto = 'uploads/images/' . $employeeId . '/' . $employeeId . '.' . $ext;
 
     move_uploaded_file($temp, '../' . $employeePhoto);
@@ -99,16 +118,15 @@ if (isset($_POST['update-personal-information'])) {
 
   updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), $bmonth, $bday, $byear, sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), sanitize($_POST['dual-citizenship-country']), sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), $email, sanitize($_POST['tin']), sanitize($_POST['agency-id']), $employeePhoto, $employeeId);
 
-  $showAlert = true;
-
-  if (affectedRows()) {
-    $message = 'Personal information has been updated successfully.';
-
-    createSystemLog($stationId, $userId, 'Updated employee personal information', $employeeId, clientIp());
-  } else {
+  if (!affectedRows()) {
     $message = 'No changes have been made to personal information.';
-    $success = false;
+    return;
   }
+
+  $message = 'Personal information has been updated successfully.';
+  $success = true;
+
+  createSystemLog($stationId, $userId, 'Updated employee personal information', $employeeId, clientIp());
 
   $activeTab = $_SESSION[alias() . '_activeTab'] = 'personal-information';
 }
@@ -795,11 +813,35 @@ if (isset($_POST['save-201-file'])) {
   $logMessage = '';
   $message = 'No changes have been made to 201 file.';
   $showAlert = true;
+  $success = false;
 
-  if ($_FILES['file-upload']['size'] > 0 && $_FILES['file-upload']['error'] === 0) {
-    $fileUpload = $_FILES['file-upload']['name'];
+  if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
     $temp = $_FILES['file-upload']['tmp_name'];
-    $type = $_FILES['file-upload']['type'];
+
+    if ($_FILES['image-upload']['size'] > 20971520) {
+      $message = 'The choosen file exceeds the upload file limit (20 MB). No changes have been made to 201 file.';
+      return;
+    }
+
+    $mimeType = mime_content_type($temp);
+    $allowedFileTypes = [
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/gif',
+        'image/jpeg',
+        'image/png',
+        'application/pdf',
+        'application/vnd.ms-powerpoint', 
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation', 
+        'application/vnd.ms-excel', 
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      ];
+
+    if (!in_array($mimeType, $allowedFileTypes)) {
+      $message = 'The choosen file is not an acceptable file. No changes have been made to 201 file.';
+      return;
+    }
+
     $ext = pathinfo($fileUpload, PATHINFO_EXTENSION);
 
     if (!empty($filename) && file_exists(root() . '/' . $filename)) {
@@ -831,12 +873,13 @@ if (isset($_POST['save-201-file'])) {
     $message = '201 file has been updated successfully.';
   }
 
-  if (affectedRows()) {
-    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-  } else {
+  if (!affectedRows()) {
     $message = 'No changes have been made to 201 file.';
-    $success = false;
+    return;
   }
+
+  createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
+  $success = true;
 }
 
 if (isset($_POST['delete-201-file'])) {
