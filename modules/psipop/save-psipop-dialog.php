@@ -13,7 +13,7 @@ $employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $employees = employee($employeeId);
 $modalTitle = 'Employee not found';
 $hasEmployee = false;
-$item = $salaryGrade = $step = $status = $eligibility = null;
+$empStatus = $item = $salaryGrade = $step = $status = $eligibility = null;
 $doa = $dlp = date('Y-m-d');
 
 if (numRows($employees) > 0) {
@@ -21,6 +21,7 @@ if (numRows($employees) > 0) {
   $employeeId = $employee['id'];
   $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
   $sex = $employee['sex'];
+  $empStatus = $employee['status'];
   $positions = fetchAssoc(position($employeeId));
   $stationId = $positions['station_id'];
   $station = $positions['station'];
@@ -59,7 +60,7 @@ if (numRows($employees) > 0) {
     <form action="" method="POST">
       <div class="modal-body">
         <?php if ($hasEmployee) {
-          employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station); ?>
+          employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $empStatus); ?>
           <hr>
 
           <div class="form-group">
