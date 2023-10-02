@@ -80,6 +80,7 @@ if (isset($_POST['add-employee'])) {
 if (isset($_POST['update-personal-information'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $employeePhoto = isset($_POST['image-verifier']) ? sanitize(decipher($_POST['image-verifier'])) : $defaultImage;
+  $ext = null;
   $showAlert = true;
   $success = false;
 
@@ -99,7 +100,7 @@ if (isset($_POST['update-personal-information'])) {
       return;
     }
 
-    $ext = pathinfo($temp, PATHINFO_EXTENSION);
+    $ext = pathinfo($_FILES['image-upload']['name'], PATHINFO_EXTENSION);
 
     if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto)) {
       unlink(root() . '/' . $employeePhoto);
