@@ -810,7 +810,7 @@ if (isset($_POST['save-201-file'])) {
   $fileId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
   $description = sanitize($_POST['description']);
   $filename = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
-  $logMessage = '';
+  $ext = $logMessage = '';
   $message = 'No changes have been made to 201 file.';
   $showAlert = true;
   $success = false;
@@ -842,7 +842,7 @@ if (isset($_POST['save-201-file'])) {
       return;
     }
 
-    $ext = pathinfo($fileUpload, PATHINFO_EXTENSION);
+    $ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
 
     if (!empty($filename) && file_exists(root() . '/' . $filename)) {
       unlink(root() . '/' . $filename);
