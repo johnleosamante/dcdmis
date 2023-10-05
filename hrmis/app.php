@@ -828,12 +828,9 @@ if (isset($_POST['save-201-file'])) {
     $allowedFileTypes = [
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'image/gif',
         'image/jpeg',
         'image/png',
-        'application/pdf',
-        'application/vnd.ms-powerpoint', 
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation', 
+        'application/pdf', 
         'application/vnd.ms-excel', 
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       ];
