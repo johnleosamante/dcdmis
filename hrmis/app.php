@@ -819,7 +819,7 @@ if (isset($_POST['save-201-file'])) {
   if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
     $temp = $_FILES['file-upload']['tmp_name'];
 
-    if ($_FILES['image-upload']['size'] > 20971520) {
+    if ($_FILES['file-upload']['size'] > 20971520) {
       $message = 'The choosen file exceeds the upload file limit (20 MB). No changes have been made to 201 file.';
       return;
     }
