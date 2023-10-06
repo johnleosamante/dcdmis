@@ -825,15 +825,7 @@ if (isset($_POST['save-201-file'])) {
     }
 
     $mimeType = mime_content_type($temp);
-    $allowedFileTypes = [
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'image/jpeg',
-        'image/png',
-        'application/pdf', 
-        'application/vnd.ms-excel', 
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      ];
+    $allowedFileTypes = ['application/pdf'];
 
     if (!in_array($mimeType, $allowedFileTypes)) {
       $message = 'The choosen file is not an acceptable file. No changes have been made to 201 file.';
