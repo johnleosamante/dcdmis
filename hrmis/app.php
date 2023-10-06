@@ -828,7 +828,7 @@ if (isset($_POST['save-201-file'])) {
     $allowedFileTypes = ['application/pdf'];
 
     if (!in_array($mimeType, $allowedFileTypes)) {
-      $message = 'The choosen file is not an acceptable file. No changes have been made to 201 file.';
+      $message = 'The choosen file is not an acceptable file (pdf). No changes have been made to 201 file.';
       return;
     }
 
