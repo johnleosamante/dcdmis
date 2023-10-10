@@ -117,6 +117,11 @@ messageAlert($showAlert, $message, $success);
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                    <?php
+                    if ($training['generate_certificate']) :
+                      linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($row['id']), 'Preview', 'fa-eye', 'Preview Certificate', true); ?>
+                    <div class="dropdown-divider"></div>
+                    <?php endif; ?>
                     <?php modalDropdownItem(uri() .'/modules/trainings/remove-participant-dialog.php?e=' . cipher($row['id']) . '&id=' . cipher($trainingId), 'Remove', 'fa-trash', 'Remove Participant'); ?>
                   </div>
                 </div>
