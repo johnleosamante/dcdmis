@@ -18,16 +18,11 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php 
-    if (isConductedTraining($trainingId)) {
-      contentTitleWithLink('Training Details', customUri('hrtdms', 'Add Training Participants', $trainingId), 'Add Participants', 'fa-plus');
-    } else {
-      contentTitleWithLink('Training Details', customUri('hrtdms', 'Scheduled Trainings'));
-    } ?>
+    <?php contentTitleWithModal('Training Details', uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['no']), 'Edit', 'fa-edit'); ?>
   </div>
 
   <div class="card-body">
-    <div class="table-responsive">
+    <div class="table-responsive mb-3">
       <table cellspacing="0">
         <tr>
           <th class="pr-5" scope="row">Code</th>
@@ -74,7 +69,15 @@ messageAlert($showAlert, $message, $success);
       </table>
     </div>
 
-    <div class="table-responsive mt-3">
+    <?php if (isConductedTraining($trainingId)) : ?>
+    <div class="d-flex align-items-center flex-row-reverse mt-2">
+      <div class="d-inline-block">
+        <?php linkButtonSplit(customUri('hrtdms', 'Add Training Participants', $trainingId), 'Add Participants', 'fa-user-plus'); ?>
+      </div>
+    </div>
+    <?php endif; ?>
+
+    <div class="table-responsive mt-2">
       <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
