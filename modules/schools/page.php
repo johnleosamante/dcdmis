@@ -27,31 +27,16 @@ $isDmis = $activeApp === 'dmis';
     <div class="table-responsive">
       <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
-          <tr>
-            <th class="align-middle" rowspan="3" width="5%">Logo</th>
-            <th class="align-middle" rowspan="3" width="25%">School Name / Alias / ID / Address</th>
-            <th class="align-middle" rowspan="3" width="10%">District</th>
-            <th class="align-middle" rowspan="3" width="10%">Category</th>
-            <th class="align-middle" rowspan="3" width="20%">Head of Office</th>
-            <th class="align-middle" colspan="9" width="15%">Personnel</th>
-            <th class="align-middle" rowspan="3" width="5%">Action</th>
-          </tr>
-
-          <tr>
-            <th class="align-middle text-mars" colspan="4" width="5%"><i class="fa fa-user fw"></i> Male</th>
-            <th class="align-middle text-venus" colspan="4" width="5%"><i class="fa fa-user fw"></i> Female</th>
-            <th class="align-middle" rowspan="2" width="5%" title="Total Personnel"><i class="fa fa-user-friends fw"></i> Total</th>
-          </tr>
-
-          <tr>
-            <th class="align-middle text-mars" title="Male Teaching Personnel">T</th>
-            <th class="align-middle text-mars" title="Male Teaching-Related Personnel">TR</th>
-            <th class="align-middle text-mars" title="Male Non-Teaching Personnel">NT</th>
-            <th class="align-middle text-mars" title="Total Male Personnel">Total</th>
-            <th class="align-middle text-venus" title="Female Teaching Personnel">T</th>
-            <th class="align-middle text-venus" title="Female Teaching-Related Personnel">TR</th>
-            <th class="align-middle text-venus" title="Female Non-Teaching Personnel">NT</th>
-            <th class="align-middle text-venus" title="Total Female Personnel">Total</th>
+        <tr>
+            <th class="align-middle" width="5%">Logo</th>
+            <th class="align-middle" width="25%">School Name / Alias / ID / Address</th>
+            <th class="align-middle" width="10%">District</th>
+            <th class="align-middle" width="10%">Category</th>
+            <th class="align-middle" width="20%">Head of Office</th>
+            <th class="align-middle text-mars" width="5%"><i class="fa fa-user fw"></i> Male</th>
+            <th class="align-middle text-venus" width="5%"><i class="fa fa-user fw"></i> Female</th>
+            <th class="align-middle" width="5%" title="Total Personnel"><i class="fa fa-user-friends fw"></i> Total</th>
+            <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
 
@@ -91,13 +76,7 @@ $isDmis = $activeApp === 'dmis';
                 echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
                 ?>
               </td>
-              <td class="align-middle"><?php echo $row['tmale']; ?></td>
-              <td class="align-middle"><?php echo $row['trmale']; ?></td>
-              <td class="align-middle"><?php echo $row['ntmale']; ?></td>
               <td class="align-middle text-mars"><strong><?php echo $row['male']; ?></strong></td>
-              <td class="align-middle"><?php echo $row['tfemale']; ?></td>
-              <td class="align-middle"><?php echo $row['trfemale']; ?></td>
-              <td class="align-middle"><?php echo $row['ntfemale']; ?></td>
               <td class="align-middle text-venus"><strong><?php echo $row['female']; ?></strong></td>
               <td class="align-middle"><strong><?php echo $row['total']; ?></strong></td>
               <td class="align-middle text-capitalize">
@@ -118,30 +97,15 @@ $isDmis = $activeApp === 'dmis';
 
         <tfoot>
           <tr>
-            <th class="align-middle" rowspan="3" width="5%">Logo</th>
-            <th class="align-middle" rowspan="3" width="25%">School Name / Alias / ID / Address</th>
-            <th class="align-middle" rowspan="3" width="10%">District</th>
-            <th class="align-middle" rowspan="3" width="10%">Category</th>
-            <th class="align-middle" rowspan="3" width="20%">Head of Office</th>
-            <th class="align-middle text-mars" title="Male Teaching Personnel">T</th>
-            <th class="align-middle text-mars" title="Male Teaching-Related Personnel">TR</th>
-            <th class="align-middle text-mars" title="Male Non-Teaching Personnel">NT</th>
-            <th class="align-middle text-mars" title="Total Male Personnel">Total</th>
-            <th class="align-middle text-venus" title="Female Teaching Personnel">T</th>
-            <th class="align-middle text-venus" title="Female Teaching-Related Personnel">TR</th>
-            <th class="align-middle text-venus" title="Female Non-Teaching Personnel">NT</th>
-            <th class="align-middle text-venus" title="Total Female Personnel">Total</th>
-            <th class="align-middle" rowspan="2" width="5%" title="Total Personnel"><i class="fa fa-user-friends fw"></i> Total</th>
-            <th class="align-middle" rowspan="3" width="5%">Action</th>
-          </tr>
-
-          <tr>
-            <th class="align-middle text-mars" colspan="4" width="5%"><i class="fa fa-user fw"></i> Male</th>
-            <th class="align-middle text-venus" colspan="4" width="5%"><i class="fa fa-user fw"></i> Female</th>
-          </tr>
-
-          <tr>
-            <th class="align-middle" colspan="9" width="15%">Personnel</th>
+            <th class="align-middle" width="5%">Logo</th>
+            <th class="align-middle" width="25%">School Name / Alias / ID / Address</th>
+            <th class="align-middle" width="10%">District</th>
+            <th class="align-middle" width="10%">Category</th>
+            <th class="align-middle" width="20%">Head of Office</th>
+            <th class="align-middle text-mars" width="5%"><i class="fa fa-user fw"></i> Male</th>
+            <th class="align-middle text-venus" width="5%"><i class="fa fa-user fw"></i> Female</th>
+            <th class="align-middle" width="5%" title="Total Personnel"><i class="fa fa-user-friends fw"></i> Total</th>
+            <th class="align-middle" width="5%">Action</th>
           </tr>
         </tfoot>
       </table>
