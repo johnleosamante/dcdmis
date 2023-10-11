@@ -3,6 +3,12 @@
 messageAlert($showAlert, $message, $success);
 ?>
 
+<div class="d-flex align-items-center flex-row-reverse mt-2 mb-3">
+  <div class="d-inline-block">
+    <?php modalButtonSplit(uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus'); ?>
+  </div>
+</div>
+
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
     <?php contentTitleWithLink('Completed Documents', uri() . '/dts'); ?>
