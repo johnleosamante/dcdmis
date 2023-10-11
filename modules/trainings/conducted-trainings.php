@@ -3,9 +3,15 @@
 messageAlert($showAlert, $message, $success);
 ?>
 
+<div class="d-flex align-items-center flex-row-reverse mt-2 mb-3">
+  <div class="d-inline-block">
+    <?php modalButtonSplit(uri() . '/modules/trainings/save-training-dialog.php', 'Add Training', 'fa-plus'); ?>
+  </div>
+</div>
+
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php contentTitleWithLink('Conducted Trainings', uri() . '/hrtdms'); ?>
+    <?php contentTitle('Conducted Trainings'); ?>
   </div>
 
   <div class="card-body">
@@ -44,6 +50,7 @@ messageAlert($showAlert, $message, $success);
                 <?php dropdownEllipsis(); ?>
                 <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                   <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['no']), 'View', 'fa-eye', 'View Training');
+                  linkDropdownItem(customUri('hrtdms', 'Add Training Participants', $training['no']), 'Add', 'fa-user-plus', 'Add Participants');
                   modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['no']), 'Edit', 'fa-edit', 'Edit Training'); ?>
                 </div>
               </div>
