@@ -7,6 +7,7 @@ if (isPublicDomain()) {
 restrictPublicAccess(hasHoliday());
 
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
+$page = $appTitle = 'Division Management Information System';
 
 if (!isset($userId)) {
   redirect(uri() . '/login');
@@ -15,8 +16,6 @@ if (!isset($userId)) {
 if (numRows(userRole($userId, 'dmis')) === 0) {
   redirect(uri() . '/pis');
 }
-
-$page = $appTitle = 'Division Management Information System';
 
 if (isset($_POST['primary-search-button'])) {
   redirect(customUri('dmis', 'Search', sanitize($_POST['primary-search-text'])));
@@ -33,6 +32,8 @@ if (isset($_POST['save-school'])) {
   $category = sanitize($_POST['category']);
   $status = 'saved';
   $logMessage = 'Added school';
+  $showAlert = true;
+  $link = '[<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . strtoupper($schoolName) . '</a>]';
 
   if (numRows(schoolById($referenceSchoolId)) === 0) {
     createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, '');
@@ -47,9 +48,6 @@ if (isset($_POST['save-school'])) {
     $status = 'updated';
     $logMessage = 'Updated school';
   }
-
-  $showAlert = true;
-  $link = '[<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . strtoupper($schoolName) . '</a>]';
 
   if (affectedRows()) {
     $message = 'School ' . $link . ' has been ' . $status . ' successfully.';
@@ -69,6 +67,8 @@ if (isset($_POST['save-section'])) {
   $head = sanitize($_POST['head']);
   $status = 'saved';
   $logMessage = 'Added section';
+  $showAlert = true;
+  $link = '[<a href="' . customUri('dmis', 'Section Information', $alias) . '" title="View ' . $section . ' information">' . strtoupper($section) . '</a>]';
 
   if (numRows(section($referenceSectionId)) === 0) {
     createSection($alias, $head, $section, $division);
@@ -82,9 +82,6 @@ if (isset($_POST['save-section'])) {
     $status = 'updated';
     $logMessage = 'Updated section';
   }
-
-  $showAlert = true;
-  $link = '[<a href="' . customUri('dmis', 'Section Information', $alias) . '" title="View ' . $section . ' information">' . strtoupper($section) . '</a>]';
 
   if (affectedRows()) {
     $message = 'Section ' . $link . ' has been ' . $status . ' successfully.';
@@ -103,6 +100,8 @@ if (isset($_POST['save-district'])) {
   $districtHead = sanitize($_POST['head']);
   $status = 'saved';
   $logMessage = 'Added district';
+  $showAlert = true;
+  $link = '[<a href="' . customUri('dmis', 'District Information', $districtCode) . '" title="View ' . $districtName . ' information">' . strtoupper($districtName) . '</a>]';
 
   if (numRows(district($referenceDistrictId)) === 0) {
     createDistrict($districtCode, $districtName, $districtHead);
@@ -112,9 +111,6 @@ if (isset($_POST['save-district'])) {
     $status = 'updated';
     $logMessage = 'Updated district';
   }
-
-  $showAlert = true;
-  $link = '[<a href="' . customUri('dmis', 'District Information', $districtCode) . '" title="View ' . $districtName . ' information">' . strtoupper($districtName) . '</a>]';
 
   if (affectedRows()) {
     $message = 'District ' . $link . ' has been ' . $status . ' successfully.';
@@ -136,6 +132,9 @@ if (isset($_POST['edit-user'])) {
   $isHrmisUser = isset($_POST['hrmis']);
   $isDmisUser = isset($_POST['dmis']);
   $isHrtdmsUser = isset($_POST['hrtdms']);
+  $showAlert = true;
+  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
+  $message = 'Employee [' . $employee . '] user assignment has been set successfully.';
 
   if (empty($employeeId)) {
     return;
@@ -175,21 +174,16 @@ if (isset($_POST['edit-user'])) {
     deleteUserRole($employeeId, 'HRTDMS');
   }
 
-  $showAlert = true;
-  $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
-  $message = 'Employee [' . $employee . '] user assignment has been set successfully.';
-
   createSystemLog($stationId, $userId, 'Assigned user privileges', $employeeId, clientIp());
 }
 
 if (isset($_POST['reset-user'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $temporaryPassword = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
-
-  updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
-
   $showAlert = true;
   $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
+
+  updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
 
   if (affectedRows()) {
     $message = 'Employee [' . $employee . '] password has been reset successfully.';
@@ -203,11 +197,10 @@ if (isset($_POST['reset-user'])) {
 
 if (isset($_POST['remove-user'])) {
   $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-
-  deleteUserRoles($employeeId);
-
   $showAlert = true;
   $employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
+
+  deleteUserRoles($employeeId);
 
   if (affectedRows()) {
     $message = 'Employee [' . $employee . '] user privileges have been removed successfully.';

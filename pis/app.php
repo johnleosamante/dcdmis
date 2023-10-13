@@ -1,12 +1,11 @@
 <?php
 // pis/app.php
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'pis';
+$page = $appTitle = 'Personnel Information System';
 
 if (!isset($userId)) {
   redirect(uri() . '/login');
 }
-
-$page = $appTitle = 'Personnel Information System';
 
 if (isset($_POST['primary-search-button'])) {
   redirect(customUri('pis', 'Search', sanitize($_POST['primary-search-text'])));
@@ -17,14 +16,13 @@ if (isset($_POST['update-identification'])) {
   $number = sanitize($_POST['card-number']);
   $place = sanitize($_POST['card-place']);
   $date = sanitize($_POST['card-date']);
+  $showAlert = true;
 
   if (numRows(employeeIdentification($userId)) === 0) {
     createIdentification($card, $number, $place, $date, $userId);
   } else {
     updateIdentification($card, $number, $place, $date, $userId);
   }
-
-  $showAlert = true;
 
   if (affectedRows()) {
     $message = 'Government issued ID has been updated successfully.';

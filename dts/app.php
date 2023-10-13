@@ -1,6 +1,7 @@
 <?php
 // dts/app.php
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'dts';
+$page = $appTitle = 'Document Tracking System';
 
 if (!isset($userId)) {
   redirect(uri() . '/login');
@@ -10,18 +11,17 @@ if (!isset($portal) || empty($portal)) {
   redirect(uri() . '/pis');
 }
 
-$page = $appTitle = 'Document Tracking System';
-
 if (isset($_POST['primary-search-button'])) {
   redirect(customUri('dts', 'Document Information', sanitize($_POST['primary-search-text'])));
 }
 
 if (isset($_POST['save-document'])) {
-  $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+  $documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
   $destination = $isSchoolPortal ? 'REC' :  sanitize($_POST['destination']);
   $logMessage = '';
+  $showAlert = true;
 
   if (numRows(document($documentId)) === 0) {
     $status = 'saved';
@@ -57,8 +57,6 @@ if (isset($_POST['save-document'])) {
     $logMessage = 'Updated document';
   }
 
-  $showAlert = true;
-
   if (affectedRows()) {
     $message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been ' . $status . ' successfully.';
 
@@ -70,11 +68,10 @@ if (isset($_POST['save-document'])) {
 }
 
 if (isset($_POST['receive-document'])) {
-  $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+  $documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+  $showAlert = true;
 
   updateDocumentLogsDone($documentId);
-
-  $showAlert = true;
 
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, '-', 'Received', 'New');
@@ -89,13 +86,12 @@ if (isset($_POST['receive-document'])) {
 }
 
 if (isset($_POST['forward-document'])) {
-  $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+  $documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $purpose = sanitize($_POST['purpose']);
   $details = sanitize($_POST['details']);
+  $showAlert = true;
 
   updateDocumentLogsDone($documentId);
-
-  $showAlert = true;
 
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, sanitize($_POST['destination']), $purpose, 'New', $details);
@@ -111,13 +107,12 @@ if (isset($_POST['forward-document'])) {
 }
 
 if (isset($_POST['complete-document'])) {
-  $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+  $documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $remarks = sanitize($_POST['remarks']);
   $status = 'Completed';
+  $showAlert = true;
 
   updateDocumentLogsDone($documentId);
-
-  $showAlert = true;
 
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
@@ -133,13 +128,12 @@ if (isset($_POST['complete-document'])) {
 }
 
 if (isset($_POST['cancel-document'])) {
-  $documentId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
+  $documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $remarks = sanitize($_POST['remarks']);
   $status = 'Canceled';
-
-  updateDocumentLogsDone($documentId);
-
   $showAlert = true;
+  
+  updateDocumentLogsDone($documentId);
 
   if (affectedRows()) {
     createDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);

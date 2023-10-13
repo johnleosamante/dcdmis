@@ -7,6 +7,7 @@ if (isPublicDomain()) {
 restrictPublicAccess(hasHoliday());
 
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrtdms';
+$page = $appTitle = 'Human Resource Training &amp; Development Management System';
 
 if (!isset($userId)) {
   redirect(uri() . '/login');
@@ -15,8 +16,6 @@ if (!isset($userId)) {
 if (numRows(userRole($userId, $activeApp)) === 0) {
   redirect(uri() . '/pis');
 }
-
-$page = $appTitle = 'Human Resource Training &amp; Development Management System';
 
 if (isset($_POST['primary-search-button'])) {
   redirect(customUri('hrtdms', 'Training Details', sanitize($_POST['primary-search-text'])));
@@ -35,8 +34,8 @@ if (isset($_POST['save-training'])) {
   $logMessage = '';
   $unconsecutiveDates = sanitize($_POST['unconsecutive-dates']);
   $hasCertificate = isset($_POST['has-certificate']) ? '1' : '0';
-
   $signatory = isset($_POST['has-certificate']) ? fetchAssoc(section('SDS'))['head'] : null;
+  $showAlert = true;
 
   if (numRows(training($trainingId)) === 0) {
     $logMessage = 'Added training';
@@ -51,8 +50,6 @@ if (isset($_POST['save-training'])) {
 
     updateTraining($trainingId, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $unconsecutiveDates, $signatory, $hasCertificate);
   }
-
-  $showAlert = true;
 
   if (affectedRows()) {
     $message = 'Training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>] has been ' . $status . ' successfully.';
@@ -105,10 +102,9 @@ if (isset($_POST['add-participants'])) {
 if (isset($_POST['remove-participant'])) {
   $participantId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
   $trainingId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+  $showAlert = true;
   
   deleteTrainingParticipant($trainingId, $participantId);
-
-  $showAlert = true;
 
   if (affectedRows()) {
     $message = 'Employee [<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($participantId) . '\')" title="View ' . userName($participantId) . ' employee information">' . userName($participantId, true) . '</a>] has been successfully removed as participant from training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
