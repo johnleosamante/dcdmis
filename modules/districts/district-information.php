@@ -1,5 +1,10 @@
 <?php
 // modules/districts/district-information.php
+if (!$isHrmis && !$isHrtdms && !$isDmis) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 $districtId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $districts = district($districtId);
 $district = $districtName = $psds = null;

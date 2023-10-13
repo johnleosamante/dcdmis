@@ -1,5 +1,10 @@
 <?php
 // modules/201-file/page.php
+if (!$isPis && !$isHrmis) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 
 if ($isPis && $userId !== $employeeId) {

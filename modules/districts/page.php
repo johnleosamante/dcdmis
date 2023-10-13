@@ -1,5 +1,10 @@
 <?php
 // modules/districts/page.php
+if (!$isHrmis && !$isHrtdms && !$isDmis) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 messageAlert($showAlert, $message, $success);
 ?>
 

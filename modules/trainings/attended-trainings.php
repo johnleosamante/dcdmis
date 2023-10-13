@@ -1,5 +1,10 @@
 <?php
 // modules/trainings/attended-trainings.php
+if (!$isPis && !$isHrmis && !$isHrtdms) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 
 if ($isPis && $userId !== $employeeId) {
@@ -26,10 +31,10 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
   <div class="card-header py-3">
-    <?php if ($isHrmis) {
-      contentTitle('Trainings : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])));
+    <?php if ($isPis) {
+      contentTitleWithLink('Trainings : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/pis');
     } else {
-      contentTitleWithLink('Trainings', uri() . '/pis');
+      contentTitle('Trainings : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])));
     } ?>
   </div>
 

@@ -1,5 +1,10 @@
 <?php
 // modules/employees/celebrant-employees.php
+if (!$isHrmis) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 $now = date('Y-m-d');
 
 messageAlert($showAlert, $message, $success);

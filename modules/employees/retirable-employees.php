@@ -1,7 +1,11 @@
 <?php
 // modules/employees/active-employees.php
+if (!$isHrmis) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 messageAlert($showAlert, $message, $success);
-$isHrmis = $activeApp === 'hrmis';
 ?>
 
 <div class="card border-left-primary shadow mb-4">

@@ -1,5 +1,10 @@
 <?php
 // modules/trainings/training-participants.php
+if (!$isHrtdms) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 $trainingId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $trainings = training($trainingId);
 $employees = employees();

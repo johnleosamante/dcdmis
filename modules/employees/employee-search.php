@@ -1,5 +1,10 @@
 <?php
 // modules/employees/employee-search.php
+if (!$isHrmis) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 $search = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $employees = employeeSearch($search);
 

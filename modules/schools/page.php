@@ -1,8 +1,11 @@
 <?php
 // modules/schools/page.php
+if (!$isHrmis && !$isHrtdms && !$isDmis) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 messageAlert($showAlert, $message, $success);
-$isHrmis = $activeApp === 'hrmis';
-$isDmis = $activeApp === 'dmis';
 ?>
 
 <div class="card border-left-primary shadow mb-4">
@@ -17,7 +20,7 @@ $isDmis = $activeApp === 'dmis';
 
   <div class="card-body">
     <?php if ($isHrmis || $isDmis) { ?>
-      <div class="d-sm-flex align-items-center flex-row-reverse my-2">
+      <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
         <div class="d-inline-block">
           <?php linkButtonSplit(customUri('export', 'schools'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
         </div>

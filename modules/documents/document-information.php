@@ -1,5 +1,10 @@
 <?php
 // modules/documents/document-information.php
+if (!$isDts) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 $documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $documents = document($documentId);
 $documentType = null;

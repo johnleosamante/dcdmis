@@ -1,9 +1,13 @@
 <?php
 // modules/sections/section-information.php
+if (!$isHrmis && !$isHrtdms && !$isDmis) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 $sectionId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $sections = section($sectionId);
 $section = $sectionName = $head = null;
-$isHrmis = $activeApp === 'hrmis';
 
 messageAlert($showAlert, $message, $success);
 
@@ -25,7 +29,7 @@ $personnel = numRows($query);
     <?php if ($activeApp === 'dmis') {
       contentTitleWithModal('Section Information: ' . strtoupper($sectionName), uri() . '/modules/sections/save-section-dialog.php?id=' . cipher($sectionId), 'Edit', 'fa-edit');
     } else {
-      contentTitle('Section Information: ' . strtoupper($sectionName));
+      contentTitleWithLink('Section Information: ' . strtoupper($sectionName), customUri($activeApp, 'Sections'));
     } ?>
   </div>
 
@@ -43,7 +47,7 @@ $personnel = numRows($query);
               <?php if ($isHrmis) {
                 linkItem(customUri('hrmis', 'Employee Information', $head), userName($head));
               } else {
-                echo userName($head);
+                modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($head), userName($head));
               } ?>
             </div>
             <div class="small"><?php echo fetchAssoc(position($head))['position']; ?></div>
@@ -66,11 +70,17 @@ $personnel = numRows($query);
             <th class="align-middle" width="15%">Date of Birth</th>
             <th class="align-middle" width="5%">Age</th>
             <th class="align-middle" width="20%">Position</th>
+            <?php if (!$isHrtdms) : ?>
             <th class="align-middle" width="15%">Email Address</th>
+            <?php else : ?>
+            <th class="align-middle" width="15%">Attended Trainings</th>
+            <?php endif; ?>
             <?php if ($isHrmis) : ?>
               <th class="align-middel" width="10%">Progress</th>
             <?php else : ?>
+              <?php if (!$isHrtdms) : ?>
               <th class="align-middle" width="10%">Contact #</th>
+              <?php endif; ?>
             <?php endif; ?>
             <th class="align-middle" width="5%">Action</th>
           </tr>
@@ -94,18 +104,34 @@ $personnel = numRows($query);
               <td class="align-middle text-left">
                 <?php if ($isHrmis) {
                   linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
+                } elseif ($isDmis) {
+                  modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName);
                 } else {
-                  modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName);;
+                  modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                 } ?>
               </td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
               <td class="align-middle"><?php echo getAge($row['year'], $row['month'], $row['day']); ?></td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
-              <td class="align-middle text-lowercase"><?php echo $row['email']; ?></td>
+              <?php if (!$isHrtdms) : ?>
+                <td class="align-middle text-lowercase"><?php echo $row['email']; ?></td>
+              <?php else : ?>
+                <td class="align-middle text-lowercase">
+                  <?php
+                  $count = numRows(attendedTrainings($row['id']));
+                  if ($count > 0) {
+                    echo $count;
+                  } else { ?>
+                    <span class="text-danger font-weight-bold"><?php echo $count; ?></span>
+                  <?php } ?>
+                </td>
+              <?php endif; ?>
               <?php if ($isHrmis) { ?>
                 <td class="align-middle"><?php progressBar(pdsProgress($row['id'])); ?></td>
               <?php } else { ?>
+                <?php if (!$isHrtdms) : ?>
                 <td class="align-middle"><?php echo $row['mobile']; ?></td>
+                <?php endif; ?>
               <?php } ?>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
@@ -117,8 +143,12 @@ $personnel = numRows($query);
                       modalDropdownItem(uri() . '/modules/schools/assign-section-head-dialog.php?e=' . cipher($sectionId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set Section Head'); ?>
                       <div class="dropdown-divider"></div>
                     <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
-                    } else {
+                    } elseif ($isDmis) {
                       modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit User');
+                    } elseif ($isHrtdms) {
+                      linkDropdownItem(customUri('hrtdms', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher');
+                    } else {
+                      modalDropdownItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), 'View', 'fa-eye', 'View Employee');
                     } ?>
                   </div>
                 </div>

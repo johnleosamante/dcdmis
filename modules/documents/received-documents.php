@@ -1,5 +1,10 @@
 <?php
 // modules/documents/received-documents.php
+if (!$isDts) {
+  require_once(root() . '/modules/error/403.php');
+  return;
+}
+
 messageAlert($showAlert, $message, $success);
 ?>
 
