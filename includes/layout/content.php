@@ -40,6 +40,7 @@ if (!isset($url) || $url === 'dashboard') {
       $file = 'documents/approve-document';
       break;
     case 'Active Employees':
+    case 'Employees':
       $file = 'employees/active-employees';
       break;
     case 'Retirable Employees':
