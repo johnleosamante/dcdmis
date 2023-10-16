@@ -19,7 +19,7 @@ messageAlert($showAlert, $message, $success);
 
   <div class="card-body">
     <?php if ($isHrmis) { ?>
-      <div class="d-sm-flex align-items-center flex-row-reverse my-2">
+      <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
         <div class="d-inline-block">
           <?php linkButtonSplit(customUri('export', 'active-employees'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
         </div>
