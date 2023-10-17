@@ -56,8 +56,8 @@ function createStation($date, $stationId, $positionId, $id) {
   nonQuery("INSERT INTO tbl_station (`Emp_DOA`, Emp_Station, Emp_Position, Emp_ID) VALUES ('{$date}', '{$stationId}', '{$positionId}', '{$id}');");
 }
 
-function updateStation($date, $stationId, $positionId, $id) {
-  nonQuery("UPDATE tbl_station SET `Emp_DOA`='{$date}', Emp_Position='{$positionId}', Emp_Station='{$stationId}' WHERE Emp_ID='{$id}';");
+function updateStation($stationId, $positionId, $id) {
+  nonQuery("UPDATE tbl_station SET Emp_Position='{$positionId}', Emp_Station='{$stationId}' WHERE Emp_ID='{$id}';");
 }
 
 function updateStationID($newStationId, $oldStationId) {
