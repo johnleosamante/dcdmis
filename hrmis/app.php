@@ -618,11 +618,13 @@ if (isset($_POST['reassign-employee'])) {
     deleteUserRoles($employeeId);
   }
 
+  createDeployment($date, $eStationId, $positionId, $employeeId);
+
   if (numRows(station($employeeId)) === 0) {
     createStation($date, $eStationId, $positionId, $employeeId);
   } else {
     updateEmployeeStatus('Active', $employeeId);
-    updateStation($date, $eStationId, $positionId, $employeeId);
+    updateStation($eStationId, $positionId, $employeeId);
   }
 
   if (affectedRows()) {
