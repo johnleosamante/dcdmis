@@ -320,4 +320,21 @@ function setEmailToUserId() {
 
   echo '(' . $no . ') Completed...<br><br>';
 }
+
+function setLatestStepIncrement() {
+  echo 'Setting latest step increment...<br>';
+
+  $employees = query("SELECT `Emp_ID` AS `id`, `Date_promoted` AS `date` FROM `psipop`;");
+  $no = 0;
+
+  while ($employee = fetchAssoc($employees)) {
+    nonQuery("UPDATE `tbl_step_increment` SET `Date_last_step`='" . $employee['date'] . "' WHERE `Emp_ID`='" . $employee['id'] . "';");
+
+    if (affectedRows()) {
+      echo ++$no . ' | ' . $employee['id'] . '<br>';
+    }
+  }
+
+  echo '(' . $no . ') Completed...<br><br>';
+}
 ?>
