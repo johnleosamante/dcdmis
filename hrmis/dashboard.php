@@ -9,15 +9,12 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
   card('Active Employees', customUri('hrmis', 'Active Employees'), 'fa-user-check', 'primary', $countActive);
   card('Retirable Employees', customUri('hrmis', 'Retirable Employees'), 'fa-user-clock', 'success', $countRetirable);
   card('Celebrant Employees', customUri('hrmis', 'Celebrant Employees'), 'fa-birthday-cake', 'info');
-  card('Archived Employees', customUri('hrmis', 'Archived Employees'), 'fa-archive', 'danger');
-  ?>
-</div>
-
-<div class="row">
-  <?php
-  card('Districts', customUri('hrmis', 'Districts'), 'fa-map-marked-alt', 'info', $districtCount);
-  card('Schools', customUri('hrmis', 'Schools'), 'fa-school', 'warning', $schoolCount);
-  card('Sections', customUri('hrmis', 'Sections'), 'fa-map-signs', 'primary', $sectionCount);
+  card('Archived Employees', customUri('hrmis', 'Archived Employees'), 'fa-archive', 'warning');
+  card('Step Increment', customUri('hrmis', 'Step Increment'), 'fa-plus', 'danger');
+  card('Loyalty Award', customUri('hrmis', 'Loyalty Award'), 'fa-trophy', 'secondary');
+  card('Districts', customUri('hrmis', 'Districts'), 'fa-map-marked-alt', 'primary', $districtCount);
+  card('Schools', customUri('hrmis', 'Schools'), 'fa-school', 'success', $schoolCount);
+  card('Sections', customUri('hrmis', 'Sections'), 'fa-map-signs', 'info', $sectionCount);
   ?>
 </div>
 
