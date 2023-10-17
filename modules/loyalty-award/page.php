@@ -55,7 +55,7 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle">
                 <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']); ?>
               </td>
-              <td class="align-middle"><?php echo toDate($row['doa']); ?></td>
+              <td class="align-middle"><?php echo toDate($row['doa'], 'F j, Y'); ?></td>
               <td class="align-middle"><?php echo $row['work_years']; ?></td>
               <td class="align-middle text-capitalize">
               <div class="dropdown no-arrow">
