@@ -90,4 +90,12 @@ function updateEmployeeStatus($status, $id) {
 function updateProfessionalTitles($before, $after, $id) {
   nonQuery("UPDATE tbl_employee SET beforeTitle='{$before}', afterTitle='{$after}' WHERE Emp_ID='{$id}' LIMIT 1;");
 }
+
+function stepIncrement() {
+  return query("SELECT * FROM (SELECT `tbl_employee`.`Emp_ID` AS `id`, `tbl_employee`.`Emp_LName` AS `lname`, `tbl_employee`.`Emp_FName` AS `fname`, `tbl_employee`.`Emp_MName` AS `mname`, `tbl_employee`.`Emp_Extension` AS `ext`, `tbl_employee`.`Emp_Sex` AS `sex`, `tbl_station`.`Emp_Station` AS `station`, `tbl_station`.`Emp_Position` AS `position`, `tbl_job`.`Salary_Grade` AS `sg`, `tbl_step_increment`.`Step_No` AS `step`, `psipop`.`Date_promoted` AS `date_promoted`, YEAR(CURRENT_DATE) - YEAR(`tbl_step_increment`.`Date_last_step`) AS `work_years`, `tbl_employee`.`Emp_Status` AS `status`, `tbl_employee`.`Picture` AS `picture` FROM `tbl_employee` INNER JOIN `tbl_station` ON `tbl_employee`.`Emp_ID`=`tbl_station`.`Emp_ID` INNER JOIN `tbl_job` ON `tbl_station`.`Emp_Position`=`tbl_job`.`Job_code` INNER JOIN `psipop` ON `tbl_station`.`Emp_ID`=`psipop`.`Emp_ID` INNER JOIN `tbl_step_increment` ON `tbl_employee`.`Emp_ID`=`tbl_step_increment`.`Emp_ID` WHERE `tbl_employee`.`Emp_Status`='Active') AS `employee` WHERE `work_years` = 3 ORDER BY `lname` ASC;");
+}
+
+function loyaltyAward() {
+  return query("SELECT * FROM (SELECT `tbl_employee`.`Emp_ID` AS `id`, `tbl_employee`.`Emp_LName` AS `lname`, `tbl_employee`.`Emp_FName` AS `fname`, `tbl_employee`.`Emp_MName` AS `mname`, `tbl_employee`.`Emp_Extension` AS `ext`, `tbl_employee`.`Emp_Sex` AS `sex`, `tbl_station`.`Emp_Station` AS `station`, `tbl_station`.`Emp_Position` AS `position`, `tbl_station`.`Emp_DOA` AS `doa`, YEAR(CURRENT_DATE) - YEAR(`tbl_station`.`Emp_DOA`) AS `work_years`, `tbl_employee`.`Emp_Status` AS `status`, `tbl_employee`.`Picture` AS `picture` FROM `tbl_employee` INNER JOIN `tbl_station` ON `tbl_employee`.`Emp_ID`=`tbl_station`.`Emp_ID` INNER JOIN `tbl_step_increment` ON `tbl_employee`.`Emp_ID`=`tbl_step_increment`.`Emp_ID` WHERE `tbl_employee`.`Emp_Status`='Active') AS `employee` WHERE `work_years` >= 10;");
+}
 ?>
