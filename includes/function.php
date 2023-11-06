@@ -34,9 +34,10 @@ function root() {
   return $_SERVER['DOCUMENT_ROOT'];
 }
 
-function uri() {
+function uri($domain=null) {
   $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
-  return $protocol . $_SERVER['HTTP_HOST'];
+  $root = $domain !== null ? $domain : $_SERVER['HTTP_HOST'];
+  return $protocol . $root;
 }
 
 function isPublicDomain() {
@@ -73,10 +74,10 @@ function restrictPublicAccess($isHoliday) {
   }
 }
 
-function customUri($page, $view, $id=null) {
+function customUri($page, $view, $id=null, $domain=null) {
   $value = ($id !== null) ? '&id=' . encode($id) : '';
 
-  return uri() . "/{$page}?&v=" . encode($view) . $value;
+  return uri($domain) . "/{$page}?&v=" . encode($view) . $value;
 }
 
 function title($page=null) {
