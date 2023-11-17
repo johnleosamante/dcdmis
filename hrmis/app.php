@@ -60,8 +60,9 @@ if (isset($_POST['add-employee'])) {
   createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $employeeId);
   createOtherInformation(0, 0, '', 0, '', 0, '0000-00-00', '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', $employeeId);
   createStation($today, $eStationId, $ePositionId, $employeeId);
+  $sg = fetchAssoc(positions($ePositionId))['salary_grade'];
   createPsipop('', '1', 'Permanent', $today, '', $employeeId);
-  createStepIncrement($today, '1', '0', $employeeId);
+  createStepIncrement($today, '1', $sg, $employeeId);
   createDeployment($today, $eStationId, $ePositionId, '0', '1', '', $employeeId);
   createIdentification('', '', '', $today, $employeeId);
   createAccount($employeeId, hashPassword(generateStrongRandomPassword()));
