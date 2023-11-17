@@ -321,15 +321,14 @@ function setEmailToUserId() {
   echo '(' . $no . ') Completed...<br><br>';
 }
 
-function setLatestStepIncrement() {
-  echo 'Setting latest step increment...<br>';
+function setDateLastStepDefault() {
+  echo 'Setting latest step date to default...<br>';
 
-  $employees = query("SELECT `Emp_ID` AS `id`, `Date_promoted` AS `date` FROM `psipop`;");
+  $employees = query("SELECT Emp_ID AS `id` FROM tbl_employee;");
   $no = 0;
 
   while ($employee = fetchAssoc($employees)) {
-    nonQuery("UPDATE `tbl_step_increment` SET `Date_last_step`='" . $employee['date'] . "' WHERE `Emp_ID`='" . $employee['id'] . "';");
-
+    nonQuery("UPDATE tbl_step_increment SET `Date_last_step`='" . date('Y-m-d') . "' WHERE `Date_last_step` > NOW() AND `Emp_ID`='" . $employee['id'] . "';");
     if (affectedRows()) {
       echo ++$no . ' | ' . $employee['id'] . '<br>';
     }
@@ -337,4 +336,23 @@ function setLatestStepIncrement() {
 
   echo '(' . $no . ') Completed...<br><br>';
 }
+
+function setStepIncrementSalaryGrade() {
+  echo 'Setting step increment salary grade...<br>';
+
+  $employees = query("SELECT `tbl_station`.`Emp_ID`, `tbl_job`.`Salary_Grade` FROM `tbl_station` INNER JOIN `tbl_job` ON `tbl_station`.`Emp_Position`=`tbl_job`.`Job_code`;");
+  $no = 0;
+
+  while ($employee = fetchAssoc($employees)) {
+    nonQuery("UPDATE `tbl_step_increment` SET `No_of_year`='" . $employee['Salary_Grade'] . "' WHERE `Emp_ID`='" . $employee['Emp_ID'] . "';");
+
+    if (affectedRows()) {
+      echo ++$no . ' | ' . $employee['Emp_ID'] . '<br>';
+    }
+  }
+
+  echo '(' . $no . ') Completed...<br><br>';
+}
+
+setStepIncrementSalaryGrade();
 ?>
