@@ -82,7 +82,7 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle"><?php echo $service['ispresent'] ? 'PRESENT' : toDate($service['to']); ?></td>
               <td class="align-middle"><?php echo toHandleNull($service['position_code'], 'N/A'); ?></td>
               <td class="align-middle"><?php echo $service['status']; ?></td>
-              <td class="align-middle"><?php echo !empty($service['salary']) ? toCurrency($service['salary']) : 'N/A'; ?></td>
+              <td class="align-middle"><?php echo !empty($service['salary']) ? toCurrency($service['salary']) * 12 : 'N/A'; ?></td>
               <td class="align-middle"><?php echo toHandleNull($service['organization_alias'], 'N/A'); ?></td>
               <td class="align-middle"><?php echo toHandleNull($service['leave_dates'], 'N/A'); ?></td>
               <td class="align-middle">

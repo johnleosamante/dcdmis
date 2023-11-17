@@ -32,7 +32,7 @@
                 <td class="align-middle"><?php echo $experience['ispresent'] ? 'PRESENT' : toDate($experience['to']); ?></td>
                 <td class="align-middle"><?php echo $experience['position']; ?></td>
                 <td class="align-middle"><?php echo $experience['organization']; ?></td>
-                <td class="align-middle"><?php echo !empty($experience['salary']) ? toCurrency($experience['salary'] / 12) : 'N/A'; ?></td>
+                <td class="align-middle"><?php echo !empty($experience['salary']) ? toCurrency($experience['salary']) : 'N/A'; ?></td>
                 <td class="align-middle"><?php echo toHandleNull($experience['sg'], 'N/A'); ?></td>
                 <td class="align-middle"><?php echo $experience['status']; ?></td>
                 <td class="align-middle"><?php echo $experience['isgovernment']; ?></td>
