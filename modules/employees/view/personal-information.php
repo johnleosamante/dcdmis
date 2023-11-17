@@ -409,21 +409,21 @@
           <div class="col-lg-3">
             <div class="form-group">
               <label for="telephone" class="mb-0">Telephone Number</label>
-              <input id="telephone" name="telephone" type="text" class="form-control" <?php echo setActiveNavigation($editMode, 'title="Leave blank if not applicable"'); ?> value="<?php echo $employee['telephone']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
+              <input id="telephone" name="telephone" type="text" class="form-control" <?php echo setActiveNavigation($editMode, 'title="Leave blank if not applicable" placeholder="XXXX-XXX-XXXX"'); ?> value="<?php echo $employee['telephone']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?>>
             </div>
           </div>
 
           <div class="col-lg-3">
             <div class="form-group">
               <label for="mobile" class="mb-0">Mobile Number <?php showAsterisk($editMode); ?></label>
-              <input id="mobile" name="mobile" type="text" class="form-control" <?php echo setActiveNavigation($editMode, 'title="Required field" placeholder="XXXX-XXX-XXXX"'); ?> value="<?php echo $employee['mobile']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
+              <input id="mobile" name="mobile" type="text" class="form-control" <?php echo setActiveNavigation($editMode, 'title="Required field ex. 09XX-XXX-XXXX" pattern="\d{4}[\-]\d{3}[\-]\d{4}" placeholder="XXXX-XXX-XXXX"'); ?> value="<?php echo $employee['mobile']; ?>" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
 
           <div class="col-lg-6">
             <div class="form-group">
               <label for="email" class="mb-0">Email Address <?php showAsterisk($editMode); ?></label>
-              <input id="email" name="email" type="email" class="form-control" <?php echo setActiveNavigation($editMode, 'title="Required field" placeholder="juan.delacruz@deped.gov.ph"'); ?> value="<?php echo $employee['email']; ?>" autocomplete="false" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
+              <input id="email" name="email" type="email" class="form-control" <?php echo setActiveNavigation($editMode, 'title="Required field ex. juan.delacruz@deped.gov.ph" pattern="[a-z0-9._%+\-]+@deped.gov.ph" placeholder="juan.delacruz@deped.gov.ph"'); ?> value="<?php echo $employee['email']; ?>" autocomplete="false" <?php echo setActiveNavigation(!$editMode, 'readonly'); ?> required>
             </div>
           </div>
         </div>
