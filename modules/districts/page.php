@@ -22,17 +22,13 @@ messageAlert($showAlert, $message, $success);
       <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th class="align-middle" rowspan="2" width="30%">District</th>
-            <th class="align-middle" rowspan="2" width="45%">Supervisor</th>
-            <th class="align-middle" colspan="4" width="20%">Schools</th>
-            <th class="align-middle" rowspan="2" width="5%">Action</th>
-          </tr>
-
-          <tr>
+            <th class="align-middle" width="30%">District</th>
+            <th class="align-middle" width="45%">Supervisor</th>
             <th class="align-middle" title="Elementary Schools" width="5%">ES</th>
             <th class="align-middle" title="High Schools" width="5%">HS</th>
             <th class="align-middle" title="Integrated Schools" width="5%">IS</th>
             <th class="align-middle" width="5%">Total</th>
+            <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
 
@@ -84,22 +80,6 @@ messageAlert($showAlert, $message, $success);
             </tr>
           <?php endwhile; ?>
         </tbody>
-
-        <tfoot>
-          <tr>
-            <th class="align-middle" rowspan="2" width="30%">District</th>
-            <th class="align-middle" rowspan="2" width="45%">Supervisor</th>
-            <th class="align-middle" title="Elementary Schools" width="5%">ES</th>
-            <th class="align-middle" title="High Schools" width="5%">HS</th>
-            <th class="align-middle" title="Integrated Schools" width="5%">IS</th>
-            <th class="align-middle" width="5%">Total</th>
-            <th class="align-middle" rowspan="2" width="5%">Action</th>
-          </tr>
-
-          <tr>
-            <th class="align-middle" colspan="4" width="20%">Schools</th>
-          </tr>
-        </tfoot>
       </table>
     </div>
   </div>
