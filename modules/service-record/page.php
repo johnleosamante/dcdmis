@@ -51,24 +51,19 @@ messageAlert($showAlert, $message, $success);
       <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th class="align-middle" colspan="2" width="10%">Service<br>(Inclusive Dates)</th>
-            <th class="align-middle" colspan="3" width="30%">Record of Appointment</th>
-            <th class="align-middle" rowspan="2" width="15%">Office Entity/Division<br>Station/Place/Branch of Assignment</th>
-            <th class="align-middle" rowspan="2" width="10%">Leave Without Pay</th>
-            <th class="align-middle" colspan="2" width="10%">Separation</th>
-            <th class="align-middle" rowspan="2" width="5%">Remarks</th>
-            <?php if ($isHrmis) : ?>
-              <th class="align-middle" rowspan="2" width="5%">Actions</th>
-            <?php endif; ?>
-          </tr>
-          <tr>
             <th class="align-middle" width="5%">From</th>
             <th class="align-middle" width="5%">To</th>
             <th class="align-middle" width="10%">Designation</th>
             <th class="align-middle" width="10%">Employment Status</th>
-            <th class="align-middle" width="10%">Salary</th>
-            <th class="align-middle" width="5%">Date</th>
-            <th class="align-middle" width="5%">Cause</th>
+            <th class="align-middle" width="10%">Annual Salary</th>
+            <th class="align-middle" width="15%">Office Entity/Division<br>Station/Place/Branch of Assignment</th>
+            <th class="align-middle" width="10%">Leave Without Pay</th>
+            <th class="align-middle" width="5%">Separation Date</th>
+            <th class="align-middle" width="5%">Separation Cause</th>
+            <th class="align-middle" width="5%">Remarks</th>
+            <?php if ($isHrmis) : ?>
+              <th class="align-middle" width="5%">Actions</th>
+            <?php endif; ?>
           </tr>
         </thead>
 
@@ -95,44 +90,21 @@ messageAlert($showAlert, $message, $success);
                 <?php echo toHandleNull($service['sg']); ?>
               </td>
               <?php if ($isHrmis) : ?>
-              <td class="align-middle text-capitalize">
-                <div class="dropdown no-arrow">
-                  <?php dropdownEllipsis(); ?>
-                  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                  <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Edit', 'fa-edit', 'Edit Service Record');
-                  modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Copy', 'fa-copy', 'Copy Service Record'); ?>
-                  <div class="dropdown-divider"></div>
-                  <?php modalDropdownItem(uri() .'/modules/service-record/delete-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Delete', 'fa-trash', 'Delete Service Record'); ?>
+                <td class="align-middle text-capitalize">
+                  <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis(); ?>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                      <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Edit', 'fa-edit', 'Edit Service Record');
+                      modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Copy', 'fa-copy', 'Copy Service Record'); ?>
+                      <div class="dropdown-divider"></div>
+                      <?php modalDropdownItem(uri() . '/modules/service-record/delete-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Delete', 'fa-trash', 'Delete Service Record'); ?>
+                    </div>
                   </div>
-                </div>
-              </td>
+                </td>
               <?php endif; ?>
             </tr>
           <?php endwhile; ?>
         </tbody>
-
-        <tfoot>
-          <tr>
-            <th class="align-middle" width="5%">From</th>
-            <th class="align-middle" width="5%">To</th>
-            <th class="align-middle" width="10%">Designation</th>
-            <th class="align-middle" width="10%">Employment Status</th>
-            <th class="align-middle" width="10%">Salary</th>
-            <th class="align-middle" rowspan="2" width="20%">Office Entity/Division/Station/Place/Branch of Assignment</th>
-            <th class="align-middle" rowspan="2" width="10%">Leave Without Pay</th>
-            <th class="align-middle" width="5%">Date</th>
-            <th class="align-middle" width="5%">Cause</th>
-            <th class="align-middle" rowspan="2" width="5%">Remarks</th>
-            <?php if ($isHrmis) : ?>
-              <th class="align-middle" rowspan="2" width="5%">Actions</th>
-            <?php endif; ?>
-          </tr>
-          <tr>
-            <th class="align-middle" colspan="2" width="10%">Service<br>(Inclusive Dates)</th>
-            <th class="align-middle" colspan="3" width="30%">Record of Appointment</th>
-            <th class="align-middle" colspan="2" width="10%">Separation</th>
-          </tr>
-        </tfoot>
       </table>
     </div>
   </div>
