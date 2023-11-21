@@ -266,6 +266,16 @@ function downloadLinkDropdownItem($link, $text, $icon, $title, $fileName, $newTa
   </a>
 <?php }
 
+function previewLinkDropdownItem($link, $text, $icon, $title, $newFeature = false) { ?>
+  <a href="<?php echo $link; ?>" class="dropdown-item" title="<?php echo $title; ?>" target="_new">
+  <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i>
+  <?php echo $text; 
+    if ($newFeature) {
+      newFeatureMark();
+  } ?>
+</a>
+<?php }
+
 function modalDropdownItem($link, $text, $icon, $title = '', $newFeature = false) { ?>
   <a href="#" data-toggle="modal" data-target="#modal" class="dropdown-item" title="<?php echo $title; ?>" onclick="loadData('<?php echo $link; ?>')">
     <i class="fas <?php echo $icon; ?> fa-sm fa-fw mr-1"></i>
