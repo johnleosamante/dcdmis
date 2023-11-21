@@ -68,6 +68,7 @@ if (!is_dir($uploadDirectory)) {
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                     <?php
+                    previewLinkDropdownItem(uri() . '/' . $row['filename'], 'Preview', 'fa-eye', 'Preview ' . $row['description']);
                     downloadLinkDropdownItem(uri() . '/' . $row['filename'], 'Download', 'fa-download', 'Download ' . $row['description'], $row['description'] . '.' . $row['ext'], true);
 
                     if ($isHrmis) {
