@@ -14,20 +14,17 @@
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
         <thead>
           <tr>
-            <th class="align-middle" width="10%" rowspan="2">Level</th>
-            <th class="align-middle" width="25%" rowspan="2">Name of School</th>
-            <th class="align-middle" width="25%" rowspan="2">Basic Education / Degree / Course</th>
-            <th class="align-middle" width="10%" colspan="2">Period of Attendance</th>
-            <th class="align-middle" width="10%" rowspan="2">Highest Level / Units Earned</th>
-            <th class="align-middle" width="5%" rowspan="2">Year Graduated</th>
-            <th class="align-middle" width="15%" rowspan="2">Scholarship / Academic Honors Received</th>
-            <?php if ($editMode) : ?>
-              <th class="align-middle" width="5%" rowspan="2">Action</th>
-            <?php endif; ?>
-          </tr>
-          <tr>
+            <th class="align-middle" width="10%">Level</th>
+            <th class="align-middle" width="25%">Name of School</th>
+            <th class="align-middle" width="25%">Basic Education / Degree / Course</th>
             <th class="align-middle" width="5%">From</th>
             <th class="align-middle" width="5%">To</th>
+            <th class="align-middle" width="10%">Highest Level / Units Earned</th>
+            <th class="align-middle" width="5%">Year Graduated</th>
+            <th class="align-middle" width="15%">Scholarship / Academic Honors Received</th>
+            <?php if ($editMode) : ?>
+              <th class="align-middle" width="5%">Action</th>
+            <?php endif; ?>
           </tr>
         </thead>
         <tbody>

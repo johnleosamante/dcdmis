@@ -8,19 +8,17 @@
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
         <thead>
           <tr>
-            <th class="align-middle" width="10%" colspan="2">Inclusive Dates</th>
-            <th class="align-middle" width="20%" rowspan="2">Position Title</th>
-            <th class="align-middle" width="30%" rowspan="2">Department / Agency / Office / Company</th>
-            <th class="align-middle" width="10%" rowspan="2">Monthly Salary</th>
-            <th class="align-middle" width="10%" rowspan="2">Salary / Job / Pay Grade &amp; Step Increment</th>
-            <th class="align-middle" width="10%" rowspan="2">Status of Appointment</th>
-            <th class="align-middle" width="10%" rowspan="2">Government Service</th>
-          </tr>
-          <tr>
             <th class="align-middle" width="5%">From</th>
             <th class="align-middle" width="5%">To</th>
+            <th class="align-middle" width="20%">Position Title</th>
+            <th class="align-middle" width="30%">Department / Agency / Office / Company</th>
+            <th class="align-middle" width="10%">Monthly Salary</th>
+            <th class="align-middle" width="10%">Salary / Job / Pay Grade &amp; Step Increment</th>
+            <th class="align-middle" width="10%">Status of Appointment</th>
+            <th class="align-middle" width="10%">Government Service</th>
           </tr>
         </thead>
+
         <tbody>
           <?php
           $experiences = experiences($employeeId);

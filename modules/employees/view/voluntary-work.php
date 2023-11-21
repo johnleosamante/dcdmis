@@ -14,17 +14,14 @@
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
         <thead>
           <tr>
-            <th class="align-middle" width="45" rowspan="2">Name &amp; Address of Organization</th>
-            <th class="align-middle" width="10%" colspan="2">Inclusive Dates</th>
-            <th class="align-middle" width="10%" rowspan="2">Number of Hours</th>
-            <th class="align-middle" width="30%" rowspan="2">Position / Nature of Work</th>
-            <?php if ($editMode) : ?>
-              <th class="align-middle" width="5%" rowspan="2">Action</th>
-            <?php endif; ?>
-          </tr>
-          <tr>
+            <th class="align-middle" width="45">Name &amp; Address of Organization</th>
             <th class="align-middle" width="5%">From</th>
             <th class="align-middle" width="5%">To</th>
+            <th class="align-middle" width="10%">Number of Hours</th>
+            <th class="align-middle" width="30%">Position / Nature of Work</th>
+            <?php if ($editMode) : ?>
+              <th class="align-middle" width="5%">Action</th>
+            <?php endif; ?>
           </tr>
         </thead>
         <tbody>

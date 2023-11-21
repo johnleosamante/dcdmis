@@ -14,18 +14,15 @@
       <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
         <thead>
           <tr>
-            <th class="align-middle" width="35%" rowspan="2">Career Services / RA 1080 (Board / Bar) Under Special Laws / CES / CSEE Barangay Eligibility / Driver's License</th>
-            <th class="align-middle" width="10%" rowspan="2">Rating</th>
-            <th class="align-middle" width="10%" rowspan="2">Date of Examination / Conferment</th>
-            <th class="align-middle" width="25%" rowspan="2">Place of Examination / Conferment</th>
-            <th class="align-middle" width="20%" colspan="2">License</th>
-            <?php if ($editMode) : ?>
-              <th class="align-middle" width="5%" rowspan="2">Action</th>
-            <?php endif; ?>
-          </tr>
-          <tr>
-            <th class="align-middle" width="10%">Number</th>
+            <th class="align-middle" width="35%">Career Services / RA 1080 (Board / Bar) Under Special Laws / CES / CSEE Barangay Eligibility / Driver's License</th>
+            <th class="align-middle" width="10%">Rating</th>
+            <th class="align-middle" width="10%">Date of Examination / Conferment</th>
+            <th class="align-middle" width="25%">Place of Examination / Conferment</th>
+            <th class="align-middle" width="10%">License Number</th>
             <th class="align-middle" width="10%">Date of Validity</th>
+            <?php if ($editMode) : ?>
+              <th class="align-middle" width="5%">Action</th>
+            <?php endif; ?>
           </tr>
         </thead>
         <tbody>
