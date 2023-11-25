@@ -158,6 +158,7 @@ if (numRows($schools) > 0) {
             <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
+        
         <tbody>
           <?php
           $query = activeEmployees($schoolId);

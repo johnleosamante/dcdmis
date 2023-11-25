@@ -43,61 +43,42 @@ messageAlert($showAlert, $message, $success);
       <table class="table table-striped table-bordered table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th class="align-middle" width="35%" rowspan="2">Title of Learning &amp; Development Interventions / Training Programs</th>
-            <th class="align-middle" width="10%" colspan="2">Inclusive Dates</th>
-            <th class="align-middle" width="5%" rowspan="2">Number of Hours</th>
-            <th class="align-middle" width="10%" rowspan="2">Type of Learning &amp; Development</th>
-            <th class="align-middle" width="15%" rowspan="2">Conducted / Sponsored by</th>
-            <th class="align-middle" width="20%" rowspan="2">Venue</th>
-            <th class="align-middle" width="5%" rowspan="2">Action</th>
-          </tr>
-          <tr>
+            <th class="align-middle" width="35%">Title of Learning &amp; Development Interventions / Training Programs</th>
             <th class="align-middle" width="5%">From</th>
             <th class="align-middle" width="5%">To</th>
+            <th class="align-middle" width="5%">Number of Hours</th>
+            <th class="align-middle" width="10%">Type of Learning &amp; Development</th>
+            <th class="align-middle" width="15%">Conducted / Sponsored by</th>
+            <th class="align-middle" width="20%">Venue</th>
+            <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
 
         <tbody>
-        <?php
-        $trainings = attendedTrainings($employeeId);
-        while ($training = fetchAssoc($trainings)) : ?>
-          <tr>
-            <td class="align-middle"><?php echo $training['title']; ?></td>
-            <td class="align-middle"><?php echo toDate($training['from']); ?></td>
-            <td class="align-middle"><?php echo toDate($training['to']); ?></td>
-            <td class="align-middle"><?php echo $training['hours']; ?></td>
-            <td class="align-middle"><?php echo $training['type']; ?></td>
-            <td class="align-middle"><?php echo $training['sponsor']; ?></td>
-            <td class="align-middle"><?php echo $training['venue']; ?></td>
-            <td class="align-middle text-capitalize">
-            <?php if ($training['generate_certificate'] === '1') : ?>
-              <div class="dropdown no-arrow">
-                <?php dropdownEllipsis(); ?>
-                <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                  <?php linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($employeeId), 'Download', 'fa-download', 'Download Certificate', true); ?>
-                </div>
-              </div>
-            <?php endif; ?>
-            </td>
-          </tr>
-        <?php endwhile; ?>
+          <?php
+          $trainings = attendedTrainings($employeeId);
+          while ($training = fetchAssoc($trainings)) : ?>
+            <tr>
+              <td class="align-middle"><?php echo $training['title']; ?></td>
+              <td class="align-middle"><?php echo toDate($training['from']); ?></td>
+              <td class="align-middle"><?php echo toDate($training['to']); ?></td>
+              <td class="align-middle"><?php echo $training['hours']; ?></td>
+              <td class="align-middle"><?php echo $training['type']; ?></td>
+              <td class="align-middle"><?php echo $training['sponsor']; ?></td>
+              <td class="align-middle"><?php echo $training['venue']; ?></td>
+              <td class="align-middle text-capitalize">
+                <?php if ($training['generate_certificate'] === '1') : ?>
+                  <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis(); ?>
+                    <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
+                      <?php linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($employeeId), 'Download', 'fa-download', 'Download Certificate', true); ?>
+                    </div>
+                  </div>
+                <?php endif; ?>
+              </td>
+            </tr>
+          <?php endwhile; ?>
         </tbody>
-
-        <thead>
-          <tr>
-            <th class="align-middle" width="35%" rowspan="2">Title of Learning &amp; Development Interventions / Training Programs</th>
-            <th class="align-middle" width="5%">From</th>
-            <th class="align-middle" width="5%">To</th>
-            <th class="align-middle" width="5%" rowspan="2">Number of Hours</th>
-            <th class="align-middle" width="10%" rowspan="2">Type of Learning &amp; Development</th>
-            <th class="align-middle" width="15%" rowspan="2">Conducted / Sponsored by</th>
-            <th class="align-middle" width="20%" rowspan="2">Venue</th>
-            <th class="align-middle" width="5%" rowspan="2">Action</th>
-          </tr>
-          <tr>
-            <th class="align-middle" width="10%" colspan="2">Inclusive Dates</th>
-          </tr>
-        </thead>
       </table>
     </div>
   </div>

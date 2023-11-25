@@ -24,16 +24,13 @@ messageAlert($showAlert, $message, $success);
       <table class="table table-striped table-bordered table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th class="align-middle" width="15%" rowspan="2">Code</th>
-            <th class="align-middle" width="30%" rowspan="2">Title of Learning &amp; Development Interventions / Training Programs</th>
-            <th class="align-middle" width="10%" colspan="2">Inclusive Dates</th>
-            <th class="align-middle" width="15%" rowspan="2">Type of Learning &amp; Development</th>
-            <th class="align-middle" width="25%" rowspan="2">Conducted / Sponsored by</th>
-            <th class="align-middle" width="5%" rowspan="2">Action</th>
-          </tr>
-          <tr>
+            <th class="align-middle" width="15%">Code</th>
+            <th class="align-middle" width="30%">Title of Learning &amp; Development Interventions / Training Programs</th>
             <th class="align-middle" width="5%">From</th>
             <th class="align-middle" width="5%">To</th>
+            <th class="align-middle" width="15%">Type of Learning &amp; Development</th>
+            <th class="align-middle" width="25%">Conducted / Sponsored by</th>
+            <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
 
@@ -63,21 +60,6 @@ messageAlert($showAlert, $message, $success);
           </tr>
           <?php endwhile; ?>
         </tbody>
-
-        <tfoot>
-          <tr>
-            <th class="align-middle" width="15%" rowspan="2">Code</th>
-            <th class="align-middle" width="30%" rowspan="2">Title of Learning &amp; Development Interventions / Training Programs</th>
-            <th class="align-middle" width="5%">From</th>
-            <th class="align-middle" width="5%">To</th>
-            <th class="align-middle" width="15%" rowspan="2">Type of Learning &amp; Development</th>
-            <th class="align-middle" width="25%" rowspan="2">Conducted / Sponsored by</th>
-            <th class="align-middle" width="5%" rowspan="2">Action</th>
-          </tr>
-          <tr>
-            <th class="align-middle" width="10%" colspan="2">Inclusive Dates</th>
-          </tr>
-        </tfoot>
       </table>
     </div>
   </div>

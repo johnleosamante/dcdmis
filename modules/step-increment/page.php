@@ -81,19 +81,6 @@ messageAlert($showAlert, $message, $success);
             </tr>
           <?php endwhile; ?>
         </tbody>
-
-        <tfoot>
-          <tr>
-            <th class="align-middle" width="5%">Photo</th>
-            <th class="align-middle" width="20%">Name</th>
-            <th class="align-middle" width="20%">Position</th>
-            <th class="align-middle" width="25%">Station</th>
-            <th class="align-middle" width="5%">From</th>
-            <th class="align-middle" width="5%">To</th>
-            <th class="align-middle" width="15%">Effectivity</th>
-            <th class="align-middle" width="5%">Action</th>
-          </tr>
-        </tfoot>
       </table>
     </div>
   </div>

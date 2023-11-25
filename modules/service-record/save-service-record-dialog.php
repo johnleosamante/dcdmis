@@ -126,7 +126,7 @@ if (isset($serviceRecordId)) {
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="salary" class="mb-0">Annual<br>Salary</label>
+              <label for="salary" class="mb-0">Monthly<br>Salary</label>
               <input id="salary" type="number" name="salary" class="form-control" min="0" step="1" title="Leave blank if not applicable" value="<?php echo $salary; ?>">
             </div>
           </div>

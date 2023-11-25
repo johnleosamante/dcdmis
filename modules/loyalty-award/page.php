@@ -58,12 +58,12 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle"><?php echo toDate($row['doa'], 'F j, Y'); ?></td>
               <td class="align-middle"><?php echo $row['work_years']; ?></td>
               <td class="align-middle text-capitalize">
-              <div class="dropdown no-arrow">
+                <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
                   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                     <?php modalDropdownItem(uri() . '/modules/loyalty-award/approve-loyalty-award-dialog.php?id=' . cipher($row['id']), 'Approve', 'fa-thumbs-up', 'Approve Employee Loyalty Award'); ?>
                     <div class="dropdown-divider"></div>
-                    <?php 
+                    <?php
                     modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
                     modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
                     ?>
@@ -73,18 +73,6 @@ messageAlert($showAlert, $message, $success);
             </tr>
           <?php endwhile; ?>
         </tbody>
-
-        <tfoot>
-          <tr>
-            <th class="align-middle" width="5%">Photo</th>
-            <th class="align-middle" width="20%">Name</th>
-            <th class="align-middle" width="20%">Position</th>
-            <th class="align-middle" width="25%">Station</th>
-            <th class="align-middle" width="15">Date of Original Appointment</th>
-            <th class="align-middle" width="10%">Years in Service</th>
-            <th class="align-middle" width="5%">Action</th>
-          </tr>
-        </tfoot>
       </table>
     </div>
   </div>
