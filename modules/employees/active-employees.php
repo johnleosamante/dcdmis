@@ -39,7 +39,9 @@ messageAlert($showAlert, $message, $success);
             <?php if ($isHrmis) : ?>
               <th class="align-middle" width="10%">Progress</th>
             <?php endif; ?>
-            <th class="align-middle" width="5%">Action</th>
+            <?php if (!$isHrtdms) : ?>
+              <th class="align-middle" width="5%">Action</th>
+            <?php endif; ?>
           </tr>
         </thead>
 
@@ -79,46 +81,33 @@ messageAlert($showAlert, $message, $success);
                   <?php progressBar(pdsProgress($row['id'])); ?>
                 </td>
               <?php endif; ?>
-              <td class="align-middle text-capitalize">
-                <div class="dropdown no-arrow">
-                  <?php dropdownEllipsis(); ?>
-                  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                    <?php
-                    if ($isHrmis) {
-                      linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
-                      linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
-                      linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
-                      linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
-                      modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel');
-                    ?>
-                      <div class="dropdown-divider"></div>
-                    <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                    modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
-                    } else {
-                      modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Set User', 'fa-user-cog', 'Set User Access');
-                      modalDropdownItem(uri() . '/modules/users/reset-user-dialog.php?id=' . cipher($row['id']), 'Reset', 'fa-undo-alt', 'Reset User');
-                    } ?>
+              <?php if (!$isHrtdms) : ?>
+                <td class="align-middle text-capitalize">
+                  <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis(); ?>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                      <?php
+                      if ($isHrmis) {
+                        linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
+                        linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
+                        linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
+                        linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
+                        modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel');
+                      ?>
+                        <div class="dropdown-divider"></div>
+                      <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                        modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
+                      } else {
+                        modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Set User', 'fa-user-cog', 'Set User Access');
+                        modalDropdownItem(uri() . '/modules/users/reset-user-dialog.php?id=' . cipher($row['id']), 'Reset', 'fa-undo-alt', 'Reset User');
+                      } ?>
+                    </div>
                   </div>
-                </div>
-              </td>
+                </td>
+              <?php endif; ?>
             </tr>
           <?php endwhile; ?>
         </tbody>
-
-        <tfoot>
-          <tr>
-            <th class="align-middle" width="5%">Photo</th>
-            <th class="align-middle" width="25%">Name</th>
-            <th class="align-middle" width="15%">Date of Birth</th>
-            <th class="align-middle" width="5%">Age</th>
-            <th class="align-middle" width="<?php $isHrmis ? '15' : '20'; ?>%">Position</th>
-            <th class="align-middle" width="<?php $isHrmis ? '20' : '25'; ?>%">Station</th>
-            <?php if ($isHrmis) : ?>
-              <th class="align-middle" width="10%">Progress</th>
-            <?php endif; ?>
-            <th class="align-middle" width="5%">Action</th>
-          </tr>
-        </tfoot>
       </table>
     </div>
   </div>
