@@ -27,6 +27,12 @@ messageAlert($showAlert, $message, $success);
   </div>
 
   <div class="card-body">
+    <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
+      <div class="d-inline-block">
+        <?php linkButtonSplit(customUri('export', 'training-details', $training['no']), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+      </div>
+    </div>
+
     <div class="table-responsive mb-3">
       <table cellspacing="0">
         <tr>
@@ -42,10 +48,10 @@ messageAlert($showAlert, $message, $success);
           <td class="text-uppercase"><?php echo empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']; ?></td>
         </tr>
         <?php if (!empty($training['hours'])) : ?>
-        <tr>
-          <th class="pr-5" scope="row">Hours</th>
-          <td class="text-uppercase"><?php echo $training['hours']; ?></td>
-        </tr>
+          <tr>
+            <th class="pr-5" scope="row">Hours</th>
+            <td class="text-uppercase"><?php echo $training['hours']; ?></td>
+          </tr>
         <?php endif; ?>
         <tr>
           <th class="pr-5" scope="row">Type</th>
@@ -56,16 +62,16 @@ messageAlert($showAlert, $message, $success);
           <td class="text-uppercase"><?php echo trainingSponsor($training['level']); ?></td>
         </tr>
         <?php if (!empty($training['sponsor'])) : ?>
-        <tr>
-          <th class="align-top pr-5" scope="row">Sponsor</th>
-          <td class="text-uppercase"><?php echo $training['sponsor']; ?></td>
-        </tr>
+          <tr>
+            <th class="align-top pr-5" scope="row">Sponsor</th>
+            <td class="text-uppercase"><?php echo $training['sponsor']; ?></td>
+          </tr>
         <?php endif; ?>
         <?php if (!empty($training['venue'])) : ?>
-        <tr>
-          <th class="align-top pr-5" scope="row">Venue</th>
-          <td class="text-uppercase"><?php echo $training['venue']; ?></td>
-        </tr>
+          <tr>
+            <th class="align-top pr-5" scope="row">Venue</th>
+            <td class="text-uppercase"><?php echo $training['venue']; ?></td>
+          </tr>
         <?php endif; ?>
         <tr>
           <th class="align-top pr-5" scope="row">Participants</th>
@@ -75,11 +81,11 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <?php if (isConductedTraining($trainingId)) : ?>
-    <div class="d-flex align-items-center flex-row-reverse mt-2">
-      <div class="d-inline-block">
-        <?php linkButtonSplit(customUri('hrtdms', 'Add Training Participants', $trainingId), 'Add Participants', 'fa-user-plus'); ?>
+      <div class="d-flex align-items-center flex-row-reverse mt-2">
+        <div class="d-inline-block">
+          <?php linkButtonSplit(customUri('hrtdms', 'Add Training Participants', $trainingId), 'Add Participants', 'fa-user-plus'); ?>
+        </div>
       </div>
-    </div>
     <?php endif; ?>
 
     <div class="table-responsive mt-2">
@@ -111,7 +117,7 @@ messageAlert($showAlert, $message, $success);
                 </div>
               </td>
               <td class="align-middle text-left">
-                <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' .cipher($row['id']), $employeeName); ?>
+                <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName); ?>
               </td>
               <td class="align-middle">
                 <?php
@@ -128,9 +134,9 @@ messageAlert($showAlert, $message, $success);
                     <?php
                     if ($training['generate_certificate']) :
                       linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($row['id']), 'Preview', 'fa-eye', 'Preview Certificate', true); ?>
-                    <div class="dropdown-divider"></div>
+                      <div class="dropdown-divider"></div>
                     <?php endif; ?>
-                    <?php modalDropdownItem(uri() .'/modules/trainings/remove-participant-dialog.php?e=' . cipher($row['id']) . '&id=' . cipher($trainingId), 'Remove', 'fa-trash', 'Remove Participant'); ?>
+                    <?php modalDropdownItem(uri() . '/modules/trainings/remove-participant-dialog.php?e=' . cipher($row['id']) . '&id=' . cipher($trainingId), 'Remove', 'fa-trash', 'Remove Participant'); ?>
                   </div>
                 </div>
               </td>
