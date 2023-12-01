@@ -44,20 +44,6 @@ require_once(root() . '/includes/layout/components.php');
       <div id="content">
         <?php require_once(root() . '/includes/layout/header-menu.php'); ?>
 
-        <?php
-        $quote_url = "https://www.brainyquote.com/link/quotebr.js";
-        $quote_script = get_headers($quote_url);
-
-        if (stripos($quote_script[0], "200 OK")) : ?>
-          <div class="container-fluid my-3">
-            <div class="card">
-              <div class="card-body">
-                <script type="text/javascript" src="<?php echo $quote_url; ?>"></script>
-              </div>
-            </div>
-          </div>
-        <?php endif; ?>
-
         <div class="container-fluid my-4">
           <?php require_once(root() . '/includes/layout/content.php'); ?>
         </div>
