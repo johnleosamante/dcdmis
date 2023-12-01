@@ -1,6 +1,6 @@
 <?php
 // export/training-details.php
-if (!isset($_GET['v']) || !isset($_GET['id'])) {
+if (!isset($_GET['v'])) {
   return;
 }
 
