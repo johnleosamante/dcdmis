@@ -45,7 +45,7 @@ if (!isset($_GET['v'])) {
         <td><?php echo strtoupper($row['ext']); ?></td>
         <td><?php echo strtoupper($row['sex'])[0]; ?></td>
         <td><?php echo $row['byear'] . '-' . $row['bmonth'] . '-' . $row['bday']; ?></td>
-        <td><?php echo getAge($row['byear'], $row['bmonth'], $row['bday']); ?></td>
+        <td><?php echo getDateDifference($row['byear'], $row['bmonth'], $row['bday']); ?></td>
         </td>
         <td><?php echo strtoupper($row['position']); ?></td>
         <td><?php echo $row['crn']; ?></td>

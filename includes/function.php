@@ -141,7 +141,7 @@ function setItemChecked($condition) {
   return $condition ? ' checked' : '';
 }
 
-function getAge($year, $month, $day) {
+function getDateDifference($year, $month, $day) {
   $now = new DateTime();
   $bdate = new DateTime("{$year}-{$month}-{$day}");
   return $now->diff($bdate)->y;

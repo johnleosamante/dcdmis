@@ -184,7 +184,7 @@ if (numRows($schools) > 0) {
                 } ?>
               </td>
               <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
-              <td class="align-middle"><?php echo getAge($row['year'], $row['month'], $row['day']); ?></td>
+              <td class="align-middle"><?php echo getDateDifference($row['year'], $row['month'], $row['day']); ?></td>
               <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
               <?php if (!$isHrtdms) : ?>
                 <td class="align-middle text-lowercase"><?php echo $row['email']; ?></td>
