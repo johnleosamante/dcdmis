@@ -21,13 +21,16 @@ if (numRows($employees) > 0) {
   $employeeId = $employee['id'];
   $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
   $sex = $employee['sex'];
+  $dob = $employee['month'] . '/' . $employee['day'] . '/' . $employee['year'];
   $empStatus = $employee['status'];
   $positions = fetchAssoc(position($employeeId));
   $stationId = $positions['station_id'];
   $station = $positions['station'];
   $positionId = $positions['position_id'];
+  $salaryGrade = fetchAssoc(positions($positionId))['salary_grade'];
   $position = $positions['position'];
   $depedEmail = $employee['email'];
+  $tin = $employee['tin'];
   $picture = uri() . '/' . $employee['picture'];
   $modalTitle = 'Employee PSIPOP Information';
   $hasEmployee = true;
@@ -37,18 +40,11 @@ if (numRows($employees) > 0) {
   if (numRows($psipops) > 0) {
     $psipop = fetchAssoc($psipops);
     $item = $psipop['item'];
-    $salaryGrade = $psipop['sg'];
     $step = $psipop['step'];
     $status = $psipop['status'];
-    $dlp = $psipop['date_promoted'];
+    $doa = $psipop['original_appointment'] ?? date('Y-m-d');
+    $dlp = $psipop['date_promoted'] ?? date('Y-m-d');
     $eligibility = $psipop['eligibility'];
-  }
-
-  $appointments = originalAppointment($employeeId);
-
-  if (numRows($appointments) > 0) {
-    $appointment = fetchAssoc($appointments);
-    $doa = $appointment['doa'];
   }
 }
 ?>
@@ -71,14 +67,44 @@ if (numRows($employees) > 0) {
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <label for="salary-grade" class="mb-0">Salary Grade <?php showAsterisk(); ?></label>
-                <input type="number" id="salary-grade" name="salary-grade" min="1" max="33" step="1" class="form-control" value="<?php echo $salaryGrade; ?>" required>
+                <label for="position" class="mb-0">Position</label>
+                <input type="text" id="position" class="form-control" value="<?php echo $position; ?>" readonly>
               </div>
             </div>
             <div class="col-6">
               <div class="form-group">
+                <label for="salary-grade" class="mb-0">Salary Grade</label>
+                <input type="text" id="salary-grade" class="form-control" value="<?php echo $salaryGrade; ?>" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
                 <label for="step" class="mb-0">Step Increment <?php showAsterisk(); ?></label>
                 <input type="number" id="step" name="step" min="1" max="8" step="1" class="form-control" value="<?php echo $step; ?>" required>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="sex" class="mb-0">Sex</label>
+                <input type="text" id="sex" class="form-control" value="<?php echo $sex; ?>" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="dob" class="mb-0">Date of Birth</label>
+                <input type="text" id="dob" class="form-control" value="<?php echo $dob; ?>" readonly>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="tin" class="mb-0">Tax Identification Number</label>
+                <input type="text" id="tin" class="form-control" value="<?php echo $tin; ?>" readonly>
               </div>
             </div>
           </div>
