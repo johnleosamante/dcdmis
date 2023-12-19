@@ -64,14 +64,6 @@ function updateStationID($newStationId, $oldStationId) {
   nonQuery("UPDATE tbl_station SET `Emp_Station`='{$newStationId}' WHERE `Emp_Station`='{$oldStationId}';");
 }
 
-function originalAppointment($id) {
-  return query("SELECT `Emp_DOA` AS `doa` FROM tbl_station WHERE Emp_ID='{$id}' LIMIT 1;");
-}
-
-function updateOriginalAppointment($id, $doa) {
-  return query("UPDATE tbl_station SET Emp_DOA='{$doa}' WHERE Emp_ID='{$id}' LIMIT 1;");
-}
-
 function district($id) {
   return query("SELECT District_code AS `id`, District_Name AS `name`, Emp_ID AS `psds` FROM tbl_district WHERE District_code='{$id}' LIMIT 1;");
 }

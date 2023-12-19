@@ -30,10 +30,6 @@ function toHandleNull($value, $default='') {
   return !empty($value) ? $value : $default;
 }
 
-function toAge($birthDate) {
-  return date_diff(date_create($birthDate), date_create(date('Y-m-d')))->format('%y');
-}
-
 function toDate($date, $format='m/d/Y', $default='') {
   return strtotime($date) ? date($format, strtotime($date)) : $default;
 }

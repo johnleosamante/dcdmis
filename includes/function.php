@@ -6,10 +6,6 @@ $onError = function ($level, $message, $file, $line) {
   throw new ErrorException($message, 0, $level, $file, $line);
 };
 
-function hashString($string) {
-  return sha1($string);
-}
-
 function hashPassword($string) {
   return md5($string);
 }
@@ -111,10 +107,6 @@ function redirect($url=null) {
     header("Location: {$url}");
     exit;
   }
-}
-
-function getDatetime() {
-  return date('Y-m-d H:i:s');
 }
 
 function getDatetimeAsId() {
