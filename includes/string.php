@@ -51,6 +51,14 @@ function sanitize($input) {
   return isset($input) ? htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES) : '';
 }
 
+function removeTags($input) {
+  return isset($input) ? strip_tags($input) : null;
+}
+
+function convertTags($input) {
+  return isset($input) ? htmlentities($input) : null;
+}
+
 function toHandleEncoding($string) {
   return mb_convert_encoding(html_entity_decode($string, ENT_QUOTES), 'ISO-8859-1', 'UTF-8');
 }
