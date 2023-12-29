@@ -26,15 +26,16 @@ messageAlert($showAlert, $message, $success);
             <th class="align-middle" width="20%">Name</th>
             <th class="align-middle" width="20%">Position</th>
             <th class="align-middle" width="25%">Station</th>
-            <th class="align-middle" width="15">Date of Original Appointment</th>
-            <th class="align-middle" width="10%">Years in Service</th>
+            <th class="align-middle" width="10">Date of Original Appointment</th>
+            <th class="align-middle" width="5%">Years in Service</th>
+            <th class="align-middle" width="10">Date Last Awarded</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
 
         <tbody>
           <?php
-          $query = loyaltyAward();
+          $query = employeeLoyaltyAward();
           while ($row = fetchArray($query)) :
             $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
             $photo = uri() . '/' . $row['picture'];
@@ -55,8 +56,9 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle">
                 <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']); ?>
               </td>
-              <td class="align-middle"><?php echo toDate($row['doa'], 'F j, Y'); ?></td>
-              <td class="align-middle"><?php echo $row['work_years']; ?></td>
+              <td class="align-middle"><?php echo toDate($row['original_appointment'], 'F j, Y'); ?></td>
+              <td class="align-middle"><?php echo $row['years_active']; ?></td>
+              <td class="align-middle"><?php echo toDate($row['last_awarded_on'], 'F j, Y'); ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
