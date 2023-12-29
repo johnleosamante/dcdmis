@@ -28,23 +28,23 @@ messageAlert($showAlert, $message, $success);
             <th class="align-middle" width="20%">Name</th>
             <th class="align-middle" width="20%">Position</th>
             <th class="align-middle" width="25%">Station</th>
+            <th class="align-middle" width="15%">Last Step Date</th>
             <th class="align-middle" width="5%">From</th>
             <th class="align-middle" width="5%">To</th>
-            <th class="align-middle" width="15%">Effectivity</th>
             <th class="align-middle" width="5%">Action</th>
           </tr>
         </thead>
 
         <tbody>
           <?php
-          $query = stepIncrement();
+          $query = employeeStepIncrement();
           while ($row = fetchArray($query)) :
             $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
             $photo = uri() . '/' . $row['picture'];
             $sg = $row['sg'];
             $step = is_int($row['step']) ? $row['step'] : 1;
             $nextStep = $step + 1;
-            $datePromoted = strtotime($row['date_promoted']) ? strtotime($row['date_promoted']) : date('Y-m-d');
+            $lastStepDate = strtotime($row['last_step_date']) ? strtotime($row['last_step_date']) : date('Y-m-d');
           ?>
             <tr class="text-uppercase">
               <td class="align-middle">
@@ -62,9 +62,9 @@ messageAlert($showAlert, $message, $success);
               <td class="align-middle">
                 <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']); ?>
               </td>
+              <td class="align-middle"><?php echo date('F j, Y', $lastStepDate); ?></td>
               <td class="align-middle"><?php echo "{$sg}-{$step}"; ?></td>
               <td class="align-middle"><?php echo "{$sg}-{$nextStep}"; ?></td>
-              <td class="align-middle"><?php echo date('F j, Y', strtotime('+3 year', $datePromoted)); ?></td>
               <td class="align-middle text-capitalize">
                 <div class="dropdown no-arrow">
                   <?php dropdownEllipsis(); ?>
