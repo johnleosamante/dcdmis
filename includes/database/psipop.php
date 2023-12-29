@@ -20,7 +20,7 @@ function createStepIncrement($dateLastStep, $stepNo, $sg, $id) {
 }
 
 function loyaltyAward($id) {
-  return query("SELECT * FROM (SELECT psipop.Emp_ID AS id, TIMESTAMPDIFF(YEAR, psipop.Original_Appointment, NOW()) AS years_active, TIMESTAMPDIFF(YEAR, tbl_loyalty_award.awarded_on, NOW()) AS last_awarded FROM psipop INNER JOIN tbl_loyalty_award ON psipop.Emp_ID=tbl_loyalty_award.employee_id) AS service_years WHERE years_active >= 10 AND last_awarded >= 5 AND id='{$id}';");
+  return query("SELECT * FROM (SELECT psipop.Emp_ID AS id, TIMESTAMPDIFF(YEAR, psipop.Original_Appointment, NOW()) AS years_active, TIMESTAMPDIFF(YEAR, tbl_loyalty_award.last_awarded_on, NOW()) AS last_awarded FROM psipop INNER JOIN tbl_loyalty_award ON psipop.Emp_ID=tbl_loyalty_award.employee_id) AS service_years WHERE years_active >= 10 AND last_awarded >= 5 AND id='{$id}';");
 }
 
 function stepIncrement($id) {
