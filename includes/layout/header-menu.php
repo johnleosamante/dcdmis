@@ -12,41 +12,110 @@ $displayPhoto = uri() . '/' . $user['picture'];
   </button>
 
   <?php if ($isDts || $isHrmis || $isHrtdms) : ?>
-  <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-0 my-2 my-md-0 mw-100 navbar-search" method="POST" action="">
-    <div class="input-group">
-      <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search" name="primary-search-text" autofocus required>
+    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-0 my-2 my-md-0 mw-100 navbar-search" method="POST" action="">
+      <div class="input-group">
+        <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search" name="primary-search-text" autofocus required>
 
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="submit" name="primary-search-button">
-          <i class="fas fa-search fa-sm"></i>
-        </button>
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit" name="primary-search-button">
+            <i class="fas fa-search fa-sm"></i>
+          </button>
+        </div>
       </div>
-    </div>
-  </form>
+    </form>
   <?php endif; ?>
 
   <ul class="navbar-nav ml-auto">
     <?php if ($isDts || $isHrmis || $isHrtdms) : ?>
-    <li class="nav-item dropdown no-arrow d-sm-none">
-      <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fas fa-search fa-fw"></i>
+      <li class="nav-item dropdown no-arrow d-sm-none">
+        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-search fa-fw"></i>
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+          <form class="form-inline mr-auto w-100 navbar-search" method="POST" action="">
+            <div class="input-group">
+              <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search" name="primary-search-text" required>
+
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit" name="primary-search-button">
+                  <i class="fas fa-search fa-sm"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </li>
+    <?php endif; ?>
+
+    <li class="nav-item dropdown no-arrow mx-1">
+      <?php
+      $increment = 1;
+      $alertCount = 0;
+      $hasStepIncrement = $hasLoyaltyAward = false;
+      $employeeSteps = stepIncrement($userId);
+      $employeeLoyalties = loyaltyAward($userId);
+
+      if (numRows($employeeSteps) > 0) {
+        $employeeStep = fetchAssoc($employeeSteps);
+        $increment = (int)$employeeStep['step'];
+        $hasStepIncrement = true;
+        $alertCount++;
+        $increment++;
+      }
+
+      if (numRows($employeeLoyalties) > 0) {
+        $hasLoyaltyAward = true;
+        $alertCount++;
+      }
+      ?>
+
+      <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-bell fa-fw"></i>
+        <?php if ($alertCount) : ?>
+          <span class="badge badge-danger badge-counter"><?php echo $alertCount; ?></span>
+        <?php endif; ?>
       </a>
 
-      <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-        <form class="form-inline mr-auto w-100 navbar-search" method="POST" action="">
-          <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search" name="primary-search-text" required>
-            
-            <div class="input-group-append">
-              <button class="btn btn-primary" type="submit" name="primary-search-button">
-                <i class="fas fa-search fa-sm"></i>
-              </button>
-            </div>
+      <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+        <h6 class="dropdown-header">
+          Alerts Center
+        </h6>
+        <?php if ($alertCount) : ?>
+          <?php if ($hasStepIncrement) : ?>
+            <a class="dropdown-item d-flex align-items-center" href="#">
+              <div class="mr-3">
+                <div class="icon-circle bg-primary">
+                  <i class="fas fa-file-alt text-white"></i>
+                </div>
+              </div>
+              <div>
+                <div class="small text-gray-500"><?php echo date('F d, Y'); ?></div>
+                <span class="font-weight-bold">You are qualified for Step Increment <?php echo $increment; ?>!</span>
+              </div>
+            </a>
+          <?php endif; ?>
+
+          <?php if ($hasLoyaltyAward) : ?>
+            <a class="dropdown-item d-flex align-items-center" href="#">
+              <div class="mr-3">
+                <div class="icon-circle bg-success">
+                  <i class="fas fa-award text-white"></i>
+                </div>
+              </div>
+              <div>
+                <div class="small text-gray-500"><?php echo date('F d, Y'); ?></div>
+                <span class="font-weight-bold">You are qualified for a Loyalty Award!</span>
+              </div>
+            </a>
+          <?php endif; ?>
+        <?php else : ?>
+          <div class="dropdown-item d-flex align-items-center">
+            <div class="font-weight-light text-center my-2">No new alerts at the moment.</div>
           </div>
-        </form>
+        <?php endif; ?>
       </div>
     </li>
-    <?php endif; ?>
 
     <li class="nav-item dropdown no-arrow mx-1">
       <a class="nav-link dropdown-toggle" href="#" id="completionDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,7 +123,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
       </a>
 
       <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="completionDropdown">
-        <h6 class="dropdown-header bg-dark border-dark">
+        <h6 class="dropdown-header bg-primary border-primary">
           My Employee Information Status
         </h6>
 
@@ -62,7 +131,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
           <div class="font-weight-bold text-left pb-1">
             <?php
             $pdsProgress = pdsProgress($userId);
-            echo "$pdsProgress% Complete"; 
+            echo "$pdsProgress% Complete";
             ?>
           </div>
 
@@ -77,7 +146,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="<?php echo strtoupper($displayName); ?>">
         <span class="mr-2 d-none d-md-inline">
           <div class="text-gray-600 small"><?php echo strtoupper($displayName); ?></div>
-          
+
           <div class="text-xs text-gray-500"><?php echo strtoupper($position); ?></div>
         </span>
 
@@ -93,7 +162,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
         if (numRows(dtsUser($userId)) > 0) {
           linkDropdownItem(uri() . '/dts', 'Tracking', 'fa-exchange-alt', 'Document Tracking System');
         }
-        
+
         if (!isPublicDomain()) {
           if (isStationUser($userId, 'hrmis')) {
             linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
@@ -110,7 +179,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
         ?>
 
         <div class="dropdown-divider"></div>
-        
+
         <?php
         linkDropdownItem(customUri($activeApp, 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
 
@@ -118,7 +187,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
         ?>
 
         <div class="dropdown-divider"></div>
-        
+
         <?php modalDropdownItem(uri() . '/logout/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout'); ?>
       </div>
     </li>
@@ -135,7 +204,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
 
     <?php if (!empty($school['address'])) : ?>
       <div class="small m-0"><?php echo $school['address']; ?></div>
-    <?php endif;
+  <?php endif;
   endif; ?>
 
   <h2 class="h1 m-0 mt-4"><?php echo strtoupper($appTitle); ?></h2>
