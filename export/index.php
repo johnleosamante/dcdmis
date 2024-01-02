@@ -3,11 +3,11 @@
 require_once('../includes/function.php');
 
 if (!isset($userId)) {
-  redirect(uri() . '/login');
+	redirect(uri() . '/login');
 }
 
 if (!isset($_GET['v'])) {
-  redirect(uri() . '/' . $activeApp);
+	redirect(uri() . '/' . $activeApp);
 }
 
 require_once(root() . '/includes/database/database.php');
@@ -22,12 +22,15 @@ header("Content-Disposition: attachment; Filename=" . $fileName);
 ?>
 
 <style>
-  table, th, td {
-    border: 1px solid;
-  }
-  table {
-    border-collapse: collapse;
-  }
+	table,
+	th,
+	td {
+		border: 1px solid;
+	}
+
+	table {
+		border-collapse: collapse;
+	}
 </style>
 
 <?php require_once($request . '.php'); ?>
