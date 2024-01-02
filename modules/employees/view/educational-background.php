@@ -3,69 +3,69 @@
 ?>
 
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'educational-background', 'show active'); ?>" id="educational-background">
-  <?php if ($editMode) : ?>
-    <div class="d-sm-flex justify-content-end my-3">
-      <?php modalButtonSplit(uri() . '/modules/employees/save/save-education.php?e='. cipher($employeeId), 'Add',  'fa-plus', 'Add Education', 'primary'); ?>
-    </div>
-  <?php endif; ?>
+    <?php if ($editMode) : ?>
+        <div class="d-sm-flex justify-content-end my-3">
+            <?php modalButtonSplit(uri() . '/modules/employees/save/save-education.php?e=' . cipher($employeeId), 'Add',  'fa-plus', 'Add Education', 'primary'); ?>
+        </div>
+    <?php endif; ?>
 
-  <div class="row my-3">
-    <div class="col table-responsive">
-      <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
-        <thead>
-          <tr>
-            <th class="align-middle" width="10%">Level</th>
-            <th class="align-middle" width="25%">Name of School</th>
-            <th class="align-middle" width="25%">Basic Education / Degree / Course</th>
-            <th class="align-middle" width="5%">From</th>
-            <th class="align-middle" width="5%">To</th>
-            <th class="align-middle" width="10%">Highest Level / Units Earned</th>
-            <th class="align-middle" width="5%">Year Graduated</th>
-            <th class="align-middle" width="15%">Scholarship / Academic Honors Received</th>
-            <?php if ($editMode) : ?>
-              <th class="align-middle" width="5%">Action</th>
-            <?php endif; ?>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $educationalBackground = educationalBackgrounds($employeeId);
+    <div class="row my-3">
+        <div class="col table-responsive">
+            <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
+                <thead>
+                    <tr>
+                        <th class="align-middle" width="10%">Level</th>
+                        <th class="align-middle" width="25%">Name of School</th>
+                        <th class="align-middle" width="25%">Basic Education / Degree / Course</th>
+                        <th class="align-middle" width="5%">From</th>
+                        <th class="align-middle" width="5%">To</th>
+                        <th class="align-middle" width="10%">Highest Level / Units Earned</th>
+                        <th class="align-middle" width="5%">Year Graduated</th>
+                        <th class="align-middle" width="15%">Scholarship / Academic Honors Received</th>
+                        <?php if ($editMode) : ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $educationalBackground = educationalBackgrounds($employeeId);
 
-          if (numRows($educationalBackground) > 0) {
-            while ($education = fetchAssoc($educationalBackground)) : ?>
-              <tr>
-                <td class="align-middle"><?php echo $education['level']; ?></td>
-                <td class="align-middle"><?php echo $education['school']; ?></td>
-                <td class="align-middle"><?php echo toHandleNull($education['course'], 'N/A'); ?></td>
-                <td class="align-middle"><?php echo $education['from']; ?></td>
-                <td class="align-middle">
-                  <?php echo $education['ispresent'] ? 'PRESENT' : $education['to']; ?>
-                </td>
-                <td class="align-middle"><?php echo toHandleNull($education['highest'], 'N/A'); ?></td>
-                <td class="align-middle"><?php echo toHandleNull($education['year_graduated'], 'N/A'); ?></td>
-                <td class="align-middle"><?php echo toHandleNull($education['scholarship'], 'N/A'); ?></td>
-                <?php if ($editMode) : ?>
-                  <td class="align-middle text-capitalize">
-                    <div class="dropdown no-arrow">
-                      <?php dropdownEllipsis(); ?>
-                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php modalDropdownItem(uri() . '/modules/employees/save/save-education.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Edit', 'fa-edit', 'Edit Education');
-                        modalDropdownItem(uri() . '/modules/employees/save/save-education.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Copy', 'fa-copy', 'Copy Education'); ?>
-                        <div class="dropdown-divider"></div>
-                        <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Delete', 'fa-trash', 'Delete Education'); ?>
-                      </div>
-                    </div>
-                  </td>
-                <?php endif; ?>
-              </tr>
-            <?php endwhile;
-          } else { ?>
-            <tr>
-              <td colspan="<?php echo $editMode ? '9' : '8'; ?>" class="align-middle">No data available in table</td>
-            </tr>
-          <?php } ?>
-        </tbody>
-      </table>
+                    if (numRows($educationalBackground) > 0) {
+                        while ($education = fetchAssoc($educationalBackground)) : ?>
+                            <tr>
+                                <td class="align-middle"><?php echo $education['level']; ?></td>
+                                <td class="align-middle"><?php echo $education['school']; ?></td>
+                                <td class="align-middle"><?php echo toHandleNull($education['course'], 'N/A'); ?></td>
+                                <td class="align-middle"><?php echo $education['from']; ?></td>
+                                <td class="align-middle">
+                                    <?php echo $education['ispresent'] ? 'PRESENT' : $education['to']; ?>
+                                </td>
+                                <td class="align-middle"><?php echo toHandleNull($education['highest'], 'N/A'); ?></td>
+                                <td class="align-middle"><?php echo toHandleNull($education['year_graduated'], 'N/A'); ?></td>
+                                <td class="align-middle"><?php echo toHandleNull($education['scholarship'], 'N/A'); ?></td>
+                                <?php if ($editMode) : ?>
+                                    <td class="align-middle text-capitalize">
+                                        <div class="dropdown no-arrow">
+                                            <?php dropdownEllipsis(); ?>
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                                <?php modalDropdownItem(uri() . '/modules/employees/save/save-education.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Edit', 'fa-edit', 'Edit Education');
+                                                modalDropdownItem(uri() . '/modules/employees/save/save-education.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Copy', 'fa-copy', 'Copy Education'); ?>
+                                                <div class="dropdown-divider"></div>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Delete', 'fa-trash', 'Delete Education'); ?>
+                                            </div>
+                                        </div>
+                                    </td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endwhile;
+                    } else { ?>
+                        <tr>
+                            <td colspan="<?php echo $editMode ? '9' : '8'; ?>" class="align-middle">No data available in table</td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
 </div>
