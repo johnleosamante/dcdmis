@@ -13,48 +13,48 @@ $modalTitle = 'Document not found';
 $hasDocument = false;
 
 if (numRows($documents) > 0) {
-  $document = fetchAssoc($documents);
-  $documentId = $document['id'];
-  $description = $document['description'];
-  $documentLogs = fetchAssoc(documentLogs($documentId));
-  $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['from'] === $station && $documentLogs['to'] === '-';
-  $modalTitle = $hasDocument ? 'Mark Completed Document' : $modalTitle;
+    $document = fetchAssoc($documents);
+    $documentId = $document['id'];
+    $description = $document['description'];
+    $documentLogs = fetchAssoc(documentLogs($documentId));
+    $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['from'] === $station && $documentLogs['to'] === '-';
+    $modalTitle = $hasDocument ? 'Mark Completed Document' : $modalTitle;
 }
 ?>
 
 <div class="modal-dialog <?php echo !$hasDocument ? 'modal-sm' : ''; ?>">
-  <div class="modal-content">
-    <?php modalHeader($modalTitle); ?>
+    <div class="modal-content">
+        <?php modalHeader($modalTitle); ?>
 
-    <form action="" method="POST">
-      <div class="modal-body">
-        <?php if ($hasDocument) { ?>
-          <div class="form-group">
-            <label for="code" class="mb-0">Code</label>
-            <input id="code" type="text" value="<?php echo $documentId; ?>" class="form-control text-uppercase" disabled>
-          </div>
+        <form action="" method="POST">
+            <div class="modal-body">
+                <?php if ($hasDocument) { ?>
+                    <div class="form-group">
+                        <label for="code" class="mb-0">Code</label>
+                        <input id="code" type="text" value="<?php echo $documentId; ?>" class="form-control text-uppercase" disabled>
+                    </div>
 
-          <div class="form-group">
-            <label for="description" class="mb-0">Description</label>
-            <textarea id="description" class="form-control text-uppercase" rows="3" disabled><?php echo $description; ?></textarea>
-          </div>
+                    <div class="form-group">
+                        <label for="description" class="mb-0">Description</label>
+                        <textarea id="description" class="form-control text-uppercase" rows="3" disabled><?php echo $description; ?></textarea>
+                    </div>
 
-          <div class="form-group mb-0">
-            <label for="remarks" class="mb-0">Remarks</label>
-            <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Type remarks..."></textarea>
-          </div>
-        <?php } else {
-          missingAlert($modalTitle, 'fa-times-circle');
-        } ?>
-      </div>
+                    <div class="form-group mb-0">
+                        <label for="remarks" class="mb-0">Remarks</label>
+                        <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Type remarks..."></textarea>
+                    </div>
+                <?php } else {
+                    missingAlert($modalTitle, 'fa-times-circle');
+                } ?>
+            </div>
 
-      <div class="modal-footer">
-        <?php if ($hasDocument) : ?>
-          <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
-          <button class="btn btn-primary" name="complete-document" type="submit">Continue</button>
-        <?php endif; ?>
-        <?php cancelModalButton(); ?>
-      </div>
-    </form>
-  </div>
+            <div class="modal-footer">
+                <?php if ($hasDocument) : ?>
+                    <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
+                    <button class="btn btn-primary" name="complete-document" type="submit">Continue</button>
+                <?php endif; ?>
+                <?php cancelModalButton(); ?>
+            </div>
+        </form>
+    </div>
 </div>
