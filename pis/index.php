@@ -28,4 +28,3 @@ require_once(root() . '/includes/database/psipop.php');
 require_once(root() . '/includes/database/system-log.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/layout/theme-dashboard.php');
-?>
