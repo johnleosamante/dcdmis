@@ -17,4 +17,3 @@ sidebarMenuItem(customUri('hrtdms', 'Employees'), 'Employees', 'fa-users', isset
 sidebarMenuItem(customUri('hrtdms', 'Districts'), 'Districts', 'fa-map-marked-alt', isset($url) && str_contains($url, 'District'), $districtCount);
 sidebarMenuItem(customUri('hrtdms', 'Schools'), 'Schools', 'fa-school', isset($url) && str_contains($url, 'School'), $schoolCount);
 sidebarMenuItem(customUri('hrtdms', 'Sections'), 'Sections', 'fa-map-signs', isset($url) && str_contains($url, 'Section'), $sectionCount);
-?>
