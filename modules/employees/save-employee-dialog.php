@@ -9,123 +9,123 @@ require_once(root() . '/includes/layout/components.php');
 ?>
 
 <div class="modal-dialog">
-  <div class="modal-content">
-    <?php modalHeader('Add Employee'); ?>
+    <div class="modal-content">
+        <?php modalHeader('Add Employee'); ?>
 
-    <form action="" method="POST">
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="lname" class="mb-0">Last Name <?php showAsterisk(); ?></label>
-          <input id="lname" name="lname" class="form-control" type="text" title="ex. DELA CRUZ" placeholder="ex. DELA CRUZ" required>
-        </div>
+        <form action="" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="lname" class="mb-0">Last Name <?php showAsterisk(); ?></label>
+                    <input id="lname" name="lname" class="form-control" type="text" title="ex. DELA CRUZ" placeholder="ex. DELA CRUZ" required>
+                </div>
 
-        <div class="form-group">
-          <label for="fname" class="mb-0">First Name <?php showAsterisk(); ?></label>
-          <input id="fname" name="fname" class="form-control" type="text" title="ex. JUAN"  placeholder="ex. JUAN" required>
-        </div>
+                <div class="form-group">
+                    <label for="fname" class="mb-0">First Name <?php showAsterisk(); ?></label>
+                    <input id="fname" name="fname" class="form-control" type="text" title="ex. JUAN" placeholder="ex. JUAN" required>
+                </div>
 
-        <div class="row">
-          <div class="col-8">
-            <div class="form-group">
-              <label for="mname" class="mb-0">Middle Name</label>
-              <input id="mname" name="mname" class="form-control" title="ex. BAUTISTA, Leave blank if not applicable" placeholder="ex. BAUTISTA" type="text">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="form-group">
+                            <label for="mname" class="mb-0">Middle Name</label>
+                            <input id="mname" name="mname" class="form-control" title="ex. BAUTISTA, Leave blank if not applicable" placeholder="ex. BAUTISTA" type="text">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="ext" class="mb-0">Extension</label>
+                            <input id="ext" name="ext" class="form-control" title="ex. JR., SR., III, Leave blank if not applicable" placeholder="ex. JR." type="text">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5">
+                        <div class="form-group">
+                            <label for="sex" class="mb-0">Sex <?php showAsterisk(); ?></label>
+                            <select name="sex" class="form-control" id="sex" required>
+                                <option value="">Select sex...</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-7">
+                        <div class="form-group">
+                            <label for="bdate" class="mb-0">Date of Birth <?php showAsterisk(); ?></label>
+                            <input type="date" id="bdate" name="bdate" value="<?php echo date('Y-m-d'); ?>" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="mb-0">DepEd Email Address <?php showAsterisk(); ?></label>
+                    <input id="email" name="email" class="form-control" type="email" title="ex. juan.delacruz@deped.gov.ph" pattern="[a-z0-9._%+\-]+@deped.gov.ph" placeholder="ex. juan.delacruz@deped.gov.ph" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile" class="mb-0">Mobile Number <?php showAsterisk(); ?></label>
+                    <input id="mobile" name="mobile" class="form-control" type="text" title="ex. 09XX-XXX-XXXX" pattern="\d{4}[\-]\d{3}[\-]\d{4}" placeholder="ex. 09XX-XXX-XXXX" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="position" class="mb-0">Position <?php showAsterisk(); ?></label>
+                    <select id="position" name="position" class="form-control" title="Required field" required>
+                        <option value="">Select position...</option>
+                        <?php
+                        $categories = positionCategories();
+                        while ($category = fetchAssoc($categories)) : ?>
+                            <optgroup label="<?php echo $category['category']; ?>">
+                                <?php $jobPositions = positionsByCategory($category['category']);
+                                while ($jobPosition = fetchArray($jobPositions)) : ?>
+                                    <option value="<?php echo $jobPosition['id']; ?>"><?php echo $jobPosition['position']; ?></option>
+                                <?php endwhile; ?>
+                            </optgroup>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="station" class="mb-0">Station <?php showAsterisk(); ?></label>
+                    <select id="station" name="station" class="form-control" title="Required field" required>
+                        <option value="">Select station...</option>
+                        <?php
+                        $districts = districts();
+                        while ($district = fetchAssoc($districts)) : ?>
+                            <optgroup label="<?php echo $district['name']; ?>">
+                                <?php
+                                $currentStation = isset($_GET['s']) ? sanitize(decode($_GET['s'])) : '';
+                                $schools = schoolsByDistrict($district['id']);
+                                while ($school = fetchAssoc($schools)) : ?>
+                                    <option value="<?php echo $school['id']; ?>" <?php echo setOptionSelected($school['id'], $currentStation); ?>><?php echo $school['name']; ?></option>
+                                <?php endwhile; ?>
+                            </optgroup>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="mb-0">Status <?php showAsterisk(); ?></label>
+                    <select id="status" name="status" class="form-control" required>
+                        <option value="">Select status...</option>
+                        <option value="Active">Active</option>
+                        <option value="Transferred">Transferred</option>
+                        <option value="Resigned">Resigned</option>
+                        <option value="Retired">Retired</option>
+                        <option value="Suspended">Suspended</option>
+                        <option value="Dismissed">Dismissed</option>
+                        <option value="Deceased">Deceased</option>
+                    </select>
+                </div>
+
+                <?php requiredLegend(0); ?>
             </div>
-          </div>
-          <div class="col-4">
-            <div class="form-group">
-              <label for="ext" class="mb-0">Extension</label>
-              <input id="ext" name="ext" class="form-control" title="ex. JR., SR., III, Leave blank if not applicable"  placeholder="ex. JR."  type="text">
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" name="add-employee" type="submit">Continue</button>
+                <?php cancelModalButton(); ?>
             </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-5">
-            <div class="form-group">
-              <label for="sex" class="mb-0">Sex <?php showAsterisk(); ?></label>
-              <select name="sex" class="form-control" id="sex" required>
-                <option value="">Select sex...</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-7">
-            <div class="form-group">
-              <label for="bdate" class="mb-0">Date of Birth <?php showAsterisk(); ?></label>
-              <input type="date" id="bdate" name="bdate" value="<?php echo date('Y-m-d'); ?>" class="form-control" required>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="email" class="mb-0">DepEd Email Address <?php showAsterisk(); ?></label>
-          <input id="email" name="email" class="form-control" type="email" title="ex. juan.delacruz@deped.gov.ph" pattern="[a-z0-9._%+\-]+@deped.gov.ph" placeholder="ex. juan.delacruz@deped.gov.ph" required>
-        </div>
-
-        <div class="form-group">
-          <label for="mobile" class="mb-0">Mobile Number <?php showAsterisk(); ?></label>
-          <input id="mobile" name="mobile" class="form-control" type="text" title="ex. 09XX-XXX-XXXX" pattern="\d{4}[\-]\d{3}[\-]\d{4}" placeholder="ex. 09XX-XXX-XXXX" required>
-        </div>
-
-        <div class="form-group">
-          <label for="position" class="mb-0">Position <?php showAsterisk(); ?></label>
-          <select id="position" name="position" class="form-control" title="Required field" required>
-            <option value="">Select position...</option>
-            <?php
-            $categories = positionCategories();
-            while ($category = fetchAssoc($categories)) : ?>
-              <optgroup label="<?php echo $category['category']; ?>">
-                <?php $jobPositions = positionsByCategory($category['category']);
-                while ($jobPosition = fetchArray($jobPositions)) : ?>
-                  <option value="<?php echo $jobPosition['id']; ?>"><?php echo $jobPosition['position']; ?></option>
-                <?php endwhile; ?>
-              </optgroup>
-            <?php endwhile; ?>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="station" class="mb-0">Station <?php showAsterisk(); ?></label>
-          <select id="station" name="station" class="form-control" title="Required field" required>
-            <option value="">Select station...</option>
-            <?php
-            $districts = districts();
-            while ($district = fetchAssoc($districts)) : ?>
-              <optgroup label="<?php echo $district['name']; ?>">
-                <?php
-                $currentStation = isset($_GET['s']) ? sanitize(decode($_GET['s'])) : '';
-                $schools = schoolsByDistrict($district['id']);
-                while ($school = fetchAssoc($schools)) : ?>
-                  <option value="<?php echo $school['id']; ?>" <?php echo setOptionSelected($school['id'], $currentStation); ?>><?php echo $school['name']; ?></option>
-                <?php endwhile; ?>
-              </optgroup>
-            <?php endwhile; ?>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="status" class="mb-0">Status <?php showAsterisk(); ?></label>
-          <select id="status" name="status" class="form-control" required>
-            <option value="">Select status...</option>
-            <option value="Active">Active</option>
-            <option value="Transferred">Transferred</option>
-            <option value="Resigned">Resigned</option>
-            <option value="Retired">Retired</option>
-            <option value="Suspended">Suspended</option>
-            <option value="Dismissed">Dismissed</option>
-            <option value="Deceased">Deceased</option>
-          </select>
-        </div>
-
-        <?php requiredLegend(0); ?>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-primary" name="add-employee" type="submit">Continue</button>
-        <?php cancelModalButton(); ?>
-      </div>
-    </form>
-  </div>
+        </form>
+    </div>
 </div>
