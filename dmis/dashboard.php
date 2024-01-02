@@ -5,11 +5,11 @@ contentTitle('Dashboard');
 ?>
 
 <div class="row mt-4">
-  <?php
-  card('Employees', customUri('dmis', 'Employees'), 'fa-users', 'primary', $employeeCount);
-  card('Districts', customUri('dmis', 'Districts'), 'fa-map-marked-alt', 'success', $districtCount);
-  card('Schools', customUri('dmis', 'Schools'), 'fa-school', 'info', $schoolCount);
-  card('Sections', customUri('dmis', 'Sections'), 'fa-map-signs', 'warning', $sectionCount);
-  card('Users', customUri('dmis', 'Users'), 'fa-user-friends', 'danger', $userCount);
-  ?>
+	<?php
+	card('Employees', customUri('dmis', 'Employees'), 'fa-users', 'primary', $employeeCount);
+	card('Districts', customUri('dmis', 'Districts'), 'fa-map-marked-alt', 'success', $districtCount);
+	card('Schools', customUri('dmis', 'Schools'), 'fa-school', 'info', $schoolCount);
+	card('Sections', customUri('dmis', 'Sections'), 'fa-map-signs', 'warning', $sectionCount);
+	card('Users', customUri('dmis', 'Users'), 'fa-user-friends', 'danger', $userCount);
+	?>
 </div>
