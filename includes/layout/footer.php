@@ -3,7 +3,7 @@
 ?>
 
 <footer class="p-4 bg-white mt-auto">
-  <div class="text-center small text-muted">
-    <?php echo 'Copyright &copy; ' . title() . ' ' . date('Y'); ?>
-  </div>
+    <div class="text-center small text-muted">
+        <?php echo 'Copyright &copy; ' . title() . ' ' . date('Y'); ?>
+    </div>
 </footer>
