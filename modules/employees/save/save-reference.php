@@ -13,53 +13,53 @@ $name = $address = $contact = '';
 $modalTitle = 'Add Reference';
 
 if (isset($referenceId)) {
-  $modalTitle = $employeeId === $copiedId ? 'Copy Reference' : 'Edit Reference';
-  $references = reference($employeeId, $referenceId);
+    $modalTitle = $employeeId === $copiedId ? 'Copy Reference' : 'Edit Reference';
+    $references = reference($employeeId, $referenceId);
 
-  if (numRows($references) > 0) {
-    $reference = fetchArray($references);
-    $referenceId = $reference['no'];
-    $name = $reference['name'];
-    $address = $reference['address'];
-    $contact = $reference['telephone'];
-  }
+    if (numRows($references) > 0) {
+        $reference = fetchArray($references);
+        $referenceId = $reference['no'];
+        $name = $reference['name'];
+        $address = $reference['address'];
+        $contact = $reference['telephone'];
+    }
 }
 ?>
 
 <div class="modal-dialog">
-  <div class="modal-content">
-    <?php modalHeader($modalTitle); ?>
+    <div class="modal-content">
+        <?php modalHeader($modalTitle); ?>
 
-    <form method="POST" action="">
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="name" class="mb-0">Name: <?php showAsterisk(); ?></label>
-          <input type="text" id="name" name="name" class="form-control" title="Required field" value="<?php echo $name; ?>" required>
-        </div>
+        <form method="POST" action="">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name" class="mb-0">Name: <?php showAsterisk(); ?></label>
+                    <input type="text" id="name" name="name" class="form-control" title="Required field" value="<?php echo $name; ?>" required>
+                </div>
 
-        <div class="form-group">
-          <label for="address" class="mb-0">Address: <?php showAsterisk(); ?></label>
-          <input type="text" id="address" name="address" class="form-control" title="Required field" value="<?php echo $address; ?>" required>
-        </div>
+                <div class="form-group">
+                    <label for="address" class="mb-0">Address: <?php showAsterisk(); ?></label>
+                    <input type="text" id="address" name="address" class="form-control" title="Required field" value="<?php echo $address; ?>" required>
+                </div>
 
-        <div class="form-group">
-          <label for="telephone" class="mb-0">Contact Number: <?php showAsterisk(); ?></label>
-          <input type="text" id="telephone" name="telephone" class="form-control" title="Required field" value="<?php echo $contact; ?>" required>
-        </div>
+                <div class="form-group">
+                    <label for="telephone" class="mb-0">Contact Number: <?php showAsterisk(); ?></label>
+                    <input type="text" id="telephone" name="telephone" class="form-control" title="Required field" value="<?php echo $contact; ?>" required>
+                </div>
 
-        <?php requiredLegend(0); ?>
-      </div>
+                <?php requiredLegend(0); ?>
+            </div>
 
-      <div class="modal-footer">
-        <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
-        <?php
-        $verifier = isset($_GET['id']) ? $_GET['id'] : null;
-        $verifier = $employeeId === $copiedId ? null : $verifier; 
-        ?>
-        <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
-        <button type="submit" class="btn btn-primary" name="save-reference">Continue</button>
-        <?php cancelModalButton(); ?>
-      </div>
-    </form>
-  </div>
+            <div class="modal-footer">
+                <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+                <?php
+                $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+                $verifier = $employeeId === $copiedId ? null : $verifier;
+                ?>
+                <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
+                <button type="submit" class="btn btn-primary" name="save-reference">Continue</button>
+                <?php cancelModalButton(); ?>
+            </div>
+        </form>
+    </div>
 </div>

@@ -13,41 +13,41 @@ $recognition = '';
 $modalTitle = 'Add Recognition';
 
 if (isset($recognitionId)) {
-  $modalTitle = $employeeId === $copiedId ? 'Copy Recognition' : 'Edit Recognition';
-  $recognitionDataSet = recognition($employeeId, $recognitionId);
+    $modalTitle = $employeeId === $copiedId ? 'Copy Recognition' : 'Edit Recognition';
+    $recognitionDataSet = recognition($employeeId, $recognitionId);
 
-  if (numRows($recognitionDataSet) > 0) {
-    $recognitionData = fetchArray($recognitionDataSet);
-    $recognitionId = $recognitionData['no'];
-    $recognition = $recognitionData['recognition'];
-  }
+    if (numRows($recognitionDataSet) > 0) {
+        $recognitionData = fetchArray($recognitionDataSet);
+        $recognitionId = $recognitionData['no'];
+        $recognition = $recognitionData['recognition'];
+    }
 }
 ?>
 
 <div class="modal-dialog">
-  <div class="modal-content">
-    <?php modalHeader($modalTitle); ?>
+    <div class="modal-content">
+        <?php modalHeader($modalTitle); ?>
 
-    <form method="POST" action="">
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="recognition" class="mb-0">Non-Academic Distinction / Recognition: <?php showAsterisk(); ?></label>
-          <input id="recognition" type="text" name="recognition" class="form-control" title="Required field" value="<?php echo $recognition; ?>" required>
-        </div>
+        <form method="POST" action="">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="recognition" class="mb-0">Non-Academic Distinction / Recognition: <?php showAsterisk(); ?></label>
+                    <input id="recognition" type="text" name="recognition" class="form-control" title="Required field" value="<?php echo $recognition; ?>" required>
+                </div>
 
-        <?php requiredLegend(0); ?>
-      </div>
+                <?php requiredLegend(0); ?>
+            </div>
 
-      <div class="modal-footer">
-        <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
-        <?php
-        $verifier = isset($_GET['id']) ? $_GET['id'] : null;
-        $verifier = $employeeId === $copiedId ? null : $verifier; 
-        ?>
-        <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
-        <button type="submit" class="btn btn-primary" name="save-recognition">Continue</button>
-        <?php cancelModalButton(); ?>
-      </div>
-    </form>
-  </div>
+            <div class="modal-footer">
+                <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+                <?php
+                $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+                $verifier = $employeeId === $copiedId ? null : $verifier;
+                ?>
+                <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
+                <button type="submit" class="btn btn-primary" name="save-recognition">Continue</button>
+                <?php cancelModalButton(); ?>
+            </div>
+        </form>
+    </div>
 </div>

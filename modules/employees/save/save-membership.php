@@ -13,41 +13,41 @@ $membership = '';
 $modalTitle = 'Add Membership in Association / Organization';
 
 if (isset($membershipId)) {
-  $modalTitle = $employeeId === $copiedId ? 'Copy Membership in Association / Organization' : 'Edit Membership in Association / Organization';
-  $membershipDataSet = membership($employeeId, $membershipId);
+    $modalTitle = $employeeId === $copiedId ? 'Copy Membership in Association / Organization' : 'Edit Membership in Association / Organization';
+    $membershipDataSet = membership($employeeId, $membershipId);
 
-  if (numRows($membershipDataSet) > 0) {
-    $membershipData = fetchArray($membershipDataSet);
-    $membershipId = $membershipData['no'];
-    $membership = $membershipData['organization'];
-  }
+    if (numRows($membershipDataSet) > 0) {
+        $membershipData = fetchArray($membershipDataSet);
+        $membershipId = $membershipData['no'];
+        $membership = $membershipData['organization'];
+    }
 }
 ?>
 
 <div class="modal-dialog">
-  <div class="modal-content">
-    <?php modalHeader($modalTitle); ?>
+    <div class="modal-content">
+        <?php modalHeader($modalTitle); ?>
 
-    <form method="POST" action="">
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="membership" class="mb-0">Membership in Association / Organization: <?php showAsterisk(); ?></label>
-          <input id="membership" type="text" name="membership" class="form-control" title="Required field" value="<?php echo $membership; ?>" required>
-        </div>
+        <form method="POST" action="">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="membership" class="mb-0">Membership in Association / Organization: <?php showAsterisk(); ?></label>
+                    <input id="membership" type="text" name="membership" class="form-control" title="Required field" value="<?php echo $membership; ?>" required>
+                </div>
 
-        <?php requiredLegend(0); ?>
-      </div>
+                <?php requiredLegend(0); ?>
+            </div>
 
-      <div class="modal-footer">
-        <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
-        <?php
-        $verifier = isset($_GET['id']) ? $_GET['id'] : null;
-        $verifier = $employeeId === $copiedId ? null : $verifier; 
-        ?>
-        <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
-        <button type="submit" class="btn btn-primary" name="save-membership">Continue</button>
-        <?php cancelModalButton(); ?>
-      </div>
-    </form>
-  </div>
+            <div class="modal-footer">
+                <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+                <?php
+                $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+                $verifier = $employeeId === $copiedId ? null : $verifier;
+                ?>
+                <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
+                <button type="submit" class="btn btn-primary" name="save-membership">Continue</button>
+                <?php cancelModalButton(); ?>
+            </div>
+        </form>
+    </div>
 </div>
