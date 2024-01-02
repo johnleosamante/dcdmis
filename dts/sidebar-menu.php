@@ -17,8 +17,7 @@ sidebarDivider();
 sidebarMenuItem(customUri('dts', 'Completed Documents'), 'Completed', 'fa-check-circle', isset($url) && str_contains($url, 'Completed'));
 
 if (!$isSchoolPortal) {
-  sidebarMenuItem(customUri('dts', 'Received Documents'), 'Received', 'fa-hand-holding-medical', isset($url) && str_contains($url, 'Received'));
+	sidebarMenuItem(customUri('dts', 'Received Documents'), 'Received', 'fa-hand-holding-medical', isset($url) && str_contains($url, 'Received'));
 }
 
 sidebarMenuItem(customUri('dts', 'Canceled Documents'), 'Canceled', 'fa-trash-alt', isset($url) && str_contains($url, 'Canceled'));
-?>
