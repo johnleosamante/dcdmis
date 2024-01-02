@@ -10,4 +10,3 @@ define('SITE_TITLE', 'Department of Education Schools Division of Dipolog City')
 define('SITE_ALIAS', 'sdodipolog');
 define('SITE_DESCRIPTION', 'Department of Education Schools Division of Dipolog City Data Management Information System');
 define('SITE_AUTHOR', 'DepEd Schools Division of Dipolog City ICT Unit');
-?>

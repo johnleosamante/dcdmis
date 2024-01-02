@@ -23,4 +23,3 @@ $isDescriptionEditable = $_SESSION[alias() . '_editableDescription'] ?? false;
 $showAlert = false;
 $message = null;
 $success = true;
-?>
