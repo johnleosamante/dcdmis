@@ -28,7 +28,7 @@ $employeeId = isset($_GET['p']) ? sanitize(decode($_GET['p'])) : null;
 $trainings = attendedTraining($code, $employeeId);
 
 if (numRows($trainings) === 0) {
-  redirect(customUri($activeApp, 'Certificate of Participation'));
+    redirect(customUri($activeApp, 'Certificate of Participation'));
 }
 
 $employee = fetchAssoc(employee($employeeId));
@@ -45,7 +45,7 @@ $givenDate = $lastDay . ' day of ' . date('F, Y', $lastDate);
 $signatory = $training['signatory'];
 
 if (empty($signatory)) {
-  redirect(customUri($activeApp, 'Certificate of Participation'));
+    redirect(customUri($activeApp, 'Certificate of Participation'));
 }
 
 $signatoryName = toHandleEncoding(userName($signatory, true));
@@ -94,4 +94,3 @@ $pdf->Cell(0, 0, $signatoryName, 0, 0, 'C');
 $pdf->Ln(5);
 $pdf->SetFont('calibri', '', 10);
 $pdf->Cell(0, 0, $position, 0, 0, 'C');
-?>

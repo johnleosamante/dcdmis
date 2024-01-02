@@ -68,19 +68,18 @@ $pdf->SetFont('calibri', '', 11);
 $pdf->Cell($innerPage / 2, 0, $employeePosition, 0, 0, 'C');
 
 if ($document['user'] !== $document['head']) {
-  $stationHead = toHandleEncoding(userName($document['head'], true));
-  $stationHeadPosition = toHandleEncoding(fetchAssoc(position($document['head']))['position']);
-  $pdf->Ln(10);
-  $pdf->SetX($width / 2);
-  $pdf->Cell($innerPage / 2, 0, 'Noted by:');
-  $pdf->Ln(15);
-  $pdf->SetX($width / 2);
-  $pdf->SetFont('calibrib', 'B', 11);
-  $pdf->Cell($innerPage / 2, 0, $stationHead, 0, 0, 'C');
-  $pdf->Ln(5);
-  $pdf->SetX($width / 2);
-  $pdf->SetFont('calibri', '', 11);
-  $pdf->Cell($innerPage / 2, 0, $stationHeadPosition, 0, 0, 'C');
-  $pdf->Ln();
+    $stationHead = toHandleEncoding(userName($document['head'], true));
+    $stationHeadPosition = toHandleEncoding(fetchAssoc(position($document['head']))['position']);
+    $pdf->Ln(10);
+    $pdf->SetX($width / 2);
+    $pdf->Cell($innerPage / 2, 0, 'Noted by:');
+    $pdf->Ln(15);
+    $pdf->SetX($width / 2);
+    $pdf->SetFont('calibrib', 'B', 11);
+    $pdf->Cell($innerPage / 2, 0, $stationHead, 0, 0, 'C');
+    $pdf->Ln(5);
+    $pdf->SetX($width / 2);
+    $pdf->SetFont('calibri', '', 11);
+    $pdf->Cell($innerPage / 2, 0, $stationHeadPosition, 0, 0, 'C');
+    $pdf->Ln();
 }
-?>

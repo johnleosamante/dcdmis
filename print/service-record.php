@@ -29,7 +29,7 @@ require_once(root() . '/includes/database/utility.php');
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 
 if (numRows(employee($employeeId)) === 0) {
-  redirect(customUri($activeApp, 'Service Record'));
+    redirect(customUri($activeApp, 'Service Record'));
 }
 
 $employee = fetchAssoc(employee($employeeId));
@@ -157,22 +157,22 @@ $services = governmentService($employeeId);
 $pdf->SetFont('calibri', '', 8);
 
 if (numRows($services) > 0) {
-  while ($service = fetchAssoc($services)) {
-    $pdf->Cell($colOne / 2, $lineHeight - 2, toDate($service['from'], 'm/d/y'), 1, 0, 'C');
-    $pdf->Cell($colOne / 2, $lineHeight - 2, $service['ispresent'] ? 'PRESENT' : toDate($service['to'], 'm/d/y'), 1, 0, 'C');
-    $pdf->Cell($colTwo / 3, $lineHeight - 2, $service['position'], 1, 0, 'C');
-    $pdf->Cell($colTwo / 3, $lineHeight - 2, strtoupper($service['status']), 1, 0, 'C');
-    $pdf->Cell($colTwo / 3, $lineHeight - 2, toCurrency($service['salary'], ''), 1, 0, 'C');
-    $pdf->Cell($colThree, $lineHeight - 2, $service['station'], 1, 0, 'C');
-    $pdf->Cell($colFour, $lineHeight - 2, toHandleNull($service['leave_dates'], 'N/A'), 1, 0, 'C');
-    $pdf->Cell($colFive / 2, $lineHeight - 2, $service['isseparation'] === '1' ? toDate($service['separation_date'], 'm/d/y') : 'N/A', 1, 0, 'C');
-    $pdf->Cell($colFive / 2, $lineHeight - 2, $service['isseparation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A', 1, 0, 'C');
-    $pdf->Cell($colSix, $lineHeight - 2, toHandleNull($service['sg']), 1, 0, 'C');
-    $pdf->Ln($lineHeight - 2);
-  }
+    while ($service = fetchAssoc($services)) {
+        $pdf->Cell($colOne / 2, $lineHeight - 2, toDate($service['from'], 'm/d/y'), 1, 0, 'C');
+        $pdf->Cell($colOne / 2, $lineHeight - 2, $service['ispresent'] ? 'PRESENT' : toDate($service['to'], 'm/d/y'), 1, 0, 'C');
+        $pdf->Cell($colTwo / 3, $lineHeight - 2, $service['position'], 1, 0, 'C');
+        $pdf->Cell($colTwo / 3, $lineHeight - 2, strtoupper($service['status']), 1, 0, 'C');
+        $pdf->Cell($colTwo / 3, $lineHeight - 2, toCurrency($service['salary'], ''), 1, 0, 'C');
+        $pdf->Cell($colThree, $lineHeight - 2, $service['station'], 1, 0, 'C');
+        $pdf->Cell($colFour, $lineHeight - 2, toHandleNull($service['leave_dates'], 'N/A'), 1, 0, 'C');
+        $pdf->Cell($colFive / 2, $lineHeight - 2, $service['isseparation'] === '1' ? toDate($service['separation_date'], 'm/d/y') : 'N/A', 1, 0, 'C');
+        $pdf->Cell($colFive / 2, $lineHeight - 2, $service['isseparation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A', 1, 0, 'C');
+        $pdf->Cell($colSix, $lineHeight - 2, toHandleNull($service['sg']), 1, 0, 'C');
+        $pdf->Ln($lineHeight - 2);
+    }
 } else {
-  $pdf->SetFontSize(10);
-  $pdf->Cell($tableWidth, $lineHeight * 2, '----- NO DATA AVAILABLE -----', 1, 0, 'C');
+    $pdf->SetFontSize(10);
+    $pdf->Cell($tableWidth, $lineHeight * 2, '----- NO DATA AVAILABLE -----', 1, 0, 'C');
 }
 
 $pdf->Ln($lineHeight / 2);
@@ -206,4 +206,3 @@ $pdf->Cell($tableWidth / 3 + 5, $lineHeight, '(Designation)', 0, 0, 'C');
 $pdf->SetFont('calibri', '', 10);
 $pdf->SetX($tableWidth / 3 * 2);
 $pdf->Cell(40, $lineHeight, 'Control No.', 0, 0, 'C');
-?>

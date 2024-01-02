@@ -7,24 +7,24 @@ $page = $url = sanitize(decode($_GET['v']));
 $file = $title = '';
 
 switch ($url) {
-  case 'Document Tracking Slip':
-    if (!isset($_SESSION[alias() . '_userId']) || !isset($_SESSION[alias() . '_portal'])) {
-      redirect(uri() . '/login');
-    }
-    $file = 'document-tracking-slip';
-    break;
-  case 'Certificate of Participation':
-    if (!isset($_GET['id']) || !isset($_GET['p'])) {
-      redirect(customUri($activeApp, '404'));
-    }
-    $file = 'certificate-of-participation';
-    break;
-  case 'Service Record':
-    $file = 'service-record';
-    break;
-  default:
-    redirect(customUri($activeApp, '404'));
-    break;
+    case 'Document Tracking Slip':
+        if (!isset($_SESSION[alias() . '_userId']) || !isset($_SESSION[alias() . '_portal'])) {
+            redirect(uri() . '/login');
+        }
+        $file = 'document-tracking-slip';
+        break;
+    case 'Certificate of Participation':
+        if (!isset($_GET['id']) || !isset($_GET['p'])) {
+            redirect(customUri($activeApp, '404'));
+        }
+        $file = 'certificate-of-participation';
+        break;
+    case 'Service Record':
+        $file = 'service-record';
+        break;
+    default:
+        redirect(customUri($activeApp, '404'));
+        break;
 }
 
 require_once(root() . '/includes/database/database.php');
@@ -36,4 +36,3 @@ require_once(root() . '/includes/plugin/phpqrcode/qrlib.php');
 require_once(root() . "/print/{$file}.php");
 
 $pdf->Output("I", "{$title}.pdf");
-?>
