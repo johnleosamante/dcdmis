@@ -1,85 +1,85 @@
 <?php
 // modules/trainings/attended-trainings.php
 if (!$isPis && !$isHrmis && !$isHrtdms) {
-  require_once(root() . '/modules/error/403.php');
-  return;
+    require_once(root() . '/modules/error/403.php');
+    return;
 }
 
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 
 if ($isPis && $userId !== $employeeId) {
-  require_once(root() . '/modules/error/no-results-found.php');
-  return;
+    require_once(root() . '/modules/error/no-results-found.php');
+    return;
 }
 
 $employees = employee($employeeId);
 
 if (numRows($employees) > 0) {
-  $employee = fetchAssoc($employees);
-  $employeeId = $employee['id'];
+    $employee = fetchAssoc($employees);
+    $employeeId = $employee['id'];
 } else {
-  require_once(root() . '/modules/error/no-results-found.php');
-  return;
+    require_once(root() . '/modules/error/no-results-found.php');
+    return;
 }
 
 if ($isHrmis) {
-  require_once(root() . '/modules/employees/employee-tabs.php');
+    require_once(root() . '/modules/employees/employee-tabs.php');
 }
 
 messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
-  <div class="card-header py-3">
-    <?php if ($isPis) {
-      contentTitleWithLink('Trainings : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/pis');
-    } else {
-      contentTitle('Trainings : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])));
-    } ?>
-  </div>
-
-  <div class="card-body">
-    <div class="table-responsive">
-      <table class="table table-striped table-bordered table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
-        <thead>
-          <tr>
-            <th class="align-middle" width="35%">Title of Learning &amp; Development Interventions / Training Programs</th>
-            <th class="align-middle" width="5%">From</th>
-            <th class="align-middle" width="5%">To</th>
-            <th class="align-middle" width="5%">Number of Hours</th>
-            <th class="align-middle" width="10%">Type of Learning &amp; Development</th>
-            <th class="align-middle" width="15%">Conducted / Sponsored by</th>
-            <th class="align-middle" width="20%">Venue</th>
-            <th class="align-middle" width="5%">Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <?php
-          $trainings = attendedTrainings($employeeId);
-          while ($training = fetchAssoc($trainings)) : ?>
-            <tr>
-              <td class="align-middle"><?php echo $training['title']; ?></td>
-              <td class="align-middle"><?php echo toDate($training['from']); ?></td>
-              <td class="align-middle"><?php echo toDate($training['to']); ?></td>
-              <td class="align-middle"><?php echo $training['hours']; ?></td>
-              <td class="align-middle"><?php echo $training['type']; ?></td>
-              <td class="align-middle"><?php echo $training['sponsor']; ?></td>
-              <td class="align-middle"><?php echo $training['venue']; ?></td>
-              <td class="align-middle text-capitalize">
-                <?php if ($training['generate_certificate'] === '1') : ?>
-                  <div class="dropdown no-arrow">
-                    <?php dropdownEllipsis(); ?>
-                    <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                      <?php linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($employeeId), 'Download', 'fa-download', 'Download Certificate', true); ?>
-                    </div>
-                  </div>
-                <?php endif; ?>
-              </td>
-            </tr>
-          <?php endwhile; ?>
-        </tbody>
-      </table>
+    <div class="card-header py-3">
+        <?php if ($isPis) {
+            contentTitleWithLink('Trainings : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/pis');
+        } else {
+            contentTitle('Trainings : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])));
+        } ?>
     </div>
-  </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="align-middle" width="35%">Title of Learning &amp; Development Interventions / Training Programs</th>
+                        <th class="align-middle" width="5%">From</th>
+                        <th class="align-middle" width="5%">To</th>
+                        <th class="align-middle" width="5%">Number of Hours</th>
+                        <th class="align-middle" width="10%">Type of Learning &amp; Development</th>
+                        <th class="align-middle" width="15%">Conducted / Sponsored by</th>
+                        <th class="align-middle" width="20%">Venue</th>
+                        <th class="align-middle" width="5%">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php
+                    $trainings = attendedTrainings($employeeId);
+                    while ($training = fetchAssoc($trainings)) : ?>
+                        <tr>
+                            <td class="align-middle"><?php echo $training['title']; ?></td>
+                            <td class="align-middle"><?php echo toDate($training['from']); ?></td>
+                            <td class="align-middle"><?php echo toDate($training['to']); ?></td>
+                            <td class="align-middle"><?php echo $training['hours']; ?></td>
+                            <td class="align-middle"><?php echo $training['type']; ?></td>
+                            <td class="align-middle"><?php echo $training['sponsor']; ?></td>
+                            <td class="align-middle"><?php echo $training['venue']; ?></td>
+                            <td class="align-middle text-capitalize">
+                                <?php if ($training['generate_certificate'] === '1') : ?>
+                                    <div class="dropdown no-arrow">
+                                        <?php dropdownEllipsis(); ?>
+                                        <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
+                                            <?php linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($employeeId), 'Download', 'fa-download', 'Download Certificate', true); ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
