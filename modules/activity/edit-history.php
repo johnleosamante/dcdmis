@@ -1,11 +1,11 @@
 <?php
 // modules/activity/edit-history.php
-if (!$isHrmis) {
+if (!$isPis && !$isHrmis) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
 
-$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : $userId;
 $employees = employee($employeeId);
 
 if (numRows($employees) > 0) {

@@ -182,7 +182,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
 
                 <?php
                 linkDropdownItem(customUri($activeApp, 'Activity Log'), 'Activity Log', 'fa-list', 'View activity log');
-
+                linkDropdownItem(customUri($activeApp, 'Edit History'), 'Edit History', 'fa-history', 'View edit history');
                 linkDropdownItem(customUri($activeApp, 'Settings'), 'Settings', 'fa-cogs', 'Go to settings');
                 ?>
 
