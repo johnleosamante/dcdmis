@@ -1,7 +1,7 @@
 <?php
 // modules/activity/page.php
-
-$employees = employee($userId);
+$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : $userId;
+$employees = employee($employeeId);
 
 if (numRows($employees) > 0) {
     $employee = fetchAssoc($employees);
@@ -33,7 +33,7 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = userLog($userId);
+                    $query = userLog($employeeId);
                     $no = 0;
                     while ($row = fetchAssoc($query)) : ?>
                         <tr class="text-uppercase">
