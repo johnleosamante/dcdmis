@@ -16,3 +16,8 @@ function createSystemLog($stationId, $id, $status, $targetId, $ip)
 {
     nonQuery("INSERT INTO tbl_system_logs (`SchoolID`, `Emp_ID`, `Time_Log`, `Status`, `target_id`, `IPAddress`) VALUES ('{$stationId}', '{$id}', NOW(), '{$status}', '{$targetId}', '{$ip}');");
 }
+
+function employeeEditHistory($id)
+{
+    return query("SELECT `Time_log` AS `datetime`, `Status` AS `activity`, `Emp_ID` AS `editor`, `IPAddress` AS `ip` FROM tbl_system_logs WHERE `target_id`='{$id}' AND `Status` NOT LIKE '%logged%' ORDER BY `Time_Log` DESC;");
+}
