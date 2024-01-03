@@ -61,6 +61,10 @@ messageAlert($showAlert, $message, $success);
                                     <?php dropdownEllipsis(); ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php
+                                        linkDropdownItem(customUri('dmis', 'Activity Log', $row['id']), 'Activity', 'fa-list', 'User Activity Log');
+                                        ?>
+                                        <div class="dropdown-divider"></div>
+                                        <?php
                                         modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit User');
                                         modalDropdownItem(uri() . '/modules/users/reset-user-dialog.php?id=' . cipher($row['id']), 'Reset', 'fa-undo-alt', 'Reset User');
                                         ?>
