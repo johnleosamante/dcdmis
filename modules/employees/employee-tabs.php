@@ -9,5 +9,6 @@
     cardMini('201 Files', customUri('hrmis', '201 Files', $employeeId), 'fa-folder-open', 'info');
     cardMini('Trainings', customUri('hrmis', 'Trainings', $employeeId), 'fa-chalkboard-teacher', 'warning');
     cardMiniModal('PSIPOP', uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($employeeId), 'fa-file-contract', 'danger');
+    cardMini('Edit History', customUri('hrmis', 'Edit History', $employeeId), 'fa-history', 'secondary');
     ?>
 </div>
