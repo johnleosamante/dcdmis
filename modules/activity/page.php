@@ -1,11 +1,22 @@
 <?php
 // modules/activity/page.php
+
+$employees = employee($userId);
+
+if (numRows($employees) > 0) {
+    $employee = fetchAssoc($employees);
+    $employeeId = $employee['id'];
+} else {
+    require_once(root() . '/modules/error/no-results-found.php');
+    return;
+}
+
 messageAlert($showAlert, $message, $success);
 ?>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitle('Activity Log'); ?>
+        <?php contentTitle('Activity Log : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext']))); ?>
     </div>
 
     <div class="card-body">
