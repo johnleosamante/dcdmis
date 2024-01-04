@@ -1,10 +1,5 @@
 <?php
 // modules/activity/edit-history.php
-if (!$isPis && !$isHrmis) {
-    require_once(root() . '/modules/error/403.php');
-    return;
-}
-
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : $userId;
 $employees = employee($employeeId);
 
@@ -50,7 +45,11 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle"><?php echo toDateTime($row['datetime']); ?></td>
                             <td class="text-left align-middle"><?php echo $row['activity']; ?></td>
                             <td class="text-center align-middle">
-                                <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['editor']), userName($row['editor'])); ?>
+                                <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['editor']), userName($row['editor']));
+
+                                if ($isDmis || $isHrmis) : ?>
+                                    <br><small><?php echo '(' . $row['ip'] . ')'; ?></small>
+                                <?php endif; ?>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
