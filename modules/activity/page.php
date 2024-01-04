@@ -41,7 +41,9 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
                             <td class="text-left align-middle"><?php echo $row['activity']; ?></td>
                             <td class="text-center align-middle">
-                                <?php echo $userId === $row['target'] ? 'YOU' : userName($row['target']); ?>
+                                <?php $userLabel = $userId === $row['target'] ? 'YOU' : userName($row['target']);
+                                modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['target']), $userLabel); ?>
+                                <br><small><?php echo '(' . $row['ip'] . ')'; ?></small>
                             </td>
                         </tr>
                     <?php endwhile; ?>
