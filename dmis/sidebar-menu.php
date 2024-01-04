@@ -13,3 +13,7 @@ sidebarMenuItem(customUri('dmis', 'Districts'), 'Districts', 'fa-map-marked-alt'
 sidebarMenuItem(customUri('dmis', 'Schools'), 'Schools', 'fa-school', isset($url) && str_contains($url, 'School'), $schoolCount);
 sidebarMenuItem(customUri('dmis', 'Sections'), 'Sections', 'fa-map-signs', isset($url) && str_contains($url, 'Section'), $sectionCount);
 sidebarMenuItem(customUri('dmis', 'Users'), 'Users', 'fa-user-friends', isset($url) && str_contains($url, 'Users'), $userCount);
+
+sidebarDivider();
+
+sidebarMenuItem(customUri('dmis', 'System Logs'), 'System Logs', 'fa-file', isset($url) && str_contains($url, 'System'));
