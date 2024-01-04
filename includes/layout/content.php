@@ -113,6 +113,9 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Edit History':
             $file = 'activity/edit-history';
             break;
+        case 'System Logs':
+            $file = 'activity/system-log';
+            break;
         case 'Settings':
             $file = 'settings/page';
             break;
