@@ -16,4 +16,4 @@ sidebarMenuItem(customUri('dmis', 'Users'), 'Users', 'fa-user-friends', isset($u
 
 sidebarDivider();
 
-sidebarMenuItem(customUri('dmis', 'System Logs'), 'System Logs', 'fa-file', isset($url) && str_contains($url, 'System'));
+sidebarMenuItem(customUri('dmis', 'System Logs'), 'System Logs', 'fa-file-alt', isset($url) && str_contains($url, 'System'));
