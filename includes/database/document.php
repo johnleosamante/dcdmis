@@ -164,3 +164,8 @@ function updateTransactionFrom($newAlias, $oldAlias)
 {
     nonQuery("UPDATE tbl_transactions SET `Trans_from`='{$newAlias}' WHERE `Trans_from`='{$oldAlias}';");
 }
+
+function documentByStatus($status, $id, $from, $to)
+{
+    return query("SELECT * FROM `tbl_system_logs` WHERE `Status`='{$status}' AND `target_id` <> '' AND Emp_ID='{$id}' AND Time_log BETWEEN '{$from}' AND '{$to}';");
+}
