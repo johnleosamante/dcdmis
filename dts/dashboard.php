@@ -17,5 +17,6 @@ contentTitleWithModal('Dashboard', uri() . '/modules/documents/save-document-dia
 	}
 
 	card('Canceled Documents', customUri('dts', 'Canceled Documents'), 'fa-trash-alt', 'danger');
+	card('Transactions Summary', customUri('dts', 'Transactions Summary'), 'fa-chart-bar', 'primary');
 	?>
 </div>
