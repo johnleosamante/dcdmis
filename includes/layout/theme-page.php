@@ -28,7 +28,7 @@ require_once(root() . '/includes/layout/components.php');
 
     <script src="<?php echo uri(); ?>/assets/vendor/jquery/jquery.min.js"></script>
     <script src="<?php echo uri(); ?>/assets/vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="<?php echo uri(); ?>/assets/js/script.js"></script>
+    <script src="<?php echo uri(); ?>/assets/js/script.js?v=1.1"></script>
 </body>
 
 </html>
