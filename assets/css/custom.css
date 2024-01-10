@@ -64,7 +64,7 @@ input::-ms-reveal {
 .image-container {
     position: relative;
     min-width: 64px;
-    max-width: 128px;
+    max-width: fit-content;
     margin: 0 auto;
 }
 
