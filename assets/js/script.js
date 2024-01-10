@@ -10,7 +10,7 @@ $(document).ready(function () {
 let dtProps = {
 	"responsive": true,
 	"pagingType": "simple",
-	"lengthMenu": [[25, 50, 75, 100, -1], [25, 50, 75, 100, "All"]],
+	"lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
 	"paging": true,
 	"order": [],
 	"autoWidth": false,
