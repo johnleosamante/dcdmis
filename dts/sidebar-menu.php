@@ -21,3 +21,5 @@ if (!$isSchoolPortal) {
 }
 
 sidebarMenuItem(customUri('dts', 'Canceled Documents'), 'Canceled', 'fa-trash-alt', isset($url) && str_contains($url, 'Canceled'));
+sidebarDivider();
+sidebarMenuItem(customUri('dts', 'Transactions Summary'), 'Summary', 'fa-chart-bar', isset($url) && str_contains($url, 'Summary'));
