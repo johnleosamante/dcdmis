@@ -116,6 +116,9 @@ if (!isset($url) || $url === 'dashboard') {
         case 'System Logs':
             $file = 'activity/system-log';
             break;
+        case 'Transactions Summary':
+            $file = 'documents/transactions-summary';
+            break;
         case 'Settings':
             $file = 'settings/page';
             break;
