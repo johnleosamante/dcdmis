@@ -103,11 +103,13 @@ if (isset($_POST['update-personal-information'])) {
 
         $ext = pathinfo($_FILES['image-upload']['name'], PATHINFO_EXTENSION);
 
-        if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto)) {
+        if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto) && basename(root() . '/' . $employeePhoto) !== 'user.png') {
             unlink(root() . '/' . $employeePhoto);
         }
 
-        $employeePhoto = 'uploads/images/' . $employeeId . '/' . $employeeId . '.' . $ext;
+        $uploadDate = date('YmdHis');
+
+        $employeePhoto = "uploads/images/{$employeeId}/{$employeeId}{$uploadDate}.{$ext}";
 
         move_uploaded_file($temp, '../' . $employeePhoto);
     }
