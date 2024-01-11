@@ -11,10 +11,12 @@
                 <img src="<?php echo uri() . '/' . $employee['picture']; ?>" width="100%" class="border rounded" id="employee-photo">
 
                 <?php if ($editMode) : ?>
-                    <div class="mt-3 custom-file">
+                    <div class="mt-3 mb-2 custom-file">
                         <input id="image-upload" type="file" name="image-upload" class="custom-file-input">
                         <label id="image-upload-label" class="custom-file-label" for="image-upload">Choose file</label>
                     </div>
+
+                    <span class="small text-secondary">The recommended picture size is 1:1 ratio and minimum of 400 pixels width and height.</span>
 
                     <script>
                         document.getElementById('image-upload').addEventListener('change', (event) => {
