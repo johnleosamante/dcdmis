@@ -5,22 +5,47 @@
 // tbl_loyalty_award
 function psipop($id)
 {
-    return query("SELECT `No` AS `no`, `Item_Number` AS `item`, `Step` AS `step`, `Job_status` AS `status`, `Original_Appointment` AS `original_appointment`, `Date_promoted` AS `date_promoted`, `Elegibility` AS `eligibility` FROM psipop WHERE `Emp_ID`='{$id}';");
+    return query("SELECT `No` AS `no`, `Item_Number` AS `item`, `Job_status` AS `status`, `Original_Appointment` AS `original_appointment`, `Date_promoted` AS `date_promoted`, `Elegibility` AS `eligibility` FROM psipop WHERE `Emp_ID`='{$id}';");
 }
 
-function createPsipop($itemNo, $step, $status, $originalAppointment, $datePromoted, $eligibility, $id)
+function createPsipop($itemNo, $status, $originalAppointment, $datePromoted, $eligibility, $id)
 {
-    nonQuery("INSERT INTO psipop (`Item_Number`, `Step`, `Job_status`, `Original_Appointment`, `Date_promoted`, `Elegibility`, `Emp_ID`) VALUES ('{$itemNo}', '{$step}', '{$status}', '{$originalAppointment}', '{$datePromoted}', '{$eligibility}', '{$id}');");
+    nonQuery("INSERT INTO psipop (`Item_Number`, `Job_status`, `Original_Appointment`, `Date_promoted`, `Elegibility`, `Emp_ID`) VALUES ('{$itemNo}', '{$status}', '{$originalAppointment}', '{$datePromoted}', '{$eligibility}', '{$id}');");
 }
 
-function updatePsipop($itemNo, $step, $status, $originalAppointment, $datePromoted, $eligibility, $id)
+function updatePsipop($itemNo, $status, $originalAppointment, $datePromoted, $eligibility, $id)
 {
-    nonQuery("UPDATE psipop SET `Item_Number`='{$itemNo}', `Step`='{$step}', `Job_status`='{$status}', `Original_Appointment`='{$originalAppointment}', `Date_promoted`='{$datePromoted}', `Elegibility`='{$eligibility}' WHERE `Emp_ID`='{$id}' LIMIT 1;");
+    nonQuery("UPDATE psipop SET `Item_Number`='{$itemNo}', `Job_status`='{$status}', `Original_Appointment`='{$originalAppointment}', `Date_promoted`='{$datePromoted}', `Elegibility`='{$eligibility}' WHERE `Emp_ID`='{$id}' LIMIT 1;");
 }
 
 function createStepIncrement($dateLastStep, $stepNo, $sg, $id)
 {
     nonQuery("INSERT INTO tbl_step_increment (`Date_last_step`, `Step_No`, `No_of_year`, `Emp_ID`) VALUES ('{$dateLastStep}', '{$stepNo}', '{$sg}', '{$id}');");
+}
+
+function updateStepIncrement($dateLastStep, $stepNo, $sg, $id)
+{
+    return query("UPDATE tbl_step_increment SET `Date_last_step`='{$dateLastStep}', `Step_No`='{$stepNo}', `No_of_year`='{$sg}' WHERE `Emp_ID`='{$id}';");
+}
+
+function lastStepIncrement($id)
+{
+    return query("SELECT `Emp_ID` AS `id`, `Date_last_step` AS `date_last_step` FROM tbl_step_increment WHERE `Emp_ID`='{$id}' AND `Date_last_step`;");
+}
+
+function createLoyaltyAward($dateLastAwarded, $id)
+{
+    nonQuery("INSERT INTO tbl_loyalty_award (`employee_id`, `last_awarded_on`) VALUES ('{$id}', '{$dateLastAwarded}');");
+}
+
+function getEmployeeStepIncrement($id)
+{
+    return query("SELECT `Emp_ID` AS `id`, `Step_No` AS `step`, `Date_last_step` AS `date_last_step` FROM tbl_step_increment WHERE `Emp_ID`='{$id}';");
+}
+
+function getEmployeeLoyaltyAward($id)
+{
+    return query("SELECT `employee_id` AS `id`, `last_awarded_on` FROM tbl_loyalty_award WHERE employee_id='{$id}';");
 }
 
 function loyaltyAward($id)
