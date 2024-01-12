@@ -28,6 +28,8 @@ if (numRows($employees) > 0) {
   $station = $positions['station'];
   $positionId = $positions['position_id'];
   $salaryGrade = fetchAssoc(positions($positionId))['salary_grade'];
+  $employeeStep = getEmployeeStepIncrement($employee['id']);
+  $step = numRows($employeeStep) > 0 ? fetchAssoc($employeeStep)['step'] : '1';
   $position = $positions['position'];
   $depedEmail = $employee['email'];
   $tin = $employee['tin'];
@@ -40,7 +42,6 @@ if (numRows($employees) > 0) {
   if (numRows($psipops) > 0) {
     $psipop = fetchAssoc($psipops);
     $item = $psipop['item'];
-    $step = $psipop['step'];
     $status = $psipop['status'];
     $doa = $psipop['original_appointment'] ?? date('Y-m-d');
     $dlp = $psipop['date_promoted'] ?? date('Y-m-d');
@@ -64,32 +65,22 @@ if (numRows($employees) > 0) {
             <input type="text" id="item" name="item" class="form-control" value="<?php echo $item; ?>" required>
           </div>
 
+          <div class="form-group">
+            <label for="position" class="mb-0">Position</label>
+            <input type="text" id="position" class="form-control" value="<?php echo $position; ?>" readonly>
+          </div>
+
           <div class="row">
-            <div class="col-6">
-              <div class="form-group">
-                <label for="position" class="mb-0">Position</label>
-                <input type="text" id="position" class="form-control" value="<?php echo $position; ?>" readonly>
-              </div>
-            </div>
             <div class="col-6">
               <div class="form-group">
                 <label for="salary-grade" class="mb-0">Salary Grade</label>
                 <input type="text" id="salary-grade" class="form-control" value="<?php echo $salaryGrade; ?>" readonly>
               </div>
             </div>
-          </div>
-
-          <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <label for="step" class="mb-0">Step Increment <?php showAsterisk(); ?></label>
-                <input type="number" id="step" name="step" min="1" max="8" step="1" class="form-control" value="<?php echo $step; ?>" required>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="form-group">
-                <label for="sex" class="mb-0">Sex</label>
-                <input type="text" id="sex" class="form-control" value="<?php echo $sex; ?>" readonly>
+                <label for="step" class="mb-0">Step Increment</label>
+                <input type="text" id="step" class="form-control" value="<?php echo $step; ?>" readonly>
               </div>
             </div>
           </div>
