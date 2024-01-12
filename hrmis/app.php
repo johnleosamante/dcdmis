@@ -871,3 +871,28 @@ if (isset($_POST['delete-201-file'])) {
         $success = false;
     }
 }
+
+if (isset($_POST['approve-step-increment'])) {
+    $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+    $showAlert = true;
+
+    $positions = fetchAssoc(position($employeeId));
+    $positionId = $positions['position_id'];
+    $sg = fetchAssoc(positions($positionId))['salary_grade'];
+
+    $stepIncrement = getEmployeeStepIncrement($employeeId);
+
+    if (numRows($stepIncrement) > 0) {
+        $esi = fetchAssoc($stepIncrement);
+        updateStepIncrement(date('Y-m-d', strtotime("+3 years", strtotime($esi['date_last_step']))), (int)$esi['step'] + 1, $sg, $employeeId);
+    }
+
+    if (affectedRows()) {
+        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>]' . "'s step increment " . 'has been approved successfully.';
+
+        createSystemLog($stationId, $userId, 'Approved employee step increment.', $employeeId, clientIp());
+    } else {
+        $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] assignment has been made.';
+        $success = false;
+    }
+}
