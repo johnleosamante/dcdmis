@@ -61,9 +61,9 @@ if (isset($_POST['add-employee'])) {
     createOtherInformation(0, 0, '', 0, '', 0, '0000-00-00', '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', $employeeId);
     createStation($today, $eStationId, $ePositionId, $employeeId);
     $sg = fetchAssoc(positions($ePositionId))['salary_grade'];
-    createPsipop('', '1', 'Permanent', $today, $today, '', $employeeId);
+    createPsipop('', 'Permanent', $today, $today, '', $employeeId);
     createStepIncrement($today, '1', $sg, $employeeId);
-    createDeployment($today, $eStationId, $ePositionId, '0', '1', '', $employeeId);
+
     createIdentification('', '', '', $today, $employeeId);
     createAccount($employeeId, hashPassword(generateStrongRandomPassword()));
 
@@ -621,8 +621,6 @@ if (isset($_POST['reassign-employee'])) {
         deleteUserRoles($employeeId);
     }
 
-    createDeployment($date, $eStationId, $positionId, $employeeId);
-
     if (numRows(station($employeeId)) === 0) {
         createStation($date, $eStationId, $positionId, $employeeId);
     } else {
@@ -748,14 +746,32 @@ if (isset($_POST['delete-service-record'])) {
 if (isset($_POST['save-psipop'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $item = sanitize($_POST['item']);
-    $step = sanitize($_POST['step']);
     $doa = sanitize($_POST['doa']);
     $dlp = sanitize($_POST['dlp']);
+    $positionId = fetchAssoc(position($employeeId))['position_id'];
+    $salaryGrade = fetchAssoc(positions($positionId))['salary_grade'];
+    $employeeStep = getEmployeeStepIncrement($employeeId);
+    $step = '1';
     $status = sanitize($_POST['status']);
     $eligibility = sanitize($_POST['eligibility']);
     $showAlert = true;
 
-    updatePsipop($item, $step, $status, $doa, $dlp, $eligibility, $employeeId);
+    if (numRows($employeeStep) === 0) {
+        createStepIncrement($dlp, $step, $salaryGrade, $employeeId);
+    } else {
+        $esi = fetchAssoc($employeeStep);
+        $step = $esi['step'];
+
+        if (empty($esi['date_last_step'])) {
+            updateStepIncrement($dlp, $step, $salaryGrade, $employeeId);
+        }
+    }
+
+    if (numRows(getEmployeeLoyaltyAward($employeeId)) === 0) {
+        createLoyaltyAward($doa, $employeeId);
+    }
+
+    updatePsipop($item, $status, $doa, $dlp, $eligibility, $employeeId);
 
     if (affectedRows()) {
         $message = 'Employee PSIPOP information has been updated successfully.';
