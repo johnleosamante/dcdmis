@@ -41,8 +41,12 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
                             <td class="text-left align-middle"><?php echo $row['activity']; ?></td>
                             <td class="text-center align-middle">
-                                <?php $userLabel = $userId === $row['target'] ? 'YOU' : userName($row['target']);
-                                modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['target']), $userLabel); ?>
+                                <?php if (numRows(employee($row['target'])) > 0) {
+                                    $userLabel = $userId === $row['target'] ? 'YOU' : userName($row['target']);
+                                    modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['target']), $userLabel);
+                                } else {
+                                    echo $row['target'];
+                                } ?>
                                 <br><small><?php echo '(' . $row['ip'] . ')'; ?></small>
                             </td>
                         </tr>
