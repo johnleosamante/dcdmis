@@ -23,12 +23,12 @@ messageAlert($showAlert, $message, $success);
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">Photo</th>
-                        <th class="align-middle" width="20%">Name</th>
+                        <th class="align-middle" width="15%">Name</th>
                         <th class="align-middle" width="20%">Position</th>
-                        <th class="align-middle" width="25%">Station</th>
-                        <th class="align-middle" width="10">Date of Original Appointment</th>
+                        <th class="align-middle" width="20%">Station</th>
+                        <th class="align-middle" width="15">Date of Original Appointment</th>
                         <th class="align-middle" width="5%">Years in Service</th>
-                        <th class="align-middle" width="10">Date Last Awarded</th>
+                        <th class="align-middle" width="15">Date Last Awarded</th>
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </thead>
@@ -65,10 +65,13 @@ messageAlert($showAlert, $message, $success);
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php modalDropdownItem(uri() . '/modules/loyalty-award/approve-loyalty-award-dialog.php?id=' . cipher($row['id']), 'Approve', 'fa-thumbs-up', 'Approve Employee Loyalty Award'); ?>
                                         <div class="dropdown-divider"></div>
-                                        <?php
-                                        modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                                        modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
-                                        ?>
+                                        <?php linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
+                                        linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
+                                        linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
+                                        linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
+                                        modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel'); ?>
+                                        <div class="dropdown-divider"></div>
+                                        <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History'); ?>
                                     </div>
                                 </div>
                             </td>
