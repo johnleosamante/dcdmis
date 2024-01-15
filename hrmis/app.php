@@ -607,7 +607,9 @@ if (isset($_POST['delete-reference'])) {
 
 if (isset($_POST['reassign-employee'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-    $positionId = sanitize($_POST['position']);
+    $positions = position($employeeId);
+
+    $positionId = numRows($positions) > 0 ? fetchAssoc($positions)['position_id'] : '';
     $eStationId = sanitize($_POST['assignment']);
     $date = sanitize($_POST['assignment-date']);
 
@@ -625,7 +627,7 @@ if (isset($_POST['reassign-employee'])) {
         createStation($date, $eStationId, $positionId, $employeeId);
     } else {
         updateEmployeeStatus('Active', $employeeId);
-        updateStation($eStationId, $positionId, $employeeId);
+        updateStation($date, $eStationId, $positionId, $employeeId);
     }
 
     if (affectedRows()) {
@@ -634,6 +636,59 @@ if (isset($_POST['reassign-employee'])) {
         createSystemLog($stationId, $userId, 'Reassigned employee', $employeeId, clientIp());
     } else {
         $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] assignment has been made.';
+        $success = false;
+    }
+}
+
+if (isset($_POST['promote-employee'])) {
+    $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+    $positionId = sanitize($_POST['position']);
+    $position = strtoupper(fetchAssoc(positions($positionId))['position']);
+    $stations = station($employeeId);
+    $eStationId = '';
+
+    if (numRows($stations) > 0) {
+        $station = fetchAssoc($stations);
+        $eStationId = $station['station_id'];
+    }
+
+    $datePromoted = sanitize($_POST['effectivity-date']);
+
+    if (empty($employeeId) || empty($positionId) || empty($eStationId) || empty($datePromoted)) {
+        return;
+    }
+
+    $showAlert = true;
+
+    $psipops = psipop($employeeId);
+    $status = $doa = $eligibility = null;
+
+    if (numRows($psipops) > 0) {
+        $psipop = fetchAssoc($psipops);
+        $status = $psipop['status'];
+        $doa = $psipop['original_appointment'];
+        $eligibility = $psipop['eligibility'];
+        updatePsipop('', $status, $doa, $datePromoted, $eligibility, $employeeId);
+    }
+
+    if (numRows(getEmployeeStepIncrement($employeeId)) > 0) {
+        $sg = fetchAssoc(positions($positionId))['salary_grade'];
+        updateStepIncrement($datePromoted, '1', $sg, $employeeId);
+    }
+
+    if (numRows(station($employeeId)) === 0) {
+        createStation($datePromoted, $eStationId, $positionId, $employeeId);
+    } else {
+        updateEmployeeStatus('Active', $employeeId);
+        updateStation($datePromoted, $eStationId, $positionId, $employeeId);
+    }
+
+    if (affectedRows()) {
+        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been promoted successfully to [' . $position . '].';
+
+        createSystemLog($stationId, $userId, 'Promoted employee', $employeeId, clientIp());
+    } else {
+        $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] information has been made.';
         $success = false;
     }
 }
@@ -782,7 +837,7 @@ if (isset($_POST['save-psipop'])) {
     updatePsipop($item, $status, $doa, $dlp, $eligibility, $employeeId);
 
     if (affectedRows()) {
-        $message = 'Employee PSIPOP information has been updated successfully.';
+        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>]' . "'s PSIPOP information has been updated successfully.";
 
         createSystemLog($stationId, $userId, 'Updated PSIPOP', $employeeId, clientIp());
     } else {
