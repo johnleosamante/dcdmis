@@ -28,14 +28,14 @@ function updateStepIncrement($dateLastStep, $stepNo, $sg, $id)
     return query("UPDATE tbl_step_increment SET `Date_last_step`='{$dateLastStep}', `Step_No`='{$stepNo}', `No_of_year`='{$sg}' WHERE `Emp_ID`='{$id}';");
 }
 
-function lastStepIncrement($id)
-{
-    return query("SELECT `Emp_ID` AS `id`, `Date_last_step` AS `date_last_step` FROM tbl_step_increment WHERE `Emp_ID`='{$id}' AND `Date_last_step`;");
-}
-
 function createLoyaltyAward($dateLastAwarded, $id)
 {
     nonQuery("INSERT INTO tbl_loyalty_award (`employee_id`, `last_awarded_on`) VALUES ('{$id}', '{$dateLastAwarded}');");
+}
+
+function updateLoyaltyAward($dateLastAwarded, $id)
+{
+    nonQuery("UPDATE tbl_loyalty_award SET `last_awarded_on`='{$dateLastAwarded}' WHERE `employee_id`='{$id}';");
 }
 
 function getEmployeeStepIncrement($id)
