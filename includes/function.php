@@ -76,6 +76,8 @@ function isOfficialTime()
 
 function restrictPublicAccess($isHoliday)
 {
+    if (!isPublicDomain()) return;
+
     if (isWeekend() || !isOfficialTime() || $isHoliday) {
         redirect(uri() . '/oops');
     }
