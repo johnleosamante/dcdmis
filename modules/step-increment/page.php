@@ -42,9 +42,12 @@ messageAlert($showAlert, $message, $success);
                         $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
                         $photo = uri() . '/' . $row['picture'];
                         $sg = $row['sg'];
-                        $step = is_int($row['step']) ? $row['step'] : 1;
-                        $nextStep = $step + 1;
-                        $lastStepDate = strtotime($row['last_step_date']) ? strtotime($row['last_step_date']) : date('Y-m-d');
+                        $step = !empty($row['step']) ? $row['step'] : 1;
+                        $lastStepDate = $row['last_step_date'];
+                        $now = new DateTime('now');
+                        $dls = new DateTime($lastStepDate);
+                        $count = (int)($now->diff($dls)->y / 3);
+                        $nextStep = (int)$step + $count;
                     ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
@@ -62,7 +65,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']); ?>
                             </td>
-                            <td class="align-middle"><?php echo date('F j, Y', $lastStepDate); ?></td>
+                            <td class="align-middle"><?php echo date('F j, Y', strtotime($lastStepDate)); ?></td>
                             <td class="align-middle"><?php echo "{$sg}-{$step}"; ?></td>
                             <td class="align-middle"><?php echo "{$sg}-{$nextStep}"; ?></td>
                             <td class="align-middle text-capitalize">
@@ -71,18 +74,13 @@ messageAlert($showAlert, $message, $success);
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php modalDropdownItem(uri() . '/modules/step-increment/approve-step-increment-dialog.php?id=' . cipher($row['id']), 'Approve', 'fa-thumbs-up', 'Approve Employee Step Increment'); ?>
                                         <div class="dropdown-divider"></div>
-                                        <?php
-                                        linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
+                                        <?php linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
                                         linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
                                         linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
                                         linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
                                         modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel'); ?>
                                         <div class="dropdown-divider"></div>
-                                        <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History'); ?><div class="dropdown-divider"></div>
-                                        <?php
-                                        modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                                        modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
-                                        ?>
+                                        <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History'); ?>
                                     </div>
                                 </div>
                             </td>
