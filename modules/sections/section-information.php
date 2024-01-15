@@ -140,6 +140,7 @@ $personnel = numRows($query);
                                         <?php if ($isHrmis) {
                                             linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee', true);
                                             modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                                            modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
                                             modalDropdownItem(uri() . '/modules/schools/assign-section-head-dialog.php?e=' . cipher($sectionId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set Section Head'); ?>
                                             <div class="dropdown-divider"></div>
                                         <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
