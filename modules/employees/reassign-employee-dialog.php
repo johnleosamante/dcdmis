@@ -51,23 +51,6 @@ if (numRows($employees) > 0) {
                     <hr>
 
                     <div class="form-group">
-                        <label for="position" class="mb-0">Position <?php showAsterisk(); ?></label>
-                        <select id="position" name="position" class="form-control" required>
-                            <option value="">Select position...</option>
-                            <?php
-                            $categories = positionCategories();
-                            while ($category = fetchAssoc($categories)) : ?>
-                                <optgroup label="<?php echo $category['category']; ?>">
-                                    <?php $jobPositions = positionsByCategory($category['category']);
-                                    while ($jobPosition = fetchArray($jobPositions)) : ?>
-                                        <option value="<?php echo $jobPosition['id']; ?>" <?php echo setOptionSelected($jobPosition['id'], $positionId); ?>><?php echo $jobPosition['position']; ?></option>
-                                    <?php endwhile; ?>
-                                </optgroup>
-                            <?php endwhile; ?>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
                         <label for="assignment" class="mb-0">Place of Assignment <?php showAsterisk(); ?></label>
                         <select id="assignment" name="assignment" class="form-control" required>
                             <option value="">Select place of assignment...</option>
