@@ -37,26 +37,25 @@ if (numRows($employees) > 0) {
 
         <form action="" method="POST">
             <div class="modal-body">
-                <div class="modal-body">
-                    <?php if ($hasEmployee) {
-                        employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status);
-                    ?>
-                        <hr>
+                <?php if ($hasEmployee) {
+                    employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status);
+                ?>
+                    <hr>
 
-                        This operation will approve the step increment of the employee. Are you sure you want to continue?
-                    <?php } else {
-                        missingAlert($modalTitle);
-                    } ?>
-                </div>
+                    This operation will approve the step increment of employee. Are you sure you want to continue?
+                <?php } else {
+                    missingAlert($modalTitle);
+                } ?>
+            </div>
 
-                <div class="modal-footer">
-                    <?php if ($hasEmployee) : ?>
-                        <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
-                        <button class="btn btn-success" name="approve-step-increment" type="submit">Yes, Continue</button>
-                    <?php endif;
+            <div class="modal-footer">
+                <?php if ($hasEmployee) : ?>
+                    <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
+                    <button class="btn btn-success" name="approve-step-increment" type="submit">Yes, Continue</button>
+                <?php endif;
 
-                    cancelModalButton(); ?>
-                </div>
+                cancelModalButton(); ?>
+            </div>
         </form>
     </div>
 </div>
