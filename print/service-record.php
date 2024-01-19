@@ -162,7 +162,7 @@ if (numRows($services) > 0) {
         $pdf->Cell($colOne / 2, $lineHeight - 2, $service['ispresent'] ? 'PRESENT' : toDate($service['to'], 'm/d/y'), 1, 0, 'C');
         $pdf->Cell($colTwo / 3, $lineHeight - 2, $service['position'], 1, 0, 'C');
         $pdf->Cell($colTwo / 3, $lineHeight - 2, strtoupper($service['status']), 1, 0, 'C');
-        $pdf->Cell($colTwo / 3, $lineHeight - 2, toCurrency($service['salary'], ''), 1, 0, 'C');
+        $pdf->Cell($colTwo / 3, $lineHeight - 2, toCurrency($service['salary'] * 12, ''), 1, 0, 'C');
         $pdf->Cell($colThree, $lineHeight - 2, $service['station'], 1, 0, 'C');
         $pdf->Cell($colFour, $lineHeight - 2, toHandleNull($service['leave_dates'], 'N/A'), 1, 0, 'C');
         $pdf->Cell($colFive / 2, $lineHeight - 2, $service['isseparation'] === '1' ? toDate($service['separation_date'], 'm/d/y') : 'N/A', 1, 0, 'C');
