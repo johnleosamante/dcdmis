@@ -25,6 +25,57 @@ function setUserSession($userId)
     }
 }
 
+$page = 'Login';
+
+if (isset($_POST['login'])) {
+    $email = sanitize($_POST['email']);
+    $password = hashPassword(sanitize($_POST['password']));
+    $showAlert = true;
+    $success = false;
+
+    if (empty($email) || empty($password)) {
+        $message = 'All fields are required.';
+        return;
+    }
+
+    if (!isValidEmail($email, 'deped.gov.ph')) {
+        $message = 'Please use your DepEd Email Address.';
+        return;
+    }
+
+    $accounts = account($email);
+
+    if (numRows($accounts) === 0) {
+        $message = 'Invalid login details! Try again.';
+        return;
+    }
+
+    $account = fetchAssoc($accounts);
+    $passwords = accountPassword($account['id'], $password);
+
+    if (numRows($passwords) === 0) {
+        $message = 'Invalid login details! Try again.';
+        return;
+    }
+
+    $userId = $_SESSION[alias() . '_userId'] = $account['id'];
+    $email = $_SESSION[alias() . '_email'] = $account['email'];
+
+    if (isset($_POST['remember']) && $_POST['remember'] === true) {
+        setcookie(alias() . '_login', $account['email'], time() + getSeconds(8), '/', uri(), false, true);
+    }
+
+    setUserSession($userId);
+
+    if (fetchAssoc($passwords)['status'] === 'Default') {
+        $_SESSION[alias() . '_change_password'] = true;
+        redirect(uri() . '/login/change');
+        return;
+    }
+
+    redirect(uri() . '/' . $activeApp);
+}
+
 if (isset($_COOKIE[alias() . '_login'])) {
     $account = account(sanitize($_COOKIE[alias() . '_login']));
 
@@ -38,49 +89,3 @@ if (isset($_COOKIE[alias() . '_login'])) {
 if (isset($userId)) {
     redirect(uri() . '/' . $activeApp);
 }
-
-$page = 'Login';
-
-if (!isset($_POST['login'])) {
-    return;
-}
-
-$email = sanitize($_POST['email']);
-$password = hashPassword(sanitize($_POST['password']));
-$showAlert = true;
-$success = false;
-
-if (empty($email) || empty($password)) {
-    $message = 'All fields are required.';
-    return;
-}
-
-if (!isValidEmail($email, 'deped.gov.ph')) {
-    $message = 'Please use your DepEd Email Address.';
-    return;
-}
-
-$accounts = account($email);
-
-if (numRows($accounts) === 0) {
-    $message = 'Invalid login details! Try again.';
-    return;
-}
-
-$account = fetchAssoc($accounts);
-$passwords = accountPassword($account['id'], $password);
-
-if (numRows($passwords) === 0) {
-    $message = 'Invalid login details! Try again.';
-    return;
-}
-
-$userId = $_SESSION[alias() . '_userId'] = $account['id'];
-$email = $_SESSION[alias() . '_email'] = $account['email'];
-
-if (isset($_POST['remember']) && $_POST['remember'] === true) {
-    setcookie(alias() . '_login', $account['email'], time() + getSeconds(8), '/', uri(), false, true);
-}
-
-setUserSession($userId);
-redirect(uri() . '/' . $activeApp);
