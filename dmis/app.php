@@ -180,15 +180,23 @@ if (isset($_POST['edit-user'])) {
 if (isset($_POST['reset-user'])) {
 	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$temporaryPassword = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+	$emails = employee($employeeId);
+	$userEmail = numRows($emails) > 0 ? fetchAssoc($emails)['email'] : '';
 	$showAlert = true;
 	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 
 	updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
 
 	if (affectedRows()) {
-		$message = 'Employee [' . $employee . '] password has been reset successfully.';
+		$message = 'Employee [' . $employee . '] password has been reset successfully. An email has been sent to [' . $userEmail . '].';
 
 		createSystemLog($stationId, $userId, 'Reset user password', $employeeId, clientIp());
+
+		$emailMessage = 'Good day! You request for password reset has been approved!' . PHP_EOL . PHP_EOL . 'Your temporary password is: ' . $temporaryPassword . PHP_EOL . PHP_EOL . 'Please login to: http://depeddipolog.net/login to confirm.' . PHP_EOL . PHP_EOL . 'If you did not request this change please contact us for assistance. Thank you.';
+
+		if (sendMail($userEmail, 'Employee Password Reset', $emailMessage)) {
+			createSystemLog($stationId, $userId, 'Password reset code sent', $employeeId, clientIp());
+		}
 	} else {
 		$message = 'No changes have been made to employee [' . $employee . ']  password.';
 		$success = false;
