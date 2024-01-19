@@ -44,7 +44,7 @@ if (numRows($employees) > 0) {
                 ?>
                     <hr>
                     <div class="text-center bg-secondary text-light rounded p-2 h2 mt-3 mb-0"><?php echo $randomPassword; ?></div>
-                    <div class="text-center mt-1 small"><em>Copy temporary password above and share to user</em></div>
+                    <div class="text-center mt-1 small"><em>The user will receive an email containing the above code to be used as the temporary password.</em></div>
                 <?php } else {
                     missingAlert($modalTitle);
                 } ?>
