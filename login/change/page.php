@@ -11,10 +11,16 @@
         <div class="card-body text-center">
             <?php displayLogo(120, 120, '3', uri(), title()); ?>
 
-            <div class="text-center">
-                <p class="mb-4">
-                    Set a strong password to keep secure your account or click the generate button below to create a random password that you can use.
-                </p>
+            <div class="text-left">
+                <p class="text-center mb-2">Use a password that has the following: </p>
+
+                <ul>
+                    <li>Atleast ten (10) characters long</li>
+                    <li>Atleast one (1) uppercase letter</li>
+                    <li>Atleast one (1) lowercase letter</li>
+                    <li>Atleast one (1) number</li>
+                    <li>Atleast one (1) special character</li>
+                </ul>
             </div>
 
             <?php messageAlert($showAlert, $message, $success); ?>
@@ -23,18 +29,6 @@
                 <div class="form-group">
                     <label for="email-address" class="font-weight-bold mb-1">Email Address</label>
                     <input id="email-address" type="text" class="form-control border-right-0" value="<?php echo $email; ?>" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label for="old-password" class="font-weight-bold mb-1">Old Password <?php showAsterisk(); ?></label>
-                    <div class="input-group">
-                        <input id="old-password" name="old-password" type="password" class="form-control border-right-0" value="<?php echo $oldPassword; ?>" required>
-                        <div class="input-group-append">
-                            <button type="button" id="old-eye-toggle" class="input-group-text border-left-0 bg-white">
-                                <i id="old-eye" class="small fas fa-eye fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="form-group">
@@ -50,24 +44,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="password-confirm" class="font-weight-bold mb-1">Retype New Password <?php showAsterisk(); ?></label>
+                    <label for="password-confirm" class="font-weight-bold mb-1">Confirm New Password <?php showAsterisk(); ?></label>
                     <div class="input-group">
                         <input id="password-confirm" name="password-confirm" type="password" class="form-control border-right-0" value="<?php echo $passwordConfirm; ?>" required>
                         <div class="input-group-append">
                             <button type="button" id="eye-confirm-toggle" class="input-group-text border-left-0 bg-white">
                                 <i id="eye-confirm" class="small fas fa-eye fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="generate-password" class="font-weight-bold mb-1">Generate Password</label>
-                    <div class="input-group">
-                        <input id="generate-password" name="generate-password" type="text" class="form-control" value="<?php echo $generatePassword; ?>">
-                        <div class="input-group-append">
-                            <button type="button" id="generate-toggle" class="input-group-text">
-                                Generate
                             </button>
                         </div>
                     </div>
