@@ -120,7 +120,7 @@ function toDateRange($from, $to)
     $sameMonth = date('m', $from) === date('m', $to);
 
     if ($sameDay) {
-        return date('F j, Y', strtotime($from));
+        return date('F j, Y', $from);
     } elseif ($sameYear && $sameMonth) {
         return date('F j', $from) . '-' . date('j, Y', $to);
     } elseif ($sameYear && !$sameMonth) {
