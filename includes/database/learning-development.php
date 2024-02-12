@@ -37,9 +37,10 @@ function conductedTrainings()
     return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `hours`, `Category` AS `type`, `conducted_by` AS `level`, `sponsor`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` < CURDATE() ORDER BY `From` DESC, `To` DESC;");
 }
 
-function trainingParticipants($no)
+function trainingParticipants($no, $id = null)
 {
-    return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS `month`, tbl_employee.Emp_Day AS `day`, tbl_employee.Emp_Year AS `year`, tbl_employee.EmpNo AS agency_id, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Status AS status FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID INNER JOIN tbl_seminar_participant ON tbl_employee.Emp_ID = tbl_seminar_participant.Emp_ID WHERE Training_Code='{$no}' ORDER BY tbl_employee.Emp_LName;");
+    $filter = $id === null ? '' : "AND tbl_employee.Emp_ID='{$id}' ";
+    return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS `month`, tbl_employee.Emp_Day AS `day`, tbl_employee.Emp_Year AS `year`, tbl_employee.EmpNo AS agency_id, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Email AS email, tbl_employee.Emp_Status AS status FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID INNER JOIN tbl_seminar_participant ON tbl_employee.Emp_ID = tbl_seminar_participant.Emp_ID WHERE Training_Code='{$no}' {$filter} ORDER BY tbl_employee.Emp_LName;");
 }
 
 function createTrainingParticipant($no, $id)
