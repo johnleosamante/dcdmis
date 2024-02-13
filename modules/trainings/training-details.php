@@ -29,7 +29,10 @@ messageAlert($showAlert, $message, $success);
     <div class="card-body">
         <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
             <div class="d-inline-block">
-                <?php linkButtonSplit(customUri('export', 'training-details', $training['no']), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+                <?php
+                linkButtonSplit(customUri('export', 'training-details', $training['no']), 'Export', 'fa-file-excel', 'Export as Excel file', 'success');
+                modalButtonSplit(uri() . '/modules/trainings/email-training-participants-dialog.php?id=' . cipher($training['no']), 'Bulk Email', 'fa-mail-bulk', 'Send Email to All Participants', 'info');
+                ?>
             </div>
         </div>
 
@@ -133,9 +136,11 @@ messageAlert($showAlert, $message, $success);
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php
                                         if ($training['generate_certificate']) :
-                                            linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($row['id']), 'Preview', 'fa-eye', 'Preview Certificate', true); ?>
-                                            <div class="dropdown-divider"></div>
-                                        <?php endif; ?>
+                                            linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($row['id']), 'Certificate', 'fa-certificate', 'View Certificate of Participation', true); ?>
+                                        <?php endif;
+                                        linkDropdownItem(customUri('print', 'Certificate of Appearance', $training['no']) . '&p=' . encode($row['id']), 'Appearance', 'fa-stamp', 'View Certificate of Appearance', true);
+                                        modalDropDownItem(uri() . '/modules/trainings/email-training-participants-dialog.php?id=' . cipher($training['no']) . '&p=' . encode($row['id']), 'Email', 'fa-envelope', 'Send Email to Participant'); ?>
+                                        <div class="dropdown-divider"></div>
                                         <?php modalDropdownItem(uri() . '/modules/trainings/remove-participant-dialog.php?e=' . cipher($row['id']) . '&id=' . cipher($trainingId), 'Remove', 'fa-trash', 'Remove Participant'); ?>
                                     </div>
                                 </div>
