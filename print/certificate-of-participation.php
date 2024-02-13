@@ -1,5 +1,5 @@
 <?php
-// print/certificate-of-appreciation.php
+// print/certificate-of-participation.php
 $logoSize = 24;
 $margin = 25.4;
 $width = 297;
@@ -28,7 +28,7 @@ $employeeId = isset($_GET['p']) ? sanitize(decode($_GET['p'])) : null;
 $trainings = attendedTraining($code, $employeeId);
 
 if (numRows($trainings) === 0) {
-    redirect(customUri($activeApp, 'Certificate of Participation'));
+    redirect(customUri($activeApp, '404'));
 }
 
 $employee = fetchAssoc(employee($employeeId));
