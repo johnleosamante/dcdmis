@@ -13,6 +13,12 @@ switch ($url) {
         }
         $file = 'document-tracking-slip';
         break;
+    case 'Certificate of Appearance':
+        if (!isset($_GET['id']) || !isset($_GET['p'])) {
+            redirect(customUri($activeApp, '404'));
+        }
+        $file = 'certificate-of-appearance';
+        break;
     case 'Certificate of Participation':
         if (!isset($_GET['id']) || !isset($_GET['p'])) {
             redirect(customUri($activeApp, '404'));
