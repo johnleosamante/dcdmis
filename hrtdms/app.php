@@ -115,3 +115,52 @@ if (isset($_POST['remove-participant'])) {
         $success = false;
     }
 }
+
+if (isset($_POST['email-participants'])) {
+    $trainingId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+    $participantId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+    $showAlert = true;
+    $trainings = training($trainingId);
+
+    if (numRows($trainings) === 0) {
+        $message = 'No training has been found.';
+        return;
+    }
+
+    $title = strtoupper(toHandleEncoding(fetchAssoc($trainings)['title']));
+
+    $trainingParticipants = trainingParticipants($trainingId, $participantId);
+
+    $name = '';
+    $participants = 0;
+
+    while ($participant = fetchAssoc($trainingParticipants)) {
+        $userEmail = $participant['email'];
+        $certificate = customUri('print', 'Certificate of Participation', $trainingId, DOMAIN) . '&p=' . encode($participant['id']);
+        $appearance = customUri('print', 'Certificate of Appearance', $trainingId, DOMAIN) . '&p=' . encode($participant['id']);
+        $name = strtoupper(toHandleEncoding(toName($participant['lname'], $participant['fname'], $participant['mname'], $participant['ext'], true)));
+
+        $emailMessage = 'Good day ' . $name . '!' . PHP_EOL . PHP_EOL .
+            'Congratulations you have successfully completed "' . $title . '".' . PHP_EOL .
+            'Get your certificates by clicking the links below.' . PHP_EOL . PHP_EOL .
+            'Certificate of Appearance: ' . $appearance . PHP_EOL . PHP_EOL .
+            'Certificate of Participation: ' . $certificate . PHP_EOL . PHP_EOL .
+            'If nothing happens when you click the link, copy the links above and paste to your web browser instead. Thank you.' . PHP_EOL . PHP_EOL . PHP_EOL .
+            '***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****';
+
+        if (sendMail($userEmail, $title, $emailMessage)) {
+            $participants++;
+        }
+    }
+
+    if ($participants === 0) {
+        $message = "No email has been sent successfully.";
+        return;
+    } else if ($participants === 1) {
+        $message = 'Email has been sent successfully to selected training participant: [<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($participantId) . '\')" title="View ' . userName($participantId) . ' employee information">' . userName($participantId, true) . '</a>]';
+    } else {
+        $message = "Email has been sent successfully to all {$participants} training participants.";
+    }
+
+    $success = true;
+}
