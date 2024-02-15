@@ -163,18 +163,16 @@ $displayPhoto = uri() . '/' . $user['picture'];
                     linkDropdownItem(uri() . '/dts', 'Tracking', 'fa-exchange-alt', 'Document Tracking System');
                 }
 
-                if (!isPublicDomain()) {
-                    if (isStationUser($userId, 'hrmis')) {
-                        linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
-                    }
+                if (!isPublicDomain() && isStationUser($userId, 'hrmis')) {
+                    linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
+                }
 
-                    if (isStationUser($userId, 'hrtdms')) {
-                        linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
-                    }
+                if (isStationUser($userId, 'hrtdms')) {
+                    linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
+                }
 
-                    if (isStationUser($userId, 'dmis')) {
-                        linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-industry', 'Division Management Information System');
-                    }
+                if (!isPublicDomain() && isStationUser($userId, 'dmis')) {
+                    linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-industry', 'Division Management Information System');
                 }
                 ?>
 
