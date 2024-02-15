@@ -11,7 +11,7 @@ function messageAlert($show, $message, $success = true, $align = 'left')
 {
     if ($show) : ?>
         <div class="alert alert-<?php echo $success ? 'success' : 'danger'; ?> text-<?php echo $align; ?>">
-            <?php echo $message; ?>
+            <i class="fa fas fa-<?php echo $success ? 'info' : 'exclamation'; ?>-circle mr-1"></i> <?php echo $message; ?>
         </div>
     <?php endif;
 }
