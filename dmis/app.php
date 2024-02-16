@@ -192,7 +192,7 @@ if (isset($_POST['reset-user'])) {
 
 		createSystemLog($stationId, $userId, 'Reset user password', $employeeId, clientIp());
 
-		$emailMessage = 'Good day! You request for password reset has been approved!' . PHP_EOL . PHP_EOL .
+		$emailMessage = 'Good day! Your request for password reset has been approved!' . PHP_EOL . PHP_EOL .
 			'Your temporary password is: ' . $temporaryPassword . PHP_EOL . PHP_EOL .
 			'Please login to: http://depeddipolog.net/login to confirm.' . PHP_EOL . PHP_EOL .
 			'If you did not request this change please contact us for assistance. Thank you.' . PHP_EOL . PHP_EOL . PHP_EOL .
