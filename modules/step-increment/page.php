@@ -48,6 +48,7 @@ messageAlert($showAlert, $message, $success);
                         $dls = new DateTime($lastStepDate);
                         $count = (int)($now->diff($dls)->y / 3);
                         $nextStep = (int)$step + $count;
+                        $nextStep =  $nextStep <= 8 ? $nextStep : 8;
                     ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
