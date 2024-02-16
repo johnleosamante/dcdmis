@@ -948,12 +948,16 @@ if (isset($_POST['approve-step-increment'])) {
     if (numRows($stepIncrement) > 0) {
         $esi = fetchAssoc($stepIncrement);
         $lastStep = $esi['date_last_step'];
-        $step = $esi['step'];
+        $step = (int)$esi['step'];
         $now = new DateTime('now');
         $dls = new DateTime($lastStep);
-        $count = (int)($now->diff($dls)->y / 3);
-        $increment = 3 * $count;
-        updateStepIncrement(date('Y-m-d', strtotime("+{$increment} years", strtotime($esi['date_last_step']))), (int)$esi['step'] + $count, $sg, $employeeId);
+        $serviceDuration = $now->diff($dls)->y;
+
+        $count = $serviceDuration < 21 ? (int)($serviceDuration / 3) : 7;
+        $increment = $serviceDuration < 21 ? 3 * $count : 21;
+        $step = $step < 8 ? $step + $count : 8;
+
+        updateStepIncrement(date('Y-m-d', strtotime("+{$increment} years", strtotime($esi['date_last_step']))), $step, $sg, $employeeId);
     }
 
     if (affectedRows()) {
