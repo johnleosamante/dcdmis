@@ -99,14 +99,14 @@ if (numRows($employees) > 0) {
                         </div>
                     </div>
 
-                    <div class="form-group mb-0">
+                    <div class="form-group">
                         <div class="form-check">
                             <input class="form-check-input" id="hrtdms" type="checkbox" name="hrtdms" <?php echo setActiveItem($hrtdmsUser, true, 'checked'); ?>>
                             <label class="form-check-label" for="hrtdms">HR Training &amp; Development Management System</label>
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mb-0">
                         <div class="form-check">
                             <input class="form-check-input" id="dmis" type="checkbox" name="dmis" <?php echo setActiveItem($dmisUser, true, 'checked'); ?>>
                             <label class="form-check-label" for="dmis">Division Management Information System</label>
