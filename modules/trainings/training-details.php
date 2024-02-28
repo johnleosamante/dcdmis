@@ -48,7 +48,9 @@ messageAlert($showAlert, $message, $success);
                 </tr>
                 <tr>
                     <th class="pr-5" scope="row">Date</th>
-                    <td class="text-uppercase"><?php echo empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']; ?></td>
+                    <td class="text-uppercase">
+                        <?php echo empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']); ?>
+                    </td>
                 </tr>
                 <?php if (!empty($training['hours'])) : ?>
                     <tr>
