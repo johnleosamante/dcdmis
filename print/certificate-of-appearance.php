@@ -37,6 +37,7 @@ $employeeName = strtoupper(toHandleEncoding(toName($employee['lname'], $employee
 $title = $url . ' | ' . $code . ' | ' . $employeeName;
 $pronoun = $employee['sex'] === 'Male' ? 'his' : 'her';
 $training = fetchAssoc($trainings);
+$trainingId = $training['no'];
 $trainingTitle = toHandleEncoding($training['title']);
 $trainingDate = empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']);
 $trainingVenue = toHandleEncoding($training['venue']);
@@ -44,6 +45,8 @@ $lastDate = strtotime($training['to']);
 $lastDay = toOrdinal(date('j', $lastDate));
 $givenDate = $lastDay . ' day of ' . date('F, Y', $lastDate);
 $signatory = $training['signatory'];
+$employeeTraining = fetchAssoc(attendedTraining($trainingId, $employeeId));
+$controlNo = !empty($employeeTraining['control_no']) ? 'Control Number: ' . $employeeTraining['control_no'] : '';
 
 if (empty($signatory)) {
     redirect(customUri($activeApp, '404'));
@@ -125,6 +128,8 @@ $pdf->Cell(0, 0, $signatoryName, 0, 0, 'C');
 $pdf->Ln(4);
 $pdf->SetFont('calibri', '', 9);
 $pdf->Cell(0, 0, $position, 0, 0, 'C');
+
+$pdf->Cell(0, 0, $controlNo, 0, 0, 'R');
 
 // Foot
 $pdf->Line($margin, $height - 21, $width - $margin, $height - 21);
