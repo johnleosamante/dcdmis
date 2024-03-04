@@ -1,9 +1,5 @@
 <?php
 // dmis/app.php
-if (isPublicDomain()) {
-	redirect(uri() . '/oops?e=403');
-}
-
 restrictPublicAccess(hasHoliday());
 
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
