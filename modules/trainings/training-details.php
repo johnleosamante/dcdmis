@@ -64,7 +64,16 @@ messageAlert($showAlert, $message, $success);
                 </tr>
                 <tr>
                     <th class="pr-5" scope="row">Level</th>
-                    <td class="text-uppercase"><?php echo trainingSponsor($training['level']); ?></td>
+                    <?php
+                    $functional_division = $training['functional_division'];
+                    $functional_divisions = functionalDivision($functional_division);
+                    $training_functional_division = '';
+                    if (numRows($functional_divisions) > 0) {
+                        $training_functional_division = fetchAssoc($functional_divisions)['name'];
+                    }
+                    $functional_division = (!empty($functional_division) && strtolower($functional_division) !== 'n/a') ? ' (' . $training_functional_division . ')' : '';
+                    ?>
+                    <td class="text-uppercase"><?php echo trainingSponsor($training['level']) . $functional_division; ?></td>
                 </tr>
                 <?php if (!empty($training['sponsor'])) : ?>
                     <tr>
