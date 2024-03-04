@@ -24,10 +24,11 @@ if (isset($_POST['save-training'])) {
     $type = sanitize($_POST['type']);
     $level = sanitize($_POST['level']);
     $sponsor = sanitize($_POST['sponsor']);
+    $division = sanitize($_POST['functional-division']);
     $venue = sanitize($_POST['venue']);
     $logMessage = '';
     $unconsecutiveDates = sanitize($_POST['unconsecutive-dates']);
-    $hasCertificate = isset($_POST['has-certificate']) ? '1' : '0';
+    $hasCertificate = strtolower($level) === '3' ? '1' : '0';
     $signatory = isset($_POST['has-certificate']) ? fetchAssoc(section('SDS'))['head'] : null;
     $showAlert = true;
 
@@ -37,12 +38,12 @@ if (isset($_POST['save-training'])) {
         $year = toDate($from, 'y', date('y'));
         $trainingId = 'HRTD-' . $year . '-' . sprintf("%04d", countTrainings($year) + 1);
 
-        createTraining($trainingId, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $unconsecutiveDates, $signatory, $hasCertificate);
+        createTraining($trainingId, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $unconsecutiveDates, $signatory, $hasCertificate, $division);
     } else {
         $logMessage = 'Updated training';
         $status = 'updated';
 
-        updateTraining($trainingId, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $unconsecutiveDates, $signatory, $hasCertificate);
+        updateTraining($trainingId, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $unconsecutiveDates, $signatory, $hasCertificate, $division);
     }
 
     if (affectedRows()) {
@@ -65,22 +66,32 @@ if (isset($_POST['add-participants'])) {
     }
 
     $trainingId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+
+    $trainings = training($trainingId);
+    $training = fetchAssoc($trainings);
+    $division = $training['functional_division'];
+    $trainingDate = strtotime($training['to']);
+    $month = date('m', $trainingDate);
+    $year = date('Y', $trainingDate);
+
     $participants = $_POST['participants'];
     $no = 0;
+
+    $count = numRows(trainingParticipants($trainingId));
 
     foreach ($participants as $participant) {
         $id = sanitize(decipher($participant));
 
         if (!isTrainingParticipant($trainingId, $id)) {
             ++$no;
-
-            createTrainingParticipant($trainingId, $id);
+            $ctrlNo = $division . '-' . $month . '-' . sprintf("%03d", $count + $no) . '-' . $year;
+            createTrainingParticipant($trainingId, $id, $ctrlNo);
         }
     }
 
     if (affectedRows()) {
         if ($no > 1) {
-            $message = $no . ' training participant' . $noun . ' added successfully to training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
+            $message = $no . ' training participants were added successfully to training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
         } else {
             $participantId = sanitize(decipher($participants[0]));
             $message = 'Employee [<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($participantId) . '\')" title="View ' . userName($participantId) . ' employee information">' . userName($participantId, true) . '</a>] has been added successfully as participant to training code [<a href="' . customUri('hrtdms', 'Training Details', $trainingId) . '" title="View ' . $trainingId . ' training details">' . strtoupper($trainingId) . '</a>].';
