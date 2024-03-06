@@ -3,6 +3,7 @@
 require_once('../../includes/function.php');
 require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/activity.php');
 require_once(root() . '/includes/database/learning-development.php');
 require_once(root() . '/includes/database/position.php');
 require_once(root() . '/includes/database/section.php');
