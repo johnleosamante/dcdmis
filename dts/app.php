@@ -37,6 +37,12 @@ if (isset($_POST['save-document'])) {
 			$headId = numRows($school) > 0 ? fetchAssoc($school)['head'] : '';
 		}
 
+		if (empty($description)) {
+			$message = 'No new document has been created. Please provide a description for the document.';
+			$success = false;
+			return;
+		}
+
 		createDocument($documentId, $description, $station, $purpose, $headId, $details);
 		createDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
 
