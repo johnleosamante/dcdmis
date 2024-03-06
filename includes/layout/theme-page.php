@@ -1,6 +1,12 @@
 <?php
 // includes/layout/theme-page.php
 require_once('app.php');
+
+$appTitle = empty($appTitle) ? http_response_code() : $appTitle;
+
+$url = isset($_GET['v']) ? sanitize(decode($_GET['v'])) : null;
+$page = isset($url) ? $url . ' | ' . $appTitle : $appTitle;
+
 require_once(root() . '/includes/layout/components.php');
 ?>
 
@@ -9,6 +15,10 @@ require_once(root() . '/includes/layout/components.php');
 
 <head>
     <?php require_once(root() . '/includes/layout/header.php'); ?>
+    <?php if ($enableScripts) : ?>
+        <link rel="stylesheet" href="<?php echo uri(); ?>/assets/vendor/datatables/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="<?php echo uri(); ?>/assets/vendor/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <?php endif; ?>
 </head>
 
 <body id="page-top" class="background-cover">
@@ -27,7 +37,17 @@ require_once(root() . '/includes/layout/components.php');
     <?php scrollToTop(); ?>
 
     <script src="<?php echo uri(); ?>/assets/vendor/jquery/jquery.min.js"></script>
+    <script src="<?php echo uri(); ?>/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo uri(); ?>/assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="<?php echo uri(); ?>/assets/js/sb-admin-2.min.js"></script>
+
+    <?php if ($enableScripts) : ?>
+        <script src="<?php echo uri(); ?>/assets/vendor/datatables/jquery.dataTables.min.js"></script>
+        <script src="<?php echo uri(); ?>/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+        <script src="<?php echo uri(); ?>/assets/vendor/datatables-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="<?php echo uri(); ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <?php endif; ?>
+
     <script src="<?php echo uri(); ?>/assets/js/script.js?v=1.1"></script>
 </body>
 
