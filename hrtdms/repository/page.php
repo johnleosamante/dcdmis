@@ -7,24 +7,26 @@
     <h1 class="my-2"><?php echo $appTitle; ?></h1>
 </div>
 
-<div class="card mt-3 mb-5 mx-auto">
-    <?php
-    if (!isset($url) || $url === 'conducted-trainings') {
-        require_once('conducted-trainings.php');
-    } else {
-        $file = '';
+<div class="col-12">
+    <div class="card mt-3 mb-5 mx-auto">
+        <?php
+        if (!isset($url) || $url === 'conducted-trainings') {
+            require_once('conducted-trainings.php');
+        } else {
+            $file = '';
 
-        switch ($url) {
-            case 'Training Details':
-                $file = 'training-details.php';
-                break;
-            case '404':
-            default:
-                $file = 'conducted-trainings.php';
-                break;
+            switch ($url) {
+                case 'Training Details':
+                    $file = 'training-details.php';
+                    break;
+                case '404':
+                default:
+                    $file = 'conducted-trainings.php';
+                    break;
+            }
+
+            require_once("{$file}");
         }
-
-        require_once("{$file}");
-    }
-    ?>
+        ?>
+    </div>
 </div>
