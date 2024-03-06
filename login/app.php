@@ -25,7 +25,7 @@ function setUserSession($userId)
     }
 }
 
-$page = 'Login';
+$appTitle = $page = 'Login';
 
 if (isset($_POST['login'])) {
     $email = sanitize($_POST['email']);
