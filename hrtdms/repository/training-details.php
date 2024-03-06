@@ -16,7 +16,7 @@ if (numRows($trainings) > 0) {
 ?>
 
 <div class="card-header py-3">
-    <?php contentTitleWithLink('Training Details', uri() . '/dtcf'); ?>
+    <?php contentTitleWithLink('Training Details', uri() . '/hrtdms/repository'); ?>
 </div>
 
 <div class="card-body">
