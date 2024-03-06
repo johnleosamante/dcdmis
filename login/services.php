@@ -17,7 +17,7 @@
                         </div>
 
                         <div class="card-body">
-                            Track paper trail of documents created by schools, sections and offices within the schools division.
+                            <a href="<?php echo uri() . '/dts/track'; ?>" title="Division Training Certificate Finder">Track</a> paper trail of documents created by schools, sections and offices within the schools division.
                         </div>
                     </div>
 
@@ -43,6 +43,16 @@
                 </div>
 
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                    <div class="card mb-4">
+                        <div class="card-header text-uppercase text-center font-weight-bold">
+                            Training Certificate Finder
+                        </div>
+
+                        <div class="card-body">
+                            Access the <a href="<?php echo uri() . '/dtcf'; ?>" title="Division Training Certificate Finder">repository</a> of participant certificates for training programs conducted by the Schools Division.
+                        </div>
+                    </div>
+
                     <?php require_once(root() . '/modules/calendar/page.php'); ?>
                 </div>
             </div>
