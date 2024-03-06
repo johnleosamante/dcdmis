@@ -163,7 +163,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
                     linkDropdownItem(uri() . '/dts', 'Tracking', 'fa-exchange-alt', 'Document Tracking System');
                 }
 
-                if (!isStationUser($userId, 'hrmis')) {
+                if (isStationUser($userId, 'hrmis')) {
                     linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
                 }
 
