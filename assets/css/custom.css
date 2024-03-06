@@ -81,7 +81,7 @@ input::-ms-reveal {
 }
 
 #calendar.card-body {
-    max-height: 400px !important;
+    max-height: 300px !important;
     overflow-y: scroll;
 }
 
