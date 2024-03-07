@@ -28,7 +28,7 @@ if (isset($_POST['save-training'])) {
     $venue = sanitize($_POST['venue']);
     $logMessage = '';
     $unconsecutiveDates = sanitize($_POST['unconsecutive-dates']);
-    $hasCertificate = strtolower($level) === '3' ? '1' : '0';
+    $hasCertificate = isset($_POST['has-certificate']) === '3' ? '1' : '0';
     $signatory = isset($_POST['has-certificate']) ? fetchAssoc(section('SDS'))['head'] : null;
     $showAlert = true;
 
