@@ -43,9 +43,5 @@ require_once('services.php');
                 <button type="submit" class="btn btn-primary btn-block" name="login">Login</button>
             </form>
         </div>
-
-        <div class="card-footer text-center">
-            <a class="small" href="<?php echo uri() . '/login/reset'; ?>" title="Reset your forgotten password">Forgot your password?</a>
-        </div>
     </div>
 </div>
