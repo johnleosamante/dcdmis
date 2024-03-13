@@ -91,7 +91,7 @@ function isOngoingDocument($id, $station)
 
 function completedDocuments($station, $from, $to)
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions.Date_time AS `postedon`, tbl_transactions_log.Date_recieved AS completedon, tbl_transactions.Trans_from AS station FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats LIKE '%Complete%' AND tbl_transactions_log.Trans_status LIKE '%Complete%' AND Date_recieved BETWEEN '{$from}' AND '{$to}' ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions.Date_time AS `postedon`, tbl_transactions_log.Date_recieved AS completedon, tbl_transactions.Trans_from AS station FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats LIKE '%Complete%' AND tbl_transactions_log.Trans_status LIKE '%Complete%' AND Date_recieved BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY)) ORDER BY tbl_transactions_log.Date_recieved DESC;");
 }
 
 function isCompletedDocument($id, $station)
@@ -101,7 +101,7 @@ function isCompletedDocument($id, $station)
 
 function receivedDocuments($station, $from, $to)
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Date_recieved AS `datetime`, tbl_transactions_log.Recieved_by AS `receiver`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from <> '{$station}' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to='-' AND (tbl_transactions_log.Trans_status LIKE '%Received%' OR tbl_transactions_log.Trans_status LIKE '%On Process%') AND tbl_transactions_log.Status='Done' AND Date_recieved BETWEEN '{$from}' AND '{$to}' ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Date_recieved AS `datetime`, tbl_transactions_log.Recieved_by AS `receiver`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from <> '{$station}' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to='-' AND (tbl_transactions_log.Trans_status LIKE '%Received%' OR tbl_transactions_log.Trans_status LIKE '%On Process%') AND tbl_transactions_log.Status='Done' AND Date_recieved BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY)) ORDER BY tbl_transactions_log.Date_recieved DESC;");
 }
 
 function isReceivedDocument($id, $station)
@@ -111,7 +111,7 @@ function isReceivedDocument($id, $station)
 
 function canceledDocuments($station, $from, $to)
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions.Date_time AS `postedon`, tbl_transactions_log.Date_recieved AS `canceledon`, tbl_transactions.Trans_from AS station FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats LIKE '%Cancel%' AND tbl_transactions_log.Trans_status LIKE '%Cancel%' AND Date_recieved BETWEEN '{$from}' AND '{$to}' ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions.Date_time AS `postedon`, tbl_transactions_log.Date_recieved AS `canceledon`, tbl_transactions.Trans_from AS station FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats LIKE '%Cancel%' AND tbl_transactions_log.Trans_status LIKE '%Cancel%' AND Date_recieved BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY)) ORDER BY tbl_transactions_log.Date_recieved DESC;");
 }
 
 function isCanceledDocument($id, $station)
@@ -167,5 +167,5 @@ function updateTransactionFrom($newAlias, $oldAlias)
 
 function documentByStatus($status, $id, $from, $to)
 {
-    return query("SELECT * FROM `tbl_system_logs` WHERE `Status`='{$status}' AND `target_id` <> '' AND Emp_ID='{$id}' AND Time_log BETWEEN '{$from}' AND '{$to}';");
+    return query("SELECT * FROM `tbl_system_logs` WHERE `Status`='{$status}' AND `target_id` <> '' AND Emp_ID='{$id}' AND Time_log BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY));");
 }
