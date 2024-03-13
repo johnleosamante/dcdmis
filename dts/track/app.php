@@ -1,0 +1,15 @@
+<?php
+// dts/track/app.php
+restrictPublicAccess(hasHoliday());
+
+$page = $appTitle = 'Document Tracking System';
+$searchText = '';
+$enableScripts = true;
+
+if (isset($userId)) {
+    redirect(uri() . '/' . $activeApp);
+}
+
+if (isset($_POST['primary-search-button'])) {
+    redirect(customUri('dts/track', 'Document Information', sanitize($_POST['primary-search-text'])));
+}
