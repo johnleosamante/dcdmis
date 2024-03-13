@@ -117,7 +117,7 @@ if (numRows($documents) > 0) {
                                 <?php echo $hasDestination ? '<div>Forwarded to ' . strtoupper($to) . '</div>' : ''; ?>
                                 <div><?php echo $status; ?></div>
                                 <?php echo !empty($details) ? '<div>' . $details . '</div>' : ''; ?>
-                                <div class="text-uppercase"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), userName($log['user'])); ?></div>
+                                <div class="text-uppercase"><?php echo userName($log['user']); ?></div>
                                 <div class="text-uppercase small"><?php echo fetchAssoc(position($log['user']))['position']; ?></div>
                             </div>
                         </div>
