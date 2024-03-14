@@ -32,9 +32,9 @@ function scheduledTrainings()
     return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `hours`, `Category` AS `type`, `conducted_by` AS `level`, `sponsor`, `functional_division`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` >= CURDATE() ORDER BY `From` DESC, `To` DESC;");
 }
 
-function conductedTrainings()
+function conductedTrainings($from, $to)
 {
-    return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `hours`, `Category` AS `type`, `conducted_by` AS `level`, `sponsor`, `functional_division`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` < CURDATE() ORDER BY `From` DESC, `To` DESC;");
+    return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `hours`, `Category` AS `type`, `conducted_by` AS `level`, `sponsor`, `functional_division`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` < CURDATE() AND (`covered_from` BETWEEN '{$from}' AND '{$to}' OR `covered_to` BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY))) ORDER BY `From` DESC, `To` DESC;");
 }
 
 function trainingParticipants($no, $id = null)
