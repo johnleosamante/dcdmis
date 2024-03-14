@@ -15,7 +15,7 @@ function districtSchools($id)
 
 function schoolsExcept($id)
 {
-    return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias FROM tbl_school WHERE SchoolName <> '{$id}' ORDER BY SchoolName;");
+    return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias, `Address` AS `address`, Incharg_ID AS `head`, District_code AS district, School_Category AS category, SchoolLogo AS logo FROM tbl_school WHERE SchoolID <> '{$id}' ORDER BY SchoolName;");
 }
 
 function schoolByAlias($alias)
