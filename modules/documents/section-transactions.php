@@ -1,0 +1,38 @@
+<?php
+// modules/documents/school-transactions.php
+?>
+
+<div class="tab-pane fade" id="section-transactions">
+    <div class="row my-3">
+        <div class="col table-responsive">
+            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table-next" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="align-middle" width="40%">Section Name / Functional Division</th>
+                        <th class="align-middle" width="15%">Incoming</th>
+                        <th class="align-middle" width="15%">Pending</th>
+                        <th class="align-middle" width="15%">Outgoing</th>
+                        <th class="align-middle" width="15%">Ongoing</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php
+                    $sections = sections();
+                    while ($section = fetchAssoc($sections)) : ?>
+                        <tr class="text-uppercase">
+                            <td class="align-middle text-left">
+                                <div><?php linkItem(customUri($activeApp, 'Section Information', $section['id']), $section['name']); ?></div>
+                                <div class="small"><?php echo $section['division']; ?></div>
+                            </td>
+                            <td class="align-middle"><?php echo number_format(numRows(incomingDocuments($section['id']))); ?></td>
+                            <td class="align-middle"><?php echo number_format(numRows(pendingDocuments($section['id']))); ?></td>
+                            <td class="align-middle"><?php echo number_format(numRows(outgoingDocuments($section['id']))); ?></td>
+                            <td class="align-middle"><?php echo number_format(numRows(ongoingDocuments($section['id']))); ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
