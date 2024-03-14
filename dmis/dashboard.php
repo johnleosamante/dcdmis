@@ -11,5 +11,6 @@ contentTitle('Dashboard');
 	card('Schools', customUri('dmis', 'Schools'), 'fa-school', 'info', $schoolCount);
 	card('Sections', customUri('dmis', 'Sections'), 'fa-map-signs', 'warning', $sectionCount);
 	card('Users', customUri('dmis', 'Users'), 'fa-user-friends', 'danger', $userCount);
+	card('System Logs', customUri('dmis', 'System Logs'), 'fa-file-alt', 'secondary');
 	?>
 </div>
