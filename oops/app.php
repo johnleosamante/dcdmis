@@ -5,7 +5,7 @@ $code = !isset($_GET['e']) ? http_response_code() : $_GET['e'];
 switch ($code) {
     case '403':
         $file = '403';
-        $error = 'Forbidden Access';
+        $error = 'Access Denied';
         break;
     case '404':
         $file = '404';
@@ -13,8 +13,8 @@ switch ($code) {
         break;
     default:
         $file = 'error';
-        $error = 'Oops!';
+        $error = 'Unexpected Error';
         break;
 }
 
-$page = $error;
+$page = $appTitle = $error;
