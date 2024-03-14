@@ -2,13 +2,13 @@
 // hrtdms/repository/page.php
 ?>
 
-<div class="mt-5 text-center">
-    <?php displayLogo(120, 120, '0', uri(), title()); ?>
-    <h1 class="my-2"><?php echo $appTitle; ?></h1>
-</div>
-
 <div class="col-12">
-    <div class="card mt-3 mb-5 mx-auto">
+    <div class="mt-5 mb-4 text-center">
+        <?php displayLogo(120, 120, '0', uri(), title()); ?>
+        <h1 class="my-2"><?php echo $appTitle; ?></h1>
+    </div>
+
+    <div class="card mt-3 mb-4 mx-auto">
         <?php
         if (!isset($url) || $url === 'conducted-trainings') {
             require_once('conducted-trainings.php');
@@ -29,4 +29,6 @@
         }
         ?>
     </div>
+
+    <a class="d-block text-center mx-2 mb-5" href="<?php echo uri() . '/login'; ?>" title="Go to login page">Already have an account? Login instead</a>
 </div>
