@@ -94,3 +94,13 @@ function attendedTraining($no, $id)
 {
     return query("SELECT `tbl_seminar`.`Training_Code` AS `no`, `tbl_seminar`.`Title_of_training` AS `title`, `tbl_seminar`.`covered_from` AS `from`, `tbl_seminar`.`covered_to` AS `to`, `tbl_training_sponsor`.`sponsor` AS `level`, `tbl_seminar`.`sponsor`, `tbl_seminar`.`TVenue` AS `venue`, `tbl_training_type`.`type`, `tbl_seminar`.`hours`, `tbl_seminar`.`unconsecutive_date`, `tbl_seminar`.`signatory`, `tbl_seminar`.`generate_certificate`, `tbl_seminar_participant`.`Emp_ID`, tbl_seminar_participant.control_no FROM `tbl_seminar` INNER JOIN `tbl_seminar_participant` ON `tbl_seminar`.`Training_Code`=`tbl_seminar_participant`.`Training_Code` INNER JOIN `tbl_training_type` ON `tbl_seminar`.`Category`=`tbl_training_type`.`id` INNER JOIN `tbl_training_sponsor` ON `tbl_seminar`.`conducted_by`=`tbl_training_sponsor`.`id` WHERE `tbl_seminar`.`Training_Code`='{$no}' AND `tbl_seminar_participant`.`Emp_ID`='{$id}' LIMIT 1;");
 }
+
+function conductedTrainingsByYear()
+{
+    return query("SELECT YEAR(`covered_to`) AS `name`, COUNT(*) as `count` FROM `tbl_seminar` GROUP BY YEAR(`covered_to`);");
+}
+
+function trainedEmployeesByYear()
+{
+    return query("SELECT YEAR(`covered_to`) AS `name`, COUNT(DISTINCT Emp_ID) AS `count` FROM `tbl_seminar` INNER JOIN `tbl_seminar_participant` ON `tbl_seminar`.`Training_Code`=`tbl_seminar_participant`.`Training_Code` GROUP BY YEAR(`covered_to`);");
+}
