@@ -39,6 +39,9 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Approve Document':
             $file = 'documents/approve-document';
             break;
+        case 'Transactions':
+            $file = 'documents/transactions';
+            break;
         case 'Active Employees':
         case 'Employees':
             $file = 'employees/active-employees';
