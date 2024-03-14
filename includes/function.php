@@ -43,41 +43,19 @@ function uri($domain = null)
     return $protocol . $root;
 }
 
-function isPublicDomain()
-{
-    return ($_SERVER['HTTP_HOST'] === DOMAIN || $_SERVER['HTTP_HOST'] === PUBLIC_IP);
-}
-
 function isWeekend()
 {
     $day = date('w');
-
-    switch ($day) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-            return false;
-            break;
-        default:
-            return true;
-            break;
-    }
+    return ($day === 6 || $day === 7);
 }
 
-function isOfficialTime()
+function isOfficialTime($startTime = '06:30:00', $endTime = '18:30:00')
 {
-    $startTime = '06:30:00';
-    $endTime = '18:30:00';
-
     return (time() >= strtotime($startTime) && time() <= strtotime($endTime));
 }
 
 function restrictPublicAccess($isHoliday)
 {
-    if (!isPublicDomain()) return;
-
     if (isWeekend() || !isOfficialTime() || $isHoliday) {
         redirect(uri() . '/oops');
     }
