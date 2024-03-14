@@ -5,7 +5,7 @@ require_once('app.php');
 $url = isset($_GET['v']) ? sanitize(decode($_GET['v'])) : null;
 
 if (http_response_code() === 200) {
-    $page = isset($url) ? $url . ' | ' . $appTitle : $appTitle;
+    $page = isset($url) && !empty($url) ? $url . ' | ' . $appTitle : $appTitle;
 } else {
     switch (http_response_code()) {
         case 403:
