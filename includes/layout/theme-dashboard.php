@@ -3,7 +3,7 @@
 require_once('app.php');
 
 $url = isset($_GET['v']) ? sanitize(decode($_GET['v'])) : null;
-$page = isset($url) ? $url . ' | ' . $appTitle : $appTitle;
+$page = isset($url) && !empty($url) ? $url . ' | ' . $appTitle : $appTitle;
 $isPis = $activeApp === 'pis';
 $isDts = $activeApp === 'dts';
 $isHrmis = $activeApp === 'hrmis';
