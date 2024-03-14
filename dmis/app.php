@@ -219,3 +219,12 @@ if (isset($_POST['remove-user'])) {
 		$success = false;
 	}
 }
+
+$fromDate = isset($_GET['from']) ? sanitize($_GET['from']) : date('Y') . '-01-01';
+$toDate = isset($_GET['to']) ? sanitize($_GET['to']) : date('Y-m-d');
+
+if (isset($_POST['transactions-summary-filter'])) {
+	$fromDate = date('Y-m-d', strtotime($_POST['date-from']));
+	$toDate = date('Y-m-d', strtotime($_POST['date-to']));
+	redirect(customUri('dmis', sanitize(decipher($_GET['v']))) . '&from=' . $fromDate . '&to=' . $toDate);
+}

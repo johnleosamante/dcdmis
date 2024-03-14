@@ -7,9 +7,9 @@ function userLog($id)
     return query("SELECT `Time_Log` AS `datetime`, `Status` AS `activity`, `target_id` AS `target`, `IPAddress` AS `ip` FROM tbl_system_logs WHERE Emp_ID='{$id}' ORDER BY `Time_Log` DESC;");
 }
 
-function systemLogs()
+function systemLogs($from, $to)
 {
-    return query("SELECT `Time_log` AS `datetime`, `Status` AS `activity`, `Emp_ID` AS `target`, `IPAddress` AS `ip` FROM tbl_system_logs WHERE `Status` NOT LIKE '%document%' ORDER BY `Time_Log` DESC;");
+    return query("SELECT `Time_log` AS `datetime`, `Status` AS `activity`, `Emp_ID` AS `target`, `IPAddress` AS `ip` FROM tbl_system_logs WHERE `Status` NOT LIKE '%document%' AND `Time_Log` BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY)) ORDER BY `Time_Log` DESC;");
 }
 
 function createSystemLog($stationId, $id, $status, $targetId, $ip)
