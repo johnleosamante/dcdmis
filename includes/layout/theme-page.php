@@ -2,10 +2,23 @@
 // includes/layout/theme-page.php
 require_once('app.php');
 
-$appTitle = empty($appTitle) ? http_response_code() : $appTitle;
-
 $url = isset($_GET['v']) ? sanitize(decode($_GET['v'])) : null;
-$page = isset($url) ? $url . ' | ' . $appTitle : $appTitle;
+
+if (http_response_code() === 200) {
+    $page = isset($url) ? $url . ' | ' . $appTitle : $appTitle;
+} else {
+    switch (http_response_code()) {
+        case 403:
+            $page = 'Access Denied';
+            break;
+        case 404:
+            $page = 'Page Not Found';
+            break;
+        default:
+            $page = 'Unexpected Error';
+            break;
+    }
+}
 
 require_once(root() . '/includes/layout/components.php');
 ?>
