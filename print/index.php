@@ -3,6 +3,11 @@
 require_once('../includes/function.php');
 require_once(root() . '/includes/string.php');
 
+$departmentSeal = root() . '/uploads/division/deped-seal.png';
+$footerLogos = root() . '/uploads/division/footer-logos.png';
+$country = 'Republic of the Philippines';
+$department = 'Department of Education';
+
 $page = $url = sanitize(decode($_GET['v']));
 $file = $title = '';
 

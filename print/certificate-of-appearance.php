@@ -5,14 +5,7 @@ $margin = 8;
 $width = 210;
 $height = 148.5;
 
-$departmentSeal = root() . '/uploads/division/deped-seal.png';
-$footerLogos = root() . '/uploads/division/footer-logos.png';
-$country = 'Republic of the Philippines';
-$department = 'Department of Education';
-$region = 'REGION IX - ZAMBOANGA PENINSULA';
-$division = 'SCHOOLS DIVISION OF DIPOLOG CITY';
-
-$school = fetchArray(schoolDetailsById('143'));
+$school = fetchArray(schoolDetailsById(divisionId()));
 $address = $school['address'];
 $telephone = $school['telephone'];
 $email = $school['email'];
@@ -77,9 +70,9 @@ $pdf->SetFont('OLDENGL', '', 12);
 $pdf->Cell(0, 0, $department, 0, 0, 'C');
 $pdf->Ln(4);
 $pdf->SetFont('TrajanPro-Regular', '', 7);
-$pdf->Cell(0, 0, $region, 0, 0, 'C');
+$pdf->Cell(0, 0, region(), 0, 0, 'C');
 $pdf->Ln(3);
-$pdf->Cell(0, 0, $division, 0, 0, 'C');
+$pdf->Cell(0, 0, division(), 0, 0, 'C');
 $pdf->Line($margin, 33, $width - $margin, 33);
 
 // Body

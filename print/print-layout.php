@@ -4,6 +4,7 @@ class PDF extends FPDF
 {
     function Header()
     {
+        global $departmentSeal;
         global $logoSize;
         global $width;
         global $margin;
@@ -11,7 +12,7 @@ class PDF extends FPDF
         global $section;
         global $address;
         global $lineY;
-        $this->Image(root() . '/uploads/division/deped-seal.png', ($width / 2) - ($logoSize / 2), 6, $logoSize);
+        $this->Image($departmentSeal, ($width / 2) - ($logoSize / 2), 6, $logoSize);
         $this->AddFont('OLDENGL', '', 'OLDENGL.php');
         $this->AddFont('TrajanPro-Regular', '', 'TrajanPro-Regular.php');
         $this->SetFont('OLDENGL', '', 12);
@@ -21,9 +22,9 @@ class PDF extends FPDF
         $this->Cell(0, 0, 'Department of Education', 0, 0, 'C');
         $this->Ln(6);
         $this->SetFont('TrajanPro-Regular', '', 10);
-        $this->Cell(0, 0, 'REGION IX - ZAMBOANGA PENINSULA', 0, 0, 'C');
+        $this->Cell(0, 0, region(), 0, 0, 'C');
         $this->Ln(5);
-        $this->Cell(0, 0, 'SCHOOLS DIVISION OF DIPOLOG CITY', 0, 0, 'C');
+        $this->Cell(0, 0, division(), 0, 0, 'C');
 
         if (!empty($section)) {
             $this->Ln(5);
@@ -42,6 +43,7 @@ class PDF extends FPDF
 
     function Footer()
     {
+        global $footerLogos;
         global $stationLogo;
         global $address;
         global $telephone;
@@ -73,7 +75,7 @@ class PDF extends FPDF
                 $footerSpace = $margin + 86.5;
             }
         } else {
-            $this->Image(root() . '/uploads/division/footer-logos.png', $margin, $height - 32, 0, $logoSize);
+            $this->Image($footerLogos, $margin, $height - 32, 0, $logoSize);
             $footerSpace = $margin + 100;
         }
 
