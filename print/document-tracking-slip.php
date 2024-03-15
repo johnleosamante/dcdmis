@@ -8,7 +8,7 @@ $lineY = 55;
 $multiplePage = true;
 $showQR = true;
 $showStationInfo = false;
-$isSchoolPortal = $stationId !== '143';
+$isSchoolPortal = $stationId !== divisionId();
 $section = strtoupper(stationName($station));
 $school = fetchArray(schoolDetailsById($stationId));
 $stationLogo = !empty($school['logo']) ? root() . '/' . $school['logo'] : null;

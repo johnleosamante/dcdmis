@@ -34,7 +34,7 @@ if (numRows($employees) > 0) {
     $modalTitle = 'Edit User';
     $hasUser = true;
     $dts = dtsUser($employeeId);
-    $dtsDivisionUser = $userStationId === '143';
+    $dtsDivisionUser = $userStationId === divisionId();
 
     if (numRows($dts) > 0) {
         $dtsUser = true;

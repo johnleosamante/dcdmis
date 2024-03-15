@@ -52,7 +52,7 @@ if (numRows($sections) > 0) {
                     <label for="head" class="mb-0">Section Head <?php showAsterisk(); ?></label>
                     <select id="head" name="head" class="form-control" required>
                         <option value="">Select section head...</option>
-                        <?php $employees = activeEmployees('143');
+                        <?php $employees = activeEmployees(divisionId());
                         while ($employee = fetchAssoc($employees)) : ?>
                             <option value="<?php echo $employee['id']; ?>" title="<?php echo fetchAssoc(position($employee['id']))['position']; ?>" <?php echo setOptionSelected($employee['id'], $sectionHead); ?>>
                                 <?php echo userName($employee['id']); ?>
