@@ -88,9 +88,19 @@ function author()
     return SITE_AUTHOR;
 }
 
+function division()
+{
+    return DIVISION;
+}
+
 function divisionId()
 {
     return DIVISION_ID;
+}
+
+function region()
+{
+    return REGION;
 }
 
 function clientIp()
