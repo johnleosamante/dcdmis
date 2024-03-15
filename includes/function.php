@@ -88,6 +88,11 @@ function author()
     return SITE_AUTHOR;
 }
 
+function divisionId()
+{
+    return DIVISION_ID;
+}
+
 function clientIp()
 {
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {

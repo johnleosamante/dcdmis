@@ -11,3 +11,4 @@ define('SITE_ALIAS', 'sdodipolog');
 define('SITE_DESCRIPTION', 'Department of Education Schools Division of Dipolog City Data Management Information System');
 define('SITE_AUTHOR', 'DepEd Dipolog City ICT Unit');
 define('SITE_AUTHOR_EMAIL', 'depeddipolog.ict@deped.gov.ph');
+define('DIVISION_ID', '143');

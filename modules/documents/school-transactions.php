@@ -19,7 +19,7 @@
 
                 <tbody>
                     <?php
-                    $schools = schoolsExcept('143');
+                    $schools = schoolsExcept(divisionID());
                     while ($school = fetchAssoc($schools)) :
                         $logo = !empty($school['logo']) ? uri() . '/' . $school['logo'] : uri() . '/uploads/division/division.png';
                         $schoolName = $school['name'];
