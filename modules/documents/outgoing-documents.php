@@ -67,6 +67,17 @@ messageAlert($showAlert, $message, $success);
                         </tr>
                     <?php } ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="15%">Code</th>
+                        <th class="align-middle" width="25%">Description</th>
+                        <th class="align-middle" width="20%">Forwarded by</th>
+                        <th class="align-middle" width="20%">Forwarded to</th>
+                        <th class="align-middle" width="15%">Forwarded on</th>
+                        <th class="align-middle" width="5%">Action</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

@@ -83,6 +83,14 @@ if (!is_dir($uploadDirectory)) {
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="25%">Uploaded on</th>
+                        <th class="align-middle" width="75%">Description</th>
+                        <th class="align-middle" width="5%">Action</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

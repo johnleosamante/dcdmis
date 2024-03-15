@@ -60,6 +60,13 @@
                     </tr>
                 <?php endwhile; ?>
             </tbody>
+
+            <tfoot>
+                <tr>
+                    <th class="align-middle" width="65%">Title of Division Training</th>
+                    <th class="align-middle" width="35%">Conducted on</th>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

@@ -42,6 +42,19 @@
                         </tr>
                     <?php } ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="5%">From</th>
+                        <th class="align-middle" width="5%">To</th>
+                        <th class="align-middle" width="20%">Position Title</th>
+                        <th class="align-middle" width="30%">Department / Agency / Office / Company</th>
+                        <th class="align-middle" width="10%">Monthly Salary</th>
+                        <th class="align-middle" width="10%">Salary / Job / Pay Grade &amp; Step Increment</th>
+                        <th class="align-middle" width="10%">Status of Appointment</th>
+                        <th class="align-middle" width="10%">Government Service</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

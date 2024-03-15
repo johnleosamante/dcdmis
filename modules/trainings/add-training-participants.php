@@ -130,6 +130,17 @@ messageAlert($showAlert, $message, $success);
                         <?php }
                         } ?>
                     </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <th width="3%"></th>
+                            <th class="align-middle" width="5%">Photo</th>
+                            <th class="align-middle" width="37%">Name</th>
+                            <th class="align-mdille" width="10%">Status</th>
+                            <th class="align-middle" width="20%">Position</th>
+                            <th class="align-middle" width="25%">Station</th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
 

@@ -21,6 +21,7 @@
 						<?php endif; ?>
 					</tr>
 				</thead>
+
 				<tbody>
 					<?php
 					$children = children($employeeId);
@@ -51,6 +52,16 @@
 						</tr>
 					<?php } ?>
 				</tbody>
+
+				<tfoot>
+					<tr>
+						<th class="align-middle" width="70%">Name of Child</th>
+						<th class="align-middle" width="30%">Date of Birth</th>
+						<?php if ($editMode) : ?>
+							<th class="align-middle" width="5%">Action</th>
+						<?php endif; ?>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 	</div>

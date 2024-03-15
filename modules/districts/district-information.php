@@ -137,6 +137,20 @@ if (numRows($districts) > 0) {
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="5%">Logo</th>
+                        <th class="align-middle" width="25%">School Name / Alias / ID / Address</th>
+                        <th class="align-middle" width="15%">District</th>
+                        <th class="align-middle" width="15%">Category</th>
+                        <th class="align-middle" width="20%">Head of Office</th>
+                        <th class="align-middle text-mars" width="5%"><i class="fa fa-user fw"></i> Male</th>
+                        <th class="align-middle text-venus" width="5%"><i class="fa fa-user fw"></i> Female</th>
+                        <th class="align-middle" width="5%"><i class="fa fa-user-friends fw"></i> Total</th>
+                        <th class="align-middle" width="5%">Action</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

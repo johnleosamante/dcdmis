@@ -105,6 +105,24 @@ messageAlert($showAlert, $message, $success);
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="5%">From</th>
+                        <th class="align-middle" width="5%">To</th>
+                        <th class="align-middle" width="10%">Designation</th>
+                        <th class="align-middle" width="10%">Employment Status</th>
+                        <th class="align-middle" width="10%">Annual Salary</th>
+                        <th class="align-middle" width="15%">Office Entity/Division<br>Station/Place/Branch of Assignment</th>
+                        <th class="align-middle" width="10%">Leave Without Pay</th>
+                        <th class="align-middle" width="5%">Separation Date</th>
+                        <th class="align-middle" width="5%">Separation Cause</th>
+                        <th class="align-middle" width="5%">Remarks</th>
+                        <?php if ($isHrmis) : ?>
+                            <th class="align-middle" width="5%">Actions</th>
+                        <?php endif; ?>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

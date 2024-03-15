@@ -88,6 +88,19 @@ messageAlert($showAlert, $message, $success);
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="5%">Photo</th>
+                        <th class="align-middle" width="20%">User</th>
+                        <th class="align-middle" width="25%">Position</th>
+                        <th class="align-middle" width="10%">Created</th>
+                        <th class="align-middle" width="10%">Received</th>
+                        <th class="align-middle" width="10%">Forwarded</th>
+                        <th class="align-middle" width="10%">Completed</th>
+                        <th class="align-middle" width="10%">Canceled</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

@@ -85,6 +85,7 @@ $personnel = numRows($query);
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     <?php
                     while ($row = fetchArray($query)) :
@@ -157,6 +158,30 @@ $personnel = numRows($query);
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="5%">Photo</th>
+                        <th class="align-middle" width="5%">Employee Number</th>
+                        <th class="align-middle" width="25%">Name</th>
+                        <th class="align-middle" width="15%">Date of Birth</th>
+                        <th class="align-middle" width="5%">Age</th>
+                        <th class="align-middle" width="20%">Position</th>
+                        <?php if (!$isHrtdms) : ?>
+                            <th class="align-middle" width="15%">Email Address</th>
+                        <?php else : ?>
+                            <th class="align-middle" width="15%">Attended Trainings</th>
+                        <?php endif; ?>
+                        <?php if ($isHrmis) : ?>
+                            <th class="align-middel" width="10%">Progress</th>
+                        <?php else : ?>
+                            <?php if (!$isHrtdms) : ?>
+                                <th class="align-middle" width="10%">Contact #</th>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <th class="align-middle" width="5%">Action</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

@@ -44,6 +44,17 @@
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="5%">Logo</th>
+                        <th class="align-middle" width="35%">School Name / Alias / ID / District / Address</th>
+                        <th class="align-middle" width="15%">Incoming</th>
+                        <th class="align-middle" width="15%">Pending</th>
+                        <th class="align-middle" width="15%">Outgoing</th>
+                        <th class="align-middle" width="15%">Ongoing</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

@@ -79,6 +79,19 @@ messageAlert($showAlert, $message, $success);
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="35%">Title of Learning &amp; Development Interventions / Training Programs</th>
+                        <th class="align-middle" width="5%">From</th>
+                        <th class="align-middle" width="5%">To</th>
+                        <th class="align-middle" width="5%">Number of Hours</th>
+                        <th class="align-middle" width="10%">Type of Learning &amp; Development</th>
+                        <th class="align-middle" width="15%">Conducted / Sponsored by</th>
+                        <th class="align-middle" width="20%">Venue</th>
+                        <th class="align-middle" width="5%">Action</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

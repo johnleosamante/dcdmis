@@ -91,6 +91,16 @@ messageAlert($showAlert, $message, $success);
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="15%">Code</th>
+                        <th class="align-middle" width="50%">Description</th>
+                        <th class="align-middle" width="15%">Posted on</th>
+                        <th class="align-middle" width="15%">Completed on</th>
+                        <th class="align-middle" width="5%">Action</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

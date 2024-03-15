@@ -22,6 +22,7 @@
                         <?php endif; ?>
                     </tr>
                 </thead>
+
                 <tbody>
                     <?php
                     $references = references($employeeId);
@@ -54,6 +55,17 @@
                         </tr>
                     <?php } ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="40%">Name</th>
+                        <th class="align-middle" width="45%">Address</th>
+                        <th class="align-middle" width="15%">Contact Number</th>
+                        <?php if ($editMode) : ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif; ?>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

@@ -20,6 +20,7 @@
                         <?php endif; ?>
                     </tr>
                 </thead>
+
                 <tbody>
                     <?php
                     $recognitions = recognitions($employee['id']);
@@ -49,6 +50,15 @@
                         </tr>
                     <?php } ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="90%">Non-Academic Distinctions / Recognition</th>
+                        <?php if ($editMode) : ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif; ?>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

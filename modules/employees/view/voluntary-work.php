@@ -24,6 +24,7 @@
                         <?php endif; ?>
                     </tr>
                 </thead>
+
                 <tbody>
                     <?php
                     $voluntaryWork = voluntaryWorks($employeeId);
@@ -58,6 +59,19 @@
                         </tr>
                     <?php } ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="45">Name &amp; Address of Organization</th>
+                        <th class="align-middle" width="5%">From</th>
+                        <th class="align-middle" width="5%">To</th>
+                        <th class="align-middle" width="10%">Number of Hours</th>
+                        <th class="align-middle" width="30%">Position / Nature of Work</th>
+                        <?php if ($editMode) : ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif; ?>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

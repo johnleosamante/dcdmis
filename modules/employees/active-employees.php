@@ -110,6 +110,23 @@ messageAlert($showAlert, $message, $success);
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="5%">Photo</th>
+                        <th class="align-middle" width="25%">Name</th>
+                        <th class="align-middle" width="15%">Date of Birth</th>
+                        <th class="align-middle" width="5%">Age</th>
+                        <th class="align-middle" width="<?php $isHrmis ? '15' : '20'; ?>%">Position</th>
+                        <th class="align-middle" width="<?php $isHrmis ? '20' : '25'; ?>%">Station</th>
+                        <?php if ($isHrmis) : ?>
+                            <th class="align-middle" width="10%">Progress</th>
+                        <?php endif; ?>
+                        <?php if (!$isHrtdms) : ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif; ?>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

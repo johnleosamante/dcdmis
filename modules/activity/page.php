@@ -52,6 +52,15 @@ messageAlert($showAlert, $message, $success);
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="5%">#</th>
+                        <th class="align-middle" width="20%">Date/Time</th>
+                        <th class="align-middle" width="50%">Activity</th>
+                        <th class="align-middle" width="25%">Target</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

@@ -32,6 +32,16 @@
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="40%">Section Name / Functional Division</th>
+                        <th class="align-middle" width="15%">Incoming</th>
+                        <th class="align-middle" width="15%">Pending</th>
+                        <th class="align-middle" width="15%">Outgoing</th>
+                        <th class="align-middle" width="15%">Ongoing</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

@@ -27,6 +27,7 @@
                         <?php endif; ?>
                     </tr>
                 </thead>
+
                 <tbody>
                     <?php
                     $educationalBackground = educationalBackgrounds($employeeId);
@@ -65,6 +66,22 @@
                         </tr>
                     <?php } ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="10%">Level</th>
+                        <th class="align-middle" width="25%">Name of School</th>
+                        <th class="align-middle" width="25%">Basic Education / Degree / Course</th>
+                        <th class="align-middle" width="5%">From</th>
+                        <th class="align-middle" width="5%">To</th>
+                        <th class="align-middle" width="10%">Highest Level / Units Earned</th>
+                        <th class="align-middle" width="5%">Year Graduated</th>
+                        <th class="align-middle" width="15%">Scholarship / Academic Honors Received</th>
+                        <?php if ($editMode) : ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif; ?>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

@@ -80,6 +80,18 @@ messageAlert($showAlert, $message, $success);
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="30%">District</th>
+                        <th class="align-middle" width="45%">Supervisor</th>
+                        <th class="align-middle" title="Elementary Schools" width="5%">ES</th>
+                        <th class="align-middle" title="High Schools" width="5%">HS</th>
+                        <th class="align-middle" title="Integrated Schools" width="5%">IS</th>
+                        <th class="align-middle" width="5%">Total</th>
+                        <th class="align-middle" width="5%">Action</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

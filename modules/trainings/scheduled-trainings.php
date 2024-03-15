@@ -62,6 +62,18 @@ messageAlert($showAlert, $message, $success);
                     }
                     ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="15%">Code</th>
+                        <th class="align-middle" width="30%">Title of Learning &amp; Development Interventions / Training Programs</th>
+                        <th class="align-middle" width="5%">From</th>
+                        <th class="align-middle" width="5%">To</th>
+                        <th class="align-middle" width="15%">Type of Learning &amp; Development</th>
+                        <th class="align-middle" width="25%">Conducted / Sponsored by</th>
+                        <th class="align-middle" width="5%">Action</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
