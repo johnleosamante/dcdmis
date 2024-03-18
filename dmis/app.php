@@ -26,20 +26,54 @@ if (isset($_POST['save-school'])) {
 	$address = sanitize($_POST['address']);
 	$districtCode = sanitize($_POST['district']);
 	$category = sanitize($_POST['category']);
+	$telephone = sanitize($_POST['telephone']);
+	$email = sanitize($_POST['email']);
+	$website = sanitize($_POST['website']);
+	$facebook = sanitize($_POST['facebook']);
+	$logo = isset($_POST['image-verifier']) ? sanitize(decipher($_POST['image-verifier'])) : '';
 	$status = 'saved';
 	$logMessage = 'Added school';
 	$showAlert = true;
 	$link = '[<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . strtoupper($schoolName) . '</a>]';
 
+	if (is_uploaded_file($_FILES['logo-upload']['tmp_name'])) {
+		$temp = $_FILES['logo-upload']['tmp_name'];
+
+		if ($_FILES['logo-upload']['size'] > $imageUploadSizeLimit) {
+			$message = 'The choosen file exceeds the upload file limit (2.5 MB). No changes have been made to school information.';
+			return;
+		}
+
+		$mimeType = mime_content_type($temp);
+		$allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif'];
+
+		if (!in_array($mimeType, $allowedFileTypes)) {
+			$message = 'The choosen file is not an image file. No changes have been made to school information.';
+			return;
+		}
+
+		$ext = pathinfo($_FILES['logo-upload']['name'], PATHINFO_EXTENSION);
+
+		if (!empty($logo) && file_exists(root() . '/' . $logo) && basename(root() . '/' . $logo) !== 'user.png') {
+			unlink(root() . '/' . $logo);
+		}
+
+		$uploadDate = date('YmdHis');
+
+		$logo = "uploads/school_logo/{$schoolId}/{$schoolId}{$uploadDate}.{$ext}";
+
+		move_uploaded_file($temp, '../' . $logo);
+	}
+
 	if (numRows(schoolById($referenceSchoolId)) === 0) {
-		createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, '');
+		createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $telephone, $email, $website, $facebook, $logo);
 	} else {
 		updateUsersStation($schoolId, $referenceSchoolId);
 		updateStationID($schoolId, $referenceSchoolId);
 		updateTransactionLogFrom($alias, $referenceAlias);
 		updateTransactionLogTo($alias, $referenceAlias);
 		updateTransactionFrom($alias, $referenceAlias);
-		updateSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $referenceSchoolId);
+		updateSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $telephone, $email, $website, $facebook, $logo, $referenceSchoolId);
 
 		$status = 'updated';
 		$logMessage = 'Updated school';
