@@ -54,8 +54,14 @@ if (isset($_POST['save-school'])) {
 
 		$ext = pathinfo($_FILES['logo-upload']['name'], PATHINFO_EXTENSION);
 
-		if (!empty($logo) && file_exists(root() . '/' . $logo) && basename(root() . '/' . $logo) !== 'user.png') {
+		if (!empty($logo) && file_exists(root() . '/' . $logo)) {
 			unlink(root() . '/' . $logo);
+		}
+
+		$uploadDirectory = root() . '/uploads/school_logo/' . $schoolId;
+
+		if (!is_dir($uploadDirectory)) {
+			mkdir($uploadDirectory, 0777, true);
 		}
 
 		$uploadDate = date('YmdHis');
