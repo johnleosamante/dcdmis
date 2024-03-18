@@ -84,7 +84,7 @@ if (isset($_POST['update-personal-information'])) {
     if (is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
         $temp = $_FILES['image-upload']['tmp_name'];
 
-        if ($_FILES['image-upload']['size'] > 2621440) {
+        if ($_FILES['image-upload']['size'] > $imageUploadSizeLimit) {
             $message = 'The choosen file exceeds the upload file limit (2.5 MB). No changes have been made to personal information.';
             return;
         }
@@ -855,7 +855,7 @@ if (isset($_POST['save-201-file'])) {
     if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
         $temp = $_FILES['file-upload']['tmp_name'];
 
-        if ($_FILES['file-upload']['size'] > 20971520) {
+        if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
             $message = 'The choosen file exceeds the upload file limit (20 MB). No changes have been made to 201 file.';
             return;
         }
