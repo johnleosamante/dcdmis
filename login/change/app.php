@@ -4,7 +4,7 @@ if (!isset($_SESSION[alias() . '_change_password']) || $_SESSION[alias() . '_cha
     redirect(uri() . '/login');
 }
 
-$page = 'Change Password';
+$appTitle = $page = 'Change Password';
 $email = isset($_SESSION[alias() . '_email']) ? $_SESSION[alias() . '_email'] : '';
 $oldPassword = $password = $passwordConfirm = $generatePassword = null;
 
