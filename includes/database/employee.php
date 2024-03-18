@@ -29,9 +29,9 @@ function updateEmployeeContactDetails($mobile, $email, $id)
     nonQuery("UPDATE tbl_employee SET Emp_Alternate_Cell_No='{$mobile}', Emp_Alternate_Email='{$email}' WHERE Emp_ID='{$id}' LIMIT 1;");
 }
 
-function psds()
+function districtSupervisors()
 {
-    return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_station.Emp_Position AS position FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID WHERE tbl_employee.Emp_Status='Active' AND tbl_station.Emp_Position='PSDS' ORDER BY tbl_employee.Emp_LName ASC;");
+    return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_station.Emp_Position AS position FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID WHERE tbl_employee.Emp_Status='Active' AND (tbl_station.Emp_Position='PSDS' OR tbl_station.Emp_Position='SDS') ORDER BY tbl_employee.Emp_LName ASC;");
 }
 
 function activeEmployees($station = null)

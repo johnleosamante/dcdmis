@@ -44,7 +44,7 @@ if (numRows($districts) > 0) {
                     <select id="head" name="head" class="form-control" required>
                         <option value="">Select district supervisor...</option>
 
-                        <?php $employees = psds();
+                        <?php $employees = districtSupervisors();
                         while ($employee = fetchAssoc($employees)) : ?>
                             <option value="<?php echo $employee['id']; ?>" title="<?php echo fetchAssoc(position($employee['id']))['position']; ?>" <?php echo setOptionSelected($employee['id'], $districtHead); ?>>
                                 <?php echo userName($employee['id']); ?>
