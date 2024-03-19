@@ -26,46 +26,46 @@ if (numRows($trainings) > 0) {
 <table>
     <thead>
         <tr>
-            <th class="pr-5" scope="row">Code</th>
-            <td class="text-uppercase" colspan="3"><?php echo $training['no']; ?></td>
+            <th>Code</th>
+            <td colspan="3"><?php echo $training['no']; ?></td>
         </tr>
         <tr>
-            <th class="align-top pr-5" scope="row">Title</th>
-            <td class="text-uppercase" colspan="3"><?php echo $training['title']; ?></td>
+            <th>Title</th>
+            <td colspan="3"><?php echo strtoupper($training['title']); ?></td>
         </tr>
         <tr>
-            <th class="pr-5" scope="row">Date</th>
-            <td class="text-uppercase" colspan="3"><?php echo empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']; ?></td>
+            <th>Date</th>
+            <td colspan="3"><?php echo strtoupper(empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']); ?></td>
         </tr>
         <?php if (!empty($training['hours'])) : ?>
             <tr>
-                <th class="pr-5" scope="row">Hours</th>
-                <td class="text-uppercase" colspan="3"><?php echo $training['hours']; ?></td>
+                <th>Hours</th>
+                <td colspan="3"><?php echo $training['hours']; ?></td>
             </tr>
         <?php endif; ?>
         <tr>
-            <th class="pr-5" scope="row">Type</th>
-            <td class="text-uppercase" colspan="3"><?php echo trainingType($training['type']); ?></td>
+            <th>Type</th>
+            <td colspan="3"><?php echo strtoupper(trainingType($training['type'])); ?></td>
         </tr>
         <tr>
-            <th class="pr-5" scope="row">Level</th>
-            <td class="text-uppercase" colspan="3"><?php echo trainingSponsor($training['level']); ?></td>
+            <th>Level</th>
+            <td colspan="3"><?php echo strtoupper(trainingSponsor($training['level'])); ?></td>
         </tr>
         <?php if (!empty($training['sponsor'])) : ?>
             <tr>
-                <th class="align-top pr-5" scope="row">Sponsor</th>
-                <td class="text-uppercase" colspan="3"><?php echo $training['sponsor']; ?></td>
+                <th>Sponsor</th>
+                <td colspan="3"><?php echo strtoupper($training['sponsor']); ?></td>
             </tr>
         <?php endif; ?>
         <?php if (!empty($training['venue'])) : ?>
             <tr>
-                <th class="align-top pr-5" scope="row">Venue</th>
-                <td class="text-uppercase" colspan="3"><?php echo $training['venue']; ?></td>
+                <th>Venue</th>
+                <td colspan="3"><?php echo strtoupper($training['venue']); ?></td>
             </tr>
         <?php endif; ?>
         <tr>
-            <th class="align-top pr-5" scope="row">Participants</th>
-            <td class="text-uppercase" colspan="3"><?php echo numRows($participants); ?></td>
+            <th>Participants</th>
+            <td colspan="3"><?php echo strtoupper(numRows($participants)); ?></td>
         </tr>
         <tr>
             <th>#</th>
@@ -82,19 +82,11 @@ if (numRows($trainings) > 0) {
         while ($row = fetchArray($participants)) :
             $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
         ?>
-            <tr class="text-uppercase">
-                <td class="align-middle">
-                    <?php echo $i++; ?>
-                </td>
-                <td class="align-middle text-left">
-                    <?php echo $employeeName; ?>
-                </td>
-                <td class="align-middle">
-                    <?php echo fetchAssoc(positions($row['position']))['position']; ?>
-                </td>
-                <td class="align-middle">
-                    <?php echo fetchAssoc(schoolById($row['station']))['name']; ?>
-                </td>
+            <tr>
+                <td><?php echo $i++; ?></td>
+                <td><?php echo strtoupper($employeeName); ?></td>
+                <td><?php echo strtoupper(fetchAssoc(positions($row['position']))['position']); ?></td>
+                <td><?php echo strtoupper(fetchAssoc(schoolById($row['station']))['name']); ?></td>
             </tr>
         <?php endwhile; ?>
     </tbody>
