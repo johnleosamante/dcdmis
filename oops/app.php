@@ -1,5 +1,5 @@
 <?php
-// error/app.php
+// oops/app.php
 $code = !isset($_GET['e']) ? http_response_code() : $_GET['e'];
 
 switch ($code) {
