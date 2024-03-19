@@ -14,6 +14,14 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
+        <?php if ($isDmis) { ?>
+            <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
+                <div class="d-inline-block">
+                    <?php linkButtonSplit(customUri('export', 'users'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+                </div>
+            </div>
+        <?php } ?>
+
         <div class="table-responsive">
             <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
