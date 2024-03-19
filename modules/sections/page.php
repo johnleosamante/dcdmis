@@ -18,6 +18,14 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
+        <?php if ($isDmis) { ?>
+            <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
+                <div class="d-inline-block">
+                    <?php linkButtonSplit(customUri('export', 'sections'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+                </div>
+            </div>
+        <?php } ?>
+
         <div class="table-responsive">
             <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
@@ -35,7 +43,7 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = sections();
-                    while ($row = fetchAssoc(($query))) : ?>
+                    while ($row = fetchAssoc($query)) : ?>
                         <tr class="text-uppercase">
                             <td class="align-middle text-center"><?php linkItem(customUri($activeApp, 'Section Information', $row['id']), $row['name']); ?></td>
                             <td class="align-middle text-center"><?php echo $row['division']; ?></td>
