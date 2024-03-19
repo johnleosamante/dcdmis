@@ -3,7 +3,7 @@
 ?>
 
 <div class="card-body">
-    <form action="" method="POST">
+    <form action="" method="POST" class="mb-3">
         <div class="row">
             <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12">
                 <div class="form-group">
