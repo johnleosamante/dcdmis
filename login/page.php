@@ -33,13 +33,6 @@ require_once('services.php');
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <div class="form-check small">
-                        <input class="form-check-input" id="remember" type="checkbox" name="remember">
-                        <label class="form-check-label" for="remember">Remember me</label>
-                    </div>
-                </div>
-
                 <button type="submit" class="btn btn-primary btn-block" name="login">Login</button>
             </form>
         </div>
