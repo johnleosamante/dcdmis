@@ -89,5 +89,8 @@ if (numRows($trainings) > 0) {
                 <td><?php echo strtoupper(fetchAssoc(schoolById($row['station']))['name']); ?></td>
             </tr>
         <?php endwhile; ?>
+        <tr>
+            <td colspan="4"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+        </tr>
     </tbody>
 </table>
