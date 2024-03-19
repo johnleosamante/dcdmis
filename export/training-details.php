@@ -1,7 +1,8 @@
 <?php
 // export/training-details.php
-if (!isset($_GET['v'])) {
-    return;
+if (!isset($_GET['v']) || empty($_GET['v'])) {
+    require_once('../includes/function.php');
+    redirect(uri() . '/login');
 }
 
 require_once(root() . '/includes/database/school.php');

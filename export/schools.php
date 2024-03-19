@@ -1,7 +1,8 @@
 <?php
 // export/schools.php
-if (!isset($_GET['v'])) {
-    return;
+if (!isset($_GET['v']) || empty($_GET['v'])) {
+    require_once('../includes/function.php');
+    redirect(uri() . '/login');
 }
 
 require_once(root() . '/includes/database/school.php');
@@ -41,7 +42,7 @@ require_once(root() . '/includes/database/utility.php');
         <?php
         $i = 1;
         $query = schoolEmployeeCount();
-        
+
         while ($row = fetchArray($query)) : ?>
             <tr>
                 <td><?php echo $i++; ?></td>
@@ -61,5 +62,8 @@ require_once(root() . '/includes/database/utility.php');
                 <td><strong><?php echo $row['total']; ?></strong></td>
             </tr>
         <?php endwhile; ?>
+        <tr>
+            <td colspan="15"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+        </tr>
     </tbody>
 </table>

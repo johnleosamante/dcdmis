@@ -1,7 +1,8 @@
 <?php
-// // export/districts.php
-if (!isset($_GET['v'])) {
-    return;
+// export/districts.php
+if (!isset($_GET['v']) || empty($_GET['v'])) {
+    require_once('../includes/function.php');
+    redirect(uri() . '/login');
 }
 
 require_once(root() . '/includes/database/school.php');
@@ -53,5 +54,8 @@ require_once(root() . '/includes/database/utility.php');
                 <td><?php echo $total; ?></td>
             </tr>
         <?php endwhile; ?>
+        <tr>
+            <td colspan="7"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+        </tr>
     </tbody>
 </table>

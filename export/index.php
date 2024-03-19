@@ -16,6 +16,11 @@ require_once(root() . '/includes/string.php');
 $request = sanitize(decode($_GET['v']));
 $identifier = isset($_GET['id']) ? sanitize(decode($_GET['id'])) . '-' : '';
 $fileName = $request . '-' . $identifier . date('Y-m-d') . '.xls';
+$isPis = $activeApp === 'pis';
+$isDts = $activeApp === 'dts';
+$isHrmis = $activeApp === 'hrmis';
+$isHrtdms = $activeApp === 'hrtdms';
+$isDmis = $activeApp === 'dmis';
 
 header("Content-Type: application/vnd.ms-excel");
 header("Content-Disposition: attachment; Filename=" . $fileName);

@@ -1,7 +1,8 @@
 <?php
 // export/active-employees.php
-if (!isset($_GET['v'])) {
-	return;
+if (!isset($_GET['v']) || empty($_GET['v'])) {
+	require_once('../includes/function.php');
+	redirect(uri() . '/login');
 }
 
 $filter = '';
@@ -65,5 +66,8 @@ $filter = isset($_GET['id']) ? $filter . " AND tbl_station.Emp_Station='" . sani
 				<td><?php echo strtoupper(toAddress('', $row['street'], $row['subdivision'], $row['barangay'], $row['city'], $row['province'])); ?></td>
 			</tr>
 		<?php endforeach; ?>
+		<tr>
+			<td colspan="<?php echo $isHrmis ? '19' : '13'; ?>"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+		</tr>
 	</tbody>
 </table>

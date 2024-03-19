@@ -1,7 +1,8 @@
 <?php
 // export/retirable-employees.php
-if (!isset($_GET['v'])) {
-	return;
+if (!isset($_GET['v']) || empty($_GET['v'])) {
+	require_once('../includes/function.php');
+	redirect(uri() . '/login');
 }
 ?>
 
@@ -30,7 +31,7 @@ if (!isset($_GET['v'])) {
 			<th>Residential Address</th>
 		</tr>
 	</thead>
-	
+
 	<tbody>
 		<?php
 		$i = 1;
