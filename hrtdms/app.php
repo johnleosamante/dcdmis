@@ -132,10 +132,9 @@ if (isset($_POST['email-participants'])) {
         return;
     }
 
-    $title = strtoupper(toHandleEncoding(fetchAssoc($trainings)['title']));
-
+    $training = fetchAssoc($trainings);
+    $title = strtoupper(toHandleEncoding($training['title']));
     $trainingParticipants = trainingParticipants($trainingId, $participantId);
-
     $name = '';
     $participants = 0;
 
