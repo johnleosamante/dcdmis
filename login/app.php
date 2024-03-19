@@ -19,9 +19,7 @@ function setUserSession($userId)
             $_SESSION[alias() . '_station'] = numRows($school) ? fetchAssoc($school)['alias'] : '';
         }
 
-        $logMessage = isset($_POST['login']) ? 'Logged in' : 'Resumed login';
-
-        createSystemLog($stationId, $userId, $logMessage, $userId, clientIp());
+        createSystemLog($stationId, $userId, 'Logged in', $userId, clientIp());
     }
 }
 
@@ -74,16 +72,6 @@ if (isset($_POST['login'])) {
     }
 
     redirect(uri() . '/' . $activeApp);
-}
-
-if (isset($_COOKIE[alias() . '_login'])) {
-    $account = account(sanitize($_COOKIE[alias() . '_login']));
-
-    if (numRows($account === 1)) {
-        $userId = $_SESSION[alias() . '_userId'] = fetchAssoc($account)['id'];
-        setUserSession($userId);
-        createSystemLog($stationId, $userId, 'Resumed login', $userId, clientIp());
-    }
 }
 
 if (isset($userId)) {
