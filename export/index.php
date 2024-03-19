@@ -22,20 +22,25 @@ $isHrmis = $activeApp === 'hrmis';
 $isHrtdms = $activeApp === 'hrtdms';
 $isDmis = $activeApp === 'dmis';
 
-header("Content-Type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; Filename=" . $fileName);
+if (file_exists($request . ".php")) :
+	header("Content-Type: application/vnd.ms-excel");
+	header("Content-Disposition: attachment; Filename=" . $fileName);
 ?>
 
-<style>
-	table,
-	th,
-	td {
-		border: 1px solid;
-	}
+	<style>
+		table,
+		th,
+		td {
+			border: 1px solid;
+		}
 
-	table {
-		border-collapse: collapse;
-	}
-</style>
+		table {
+			border-collapse: collapse;
+		}
+	</style>
 
-<?php require_once($request . '.php'); ?>
+<?php require_once($request . '.php');
+else :
+	redirect(uri() . '/login');
+endif;
+?>
