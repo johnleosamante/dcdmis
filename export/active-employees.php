@@ -21,12 +21,14 @@ $filter = isset($_GET['id']) ? $filter . " AND tbl_station.Emp_Station='" . sani
 			<th>Sex</th>
 			<th>Date of Birth</th>
 			<th>Position</th>
-			<th>GSIS CRN No.</th>
-			<th>GSIS BP No.</th>
-			<th>PAGIBIG ID No.</th>
-			<th>PhilHealth ID No.</th>
-			<th>SSS No.</th>
-			<th>TIN No.</th>
+			<?php if ($isHrmis) : ?>
+				<th>GSIS CRN No.</th>
+				<th>GSIS BP No.</th>
+				<th>PAGIBIG ID No.</th>
+				<th>PhilHealth ID No.</th>
+				<th>SSS No.</th>
+				<th>TIN No.</th>
+			<?php endif; ?>
 			<th>Contact No.</th>
 			<th>Email Address</th>
 			<th>Residential Address</th>
@@ -50,12 +52,14 @@ $filter = isset($_GET['id']) ? $filter . " AND tbl_station.Emp_Station='" . sani
 				<td><?php echo strtoupper($row['sex'])[0]; ?></td>
 				<td><?php echo $row['byear'] . '-' . $row['bmonth'] . '-' . $row['bday']; ?></td>
 				<td><?php echo strtoupper($row['position']); ?></td>
-				<td><?php echo $row['crn']; ?></td>
-				<td><?php echo $row['bp']; ?></td>
-				<td><?php echo $row['pagibig']; ?></td>
-				<td><?php echo $row['philhealth']; ?></td>
-				<td><?php echo $row['sss']; ?></td>
-				<td><?php echo $row['tin']; ?></td>
+				<?php if ($isHrmis) : ?>
+					<td><?php echo $row['crn']; ?></td>
+					<td><?php echo $row['bp']; ?></td>
+					<td><?php echo $row['pagibig']; ?></td>
+					<td><?php echo $row['philhealth']; ?></td>
+					<td><?php echo $row['sss']; ?></td>
+					<td><?php echo $row['tin']; ?></td>
+				<?php endif; ?>
 				<td><?php echo $row['contact']; ?></td>
 				<td><?php echo strtolower($row['email']); ?></td>
 				<td><?php echo strtoupper(toAddress('', $row['street'], $row['subdivision'], $row['barangay'], $row['city'], $row['province'])); ?></td>
