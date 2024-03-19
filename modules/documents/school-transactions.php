@@ -5,6 +5,14 @@
 <div class="tab-pane fade show active" id="school-transactions">
     <div class="row my-3">
         <div class="col table-responsive">
+            <?php if ($isDmis) { ?>
+                <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
+                    <div class="d-inline-block">
+                        <?php linkButtonSplit(customUri('export', 'school-transactions'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+                    </div>
+                </div>
+            <?php } ?>
+
             <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table-previous" width="100%" cellspacing="0">
                 <thead>
                     <tr>
