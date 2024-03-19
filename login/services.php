@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="card-body">
-                            Access the <a href="<?php echo uri() . '/hrtdms/repository'; ?>" title="Division Training Certificate Finder">repository</a> of participant certificates for training programs conducted by the Schools Division.
+                            Access the <a href="<?php echo uri() . '/hrtdms/repository'; ?>" title="Division Training Certificate Finder">repository</a> of participant certificates for training programs conducted by the schools division.
                         </div>
                     </div>
 
