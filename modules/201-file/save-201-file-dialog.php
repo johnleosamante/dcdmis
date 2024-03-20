@@ -32,7 +32,7 @@ if (isset($attachmentId)) {
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="modal-body">
                 <div class="form-group">
-                    <input id="file-upload" name="file-upload" type="file" title="Upload pdf, jpeg and png file..." class="w-100">
+                    <input id="file-upload" name="file-upload" type="file" title="Upload 201 file with pdf, jpeg or png format..." class="w-100">
                 </div>
 
                 <div class="form-group">
