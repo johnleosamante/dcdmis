@@ -62,6 +62,9 @@ if (!isset($url) || $url === 'dashboard') {
         case '201 Files':
             $file = '201-file/page';
             break;
+        case 'Payslip':
+            $file = 'payslip/page';
+            break;
         case 'Step Increment':
             $file = 'step-increment/page';
             break;
