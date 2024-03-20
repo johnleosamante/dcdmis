@@ -62,8 +62,7 @@ if (!is_dir($uploadDirectory)) {
                                         <?php
                                         previewLinkDropdownItem(uri() . '/' . $payslip['filename'], 'Preview', 'fa-eye', 'Preview ' . $payslip['description']);
                                         downloadLinkDropdownItem(uri() . '/' . $payslip['filename'], 'Download', 'fa-download', 'Download ' . $payslip['description'], $payslip['description'] . '.' . $payslip['ext'], true);
-                                        modalDropdownItem(uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Edit', 'fa-edit', 'Edit Payslip');
-                                        modalDropdownItem(uri() . '/modules/payslip/save-payslip-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Copy', 'fa-copy', 'Copy Payslip'); ?>
+                                        modalDropdownItem(uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Edit', 'fa-edit', 'Edit Payslip'); ?>
                                         <div class="dropdown-divider"></div>
                                         <?php modalDropdownItem(uri() . '/modules/payslip/delete-payslip-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Delete', 'fa-trash', 'Delete Payslip');
                                         ?>
