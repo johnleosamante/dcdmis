@@ -50,7 +50,7 @@
                 <?php
                 $trainings = conductedTrainings($fromDate, $toDate);
                 while ($training = fetchAssoc($trainings)) : ?>
-                    <tr>
+                    <tr class="text-uppercase">
                         <td class="align-middle text-left">
                             <?php linkItem(customUri('hrtdms/repository', 'Training Details', $training['no']), $training['title']); ?>
                         </td>

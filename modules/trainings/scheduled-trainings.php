@@ -39,7 +39,7 @@ messageAlert($showAlert, $message, $success);
                     $trainings = scheduledTrainings();
                     if (numRows($trainings) > 0) {
                         while ($training = fetchAssoc($trainings)) : ?>
-                            <tr>
+                            <tr class="text-uppercase">
                                 <td class="align-middle">
                                     <?php linkItem(customUri('hrtdms', 'Training Details', $training['no']), $training['no']); ?>
                                 </td>

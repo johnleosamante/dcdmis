@@ -58,7 +58,7 @@ messageAlert($showAlert, $message, $success);
                     <?php
                     $trainings = attendedTrainings($employeeId);
                     while ($training = fetchAssoc($trainings)) : ?>
-                        <tr>
+                        <tr class="text-uppercase">
                             <td class="align-middle"><?php echo $training['title']; ?></td>
                             <td class="align-middle"><?php echo toDate($training['from']); ?></td>
                             <td class="align-middle"><?php echo toDate($training['to']); ?></td>
