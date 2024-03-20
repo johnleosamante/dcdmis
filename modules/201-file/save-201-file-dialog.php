@@ -32,12 +32,12 @@ if (isset($attachmentId)) {
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="modal-body">
                 <div class="form-group">
-                    <input id="file-upload" name="file-upload" type="file" class="w-100">
+                    <input id="file-upload" name="file-upload" type="file" title="Upload pdf, jpeg and png file..." class="w-100">
                 </div>
 
                 <div class="form-group">
                     <label for="description" class="mb-0">Description <?php showAsterisk(); ?></label>
-                    <textarea id="description" name="description" class="form-control" placeholder="Type description..." rows="3" required><?php echo $description; ?></textarea>
+                    <textarea id="description" name="description" class="form-control" placeholder="Type description..." title="Type 201 file description..." rows="3" required><?php echo $description; ?></textarea>
                 </div>
 
                 <?php requiredLegend(0); ?>
