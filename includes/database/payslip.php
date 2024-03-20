@@ -7,7 +7,7 @@ function payslips($employeeId)
 
 function payslip($employeeId, $id)
 {
-    return query("SELECT `id`, `employee_id`, `description`, `filename`, `ext`, `created_at`, `updated_at`, `created_by`, `updated_by` FROM `payslips` WHERE `employee_id`='{$employeeId} AND `id`='{$id}' LIMIT 1;");
+    return query("SELECT `id`, `employee_id`, `description`, `filename`, `ext`, `created_at`, `updated_at`, `created_by`, `updated_by` FROM `payslips` WHERE `employee_id`='{$employeeId}' AND `id`='{$id}' LIMIT 1;");
 }
 
 function createPayslip($description, $filename, $ext, $employeeId)
