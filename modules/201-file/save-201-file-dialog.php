@@ -1,5 +1,5 @@
 <?php
-// modules/employees/update/update-education.php
+// modules/201-file/save-201-file-dialog.php
 require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/201-file.php');
@@ -40,7 +40,7 @@ if (isset($attachmentId)) {
                     <textarea id="description" name="description" class="form-control" placeholder="Type description..." rows="3" required><?php echo $description; ?></textarea>
                 </div>
 
-                <?php requiredLegend(); ?>
+                <?php requiredLegend(0); ?>
             </div>
 
             <div class="modal-footer">
