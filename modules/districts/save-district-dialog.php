@@ -31,17 +31,17 @@ if (numRows($districts) > 0) {
             <div class="modal-body">
                 <div class="form-group">
                     <label for="code" class="mb-0">Alias <?php showAsterisk(); ?></label>
-                    <input type="text" id="code" name="code" class="form-control" minlength="3" maxlength="5" value="<?php echo $districtCode; ?>" required>
+                    <input type="text" id="code" name="code" class="form-control" placeholder="Type alias..." title="Type district alias.." minlength="3" maxlength="5" value="<?php echo $districtCode; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="district" class="mb-0">Name <?php showAsterisk(); ?></label>
-                    <input type="text" id="district" name="district" class="form-control" value="<?php echo $districtName; ?>" required>
+                    <input type="text" id="district" name="district" class="form-control" placeholder="Type name..." title="Type district name..." value="<?php echo $districtName; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="head" class="mb-0">District Supervisor <?php showAsterisk(); ?></label>
-                    <select id="head" name="head" class="form-control" required>
+                    <select id="head" name="head" class="form-control" title="Select district supervisor..." required>
                         <option value="">Select district supervisor...</option>
 
                         <?php $employees = districtSupervisors();
