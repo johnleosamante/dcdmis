@@ -52,10 +52,10 @@ if (isset($_POST['save-payslip'])) {
         }
 
         $mimeType = mime_content_type($temp);
-        $allowedFileTypes = ['application/pdf'];
+        $allowedFileTypes = ['application/pdf', 'image/png', 'image/jpeg'];
 
         if (!in_array($mimeType, $allowedFileTypes)) {
-            $message = 'The choosen file is not an acceptable file (pdf). No changes have been made to payslip.';
+            $message = 'The choosen file is not an acceptable file (pdf, png, jpeg). No changes have been made to payslip.';
             return;
         }
 
