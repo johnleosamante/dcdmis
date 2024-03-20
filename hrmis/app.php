@@ -90,7 +90,7 @@ if (isset($_POST['update-personal-information'])) {
         }
 
         $mimeType = mime_content_type($temp);
-        $allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif'];
+        $allowedFileTypes = ['image/png', 'image/jpeg'];
 
         if (!in_array($mimeType, $allowedFileTypes)) {
             $message = 'The choosen file is not an image file. No changes have been made to personal information.';
