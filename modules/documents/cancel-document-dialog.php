@@ -41,7 +41,7 @@ if (numRows($documents) > 0) {
 
                     <div class="form-group">
                         <label for="remarks" class="mb-0">Reason <?php showAsterisk(); ?></label>
-                        <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Type reason..." required></textarea>
+                        <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Type reason..." title="Type document reason..." required></textarea>
                     </div>
 
                     <?php requiredLegend(0); ?>
