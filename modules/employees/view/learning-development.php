@@ -23,7 +23,7 @@
 
                     if (numRows($learnings) > 0) {
                         while ($learning = fetchAssoc($learnings)) : ?>
-                            <tr>
+                            <tr class="text-uppercase">
                                 <td class="align-middle"><?php echo $learning['title']; ?></td>
                                 <td class="align-middle"><?php echo toDate($learning['from']); ?></td>
                                 <td class="align-middle"><?php echo toDate($learning['to']); ?></td>

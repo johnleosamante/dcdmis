@@ -34,7 +34,7 @@
 
                     if (numRows($educationalBackground) > 0) {
                         while ($education = fetchAssoc($educationalBackground)) : ?>
-                            <tr>
+                            <tr class="text-uppercase">
                                 <td class="align-middle"><?php echo $education['level']; ?></td>
                                 <td class="align-middle"><?php echo $education['school']; ?></td>
                                 <td class="align-middle"><?php echo toHandleNull($education['course'], 'N/A'); ?></td>

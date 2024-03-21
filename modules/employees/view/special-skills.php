@@ -27,7 +27,7 @@
 
                     if (numRows($skills) > 0) {
                         while ($skill = fetchAssoc($skills)) : ?>
-                            <tr>
+                            <tr class="text-uppercase">
                                 <td class="align-middle"><?php echo $skill['skill']; ?></td>
                                 <?php if ($editMode) : ?>
                                     <td class="align-middle text-capitalize">

@@ -25,7 +25,7 @@
 
                     if (numRows($experiences) > 0) {
                         while ($experience = fetchAssoc($experiences)) : ?>
-                            <tr>
+                            <tr class="text-uppercase">
                                 <td class="align-middle"><?php echo toDate($experience['from']); ?></td>
                                 <td class="align-middle"><?php echo $experience['ispresent'] ? 'PRESENT' : toDate($experience['to']); ?></td>
                                 <td class="align-middle"><?php echo $experience['position']; ?></td>

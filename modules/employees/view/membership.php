@@ -27,7 +27,7 @@
 
                     if (numRows($organizations) > 0) {
                         while ($membership = fetchAssoc($organizations)) : ?>
-                            <tr>
+                            <tr class="text-uppercase">
                                 <td class="align-middle"><?php echo $membership['organization']; ?></td>
                                 <?php if ($editMode) : ?>
                                     <td class="align-middle text-capitalize">

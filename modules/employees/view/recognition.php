@@ -27,7 +27,7 @@
 
                     if (numRows($recognitions) > 0) {
                         while ($recognition = fetchAssoc($recognitions)) : ?>
-                            <tr>
+                            <tr class="text-uppercase">
                                 <td class="align-middle"><?php echo $recognition['recognition']; ?></td>
                                 <?php if ($editMode) : ?>
                                     <td class="align-middle text-capitalize">

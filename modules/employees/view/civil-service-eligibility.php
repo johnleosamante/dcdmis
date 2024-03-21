@@ -15,9 +15,9 @@
                 <thead>
                     <tr>
                         <th class="align-middle" width="35%">Career Services / RA 1080 (Board / Bar) Under Special Laws / CES / CSEE Barangay Eligibility / Driver's License</th>
-                        <th class="align-middle" width="10%">Rating</th>
+                        <th class="align-middle" width="5%">Rating</th>
                         <th class="align-middle" width="10%">Date of Examination / Conferment</th>
-                        <th class="align-middle" width="25%">Place of Examination / Conferment</th>
+                        <th class="align-middle" width="30%">Place of Examination / Conferment</th>
                         <th class="align-middle" width="10%">License Number</th>
                         <th class="align-middle" width="10%">Date of Validity</th>
                         <?php if ($editMode) : ?>
@@ -32,7 +32,7 @@
 
                     if (numRows($eligibilities) > 0) {
                         while ($eligibility = fetchAssoc($eligibilities)) : ?>
-                            <tr>
+                            <tr class="text-uppercase">
                                 <td class="align-middle"><?php echo $eligibility['eligibility']; ?></td>
                                 <td class="align-middle"><?php echo toHandleNull($eligibility['rating'], 'N/A'); ?></td>
                                 <td class="align-middle"><?php echo toDate($eligibility['date']); ?></td>

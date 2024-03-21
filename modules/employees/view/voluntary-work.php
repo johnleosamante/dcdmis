@@ -31,7 +31,7 @@
 
                     if (numRows($voluntaryWork) > 0) {
                         while ($voluntary = fetchAssoc($voluntaryWork)) : ?>
-                            <tr>
+                            <tr class="text-uppercase">
                                 <td class="align-middle"><?php echo $voluntary['organization']; ?></td>
                                 <td class="align-middle"><?php echo toDate($voluntary['from']); ?></td>
                                 <td class="align-middle"><?php echo $voluntary['ispresent'] ? 'PRESENT' : toDate($voluntary['to']); ?></td>

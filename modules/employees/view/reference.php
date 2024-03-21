@@ -29,7 +29,7 @@
 
                     if (numRows($references) > 0) {
                         while ($reference = fetchAssoc($references)) : ?>
-                            <tr>
+                            <tr class="text-uppercase">
                                 <td class="align-middle"><?php echo $reference['name']; ?></td>
                                 <td class="align-middle"><?php echo toHandleNull($reference['address'], 'N/A'); ?></td>
                                 <td class="align-middle"><?php echo toHandleNull($reference['telephone'], 'N/A'); ?></td>
