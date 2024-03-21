@@ -186,7 +186,7 @@ $displayPhoto = uri() . '/' . $user['picture'];
 
                 <div class="dropdown-divider"></div>
 
-                <?php modalDropdownItem(uri() . '/logout/confirm', 'Logout', 'fa-sign-out-alt', 'Logout'); ?>
+                <?php modalDropdownItem(uri() . '/logout/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout'); ?>
             </div>
         </li>
     </ul>

@@ -1,6 +1,6 @@
 <?php
-// logout/confirm/index.php
-require_once('../../includes/function.php');
+// logout/logout-dialog.php
+require_once('../includes/function.php');
 require_once(root() . '/includes/layout/components.php');
 
 $modalTitle = 'Logout';
