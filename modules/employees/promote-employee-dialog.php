@@ -52,7 +52,7 @@ if (numRows($employees) > 0) {
 
                     <div class="form-group">
                         <label for="position" class="mb-0">Position <?php showAsterisk(); ?></label>
-                        <select id="position" name="position" class="form-control" required>
+                        <select id="position" name="position" class="form-control" title="Select employee position..." required>
                             <option value="">Select position...</option>
                             <?php
                             $categories = positionCategories();
@@ -69,7 +69,7 @@ if (numRows($employees) > 0) {
 
                     <div class="form-group">
                         <label for="effectivity-date" class="mb-0">Date of Effectivity <?php showAsterisk(); ?></label>
-                        <input class="form-control" type="date" id="effectivity-date" name="effectivity-date" value="<?php echo toDate($doa, 'Y-m-d', date('Y-m-d')); ?>" required>
+                        <input class="form-control" type="date" id="effectivity-date" name="effectivity-date" value="<?php echo toDate($doa, 'Y-m-d', date('Y-m-d')); ?>" title="Set date of effectivity..." required>
                     </div>
 
                     <?php requiredLegend(0); ?>

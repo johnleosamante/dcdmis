@@ -62,14 +62,14 @@ if (numRows($documents) > 0) {
 
                     <div class="form-group">
                         <label for="description" class="mb-0">Description <?php showAsterisk($isDescriptionEditable); ?></label>
-                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Type description..." <?php echo $attribute; ?> required><?php echo $description; ?></textarea>
+                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Type description..." title="Type document description..." <?php echo $attribute; ?> required><?php echo $description; ?></textarea>
                     </div>
 
                     <?php if (!$isSchoolPortal) : ?>
                         <div class="form-group">
                             <label class="mb-0" for="destination">Destination <?php showAsterisk(); ?></label>
                             <?php if (!$forRelease) { ?>
-                                <select name="destination" id="destination" class="form-control" required>
+                                <select name="destination" id="destination" class="form-control" title="Select document destination..." required>
                                     <option value="">Select destination...</option>
                                     <?php
                                     $divisions = functionalDivisions();
@@ -103,7 +103,7 @@ if (numRows($documents) > 0) {
                     <div class="form-group">
                         <label class="mb-0" for="purpose">Purpose <?php showAsterisk(); ?></label>
                         <?php if (!$forRelease) : ?>
-                            <select name="purpose" id="purpose" class="form-control" required>
+                            <select name="purpose" id="purpose" class="form-control" title="Select document purpose..." required>
                                 <option value="">Select purpose...</option>
                                 <?php
                                 $documentPurposes = documentPurpose();
@@ -118,7 +118,7 @@ if (numRows($documents) > 0) {
 
                     <div class="form-group">
                         <label class="mb-0" for="details">Additional details</label>
-                        <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."><?php echo $details; ?></textarea>
+                        <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..." title="Type additional details..."><?php echo $details; ?></textarea>
                     </div>
 
                     <?php requiredLegend(0); ?>

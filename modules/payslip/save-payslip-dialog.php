@@ -36,7 +36,7 @@ if (isset($payslipId)) {
 
                 <div class="form-group">
                     <label for="description" class="mb-0">Description <?php showAsterisk(); ?></label>
-                    <textarea id="description" name="description" class="form-control" placeholder="Type description..." rows="3" required><?php echo $description; ?></textarea>
+                    <textarea id="description" name="description" class="form-control" placeholder="Type description..." title="Type payslip description..." rows="3" required><?php echo $description; ?></textarea>
                 </div>
 
                 <?php requiredLegend(0); ?>

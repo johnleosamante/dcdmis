@@ -52,7 +52,7 @@ if (numRows($employees) > 0) {
 
                     <div class="form-group">
                         <label for="assignment" class="mb-0">Place of Assignment <?php showAsterisk(); ?></label>
-                        <select id="assignment" name="assignment" class="form-control" required>
+                        <select id="assignment" name="assignment" class="form-control" title="Select employee place of assignment..." required>
                             <option value="">Select place of assignment...</option>
                             <?php
                             $districts = districts();
@@ -70,7 +70,7 @@ if (numRows($employees) > 0) {
 
                     <div class="form-group">
                         <label for="assignment-date" class="mb-0">Date of Assignment <?php showAsterisk(); ?></label>
-                        <input class="form-control" type="date" id="assignment-date" name="assignment-date" value="<?php echo toDate($doa, 'Y-m-d', date('Y-m-d')); ?>" required>
+                        <input class="form-control" type="date" id="assignment-date" name="assignment-date" value="<?php echo toDate($doa, 'Y-m-d', date('Y-m-d')); ?>" title="Set date of assignment..." required>
                     </div>
 
                     <?php requiredLegend(0); ?>

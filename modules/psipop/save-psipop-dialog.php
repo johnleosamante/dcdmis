@@ -62,7 +62,7 @@ if (numRows($employees) > 0) {
 
           <div class="form-group">
             <label for="item" class="mb-0">Item Number <?php showAsterisk(); ?></label>
-            <input type="text" id="item" name="item" class="form-control" value="<?php echo $item; ?>" required>
+            <input type="text" id="item" name="item" class="form-control" placeholder="Type item number..." title="Type employee PSIPOP item number..." value="<?php echo $item; ?>" required>
           </div>
 
           <div class="form-group">
@@ -104,13 +104,13 @@ if (numRows($employees) > 0) {
             <div class="col-6">
               <div class="form-group">
                 <label for="doa" class="mb-0">Date of Original<br>Appointment <?php showAsterisk(); ?></label>
-                <input type="date" id="doa" name="doa" class="form-control" value="<?php echo $doa; ?>" required>
+                <input type="date" id="doa" name="doa" class="form-control" title="Set date of original appointment..." value="<?php echo $doa; ?>" required>
               </div>
             </div>
             <div class="col-6">
               <div class="form-group">
                 <label for="dlp" class="mb-0">Date of Last<br>Promotion <?php showAsterisk(); ?></label>
-                <input type="date" id="dlp" name="dlp" class="form-control" value="<?php echo $dlp; ?>" required>
+                <input type="date" id="dlp" name="dlp" class="form-control" title="Set date of last promotion..." value="<?php echo $dlp; ?>" required>
               </div>
             </div>
           </div>
@@ -119,7 +119,7 @@ if (numRows($employees) > 0) {
             <div class="col-6">
               <div class="form-group">
                 <label for="status" class="mb-0">Employment Status <?php showAsterisk(); ?></label>
-                <select name="status" id="status" class="form-control" title="Required field" required>
+                <select name="status" id="status" class="form-control" title="Select employment status..." required>
                   <option value="Permanent" <?php echo setOptionSelected("Permanent", $status); ?>>Permanent</option>
                   <option value="Temporary" <?php echo setOptionSelected("Temporary", $status); ?>>Temporary</option>
                   <option value="Coterminus" <?php echo setOptionSelected("Coterminus", $status); ?>>Coterminus</option>
@@ -134,7 +134,7 @@ if (numRows($employees) > 0) {
             <div class="col-6">
               <div class="form-group">
                 <label for="eligibility" class="mb-0">Eligibility <?php showAsterisk(); ?></label>
-                <input type="text" id="eligibility" name="eligibility" class="form-control" value="<?php echo $eligibility; ?>" required>
+                <input type="text" id="eligibility" name="eligibility" class="form-control" placeholder="Type eligibility..." title="Type employee eligibility..." value="<?php echo $eligibility; ?>" required>
               </div>
             </div>
           </div>

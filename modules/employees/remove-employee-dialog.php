@@ -43,7 +43,7 @@ if (numRows($employees) > 0) {
                     <hr>
                     <div class="form-group">
                         <label for="reason" class="mb-0">Reason <?php showAsterisk(); ?></label>
-                        <select id="reason" name="reason" class="form-control" required>
+                        <select id="reason" name="reason" class="form-control" title="Select reason of removal..." required>
                             <option value="">Select reason...</option>
                             <option value="Transferred">Transferred</option>
                             <option value="Resigned">Resigned</option>

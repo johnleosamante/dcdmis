@@ -52,7 +52,7 @@ if (numRows($documents) > 0) {
                     <div class="form-group">
                         <label for="destination" class="mb-0">Destination <?php showAsterisk(); ?></label>
                         <?php if (!$forRelease) { ?>
-                            <select id="destination" name="destination" class="form-control" required>
+                            <select id="destination" name="destination" class="form-control" title="Select document destination..." required>
                                 <option value="">Select destination...</option>
                                 <?php
                                 $divisions = functionalDivisions();
@@ -85,7 +85,7 @@ if (numRows($documents) > 0) {
                     <div class="form-group">
                         <label for="purpose" class="mb-0">Purpose <?php showAsterisk(); ?></label>
                         <?php if (!$forRelease) : ?>
-                            <select id="purpose" name="purpose" class="form-control" required>
+                            <select id="purpose" name="purpose" class="form-control" title="Select document purpose..." required>
                                 <option value="">Select purpose...</option>
                                 <?php
                                 $documentPurpose = documentPurpose();
@@ -100,7 +100,7 @@ if (numRows($documents) > 0) {
 
                     <div class="form-group">
                         <label for="details" class="mb-0">Additional details</label>
-                        <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..."><?php echo $details; ?></textarea>
+                        <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..." title="Type document additional details..."><?php echo $details; ?></textarea>
                     </div>
 
                     <?php requiredLegend(0); ?>
