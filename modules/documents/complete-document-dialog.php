@@ -41,7 +41,7 @@ if (numRows($documents) > 0) {
 
                     <div class="form-group mb-0">
                         <label for="remarks" class="mb-0">Remarks</label>
-                        <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Type remarks..."></textarea>
+                        <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Type remarks..." title="Type document remarks..."></textarea>
                     </div>
                 <?php } else {
                     missingAlert($modalTitle, 'fa-times-circle');
