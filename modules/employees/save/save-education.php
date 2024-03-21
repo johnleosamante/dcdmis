@@ -1,5 +1,5 @@
 <?php
-// modules/employees/update/update-education.php
+// modules/employees/save/save-education.php
 require_once('../../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/education.php');

@@ -1,5 +1,5 @@
 <?php
-// modules/employees/update/update-special-skill.php
+// modules/employees/save/save-special-skill.php
 require_once('../../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/special-skill.php');

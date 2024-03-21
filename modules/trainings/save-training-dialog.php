@@ -49,41 +49,41 @@ if (numRows($trainings) > 0) {
 
                 <div class="form-group">
                     <label for="title" class="mb-0">Title <?php showAsterisk(); ?></label>
-                    <textarea id="title" name="title" class="form-control" rows="3" placeholder="Type title..."><?php echo $title; ?></textarea>
+                    <textarea id="title" name="title" class="form-control" rows="3" placeholder="Type title..." title="Type training title..."><?php echo $title; ?></textarea>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
                             <label for="from" class="mb-0">Date from <?php showAsterisk(); ?></label>
-                            <input type="date" name="from" id="from" class="form-control" value="<?php echo $dateFrom; ?>" required>
+                            <input type="date" name="from" id="from" class="form-control" title="Set training start date..." value="<?php echo $dateFrom; ?>" required>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group">
                             <label for="from" class="mb-0">Date to <?php showAsterisk(); ?></label>
-                            <input type="date" name="to" id="to" class="form-control" value="<?php echo $dateTo; ?>" required>
+                            <input type="date" name="to" id="to" class="form-control" title="Set training end date..." value="<?php echo $dateTo; ?>" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="unconsecutive-dates" class="mb-0">For non-consecutive days, please specify</label>
-                    <input type="text" name="unconsecutive-dates" id="unconsecutive-dates" class="form-control" value="<?php echo $unconsecutiveDates; ?>">
+                    <input type="text" name="unconsecutive-dates" id="unconsecutive-dates" placeholder="Type non-consecutive days..." title="Type training date for non-consecutive days, Leave blank if not applicable..." class="form-control" value="<?php echo $unconsecutiveDates; ?>">
                 </div>
 
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
                             <label for="hours" class="mb-0">Number of hours <?php showAsterisk(); ?></label>
-                            <input type="number" name="hours" id="hours" class="form-control" placeholder="Type hours..." value="<?php echo $hours; ?>" required>
+                            <input type="number" name="hours" id="hours" class="form-control" title="Set training number of hours..." value="<?php echo $hours; ?>" required>
                         </div>
                     </div>
 
                     <div class="col-8">
                         <div class="form-group">
                             <label for="type" class="mb-0">Type <?php showAsterisk(); ?></label>
-                            <select id="type" name="type" class="form-control" required>
+                            <select id="type" name="type" class="form-control" title="Select training type..." required>
                                 <option value="">Select type...</option>
                                 <?php
                                 $types = trainingTypes();
@@ -99,7 +99,7 @@ if (numRows($trainings) > 0) {
                     <div class="col-4">
                         <div class="form-group">
                             <label for="level" class="mb-0">Level <?php showAsterisk(); ?></label>
-                            <select id="level" name="level" class="form-control" required>
+                            <select id="level" name="level" class="form-control" title="Select training level..." required>
                                 <option value="">Select level...</option>
                                 <?php
                                 $sponsors = trainingSponsors();
@@ -109,17 +109,18 @@ if (numRows($trainings) > 0) {
                             </select>
                         </div>
                     </div>
+
                     <div class="col-8">
                         <div class="form-group">
                             <label for="sponsor" class="mb-0">Sponsor <?php showAsterisk(); ?></label>
-                            <input type="text" id="sponsor" name="sponsor" class="form-control" value="<?php echo $sponsorName; ?>" required>
+                            <input type="text" id="sponsor" name="sponsor" class="form-control" placeholder="Type sponsor..." title="Type training sponsor..." value="<?php echo $sponsorName; ?>" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="functional-division" class="mb-0">Functional Division <?php showAsterisk(); ?></label>
-                    <select id="functional-division" name="functional-division" class="form-control" required>
+                    <select id="functional-division" name="functional-division" class="form-control" title="Select training functional division..." required>
                         <option value="">Select functional division...</option>
                         <?php
                         $functionalDivisions = functionalDivisions();
@@ -132,7 +133,7 @@ if (numRows($trainings) > 0) {
 
                 <div class="form-group">
                     <label for="venue" class="mb-0">Venue <?php showAsterisk(); ?></label>
-                    <input id="venue" name="venue" type="text" class="form-control" placeholder="Type venue..." value="<?php echo $venue; ?>" required>
+                    <input id="venue" name="venue" type="text" class="form-control" placeholder="Type venue..." title="Type training venue..." value="<?php echo $venue; ?>" required>
                 </div>
 
                 <div class="form-check mb-3">

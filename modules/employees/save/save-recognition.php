@@ -1,5 +1,5 @@
 <?php
-// modules/employees/update/update-recognition.php
+// modules/employees/save/save-recognition.php
 require_once('../../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/recognition.php');
