@@ -45,7 +45,7 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = schoolEmployeeCount();
+                    $query = schools();
                     while ($row = fetchArray($query)) :
                         $logo = !empty($row['logo']) ? uri() . '/' . $row['logo'] : uri() . '/uploads/division/division.png';
                         $schoolName = $row['name'];
@@ -63,25 +63,39 @@ messageAlert($showAlert, $message, $success);
                                 <div class="small"><?php echo $row['id'] . ' | ' . $row['address']; ?></div>
                             </td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'District Information', $row['districtId']), $row['district']); ?>
+                                <?php linkItem(customUri($activeApp, 'District Information', $row['id']), fetchAssoc(district($row['district']))['name']); ?>
                             </td>
                             <td class="align-middle"><?php echo $row['category']; ?></td>
                             <td class="align-middle">
-                                <div>
-                                    <?php if ($isHrmis) {
-                                        linkItem(customUri('hrmis', 'Employee Information', $row['head']), userName($row['head']));
-                                    } else {
-                                        modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['head']), userName($row['head']));
-                                    } ?>
-                                </div>
+                                <?php if (!empty($row['head'])) : ?>
+                                    <div>
+                                        <?php if ($isHrmis) {
+                                            linkItem(customUri('hrmis', 'Employee Information', $row['head']), userName($row['head']));
+                                        } else {
+                                            modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['head']), userName($row['head']));
+                                        } ?>
+                                    </div>
                                 <?php
-                                $positions = position($row['head']);
-                                echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
-                                ?>
+                                    $positions = position($row['head']);
+                                    echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
+                                endif; ?>
                             </td>
-                            <td class="align-middle text-mars"><strong><?php echo $row['male']; ?></strong></td>
-                            <td class="align-middle text-venus"><strong><?php echo $row['female']; ?></strong></td>
-                            <td class="align-middle"><strong><?php echo $row['total']; ?></strong></td>
+
+                            <?php
+                            $employeeCount = schoolEmployeeCount($row['id']);
+                            $male = $female = $total = 0;
+
+                            if (numRows($employeeCount) > 0) {
+                                $count = fetchAssoc($employeeCount);
+                                $male = $count['male'];
+                                $female = $count['female'];
+                                $total = $count['total'];
+                            }
+                            ?>
+
+                            <td class="align-middle text-mars"><strong><?php echo $male; ?></strong></td>
+                            <td class="align-middle text-venus"><strong><?php echo $female; ?></strong></td>
+                            <td class="align-middle"><strong><?php echo $total; ?></strong></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis(); ?>
@@ -90,7 +104,13 @@ messageAlert($showAlert, $message, $success);
 
                                         if ($isDmis) {
                                             modalDropdownItem(uri() . '/modules/schools/save-school-dialog.php?id=' . cipher($row['id']) . '&e=' . cipher($row['alias']), 'Edit', 'fa-edit', 'Edit School');
-                                        } ?>
+                                            if ((int)$total === 0) { ?>
+                                                <div class="dropdown-divider"></div>
+                                        <?php
+                                                modalDropdownItem(uri() . '/modules/schools/delete-school-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete School');
+                                            }
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </td>
