@@ -82,7 +82,7 @@ if (numRows($schools) > 0) {
                                         <?php if ($isHrmis) {
                                             linkItem(customUri('hrmis', 'Employee Information', $head), userName($head));
                                         } else {
-                                            echo userName($head);
+                                            modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($head), userName($head));
                                         } ?>
                                     </div>
                                     <?php
@@ -180,7 +180,7 @@ if (numRows($schools) > 0) {
                                 <?php if ($isHrmis) {
                                     linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName, true);
                                 } else {
-                                    echo $employeeName;
+                                    modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                                 } ?>
                             </td>
                             <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
