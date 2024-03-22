@@ -158,6 +158,26 @@ if (isset($_POST['save-district'])) {
 	}
 }
 
+if (isset($_POST['delete-district'])) {
+	$districtCode = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$showAlert = true;
+
+	$districts = district($districtCode);
+
+	$target = numRows($districts) === 1 ? fetchAssoc($districts)['name'] : $districtCode;
+
+	deleteDistrict($districtCode);
+
+	if (affectedRows()) {
+		$message = 'District has been deleted successfully.';
+
+		createSystemLog($stationId, $userId, 'Deleted district', $target, clientIp());
+	} else {
+		$message = 'No changes have been made to district.';
+		$success = false;
+	}
+}
+
 if (isset($_POST['edit-user'])) {
 	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$userEmail = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
