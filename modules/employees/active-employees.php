@@ -21,7 +21,13 @@ messageAlert($showAlert, $message, $success);
         <?php if ($isHrmis || $isDmis) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
                 <div class="d-inline-block">
-                    <?php linkButtonSplit(customUri('export', 'active-employees'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+                    <?php
+                    linkButtonSplit(customUri('export', 'active-employees'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success');
+
+                    if ($isDmis) {
+                        linkButtonSplit(customUri('dmis', 'Archived Employees'), 'Archived', 'fa-archive', 'View archived employees', 'danger');
+                    }
+                    ?>
                 </div>
             </div>
         <?php } ?>
