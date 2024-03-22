@@ -1,6 +1,6 @@
 <?php
 // modules/employees/active-employees.php
-if (!$isHrmis) {
+if (!$isHrmis && !$isDmis) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -55,11 +55,14 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
                             <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']); ?>
+                                <?php
+                                $stationName = stationName($row['station']);
+
+                                linkItem(customUri($activeApp, 'School Information', $row['station']), $stationName); ?>
                             </td>
                             <td class="align-middle"><?php progressBar(pdsProgress($row['id'])); ?></td>
                             <td class="align-middle text-capitalize">
-                                <?php if ($status !== 'duplicate') : ?>
+                                <?php if ($isHrmis && $status !== 'duplicate') : ?>
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis(); ?>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
@@ -87,7 +90,15 @@ messageAlert($showAlert, $message, $success);
                                             ?>
                                         </div>
                                     </div>
-                                <?php endif; ?>
+                                <?php endif;
+
+                                if ($isDmis && $status === 'duplicate') : ?>
+                                    <div class="dropdown no-arrow">
+                                        <?php dropdownEllipsis(); ?>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                            <?php modalDropdownItem(uri() . '/modules/employees/delete-employee-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete Employee'); ?>
+                                        </div>
+                                    <?php endif; ?>
                             </td>
                         </tr>
                     <?php endwhile; ?>
