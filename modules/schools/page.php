@@ -78,6 +78,8 @@ messageAlert($showAlert, $message, $success);
                                 <?php
                                     $positions = position($row['head']);
                                     echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
+                                else :
+                                    echo 'To be assigned';
                                 endif; ?>
                             </td>
 
