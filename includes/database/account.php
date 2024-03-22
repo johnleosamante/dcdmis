@@ -18,6 +18,11 @@ function createAccount($id, $password)
     nonQuery("INSERT INTO tbl_teacher_account (`Teacher_TIN`, `Teacher_Password`, `Pass_status`) VALUES ('{$id}', '{$password}', 'Default');");
 }
 
+function deleteAccount($id)
+{
+    nonQuery("DELETE FROM tbl_teacher_account WHERE `Teacher_TIN`='{$id}';");
+}
+
 function updateAccountPassword($id, $password, $status = null)
 {
     $filter = !empty($status) ? ", Pass_status='{$status}'" : '';

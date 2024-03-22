@@ -18,6 +18,11 @@ function updatePsipop($itemNo, $status, $originalAppointment, $datePromoted, $el
     nonQuery("UPDATE psipop SET `Item_Number`='{$itemNo}', `Job_status`='{$status}', `Original_Appointment`='{$originalAppointment}', `Date_promoted`='{$datePromoted}', `Elegibility`='{$eligibility}' WHERE `Emp_ID`='{$id}' LIMIT 1;");
 }
 
+function deletePsipop($id)
+{
+    nonQuery("DELETE FROM psipop WHERE `Item_Number`='{$id}';");
+}
+
 function createStepIncrement($dateLastStep, $stepNo, $sg, $id)
 {
     nonQuery("INSERT INTO tbl_step_increment (`Date_last_step`, `Step_No`, `No_of_year`, `Emp_ID`) VALUES ('{$dateLastStep}', '{$stepNo}', '{$sg}', '{$id}');");
@@ -28,6 +33,11 @@ function updateStepIncrement($dateLastStep, $stepNo, $sg, $id)
     return query("UPDATE tbl_step_increment SET `Date_last_step`='{$dateLastStep}', `Step_No`='{$stepNo}', `No_of_year`='{$sg}' WHERE `Emp_ID`='{$id}';");
 }
 
+function deleteStepIncrement($id)
+{
+    nonQuery("DELETE FROM tbl_step_increment WHERE Emp_ID='{$id}';");
+}
+
 function createLoyaltyAward($dateLastAwarded, $id)
 {
     nonQuery("INSERT INTO tbl_loyalty_award (`employee_id`, `last_awarded_on`) VALUES ('{$id}', '{$dateLastAwarded}');");
@@ -36,6 +46,11 @@ function createLoyaltyAward($dateLastAwarded, $id)
 function updateLoyaltyAward($dateLastAwarded, $id)
 {
     nonQuery("UPDATE tbl_loyalty_award SET `last_awarded_on`='{$dateLastAwarded}' WHERE `employee_id`='{$id}';");
+}
+
+function deleteLoyaltyAward($id)
+{
+    nonQuery("DELETE FROM tbl_loyalty_award WHERE employee_id='{$id}';");
 }
 
 function getEmployeeStepIncrement($id)

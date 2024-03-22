@@ -79,6 +79,11 @@ function updateStation($date, $stationId, $positionId, $id)
     nonQuery("UPDATE tbl_station SET Emp_Position='{$positionId}', Emp_Station='{$stationId}', Emp_DOA='{$date}' WHERE Emp_ID='{$id}';");
 }
 
+function deleteStation($id)
+{
+    nonQuery("DELETE FROM tbl_station WHERE Emp_ID='{$id}';");
+}
+
 function updateStationID($newStationId, $oldStationId)
 {
     nonQuery("UPDATE tbl_station SET `Emp_Station`='{$newStationId}' WHERE `Emp_Station`='{$oldStationId}';");

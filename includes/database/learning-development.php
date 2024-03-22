@@ -53,6 +53,11 @@ function deleteTrainingParticipant($no, $id)
     nonQuery("DELETE FROM tbl_seminar_participant WHERE `Training_Code`='{$no}' AND `Emp_ID`='{$id}';");
 }
 
+function deleteParticipantTrainings($id)
+{
+    nonQuery("DELETE FROM tbl_seminar_participant WHERE `Emp_ID`='{$id}';");
+}
+
 function isConductedTraining($no)
 {
     return numRows(query("SELECT `Training_Code` AS `no` FROM tbl_seminar WHERE `Training_Code`='{$no}' AND `covered_to` < CURDATE() LIMIT 1;")) > 0;

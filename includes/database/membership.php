@@ -25,3 +25,8 @@ function deleteMembership($id, $no)
 {
     nonQuery("DELETE FROM tbl_membership WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
+
+function deleteMemberships($id)
+{
+    nonQuery("DELETE FROM tbl_membership WHERE Emp_ID='{$id}';");
+}

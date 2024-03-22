@@ -24,3 +24,8 @@ function deletePayslip($employeeId, $id)
 {
     nonQuery("DELETE FROM `payslips` WHERE `employee_id`='{$employeeId}' AND `id`='{$id}' LIMIT 1;");
 }
+
+function deletePayslips($employeeId)
+{
+    nonQuery("DELETE FROM `payslips` WHERE `employee_id`='{$employeeId}'");
+}

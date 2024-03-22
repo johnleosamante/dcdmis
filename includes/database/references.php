@@ -25,3 +25,8 @@ function deleteReference($id, $no)
 {
     nonQuery("DELETE FROM reference WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
+
+function deleteReferences($id)
+{
+    nonQuery("DELETE FROM reference WHERE Emp_ID='{$id}';");
+}

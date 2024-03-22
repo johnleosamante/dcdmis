@@ -25,3 +25,8 @@ function deleteEducation($id, $no)
 {
     nonQuery("DELETE FROM educational_background WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
+
+function deleteEducations($id)
+{
+    nonQuery("DELETE FROM educational_background WHERE Emp_ID='{$id}';");
+}

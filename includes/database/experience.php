@@ -26,6 +26,11 @@ function deleteExperience($id, $no)
     nonQuery("DELETE FROM work_experience WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
 
+function deleteExperiences($id)
+{
+    nonQuery("DELETE FROM work_experience WHERE Emp_ID='{$id}';");
+}
+
 function governmentService($id)
 {
     return query("SELECT `No` AS `no`, `From` AS `from`, `To` AS `to`, `ispresent`, `position_code` AS `position`, `organization_alias` AS `station`, `Salary_Grade` AS `sg`, `Monthly_Salary` AS `salary`, `Job_Status` AS `status`, `Goverment` AS `isgovernment`, `leave_dates`, `isseparation`, `separation_date`, `separation_cause`, `Emp_ID` AS `id` FROM `work_experience` WHERE `Emp_ID`='{$id}' AND `Goverment`='Y' ORDER BY `From` DESC;");

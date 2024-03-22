@@ -24,3 +24,8 @@ function deleteFileAttachment($id, $no)
 {
     nonQuery("DELETE FROM tbl_201_file WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
+
+function deleteFileAttachments($id)
+{
+    nonQuery("DELETE FROM tbl_201_file WHERE Emp_ID='{$id}';");
+}

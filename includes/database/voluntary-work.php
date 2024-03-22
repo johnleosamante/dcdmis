@@ -25,3 +25,8 @@ function deleteVoluntaryWork($id, $no)
 {
     nonQuery("DELETE FROM voluntary_work WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
+
+function deleteVoluntaryWorks($id)
+{
+    nonQuery("DELETE FROM voluntary_work WHERE Emp_ID='{$id}';");
+}

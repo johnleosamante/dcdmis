@@ -25,3 +25,8 @@ function deleteSpecialSkill($id, $no)
 {
     nonQuery("DELETE FROM tbl_special_skills WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
+
+function deleteSpecialSkills($id)
+{
+    nonQuery("DELETE FROM tbl_special_skills WHERE Emp_ID='{$id}';");
+}

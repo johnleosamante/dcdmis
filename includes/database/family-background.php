@@ -17,6 +17,11 @@ function updateFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbu
     nonQuery("UPDATE tbl_family_background SET SpouseLast='{$slast}', SpouseFirst='{$sfirst}', SpouseExtension='{$sext}', SpouseMiddle='{$smiddle}', SpouseOccupation='{$swork}', SpouseBusiness='{$sbusiness}', SpouseBusinessAddress='{$sbusinessAddress}', SpouseTelephone='{$stelephone}', FatherLast='{$flast}', FatherFirst='{$ffirst}', FatherExtension='{$fext}', FatherMiddle='{$fmiddle}', MotherLast='{$mlast}', MotherFirst='{$mfirst}', MotherMiddle='{$mmiddle}' WHERE Emp_ID='{$id}' LIMIT 1;");
 }
 
+function deleteFamily($id)
+{
+    nonQuery("DELETE FROM tbl_family_background WHERE Emp_ID='{$id}';");
+}
+
 function children($id)
 {
     return query("SELECT `No` AS `no`, Family_Name AS `last`, First_Name AS `first`, Name_Extension AS ext, Middle_Name AS middle, Birthdate AS dob, Emp_ID AS id FROM family_background WHERE Emp_ID='{$id}' ORDER BY Birthdate ASC;");
@@ -40,4 +45,9 @@ function updateChild($lname, $fname, $ext, $mname, $dob, $id, $no)
 function deleteChild($id, $no)
 {
     nonQuery("DELETE FROM family_background WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+}
+
+function deleteChildren($id)
+{
+    nonQuery("DELETE FROM family_background WHERE Emp_ID='{$id}';");
 }

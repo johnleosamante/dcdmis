@@ -25,3 +25,8 @@ function deleteEligibility($id, $no)
 {
     nonQuery("DELETE FROM civil_service WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
+
+function deleteEligibilities($id)
+{
+    nonQuery("DELETE FROM civil_service WHERE Emp_ID='{$id}';");
+}

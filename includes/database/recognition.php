@@ -25,3 +25,8 @@ function deleteRecognition($id, $no)
 {
     nonQuery("DELETE FROM tbl_recognition WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
 }
+
+function deleteRecognitions($id)
+{
+    nonQuery("DELETE FROM tbl_recognition WHERE Emp_ID='{$id}';");
+}
