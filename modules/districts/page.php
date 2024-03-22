@@ -80,6 +80,11 @@ messageAlert($showAlert, $message, $success);
                                         linkDropdownItem(customUri($activeApp, 'District Information', $row['id']), 'View', 'fa-eye', 'View District');
                                         if ($isDmis) {
                                             modalDropdownItem(uri() . '/modules/districts/save-district-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit District');
+                                            if ((int)$total === 0) { ?>
+                                                <div class="dropdown-divider"></div>
+                                        <?php
+                                                modalDropdownItem(uri() . '/modules/districts/delete-district-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete District');
+                                            }
                                         }
                                         ?>
                                     </div>
