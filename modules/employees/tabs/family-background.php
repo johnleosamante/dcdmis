@@ -1,5 +1,5 @@
 <?php
-// modules/employees/view/family-background.php
+// modules/employees/tabs/family-background.php
 
 $slast = $sfirst = $sext = $smiddle = $swork = $soffice = $sofficeAddress = $stelephone = $flast = $ffirst = $fext = $fmiddle = $mlast = $mfirst = $mmiddle = null;
 $familyMembers = family($employeeId);

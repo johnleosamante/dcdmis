@@ -104,20 +104,20 @@ $employeePhoto = '';
 
         <div class="tab-content mt-2">
             <?php
-            require_once(root() . '/modules/employees/view/personal-information.php');
-            require_once(root() . '/modules/employees/view/family-background.php');
-            require_once(root() . '/modules/employees/view/children.php');
-            require_once(root() . '/modules/employees/view/educational-background.php');
-            require_once(root() . '/modules/employees/view/civil-service-eligibility.php');
-            require_once(root() . '/modules/employees/view/work-experience.php');
-            require_once(root() . '/modules/employees/view/voluntary-work.php');
-            require_once(root() . '/modules/employees/view/learning-development.php');
-            require_once(root() . '/modules/employees/view/special-skills.php');
-            require_once(root() . '/modules/employees/view/recognition.php');
-            require_once(root() . '/modules/employees/view/membership.php');
-            require_once(root() . '/modules/employees/view/other-information.php');
-            require_once(root() . '/modules/employees/view/reference.php');
-            require_once(root() . '/modules/employees/view/government-id.php');
+            require_once(root() . '/modules/employees/tabs/personal-information.php');
+            require_once(root() . '/modules/employees/tabs/family-background.php');
+            require_once(root() . '/modules/employees/tabs/children.php');
+            require_once(root() . '/modules/employees/tabs/educational-background.php');
+            require_once(root() . '/modules/employees/tabs/civil-service-eligibility.php');
+            require_once(root() . '/modules/employees/tabs/work-experience.php');
+            require_once(root() . '/modules/employees/tabs/voluntary-work.php');
+            require_once(root() . '/modules/employees/tabs/learning-development.php');
+            require_once(root() . '/modules/employees/tabs/special-skills.php');
+            require_once(root() . '/modules/employees/tabs/recognition.php');
+            require_once(root() . '/modules/employees/tabs/membership.php');
+            require_once(root() . '/modules/employees/tabs/other-information.php');
+            require_once(root() . '/modules/employees/tabs/reference.php');
+            require_once(root() . '/modules/employees/tabs/government-id.php');
             ?>
         </div>
     </div>

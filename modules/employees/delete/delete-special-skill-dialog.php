@@ -1,5 +1,5 @@
 <?php
-// modules/employees/delete/delete-special-skills.php
+// modules/employees/delete/delete-special-skills-dialog.php
 require_once('../../../includes/function.php');
 require_once(root() . '/includes/layout/components.php');
 

@@ -1,25 +1,25 @@
 <?php
-// modules/employees/save/save-recognition.php
+// modules/employees/save/save-special-skill-dialog.php
 require_once('../../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
-require_once(root() . '/includes/database/recognition.php');
+require_once(root() . '/includes/database/special-skill.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
-$recognitionId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$skillId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
-$recognition = '';
-$modalTitle = 'Add Recognition';
+$skill = '';
+$modalTitle = 'Add Special Skill / Hobby';
 
-if (isset($recognitionId)) {
-    $modalTitle = $employeeId === $copiedId ? 'Copy Recognition' : 'Edit Recognition';
-    $recognitionDataSet = recognition($employeeId, $recognitionId);
+if (isset($skillId)) {
+    $modalTitle = $employeeId === $copiedId ? 'Copy Special Skill / Hobby' : 'Edit Special Skill / Hobby';
+    $specialSkills = specialSkill($employeeId, $skillId);
 
-    if (numRows($recognitionDataSet) > 0) {
-        $recognitionData = fetchArray($recognitionDataSet);
-        $recognitionId = $recognitionData['no'];
-        $recognition = $recognitionData['recognition'];
+    if (numRows($specialSkills) > 0) {
+        $specialSkill = fetchArray($specialSkills);
+        $skillId = $specialSkill['no'];
+        $skill = $specialSkill['skill'];
     }
 }
 ?>
@@ -31,8 +31,8 @@ if (isset($recognitionId)) {
         <form method="POST" action="">
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="recognition" class="mb-0">Non-Academic Distinction / Recognition: <?php showAsterisk(); ?></label>
-                    <input id="recognition" type="text" name="recognition" class="form-control" title="Required field" value="<?php echo $recognition; ?>" required>
+                    <label for="skill" class="mb-0">Special Skill / Hobby: <?php showAsterisk(); ?></label>
+                    <input id="skill" type="text" name="skill" class="form-control" title="Required field" value="<?php echo $skill; ?>" required>
                 </div>
 
                 <?php requiredLegend(0); ?>
@@ -45,7 +45,7 @@ if (isset($recognitionId)) {
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
                 <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
-                <button type="submit" class="btn btn-primary" name="save-recognition">Continue</button>
+                <button type="submit" class="btn btn-primary" name="save-special-skill">Continue</button>
                 <?php cancelModalButton(); ?>
             </div>
         </form>

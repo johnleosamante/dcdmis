@@ -1,11 +1,11 @@
 <?php
-// modules/employees/view/special-skills.php
+// modules/employees/tabs/recognition.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'special-skills', 'show active'); ?>" id="special-skills">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'recognition', 'show active'); ?>" id="recognition">
     <?php if ($editMode) : ?>
         <div class="d-sm-flex justify-content-end my-3">
-            <?php modalButtonSplit(uri() . '/modules/employees/save/save-special-skill.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Special Skill / Hobby', 'primary'); ?>
+            <?php modalButtonSplit(uri() . '/modules/employees/save/save-recognition-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Recogntion', 'primary'); ?>
         </div>
     <?php endif; ?>
 
@@ -14,7 +14,7 @@
             <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="100%">Special Skills &amp; Hobbies</th>
+                        <th class="align-middle" width="90%">Non-Academic Distinctions / Recognition</th>
                         <?php if ($editMode) : ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>
@@ -23,21 +23,21 @@
 
                 <tbody>
                     <?php
-                    $skills = specialSkills($employeeId);
+                    $recognitions = recognitions($employee['id']);
 
-                    if (numRows($skills) > 0) {
-                        while ($skill = fetchAssoc($skills)) : ?>
+                    if (numRows($recognitions) > 0) {
+                        while ($recognition = fetchAssoc($recognitions)) : ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?php echo $skill['skill']; ?></td>
+                                <td class="align-middle"><?php echo $recognition['recognition']; ?></td>
                                 <?php if ($editMode) : ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
                                             <?php dropdownEllipsis(); ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                                <?php modalDropdownItem(uri() . '/modules/employees/save/save-special-skill.php?e=' . cipher($employeeId) . '&id=' . cipher($skill['no']), 'Edit', 'fa-edit', 'Edit Special Skill / Hobby');
-                                                modalDropdownItem(uri() . '/modules/employees/save/save-special-skill.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($skill['no']), 'Copy', 'fa-copy', 'Copy Special Skill / Hobby'); ?>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/save/save-recognition-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Edit', 'fa-edit', 'Edit Recognition');
+                                                modalDropdownItem(uri() . '/modules/employees/save/save-recognition-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Copy', 'fa-copy', 'Copy Recognition'); ?>
                                                 <div class="dropdown-divider"></div>
-                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-special-skill.php?e=' . cipher($employeeId) . '&id=' . cipher($skill['no']), 'Delete', 'fa-trash', 'Delete Special Skill / Hobby'); ?>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-recognition-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Delete', 'fa-trash', 'Delete Recognition'); ?>
                                             </div>
                                         </div>
                                     </td>
@@ -53,7 +53,7 @@
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="100%">Special Skills &amp; Hobbies</th>
+                        <th class="align-middle" width="90%">Non-Academic Distinctions / Recognition</th>
                         <?php if ($editMode) : ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>

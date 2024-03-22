@@ -1,11 +1,11 @@
 <?php
-// modules/employees/view/reference.php
+// modules/employees/tabs/reference.php
 ?>
 
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'reference', 'show active'); ?>" id="reference">
     <?php if ($editMode) : ?>
         <div class="d-sm-flex justify-content-end my-3">
-            <?php modalButtonSplit(uri() . '/modules/employees/save/save-reference.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Reference', 'primary'); ?>
+            <?php modalButtonSplit(uri() . '/modules/employees/save/save-reference-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Reference', 'primary'); ?>
         </div>
     <?php endif; ?>
 
@@ -38,10 +38,10 @@
                                         <div class="dropdown no-arrow">
                                             <?php dropdownEllipsis(); ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                                <?php modalDropdownItem(uri() . '/modules/employees/save/save-reference.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Edit', 'fa-edit', 'Edit Reference');
-                                                modalDropdownItem(uri() . '/modules/employees/save/save-reference.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Copy', 'fa-copy', 'Copy Reference'); ?>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/save/save-reference-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Edit', 'fa-edit', 'Edit Reference');
+                                                modalDropdownItem(uri() . '/modules/employees/save/save-reference-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Copy', 'fa-copy', 'Copy Reference'); ?>
                                                 <div class="dropdown-divider"></div>
-                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-reference.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Delete', 'fa-trash', 'Delete Reference'); ?>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-reference-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($reference['no']), 'Delete', 'fa-trash', 'Delete Reference'); ?>
                                             </div>
                                         </div>
                                     </td>

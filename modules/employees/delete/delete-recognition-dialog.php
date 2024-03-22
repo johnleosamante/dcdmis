@@ -1,5 +1,5 @@
 <?php
-// modules/employees/delete/delete-recognition.php
+// modules/employees/delete/delete-recognition-dialog.php
 require_once('../../../includes/function.php');
 require_once(root() . '/includes/layout/components.php');
 

@@ -1,11 +1,11 @@
 <?php
-// modules/employees/view/membership.php
+// modules/employees/tabs/special-skills.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'membership', 'show active'); ?>" id="membership">
+<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'special-skills', 'show active'); ?>" id="special-skills">
     <?php if ($editMode) : ?>
         <div class="d-sm-flex justify-content-end my-3">
-            <?php modalButtonSplit(uri() . '/modules/employees/save/save-membership.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Membership', 'primary'); ?>
+            <?php modalButtonSplit(uri() . '/modules/employees/save/save-special-skill-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Special Skill / Hobby', 'primary'); ?>
         </div>
     <?php endif; ?>
 
@@ -14,7 +14,7 @@
             <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="100%">Membership in Association / Organization</th>
+                        <th class="align-middle" width="100%">Special Skills &amp; Hobbies</th>
                         <?php if ($editMode) : ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>
@@ -23,21 +23,21 @@
 
                 <tbody>
                     <?php
-                    $organizations = memberships($employeeId);
+                    $skills = specialSkills($employeeId);
 
-                    if (numRows($organizations) > 0) {
-                        while ($membership = fetchAssoc($organizations)) : ?>
+                    if (numRows($skills) > 0) {
+                        while ($skill = fetchAssoc($skills)) : ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?php echo $membership['organization']; ?></td>
+                                <td class="align-middle"><?php echo $skill['skill']; ?></td>
                                 <?php if ($editMode) : ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
                                             <?php dropdownEllipsis(); ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                                <?php modalDropdownItem(uri() . '/modules/employees/save/save-membership.php?e=' . cipher($employeeId) . '&id=' . cipher($membership['no']), 'Edit', 'fa-edit', 'Edit Membership');
-                                                modalDropdownItem(uri() . '/modules/employees/save/save-membership.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($membership['no']), 'Copy', 'fa-copy', 'Copy Membership'); ?>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/save/save-special-skill-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($skill['no']), 'Edit', 'fa-edit', 'Edit Special Skill / Hobby');
+                                                modalDropdownItem(uri() . '/modules/employees/save/save-special-skill-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($skill['no']), 'Copy', 'fa-copy', 'Copy Special Skill / Hobby'); ?>
                                                 <div class="dropdown-divider"></div>
-                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-membership.php?e=' . cipher($employeeId) . '&id=' . cipher($membership['no']), 'Delete', 'fa-trash', 'Delete Membership'); ?>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-special-skill-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($skill['no']), 'Delete', 'fa-trash', 'Delete Special Skill / Hobby'); ?>
                                             </div>
                                         </div>
                                     </td>
@@ -46,14 +46,14 @@
                         <?php endwhile;
                     } else { ?>
                         <tr>
-                            <td class="align-middle" colspan="<?php echo $editMode ? '2' : '1'; ?>">No data available in table</td>
+                            <td colspan="<?php echo $editMode ? '2' : '1'; ?>" class="align-middle">No data available in table</td>
                         </tr>
                     <?php } ?>
                 </tbody>
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="100%">Membership in Association / Organization</th>
+                        <th class="align-middle" width="100%">Special Skills &amp; Hobbies</th>
                         <?php if ($editMode) : ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>

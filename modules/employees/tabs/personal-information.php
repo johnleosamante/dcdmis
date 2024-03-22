@@ -1,5 +1,5 @@
 <?php
-// modules/employees/view/personal-information.php
+// modules/employees/tabs/personal-information.php
 ?>
 
 <div class="tab-pane fade<?php echo setActiveNavigation(!isset($activeTab) || $activeTab === 'personal-information', 'show active'); ?>" id="personal-information">

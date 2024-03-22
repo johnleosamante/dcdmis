@@ -1,5 +1,5 @@
 <?php
-// modules/employees/view/government-id.php
+// modules/employees/tabs/government-id.php
 $card = $number = $place = $date = 'N/A';
 
 if ($isPis) {

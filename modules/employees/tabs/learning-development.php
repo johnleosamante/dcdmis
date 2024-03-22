@@ -1,5 +1,5 @@
 <?php
-// modules/employees/view/learning-development.php
+// modules/employees/tabs/learning-development.php
 ?>
 
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'learning-development', 'show active'); ?>" id="learning-development">

@@ -1,5 +1,5 @@
 <?php
-// modules/employees/delete/delete-voluntary-work.php
+// modules/employees/delete/delete-voluntary-work-dialog.php
 require_once('../../../includes/function.php');
 require_once(root() . '/includes/layout/components.php');
 

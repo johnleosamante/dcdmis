@@ -1,5 +1,5 @@
 <?php
-// modules/employees/view/work-experience.php
+// modules/employees/tabs/work-experience.php
 ?>
 
 <div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'work-experience', 'show active'); ?>" id="work-experience">

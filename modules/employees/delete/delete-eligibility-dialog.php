@@ -1,5 +1,5 @@
 <?php
-// modules/employees/delete/delete-eligibility.php
+// modules/employees/delete/delete-eligibility-dialog.php
 require_once('../../../includes/function.php');
 require_once(root() . '/includes/layout/components.php');
 
