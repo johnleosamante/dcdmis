@@ -59,6 +59,11 @@ function updateSchool($id, $name, $alias, $address, $district, $category, $telep
     nonQuery("UPDATE tbl_school SET `SchoolID`='{$id}', `SchoolName`='{$name}', `Abraviate`='{$alias}', `Address`='{$address}', `District_code`='{$district}', `School_Category`='{$category}', `telephone`='{$telephone}', `email`='{$email}', `website`='{$website}', `fb_page`='{$facebook}', `SchoolLogo`='{$logo}' WHERE `SchoolID`='{$referenceId}' LIMIT 1;");
 }
 
+function deleteSchool($id)
+{
+    nonQuery("DELETE FROM tbl_school WHERE `SchoolID`='{$id}' LIMIT 1;");
+}
+
 function station($id)
 {
     return query("SELECT `No`, Emp_Position AS position_id, Emp_Station AS station_id, Emp_DOA AS doa, Emp_ID AS id FROM tbl_station WHERE Emp_ID='{$id}' ORDER BY Emp_DOA DESC LIMIT 1;");
