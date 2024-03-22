@@ -95,6 +95,26 @@ if (isset($_POST['save-school'])) {
 	}
 }
 
+if (isset($_POST['delete-school'])) {
+	$schoolId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$showAlert = true;
+
+	$schools = schoolById($schoolId);
+
+	$target = numRows($schools) === 1 ? fetchAssoc($schools)['name'] : $schoolId;
+
+	deleteSchool($schoolId);
+
+	if (affectedRows()) {
+		$message = 'School has been deleted successfully.';
+
+		createSystemLog($stationId, $userId, 'Deleted school', $target, clientIp());
+	} else {
+		$message = 'No changes have been made to school.';
+		$success = false;
+	}
+}
+
 if (isset($_POST['save-section'])) {
 	$referenceSectionId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$alias = sanitize($_POST['alias']);
