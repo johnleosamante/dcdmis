@@ -178,6 +178,49 @@ if (isset($_POST['save-district'])) {
 	}
 }
 
+if (isset($_POST['delete-employee'])) {
+	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$showAlert = true;
+
+	$employee = employee($employeeId);
+
+	$target = numRows($employee) === 1 ? userName($employeeId) : $employeeId;
+
+	if (isDuplicateEmployee($employeeId)) {
+		deleteFileAttachments($employeeId);
+		deleteAccount($employeeId);
+		deleteUserRoles($employeeId);
+		deleteEducations($employeeId);
+		deleteEligibilities($employeeId);
+		deleteExperiences($employeeId);
+		deleteChildren($employeeId);
+		deleteFamily($employeeId);
+		deleteParticipantTrainings($employeeId);
+		deleteMemberships($employeeId);
+		deleteOtherInformation($employeeId);
+		deletePayslips($employeeId);
+		deleteRecognitions($employeeId);
+		deleteReferences($employeeId);
+		deleteSpecialSkills($employeeId);
+		deleteVoluntaryWorks($employeeId);
+		deletePsipop($employeeId);
+		deleteStepIncrement($employeeId);
+		deleteLoyaltyAward($employeeId);
+		deleteStepIncrement($employeeId);
+		deleteStation($employeeId);
+		deleteEmployee($employeeId);
+	}
+
+	if (affectedRows()) {
+		$message = 'Employee has been deleted successfully.';
+
+		createSystemLog($stationId, $userId, 'Deleted employee', $target, clientIp());
+	} else {
+		$message = 'No changes have been made to employee information.';
+		$success = false;
+	}
+}
+
 if (isset($_POST['delete-district'])) {
 	$districtCode = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$showAlert = true;
