@@ -4,6 +4,15 @@ require_once('app.php');
 messageAlert($showAlert, $message, $success);
 ?>
 
+<div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
+    <nav class="d-flex align-items-center flex-row m-0">
+        <ol class="breadcrumb m-0 p-0 bg-transparent">
+            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item active">Settings</li>
+        </ol>
+    </nav>
+</div>
+
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
         <?php contentTitle('Settings'); ?>

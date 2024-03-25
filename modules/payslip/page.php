@@ -31,6 +31,15 @@ if (!is_dir($uploadDirectory)) {
 }
 ?>
 
+<div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
+    <nav class="d-flex align-items-center flex-row m-0">
+        <ol class="breadcrumb m-0 p-0 bg-transparent">
+            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item active">Payslip</li>
+        </ol>
+    </nav>
+</div>
+
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
         <?php contentTitleWithModal('Payslip : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus'); ?>
