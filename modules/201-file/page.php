@@ -22,17 +22,7 @@ if (numRows($employees) > 0) {
     return;
 }
 
-if ($isHrmis) {
-    require_once(root() . '/modules/employees/employee-tabs.php');
-}
-
 messageAlert($showAlert, $message, $success);
-
-$uploadDirectory = root() . '/uploads/201_files/' . $employeeId;
-
-if (!is_dir($uploadDirectory)) {
-    mkdir($uploadDirectory, 0777, true);
-}
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -43,6 +33,18 @@ if (!is_dir($uploadDirectory)) {
         </ol>
     </nav>
 </div>
+
+<?php
+if ($isHrmis) {
+    require_once(root() . '/modules/employees/employee-tabs.php');
+}
+
+$uploadDirectory = root() . '/uploads/201_files/' . $employeeId;
+
+if (!is_dir($uploadDirectory)) {
+    mkdir($uploadDirectory, 0777, true);
+}
+?>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">

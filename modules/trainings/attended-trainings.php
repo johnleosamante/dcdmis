@@ -22,10 +22,6 @@ if (numRows($employees) > 0) {
     return;
 }
 
-if ($isHrmis) {
-    require_once(root() . '/modules/employees/employee-tabs.php');
-}
-
 messageAlert($showAlert, $message, $success);
 ?>
 
@@ -37,6 +33,12 @@ messageAlert($showAlert, $message, $success);
         </ol>
     </nav>
 </div>
+
+<?php
+if ($isHrmis) {
+    require_once(root() . '/modules/employees/employee-tabs.php');
+}
+?>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
