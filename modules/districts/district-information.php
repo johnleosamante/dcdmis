@@ -29,10 +29,6 @@ if (numRows($districts) > 0) {
             <li class="breadcrumb-item active"><?php echo $districtName; ?></li>
         </ol>
     </nav>
-
-    <div class="d-inline-block">
-        <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus'); ?>
-    </div>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
