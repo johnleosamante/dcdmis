@@ -18,10 +18,6 @@ messageAlert($showAlert, $message, $success);
             <li class="breadcrumb-item active">Archived</li>
         </ol>
     </nav>
-
-    <div class="d-inline-block">
-        <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus'); ?>
-    </div>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
