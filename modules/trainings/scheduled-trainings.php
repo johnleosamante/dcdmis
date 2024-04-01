@@ -8,7 +8,14 @@ if (!$isHrtdms) {
 messageAlert($showAlert, $message, $success);
 ?>
 
-<div class="d-flex align-items-center flex-row-reverse mt-2 mb-3">
+<div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
+    <nav class="d-flex align-items-center flex-row m-0">
+        <ol class="breadcrumb m-0 p-0 bg-transparent">
+            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item active">Scheduled Trainings</li>
+        </ol>
+    </nav>
+
     <div class="d-inline-block">
         <?php modalButtonSplit(uri() . '/modules/trainings/save-training-dialog.php', 'Add Training', 'fa-plus'); ?>
     </div>

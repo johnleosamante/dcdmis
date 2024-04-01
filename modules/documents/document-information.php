@@ -45,7 +45,7 @@ if (numRows($documents) > 0) {
             <li class="breadcrumb-item">
                 <a href="<?php echo customUri('dts', $documentType); ?>"><?php echo trim($documentType, ' Documents'); ?></a>
             </li>
-            <li class="breadcrumb-item active">Information</li>
+            <li class="breadcrumb-item active"><?php echo $documentId; ?></li>
         </ol>
     </nav>
 </div>

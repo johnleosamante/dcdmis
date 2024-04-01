@@ -21,6 +21,22 @@ if (numRows($trainings) > 0) {
 messageAlert($showAlert, $message, $success);
 ?>
 
+<div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
+    <nav class="d-flex align-items-center flex-row m-0">
+        <ol class="breadcrumb m-0 p-0 bg-transparent">
+            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item">
+                <?php if (strtotime($training['from']) < strtotime(date('Y-m-d'))) : ?>
+                    <a href="<?php echo customUri('hrtdms', 'Conducted Trainings'); ?>">Conducted Trainings</a>
+                <?php else : ?>
+                    <a href="<?php echo customUri('hrtdms', 'Scheduled Trainings'); ?>">Scheduled Trainings</a>
+                <?php endif; ?>
+            </li>
+            <li class="breadcrumb-item active">HRTD-24-0005</li>
+        </ol>
+    </nav>
+</div>
+
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
         <?php contentTitleWithModal('Training Details', uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['no']), 'Edit', 'fa-edit'); ?>
