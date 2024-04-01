@@ -18,6 +18,12 @@ messageAlert($showAlert, $message, $success);
             <li class="breadcrumb-item active">Archived</li>
         </ol>
     </nav>
+
+    <?php if ($isHrmis) : ?>
+        <div class="d-inline-block">
+            <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus'); ?>
+        </div>
+    <?php endif; ?>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
