@@ -43,6 +43,7 @@ require_once(root() . '/includes/database/section.php');
 require_once(root() . '/includes/database/school.php');
 require_once(root() . '/includes/database/utility.php');
 require_once(root() . '/includes/plugin/fpdf/fpdf.php');
+require_once(root() . '/includes/plugin/code128/code128.php');
 require_once(root() . '/includes/plugin/phpqrcode/qrlib.php');
 require_once(root() . "/print/{$file}.php");
 

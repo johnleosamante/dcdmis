@@ -1,6 +1,6 @@
 <?php
 // print/print-layout.php
-class PDF extends FPDF
+class PDF extends PDF_Code128
 {
     function Header()
     {
@@ -58,6 +58,7 @@ class PDF extends FPDF
         global $margin;
         global $height;
         global $width;
+        global $showBarCode;
         global $showQR;
         global $code;
         global $multiplePage;
@@ -132,6 +133,10 @@ class PDF extends FPDF
             QRcode::png($code, $filename, $errorCorrectionLevel, $matrixPointSize, 2);
 
             $this->Image($filename, $width - $margin - $logoSize, $height - 33, $logoSize + 2);
+        }
+
+        if ($showBarCode) {
+            $this->Code128($width - $margin - 40, $height - 50, $code, 40, 15);
         }
 
         $this->Line($margin, $height - 33, $width - $margin, $height - 33);

@@ -6,6 +6,7 @@ $width = 210;
 $height = 297;
 $lineY = 55;
 $multiplePage = true;
+$showBarCode = true;
 $showQR = true;
 $showStationInfo = false;
 $isSchoolPortal = $stationId !== divisionId();
