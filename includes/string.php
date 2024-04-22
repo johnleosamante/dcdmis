@@ -101,7 +101,7 @@ function generateStrongRandomPassword()
 {
     $strongPassword = false;
     $randomPassword = '';
-    $length = rand(10, 16);
+    $length = rand(10, 12);
 
     while (!$strongPassword) {
         $randomPassword = randomPassword($length);
