@@ -77,7 +77,7 @@ function toHandleEncoding($string)
 
 function randomPassword($length)
 {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:<>?-=[]\;,./';
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*?';
     $charLength = strlen($characters);
     $randomString = '';
 
