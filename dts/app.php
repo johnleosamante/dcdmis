@@ -121,8 +121,8 @@ if (isset($_POST['complete-document'])) {
 	updateDocumentLogsDone($documentId);
 
 	if (affectedRows()) {
-		createDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
-		updateDocumentStatus($documentId, $status, 'Read', $remarks);
+		createDocumentLog($documentId, $userId, $station, '-', $status, 'New', $remarks);
+		updateDocumentStatus($documentId, $status, 'Unread', $remarks);
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been mark completed successfully.';
 
@@ -142,8 +142,8 @@ if (isset($_POST['cancel-document'])) {
 	updateDocumentLogsDone($documentId);
 
 	if (affectedRows()) {
-		createDocumentLog($documentId, $userId, $station, '-', $status, 'Done', $remarks);
-		updateDocumentStatus($documentId, $status, 'Read', $remarks);
+		createDocumentLog($documentId, $userId, $station, '-', $status, 'New', $remarks);
+		updateDocumentStatus($documentId, $status, 'Unread', $remarks);
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
 
