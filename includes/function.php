@@ -45,8 +45,8 @@ function uri($domain = null)
 
 function isWeekend()
 {
-    $day = date('w');
-    return ($day === 6 || $day === 7);
+    $day = date('N');
+    return $day > 5;
 }
 
 function isOfficialTime($startTime = '06:30:00', $endTime = '18:30:00')
