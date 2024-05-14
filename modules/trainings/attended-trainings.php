@@ -82,7 +82,10 @@ if ($isHrmis) {
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis(); ?>
                                         <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                                            <?php linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($employeeId), 'Download', 'fa-download', 'Download Certificate', true); ?>
+                                            <?php
+                                            linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($employeeId), 'Download', 'fa-download', 'Download Certificate', true); 
+                                            linkDropdownItem(customUri('print', 'Certificate of Appearance', $training['no']) . '&p=' . encode($employeeId), 'Appearance', 'fa-stamp', 'View Certificate of Appearance', true);
+                                            ?>
                                         </div>
                                     </div>
                                 <?php endif; ?>
