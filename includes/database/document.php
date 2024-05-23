@@ -46,7 +46,7 @@ function createDocument($id, $description, $station, $purpose, $headId, $details
 function updateDocument($id, $description, $purpose, $details = '', $updateDescription = true)
 {
     $description_column = $updateDescription ? " Title='{$description}', " : ' ';
-    nonQuery("UPDATE tbl_transactions SET $description_column Date_time=NOW(), Trans_Stats='{$purpose}', details='{$details}' WHERE TransCode='{$id}' LIMIT 1;");
+    nonQuery("UPDATE tbl_transactions SET $description_column Trans_Stats='{$purpose}', details='{$details}' WHERE TransCode='{$id}' LIMIT 1;");
 }
 
 function incomingDocuments($station)
@@ -71,17 +71,17 @@ function isPendingDocument($id, $station)
 
 function outgoingDocuments($station)
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Forwarded_to AS `to`, tbl_transactions_log.Recieved_by AS user, tbl_transactions_log.Date_recieved AS `datetime`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to <> '' AND tbl_transactions_log.Forwarded_to <> '-' AND tbl_transactions_log.Status='new' ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Forwarded_to AS `to`, tbl_transactions_log.Recieved_by AS user, tbl_transactions_log.Date_recieved AS `datetime`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to <> '' AND tbl_transactions_log.Forwarded_to <> '-' AND tbl_transactions_log.Status='New' ORDER BY tbl_transactions_log.Date_recieved DESC;");
 }
 
 function isOutgoingDocument($id, $station)
 {
-    return numRows(query("SELECT tbl_transactions.TransCode AS id FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions.TransCode='{$id}' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to <> '' AND tbl_transactions_log.Forwarded_to <> '-' AND tbl_transactions_log.Status='new' ORDER BY tbl_transactions_log.Date_recieved DESC LIMIT 1;")) > 0;
+    return numRows(query("SELECT tbl_transactions.TransCode AS id FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions.TransCode='{$id}' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to <> '' AND tbl_transactions_log.Forwarded_to <> '-' AND tbl_transactions_log.Status='New' ORDER BY tbl_transactions_log.Date_recieved DESC LIMIT 1;")) > 0;
 }
 
 function ongoingDocuments($station)
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Forwarded_to AS `to`, tbl_transactions.Date_time AS `datetime`, tbl_transactions.Trans_Stats AS `status`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions_log.Trans_status NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions_log.Trans_status NOT LIKE '%Cancel%' GROUP BY tbl_transactions.TransCode ORDER BY tbl_transactions_log. Date_recieved DESC;");
+    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Forwarded_to AS `to`, tbl_transactions.Date_time AS `datetime`, tbl_transactions.Trans_Stats AS `status`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions_log.Trans_status NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions_log.Trans_status NOT LIKE '%Cancel%' GROUP BY tbl_transactions.TransCode ORDER BY tbl_transactions_log.Date_recieved DESC;");
 }
 
 function isOngoingDocument($id, $station)
@@ -97,6 +97,11 @@ function completedDocuments($station, $from, $to)
 function isCompletedDocument($id, $station)
 {
     return numRows(query("SELECT tbl_transactions.TransCode AS id FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' AND tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats LIKE '%Complete%' AND tbl_transactions_log.Trans_status LIKE '%Complete%' ORDER BY tbl_transactions_log.Date_recieved DESC LIMIT 1;")) > 0;
+}
+
+function wasDocumentCompleted($id, $station)
+{
+    return numRows(query("SELECT Transaction_code AS id FROM tbl_transactions_log WHERE Transaction_code='{$id}' AND From_office='{}' Trans_status='Completed'")) > 0;
 }
 
 function receivedDocuments($station, $from, $to)
