@@ -5,10 +5,6 @@ restrictPublicAccess(hasHoliday());
 $page = $appTitle = 'Division Training Certificate Finder';
 $enableScripts = true;
 
-if (isset($userId)) {
-    redirect(customUri('hrtdms', 'Conducted Trainings'));
-}
-
 $fromDate = isset($_GET['from']) ? sanitize($_GET['from']) : date('Y') . '-01-01';
 $toDate = isset($_GET['to']) ? sanitize($_GET['to']) : date('Y-m-d');
 
