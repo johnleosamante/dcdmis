@@ -149,7 +149,8 @@ if (isset($_POST['email-participants'])) {
             'Get your certificates by clicking the links below.' . PHP_EOL . PHP_EOL .
             'Certificate of Appearance: ' . $appearance . PHP_EOL . PHP_EOL .
             'Certificate of Participation: ' . $certificate . PHP_EOL . PHP_EOL .
-            'If nothing happens when you click the link, copy the links above and paste to your web browser instead. Thank you.' . PHP_EOL . PHP_EOL . PHP_EOL .
+            'If nothing happens when you click the link, copy the links above and paste to your web browser instead.' . PHP_EOL . PHP_EOL .
+            'You can also go to the DepEd Dipolog City Division Training Repository (' . uri(DOMAIN) . '/hrtdms/repository' . ') to view your trainings. Thank you.' . PHP_EOL . PHP_EOL . PHP_EOL .
             '***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****';
 
         if (sendMail($userEmail, $title, $emailMessage)) {
