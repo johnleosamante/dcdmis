@@ -106,8 +106,10 @@ if (numRows($documents) > 0) {
                         }
                         break;
                     case 'Completed Documents':
-                        modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-minus-square', 'Mark Incomplete', 'danger');
-                        break;
+                        if (isDocumentFrom($documentId, $station) && $document['from'] === $station && isDocument($documentId, 'Completed')) {
+                            modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-minus-square', 'Mark Incomplete', 'danger');
+                            break;
+                        }
                     default:
                         break;
                 }
