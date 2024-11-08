@@ -54,7 +54,7 @@ messageAlert($showAlert, $message, $success);
                     $query = retirableEmployees();
                     while ($row = fetchArray($query)) :
                         $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = uri() . '/' . $row['picture'];
+                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
                     ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
