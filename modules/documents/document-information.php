@@ -58,6 +58,10 @@ if (numRows($documents) > 0) {
     <div class="card-body">
         <table cellspacing="0">
             <tr>
+                <th class="align-top pr-3" scope="row">Type:</th>
+                <td class="text-uppercase"><?php echo fetchArray(documentType($document['type']))['name']; ?></td>
+            </tr>
+            <tr>
                 <th class="align-top pr-3" scope="row">Description:</th>
                 <td class="text-uppercase"><?php echo $document['description']; ?></td>
             </tr>
@@ -72,9 +76,7 @@ if (numRows($documents) > 0) {
             <tr>
                 <th class="align-top pr-3" scope="row">Status:</th>
                 <td class="text-uppercase">
-                    <?php
-                    echo strlen($document['details']) === 0 ? $document['status'] : $document['status'] . ' - ' . $document['details'];
-                    ?>
+                    <?= $document['status'] ?>
                 </td>
             </tr>
         </table>
@@ -143,6 +145,7 @@ if (numRows($documents) > 0) {
                 $hasDestination = !empty($to) && $to !== '-';
                 $status = $log['status'];
                 $details = $log['details'];
+                $attachment = $log['attachment'];
                 $isCompleted = str_contains(strtolower($status), 'complete');
                 $isCanceled = str_contains(strtolower($status), 'cancel');
                 $bgColor = '';
@@ -183,13 +186,30 @@ if (numRows($documents) > 0) {
                     </div>
                     <div class="timeline-item-content pt-0">
                         <div class="card">
-                            <div class="card-body p-3">
-                                <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase">
+                            <div class="card-header">
+                                <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase mb-0">
                                     <?php echo $from; ?>
                                 </h5>
+                            </div>
+
+                            <div class="card-body">
                                 <?php echo $hasDestination ? '<div>Forwarded to ' . strtoupper($to) . '</div>' : ''; ?>
-                                <div><?php echo $status; ?></div>
-                                <?php echo !empty($details) ? '<div>' . $details . '</div>' : ''; ?>
+
+                                <div class="font-weight-bold text-lg"><?php echo $status; ?></div>
+
+                                <?php if (!empty($details)) : ?>
+                                    <div class="bg-warning text-dark d-inline-block px-2 py-1 rounded mt-2"><?= $details ?></div>
+                                <?php endif; ?>
+
+                                <?php
+                                if (!empty($attachment) && file_exists(root() . '/' . $attachment)) : ?>
+                                    <div class="mt-1">
+                                        <?php linkButtonSplit(uri() . '/' . $attachment, 'View Attachment', 'fa-eye', 'View Attachment', 'info', true); ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="card-footer">
                                 <div class="text-uppercase"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), userName($log['user'])); ?></div>
                                 <div class="text-uppercase small"><?php echo fetchAssoc(position($log['user']))['position']; ?></div>
                             </div>
