@@ -141,6 +141,9 @@ if (numRows($documents) > 0) {
                 $logCount++;
                 $from = stationName($log['from']);
                 $to = stationName($log['to']);
+                $displayName = userName($log['user']);
+                $user = fetchAssoc(employee($log['user']));
+                $displayPhoto = uri() . '/' . $user['picture'];
                 $icon = 'flag';
                 $hasDestination = !empty($to) && $to !== '-';
                 $status = $log['status'];
@@ -193,26 +196,32 @@ if (numRows($documents) > 0) {
                             </div>
 
                             <div class="card-body">
-                                <?php echo $hasDestination ? '<div>Forwarded to ' . strtoupper($to) . '</div>' : ''; ?>
+                                <div class="mb-3">
+                                    <span class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
+                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px" width="40px">
+                                    </span>
+
+                                    <div class="ml-2 d-inline-block align-middle">
+                                        <div class="text-uppercase"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName); ?></div>
+
+                                        <div class="text-uppercase text-xs"><?php echo fetchAssoc(position($log['user']))['position']; ?></div>
+                                    </div>
+                                </div>
+
+                                <?php echo $hasDestination ? '<div class="m-0">Forwarded to ' . strtoupper($to) . '</div>' : ''; ?>
 
                                 <div class="font-weight-bold text-lg"><?php echo $status; ?></div>
 
                                 <?php if (!empty($details)) : ?>
-                                    <div class="bg-warning text-dark d-inline-block px-2 py-1 rounded mt-2"><?= $details ?></div>
-                                <?php endif; ?>
-
-                                <?php
-                                if (!empty($attachment) && file_exists(root() . '/' . $attachment)) : ?>
-                                    <div class="mt-1">
-                                        <?php linkButtonSplit(uri() . '/' . $attachment, 'View Attachment', 'fa-eye', 'View Attachment', 'info', true); ?>
-                                    </div>
+                                    <div class="bg-warning text-dark d-inline-block px-2 py-1 rounded mt-3"><?= $details ?></div>
                                 <?php endif; ?>
                             </div>
 
-                            <div class="card-footer">
-                                <div class="text-uppercase"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), userName($log['user'])); ?></div>
-                                <div class="text-uppercase small"><?php echo fetchAssoc(position($log['user']))['position']; ?></div>
-                            </div>
+                            <?php if (!empty($attachment) && file_exists(root() . '/' . $attachment)) : ?>
+                                <div class="card-footer">
+                                    <?php linkButtonSplit(uri() . '/' . $attachment, 'View Attachment', 'fa-eye', 'View Attachment', 'info', true); ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
