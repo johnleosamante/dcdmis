@@ -8,7 +8,7 @@ require_once(root() . '/includes/layout/components.php');
 
 $documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $documents = document($documentId);
-$description = '';
+$description = $type = '';
 $modalTitle = 'Document not found';
 $hasDocument = false;
 
