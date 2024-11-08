@@ -18,7 +18,7 @@ if (numRows($documents) > 0) {
     $description = $document['description'];
     $type = $document['type'];
     $documentLogs = fetchAssoc(documentLogs($documentId));
-    $hasDocument = !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['from'] === $station;
+    $hasDocument = !str_contains(strtolower($documentLogs['status']), 'cancel') && str_contains(strtolower($documentLogs['status']), 'complete') && $documentLogs['from'] === $station && $documentLogs['to'] === '-';
     $modalTitle = $hasDocument ? 'Mark Incomplete Document' : $modalTitle;
 }
 ?>
