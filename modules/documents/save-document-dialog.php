@@ -71,6 +71,7 @@ if (numRows($documents) > 0) {
                             while ($documentType = fetchAssoc($documentTypes)) : ?>
                                 <option value="<?php echo $documentType['id']; ?>" <?php echo setOptionSelected($documentType['id'], $type); ?>><?php echo $documentType['name']; ?></option>
                             <?php endwhile; ?>
+                            <option value="1" <?php echo setOptionSelected('1', $type); ?>>Others</option>
                         </select>
                     </div>
 
