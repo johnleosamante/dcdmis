@@ -53,7 +53,7 @@ messageAlert($showAlert, $message, $success);
                     $query = employeeStepIncrement();
                     while ($row = fetchArray($query)) :
                         $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = uri() . '/' . $row['picture'];
+                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
                         $sg = $row['sg'];
                         $step = !empty($row['step']) ? $row['step'] : 1;
                         $lastStepDate = $row['last_step_date'];
