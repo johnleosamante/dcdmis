@@ -18,10 +18,47 @@ if (isset($_POST['primary-search-button'])) {
 if (isset($_POST['save-document'])) {
 	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$purpose = sanitize($_POST['purpose']);
+	$type = sanitize($_POST['document-type']);
 	$details = sanitize($_POST['details']);
 	$destination = $isSchoolPortal ? 'REC' :  sanitize($_POST['destination']);
+	$attachment = isset($_POST['file-verifier']) ? decipher($_POST['file-verifier']) : null;
 	$logMessage = '';
 	$showAlert = true;
+
+	$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
+
+	if (!is_dir($uploadDirectory)) {
+		mkdir($uploadDirectory, 0777, true);
+	}
+
+	if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
+		$temp = $_FILES['file-upload']['tmp_name'];
+
+		if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
+			$message = 'The choosen file exceeds the upload file limit (20 MB).';
+			$success = false;
+			return;
+		}
+
+		$mimeType = mime_content_type($temp);
+		$allowedFileTypes = ['application/pdf'];
+
+		if (!in_array($mimeType, $allowedFileTypes)) {
+			$message = 'The choosen file is not an acceptable .pdf file.';
+			$success = false;
+			return;
+		}
+
+		$ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
+
+		if (!empty($attachment) && file_exists(root() . '/' . $attachment)) {
+			unlink(root() . '/' . $attachment);
+		}
+
+		$attachment = 'uploads/attachments/' . cipher($documentId) . '/' . cipher($documentId) . '-' . date('YmdHis') . '.' . $ext;
+
+		move_uploaded_file($temp, '../' . $attachment);
+	}
 
 	if (numRows(document($documentId)) === 0) {
 		$status = 'saved';
@@ -43,8 +80,8 @@ if (isset($_POST['save-document'])) {
 			return;
 		}
 
-		createDocument($documentId, $description, $station, $purpose, $headId, $details);
-		createDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
+		createDocument($documentId, $description, $type, $station, $purpose, $headId, $details);
+		createDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details, $attachment);
 
 		$logMessage = 'Created document';
 	} else {
@@ -57,8 +94,8 @@ if (isset($_POST['save-document'])) {
 			$description = isset($_POST['description']) ? sanitize($_POST['description']) : null;
 		}
 
-		updateDocument($documentId, $description, $purpose, $details, $updateDescription);
-		updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details);
+		updateDocument($documentId, $description, $type, $purpose, $details, $updateDescription);
+		updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details, $attachment);
 
 		$logMessage = 'Updated document';
 	}
@@ -95,12 +132,48 @@ if (isset($_POST['forward-document'])) {
 	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$purpose = sanitize($_POST['purpose']);
 	$details = sanitize($_POST['details']);
+	$attachment = isset($_POST['file-verifier']) ? decipher($_POST['file-verifier']) : null;
 	$showAlert = true;
+
+	$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
+
+	if (!is_dir($uploadDirectory)) {
+		mkdir($uploadDirectory, 0777, true);
+	}
+
+	if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
+		$temp = $_FILES['file-upload']['tmp_name'];
+
+		if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
+			$message = 'The choosen file exceeds the upload file limit (20 MB).';
+			$success = false;
+			return;
+		}
+
+		$mimeType = mime_content_type($temp);
+		$allowedFileTypes = ['application/pdf'];
+
+		if (!in_array($mimeType, $allowedFileTypes)) {
+			$message = 'The choosen file is not an acceptable .pdf file.';
+			$success = false;
+			return;
+		}
+
+		$ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
+
+		if (!empty($attachment) && file_exists(root() . '/' . $attachment)) {
+			unlink(root() . '/' . $attachment);
+		}
+
+		$attachment = 'uploads/attachments/' . cipher($documentId) . '/' . cipher($documentId) . '-' . date('YmdHis') . '.' . $ext;
+
+		move_uploaded_file($temp, '../' . $attachment);
+	}
 
 	updateDocumentLogsDone($documentId);
 
 	if (affectedRows()) {
-		createDocumentLog($documentId, $userId, $station, sanitize($_POST['destination']), $purpose, 'New', $details);
+		createDocumentLog($documentId, $userId, $station, sanitize($_POST['destination']), $purpose, 'New', $details, $attachment);
 		updateDocumentStatus($documentId, $purpose, 'Unread', $details);
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been forwarded successfully!';
