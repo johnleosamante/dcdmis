@@ -10,7 +10,7 @@ require_once(root() . '/includes/layout/components.php');
 
 $documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $documents = document($documentId);
-$description = $destination = $purpose = $details = '';
+$description = $destination = $type = $purpose = $details = '';
 $modalTitle = 'Document not found';
 $hasDocument = false;
 $forRelease = false;
@@ -19,7 +19,9 @@ if (numRows($documents) > 0) {
     $document = fetchAssoc($documents);
     $documentId = $document['id'];
     $description = $document['description'];
+    $type = $document['type'];
     $documentLogs = fetchAssoc(documentLogs($documentId));
+    $filename = $documentLogs['attachment'];
     $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['from'] === $station && $documentLogs['to'] === '-';
     $modalTitle = $hasDocument ? 'Forward Document' : $modalTitle;
 
@@ -36,12 +38,17 @@ if (numRows($documents) > 0) {
     <div class="modal-content">
         <?php modalHeader($modalTitle); ?>
 
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data">
             <div class="modal-body">
                 <?php if ($hasDocument) { ?>
                     <div class="form-group">
                         <label for="code" class="mb-0">Code</label>
                         <input id="code" type="text" value="<?php echo $documentId; ?>" class="form-control text-uppercase" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type" class="mb-0">Type</label>
+                        <input id="type" class="form-control text-uppercase" value="<?= fetchArray(documentType($type))['name'] ?>" disabled>
                     </div>
 
                     <div class="form-group">
@@ -103,6 +110,11 @@ if (numRows($documents) > 0) {
                         <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..." title="Type document additional details..."><?php echo $details; ?></textarea>
                     </div>
 
+                    <div class="form-group">
+                        <label class="mb-0" for="file-upload">Attachment</label>
+                        <input id="file-upload" name="file-upload" type="file" class="w-100">
+                    </div>
+
                     <?php requiredLegend(0); ?>
                 <?php } else {
                     missingAlert($modalTitle);
@@ -112,6 +124,7 @@ if (numRows($documents) > 0) {
             <div class="modal-footer">
                 <?php if ($hasDocument) : ?>
                     <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
+                    <input type="hidden" name="file-verifier" value="<?php echo cipher($filename); ?>">
                     <button class="btn btn-primary" name="forward-document" type="submit">Continue</button>
                 <?php endif; ?>
                 <?php cancelModalButton(); ?>
