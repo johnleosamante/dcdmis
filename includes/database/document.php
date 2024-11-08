@@ -10,7 +10,7 @@ function documentPurpose()
 
 function documentTypes()
 {
-    return query("SELECT `id`, `name` FROM `document_types`;");
+    return query("SELECT `id`, `name` FROM `document_types` WHERE `id` NOT LIKE '1' ORDER BY `name`;");
 }
 
 function documentType($id)
