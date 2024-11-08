@@ -105,6 +105,9 @@ if (numRows($documents) > 0) {
                             modalButtonSplit(uri() . '/modules/documents/save-document-dialog.php?id=' . cipher($documentId), 'Edit', 'fa-edit', 'Edit Document', 'info');
                         }
                         break;
+                    case 'Completed Documents':
+                        modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-minus-square', 'Mark Incomplete', 'danger');
+                        break;
                     default:
                         break;
                 }
