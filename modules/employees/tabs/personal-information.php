@@ -8,7 +8,8 @@
         <?php endif; ?>
         <div class="row mt-3">
             <div class="col-sm-12 col-md-4 col-lg-3 col-xl-2 mb-4">
-                <img src="<?php echo uri() . '/' . $employee['picture']; ?>" width="100%" class="border rounded" id="employee-photo">
+                <?php $photo = file_exists(root() . '/' . $employee['picture']) ? uri() . '/' . $employee['picture'] : uri() . '/assets/img/user.png'; ?>
+                <img src="<?= $photo ?>" width="100%" class="border rounded" id="employee-photo">
 
                 <?php if ($editMode) : ?>
                     <div class="mt-3 mb-2 custom-file">
