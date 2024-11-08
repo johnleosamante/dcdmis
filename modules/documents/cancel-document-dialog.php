@@ -16,6 +16,7 @@ if (numRows($documents) > 0) {
     $document = fetchAssoc($documents);
     $documentId = $document['id'];
     $description = $document['description'];
+    $type = $document['type'];
     $documentLogs = fetchAssoc(documentLogs($documentId));
     $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['from'] === $station;
     $modalTitle = $hasDocument ? 'Cancel Document' : $modalTitle;
@@ -32,6 +33,11 @@ if (numRows($documents) > 0) {
                     <div class="form-group">
                         <label for="code" class="mb-0">Code</label>
                         <input id="code" type="text" value="<?php echo $documentId; ?>" class="form-control text-uppercase" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type" class="mb-0">Type</label>
+                        <input id="type" class="form-control text-uppercase" value="<?= fetchArray(documentType($type))['name'] ?>" disabled>
                     </div>
 
                     <div class="form-group">
