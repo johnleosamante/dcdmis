@@ -143,7 +143,7 @@ if (numRows($documents) > 0) {
                 $to = stationName($log['to']);
                 $displayName = userName($log['user']);
                 $user = fetchAssoc(employee($log['user']));
-                $displayPhoto = uri() . '/' . $user['picture'];
+                $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $user['picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
                 $hasDestination = !empty($to) && $to !== '-';
                 $status = $log['status'];
