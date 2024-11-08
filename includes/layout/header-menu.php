@@ -3,7 +3,7 @@
 $user = fetchAssoc(employee($userId));
 $displayName = toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true, true);
 $position = fetchAssoc(position($userId))['position'];
-$displayPhoto = uri() . '/' . $user['picture'];
+$displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $user['picture'] : uri() . '/assets/img/user.png';
 ?>
 
 <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
