@@ -220,9 +220,30 @@ if (isset($_POST['incomplete-document'])) {
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been marked incomplete successfully.';
 
-		createSystemLog($stationId, $userId, $status . ' document', $documentId, clientIp());
+		createSystemLog($stationId, $userId, 'Marked incomplete document', $documentId, clientIp());
 	} else {
 		$message = 'No document has been marked incomplete.';
+		$success = false;
+	}
+}
+
+if (isset($_POST['restore-document'])) {
+	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$remarks = sanitize($_POST['remarks']);
+	$status = 'Received';
+	$showAlert = true;
+
+	updateDocumentLogsDone($documentId);
+
+	if (affectedRows()) {
+		createDocumentLog($documentId, $userId, $station, '-', $status, 'New', $remarks);
+		updateDocumentStatus($documentId, $status, 'Unread', $remarks);
+
+		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been restored successfully.';
+
+		createSystemLog($stationId, $userId, 'Restored document', $documentId, clientIp());
+	} else {
+		$message = 'No document has been restored.';
 		$success = false;
 	}
 }
