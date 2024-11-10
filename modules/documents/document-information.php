@@ -107,9 +107,14 @@ if (numRows($documents) > 0) {
                         break;
                     case 'Completed Documents':
                         if (isDocumentFrom($documentId, $station) && $document['from'] === $station && isDocument($documentId, 'Completed')) {
-                            modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-minus-square', 'Mark Incomplete', 'danger');
-                            break;
+                            modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-minus-square', 'Mark Incomplete Document', 'danger');
                         }
+                        break;
+                    case 'Canceled Documents':
+                        if (isDocumentFrom($documentId, $station) && $document['from'] === $station && isDocument($documentId, 'Canceled')) {
+                            modalButtonSplit(uri() . '/modules/documents/restore-document-dialog.php?id=' . cipher($documentId), 'Restore', 'fa-undo', 'Restore Document', 'success');
+                        }
+                        break;
                     default:
                         break;
                 }
