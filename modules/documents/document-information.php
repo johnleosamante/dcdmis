@@ -223,7 +223,7 @@ if (numRows($documents) > 0) {
                                 <div class="font-weight-bold text-lg"><?php echo $status; ?></div>
 
                                 <?php if (!empty($details)) : ?>
-                                    <div class="bg-warning text-dark d-inline-block px-2 py-1 rounded mt-3"><?= $details ?></div>
+                                    <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= $details ?></div>
                                 <?php endif; ?>
                             </div>
 
