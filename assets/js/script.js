@@ -3,28 +3,33 @@
 if (window.history.replaceState) {
 	window.history.replaceState(null, null, window.location.href);
 }
+
 $(document).ready(function () {
-	$('div.alert').fadeIn(300).delay(60000).fadeOut(300);
+	$("div.auto-hide").fadeIn(300).delay(60000).fadeOut(300);
 
 	let dtProps = {
-		"responsive": true,
-		"pagingType": "simple",
-		"lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
-		"paging": true,
-		"order": [],
-		"autoWidth": false,
-		"info": true,
+		responsive: true,
+		pagingType: "simple",
+		lengthMenu: [
+			[10, 25, 50, 75, 100, -1],
+			[10, 25, 50, 75, 100, "All"],
+		],
+		paging: true,
+		order: [],
+		autoWidth: false,
+		info: true,
 	};
 
-	if ($('#data-table-previous').length > 0) {
-		$('#data-table-previous').DataTable(dtProps);
+	if ($("#data-table-previous").length > 0) {
+		$("#data-table-previous").DataTable(dtProps);
 	}
 
-	if ($('#data-table').length > 0) {
-		$('#data-table').DataTable(dtProps);
+	if ($("#data-table").length > 0) {
+		$("#data-table").DataTable(dtProps);
 	}
-	if ($('#data-table-next').length > 0) {
-		$('#data-table-next').DataTable(dtProps);
+
+	if ($("#data-table-next").length > 0) {
+		$("#data-table-next").DataTable(dtProps);
 	}
 });
 
@@ -32,44 +37,49 @@ const eyeToggle = (inputId, eyeId) => {
 	const input = document.getElementById(inputId);
 	const eye = document.getElementById(eyeId);
 
-	if (input.type === 'password') {
-		input.type = 'text';
-		eye.classList.remove('fa-eye');
-		eye.classList.add('fa-eye-slash');
+	if (input.type === "password") {
+		input.type = "text";
+		eye.classList.remove("fa-eye");
+		eye.classList.add("fa-eye-slash");
 	} else {
-		input.type = 'password';
-		eye.classList.remove('fa-eye-slash');
-		eye.classList.add('fa-eye');
+		input.type = "password";
+		eye.classList.remove("fa-eye-slash");
+		eye.classList.add("fa-eye");
 	}
 };
 
 const elementExist = (element) => {
-	return typeof (element) !== 'undefined' && element !== null;
+	return typeof element !== "undefined" && element !== null;
 };
 
-const loadData = (href, id = 'modal') => {
-	const xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+const loadData = (href, id = "modal") => {
+	const xmlhttp = window.XMLHttpRequest
+		? new XMLHttpRequest()
+		: new ActiveXObject("Microsoft.XMLHTTP");
 
 	xmlhttp.onreadystatechange = () => {
 		if (xmlhttp.readyState === 4) {
 			if (xmlhttp.status === 200) {
 				document.getElementById(id).innerHTML = xmlhttp.responseText;
 			} else {
-				alert('Bad request encountered! Please refresh the page and try again.');
+				alert(
+					"Bad request encountered! Please refresh the page and try again."
+				);
 				location.reload();
 				return;
 			}
 		}
-	}
+	};
 
-	xmlhttp.open('GET', href);
+	xmlhttp.open("GET", href);
 	xmlhttp.send();
 };
 
 const generateRandomPassword = (length) => {
-	const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*?';
+	const chars =
+		"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*?";
 
-	let result = '';
+	let result = "";
 	for (let i = 0; i < length; i++) {
 		result += chars.charAt(Math.floor(Math.random() * chars.length));
 	}
@@ -153,53 +163,57 @@ const checkFieldValidity = (elementId, condition) => {
 	}
 };
 
-const oldToggle = document.getElementById('old-eye-toggle');
+const oldToggle = document.getElementById("old-eye-toggle");
 if (elementExist(oldToggle)) {
-	oldToggle.addEventListener('click', (e) => {
+	oldToggle.addEventListener("click", (e) => {
 		e.preventDefault();
-		eyeToggle('old-password', 'old-eye');
+		eyeToggle("old-password", "old-eye");
 	});
 }
 
-const toggle = document.getElementById('eye-toggle');
+const toggle = document.getElementById("eye-toggle");
 if (elementExist(toggle)) {
-	toggle.addEventListener('click', (e) => {
+	toggle.addEventListener("click", (e) => {
 		e.preventDefault();
-		eyeToggle('password', 'eye');
+		eyeToggle("password", "eye");
 	});
 }
 
-const confirmToggle = document.getElementById('eye-confirm-toggle');
+const confirmToggle = document.getElementById("eye-confirm-toggle");
 if (elementExist(confirmToggle)) {
-	confirmToggle.addEventListener('click', (e) => {
+	confirmToggle.addEventListener("click", (e) => {
 		e.preventDefault();
-		eyeToggle('password-confirm', 'eye-confirm');
+		eyeToggle("password-confirm", "eye-confirm");
 	});
 }
 
-const generateToggle = document.getElementById('generate-toggle');
+const generateToggle = document.getElementById("generate-toggle");
 if (elementExist(generateToggle)) {
-	generateToggle.addEventListener('click', (e) => {
+	generateToggle.addEventListener("click", (e) => {
 		e.preventDefault();
 		let strongPassword = false;
 		let length = generateRandomNumber(10, 16);
-		let randomPassword = '';
+		let randomPassword = "";
 
 		while (!strongPassword) {
 			randomPassword = generateRandomPassword(length);
 			strongPassword = checkPasswordStrength(randomPassword);
 		}
 
-		document.getElementById('password').value = randomPassword;
-		document.getElementById('password-confirm').value = randomPassword;
-		document.getElementById('generate-password').value = randomPassword;
+		document.getElementById("password").value = randomPassword;
+		document.getElementById("password-confirm").value = randomPassword;
+		document.getElementById("generate-password").value = randomPassword;
 	});
 }
 
 const password = document.getElementById("password");
 const confirmPassword = document.getElementById("password-confirm");
 const passwordRequirements = document.getElementById("password-requirements");
-if (elementExist(password) && elementExist(confirmPassword) && elementExist(passwordRequirements)) {
+if (
+	elementExist(password) &&
+	elementExist(confirmPassword) &&
+	elementExist(passwordRequirements)
+) {
 	let passwordValue = password.value;
 	let confirmPasswordValue = confirmPassword.value;
 	let validPasswordLength = passwordValue.length >= 10;
@@ -214,8 +228,19 @@ if (elementExist(password) && elementExist(confirmPassword) && elementExist(pass
 	checkPasswordRequirement("number", hasNumberPassword);
 	checkPasswordRequirement("special", hasSpecialPassword);
 
-	checkFieldValidity("password-group", validPasswordLength && hasUppercasePassword && hasLowercasePassword && hasNumberPassword && hasSpecialPassword);
-	checkFieldValidity("password-confirm-group", confirmPasswordValue.length > 0 && passwordValue === confirmPasswordValue);
+	checkFieldValidity(
+		"password-group",
+		validPasswordLength &&
+			hasUppercasePassword &&
+			hasLowercasePassword &&
+			hasNumberPassword &&
+			hasSpecialPassword
+	);
+	checkFieldValidity(
+		"password-confirm-group",
+		confirmPasswordValue.length > 0 &&
+			passwordValue === confirmPasswordValue
+	);
 
 	password.addEventListener("input", () => {
 		passwordValue = password.value;
@@ -232,14 +257,29 @@ if (elementExist(password) && elementExist(confirmPassword) && elementExist(pass
 		checkPasswordRequirement("number", hasNumberPassword);
 		checkPasswordRequirement("special", hasSpecialPassword);
 
-		checkFieldValidity("password-group", validPasswordLength && hasUppercasePassword && hasLowercasePassword && hasNumberPassword && hasSpecialPassword);
-		checkFieldValidity("password-confirm-group", confirmPasswordValue.length > 0 && passwordValue === confirmPasswordValue);
+		checkFieldValidity(
+			"password-group",
+			validPasswordLength &&
+				hasUppercasePassword &&
+				hasLowercasePassword &&
+				hasNumberPassword &&
+				hasSpecialPassword
+		);
+		checkFieldValidity(
+			"password-confirm-group",
+			confirmPasswordValue.length > 0 &&
+				passwordValue === confirmPasswordValue
+		);
 	});
 
 	confirmPassword.addEventListener("input", () => {
 		passwordValue = password.value;
 		confirmPasswordValue = confirmPassword.value;
 
-		checkFieldValidity("password-confirm-group", confirmPasswordValue.length > 0 && passwordValue === confirmPasswordValue);
+		checkFieldValidity(
+			"password-confirm-group",
+			confirmPasswordValue.length > 0 &&
+				passwordValue === confirmPasswordValue
+		);
 	});
 }
