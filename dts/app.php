@@ -25,6 +25,8 @@ if (isset($_POST['save-document'])) {
 	$logMessage = '';
 	$showAlert = true;
 
+	$year = date('y');
+	$documentId = strlen($documentId) > 0 ? $documentId : $code . '-' . $year . '-' . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
 	$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
 
 	if (!is_dir($uploadDirectory)) {
@@ -62,9 +64,7 @@ if (isset($_POST['save-document'])) {
 
 	if (numRows(document($documentId)) === 0) {
 		$status = 'saved';
-		$year = date('y');
 		$description = sanitize($_POST['description']);
-		$documentId = $code . '-' . $year . '-' . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
 		$section = section($code);
 
 		if (numRows($section) > 0) {
