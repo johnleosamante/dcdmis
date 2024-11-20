@@ -41,11 +41,11 @@ if (numRows($documents) > 0) {
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp; ?>">Dashboard</a></li>
             <li class="breadcrumb-item">
-                <a href="<?php echo customUri('dts', $documentType); ?>"><?php echo trim($documentType, ' Documents'); ?></a>
+                <a href="<?= customUri('dts', $documentType); ?>"><?= trim($documentType, ' Documents'); ?></a>
             </li>
-            <li class="breadcrumb-item active"><?php echo $documentId; ?></li>
+            <li class="breadcrumb-item active"><?= $documentId; ?></li>
         </ol>
     </nav>
 </div>
@@ -59,19 +59,19 @@ if (numRows($documents) > 0) {
         <table cellspacing="0">
             <tr>
                 <th class="align-top pr-3" scope="row">Type:</th>
-                <td class="text-uppercase"><?php echo fetchArray(documentType($document['type']))['name']; ?></td>
+                <td class="text-uppercase"><?= fetchArray(documentType($document['type']))['name']; ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Description:</th>
-                <td class="text-uppercase"><?php echo $document['description']; ?></td>
+                <td class="text-uppercase"><?= $document['description']; ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Created on:</th>
-                <td class="text-uppercase"><?php echo toDate($document['datetime'], 'F d, Y h:i:s A'); ?></td>
+                <td class="text-uppercase"><?= toDate($document['datetime'], 'F d, Y h:i:s A'); ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">From:</th>
-                <td class="text-uppercase"><?php echo stationName($document['from']); ?></td>
+                <td class="text-uppercase"><?= stationName($document['from']); ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Status:</th>
@@ -84,6 +84,8 @@ if (numRows($documents) > 0) {
         <div class="d-flex align-items-center flex-row-reverse mt-2 mb-3">
             <div class="d-inline-block">
                 <?php
+                $hasSuccess = false;
+
                 if ($station === $document['from']) {
                     linkButtonSplit(customUri('print', 'Document Tracking Slip', $documentId), 'Print', 'fa-print', 'Print Document Tracking Slip', 'primary', true);
                 }
@@ -92,6 +94,7 @@ if (numRows($documents) > 0) {
                     case 'Incoming Documents':
                         if (!isDocument($documentId, 'Cancel')) {
                             modalButtonSplit(uri() . '/modules/documents/receive-document-dialog.php?id=' . cipher($documentId), 'Receive', 'fa-hand-holding-medical', 'Receive Document', 'success');
+                            $hasSuccess = true;
                         }
                         break;
                     case 'Pending Documents':
@@ -136,6 +139,10 @@ if (numRows($documents) > 0) {
                         break;
                     default:
                         break;
+                }
+
+                if ($station === $document['from']) {
+                    linkButtonSplit(customUri('export', 'document-log', $documentId), 'Export', 'fa-file-excel', 'Export as Excel file', $hasSuccess ? 'warning' : 'success');
                 }
                 ?>
             </div>
@@ -191,17 +198,17 @@ if (numRows($documents) > 0) {
                 <div class="timeline-item">
                     <div class="timeline-item-marker">
                         <div class="timeline-item-marker-text text-uppercase">
-                            <?php echo date('M d, Y', strtotime($log['datetime'])) . '<br>' . date('h:i:s A', strtotime($log['datetime'])); ?>
+                            <?= date('M d, Y', strtotime($log['datetime'])) . '<br>' . date('h:i:s A', strtotime($log['datetime'])); ?>
                         </div>
-                        <div class="timeline-item-marker-indicator <?php echo $bgColor; ?>">
-                            <i class="fas fa-<?php echo $icon; ?>"></i>
+                        <div class="timeline-item-marker-indicator <?= $bgColor; ?>">
+                            <i class="fas fa-<?= $icon; ?>"></i>
                         </div>
                     </div>
                     <div class="timeline-item-content pt-0">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase mb-0">
-                                    <?php echo $from; ?>
+                                    <?= $from; ?>
                                 </h5>
                             </div>
 
@@ -214,13 +221,13 @@ if (numRows($documents) > 0) {
                                     <div class="ml-2 d-inline-block align-middle">
                                         <div class="text-uppercase"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName); ?></div>
 
-                                        <div class="text-uppercase text-xs"><?php echo fetchAssoc(position($log['user']))['position']; ?></div>
+                                        <div class="text-uppercase text-xs"><?= fetchAssoc(position($log['user']))['position']; ?></div>
                                     </div>
                                 </div>
 
-                                <?php echo $hasDestination ? '<div class="m-0">Forwarded to ' . strtoupper($to) . '</div>' : ''; ?>
+                                <?= $hasDestination ? '<div class="m-0">Forwarded to ' . strtoupper($to) . '</div>' : ''; ?>
 
-                                <div class="font-weight-bold text-lg"><?php echo $status; ?></div>
+                                <div class="font-weight-bold text-lg"><?= $status; ?></div>
 
                                 <?php if (!empty($details)) : ?>
                                     <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= $details ?></div>
