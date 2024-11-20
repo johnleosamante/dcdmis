@@ -10,7 +10,7 @@ require_once(root() . '/includes/layout/components.php');
 
 $documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $documents = documentLog($documentId);
-$description = $destination = $purpose = $details = $attribute = $filename = '';
+$description = $destination = $type = $purpose = $details = $attribute = $filename = '';
 $isDescriptionEditable = true;
 $modalTitle = 'New Document';
 $hasDocument = true;
@@ -48,7 +48,7 @@ if (numRows($documents) > 0) {
 }
 ?>
 
-<div class="modal-dialog <?php echo !$hasDocument ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?= !$hasDocument ? 'modal-sm' : ''; ?>">
     <div class="modal-content">
         <?php modalHeader($modalTitle); ?>
 
@@ -58,7 +58,7 @@ if (numRows($documents) > 0) {
                     <?php if (!$notFound) : ?>
                         <div class="form-group">
                             <label for="code" class="mb-0">Code</label>
-                            <input id="code" type="text" value="<?php echo $documentId; ?>" class="form-control text-uppercase" disabled>
+                            <input id="code" type="text" value="<?= $documentId; ?>" class="form-control text-uppercase" disabled>
                         </div>
                     <?php endif; ?>
 
@@ -69,15 +69,15 @@ if (numRows($documents) > 0) {
                             <?php
                             $documentTypes = documentTypes();
                             while ($documentType = fetchAssoc($documentTypes)) : ?>
-                                <option value="<?php echo $documentType['id']; ?>" <?php echo setOptionSelected($documentType['id'], $type); ?>><?php echo $documentType['name']; ?></option>
+                                <option value="<?= $documentType['id'] ?>" <?= setOptionSelected($documentType['id'], $type) ?>><?= $documentType['name'] ?></option>
                             <?php endwhile; ?>
-                            <option value="1" <?php echo setOptionSelected('1', $type); ?>>Others</option>
+                            <option value="1" <?= setOptionSelected('1', $type) ?>>Others</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="description" class="mb-0">Description <?php showAsterisk($isDescriptionEditable); ?></label>
-                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Type description..." title="Type document description..." <?php echo $attribute; ?> required><?php echo $description; ?></textarea>
+                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Type description..." title="Type document description..." <?= $attribute; ?> required><?= $description; ?></textarea>
                     </div>
 
                     <?php if (!$isSchoolPortal) : ?>
@@ -89,12 +89,12 @@ if (numRows($documents) > 0) {
                                     <?php
                                     $divisions = functionalDivisions();
                                     while ($division = fetchAssoc($divisions)) : ?>
-                                        <optgroup label="<?php echo $division['name']; ?>">
+                                        <optgroup label="<?= $division['name']; ?>">
                                             <?php
                                             $sections = sections($division['id']);
                                             while ($section = fetchAssoc($sections)) {
                                                 if ($section['id'] !== $station) { ?>
-                                                    <option value="<?php echo $section['id']; ?>" <?php echo setOptionSelected($section['id'], $destination); ?>><?php echo $section['name']; ?></option>
+                                                    <option value="<?= $section['id']; ?>" <?= setOptionSelected($section['id'], $destination); ?>><?= $section['name']; ?></option>
                                             <?php
                                                 }
                                             } ?>
@@ -109,8 +109,8 @@ if (numRows($documents) > 0) {
                                     $school = fetchAssoc($schools)['name'];
                                 }
                             ?>
-                                <input id="destination" class="form-control" type="text" value="<?php echo $school; ?>" disabled>
-                                <input name="destination" class="form-control" type="hidden" value="<?php echo $destination; ?>" required>
+                                <input id="destination" class="form-control" type="text" value="<?= $school; ?>" disabled>
+                                <input name="destination" class="form-control" type="hidden" value="<?= $destination; ?>" required>
                             <?php } ?>
                         </div>
                     <?php endif; ?>
@@ -123,17 +123,17 @@ if (numRows($documents) > 0) {
                                 <?php
                                 $documentPurposes = documentPurpose();
                                 while ($documentPurpose = fetchArray($documentPurposes)) : ?>
-                                    <option value="<?php echo $documentPurpose['purpose']; ?>" <?php echo setOptionSelected($documentPurpose['purpose'], $purpose); ?>><?php echo $documentPurpose['purpose']; ?></option>
+                                    <option value="<?= $documentPurpose['purpose']; ?>" <?= setOptionSelected($documentPurpose['purpose'], $purpose); ?>><?= $documentPurpose['purpose']; ?></option>
                                 <?php endwhile; ?>
                             </select>
                         <?php else : ?>
-                            <input id="purpose" name="purpose" class="form-control" type="text" value="<?php echo $purpose; ?>" required readonly>
+                            <input id="purpose" name="purpose" class="form-control" type="text" value="<?= $purpose; ?>" required readonly>
                         <?php endif; ?>
                     </div>
 
                     <div class="form-group">
                         <label class="mb-0" for="details">Additional details</label>
-                        <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..." title="Type additional details..."><?php echo $details; ?></textarea>
+                        <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..." title="Type additional details..."><?= $details; ?></textarea>
                     </div>
 
                     <div class="form-group">
@@ -149,8 +149,8 @@ if (numRows($documents) > 0) {
 
             <div class="modal-footer">
                 <?php if ($hasDocument) : ?>
-                    <input type="hidden" name="verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-                    <input type="hidden" name="file-verifier" value="<?php echo cipher($filename); ?>">
+                    <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null; ?>">
+                    <input type="hidden" name="file-verifier" value="<?= cipher($filename); ?>">
                     <button class="btn btn-primary" name="save-document" type="submit">Continue</button>
                 <?php endif; ?>
                 <?php cancelModalButton(); ?>
