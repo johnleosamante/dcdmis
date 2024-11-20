@@ -40,7 +40,7 @@ if (isset($_POST['save-school'])) {
 		$temp = $_FILES['logo-upload']['tmp_name'];
 
 		if ($_FILES['logo-upload']['size'] > $imageUploadSizeLimit) {
-			$message = 'The choosen file exceeds the upload file limit (2.5 MB). No changes have been made to school information.';
+			$message = 'The chosen file exceeds the upload file limit (2.5 MB). No changes have been made to school information.';
 			return;
 		}
 
@@ -48,7 +48,7 @@ if (isset($_POST['save-school'])) {
 		$allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif'];
 
 		if (!in_array($mimeType, $allowedFileTypes)) {
-			$message = 'The choosen file is not an image file. No changes have been made to school information.';
+			$message = 'The chosen file is not an image file. No changes have been made to school information.';
 			return;
 		}
 
