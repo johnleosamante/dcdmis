@@ -81,3 +81,52 @@ if (isset($_POST['update-professional-titles'])) {
         $success = false;
     }
 }
+
+if (isset($_POST['update-profile-photo'])) {
+    $employeePhoto = isset($_POST['image-verifier']) ? sanitize(decipher($_POST['image-verifier'])) : '';
+    $employeeId = $userId;
+
+    if (is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
+        $temp = $_FILES['image-upload']['tmp_name'];
+
+        if ($_FILES['image-upload']['size'] > $imageUploadSizeLimit) {
+            $message = 'The chosen file exceeds the upload file limit (2.5 MB). No changes have been made to personal information.';
+            return;
+        }
+
+        $mimeType = mime_content_type($temp);
+        $allowedFileTypes = ['image/png', 'image/jpeg'];
+
+        if (!in_array($mimeType, $allowedFileTypes)) {
+            $message = 'The chosen file is not an image file. No changes have been made to personal information.';
+            return;
+        }
+
+        $ext = pathinfo($_FILES['image-upload']['name'], PATHINFO_EXTENSION);
+
+        if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto) && basename(root() . '/' . $employeePhoto) !== 'user.png') {
+            unlink(root() . '/' . $employeePhoto);
+        }
+
+        $uploadDate = date('YmdHis');
+
+        $employeePhoto = "uploads/images/{$employeeId}/{$employeeId}{$uploadDate}.{$ext}";
+
+        move_uploaded_file($temp, '../' . $employeePhoto);
+    }
+
+    updateProfilePhoto($employeePhoto, $employeeId);
+
+    $showAlert = true;
+
+    if (!affectedRows()) {
+        $message = 'No changes have been made to profile photo.';
+        $success = false;
+        return;
+    }
+
+    $message = 'Profile photo has been updated successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Updated your profile photo', $userId, clientIp());
+}
