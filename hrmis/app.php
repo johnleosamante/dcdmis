@@ -85,7 +85,7 @@ if (isset($_POST['update-personal-information'])) {
         $temp = $_FILES['image-upload']['tmp_name'];
 
         if ($_FILES['image-upload']['size'] > $imageUploadSizeLimit) {
-            $message = 'The choosen file exceeds the upload file limit (2.5 MB). No changes have been made to personal information.';
+            $message = 'The chosen file exceeds the upload file limit (2.5 MB). No changes have been made to personal information.';
             return;
         }
 
@@ -93,7 +93,7 @@ if (isset($_POST['update-personal-information'])) {
         $allowedFileTypes = ['image/png', 'image/jpeg'];
 
         if (!in_array($mimeType, $allowedFileTypes)) {
-            $message = 'The choosen file is not an image file. No changes have been made to personal information.';
+            $message = 'The chosen file is not an image file. No changes have been made to personal information.';
             return;
         }
 
@@ -751,6 +751,7 @@ if (isset($_POST['save-service-record'])) {
     $separationDate = $separationCause = null;
     $logMessage = '';
     $showAlert = true;
+    $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
 
     if ($isSeparation === '1') {
         $separationDate = sanitize($_POST['separation-date']);
@@ -781,6 +782,7 @@ if (isset($_POST['delete-service-record'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $serviceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $showAlert = true;
+    $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
 
     deleteExperience($employeeId, $serviceId);
 
