@@ -14,14 +14,14 @@ $professionalName = toString($before, '', ' ') . toName($title['lname'], $title[
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="before-title" class="mb-0">Prefix</label>
-                            <input type="text" class="form-control" id="before-title" name="before-title" value="<?php echo $before; ?>" title="Leave blank if not applicable">
+                            <input type="text" class="form-control" id="before-title" name="before-title" value="<?= $before ?>" title="Leave blank if not applicable">
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="after-title" class="mb-0">Suffix</label>
-                            <input type="text" class="form-control" id="after-title" name="after-title" value="<?php echo $after; ?>" title="Leave blank if not applicable">
+                            <input type="text" class="form-control" id="after-title" name="after-title" value="<?= $after ?>" title="Leave blank if not applicable">
                         </div>
                     </div>
                 </div>
@@ -31,8 +31,8 @@ $professionalName = toString($before, '', ' ') . toName($title['lname'], $title[
         <div class="row">
             <div class="col-sm-12 col-md-10 col-lg-6 col-xl-4 col">
                 <div class="form-group">
-                    <label for="mobile" class="mb-0">Preview</label>
-                    <input type="text" id="mobile" class="form-control" value="<?php echo $professionalName; ?>" readonly>
+                    <label for="preview" class="mb-0">Preview</label>
+                    <input type="text" id="preview" class="form-control" value="<?= $professionalName ?>" readonly>
                 </div>
             </div>
         </div>
