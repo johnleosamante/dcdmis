@@ -123,6 +123,11 @@ function updateProfessionalTitles($before, $after, $id)
     nonQuery("UPDATE tbl_employee SET beforeTitle='{$before}', afterTitle='{$after}' WHERE Emp_ID='{$id}' LIMIT 1;");
 }
 
+function updateProfilePhoto($photo, $id)
+{
+    nonQuery("UPDATE tbl_employee SET Picture='{$photo}' WHERE Emp_ID='{$id}' LIMIT 1;");
+}
+
 function employeeStepIncrement()
 {
     return query("SELECT * FROM (SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Picture AS picture, tbl_station.Emp_Position AS position, tbl_job.Salary_Grade AS sg, tbl_station.Emp_Station AS station, tbl_step_increment.Date_last_step AS last_step_date, tbl_step_increment.Step_No AS step, TIMESTAMPDIFF(YEAR, Date_last_step, NOW()) AS years_active FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_job ON tbl_station.Emp_Position=tbl_job.Job_code INNER JOIN tbl_step_increment ON tbl_employee.Emp_ID=tbl_step_increment.Emp_ID WHERE tbl_employee.Emp_Status='Active' ORDER BY Date_last_step) AS service_years WHERE years_active >= 3 AND step < 8;");
