@@ -3,6 +3,7 @@
 /backup/
 /temp/
 /uploads/
+/validate/
 *.png-errors.txt
 /.well-known/
 /cgi-bin/
