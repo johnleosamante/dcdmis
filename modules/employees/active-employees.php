@@ -11,18 +11,18 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">
-                <?php echo $isHrmis ? 'Active' : 'Employees'; ?>
+                <?= $isHrmis ? 'Active' : 'Employees' ?>
             </li>
         </ol>
     </nav>
 
     <?php if ($isHrmis) : ?>
         <div class="d-inline-block">
-            <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus'); ?>
+            <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus') ?>
         </div>
-    <?php endif; ?>
+    <?php endif ?>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
@@ -57,14 +57,14 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="25%">Name</th>
                         <th class="align-middle" width="15%">Date of Birth</th>
                         <th class="align-middle" width="5%">Age</th>
-                        <th class="align-middle" width="<?php $isHrmis ? '15' : '20'; ?>%">Position</th>
-                        <th class="align-middle" width="<?php $isHrmis ? '20' : '25'; ?>%">Station</th>
+                        <th class="align-middle" width="<?php $isHrmis ? '15' : '20' ?>%">Position</th>
+                        <th class="align-middle" width="<?php $isHrmis ? '20' : '25' ?>%">Station</th>
                         <?php if ($isHrmis) : ?>
                             <th class="align-middle" width="10%">Progress</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                         <?php if (!$isHrtdms) : ?>
                             <th class="align-middle" width="5%">Action</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                     </tr>
                 </thead>
 
@@ -79,9 +79,9 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <div class="image-container">
                                     <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
+                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
                                     </span>
-                                    <div class="sex-sign"><?php sex($row['sex']); ?></div>
+                                    <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
                             </td>
                             <td class="align-middle text-left">
@@ -93,30 +93,30 @@ messageAlert($showAlert, $message, $success);
                                     modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                                 } ?>
                             </td>
-                            <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
-                            <td class="align-middle"><?php echo getDateDifference($row['year'], $row['month'], $row['day']); ?></td>
-                            <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
+                            <td class="align-middle"><?= toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y') ?></td>
+                            <td class="align-middle"><?= getDateDifference($row['year'], $row['month'], $row['day']) ?></td>
+                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']); ?>
+                                <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']) ?>
                             </td>
                             <?php if ($isHrmis) : ?>
                                 <td class="align-middle">
-                                    <?php progressBar(pdsProgress($row['id'])); ?>
+                                    <?php progressBar(pdsProgress($row['id'])) ?>
                                 </td>
-                            <?php endif; ?>
+                            <?php endif ?>
                             <?php if (!$isHrtdms) : ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
-                                        <?php dropdownEllipsis(); ?>
+                                        <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                             <?php if ($isHrmis) {
                                                 linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
                                                 linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
                                                 linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
                                                 linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
-                                                modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel'); ?>
+                                                modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel') ?>
                                                 <div class="dropdown-divider"></div>
-                                                <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History'); ?>
+                                                <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History') ?>
                                                 <div class="dropdown-divider"></div>
                                             <?php
                                                 modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
@@ -129,9 +129,9 @@ messageAlert($showAlert, $message, $success);
                                         </div>
                                     </div>
                                 </td>
-                            <?php endif; ?>
+                            <?php endif ?>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>
@@ -140,14 +140,14 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="25%">Name</th>
                         <th class="align-middle" width="15%">Date of Birth</th>
                         <th class="align-middle" width="5%">Age</th>
-                        <th class="align-middle" width="<?php $isHrmis ? '15' : '20'; ?>%">Position</th>
-                        <th class="align-middle" width="<?php $isHrmis ? '20' : '25'; ?>%">Station</th>
+                        <th class="align-middle" width="<?php $isHrmis ? '15' : '20' ?>%">Position</th>
+                        <th class="align-middle" width="<?php $isHrmis ? '20' : '25' ?>%">Station</th>
                         <?php if ($isHrmis) : ?>
                             <th class="align-middle" width="10%">Progress</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                         <?php if (!$isHrtdms) : ?>
                             <th class="align-middle" width="5%">Action</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>

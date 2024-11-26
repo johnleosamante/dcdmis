@@ -27,45 +27,45 @@ if (numRows($trainings) > 0) {
     <thead>
         <tr>
             <th>Code</th>
-            <td colspan="3"><?php echo $training['no']; ?></td>
+            <td colspan="3"><?= $training['no'] ?></td>
         </tr>
         <tr>
             <th>Title</th>
-            <td colspan="3"><?php echo strtoupper($training['title']); ?></td>
+            <td colspan="3"><?= strtoupper($training['title']) ?></td>
         </tr>
         <tr>
             <th>Date</th>
-            <td colspan="3"><?php echo strtoupper(empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']); ?></td>
+            <td colspan="3"><?= strtoupper(empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']) ?></td>
         </tr>
         <?php if (!empty($training['hours'])) : ?>
             <tr>
                 <th>Hours</th>
-                <td colspan="3"><?php echo $training['hours']; ?></td>
+                <td colspan="3"><?= $training['hours'] ?></td>
             </tr>
-        <?php endif; ?>
+        <?php endif ?>
         <tr>
             <th>Type</th>
-            <td colspan="3"><?php echo strtoupper(trainingType($training['type'])); ?></td>
+            <td colspan="3"><?= strtoupper(trainingType($training['type'])) ?></td>
         </tr>
         <tr>
             <th>Level</th>
-            <td colspan="3"><?php echo strtoupper(trainingSponsor($training['level'])); ?></td>
+            <td colspan="3"><?= strtoupper(trainingSponsor($training['level'])) ?></td>
         </tr>
         <?php if (!empty($training['sponsor'])) : ?>
             <tr>
                 <th>Sponsor</th>
-                <td colspan="3"><?php echo strtoupper($training['sponsor']); ?></td>
+                <td colspan="3"><?= strtoupper($training['sponsor']) ?></td>
             </tr>
-        <?php endif; ?>
+        <?php endif ?>
         <?php if (!empty($training['venue'])) : ?>
             <tr>
                 <th>Venue</th>
-                <td colspan="3"><?php echo strtoupper($training['venue']); ?></td>
+                <td colspan="3"><?= strtoupper($training['venue']) ?></td>
             </tr>
-        <?php endif; ?>
+        <?php endif ?>
         <tr>
             <th>Participants</th>
-            <td colspan="3"><?php echo strtoupper(numRows($participants)); ?></td>
+            <td colspan="3"><?= strtoupper(numRows($participants)) ?></td>
         </tr>
         <tr>
             <th>#</th>
@@ -83,14 +83,14 @@ if (numRows($trainings) > 0) {
             $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
         ?>
             <tr>
-                <td><?php echo $i++; ?></td>
-                <td><?php echo strtoupper($employeeName); ?></td>
-                <td><?php echo strtoupper(fetchAssoc(positions($row['position']))['position']); ?></td>
-                <td><?php echo strtoupper(fetchAssoc(schoolById($row['station']))['name']); ?></td>
+                <td><?= $i++ ?></td>
+                <td><?= strtoupper($employeeName) ?></td>
+                <td><?= strtoupper(fetchAssoc(positions($row['position']))['position']) ?></td>
+                <td><?= strtoupper(fetchAssoc(schoolById($row['station']))['name']) ?></td>
             </tr>
-        <?php endwhile; ?>
+        <?php endwhile ?>
         <tr>
-            <td colspan="4"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+            <td colspan="4"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>
     </tbody>
 </table>

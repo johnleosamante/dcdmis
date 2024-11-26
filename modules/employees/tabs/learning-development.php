@@ -2,7 +2,7 @@
 // modules/employees/tabs/learning-development.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'learning-development', 'show active'); ?>" id="learning-development">
+<div class="tab-pane fade<?= setActiveNavigation(isset($activeTab) && $activeTab === 'learning-development', 'show active') ?>" id="learning-development">
     <div class="row my-3">
         <div class="col table-responsive">
             <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
@@ -24,12 +24,12 @@
                     if (numRows($learnings) > 0) {
                         while ($learning = fetchAssoc($learnings)) : ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?php echo $learning['title']; ?></td>
-                                <td class="align-middle"><?php echo toDate($learning['from']); ?></td>
-                                <td class="align-middle"><?php echo toDate($learning['to']); ?></td>
-                                <td class="align-middle"><?php echo $learning['hours']; ?></td>
-                                <td class="align-middle"><?php echo $learning['type']; ?></td>
-                                <td class="align-middle"><?php echo $learning['sponsor']; ?></td>
+                                <td class="align-middle"><?= $learning['title'] ?></td>
+                                <td class="align-middle"><?= toDate($learning['from']) ?></td>
+                                <td class="align-middle"><?= toDate($learning['to']) ?></td>
+                                <td class="align-middle"><?= $learning['hours'] ?></td>
+                                <td class="align-middle"><?= $learning['type'] ?></td>
+                                <td class="align-middle"><?= $learning['sponsor'] ?></td>
                             </tr>
                         <?php endwhile;
                     } else { ?>

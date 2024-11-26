@@ -22,7 +22,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithLink('Add Training Participants', customUri('hrtdms', 'Training Details', $trainingId)); ?>
+        <?php contentTitleWithLink('Add Training Participants', customUri('hrtdms', 'Training Details', $trainingId)) ?>
     </div>
 
     <div class="card-body">
@@ -30,25 +30,25 @@ messageAlert($showAlert, $message, $success);
             <table cellspacing="0">
                 <tr>
                     <th class="align-top pr-5" scope="row">Code</th>
-                    <td class="text-uppercase"><?php echo $training['no']; ?></td>
+                    <td class="text-uppercase"><?= $training['no'] ?></td>
                 </tr>
                 <tr>
                     <th class="align-top pr-5" scope="row">Title</th>
-                    <td class="text-uppercase"><?php echo $training['title']; ?></td>
+                    <td class="text-uppercase"><?= $training['title'] ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5" scope="row">Date</th>
-                    <td class="text-uppercase"><?php echo empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']; ?></td>
+                    <td class="text-uppercase"><?= empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date'] ?></td>
                 </tr>
                 <?php if (!empty($training['hours'])) : ?>
                     <tr>
                         <th class="pr-5" scope="row">Hours</th>
-                        <td class="text-uppercase"><?php echo $training['hours']; ?></td>
+                        <td class="text-uppercase"><?= $training['hours'] ?></td>
                     </tr>
-                <?php endif; ?>
+                <?php endif ?>
                 <tr>
                     <th class="pr-5" scope="row">Type</th>
-                    <td class="text-uppercase"><?php echo trainingType($training['type']); ?></td>
+                    <td class="text-uppercase"><?= trainingType($training['type']) ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5" scope="row">Level</th>
@@ -61,23 +61,23 @@ messageAlert($showAlert, $message, $success);
                     }
                     $functional_division = (!empty($functional_division) && strtolower($functional_division) !== 'n/a') ? ' (' . $training_functional_division . ')' : '';
                     ?>
-                    <td class="text-uppercase"><?php echo trainingSponsor($training['level']) . $functional_division; ?></td>
+                    <td class="text-uppercase"><?= trainingSponsor($training['level']) . $functional_division ?></td>
                 </tr>
                 <?php if (!empty($training['sponsor'])) : ?>
                     <tr>
                         <th class="align-top pr-5" scope="row">Sponsor</th>
-                        <td class="text-uppercase"><?php echo $training['sponsor']; ?></td>
+                        <td class="text-uppercase"><?= $training['sponsor'] ?></td>
                     </tr>
-                <?php endif; ?>
+                <?php endif ?>
                 <?php if (!empty($training['venue'])) : ?>
                     <tr>
                         <th class="align-top pr-5" scope="row">Venue</th>
-                        <td class="text-uppercase"><?php echo $training['venue']; ?></td>
+                        <td class="text-uppercase"><?= $training['venue'] ?></td>
                     </tr>
-                <?php endif; ?>
+                <?php endif ?>
                 <tr>
                     <th class="align-top pr-5" scope="row">Participants</th>
-                    <td class="text-uppercase"><?php echo numRows(trainingParticipants($trainingId)); ?></td>
+                    <td class="text-uppercase"><?= numRows(trainingParticipants($trainingId)) ?></td>
                 </tr>
             </table>
         </div>
@@ -105,18 +105,18 @@ messageAlert($showAlert, $message, $success);
                         ?>
                                 <tr class="text-uppercase">
                                     <td class="align-middle">
-                                        <input type="checkbox" class="form-control" name="participants[]" value="<?php echo cipher($row['id']); ?>">
+                                        <input type="checkbox" class="form-control" name="participants[]" value="<?= cipher($row['id']) ?>">
                                     </td>
                                     <td class="align-middle">
                                         <div class="image-container">
                                             <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                                <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
+                                                <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
                                             </span>
-                                            <div class="sex-sign"><?php sex($row['sex']); ?></div>
+                                            <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                         </div>
                                     </td>
                                     <td class="align-middle text-left">
-                                        <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName); ?>
+                                        <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName) ?>
                                     </td>
                                     <td class="align-middle">
                                         <?php
@@ -124,8 +124,8 @@ messageAlert($showAlert, $message, $success);
                                         roundPill($status);
                                         ?>
                                     </td>
-                                    <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
-                                    <td class="align-middle"><?php echo fetchAssoc(schoolById($row['station']))['name']; ?></td>
+                                    <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
+                                    <td class="align-middle"><?= fetchAssoc(schoolById($row['station']))['name'] ?></td>
                                 </tr>
                         <?php }
                         } ?>
@@ -144,7 +144,7 @@ messageAlert($showAlert, $message, $success);
                 </table>
             </div>
 
-            <input type="hidden" name="verifier" value="<?php echo cipher($trainingId); ?>">
+            <input type="hidden" name="verifier" value="<?= cipher($trainingId) ?>">
             <button class="btn btn-primary btn-block" name="add-participants">
                 <i class="fas fa-plus fa-fw"></i>
                 Add Participants

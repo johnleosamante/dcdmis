@@ -33,9 +33,9 @@ require_once(root() . '/includes/database/utility.php');
 
         while ($row = fetchArray($query)) : ?>
             <tr>
-                <td><?php echo $i++; ?></td>
-                <td><?php echo strtoupper($row['name']); ?></td>
-                <td><?php echo userName($row['psds'], true); ?></td>
+                <td><?= $i++ ?></td>
+                <td><?= strtoupper($row['name']) ?></td>
+                <td><?= userName($row['psds'], true) ?></td>
                 <?php
                 $schoolCount = districtSchoolCount($row['id']);
                 $es = $hs = $is = $total = 0;
@@ -48,14 +48,14 @@ require_once(root() . '/includes/database/utility.php');
                     $total = $count['total'];
                 }
                 ?>
-                <td><?php echo toHandleNull($es, '0'); ?></td>
-                <td><?php echo toHandleNull($hs, '0'); ?></td>
-                <td><?php echo toHandleNull($is, '0'); ?></td>
-                <td><?php echo $total; ?></td>
+                <td><?= toHandleNull($es, '0') ?></td>
+                <td><?= toHandleNull($hs, '0') ?></td>
+                <td><?= toHandleNull($is, '0') ?></td>
+                <td><?= $total ?></td>
             </tr>
-        <?php endwhile; ?>
+        <?php endwhile ?>
         <tr>
-            <td colspan="7"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+            <td colspan="7"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>
     </tbody>
 </table>

@@ -8,7 +8,7 @@
             <?php if ($isDmis) { ?>
                 <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
                     <div class="d-inline-block">
-                        <?php linkButtonSplit(customUri('export', 'section-transactions'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+                        <?php linkButtonSplit(customUri('export', 'section-transactions'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success') ?>
                     </div>
                 </div>
             <?php } ?>
@@ -30,15 +30,15 @@
                     while ($section = fetchAssoc($sections)) : ?>
                         <tr class="text-uppercase">
                             <td class="align-middle text-left">
-                                <div><?php linkItem(customUri($activeApp, 'Section Information', $section['id']), $section['name']); ?></div>
-                                <div class="small"><?php echo $section['division']; ?></div>
+                                <div><?php linkItem(customUri($activeApp, 'Section Information', $section['id']), $section['name']) ?></div>
+                                <div class="small"><?= $section['division'] ?></div>
                             </td>
-                            <td class="align-middle"><?php echo number_format(numRows(incomingDocuments($section['id']))); ?></td>
-                            <td class="align-middle"><?php echo number_format(numRows(pendingDocuments($section['id']))); ?></td>
-                            <td class="align-middle"><?php echo number_format(numRows(outgoingDocuments($section['id']))); ?></td>
-                            <td class="align-middle"><?php echo number_format(numRows(ongoingDocuments($section['id']))); ?></td>
+                            <td class="align-middle"><?= number_format(numRows(incomingDocuments($section['id']))) ?></td>
+                            <td class="align-middle"><?= number_format(numRows(pendingDocuments($section['id']))) ?></td>
+                            <td class="align-middle"><?= number_format(numRows(outgoingDocuments($section['id']))) ?></td>
+                            <td class="align-middle"><?= number_format(numRows(ongoingDocuments($section['id']))) ?></td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>

@@ -5,7 +5,7 @@
 <div id="services-panel" class="col-xl-8 col-lg-8 col-md-6 col-sm-12">
     <div class="card o-hidden border-0 shadow-lg my-5">
         <div class="card-header">
-            <h3 class="text-center my-2"><?php echo title(); ?> Online Services</h3>
+            <h3 class="text-center my-2"><?= title() ?> Online Services</h3>
         </div>
 
         <div class="card-body">
@@ -17,7 +17,7 @@
                         </div>
 
                         <div class="card-body">
-                            <a href="<?php echo uri() . '/dts/track'; ?>" title="Division Training Certificate Finder">Track</a> paper trail of documents created by schools, sections and offices within the schools division.
+                            <a href="<?= uri() . '/dts/track' ?>" title="Division Training Certificate Finder">Track</a> paper trail of documents created by schools, sections and offices within the schools division.
                         </div>
                     </div>
 
@@ -49,11 +49,11 @@
                         </div>
 
                         <div class="card-body">
-                            Access the <a href="<?php echo uri() . '/hrtdms/repository'; ?>" title="Division Training Certificate Finder">repository</a> of participant certificates for training programs conducted by the schools division.
+                            Access the <a href="<?= uri() . '/hrtdms/repository' ?>" title="Division Training Certificate Finder">repository</a> of participant certificates for training programs conducted by the schools division.
                         </div>
                     </div>
 
-                    <?php require_once(root() . '/modules/calendar/page.php'); ?>
+                    <?php require_once(root() . '/modules/calendar/page.php') ?>
                 </div>
             </div>
         </div>

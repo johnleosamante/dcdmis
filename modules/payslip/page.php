@@ -34,7 +34,7 @@ if (!is_dir($uploadDirectory)) {
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Payslip</li>
         </ol>
     </nav>
@@ -42,7 +42,7 @@ if (!is_dir($uploadDirectory)) {
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithModal('Payslip : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus'); ?>
+        <?php contentTitleWithModal('Payslip : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus') ?>
     </div>
 
     <div class="card-body">
@@ -62,16 +62,16 @@ if (!is_dir($uploadDirectory)) {
 
                     while ($payslip = fetchAssoc($payslips)) : ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php echo toDateTime($payslip['updated_at']); ?></td>
-                            <td class="align-middle text-left"><?php echo $payslip['description']; ?></td>
+                            <td class="align-middle"><?= toDateTime($payslip['updated_at']) ?></td>
+                            <td class="align-middle text-left"><?= $payslip['description'] ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
-                                    <?php dropdownEllipsis(); ?>
+                                    <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                                         <?php
                                         previewLinkDropdownItem(uri() . '/' . $payslip['filename'], 'Preview', 'fa-eye', 'Preview ' . $payslip['description']);
                                         downloadLinkDropdownItem(uri() . '/' . $payslip['filename'], 'Download', 'fa-download', 'Download ' . $payslip['description'], $payslip['description'] . '.' . $payslip['ext'], true);
-                                        modalDropdownItem(uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Edit', 'fa-edit', 'Edit Payslip'); ?>
+                                        modalDropdownItem(uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Edit', 'fa-edit', 'Edit Payslip') ?>
                                         <div class="dropdown-divider"></div>
                                         <?php modalDropdownItem(uri() . '/modules/payslip/delete-payslip-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Delete', 'fa-trash', 'Delete Payslip');
                                         ?>
@@ -79,7 +79,7 @@ if (!is_dir($uploadDirectory)) {
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>

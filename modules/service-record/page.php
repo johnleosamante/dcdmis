@@ -28,7 +28,7 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Service Record</li>
         </ol>
     </nav>
@@ -53,7 +53,7 @@ if ($isHrmis) {
         <?php if ($isHrmis) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse my-2">
                 <div class="d-inline-block">
-                    <?php linkButtonSplit(customUri('print', 'Service Record', $employeeId), 'Print', 'fa-print', 'Print file', 'success', true); ?>
+                    <?php linkButtonSplit(customUri('print', 'Service Record', $employeeId), 'Print', 'fa-print', 'Print file', 'success', true) ?>
                 </div>
             </div>
         <?php } ?>
@@ -74,7 +74,7 @@ if ($isHrmis) {
                         <th class="align-middle" width="5%">Remarks</th>
                         <?php if ($isHrmis) : ?>
                             <th class="align-middle" width="5%">Actions</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                     </tr>
                 </thead>
 
@@ -84,37 +84,37 @@ if ($isHrmis) {
 
                     while ($service = fetchAssoc($services)) : ?>
                         <tr>
-                            <td class="align-middle"><?php echo toDate($service['from']); ?></td>
-                            <td class="align-middle"><?php echo $service['ispresent'] ? 'PRESENT' : toDate($service['to']); ?></td>
-                            <td class="align-middle"><?php echo toHandleNull($service['position_code'], 'N/A'); ?></td>
-                            <td class="align-middle"><?php echo $service['status']; ?></td>
-                            <td class="align-middle"><?php echo !empty($service['salary']) ? toCurrency($service['salary'] * 12) : 'N/A'; ?></td>
-                            <td class="align-middle"><?php echo toHandleNull($service['organization_alias'], 'N/A'); ?></td>
-                            <td class="align-middle"><?php echo toHandleNull($service['leave_dates'], 'N/A'); ?></td>
+                            <td class="align-middle"><?= toDate($service['from']) ?></td>
+                            <td class="align-middle"><?= $service['ispresent'] ? 'PRESENT' : toDate($service['to']) ?></td>
+                            <td class="align-middle"><?= toHandleNull($service['position_code'], 'N/A') ?></td>
+                            <td class="align-middle"><?= $service['status'] ?></td>
+                            <td class="align-middle"><?= !empty($service['salary']) ? toCurrency($service['salary'] * 12) : 'N/A' ?></td>
+                            <td class="align-middle"><?= toHandleNull($service['organization_alias'], 'N/A') ?></td>
+                            <td class="align-middle"><?= toHandleNull($service['leave_dates'], 'N/A') ?></td>
                             <td class="align-middle">
-                                <?php echo $service['isseparation'] === '1' ? toDate($service['separation_date']) : 'N/A'; ?>
+                                <?= $service['isseparation'] === '1' ? toDate($service['separation_date']) : 'N/A' ?>
                             </td>
                             <td class="align-middle">
-                                <?php echo $service['isseparation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A'; ?>
+                                <?= $service['isseparation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A' ?>
                             </td>
                             <td class="align-middle">
-                                <?php echo toHandleNull($service['sg']); ?>
+                                <?= toHandleNull($service['sg']) ?>
                             </td>
                             <?php if ($isHrmis) : ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
-                                        <?php dropdownEllipsis(); ?>
+                                        <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                             <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Edit', 'fa-edit', 'Edit Service Record');
-                                            modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Copy', 'fa-copy', 'Copy Service Record'); ?>
+                                            modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Copy', 'fa-copy', 'Copy Service Record') ?>
                                             <div class="dropdown-divider"></div>
-                                            <?php modalDropdownItem(uri() . '/modules/service-record/delete-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Delete', 'fa-trash', 'Delete Service Record'); ?>
+                                            <?php modalDropdownItem(uri() . '/modules/service-record/delete-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Delete', 'fa-trash', 'Delete Service Record') ?>
                                         </div>
                                     </div>
                                 </td>
-                            <?php endif; ?>
+                            <?php endif ?>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>
@@ -131,7 +131,7 @@ if ($isHrmis) {
                         <th class="align-middle" width="5%">Remarks</th>
                         <?php if ($isHrmis) : ?>
                             <th class="align-middle" width="5%">Actions</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>

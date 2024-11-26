@@ -17,7 +17,7 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Edit History</li>
         </ol>
     </nav>
@@ -31,7 +31,7 @@ if ($isHrmis) {
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitle('Edit History : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext']))); ?>
+        <?php contentTitle('Edit History : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext']))) ?>
     </div>
 
     <div class="card-body">
@@ -52,17 +52,17 @@ if ($isHrmis) {
                     $no = 0;
                     while ($row = fetchAssoc($query)) : ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php echo ++$no; ?></td>
-                            <td class="align-middle"><?php echo toDateTime($row['datetime']); ?></td>
-                            <td class="text-left align-middle"><?php echo $row['activity']; ?></td>
+                            <td class="align-middle"><?= ++$no ?></td>
+                            <td class="align-middle"><?= toDateTime($row['datetime']) ?></td>
+                            <td class="text-left align-middle"><?= $row['activity'] ?></td>
                             <td class="text-center align-middle">
                                 <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['editor']), userName($row['editor']));
 
                                 if ($isDmis || $isHrmis) : ?>
-                                    <br><small><?php echo '(' . $row['ip'] . ')'; ?></small>
-                                <?php endif; ?>
+                                    <br><small><?= '(' . $row['ip'] . ')' ?></small>
+                                <?php endif ?>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>

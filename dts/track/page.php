@@ -3,8 +3,8 @@
 ?>
 <div class="col-12">
     <div class="mt-5 mb-4 text-center">
-        <?php displayLogo(120, 120, '0', uri(), title()); ?>
-        <h1 class="my-2"><?php echo $appTitle; ?></h1>
+        <?php displayLogo(120, 120, '0', uri(), title()) ?>
+        <h1 class="my-2"><?= $appTitle ?></h1>
     </div>
 
     <?php
@@ -25,5 +25,5 @@
     }
     ?>
 
-    <a class="d-block text-center mx-2 mb-5" href="<?php echo uri() . '/login'; ?>" title="Go to login page">Already have an account? Login instead</a>
+    <a class="d-block text-center mx-2 mb-5" href="<?= uri() . '/login' ?>" title="Go to login page">Already have an account? Login instead</a>
 </div>

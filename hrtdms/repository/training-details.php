@@ -16,7 +16,7 @@ if (numRows($trainings) > 0) {
 ?>
 
 <div class="card-header py-3">
-    <?php contentTitleWithLink('Training Details', uri() . '/hrtdms/repository'); ?>
+    <?php contentTitleWithLink('Training Details', uri() . '/hrtdms/repository') ?>
 </div>
 
 <div class="card-body">
@@ -24,27 +24,27 @@ if (numRows($trainings) > 0) {
         <table cellspacing="0">
             <tr>
                 <th class="pr-5" scope="row">Code</th>
-                <td class="text-uppercase"><?php echo $training['no']; ?></td>
+                <td class="text-uppercase"><?= $training['no'] ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-5" scope="row">Title</th>
-                <td class="text-uppercase"><?php echo $training['title']; ?></td>
+                <td class="text-uppercase"><?= $training['title'] ?></td>
             </tr>
             <tr>
                 <th class="pr-5" scope="row">Date</th>
                 <td class="text-uppercase">
-                    <?php echo empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']); ?>
+                    <?= empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']) ?>
                 </td>
             </tr>
             <?php if (!empty($training['hours'])) : ?>
                 <tr>
                     <th class="pr-5" scope="row">Hours</th>
-                    <td class="text-uppercase"><?php echo $training['hours']; ?></td>
+                    <td class="text-uppercase"><?= $training['hours'] ?></td>
                 </tr>
-            <?php endif; ?>
+            <?php endif ?>
             <tr>
                 <th class="pr-5" scope="row">Type</th>
-                <td class="text-uppercase"><?php echo trainingType($training['type']); ?></td>
+                <td class="text-uppercase"><?= trainingType($training['type']) ?></td>
             </tr>
             <tr>
                 <th class="pr-5" scope="row">Level</th>
@@ -57,23 +57,23 @@ if (numRows($trainings) > 0) {
                 }
                 $functional_division = (!empty($functional_division) && strtolower($functional_division) !== 'n/a') ? ' (' . $training_functional_division . ')' : '';
                 ?>
-                <td class="text-uppercase"><?php echo trainingSponsor($training['level']) . $functional_division; ?></td>
+                <td class="text-uppercase"><?= trainingSponsor($training['level']) . $functional_division ?></td>
             </tr>
             <?php if (!empty($training['sponsor'])) : ?>
                 <tr>
                     <th class="align-top pr-5" scope="row">Sponsor</th>
-                    <td class="text-uppercase"><?php echo $training['sponsor']; ?></td>
+                    <td class="text-uppercase"><?= $training['sponsor'] ?></td>
                 </tr>
-            <?php endif; ?>
+            <?php endif ?>
             <?php if (!empty($training['venue'])) : ?>
                 <tr>
                     <th class="align-top pr-5" scope="row">Venue</th>
-                    <td class="text-uppercase"><?php echo $training['venue']; ?></td>
+                    <td class="text-uppercase"><?= $training['venue'] ?></td>
                 </tr>
-            <?php endif; ?>
+            <?php endif ?>
             <tr>
                 <th class="align-top pr-5" scope="row">Participants</th>
-                <td class="text-uppercase"><?php echo numRows($participants); ?></td>
+                <td class="text-uppercase"><?= numRows($participants) ?></td>
             </tr>
         </table>
     </div>
@@ -100,30 +100,30 @@ if (numRows($trainings) > 0) {
                         <td class="align-middle">
                             <div class="image-container">
                                 <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                    <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
+                                    <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
                                 </span>
-                                <div class="sex-sign"><?php sex($row['sex']); ?></div>
+                                <div class="sex-sign"><?php sex($row['sex']) ?></div>
                             </div>
                         </td>
                         <td class="align-middle text-left">
-                            <?php echo $employeeName; ?>
+                            <?= $employeeName ?>
                         </td>
-                        <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
-                        <td class="align-middle"><?php echo fetchAssoc(schoolById($row['station']))['name']; ?></td>
+                        <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
+                        <td class="align-middle"><?= fetchAssoc(schoolById($row['station']))['name'] ?></td>
                         <td class="align-middle text-capitalize">
                             <div class="dropdown no-arrow">
-                                <?php dropdownEllipsis(); ?>
+                                <?php dropdownEllipsis() ?>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                     <?php
                                     if ($training['generate_certificate']) :
-                                        linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($row['id']), 'Certificate', 'fa-certificate', 'View Certificate of Participation', true); ?>
+                                        linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($row['id']), 'Certificate', 'fa-certificate', 'View Certificate of Participation', true) ?>
                                     <?php endif;
-                                    linkDropdownItem(customUri('print', 'Certificate of Appearance', $training['no']) . '&p=' . encode($row['id']), 'Appearance', 'fa-stamp', 'View Certificate of Appearance', true); ?>
+                                    linkDropdownItem(customUri('print', 'Certificate of Appearance', $training['no']) . '&p=' . encode($row['id']), 'Appearance', 'fa-stamp', 'View Certificate of Appearance', true) ?>
                                 </div>
                             </div>
                         </td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endwhile ?>
             </tbody>
 
             <tfoot>

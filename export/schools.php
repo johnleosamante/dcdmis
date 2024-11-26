@@ -45,25 +45,25 @@ require_once(root() . '/includes/database/utility.php');
 
         while ($row = fetchArray($query)) : ?>
             <tr>
-                <td><?php echo $i++; ?></td>
-                <td><?php echo $row['id']; ?></td>
-                <td><?php echo strtoupper($row['name']); ?></td>
-                <td><?php echo strtoupper($row['district']); ?></td>
-                <td><?php echo strtoupper($row['category']); ?></td>
-                <td><?php echo strtoupper(userName($row['head'])); ?></td>
-                <td><?php echo $row['tmale']; ?></td>
-                <td><?php echo $row['trmale']; ?></td>
-                <td><?php echo $row['ntmale']; ?></td>
-                <td><strong><?php echo $row['male']; ?></strong></td>
-                <td><?php echo $row['tfemale']; ?></td>
-                <td><?php echo $row['trfemale']; ?></td>
-                <td><?php echo $row['ntfemale']; ?></td>
-                <td><strong><?php echo $row['female']; ?></strong></td>
-                <td><strong><?php echo $row['total']; ?></strong></td>
+                <td><?= $i++ ?></td>
+                <td><?= $row['id'] ?></td>
+                <td><?= strtoupper($row['name']) ?></td>
+                <td><?= strtoupper($row['district']) ?></td>
+                <td><?= strtoupper($row['category']) ?></td>
+                <td><?= strtoupper(userName($row['head'])) ?></td>
+                <td><?= $row['tmale'] ?></td>
+                <td><?= $row['trmale'] ?></td>
+                <td><?= $row['ntmale'] ?></td>
+                <td><strong><?= $row['male'] ?></strong></td>
+                <td><?= $row['tfemale'] ?></td>
+                <td><?= $row['trfemale'] ?></td>
+                <td><?= $row['ntfemale'] ?></td>
+                <td><strong><?= $row['female'] ?></strong></td>
+                <td><strong><?= $row['total'] ?></strong></td>
             </tr>
-        <?php endwhile; ?>
+        <?php endwhile ?>
         <tr>
-            <td colspan="15"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+            <td colspan="15"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>
     </tbody>
 </table>

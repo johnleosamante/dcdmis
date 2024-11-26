@@ -2,12 +2,12 @@
 // modules/employees/tabs/recognition.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'recognition', 'show active'); ?>" id="recognition">
+<div class="tab-pane fade<?= setActiveNavigation(isset($activeTab) && $activeTab === 'recognition', 'show active') ?>" id="recognition">
     <?php if ($editMode) : ?>
         <div class="d-sm-flex justify-content-end my-3">
-            <?php modalButtonSplit(uri() . '/modules/employees/save/save-recognition-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Recogntion', 'primary'); ?>
+            <?php modalButtonSplit(uri() . '/modules/employees/save/save-recognition-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Recogntion', 'primary') ?>
         </div>
-    <?php endif; ?>
+    <?php endif ?>
 
     <div class="row my-3">
         <div class="col table-responsive">
@@ -17,7 +17,7 @@
                         <th class="align-middle" width="90%">Non-Academic Distinctions / Recognition</th>
                         <?php if ($editMode) : ?>
                             <th class="align-middle" width="5%">Action</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                     </tr>
                 </thead>
 
@@ -28,25 +28,25 @@
                     if (numRows($recognitions) > 0) {
                         while ($recognition = fetchAssoc($recognitions)) : ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?php echo $recognition['recognition']; ?></td>
+                                <td class="align-middle"><?= $recognition['recognition'] ?></td>
                                 <?php if ($editMode) : ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
-                                            <?php dropdownEllipsis(); ?>
+                                            <?php dropdownEllipsis() ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                                 <?php modalDropdownItem(uri() . '/modules/employees/save/save-recognition-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Edit', 'fa-edit', 'Edit Recognition');
-                                                modalDropdownItem(uri() . '/modules/employees/save/save-recognition-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Copy', 'fa-copy', 'Copy Recognition'); ?>
+                                                modalDropdownItem(uri() . '/modules/employees/save/save-recognition-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Copy', 'fa-copy', 'Copy Recognition') ?>
                                                 <div class="dropdown-divider"></div>
-                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-recognition-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Delete', 'fa-trash', 'Delete Recognition'); ?>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-recognition-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['no']), 'Delete', 'fa-trash', 'Delete Recognition') ?>
                                             </div>
                                         </div>
                                     </td>
-                                <?php endif; ?>
+                                <?php endif ?>
                             </tr>
                         <?php endwhile;
                     } else { ?>
                         <tr>
-                            <td colspan="<?php echo $editMode ? '2' : '1'; ?>" class="align-middle">No data available in table</td>
+                            <td colspan="<?= $editMode ? '2' : '1' ?>" class="align-middle">No data available in table</td>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -56,7 +56,7 @@
                         <th class="align-middle" width="90%">Non-Academic Distinctions / Recognition</th>
                         <?php if ($editMode) : ?>
                             <th class="align-middle" width="5%">Action</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>

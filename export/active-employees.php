@@ -29,7 +29,7 @@ $filter = isset($_GET['id']) ? $filter . " AND tbl_station.Emp_Station='" . sani
 				<th>PhilHealth ID No.</th>
 				<th>SSS No.</th>
 				<th>TIN No.</th>
-			<?php endif; ?>
+			<?php endif ?>
 			<th>Contact No.</th>
 			<th>Email Address</th>
 			<th>Residential Address</th>
@@ -43,31 +43,31 @@ $filter = isset($_GET['id']) ? $filter . " AND tbl_station.Emp_Station='" . sani
 
 		foreach ($rows as $row) : ?>
 			<tr>
-				<td><?php echo $i++; ?></td>
-				<td><?php echo strtoupper($row['school']); ?></td>
-				<td><?php echo $row['id']; ?></td>
-				<td><?php echo strtoupper($row['lname']); ?></td>
-				<td><?php echo strtoupper($row['fname']); ?></td>
-				<td><?php echo strtoupper($row['mname']); ?></td>
-				<td><?php echo strtoupper($row['ext']); ?></td>
-				<td><?php echo strtoupper($row['sex'])[0]; ?></td>
-				<td><?php echo $row['byear'] . '-' . $row['bmonth'] . '-' . $row['bday']; ?></td>
-				<td><?php echo strtoupper($row['position']); ?></td>
+				<td><?= $i++ ?></td>
+				<td><?= strtoupper($row['school']) ?></td>
+				<td><?= $row['id'] ?></td>
+				<td><?= strtoupper($row['lname']) ?></td>
+				<td><?= strtoupper($row['fname']) ?></td>
+				<td><?= strtoupper($row['mname']) ?></td>
+				<td><?= strtoupper($row['ext']) ?></td>
+				<td><?= strtoupper($row['sex'])[0] ?></td>
+				<td><?= $row['byear'] . '-' . $row['bmonth'] . '-' . $row['bday'] ?></td>
+				<td><?= strtoupper($row['position']) ?></td>
 				<?php if ($isHrmis) : ?>
-					<td><?php echo $row['crn']; ?></td>
-					<td><?php echo $row['bp']; ?></td>
-					<td><?php echo $row['pagibig']; ?></td>
-					<td><?php echo $row['philhealth']; ?></td>
-					<td><?php echo $row['sss']; ?></td>
-					<td><?php echo $row['tin']; ?></td>
-				<?php endif; ?>
-				<td><?php echo $row['contact']; ?></td>
-				<td><?php echo strtolower($row['email']); ?></td>
-				<td><?php echo strtoupper(toAddress('', $row['street'], $row['subdivision'], $row['barangay'], $row['city'], $row['province'])); ?></td>
+					<td><?= $row['crn'] ?></td>
+					<td><?= $row['bp'] ?></td>
+					<td><?= $row['pagibig'] ?></td>
+					<td><?= $row['philhealth'] ?></td>
+					<td><?= $row['sss'] ?></td>
+					<td><?= $row['tin'] ?></td>
+				<?php endif ?>
+				<td><?= $row['contact'] ?></td>
+				<td><?= strtolower($row['email']) ?></td>
+				<td><?= strtoupper(toAddress('', $row['street'], $row['subdivision'], $row['barangay'], $row['city'], $row['province'])) ?></td>
 			</tr>
-		<?php endforeach; ?>
+		<?php endforeach ?>
 		<tr>
-			<td colspan="<?php echo $isHrmis ? '19' : '13'; ?>"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+			<td colspan="<?= $isHrmis ? '19' : '13' ?>"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
 		</tr>
 	</tbody>
 </table>

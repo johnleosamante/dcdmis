@@ -3,7 +3,7 @@
 ?>
 
 <div class="text-center py-0">
-    <?php missingAlert('No results found', 'fa-search', 'text-gray-800'); ?>
+    <?php missingAlert('No results found', 'fa-search', 'text-gray-800') ?>
 
     <p class="text-gray-700 mt-4 mb-1">Try a new search term instead</p>
 
@@ -23,6 +23,6 @@
     </form>
 
     <?php if (isset($userId)) : ?>
-        <a href="<?php echo uri() . '/' . $activeApp; ?>" title="Go to dashboard">Go to Dashboard</a>
-    <?php endif; ?>
+        <a href="<?= uri() . '/' . $activeApp ?>" title="Go to dashboard">Go to Dashboard</a>
+    <?php endif ?>
 </div>

@@ -15,9 +15,9 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 	?>
 </div>
 
-<script src="<?php echo uri(); ?>/assets/vendor/chart.js/Chart.min.js"></script>
-<script src="<?php echo uri(); ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
-<script src="<?php echo uri(); ?>/assets/js/chart-custom.js"></script>
+<script src="<?= uri() ?>/assets/vendor/chart.js/Chart.min.js"></script>
+<script src="<?= uri() ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
+<script src="<?= uri() ?>/assets/js/chart-custom.js"></script>
 
 <div class="row">
 	<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
@@ -29,8 +29,8 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 				<div class="chart-bar h-auto">
 					<canvas id="conducted-trainings-bar-chart"></canvas>
 					<script>
-						<?php $conductedTrainingByYear = conductedTrainingsByYear(); ?>
-						generateBarChart(<?php echo json_encode(fetchAllAssoc($conductedTrainingByYear)); ?>, generateColorPallete(<?php echo numRows($conductedTrainingByYear); ?>), 'conducted-trainings-bar-chart');
+						<?php $conductedTrainingByYear = conductedTrainingsByYear() ?>
+						generateBarChart(<?= json_encode(fetchAllAssoc($conductedTrainingByYear)) ?>, generateColorPallete(<?= numRows($conductedTrainingByYear) ?>), 'conducted-trainings-bar-chart');
 					</script>
 				</div>
 			</div>
@@ -46,8 +46,8 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 				<div class="chart-bar h-auto">
 					<canvas id="trained-employees-bar-chart"></canvas>
 					<script>
-						<?php $trainedEmployeesByYear = trainedEmployeesByYear(); ?>
-						generateBarChart(<?php echo json_encode(fetchAllAssoc($trainedEmployeesByYear)); ?>, generateColorPallete(<?php echo numRows($trainedEmployeesByYear); ?>), 'trained-employees-bar-chart');
+						<?php $trainedEmployeesByYear = trainedEmployeesByYear() ?>
+						generateBarChart(<?= json_encode(fetchAllAssoc($trainedEmployeesByYear)) ?>, generateColorPallete(<?= numRows($trainedEmployeesByYear) ?>), 'trained-employees-bar-chart');
 					</script>
 				</div>
 			</div>

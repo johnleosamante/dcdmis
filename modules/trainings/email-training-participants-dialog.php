@@ -23,9 +23,9 @@ if (numRows($trainings) > 0) {
 }
 ?>
 
-<div class="modal-dialog <?php echo $notFound ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?= $notFound ? 'modal-sm' : '' ?>">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <div class="modal-body">
             <?php if (!$notFound) {
@@ -42,14 +42,14 @@ if (numRows($trainings) > 0) {
                         <?php if ($numberOfParticipants > 1) : ?>
                             <ol class="mb-0">
                                 <?php while ($participant = fetchAssoc($trainingParticipants)) : ?>
-                                    <li><?php echo strtoupper(toName($participant['lname'], $participant['fname'], $participant['mname'], $participant['ext'])); ?></li>
-                                <?php endwhile; ?>
+                                    <li><?= strtoupper(toName($participant['lname'], $participant['fname'], $participant['mname'], $participant['ext'])) ?></li>
+                                <?php endwhile ?>
                             </ol>
                         <?php else : ?>
                             <?php while ($participant = fetchAssoc($trainingParticipants)) : ?>
-                                <div class="m-0 pl-3"><?php echo strtoupper(toName($participant['lname'], $participant['fname'], $participant['mname'], $participant['ext'])); ?></div>
-                            <?php endwhile; ?>
-                        <?php endif; ?>
+                                <div class="m-0 pl-3"><?= strtoupper(toName($participant['lname'], $participant['fname'], $participant['mname'], $participant['ext'])) ?></div>
+                            <?php endwhile ?>
+                        <?php endif ?>
                     </div>
             <?php }
             } else {
@@ -60,16 +60,16 @@ if (numRows($trainings) > 0) {
         <div class="modal-footer">
             <?php if (!$notFound) : ?>
                 <form action="" method="POST">
-                    <input type="hidden" name="verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+                    <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
                     <?php if (isset($_GET['p'])) : ?>
-                        <input type="hidden" name="data-verifier" value="<?php echo $_GET['p']; ?>">
-                    <?php endif; ?>
+                        <input type="hidden" name="data-verifier" value="<?= $_GET['p'] ?>">
+                    <?php endif ?>
                     <button class="btn btn-primary" name="email-participants" type="submit">Yes, Continue</button>
                 <?php endif;
             cancelModalButton();
             if (!$notFound) : ?>
                 </form>
-            <?php endif; ?>
+            <?php endif ?>
         </div>
     </div>
 </div>

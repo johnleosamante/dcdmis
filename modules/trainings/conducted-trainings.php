@@ -11,19 +11,19 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Conducted Trainings</li>
         </ol>
     </nav>
 
     <div class="d-inline-block">
-        <?php modalButtonSplit(uri() . '/modules/trainings/save-training-dialog.php', 'Add Training', 'fa-plus'); ?>
+        <?php modalButtonSplit(uri() . '/modules/trainings/save-training-dialog.php', 'Add Training', 'fa-plus') ?>
     </div>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitle('Conducted Trainings'); ?>
+        <?php contentTitle('Conducted Trainings') ?>
     </div>
 
     <div class="card-body">
@@ -36,7 +36,7 @@ messageAlert($showAlert, $message, $success);
                                 <label for="date-from" class="font-weight-bold m-0">From:</label>
                             </div>
                             <div class="col-10">
-                                <input class="form-control" id="date-from" type="date" name="date-from" value="<?php echo $fromDate; ?>">
+                                <input class="form-control" id="date-from" type="date" name="date-from" value="<?= $fromDate ?>">
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@ messageAlert($showAlert, $message, $success);
                                 <label for="date-to" class="font-weight-bold m-0">To:</label>
                             </div>
                             <div class="col-10">
-                                <input class="form-control" id="date-to" type="date" name="date-to" value="<?php echo $toDate; ?>">
+                                <input class="form-control" id="date-to" type="date" name="date-to" value="<?= $toDate ?>">
                             </div>
                         </div>
                     </div>
@@ -81,25 +81,25 @@ messageAlert($showAlert, $message, $success);
                     while ($training = fetchAssoc($trainings)) : ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
-                                <?php linkItem(customUri('hrtdms', 'Training Details', $training['no']), $training['no']); ?>
+                                <?php linkItem(customUri('hrtdms', 'Training Details', $training['no']), $training['no']) ?>
                             </td>
-                            <td class="align-middle text-left"><?php echo $training['title']; ?></td>
-                            <td class="align-middle"><?php echo toDate($training['from']); ?></td>
-                            <td class="align-middle"><?php echo toDate($training['to']); ?></td>
-                            <td class="align-middle"><?php echo trainingType($training['type']); ?></td>
-                            <td class="align-middle"><?php echo $training['sponsor']; ?></td>
+                            <td class="align-middle text-left"><?= $training['title'] ?></td>
+                            <td class="align-middle"><?= toDate($training['from']) ?></td>
+                            <td class="align-middle"><?= toDate($training['to']) ?></td>
+                            <td class="align-middle"><?= trainingType($training['type']) ?></td>
+                            <td class="align-middle"><?= $training['sponsor'] ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
-                                    <?php dropdownEllipsis(); ?>
+                                    <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                                         <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['no']), 'View', 'fa-eye', 'View Training');
                                         linkDropdownItem(customUri('hrtdms', 'Add Training Participants', $training['no']), 'Add', 'fa-user-plus', 'Add Participants');
-                                        modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['no']), 'Edit', 'fa-edit', 'Edit Training'); ?>
+                                        modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['no']), 'Edit', 'fa-edit', 'Edit Training') ?>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>

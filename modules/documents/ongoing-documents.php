@@ -11,19 +11,19 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Ongoing</li>
         </ol>
     </nav>
 
     <div class="d-inline-block">
-        <?php modalButtonSplit(uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus'); ?>
+        <?php modalButtonSplit(uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus') ?>
     </div>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithLink('Ongoing Documents', uri() . '/dts'); ?>
+        <?php contentTitleWithLink('Ongoing Documents', uri() . '/dts') ?>
     </div>
 
     <div class="card-body">
@@ -45,13 +45,13 @@ messageAlert($showAlert, $message, $success);
                     while ($row = fetchArray($query)) {
                     ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']); ?></td>
-                            <td class="text-left align-middle"><?php echo $row['description']; ?></td>
-                            <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
-                            <td class="align-middle"><?php echo $row['status']; ?></td>
+                            <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?></td>
+                            <td class="text-left align-middle"><?= $row['description'] ?></td>
+                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
+                            <td class="align-middle"><?= $row['status'] ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
-                                    <?php dropdownEllipsis(); ?>
+                                    <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 

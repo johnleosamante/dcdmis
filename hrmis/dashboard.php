@@ -16,9 +16,9 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
     ?>
 </div>
 
-<script src="<?php echo uri(); ?>/assets/vendor/chart.js/Chart.min.js"></script>
-<script src="<?php echo uri(); ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
-<script src="<?php echo uri(); ?>/assets/js/chart-custom.js"></script>
+<script src="<?= uri() ?>/assets/vendor/chart.js/Chart.min.js"></script>
+<script src="<?= uri() ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
+<script src="<?= uri() ?>/assets/js/chart-custom.js"></script>
 
 <div class="row">
     <div class="col-xl-3 col-lg-12 mb-4">
@@ -30,7 +30,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-pie py-2">
                     <canvas id="gender-pie-chart"></canvas>
                     <script>
-                        generateDoughnutChart(<?php echo json_encode(fetchAllAssoc(employeeGender())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>, 'gender-pie-chart');
+                        generateDoughnutChart(<?= json_encode(fetchAllAssoc(employeeGender())) ?>, <?= json_encode(array('#02a3fe', '#ec49a6')) ?>, 'gender-pie-chart');
                     </script>
                 </div>
             </div>
@@ -46,7 +46,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-bar h-auto">
                     <canvas id="gender-comparative-bar-chart"></canvas>
                     <script>
-                        generateComparativeBarChart(<?php echo json_encode(fetchAllAssoc(employeeGenderCategory())); ?>, <?php echo json_encode(array('#02a3fe', '#ec49a6')); ?>, 'gender-comparative-bar-chart');
+                        generateComparativeBarChart(<?= json_encode(fetchAllAssoc(employeeGenderCategory())) ?>, <?= json_encode(array('#02a3fe', '#ec49a6')) ?>, 'gender-comparative-bar-chart');
                     </script>
                 </div>
             </div>
@@ -64,8 +64,8 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-pie py-2">
                     <canvas id="category-doughnut-chart"></canvas>
                     <script>
-                        <?php $employeeCategory = employeeCategory(); ?>
-                        generatePieChart(<?php echo json_encode(fetchAllAssoc($employeeCategory)); ?>, generateColorPallete(<?php echo numRows($employeeCategory); ?>), 'category-doughnut-chart');
+                        <?php $employeeCategory = employeeCategory() ?>
+                        generatePieChart(<?= json_encode(fetchAllAssoc($employeeCategory)) ?>, generateColorPallete(<?= numRows($employeeCategory) ?>), 'category-doughnut-chart');
                     </script>
                 </div>
             </div>
@@ -81,8 +81,8 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-bar h-auto">
                     <canvas id="position-bar-chart"></canvas>
                     <script>
-                        <?php $employeePositions = employeePosition(); ?>
-                        generateBarChart(<?php echo json_encode(fetchAllAssoc($employeePositions)); ?>, generateColorPallete(<?php echo numRows($employeePositions); ?>), 'position-bar-chart');
+                        <?php $employeePositions = employeePosition() ?>
+                        generateBarChart(<?= json_encode(fetchAllAssoc($employeePositions)) ?>, generateColorPallete(<?= numRows($employeePositions) ?>), 'position-bar-chart');
                     </script>
                 </div>
             </div>
@@ -100,8 +100,8 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-pie py-2">
                     <canvas id="district-polar-area-chart"></canvas>
                     <script>
-                        <?php $districtEmployees = districtEmployee(); ?>
-                        generatePolarAreaChart(<?php echo json_encode(fetchAllAssoc($districtEmployees)); ?>, generateColorPallete(<?php echo numRows($districtEmployees); ?>), 'district-polar-area-chart');
+                        <?php $districtEmployees = districtEmployee() ?>
+                        generatePolarAreaChart(<?= json_encode(fetchAllAssoc($districtEmployees)) ?>, generateColorPallete(<?= numRows($districtEmployees) ?>), 'district-polar-area-chart');
                     </script>
                 </div>
             </div>
@@ -117,8 +117,8 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-bar h-auto">
                     <canvas id="station-bar-chart"></canvas>
                     <script>
-                        <?php $employeeStations = employeeStation(); ?>
-                        generateBarChart(<?php echo json_encode(fetchAllAssoc($employeeStations)); ?>, generateColorPallete(<?php echo numRows($employeeStations); ?>), 'station-bar-chart');
+                        <?php $employeeStations = employeeStation() ?>
+                        generateBarChart(<?= json_encode(fetchAllAssoc($employeeStations)) ?>, generateColorPallete(<?= numRows($employeeStations) ?>), 'station-bar-chart');
                     </script>
                 </div>
             </div>

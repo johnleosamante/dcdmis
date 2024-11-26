@@ -5,11 +5,11 @@
 <div class="col-xl-5 col-lg-5 col-md-8 col-sm-12">
     <div class="card o-hidden border-0 shadow-lg my-5">
         <div class="card-header">
-            <h3 class="text-center my-2"><?php echo $page; ?></h3>
+            <h3 class="text-center my-2"><?= $page ?></h3>
         </div>
 
         <div class="card-body text-center">
-            <?php displayLogo(120, 120, '3', uri(), title()); ?>
+            <?php displayLogo(120, 120, '3', uri(), title()) ?>
 
             <div class="text-left">
                 <p class="text-center mb-2">New password should have the following:</p>
@@ -23,18 +23,18 @@
                 </ul>
             </div>
 
-            <?php messageAlert($showAlert, $message, $success); ?>
+            <?php messageAlert($showAlert, $message, $success) ?>
 
             <form action="" method="POST" class="text-left mt-3">
                 <div class="form-group">
                     <label for="email-address" class="font-weight-bold mb-1">Email Address</label>
-                    <input id="email-address" type="text" class="form-control border" value="<?php echo $email; ?>" readonly>
+                    <input id="email-address" type="text" class="form-control border" value="<?= $email ?>" readonly>
                 </div>
 
                 <div class="form-group">
-                    <label for="password" class="font-weight-bold mb-1">New Password <?php showAsterisk(); ?></label>
+                    <label for="password" class="font-weight-bold mb-1">New Password <?php showAsterisk() ?></label>
                     <div id="password-group" class="input-group border rounded">
-                        <input id="password" name="password" type="password" class="form-control border-0" value="<?php echo $password; ?>" required>
+                        <input id="password" name="password" type="password" class="form-control border-0" value="<?= $password ?>" required>
                         <div class="input-group-append">
                             <button type="button" id="eye-toggle" class="input-group-text border-0 bg-transparent">
                                 <i id="eye" class="small fas fa-eye fa-sm"></i>
@@ -44,9 +44,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="password-confirm" class="font-weight-bold mb-1">Confirm New Password <?php showAsterisk(); ?></label>
+                    <label for="password-confirm" class="font-weight-bold mb-1">Confirm New Password <?php showAsterisk() ?></label>
                     <div id="password-confirm-group" class="input-group border rounded">
-                        <input id="password-confirm" name="password-confirm" type="password" class="form-control border-0" value="<?php echo $passwordConfirm; ?>" required>
+                        <input id="password-confirm" name="password-confirm" type="password" class="form-control border-0" value="<?= $passwordConfirm ?>" required>
                         <div class="input-group-append">
                             <button type="button" id="eye-confirm-toggle" class="input-group-text border-0 bg-transparent">
                                 <i id="eye-confirm" class="small fas fa-eye fa-sm"></i>
@@ -55,7 +55,7 @@
                     </div>
                 </div>
 
-                <?php requiredLegend(); ?>
+                <?php requiredLegend() ?>
 
                 <button id="change-password" type="submit" class="btn btn-primary btn-block" name="change-password">Change Password</button>
             </form>

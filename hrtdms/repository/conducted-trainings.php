@@ -12,7 +12,7 @@
                             <label for="date-from" class="font-weight-bold m-0">From:</label>
                         </div>
                         <div class="col-10">
-                            <input class="form-control" id="date-from" type="date" name="date-from" value="<?php echo $fromDate; ?>">
+                            <input class="form-control" id="date-from" type="date" name="date-from" value="<?= $fromDate ?>">
                         </div>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                             <label for="date-to" class="font-weight-bold m-0">To:</label>
                         </div>
                         <div class="col-10">
-                            <input class="form-control" id="date-to" type="date" name="date-to" value="<?php echo $toDate; ?>">
+                            <input class="form-control" id="date-to" type="date" name="date-to" value="<?= $toDate ?>">
                         </div>
                     </div>
                 </div>
@@ -52,13 +52,13 @@
                 while ($training = fetchAssoc($trainings)) : ?>
                     <tr class="text-uppercase">
                         <td class="align-middle text-left">
-                            <?php linkItem(customUri('hrtdms/repository', 'Training Details', $training['no']), $training['title']); ?>
+                            <?php linkItem(customUri('hrtdms/repository', 'Training Details', $training['no']), $training['title']) ?>
                         </td>
                         <td class="align-middle">
-                            <?php echo empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']); ?>
+                            <?= empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']) ?>
                         </td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endwhile ?>
             </tbody>
 
             <tfoot>

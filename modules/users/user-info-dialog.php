@@ -31,9 +31,9 @@ if (numRows($employees) > 0) {
 }
 ?>
 
-<div class="modal-dialog <?php echo !$hasEmployee ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?= !$hasEmployee ? 'modal-sm' : '' ?>">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
             <div class="modal-body">
@@ -45,7 +45,7 @@ if (numRows($employees) > 0) {
             </div>
 
             <div class="modal-footer">
-                <?php cancelModalButton(); ?>
+                <?php cancelModalButton() ?>
             </div>
         </form>
     </div>

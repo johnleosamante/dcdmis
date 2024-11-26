@@ -26,27 +26,27 @@ if (isset($recognitionId)) {
 
 <div class="modal-dialog">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="">
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="recognition" class="mb-0">Non-Academic Distinction / Recognition: <?php showAsterisk(); ?></label>
-                    <input id="recognition" type="text" name="recognition" class="form-control" title="Required field" value="<?php echo $recognition; ?>" required>
+                    <label for="recognition" class="mb-0">Non-Academic Distinction / Recognition: <?php showAsterisk() ?></label>
+                    <input id="recognition" type="text" name="recognition" class="form-control" title="Required field" value="<?= $recognition ?>" required>
                 </div>
 
-                <?php requiredLegend(0); ?>
+                <?php requiredLegend(0) ?>
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+                <input type="hidden" name="verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
                 <?php
                 $verifier = isset($_GET['id']) ? $_GET['id'] : null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
+                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
                 <button type="submit" class="btn btn-primary" name="save-recognition">Continue</button>
-                <?php cancelModalButton(); ?>
+                <?php cancelModalButton() ?>
             </div>
         </form>
     </div>

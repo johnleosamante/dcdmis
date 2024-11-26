@@ -26,7 +26,7 @@ if (isset($payslipId)) {
 
 <div class="modal-dialog">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="modal-body">
@@ -35,23 +35,23 @@ if (isset($payslipId)) {
                 </div>
 
                 <div class="form-group">
-                    <label for="description" class="mb-0">Description <?php showAsterisk(); ?></label>
-                    <textarea id="description" name="description" class="form-control" placeholder="Type description..." title="Type payslip description..." rows="3" required><?php echo $description; ?></textarea>
+                    <label for="description" class="mb-0">Description <?php showAsterisk() ?></label>
+                    <textarea id="description" name="description" class="form-control" placeholder="Type description..." title="Type payslip description..." rows="3" required><?= $description ?></textarea>
                 </div>
 
-                <?php requiredLegend(0); ?>
+                <?php requiredLegend(0) ?>
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+                <input type="hidden" name="verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
                 <?php
                 $verifier = isset($_GET['id']) ? $_GET['id'] : null;
                 $filename = !isset($_GET['c']) ? $filename : null;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
-                <input type="hidden" name="file-verifier" value="<?php echo cipher($filename); ?>">
+                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="file-verifier" value="<?= cipher($filename) ?>">
                 <button type="submit" class="btn btn-primary" name="save-payslip">Continue</button>
-                <?php cancelModalButton(); ?>
+                <?php cancelModalButton() ?>
             </div>
         </form>
     </div>

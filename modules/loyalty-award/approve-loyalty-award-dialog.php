@@ -31,9 +31,9 @@ if (numRows($employees) > 0) {
 }
 ?>
 
-<div class="modal-dialog <?php echo !$hasEmployee ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?= !$hasEmployee ? 'modal-sm' : '' ?>">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
             <div class="modal-body">
@@ -50,11 +50,11 @@ if (numRows($employees) > 0) {
 
             <div class="modal-footer">
                 <?php if ($hasEmployee) : ?>
-                    <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
+                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
                     <button class="btn btn-success" name="approve-loyalty-award" type="submit">Yes, Continue</button>
                 <?php endif;
 
-                cancelModalButton(); ?>
+                cancelModalButton() ?>
             </div>
         </form>
     </div>

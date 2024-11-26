@@ -11,7 +11,7 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">System Log</li>
         </ol>
     </nav>
@@ -19,7 +19,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitle('System Log'); ?>
+        <?php contentTitle('System Log') ?>
     </div>
 
     <div class="card-body">
@@ -32,7 +32,7 @@ messageAlert($showAlert, $message, $success);
                                 <label for="date-from" class="font-weight-bold m-0">From:</label>
                             </div>
                             <div class="col-10">
-                                <input class="form-control" id="date-from" type="date" name="date-from" value="<?php echo $fromDate; ?>">
+                                <input class="form-control" id="date-from" type="date" name="date-from" value="<?= $fromDate ?>">
                             </div>
                         </div>
                     </div>
@@ -45,7 +45,7 @@ messageAlert($showAlert, $message, $success);
                                 <label for="date-to" class="font-weight-bold m-0">To:</label>
                             </div>
                             <div class="col-10">
-                                <input class="form-control" id="date-to" type="date" name="date-to" value="<?php echo $toDate; ?>">
+                                <input class="form-control" id="date-to" type="date" name="date-to" value="<?= $toDate ?>">
                             </div>
                         </div>
                     </div>
@@ -74,19 +74,19 @@ messageAlert($showAlert, $message, $success);
                     $no = 0;
                     while ($row = fetchAssoc($query)) : ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php echo ++$no; ?></td>
-                            <td class="align-middle"><?php echo toDatetime($row['datetime']); ?></td>
-                            <td class="text-left align-middle"><?php echo $row['activity']; ?></td>
+                            <td class="align-middle"><?= ++$no ?></td>
+                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
+                            <td class="text-left align-middle"><?= $row['activity'] ?></td>
                             <td class="text-center align-middle">
                                 <?php $userLabel = $userId === $row['target'] ? 'YOU' : userName($row['target']);
                                 modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['target']), $userLabel);
 
                                 if ($isDmis || $isHrmis) : ?>
-                                    <br><small><?php echo '(' . $row['ip'] . ')'; ?></small>
-                                <?php endif; ?>
+                                    <br><small><?= '(' . $row['ip'] . ')' ?></small>
+                                <?php endif ?>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>

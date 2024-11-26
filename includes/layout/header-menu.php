@@ -23,7 +23,7 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
                 </div>
             </div>
         </form>
-    <?php endif; ?>
+    <?php endif ?>
 
     <ul class="navbar-nav ml-auto">
         <?php if ($isDts || $isHrmis || $isHrtdms) : ?>
@@ -46,7 +46,7 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
                     </form>
                 </div>
             </li>
-        <?php endif; ?>
+        <?php endif ?>
 
         <li class="nav-item dropdown no-arrow mx-1">
             <?php
@@ -73,8 +73,8 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <?php if ($alertCount) : ?>
-                    <span class="badge badge-danger badge-counter"><?php echo $alertCount; ?></span>
-                <?php endif; ?>
+                    <span class="badge badge-danger badge-counter"><?= $alertCount ?></span>
+                <?php endif ?>
             </a>
 
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -90,11 +90,11 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
                                 </div>
                             </div>
                             <div>
-                                <div class="small text-gray-500"><?php echo date('F d, Y'); ?></div>
-                                <span class="font-weight-bold">You are qualified for Step Increment <?php echo $increment; ?>!</span>
+                                <div class="small text-gray-500"><?= date('F d, Y') ?></div>
+                                <span class="font-weight-bold">You are qualified for Step Increment <?= $increment ?>!</span>
                             </div>
                         </a>
-                    <?php endif; ?>
+                    <?php endif ?>
 
                     <?php if ($hasLoyaltyAward) : ?>
                         <a class="dropdown-item d-flex align-items-center" href="#">
@@ -104,16 +104,16 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
                                 </div>
                             </div>
                             <div>
-                                <div class="small text-gray-500"><?php echo date('F d, Y'); ?></div>
+                                <div class="small text-gray-500"><?= date('F d, Y') ?></div>
                                 <span class="font-weight-bold">You are qualified for a Loyalty Award!</span>
                             </div>
                         </a>
-                    <?php endif; ?>
+                    <?php endif ?>
                 <?php else : ?>
                     <div class="dropdown-item d-flex align-items-center">
                         <div class="font-weight-light text-center my-2">No new alerts at the moment.</div>
                     </div>
-                <?php endif; ?>
+                <?php endif ?>
             </div>
         </li>
 
@@ -127,7 +127,7 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
                     My Employee Information Status
                 </h6>
 
-                <a class="dropdown-item py-3" href="<?php echo customUri('pis', 'Employee Information', $userId); ?>">
+                <a class="dropdown-item py-3" href="<?= customUri('pis', 'Employee Information', $userId) ?>">
                     <div class="font-weight-bold text-left pb-1">
                         <?php
                         $pdsProgress = pdsProgress($userId);
@@ -135,7 +135,7 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
                         ?>
                     </div>
 
-                    <?php progressBar($pdsProgress); ?>
+                    <?php progressBar($pdsProgress) ?>
                 </a>
             </div>
         </li>
@@ -143,15 +143,15 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="<?php echo strtoupper($displayName); ?>">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="<?= strtoupper($displayName) ?>">
                 <span class="mr-2 d-none d-md-inline">
-                    <div class="text-gray-600 small"><?php echo strtoupper($displayName); ?></div>
+                    <div class="text-gray-600 small"><?= strtoupper($displayName) ?></div>
 
-                    <div class="text-xs text-gray-500"><?php echo strtoupper($position); ?></div>
+                    <div class="text-xs text-gray-500"><?= strtoupper($position) ?></div>
                 </span>
 
                 <span class="d-flex justify-content-center align-middle img-profile rounded-circle overflow-hidden">
-                    <img src="<?php echo $displayPhoto; ?>" alt="<?php echo $displayName; ?>" height="100%">
+                    <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="100%">
                 </span>
             </a>
 
@@ -186,7 +186,7 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
 
                 <div class="dropdown-divider"></div>
 
-                <?php modalDropdownItem(uri() . '/logout/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout'); ?>
+                <?php modalDropdownItem(uri() . '/logout/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout') ?>
             </div>
         </li>
     </ul>
@@ -197,17 +197,17 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
     $schools = schoolDetailsById($stationId);
 
     if (numRows($schools)) :
-        $school = fetchAssoc($schools); ?>
-        <h1 class="h3 m-0"><?php echo $school['name']; ?></h1>
+        $school = fetchAssoc($schools) ?>
+        <h1 class="h3 m-0"><?= $school['name'] ?></h1>
 
         <?php if (!empty($school['address'])) : ?>
-            <div class="small m-0"><?php echo $school['address']; ?></div>
+            <div class="small m-0"><?= $school['address'] ?></div>
     <?php endif;
-    endif; ?>
+    endif ?>
 
-    <h2 class="h1 m-0 mt-4"><?php echo strtoupper($appTitle); ?></h2>
+    <h2 class="h1 m-0 mt-4"><?= strtoupper($appTitle) ?></h2>
 
     <?php if ($hasPortal && !$isSchoolPortal && $isDts) : ?>
-        <h3 class="h4 m-0"><?php echo stationName($station); ?></h3>
-    <?php endif; ?>
+        <h3 class="h4 m-0"><?= stationName($station) ?></h3>
+    <?php endif ?>
 </div>

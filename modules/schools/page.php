@@ -11,7 +11,7 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Schools</li>
         </ol>
     </nav>
@@ -31,7 +31,7 @@ messageAlert($showAlert, $message, $success);
         <?php if ($isHrmis || $isDmis) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
                 <div class="d-inline-block">
-                    <?php linkButtonSplit(customUri('export', 'schools'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+                    <?php linkButtonSplit(customUri('export', 'schools'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success') ?>
                 </div>
             </div>
         <?php } ?>
@@ -63,18 +63,18 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <div class="image-container">
                                     <span class="d-flex justify-content-center align-middle school-logo overflow-hidden">
-                                        <img height="100%" src="<?php echo $logo; ?>" alt="<?php echo $schoolName; ?>">
+                                        <img height="100%" src="<?= $logo ?>" alt="<?= $schoolName ?>">
                                     </span>
                                 </div>
                             </td>
                             <td class="align-middle text-left">
-                                <div><?php linkItem(customUri($activeApp, 'School Information', $row['id']), $schoolName . ' (' . $row['alias'] . ')'); ?></div>
-                                <div class="small"><?php echo $row['id'] . ' | ' . $row['address']; ?></div>
+                                <div><?php linkItem(customUri($activeApp, 'School Information', $row['id']), $schoolName . ' (' . $row['alias'] . ')') ?></div>
+                                <div class="small"><?= $row['id'] . ' | ' . $row['address'] ?></div>
                             </td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'District Information', $row['district']), fetchAssoc(district($row['district']))['name']); ?>
+                                <?php linkItem(customUri($activeApp, 'District Information', $row['district']), fetchAssoc(district($row['district']))['name']) ?>
                             </td>
-                            <td class="align-middle"><?php echo $row['category']; ?></td>
+                            <td class="align-middle"><?= $row['category'] ?></td>
                             <td class="align-middle">
                                 <?php if (!empty($row['head'])) : ?>
                                     <div>
@@ -89,7 +89,7 @@ messageAlert($showAlert, $message, $success);
                                     echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
                                 else :
                                     echo 'To be assigned';
-                                endif; ?>
+                                endif ?>
                             </td>
 
                             <?php
@@ -104,12 +104,12 @@ messageAlert($showAlert, $message, $success);
                             }
                             ?>
 
-                            <td class="align-middle text-mars"><strong><?php echo $male; ?></strong></td>
-                            <td class="align-middle text-venus"><strong><?php echo $female; ?></strong></td>
-                            <td class="align-middle"><strong><?php echo $total; ?></strong></td>
+                            <td class="align-middle text-mars"><strong><?= $male ?></strong></td>
+                            <td class="align-middle text-venus"><strong><?= $female ?></strong></td>
+                            <td class="align-middle"><strong><?= $total ?></strong></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
-                                    <?php dropdownEllipsis(); ?>
+                                    <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php linkDropdownItem(customUri($activeApp, 'School Information', $row['id']), 'View', 'fa-eye', 'View School');
 
@@ -126,7 +126,7 @@ messageAlert($showAlert, $message, $success);
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>

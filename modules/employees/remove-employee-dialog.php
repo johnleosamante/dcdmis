@@ -31,9 +31,9 @@ if (numRows($employees) > 0) {
 }
 ?>
 
-<div class="modal-dialog <?php echo !$hasEmployee ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?= !$hasEmployee ? 'modal-sm' : '' ?>">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
             <div class="modal-body">
@@ -42,7 +42,7 @@ if (numRows($employees) > 0) {
                 ?>
                     <hr>
                     <div class="form-group">
-                        <label for="reason" class="mb-0">Reason <?php showAsterisk(); ?></label>
+                        <label for="reason" class="mb-0">Reason <?php showAsterisk() ?></label>
                         <select id="reason" name="reason" class="form-control" title="Select reason of removal..." required>
                             <option value="">Select reason...</option>
                             <option value="Transferred">Transferred</option>
@@ -55,7 +55,7 @@ if (numRows($employees) > 0) {
                         </select>
                     </div>
 
-                    <?php requiredLegend(0); ?>
+                    <?php requiredLegend(0) ?>
                 <?php } else {
                     missingAlert($modalTitle);
                 } ?>
@@ -63,11 +63,11 @@ if (numRows($employees) > 0) {
 
             <div class="modal-footer">
                 <?php if ($hasEmployee) : ?>
-                    <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
+                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
                     <button class="btn btn-danger" name="remove-employee" type="submit">Continue</button>
                 <?php endif;
 
-                cancelModalButton(); ?>
+                cancelModalButton() ?>
             </div>
         </form>
     </div>

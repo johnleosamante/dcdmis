@@ -23,16 +23,16 @@ if (numRows($documents) > 0) {
 }
 ?>
 
-<div class="modal-dialog <?php echo !$hasDocument ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?= !$hasDocument ? 'modal-sm' : '' ?>">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
             <div class="modal-body">
                 <?php if ($hasDocument) { ?>
                     <div class="form-group">
                         <label for="code" class="mb-0">Code</label>
-                        <input id="code" type="text" value="<?php echo $documentId; ?>" class="form-control text-uppercase" disabled>
+                        <input id="code" type="text" value="<?= $documentId ?>" class="form-control text-uppercase" disabled>
                     </div>
 
                     <div class="form-group">
@@ -42,15 +42,15 @@ if (numRows($documents) > 0) {
 
                     <div class="form-group">
                         <label for="description" class="mb-0">Description</label>
-                        <textarea id="description" class="form-control text-uppercase" rows="3" disabled><?php echo $description; ?></textarea>
+                        <textarea id="description" class="form-control text-uppercase" rows="3" disabled><?= $description ?></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="remarks" class="mb-0">Reason <?php showAsterisk(); ?></label>
+                        <label for="remarks" class="mb-0">Reason <?php showAsterisk() ?></label>
                         <textarea id="remarks" name="remarks" class="form-control" rows="3" autofocus placeholder="Type reason..." title="Type document reason..." required></textarea>
                     </div>
 
-                    <?php requiredLegend(0); ?>
+                    <?php requiredLegend(0) ?>
                 <?php } else {
                     missingAlert($modalTitle);
                 } ?>
@@ -58,10 +58,10 @@ if (numRows($documents) > 0) {
 
             <div class="modal-footer">
                 <?php if ($hasDocument) : ?>
-                    <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
+                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
                     <button class="btn btn-danger" name="cancel-document" type="submit">Continue</button>
-                <?php endif; ?>
-                <?php cancelModalButton(); ?>
+                <?php endif ?>
+                <?php cancelModalButton() ?>
             </div>
         </form>
     </div>

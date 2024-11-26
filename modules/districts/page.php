@@ -11,7 +11,7 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Districts</li>
         </ol>
     </nav>
@@ -30,7 +30,7 @@ messageAlert($showAlert, $message, $success);
         <?php if ($isDmis) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
                 <div class="d-inline-block">
-                    <?php linkButtonSplit(customUri('export', 'districts'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+                    <?php linkButtonSplit(customUri('export', 'districts'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success') ?>
                 </div>
             </div>
         <?php } ?>
@@ -54,7 +54,7 @@ messageAlert($showAlert, $message, $success);
                     $query = districts();
                     while ($row = fetchAssoc(($query))) : ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle text-center"><?php linkItem(customUri($activeApp, 'District Information', $row['id']), $row['name']); ?></td>
+                            <td class="align-middle text-center"><?php linkItem(customUri($activeApp, 'District Information', $row['id']), $row['name']) ?></td>
                             <td class="align-middle">
                                 <div>
                                     <?php if ($isHrmis) {
@@ -63,7 +63,7 @@ messageAlert($showAlert, $message, $success);
                                         modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['psds']), userName($row['psds']));
                                     } ?>
                                 </div>
-                                <div class="small"><?php echo fetchAssoc(position($row['psds']))['position']; ?></div>
+                                <div class="small"><?= fetchAssoc(position($row['psds']))['position'] ?></div>
                             </td>
                             <?php
                             $schoolCount = districtSchoolCount($row['id']);
@@ -77,13 +77,13 @@ messageAlert($showAlert, $message, $success);
                                 $total = $count['total'];
                             }
                             ?>
-                            <td class="align-middle"><?php echo toHandleNull($es, '0'); ?></td>
-                            <td class="align-middle"><?php echo toHandleNull($hs, '0'); ?></td>
-                            <td class="align-middle"><?php echo toHandleNull($is, '0'); ?></td>
-                            <td class="align-middle"><?php echo $total; ?></td>
+                            <td class="align-middle"><?= toHandleNull($es, '0') ?></td>
+                            <td class="align-middle"><?= toHandleNull($hs, '0') ?></td>
+                            <td class="align-middle"><?= toHandleNull($is, '0') ?></td>
+                            <td class="align-middle"><?= $total ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
-                                    <?php dropdownEllipsis(); ?>
+                                    <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php
                                         linkDropdownItem(customUri($activeApp, 'District Information', $row['id']), 'View', 'fa-eye', 'View District');
@@ -100,7 +100,7 @@ messageAlert($showAlert, $message, $success);
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>

@@ -27,9 +27,9 @@ $personnel = numRows($query);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?php echo customUri($activeApp, 'Sections'); ?>">Sections</a></li>
-            <li class="breadcrumb-item active"><?php echo $sectionName; ?></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Sections') ?>">Sections</a></li>
+            <li class="breadcrumb-item active"><?= $sectionName ?></li>
         </ol>
     </nav>
 </div>
@@ -48,7 +48,7 @@ $personnel = numRows($query);
             <table cellspacing="0">
                 <tr>
                     <th class="pr-5 align-top" scope="row">Section</th>
-                    <td class="text-uppercase"><?php echo $sectionName; ?></td>
+                    <td class="text-uppercase"><?= $sectionName ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5 align-top" scope="row">Section Head</th>
@@ -60,12 +60,12 @@ $personnel = numRows($query);
                                 modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($head), userName($head));
                             } ?>
                         </div>
-                        <div class="small"><?php echo fetchAssoc(position($head))['position']; ?></div>
+                        <div class="small"><?= fetchAssoc(position($head))['position'] ?></div>
                     </td>
                 </tr>
                 <tr>
                     <th class="pr-5 align-top" scoper="row">Personnel</th>
-                    <td class="text-lowercase"><?php echo $personnel; ?></td>
+                    <td class="text-lowercase"><?= $personnel ?></td>
                 </tr>
             </table>
         </div>
@@ -84,14 +84,14 @@ $personnel = numRows($query);
                             <th class="align-middle" width="15%">Email Address</th>
                         <?php else : ?>
                             <th class="align-middle" width="15%">Attended Trainings</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                         <?php if ($isHrmis) : ?>
                             <th class="align-middel" width="10%">Progress</th>
                         <?php else : ?>
                             <?php if (!$isHrtdms) : ?>
                                 <th class="align-middle" width="10%">Contact #</th>
-                            <?php endif; ?>
-                        <?php endif; ?>
+                            <?php endif ?>
+                        <?php endif ?>
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </thead>
@@ -106,12 +106,12 @@ $personnel = numRows($query);
                             <td class="align-middle">
                                 <div class="image-container">
                                     <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?php echo $photo; ?>" alt="<?php echo $employeeName; ?>">
+                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
                                     </span>
-                                    <div class="sex-sign"><?php sex($row['sex']); ?></div>
+                                    <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
                             </td>
-                            <td class="align-middle"><?php echo toHandleNull($row['agency_id'], 'N/A'); ?></td>
+                            <td class="align-middle"><?= toHandleNull($row['agency_id'], 'N/A') ?></td>
                             <td class="align-middle text-left">
                                 <?php if ($isHrmis) {
                                     linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
@@ -121,11 +121,11 @@ $personnel = numRows($query);
                                     modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                                 } ?>
                             </td>
-                            <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y'); ?></td>
-                            <td class="align-middle"><?php echo getDateDifference($row['year'], $row['month'], $row['day']); ?></td>
-                            <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position']; ?></td>
+                            <td class="align-middle"><?= toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y') ?></td>
+                            <td class="align-middle"><?= getDateDifference($row['year'], $row['month'], $row['day']) ?></td>
+                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
                             <?php if (!$isHrtdms) : ?>
-                                <td class="align-middle text-lowercase"><?php echo $row['email']; ?></td>
+                                <td class="align-middle text-lowercase"><?= $row['email'] ?></td>
                             <?php else : ?>
                                 <td class="align-middle text-lowercase">
                                     <?php
@@ -133,26 +133,26 @@ $personnel = numRows($query);
                                     if ($count > 0) {
                                         echo $count;
                                     } else { ?>
-                                        <span class="text-danger font-weight-bold"><?php echo $count; ?></span>
+                                        <span class="text-danger font-weight-bold"><?= $count ?></span>
                                     <?php } ?>
                                 </td>
-                            <?php endif; ?>
+                            <?php endif ?>
                             <?php if ($isHrmis) { ?>
-                                <td class="align-middle"><?php progressBar(pdsProgress($row['id'])); ?></td>
+                                <td class="align-middle"><?php progressBar(pdsProgress($row['id'])) ?></td>
                             <?php } else { ?>
                                 <?php if (!$isHrtdms) : ?>
-                                    <td class="align-middle"><?php echo $row['mobile']; ?></td>
-                                <?php endif; ?>
+                                    <td class="align-middle"><?= $row['mobile'] ?></td>
+                                <?php endif ?>
                             <?php } ?>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
-                                    <?php dropdownEllipsis(); ?>
+                                    <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php if ($isHrmis) {
                                             linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee', true);
                                             modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
                                             modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
-                                            modalDropdownItem(uri() . '/modules/schools/assign-section-head-dialog.php?e=' . cipher($sectionId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set Section Head'); ?>
+                                            modalDropdownItem(uri() . '/modules/schools/assign-section-head-dialog.php?e=' . cipher($sectionId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set Section Head') ?>
                                             <div class="dropdown-divider"></div>
                                         <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
                                         } elseif ($isDmis) {
@@ -166,7 +166,7 @@ $personnel = numRows($query);
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>
@@ -181,14 +181,14 @@ $personnel = numRows($query);
                             <th class="align-middle" width="15%">Email Address</th>
                         <?php else : ?>
                             <th class="align-middle" width="15%">Attended Trainings</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                         <?php if ($isHrmis) : ?>
                             <th class="align-middel" width="10%">Progress</th>
                         <?php else : ?>
                             <?php if (!$isHrtdms) : ?>
                                 <th class="align-middle" width="10%">Contact #</th>
-                            <?php endif; ?>
-                        <?php endif; ?>
+                            <?php endif ?>
+                        <?php endif ?>
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </tfoot>

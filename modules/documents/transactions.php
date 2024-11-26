@@ -9,7 +9,7 @@ if (!$isDmis) {
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Transactions</li>
         </ol>
     </nav>
@@ -17,7 +17,7 @@ if (!$isDmis) {
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitle('Transactions'); ?>
+        <?php contentTitle('Transactions') ?>
     </div>
 
     <div class="card-body pb-2">

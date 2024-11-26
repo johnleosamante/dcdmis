@@ -48,14 +48,14 @@ if (numRows($employees) > 0) {
 }
 ?>
 
-<div class="modal-dialog <?php echo !$hasUser ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?= !$hasUser ? 'modal-sm' : '' ?>">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
             <div class="modal-body">
                 <?php if ($hasUser) {
-                    employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status); ?>
+                    employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status) ?>
 
                     <hr>
 
@@ -63,7 +63,7 @@ if (numRows($employees) > 0) {
 
                     <div class="form-group">
                         <div class="form-check">
-                            <input class="form-check-input" id="dts" type="checkbox" name="dts" <?php echo setActiveItem($dtsUser, true, 'checked'); ?>>
+                            <input class="form-check-input" id="dts" type="checkbox" name="dts" <?= setActiveItem($dtsUser, true, 'checked') ?>>
                             <label class="form-check-label" for="dts">Document Tracking System</label>
                         </div>
                     </div>
@@ -75,40 +75,40 @@ if (numRows($employees) > 0) {
                                 <?php
                                 $divisions = functionalDivisions();
                                 while ($division = fetchAssoc($divisions)) : ?>
-                                    <optgroup label="<?php echo $division['name']; ?>">
+                                    <optgroup label="<?= $division['name'] ?>">
                                         <?php
                                         $sections = sections($division['id']);
                                         while ($section = fetchAssoc($sections)) {
                                             if ($section['id'] !== $station) { ?>
-                                                <option value="<?php echo $section['id']; ?>" <?php echo setOptionSelected($section['id'], $dtsUserStation); ?>><?php echo $section['name']; ?></option>
+                                                <option value="<?= $section['id'] ?>" <?= setOptionSelected($section['id'], $dtsUserStation) ?>><?= $section['name'] ?></option>
                                         <?php
                                             }
                                         } ?>
                                     </optgroup>
-                                <?php endwhile; ?>
+                                <?php endwhile ?>
                             </select>
                         </div>
                     <?php else : ?>
-                        <input type="hidden" name="dts-verifier" value="<?php echo $userStationId; ?>">
-                    <?php endif; ?>
+                        <input type="hidden" name="dts-verifier" value="<?= $userStationId ?>">
+                    <?php endif ?>
 
                     <div class="form-group">
                         <div class="form-check">
-                            <input class="form-check-input" id="hrmis" type="checkbox" name="hrmis" <?php echo setActiveItem($hrmisUser, true, 'checked'); ?>>
+                            <input class="form-check-input" id="hrmis" type="checkbox" name="hrmis" <?= setActiveItem($hrmisUser, true, 'checked') ?>>
                             <label class="form-check-label" for="hrmis">Human Resource Management Information System</label>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="form-check">
-                            <input class="form-check-input" id="hrtdms" type="checkbox" name="hrtdms" <?php echo setActiveItem($hrtdmsUser, true, 'checked'); ?>>
+                            <input class="form-check-input" id="hrtdms" type="checkbox" name="hrtdms" <?= setActiveItem($hrtdmsUser, true, 'checked') ?>>
                             <label class="form-check-label" for="hrtdms">HR Training &amp; Development Management System</label>
                         </div>
                     </div>
 
                     <div class="form-group mb-0">
                         <div class="form-check">
-                            <input class="form-check-input" id="dmis" type="checkbox" name="dmis" <?php echo setActiveItem($dmisUser, true, 'checked'); ?>>
+                            <input class="form-check-input" id="dmis" type="checkbox" name="dmis" <?= setActiveItem($dmisUser, true, 'checked') ?>>
                             <label class="form-check-label" for="dmis">Division Management Information System</label>
                         </div>
                     </div>
@@ -119,11 +119,11 @@ if (numRows($employees) > 0) {
 
             <div class="modal-footer">
                 <?php if ($hasUser) : ?>
-                    <input type="hidden" name="verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-                    <input type="hidden" name="data-verifier" value="<?php echo cipher($depedEmail); ?>">
+                    <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
+                    <input type="hidden" name="data-verifier" value="<?= cipher($depedEmail) ?>">
                     <button class="btn btn-primary" name="edit-user" type="submit">Continue</button>
-                <?php endif; ?>
-                <?php cancelModalButton(); ?>
+                <?php endif ?>
+                <?php cancelModalButton() ?>
             </div>
         </form>
     </div>

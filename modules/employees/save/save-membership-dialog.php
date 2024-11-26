@@ -26,27 +26,27 @@ if (isset($membershipId)) {
 
 <div class="modal-dialog">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="">
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="membership" class="mb-0">Membership in Association / Organization: <?php showAsterisk(); ?></label>
-                    <input id="membership" type="text" name="membership" class="form-control" title="Required field" value="<?php echo $membership; ?>" required>
+                    <label for="membership" class="mb-0">Membership in Association / Organization: <?php showAsterisk() ?></label>
+                    <input id="membership" type="text" name="membership" class="form-control" title="Required field" value="<?= $membership ?>" required>
                 </div>
 
-                <?php requiredLegend(0); ?>
+                <?php requiredLegend(0) ?>
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+                <input type="hidden" name="verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
                 <?php
                 $verifier = isset($_GET['id']) ? $_GET['id'] : null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?php echo $verifier; ?>">
+                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
                 <button type="submit" class="btn btn-primary" name="save-membership">Continue</button>
-                <?php cancelModalButton(); ?>
+                <?php cancelModalButton() ?>
             </div>
         </form>
     </div>

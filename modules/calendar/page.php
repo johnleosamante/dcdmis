@@ -17,16 +17,16 @@
             <ul class="fa-ul mb-0 ml-4">
                 <?php while ($calendar = fetchAssoc($calendarActivities)) { ?>
                     <li class="py-1">
-                        <?php $isHoliday = $calendar['isHoliday']; ?>
+                        <?php $isHoliday = $calendar['isHoliday'] ?>
                         <span class="fa-li">
-                            <i class="fas fa-calendar-alt <?php echo $isHoliday ? 'text-danger' : 'text-primary'; ?>"></i>
+                            <i class="fas fa-calendar-alt <?= $isHoliday ? 'text-danger' : 'text-primary' ?>"></i>
                         </span>
 
-                        <span class="<?php echo $isHoliday ? 'text-danger' : 'text-primary'; ?>">
-                            <?php echo $calendar['activity']; ?>
+                        <span class="<?= $isHoliday ? 'text-danger' : 'text-primary' ?>">
+                            <?= $calendar['activity'] ?>
                         </span>
 
-                        <div class="small"><?php echo toDateRange(strtotime($calendar['from']), strtotime($calendar['to'])); ?></div>
+                        <div class="small"><?= toDateRange(strtotime($calendar['from']), strtotime($calendar['to'])) ?></div>
                     </li>
                 <?php } ?>
             </ul>

@@ -8,8 +8,8 @@
     <p class="text-gray-500 mb-4">Sorry, the page you're trying to access is restricted.</p>
 
     <?php if (isset($userId)) : ?>
-        <a href="<?php echo uri() . '/' . $activeApp; ?>" title="Go to dashboard">Go to dashboard</a>
+        <a href="<?= uri() . '/' . $activeApp ?>" title="Go to dashboard">Go to dashboard</a>
     <?php else : ?>
-        <a href="<?php echo uri(); ?>" title="Go to home page">Go to home page</a>
-    <?php endif; ?>
+        <a href="<?= uri() ?>" title="Go to home page">Go to home page</a>
+    <?php endif ?>
 </div>

@@ -30,59 +30,59 @@ if (numRows($schools) > 0) {
 
 <div class="modal-dialog">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="modal-body">
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="school-id" class="mb-0">School ID <?php showAsterisk(); ?></label>
-                            <input type="text" id="school-id" name="school-id" class="form-control" value="<?php echo $schoolId; ?>" required>
+                            <label for="school-id" class="mb-0">School ID <?php showAsterisk() ?></label>
+                            <input type="text" id="school-id" name="school-id" class="form-control" value="<?= $schoolId ?>" required>
                         </div>
                     </div>
 
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="alias" class="mb-0">Alias <?php showAsterisk(); ?></label>
-                            <input type="text" id="alias" name="alias" class="form-control" value="<?php echo $alias; ?>" required>
+                            <label for="alias" class="mb-0">Alias <?php showAsterisk() ?></label>
+                            <input type="text" id="alias" name="alias" class="form-control" value="<?= $alias ?>" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="school-name" class="mb-0">Name <?php showAsterisk(); ?></label>
-                    <input type="text" id="school-name" name="school-name" class="form-control" value="<?php echo $schoolName; ?>" required>
+                    <label for="school-name" class="mb-0">Name <?php showAsterisk() ?></label>
+                    <input type="text" id="school-name" name="school-name" class="form-control" value="<?= $schoolName ?>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="address" class="mb-0">Address <?php showAsterisk(); ?></label>
-                    <input type="text" id="address" name="address" class="form-control" value="<?php echo $address; ?>" required>
+                    <label for="address" class="mb-0">Address <?php showAsterisk() ?></label>
+                    <input type="text" id="address" name="address" class="form-control" value="<?= $address ?>" required>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="district" class="mb-0">District <?php showAsterisk(); ?></label>
+                            <label for="district" class="mb-0">District <?php showAsterisk() ?></label>
                             <select id="district" name="district" class="form-control" required>
                                 <option value="">Select district...</option>
                                 <?php $districts = districts();
                                 while ($district = fetchAssoc($districts)) : ?>
-                                    <option value="<?php echo $district['id']; ?>" <?php echo setOptionSelected($district['id'], $districtCode); ?>><?php echo $district['name']; ?></option>
-                                <?php endwhile; ?>
+                                    <option value="<?= $district['id'] ?>" <?= setOptionSelected($district['id'], $districtCode) ?>><?= $district['name'] ?></option>
+                                <?php endwhile ?>
                             </select>
                         </div>
                     </div>
 
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="category" class="mb-0">Category <?php showAsterisk(); ?></label>
+                            <label for="category" class="mb-0">Category <?php showAsterisk() ?></label>
                             <select id="category" name="category" class="form-control" required>
                                 <option value="">Select category...</option>
-                                <option value="Elementary" <?php echo setOptionSelected('Elementary', $category); ?>>Elementary</option>
-                                <option value="Secondary" <?php echo setOptionSelected('Secondary', $category); ?>>Secondary</option>
-                                <option value="Integrated" <?php echo setOptionSelected('Integrated', $category); ?>>Integrated</option>
-                                <option value="Office" <?php echo setOptionSelected('Office', $category); ?>>Office</option>
+                                <option value="Elementary" <?= setOptionSelected('Elementary', $category) ?>>Elementary</option>
+                                <option value="Secondary" <?= setOptionSelected('Secondary', $category) ?>>Secondary</option>
+                                <option value="Integrated" <?= setOptionSelected('Integrated', $category) ?>>Integrated</option>
+                                <option value="Office" <?= setOptionSelected('Office', $category) ?>>Office</option>
                             </select>
                         </div>
                     </div>
@@ -90,22 +90,22 @@ if (numRows($schools) > 0) {
 
                 <div class="form-group">
                     <label for="telephone" class="mb-0">Telephone</label>
-                    <input type="text" id="telephone" name="telephone" class="form-control" value="<?php echo $telephone; ?>">
+                    <input type="text" id="telephone" name="telephone" class="form-control" value="<?= $telephone ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="email" class="mb-0">Email <?php showAsterisk(); ?></label>
-                    <input type="text" id="email" name="email" class="form-control" value="<?php echo $email; ?>" required>
+                    <label for="email" class="mb-0">Email <?php showAsterisk() ?></label>
+                    <input type="text" id="email" name="email" class="form-control" value="<?= $email ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="website" class="mb-0">Website</label>
-                    <input type="text" id="website" name="website" class="form-control" value="<?php echo $website; ?>">
+                    <input type="text" id="website" name="website" class="form-control" value="<?= $website ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="facebook" class="mb-0">Facebook</label>
-                    <input type="text" id="facebook" name="facebook" class="form-control" value="<?php echo $facebook; ?>">
+                    <input type="text" id="facebook" name="facebook" class="form-control" value="<?= $facebook ?>">
                 </div>
 
                 <div class="form-group">
@@ -113,14 +113,14 @@ if (numRows($schools) > 0) {
                     <input id="logo-upload" name="logo-upload" type="file" class="w-100">
                 </div>
 
-                <?php requiredLegend(0); ?>
+                <?php requiredLegend(0) ?>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-                <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
-                <input type="hidden" name="image-verifier" value="<?php echo cipher($logo); ?>">
+                <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
+                <input type="hidden" name="data-verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
+                <input type="hidden" name="image-verifier" value="<?= cipher($logo) ?>">
                 <button class="btn btn-primary" name="save-school" type="submit">Continue</button>
-                <?php cancelModalButton(); ?>
+                <?php cancelModalButton() ?>
             </div>
         </form>
     </div>

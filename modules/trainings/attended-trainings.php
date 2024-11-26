@@ -28,7 +28,7 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Trainings</li>
         </ol>
     </nav>
@@ -70,28 +70,28 @@ if ($isHrmis) {
                     $trainings = attendedTrainings($employeeId);
                     while ($training = fetchAssoc($trainings)) : ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php echo $training['title']; ?></td>
-                            <td class="align-middle"><?php echo toDate($training['from']); ?></td>
-                            <td class="align-middle"><?php echo toDate($training['to']); ?></td>
-                            <td class="align-middle"><?php echo $training['hours']; ?></td>
-                            <td class="align-middle"><?php echo $training['type']; ?></td>
-                            <td class="align-middle"><?php echo $training['sponsor']; ?></td>
-                            <td class="align-middle"><?php echo $training['venue']; ?></td>
+                            <td class="align-middle"><?= $training['title'] ?></td>
+                            <td class="align-middle"><?= toDate($training['from']) ?></td>
+                            <td class="align-middle"><?= toDate($training['to']) ?></td>
+                            <td class="align-middle"><?= $training['hours'] ?></td>
+                            <td class="align-middle"><?= $training['type'] ?></td>
+                            <td class="align-middle"><?= $training['sponsor'] ?></td>
+                            <td class="align-middle"><?= $training['venue'] ?></td>
                             <td class="align-middle text-capitalize">
                                 <?php if ($training['generate_certificate'] === '1') : ?>
                                     <div class="dropdown no-arrow">
-                                        <?php dropdownEllipsis(); ?>
+                                        <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                                             <?php
-                                            linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($employeeId), 'Download', 'fa-download', 'Download Certificate', true); 
+                                            linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($employeeId), 'Download', 'fa-download', 'Download Certificate', true);
                                             linkDropdownItem(customUri('print', 'Certificate of Appearance', $training['no']) . '&p=' . encode($employeeId), 'Appearance', 'fa-stamp', 'View Certificate of Appearance', true);
                                             ?>
                                         </div>
                                     </div>
-                                <?php endif; ?>
+                                <?php endif ?>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endwhile ?>
                 </tbody>
 
                 <tfoot>

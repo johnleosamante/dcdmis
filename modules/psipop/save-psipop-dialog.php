@@ -50,37 +50,37 @@ if (numRows($employees) > 0) {
 }
 ?>
 
-<div class="modal-dialog <?php echo !$hasEmployee ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?= !$hasEmployee ? 'modal-sm' : '' ?>">
   <div class="modal-content">
-    <?php modalHeader($modalTitle); ?>
+    <?php modalHeader($modalTitle) ?>
 
     <form action="" method="POST">
       <div class="modal-body">
         <?php if ($hasEmployee) {
-          employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $empStatus); ?>
+          employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $empStatus) ?>
           <hr>
 
           <div class="form-group">
-            <label for="item" class="mb-0">Item Number <?php showAsterisk(); ?></label>
-            <input type="text" id="item" name="item" class="form-control" placeholder="Type item number..." title="Type employee PSIPOP item number..." value="<?php echo $item; ?>" required>
+            <label for="item" class="mb-0">Item Number <?php showAsterisk() ?></label>
+            <input type="text" id="item" name="item" class="form-control" placeholder="Type item number..." title="Type employee PSIPOP item number..." value="<?= $item ?>" required>
           </div>
 
           <div class="form-group">
             <label for="position" class="mb-0">Position</label>
-            <input type="text" id="position" class="form-control" value="<?php echo $position; ?>" readonly>
+            <input type="text" id="position" class="form-control" value="<?= $position ?>" readonly>
           </div>
 
           <div class="row">
             <div class="col-6">
               <div class="form-group">
                 <label for="salary-grade" class="mb-0">Salary Grade</label>
-                <input type="text" id="salary-grade" class="form-control" value="<?php echo $salaryGrade; ?>" readonly>
+                <input type="text" id="salary-grade" class="form-control" value="<?= $salaryGrade ?>" readonly>
               </div>
             </div>
             <div class="col-6">
               <div class="form-group">
                 <label for="step" class="mb-0">Step Increment</label>
-                <input type="text" id="step" class="form-control" value="<?php echo $step; ?>" readonly>
+                <input type="text" id="step" class="form-control" value="<?= $step ?>" readonly>
               </div>
             </div>
           </div>
@@ -89,13 +89,13 @@ if (numRows($employees) > 0) {
             <div class="col-6">
               <div class="form-group">
                 <label for="dob" class="mb-0">Date of Birth</label>
-                <input type="text" id="dob" class="form-control" value="<?php echo $dob; ?>" readonly>
+                <input type="text" id="dob" class="form-control" value="<?= $dob ?>" readonly>
               </div>
             </div>
             <div class="col-6">
               <div class="form-group">
                 <label for="tin" class="mb-0">Tax Identification Number</label>
-                <input type="text" id="tin" class="form-control" value="<?php echo $tin; ?>" readonly>
+                <input type="text" id="tin" class="form-control" value="<?= $tin ?>" readonly>
               </div>
             </div>
           </div>
@@ -103,14 +103,14 @@ if (numRows($employees) > 0) {
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <label for="doa" class="mb-0">Date of Original<br>Appointment <?php showAsterisk(); ?></label>
-                <input type="date" id="doa" name="doa" class="form-control" title="Set date of original appointment..." value="<?php echo $doa; ?>" required>
+                <label for="doa" class="mb-0">Date of Original<br>Appointment <?php showAsterisk() ?></label>
+                <input type="date" id="doa" name="doa" class="form-control" title="Set date of original appointment..." value="<?= $doa ?>" required>
               </div>
             </div>
             <div class="col-6">
               <div class="form-group">
-                <label for="dlp" class="mb-0">Date of Last<br>Promotion <?php showAsterisk(); ?></label>
-                <input type="date" id="dlp" name="dlp" class="form-control" title="Set date of last promotion..." value="<?php echo $dlp; ?>" required>
+                <label for="dlp" class="mb-0">Date of Last<br>Promotion <?php showAsterisk() ?></label>
+                <input type="date" id="dlp" name="dlp" class="form-control" title="Set date of last promotion..." value="<?= $dlp ?>" required>
               </div>
             </div>
           </div>
@@ -118,28 +118,28 @@ if (numRows($employees) > 0) {
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <label for="status" class="mb-0">Employment Status <?php showAsterisk(); ?></label>
+                <label for="status" class="mb-0">Employment Status <?php showAsterisk() ?></label>
                 <select name="status" id="status" class="form-control" title="Select employment status..." required>
-                  <option value="Permanent" <?php echo setOptionSelected("Permanent", $status); ?>>Permanent</option>
-                  <option value="Temporary" <?php echo setOptionSelected("Temporary", $status); ?>>Temporary</option>
-                  <option value="Coterminus" <?php echo setOptionSelected("Coterminus", $status); ?>>Coterminus</option>
-                  <option value="Fixed Term" <?php echo setOptionSelected("Fixed Term", $status); ?>>Fixed Term</option>
-                  <option value="Contractual" <?php echo setOptionSelected("Contractual", $status); ?>>Contractual</option>
-                  <option value="Substitute" <?php echo setOptionSelected("Substitute", $status); ?>>Substitute</option>
-                  <option value="Provisional" <?php echo setOptionSelected("Provisional", $status); ?>>Provisional</option>
-                  <option value="Volunteer" <?php echo setOptionSelected("Volunteer", $status); ?>>Volunteer</option>
+                  <option value="Permanent" <?= setOptionSelected("Permanent", $status) ?>>Permanent</option>
+                  <option value="Temporary" <?= setOptionSelected("Temporary", $status) ?>>Temporary</option>
+                  <option value="Coterminus" <?= setOptionSelected("Coterminus", $status) ?>>Coterminus</option>
+                  <option value="Fixed Term" <?= setOptionSelected("Fixed Term", $status) ?>>Fixed Term</option>
+                  <option value="Contractual" <?= setOptionSelected("Contractual", $status) ?>>Contractual</option>
+                  <option value="Substitute" <?= setOptionSelected("Substitute", $status) ?>>Substitute</option>
+                  <option value="Provisional" <?= setOptionSelected("Provisional", $status) ?>>Provisional</option>
+                  <option value="Volunteer" <?= setOptionSelected("Volunteer", $status) ?>>Volunteer</option>
                 </select>
               </div>
             </div>
             <div class="col-6">
               <div class="form-group">
-                <label for="eligibility" class="mb-0">Eligibility <?php showAsterisk(); ?></label>
-                <input type="text" id="eligibility" name="eligibility" class="form-control" placeholder="Type eligibility..." title="Type employee eligibility..." value="<?php echo $eligibility; ?>" required>
+                <label for="eligibility" class="mb-0">Eligibility <?php showAsterisk() ?></label>
+                <input type="text" id="eligibility" name="eligibility" class="form-control" placeholder="Type eligibility..." title="Type employee eligibility..." value="<?= $eligibility ?>" required>
               </div>
             </div>
           </div>
 
-          <?php requiredLegend(0); ?>
+          <?php requiredLegend(0) ?>
         <?php
         } else {
           missingAlert($modalTitle);
@@ -147,7 +147,7 @@ if (numRows($employees) > 0) {
       </div>
       <div class="modal-footer">
         <?php if ($hasEmployee) : ?>
-          <input type="hidden" name="verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+          <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
           <button class="btn btn-primary" name="save-psipop" type="submit">Continue</button>
         <?php
         endif;

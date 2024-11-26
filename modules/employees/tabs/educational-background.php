@@ -2,12 +2,12 @@
 // modules/employees/tabs/educational-background.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'educational-background', 'show active'); ?>" id="educational-background">
+<div class="tab-pane fade<?= setActiveNavigation(isset($activeTab) && $activeTab === 'educational-background', 'show active') ?>" id="educational-background">
     <?php if ($editMode) : ?>
         <div class="d-sm-flex justify-content-end my-3">
-            <?php modalButtonSplit(uri() . '/modules/employees/save/save-education-dialog.php?e=' . cipher($employeeId), 'Add',  'fa-plus', 'Add Education', 'primary'); ?>
+            <?php modalButtonSplit(uri() . '/modules/employees/save/save-education-dialog.php?e=' . cipher($employeeId), 'Add',  'fa-plus', 'Add Education', 'primary') ?>
         </div>
-    <?php endif; ?>
+    <?php endif ?>
 
     <div class="row my-3">
         <div class="col table-responsive">
@@ -24,7 +24,7 @@
                         <th class="align-middle" width="15%">Scholarship / Academic Honors Received</th>
                         <?php if ($editMode) : ?>
                             <th class="align-middle" width="5%">Action</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                     </tr>
                 </thead>
 
@@ -35,34 +35,34 @@
                     if (numRows($educationalBackground) > 0) {
                         while ($education = fetchAssoc($educationalBackground)) : ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?php echo $education['level']; ?></td>
-                                <td class="align-middle"><?php echo $education['school']; ?></td>
-                                <td class="align-middle"><?php echo toHandleNull($education['course'], 'N/A'); ?></td>
-                                <td class="align-middle"><?php echo $education['from']; ?></td>
+                                <td class="align-middle"><?= $education['level'] ?></td>
+                                <td class="align-middle"><?= $education['school'] ?></td>
+                                <td class="align-middle"><?= toHandleNull($education['course'], 'N/A') ?></td>
+                                <td class="align-middle"><?= $education['from'] ?></td>
                                 <td class="align-middle">
-                                    <?php echo $education['ispresent'] ? 'PRESENT' : $education['to']; ?>
+                                    <?= $education['ispresent'] ? 'PRESENT' : $education['to'] ?>
                                 </td>
-                                <td class="align-middle"><?php echo toHandleNull($education['highest'], 'N/A'); ?></td>
-                                <td class="align-middle"><?php echo toHandleNull($education['year_graduated'], 'N/A'); ?></td>
-                                <td class="align-middle"><?php echo toHandleNull($education['scholarship'], 'N/A'); ?></td>
+                                <td class="align-middle"><?= toHandleNull($education['highest'], 'N/A') ?></td>
+                                <td class="align-middle"><?= toHandleNull($education['year_graduated'], 'N/A') ?></td>
+                                <td class="align-middle"><?= toHandleNull($education['scholarship'], 'N/A') ?></td>
                                 <?php if ($editMode) : ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
-                                            <?php dropdownEllipsis(); ?>
+                                            <?php dropdownEllipsis() ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                                 <?php modalDropdownItem(uri() . '/modules/employees/save/save-education-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Edit', 'fa-edit', 'Edit Education');
-                                                modalDropdownItem(uri() . '/modules/employees/save/save-education-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Copy', 'fa-copy', 'Copy Education'); ?>
+                                                modalDropdownItem(uri() . '/modules/employees/save/save-education-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Copy', 'fa-copy', 'Copy Education') ?>
                                                 <div class="dropdown-divider"></div>
-                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Delete', 'fa-trash', 'Delete Education'); ?>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Delete', 'fa-trash', 'Delete Education') ?>
                                             </div>
                                         </div>
                                     </td>
-                                <?php endif; ?>
+                                <?php endif ?>
                             </tr>
                         <?php endwhile;
                     } else { ?>
                         <tr>
-                            <td colspan="<?php echo $editMode ? '9' : '8'; ?>" class="align-middle">No data available in table</td>
+                            <td colspan="<?= $editMode ? '9' : '8' ?>" class="align-middle">No data available in table</td>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -79,7 +79,7 @@
                         <th class="align-middle" width="15%">Scholarship / Academic Honors Received</th>
                         <?php if ($editMode) : ?>
                             <th class="align-middle" width="5%">Action</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>

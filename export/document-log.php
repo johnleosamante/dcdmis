@@ -67,6 +67,6 @@ $document = fetchAssoc($documents);
                 <td><?= $log['status'] ?></td>
                 <td><?= $log['details'] ?></td>
             </tr>
-        <?php endwhile; ?>
+        <?php endwhile ?>
     </tbody>
 </table>

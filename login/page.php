@@ -6,7 +6,7 @@ require_once('services.php');
 <div id="login-panel" class="col-xl-4 col-lg-4 col-md-5 col-sm-12">
     <div class="card o-hidden border-0 shadow-lg my-5">
         <div class="card-header">
-            <h3 class="text-center my-2"><?php echo $page; ?></h3>
+            <h3 class="text-center my-2"><?= $page ?></h3>
         </div>
 
         <div class="card-body text-center">

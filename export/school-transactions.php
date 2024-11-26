@@ -30,17 +30,17 @@ require_once(root() . '/includes/database/document.php');
         while ($school = fetchAssoc($schools)) :
         ?>
             <tr>
-                <td><?php echo $i++; ?></td>
-                <td><?php echo strtoupper($school['name']); ?></td>
-                <td><?php echo strtoupper(fetchAssoc(district($school['district']))['name']); ?></td>
-                <td><?php echo number_format(numRows(incomingDocuments($school['alias']))); ?></td>
-                <td><?php echo number_format(numRows(pendingDocuments($school['alias']))); ?></td>
-                <td><?php echo number_format(numRows(outgoingDocuments($school['alias']))); ?></td>
-                <td><?php echo number_format(numRows(ongoingDocuments($school['alias']))); ?></td>
+                <td><?= $i++ ?></td>
+                <td><?= strtoupper($school['name']) ?></td>
+                <td><?= strtoupper(fetchAssoc(district($school['district']))['name']) ?></td>
+                <td><?= number_format(numRows(incomingDocuments($school['alias']))) ?></td>
+                <td><?= number_format(numRows(pendingDocuments($school['alias']))) ?></td>
+                <td><?= number_format(numRows(outgoingDocuments($school['alias']))) ?></td>
+                <td><?= number_format(numRows(ongoingDocuments($school['alias']))) ?></td>
             </tr>
-        <?php endwhile; ?>
+        <?php endwhile ?>
         <tr>
-            <td colspan="7"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+            <td colspan="7"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>
     </tbody>
 </table>

@@ -27,41 +27,41 @@ require_once(root() . '/includes/layout/components.php');
 <html lang="en">
 
 <head>
-    <?php require_once(root() . '/includes/layout/header.php'); ?>
+    <?php require_once(root() . '/includes/layout/header.php') ?>
     <?php if ($enableScripts) : ?>
-        <link rel="stylesheet" href="<?php echo uri(); ?>/assets/vendor/datatables/dataTables.bootstrap4.min.css">
-        <link rel="stylesheet" href="<?php echo uri(); ?>/assets/vendor/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <?php endif; ?>
+        <link rel="stylesheet" href="<?= uri() ?>/assets/vendor/datatables/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="<?= uri() ?>/assets/vendor/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <?php endif ?>
 </head>
 
 <body id="page-top" class="background-cover">
     <div id="layout">
         <div id="layout-content" class="container-xl">
             <div id="main-content" class="row justify-content-center">
-                <?php require_once('page.php'); ?>
+                <?php require_once('page.php') ?>
             </div>
         </div>
 
         <div id="layout-footer">
-            <?php require_once(root() . '/includes/layout/footer.php'); ?>
+            <?php require_once(root() . '/includes/layout/footer.php') ?>
         </div>
     </div>
 
-    <?php scrollToTop(); ?>
+    <?php scrollToTop() ?>
 
-    <script src="<?php echo uri(); ?>/assets/vendor/jquery/jquery.min.js"></script>
-    <script src="<?php echo uri(); ?>/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo uri(); ?>/assets/vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="<?php echo uri(); ?>/assets/js/sb-admin-2.min.js"></script>
+    <script src="<?= uri() ?>/assets/vendor/jquery/jquery.min.js"></script>
+    <script src="<?= uri() ?>/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= uri() ?>/assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="<?= uri() ?>/assets/js/sb-admin-2.min.js"></script>
 
     <?php if ($enableScripts) : ?>
-        <script src="<?php echo uri(); ?>/assets/vendor/datatables/jquery.dataTables.min.js"></script>
-        <script src="<?php echo uri(); ?>/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-        <script src="<?php echo uri(); ?>/assets/vendor/datatables-responsive/js/dataTables.responsive.min.js"></script>
-        <script src="<?php echo uri(); ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <?php endif; ?>
+        <script src="<?= uri() ?>/assets/vendor/datatables/jquery.dataTables.min.js"></script>
+        <script src="<?= uri() ?>/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+        <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <?php endif ?>
 
-    <script src="<?php echo uri(); ?>/assets/js/script.js?v=1.2"></script>
+    <script src="<?= uri() ?>/assets/js/script.js?v=1.2"></script>
 </body>
 
 </html>

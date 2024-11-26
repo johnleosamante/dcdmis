@@ -2,12 +2,12 @@
 // modules/employees/tabs/children.php
 ?>
 
-<div class="tab-pane fade<?php echo setActiveNavigation(isset($activeTab) && $activeTab === 'children', 'show active'); ?>" id="children">
+<div class="tab-pane fade<?= setActiveNavigation(isset($activeTab) && $activeTab === 'children', 'show active') ?>" id="children">
 	<?php if ($editMode) : ?>
 		<div class="d-sm-flex justify-content-end my-3">
-			<?php modalButtonSplit(uri() . '/modules/employees/save/save-child-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Child', 'primary'); ?>
+			<?php modalButtonSplit(uri() . '/modules/employees/save/save-child-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Child', 'primary') ?>
 		</div>
-	<?php endif; ?>
+	<?php endif ?>
 
 	<div class="row my-3">
 		<div class="col table-responsive">
@@ -18,7 +18,7 @@
 						<th class="align-middle" width="30%">Date of Birth</th>
 						<?php if ($editMode) : ?>
 							<th class="align-middle" width="5%">Action</th>
-						<?php endif; ?>
+						<?php endif ?>
 					</tr>
 				</thead>
 
@@ -29,26 +29,26 @@
 					if (numRows($children) > 0) {
 						while ($child = fetchAssoc($children)) : ?>
 							<tr class="text-uppercase">
-								<td class="align-middle"><?php echo toName($child['last'], $child['first'], $child['middle'], $child['ext'], true); ?></td>
-								<td class="align-middle"><?php echo toDate($child['dob']); ?></td>
+								<td class="align-middle"><?= toName($child['last'], $child['first'], $child['middle'], $child['ext'], true) ?></td>
+								<td class="align-middle"><?= toDate($child['dob']) ?></td>
 								<?php if ($editMode) : ?>
 									<td class="align-middle text-capitalize">
 										<div class="dropdown no-arrow">
-											<?php dropdownEllipsis(); ?>
+											<?php dropdownEllipsis() ?>
 											<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
 												<?php modalDropdownItem(uri() . '/modules/employees/save/save-child-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Edit', 'fa-edit', 'Edit Child');
-												modalDropdownItem(uri() . '/modules/employees/save/save-child-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Copy', 'fa-copy', 'Copy Child'); ?>
+												modalDropdownItem(uri() . '/modules/employees/save/save-child-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Copy', 'fa-copy', 'Copy Child') ?>
 												<div class="dropdown-divider"></div>
-												<?php modalDropdownItem(uri() . '/modules/employees/delete/delete-child-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Delete', 'fa-trash', 'Delete Child'); ?>
+												<?php modalDropdownItem(uri() . '/modules/employees/delete/delete-child-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($child['no']), 'Delete', 'fa-trash', 'Delete Child') ?>
 											</div>
 										</div>
 									</td>
-								<?php endif; ?>
+								<?php endif ?>
 							</tr>
 						<?php endwhile;
 					} else { ?>
 						<tr>
-							<td colspan="<?php echo $editMode ? '3' : '2'; ?>" class="align-middle">No data available in table</td>
+							<td colspan="<?= $editMode ? '3' : '2' ?>" class="align-middle">No data available in table</td>
 						</tr>
 					<?php } ?>
 				</tbody>
@@ -59,7 +59,7 @@
 						<th class="align-middle" width="30%">Date of Birth</th>
 						<?php if ($editMode) : ?>
 							<th class="align-middle" width="5%">Action</th>
-						<?php endif; ?>
+						<?php endif ?>
 					</tr>
 				</tfoot>
 			</table>

@@ -30,50 +30,50 @@ if (numRows($employees) > 0) {
 }
 ?>
 
-<div class="modal-dialog <?php echo !$hasEmployee ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?= !$hasEmployee ? 'modal-sm' : '' ?>">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
             <div class="modal-body">
                 <?php if ($hasEmployee) { ?>
                     <div class="image-container">
                         <span class="d-flex justify-content-center align-middle employee-photo photo-4x rounded-circle overflow-hidden">
-                            <img height="100%" src="<?php echo $picture; ?>" alt="<?php echo $employeeName; ?>">
+                            <img height="100%" src="<?= $picture ?>" alt="<?= $employeeName ?>">
                         </span>
-                        <div class="sex-sign"><?php sex($sex); ?></div>
+                        <div class="sex-sign"><?php sex($sex) ?></div>
                     </div>
 
-                    <div class="text-center text-uppercase my-1 h4"><?php echo $employeeName; ?></div>
-                    <div class="text-center text-uppercase my-1 h5"><?php echo $position; ?></div>
-                    <div class="text-center text-uppercase my-1 h6"><?php echo $station; ?></div>
+                    <div class="text-center text-uppercase my-1 h4"><?= $employeeName ?></div>
+                    <div class="text-center text-uppercase my-1 h5"><?= $position ?></div>
+                    <div class="text-center text-uppercase my-1 h6"><?= $station ?></div>
 
                     <hr>
 
                     <div class="form-group">
-                        <label for="assignment" class="mb-0">Place of Assignment <?php showAsterisk(); ?></label>
+                        <label for="assignment" class="mb-0">Place of Assignment <?php showAsterisk() ?></label>
                         <select id="assignment" name="assignment" class="form-control" title="Select employee place of assignment..." required>
                             <option value="">Select place of assignment...</option>
                             <?php
                             $districts = districts();
                             while ($district = fetchAssoc($districts)) : ?>
-                                <optgroup label="<?php echo $district['name']; ?>">
+                                <optgroup label="<?= $district['name'] ?>">
                                     <?php
                                     $schools = schoolsByDistrict($district['id']);
                                     while ($school = fetchAssoc($schools)) : ?>
-                                        <option value="<?php echo $school['id']; ?>" <?php echo setOptionSelected($school['id'], $stationId); ?>><?php echo $school['name']; ?></option>
-                                    <?php endwhile; ?>
+                                        <option value="<?= $school['id'] ?>" <?= setOptionSelected($school['id'], $stationId) ?>><?= $school['name'] ?></option>
+                                    <?php endwhile ?>
                                 </optgroup>
-                            <?php endwhile; ?>
+                            <?php endwhile ?>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="assignment-date" class="mb-0">Date of Assignment <?php showAsterisk(); ?></label>
-                        <input class="form-control" type="date" id="assignment-date" name="assignment-date" value="<?php echo toDate($doa, 'Y-m-d', date('Y-m-d')); ?>" title="Set date of assignment..." required>
+                        <label for="assignment-date" class="mb-0">Date of Assignment <?php showAsterisk() ?></label>
+                        <input class="form-control" type="date" id="assignment-date" name="assignment-date" value="<?= toDate($doa, 'Y-m-d', date('Y-m-d')) ?>" title="Set date of assignment..." required>
                     </div>
 
-                    <?php requiredLegend(0); ?>
+                    <?php requiredLegend(0) ?>
                 <?php } else {
                     missingAlert($modalTitle);
                 } ?>
@@ -81,10 +81,10 @@ if (numRows($employees) > 0) {
 
             <div class="modal-footer">
                 <?php if ($hasEmployee) : ?>
-                    <input type="hidden" name="verifier" value="<?php echo $_GET['id']; ?>">
+                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
                     <button class="btn btn-primary" name="reassign-employee" type="submit">Continue</button>
                 <?php endif;
-                cancelModalButton(); ?>
+                cancelModalButton() ?>
             </div>
         </form>
     </div>

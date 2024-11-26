@@ -35,11 +35,11 @@ require_once(root() . '/includes/database/utility.php');
         $query = sections();
         while ($row = fetchAssoc($query)) : ?>
             <tr>
-                <td><?php echo $i++; ?></td>
-                <td><?php echo strtoupper($row['name']); ?></td>
-                <td><?php echo strtoupper($row['division']); ?></td>
-                <td><?php echo userName($row['head'], true); ?></td>
-                <td><?php echo strtoupper(fetchAssoc(position($row['head']))['position']); ?></td>
+                <td><?= $i++ ?></td>
+                <td><?= strtoupper($row['name']) ?></td>
+                <td><?= strtoupper($row['division']) ?></td>
+                <td><?= userName($row['head'], true) ?></td>
+                <td><?= strtoupper(fetchAssoc(position($row['head']))['position']) ?></td>
                 <?php
                 $sectionCount = sectionEmployeeCount($row['id']);
                 $male = $female = $total = 0;
@@ -51,13 +51,13 @@ require_once(root() . '/includes/database/utility.php');
                     $total = $count['total'];
                 }
                 ?>
-                <td><?php echo $male; ?></td>
-                <td><?php echo $female; ?></td>
-                <td><?php echo $total; ?></td>
+                <td><?= $male ?></td>
+                <td><?= $female ?></td>
+                <td><?= $total ?></td>
             </tr>
-        <?php endwhile; ?>
+        <?php endwhile ?>
         <tr>
-            <td colspan="8"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+            <td colspan="8"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>
     </tbody>
 </table>

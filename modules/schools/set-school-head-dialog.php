@@ -32,9 +32,9 @@ if (numRows($employees) > 0) {
 }
 ?>
 
-<div class="modal-dialog <?php echo !$hasEmployee ? 'modal-sm' : ''; ?>">
+<div class="modal-dialog <?= !$hasEmployee ? 'modal-sm' : '' ?>">
     <div class="modal-content">
-        <?php modalHeader($modalTitle); ?>
+        <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
             <div class="modal-body">
@@ -46,10 +46,10 @@ if (numRows($employees) > 0) {
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
-                <input type="hidden" name="data-verifier" value="<?php echo isset($_GET['e']) ? $_GET['e'] : null; ?>">
+                <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
+                <input type="hidden" name="data-verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
                 <button class="btn btn-primary" name="set-school-head" type="submit">Continue</button>
-                <?php cancelModalButton(); ?>
+                <?php cancelModalButton() ?>
             </div>
         </form>
     </div>

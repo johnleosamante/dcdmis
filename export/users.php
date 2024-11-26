@@ -31,17 +31,17 @@ require_once(root() . '/includes/database/school.php');
             $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
         ?>
             <tr>
-                <td><?php echo $i++; ?></td>
-                <td><?php echo strtoupper($employeeName); ?></td>
-                <td><?php echo strtolower($row['email']); ?></td>
-                <td><?php echo strtoupper(fetchAssoc(positions($row['position']))['position']); ?></td>
-                <td><?php echo strtoupper(fetchAssoc(schoolById($row['assignment']))['name']); ?></td>
-                <td><?php echo strtoupper($row['status']); ?></td>
+                <td><?= $i++ ?></td>
+                <td><?= strtoupper($employeeName) ?></td>
+                <td><?= strtolower($row['email']) ?></td>
+                <td><?= strtoupper(fetchAssoc(positions($row['position']))['position']) ?></td>
+                <td><?= strtoupper(fetchAssoc(schoolById($row['assignment']))['name']) ?></td>
+                <td><?= strtoupper($row['status']) ?></td>
             </tr>
-        <?php endwhile; ?>
+        <?php endwhile ?>
 
         <tr>
-            <td colspan="6"><?php echo 'Data as of ' . date("F j, Y, g:i a"); ?></td>
+            <td colspan="6"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>
     </tbody>
 </table>
