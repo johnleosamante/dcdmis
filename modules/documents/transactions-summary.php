@@ -66,17 +66,20 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="25%">Position</th>
                         <th class="align-middle" width="10%">Created</th>
                         <th class="align-middle" width="10%">Received</th>
-                        <th class="align-middle" width="10%">Forwarded</th>
+                        <?php if (!$isSchoolPortal) : ?>
+                            <th class="align-middle" width="10%">Forwarded</th>
+                        <?php endif ?>
                         <th class="align-middle" width="10%">Completed</th>
                         <th class="align-middle" width="10%">Canceled</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php $query = sectionUsers($station);
+                    <?php $query = portalUsers($station, $from, $to);
+
                     while ($row = fetchArray($query)) :
                         $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = uri() . '/' . $row['picture'];
+                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
                     ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
@@ -89,11 +92,13 @@ messageAlert($showAlert, $message, $success);
                             </td>
                             <td class="align-middle text-left"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName) ?></td>
                             <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
-                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Created Document', $row['id'], $from, $to))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Received Document', $row['id'], $from, $to))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Forwarded Document', $row['id'], $from, $to))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Completed Document', $row['id'], $from, $to))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Canceled Document', $row['id'], $from, $to))) ?></td>
+                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Created Document', $row['id'], $code, $from, $to))) ?></td>
+                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Received Document', $row['id'], $code, $from, $to))) ?></td>
+                            <?php if (!$isSchoolPortal) : ?>
+                                <td class="align-middle"><?= number_format(numRows(documentByStatus('Forwarded Document', $row['id'], $code, $from, $to))) ?></td>
+                            <?php endif ?>
+                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Completed Document', $row['id'], $code, $from, $to))) ?></td>
+                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Canceled Document', $row['id'], $code, $from, $to))) ?></td>
                         </tr>
                     <?php endwhile ?>
                 </tbody>
@@ -105,7 +110,9 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="25%">Position</th>
                         <th class="align-middle" width="10%">Created</th>
                         <th class="align-middle" width="10%">Received</th>
-                        <th class="align-middle" width="10%">Forwarded</th>
+                        <?php if (!$isSchoolPortal) : ?>
+                            <th class="align-middle" width="10%">Forwarded</th>
+                        <?php endif ?>
                         <th class="align-middle" width="10%">Completed</th>
                         <th class="align-middle" width="10%">Canceled</th>
                     </tr>
