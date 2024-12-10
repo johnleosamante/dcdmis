@@ -29,7 +29,7 @@ if (numRows($employees) === 0) {
                         <th class="align-middle" width="5%">Photo</th>
                         <th class="align-middle" width="5%">Employee Number</th>
                         <th class="align-middle" width="20%">Name</th>
-                        <th class="align-mdille" width="10%">Status</th>
+                        <th class="align-middle" width="10%">Status</th>
                         <th class="align-middle" width="15%">Date of Birth</th>
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="15%">Position</th>
