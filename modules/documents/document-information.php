@@ -7,7 +7,7 @@ if (!$isDts) {
 
 $documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $documents = document($documentId);
-$documentType = null;
+$documentType = 'Ongoing Documents';
 
 messageAlert($showAlert, $message, $success);
 
@@ -21,16 +21,12 @@ if (numRows($documents) > 0) {
         $documentType = 'Pending Documents';
     } elseif (isOutgoingDocument($documentId, $station)) {
         $documentType = 'Outgoing Documents';
-    } elseif (isOngoingDocument($documentId, $station)) {
-        $documentType = 'Ongoing Documents';
     } elseif (isCompletedDocument($documentId, $station)) {
         $documentType = 'Completed Documents';
     } elseif (isReceivedDocument($documentId, $station)) {
         $documentType = 'Received Documents';
     } elseif (isCanceledDocument($documentId, $station)) {
         $documentType = 'Canceled Documents';
-    } else {
-        $documentType = null;
     }
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -86,7 +82,7 @@ if (numRows($documents) > 0) {
                 <?php
                 $hasSuccess = false;
 
-                if ($station === $document['from']) {
+                if ($station === $document['from'] || $isRecordsPortal) {
                     linkButtonSplit(customUri('print', 'Document Tracking Slip', $documentId), 'Print', 'fa-print', 'Print Document Tracking Slip', 'primary', true);
                 }
 
@@ -116,6 +112,7 @@ if (numRows($documents) > 0) {
                     case 'Canceled Documents':
                         if (isDocumentFrom($documentId, $station) && $document['from'] === $station && isDocument($documentId, 'Canceled')) {
                             modalButtonSplit(uri() . '/modules/documents/restore-document-dialog.php?id=' . cipher($documentId), 'Restore', 'fa-undo', 'Restore Document', 'success');
+                            $hasSuccess = true;
                         }
                         break;
                     default:
@@ -127,6 +124,8 @@ if (numRows($documents) > 0) {
                         if ($isSchoolPortal) {
                             break;
                         }
+
+                        $hasSuccess = true;
 
                         if (isDocumentFrom($documentId, $station) && $document['from'] === $station && !isDocument($documentId, 'Cancel')) {
                             modalButtonSplit(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($documentId), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
