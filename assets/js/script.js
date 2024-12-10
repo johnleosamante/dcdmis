@@ -209,6 +209,7 @@ if (elementExist(generateToggle)) {
 const password = document.getElementById("password");
 const confirmPassword = document.getElementById("password-confirm");
 const passwordRequirements = document.getElementById("password-requirements");
+
 if (
 	elementExist(password) &&
 	elementExist(confirmPassword) &&
@@ -281,5 +282,37 @@ if (
 			confirmPasswordValue.length > 0 &&
 				passwordValue === confirmPasswordValue
 		);
+	});
+}
+
+const beforeTitle = document.getElementById("before-title");
+const afterTitle = document.getElementById("after-title");
+const userName = document.getElementById("user-name");
+const preview = document.getElementById("preview");
+
+if (
+	elementExist(beforeTitle) &&
+	elementExist(afterTitle) &&
+	elementExist(userName) &&
+	elementExist(preview)
+) {
+	let beforeTitleValue = beforeTitle.value;
+	let afterTitleValue = afterTitle.value;
+	let userNameValue = userName.value;
+
+	beforeTitle.addEventListener("input", () => {
+		beforeTitleValue =
+			beforeTitle.value.length > 0 ? beforeTitle.value + " " : "";
+		afterTitleValue =
+			afterTitle.value.length > 0 ? ", " + afterTitle.value : "";
+		preview.value = beforeTitleValue + userName.value + afterTitleValue;
+	});
+
+	afterTitle.addEventListener("input", () => {
+		beforeTitleValue =
+			beforeTitle.value.length > 0 ? beforeTitle.value + " " : "";
+		afterTitleValue =
+			afterTitle.value.length > 0 ? ", " + afterTitle.value : "";
+		preview.value = beforeTitleValue + userName.value + afterTitleValue;
 	});
 }
