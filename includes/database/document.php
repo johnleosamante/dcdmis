@@ -180,7 +180,13 @@ function updateTransactionFrom($newAlias, $oldAlias)
     nonQuery("UPDATE tbl_transactions SET `Trans_from`='{$newAlias}' WHERE `Trans_from`='{$oldAlias}';");
 }
 
-function documentByStatus($status, $id, $from, $to)
+function documentByStatus($status, $id, $station, $from = '', $to = '')
 {
-    return query("SELECT * FROM `tbl_system_logs` WHERE `Status`='{$status}' AND `target_id` <> '' AND Emp_ID='{$id}' AND Time_log BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY));");
+    return query("SELECT * FROM `tbl_system_logs` WHERE `Status`='{$status}' AND `target_id` LIKE '{$station}%' AND Emp_ID='{$id}' AND Time_log BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY));");
+}
+
+function documentSearch($string, $station)
+{
+    return query("SELECT `TransCode` AS `id`, `Title` AS `description`, `Date_time` AS `datetime`, `Trans_from` AS `from`, `Trans_Stats` AS `status` FROM `tbl_transactions` INNER JOIN `tbl_transactions_log` ON `tbl_transactions`.`TransCode`=`tbl_transactions_log`.`Transaction_code` WHERE (`tbl_transactions`.`TransCode` LIKE '%{$string}%' OR `tbl_transactions`.`Title` LIKE '%{$string}%' OR `tbl_transactions_log`.`details` LIKE '%{$string}%') AND (`tbl_transactions_log`.`From_office`='{$station}' OR `tbl_transactions_log`.`Forwarded_to`=
+    '{$station}') GROUP BY `tbl_transactions`.`TransCode`;");
 }
