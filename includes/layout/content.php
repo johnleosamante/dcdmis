@@ -30,6 +30,9 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Document Information':
             $file = 'documents/document-information';
             break;
+        case 'Document Search':
+            $file = 'documents/document-search';
+            break;
         case 'Receive Document':
             $file = 'documents/receive-document';
             break;
