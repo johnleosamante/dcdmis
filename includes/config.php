@@ -4,7 +4,7 @@ define('HOSTNAME', 'localhost');
 define('USER', 'chickenstalker');
 define('PASSWORD', '82%a*f25RPG6');
 define('DATABASE', 'dcdmis');
-define('DOMAIN', 'depeddipolog.net');
+define('DOMAIN', 'depeddipolog.com');
 define('PUBLIC_IP', '120.28.189.147');
 define('SITE_TITLE', 'Department of Education Schools Division of Dipolog City');
 define('SITE_ALIAS', 'sdodipolog');
