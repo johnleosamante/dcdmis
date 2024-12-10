@@ -4,7 +4,7 @@
 <div class="col-xl-5 col-lg-5 col-md-8 col-sm-12">
     <div class="card o-hidden border-0 shadow-lg my-5">
         <div class="card-header">
-            <h3 class="text-center my-2"><?= $page ?></h3>
+            <h3 class="text-center my-2">Reset Password</h3>
         </div>
 
         <div class="card-body text-center">

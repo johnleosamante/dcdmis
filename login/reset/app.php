@@ -1,6 +1,5 @@
 <?php
 // login/reset/app.php
-$page = 'Reset Password';
 $userEmail = null;
 
 if (isset($_POST['reset-password'])) {
