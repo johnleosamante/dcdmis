@@ -12,7 +12,15 @@ if (!isset($portal) || empty($portal)) {
 }
 
 if (isset($_POST['primary-search-button'])) {
-	redirect(customUri('dts', 'Document Information', sanitize($_POST['primary-search-text'])));
+	$search = sanitize($_POST['primary-search-text']);
+
+	$documents = documentSearch($search, $station);
+
+	if (numRows($documents) === 1) {
+		redirect(customUri('dts', 'Document Information', $search));
+	}
+
+	redirect(customUri('dts', 'Document Search', $search));
 }
 
 if (isset($_POST['save-document'])) {
@@ -37,7 +45,7 @@ if (isset($_POST['save-document'])) {
 		$temp = $_FILES['file-upload']['tmp_name'];
 
 		if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
-			$message = 'The choosen file exceeds the upload file limit (20 MB).';
+			$message = 'The chosen file exceeds the upload file limit (20 MB).';
 			$success = false;
 			return;
 		}
@@ -46,7 +54,7 @@ if (isset($_POST['save-document'])) {
 		$allowedFileTypes = ['application/pdf'];
 
 		if (!in_array($mimeType, $allowedFileTypes)) {
-			$message = 'The choosen file is not an acceptable .pdf file.';
+			$message = 'The chosen file is not an acceptable .pdf file.';
 			$success = false;
 			return;
 		}
