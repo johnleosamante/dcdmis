@@ -75,7 +75,17 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
     <div class="col-xl-9 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Position</h6>
+                <div class="d-sm-flex align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Position</h6>
+
+                    <div class="dropdown no-arrow">
+                        <?php dropdownEllipsis() ?>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                            <?php linkDropdownItem(customUri('hrmis', 'Employees by Position'), 'View', 'fa-user');
+                            linkDropdownItem(customUri('export', 'employee-positions'), 'Export', 'fa-file-excel') ?>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <div class="chart-bar h-auto">
