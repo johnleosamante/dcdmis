@@ -31,7 +31,7 @@ if (isset($_POST['reset-password'])) {
     updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
 
     if (affectedRows()) {
-        $emailMessage = 'Good day! You request for password reset has been approved!' . PHP_EOL . PHP_EOL . 'Your temporary password is: ' . $temporaryPassword . PHP_EOL . PHP_EOL . 'Please login to: https://depeddipolog.com/login to confirm.' . PHP_EOL . PHP_EOL . 'If you did not request this change please contact us for assistance. Thank you.';
+        $emailMessage = 'Good day! You request for password reset has been approved!' . PHP_EOL . PHP_EOL . 'Your temporary password is: ' . $temporaryPassword . PHP_EOL . PHP_EOL . 'Please login to: ' . uri() . '/login to confirm.' . PHP_EOL . PHP_EOL . 'If you did not request this change please contact us for assistance. Thank you.';
 
         if (sendMail($userEmail, 'Employee Password Reset', $emailMessage)) {
             $message = 'An email has been sent successfully to [' . $userEmail . '].';
