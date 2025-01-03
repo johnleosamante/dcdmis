@@ -80,6 +80,9 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Celebrant Employees':
             $file = 'employees/celebrant-employees';
             break;
+        case 'Employees by Position':
+            $file = 'employees/employees-position';
+            break;
         case 'Users':
             $file = 'users/page';
             break;
