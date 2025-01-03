@@ -137,3 +137,8 @@ function employeeLoyaltyAward()
 {
     return query("SELECT * FROM (SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Picture AS picture, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, psipop.Original_Appointment AS original_appointment, tbl_loyalty_award.last_awarded_on, TIMESTAMPDIFF(YEAR, psipop.Original_Appointment, NOW()) AS years_active, TIMESTAMPDIFF(YEAR, tbl_loyalty_award.last_awarded_on, NOW()) AS last_awarded FROM tbl_employee INNER JOIN psipop ON tbl_employee.Emp_ID=psipop.Emp_ID INNER JOIN tbl_station ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_loyalty_award ON tbl_employee.Emp_ID=tbl_loyalty_award.employee_id WHERE tbl_employee.Emp_Status='Active' ORDER BY tbl_loyalty_award.last_awarded_on) AS service_years WHERE years_active >= 10 AND last_awarded >= 5;");
 }
+
+function employeePositions()
+{
+    return query("SELECT `tbl_job`.`Job_description` AS `position`, COUNT(CASE WHEN `tbl_employee`.`Emp_Sex`='Male' THEN 1 END) AS `male`, COUNT(CASE WHEN `tbl_employee`.`Emp_Sex`='Female' THEN 1 END) AS `female`, COUNT(`tbl_station`.`Emp_Position`) AS `total` FROM `tbl_employee` INNER JOIN `tbl_station` ON `tbl_employee`.`Emp_ID`=`tbl_station`.`Emp_ID` INNER JOIN `tbl_job` ON `tbl_station`.`Emp_Position`=`tbl_job`.`Job_code` WHERE `tbl_employee`.`Emp_Status`='Active' GROUP BY `tbl_station`.`Emp_Position` ORDER BY `tbl_job`.`Salary_Grade` DESC;");
+}
