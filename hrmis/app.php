@@ -662,7 +662,7 @@ if (isset($_POST['promote-employee'])) {
     if (numRows($psipops) > 0) {
         $psipop = fetchAssoc($psipops);
         $status = $psipop['status'];
-        $doa = $psipop['original_appointment'];
+        $doa = $psipop['original_appointment'] ?? date('Y-m-d');
         $eligibility = $psipop['eligibility'];
         updatePsipop('', $status, $doa, $datePromoted, $eligibility, $employeeId);
     }
