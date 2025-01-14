@@ -10,7 +10,7 @@
 /wp-includes/
 /.htaccess
 /.user.ini
-/ais-bootstrap.php
+/aios-bootstrap.php
 /index.php
 /license.txt
 /readme.html
