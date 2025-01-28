@@ -97,6 +97,7 @@ if (numRows($documents) > 0) {
                         if (!$isSchoolPortal) {
                             modalButtonSplit(uri() . '/modules/documents/forward-document-dialog.php?id=' . cipher($documentId), 'Forward', 'fa-share', 'Forward Document', 'info');
                         }
+                        if (isDocument($documentId, 'Restored')) break;
                         modalButtonSplit(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
                         break;
                     case 'Outgoing Documents':
@@ -212,7 +213,7 @@ if (numRows($documents) > 0) {
                             </div>
 
                             <div class="card-body">
-                                <div class="mb-3">
+                                <div>
                                     <span class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
                                         <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px" width="40px">
                                     </span>
@@ -224,7 +225,7 @@ if (numRows($documents) > 0) {
                                     </div>
                                 </div>
 
-                                <?= $hasDestination ? '<div class="m-0">Forwarded to ' . strtoupper($to) . '</div>' : '' ?>
+                                <?= $hasDestination ? '<div class="mb-3">Forwarded to ' . strtoupper($to) . '</div>' : '' ?>
 
                                 <div class="font-weight-bold text-lg"><?= $status ?></div>
 
