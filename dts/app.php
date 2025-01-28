@@ -153,7 +153,7 @@ if (isset($_POST['forward-document'])) {
 		$temp = $_FILES['file-upload']['tmp_name'];
 
 		if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
-			$message = 'The choosen file exceeds the upload file limit (20 MB).';
+			$message = 'The chosen file exceeds the upload file limit (20 MB).';
 			$success = false;
 			return;
 		}
@@ -162,7 +162,7 @@ if (isset($_POST['forward-document'])) {
 		$allowedFileTypes = ['application/pdf'];
 
 		if (!in_array($mimeType, $allowedFileTypes)) {
-			$message = 'The choosen file is not an acceptable .pdf file.';
+			$message = 'The chosen file is not an acceptable .pdf file.';
 			$success = false;
 			return;
 		}
@@ -238,13 +238,14 @@ if (isset($_POST['incomplete-document'])) {
 if (isset($_POST['restore-document'])) {
 	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$remarks = sanitize($_POST['remarks']);
-	$status = 'Received';
+	$status = $isSchoolPortal ? 'For submission' : 'Restored';
+	$destination = $isSchoolPortal ? 'REC' : '-';
 	$showAlert = true;
 
 	updateDocumentLogsDone($documentId);
 
 	if (affectedRows()) {
-		createDocumentLog($documentId, $userId, $station, '-', $status, 'New', $remarks);
+		createDocumentLog($documentId, $userId, $station, $destination, $status, 'New', $remarks);
 		updateDocumentStatus($documentId, $status, 'Unread', $remarks);
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been restored successfully.';
