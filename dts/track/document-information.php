@@ -65,6 +65,9 @@ if (numRows($documents) > 0) {
                 $logCount++;
                 $from = stationName($log['from']);
                 $to = stationName($log['to']);
+                $displayName = userName($log['user']);
+                $user = fetchAssoc(employee($log['user']));
+                $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $user['picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
                 $hasDestination = !empty($to) && $to !== '-';
                 $status = $log['status'];
@@ -109,15 +112,32 @@ if (numRows($documents) > 0) {
                     </div>
                     <div class="timeline-item-content pt-0">
                         <div class="card">
-                            <div class="card-body p-3">
-                                <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase">
+                            <div class="card-header">
+                                <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase mb-0">
                                     <?= $from ?>
                                 </h5>
-                                <?= $hasDestination ? '<div>Forwarded to ' . strtoupper($to) . '</div>' : '' ?>
-                                <div><?= $status ?></div>
-                                <?= !empty($details) ? '<div>' . $details . '</div>' : '' ?>
-                                <div class="text-uppercase"><?= userName($log['user']) ?></div>
-                                <div class="text-uppercase small"><?= fetchAssoc(position($log['user']))['position'] ?></div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <span class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
+                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px" width="40px">
+                                    </span>
+
+                                    <div class="ml-2 d-inline-block align-middle">
+                                        <div class="text-uppercase"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName) ?></div>
+
+                                        <div class="text-uppercase text-xs"><?= fetchAssoc(position($log['user']))['position'] ?></div>
+                                    </div>
+                                </div>
+
+                                <?= $hasDestination ? '<div class="mb-3">Forwarded to ' . strtoupper($to) . '</div>' : '' ?>
+
+                                <div class="font-weight-bold text-lg"><?= $status ?></div>
+
+                                <?php if (!empty($details)) : ?>
+                                    <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= $details ?></div>
+                                <?php endif ?>
                             </div>
                         </div>
                     </div>
