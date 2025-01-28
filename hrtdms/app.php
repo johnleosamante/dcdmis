@@ -69,6 +69,7 @@ if (isset($_POST['add-participants'])) {
 
     $trainings = training($trainingId);
     $training = fetchAssoc($trainings);
+    $title = strtoupper(toHandleEncoding($training['title']));
     $division = $training['functional_division'];
     $trainingDate = strtotime($training['to']);
     $month = date('m', $trainingDate);
@@ -86,6 +87,26 @@ if (isset($_POST['add-participants'])) {
             ++$no;
             $ctrlNo = $division . '-' . $month . '-' . sprintf("%03d", $count + $no) . '-' . $year;
             createTrainingParticipant($trainingId, $id, $ctrlNo);
+
+            if (affectedRows()) {
+                $employee = fetchAssoc(trainingParticipants($trainingId, $id));
+                $employeeEmail = $employee['email'];
+                $employeeName = strtoupper(toHandleEncoding(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true)));
+                $certificate = customUri('print', 'Certificate of Participation', $trainingId, DOMAIN) . '&p=' . encode($id);
+                $appearance = customUri('print', 'Certificate of Appearance', $trainingId, DOMAIN) . '&p=' . encode($id);
+
+                $emailMessage =
+                    'Good day ' . $employeeName . '!' . PHP_EOL . PHP_EOL .
+                    'Congratulations you have successfully completed "' . $title . '".' . PHP_EOL .
+                    'Get your certificates by clicking the links below.' . PHP_EOL . PHP_EOL .
+                    'Certificate of Appearance: ' . $appearance . PHP_EOL . PHP_EOL .
+                    'Certificate of Participation: ' . $certificate . PHP_EOL . PHP_EOL .
+                    'If nothing happens when you click the link, copy the links above and paste to your web browser instead.' . PHP_EOL . PHP_EOL .
+                    'You can also go to the DepEd Dipolog City Division Training Repository (' . uri(DOMAIN) . '/hrtdms/repository' . ') to view your trainings. Thank you.' . PHP_EOL . PHP_EOL . PHP_EOL .
+                    '***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****';
+
+                sendMail($employeeEmail, $title, $emailMessage);
+            }
         }
     }
 
