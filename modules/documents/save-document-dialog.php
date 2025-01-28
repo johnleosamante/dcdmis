@@ -67,7 +67,7 @@ if (numRows($documents) > 0) {
                         <select name="document-type" id="document-type" class="form-control" title="Select document type..." required>
                             <option value="">Select type...</option>
                             <?php
-                            $documentTypes = documentTypes();
+                            $documentTypes = $isSchoolPortal ? documentTypes(true) : documentTypes(false);
                             while ($documentType = fetchAssoc($documentTypes)) : ?>
                                 <option value="<?= $documentType['id'] ?>" <?= setOptionSelected($documentType['id'], $type) ?>><?= $documentType['name'] ?></option>
                             <?php endwhile ?>
