@@ -8,9 +8,10 @@ function documentPurpose()
     return query("SELECT `purpose` FROM tbl_document_purpose;");
 }
 
-function documentTypes()
+function documentTypes($for_school = false)
 {
-    return query("SELECT `id`, `name` FROM `document_types` WHERE `id` NOT LIKE '1' ORDER BY `name`;");
+    $filter = $for_school ? "`for_school`='1' AND" : '';
+    return query("SELECT `id`, `name` FROM `document_types` WHERE {$filter} `id` NOT LIKE '1' ORDER BY `name`;");
 }
 
 function documentType($id)
