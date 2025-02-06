@@ -1,7 +1,5 @@
 <?php
 // hrmis/app.php
-restrictPublicAccess(hasHoliday());
-
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrmis';
 $page = $appTitle = 'Human Resource Management Information System';
 

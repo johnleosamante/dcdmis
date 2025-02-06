@@ -1,7 +1,5 @@
 <?php
 // dmis/app.php
-restrictPublicAccess(hasHoliday());
-
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
 $page = $appTitle = 'Division Management Information System';
 

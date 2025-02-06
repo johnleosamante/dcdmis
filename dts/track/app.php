@@ -1,7 +1,5 @@
 <?php
 // dts/track/app.php
-restrictPublicAccess(hasHoliday());
-
 $page = $appTitle = 'Document Tracking System';
 $searchText = '';
 $enableScripts = true;

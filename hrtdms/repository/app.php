@@ -1,7 +1,5 @@
 <?php
 // hrtdms/repository/app.php
-restrictPublicAccess(hasHoliday());
-
 $page = $appTitle = 'Division Training Certificate Finder';
 $enableScripts = true;
 
