@@ -16,7 +16,9 @@
                         <th class="align-middle" width="10%">Salary / Job / Pay Grade &amp; Step Increment</th>
                         <th class="align-middle" width="10%">Status of Appointment</th>
                         <th class="align-middle" width="10%">Government Service</th>
-                        <th class="align-middle" width="5%">Actions</th>
+                        <?php if ($editMode) : ?>
+                            <th class="align-middle" width="5%">Actions</th>
+                        <?php endif ?>
                     </tr>
                 </thead>
 
@@ -35,22 +37,24 @@
                                 <td class="align-middle"><?= toHandleNull($experience['sg'], 'N/A') ?></td>
                                 <td class="align-middle"><?= $experience['status'] ?></td>
                                 <td class="align-middle"><?= $experience['isgovernment'] ?></td>
-                                <td class="align-middle text-capitalize">
-                                    <div class="dropdown no-arrow">
-                                        <?php dropdownEllipsis() ?>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                            <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Edit', 'fa-edit', 'Edit Service Record');
-                                            modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Copy', 'fa-copy', 'Copy Service Record') ?>
-                                            <div class="dropdown-divider"></div>
-                                            <?php modalDropdownItem(uri() . '/modules/service-record/delete-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Delete', 'fa-trash', 'Delete Service Record') ?>
+                                <?php if ($editMode) : ?>
+                                    <td class="align-middle text-capitalize">
+                                        <div class="dropdown no-arrow">
+                                            <?php dropdownEllipsis() ?>
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                                <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Edit', 'fa-edit', 'Edit Service Record');
+                                                modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Copy', 'fa-copy', 'Copy Service Record') ?>
+                                                <div class="dropdown-divider"></div>
+                                                <?php modalDropdownItem(uri() . '/modules/service-record/delete-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($experience['no']), 'Delete', 'fa-trash', 'Delete Service Record') ?>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
+                                    </td>
+                                <?php endif ?>
                             </tr>
                         <?php endwhile;
                     } else { ?>
                         <tr>
-                            <td colspan="8" class="align-middle">No data available in table</td>
+                            <td colspan="<?= $editMode ? '8' : '7' ?>" class="align-middle">No data available in table</td>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -65,7 +69,9 @@
                         <th class="align-middle" width="10%">Salary / Job / Pay Grade &amp; Step Increment</th>
                         <th class="align-middle" width="10%">Status of Appointment</th>
                         <th class="align-middle" width="10%">Government Service</th>
-                        <th class="align-middle" width="5%">Actions</th>
+                        <?php if ($editMode) : ?>
+                            <th class="align-middle" width="5%">Actions</th>
+                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>
