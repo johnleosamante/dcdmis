@@ -13,10 +13,14 @@ if ($isPis && $userId !== $employeeId) {
 }
 
 $employees = employee($employeeId);
+$employeeName = $schoolId = $schoolName = '';
 
 if (numRows($employees) > 0) {
     $employee = fetchAssoc($employees);
     $employeeId = $employee['id'];
+    $employeeName = strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext']));
+    $schoolId = fetchAssoc(station($employeeId))['station_id'];
+    $schoolName = fetchAssoc(schoolById($schoolId))['name'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
@@ -29,7 +33,13 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item active">Trainings</li>
+            <?php if ($isHrtdms) : ?>
+                <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Schools') ?>">Schools</a></li>
+                <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'School Information', $schoolId) ?>"><?= $schoolName ?></a></li>
+                <li class="breadcrumb-item active">Employee Trainings</li>
+            <?php else : ?>
+                <li class="breadcrumb-item active">Trainings</li>
+            <?php endif ?>
         </ol>
     </nav>
 </div>
@@ -43,9 +53,11 @@ if ($isHrmis) {
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
         <?php if ($isPis) {
-            contentTitleWithLink('Trainings : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/pis');
+            contentTitleWithLink('Trainings : ' . $employeeName, uri() . '/pis');
+        } elseif ($isHrtdms) {
+            contentTitleWithLink('Trainings : ' . $employeeName, customUri($activeApp, 'School Information', $schoolId));
         } else {
-            contentTitle('Trainings : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])));
+            contentTitle('Trainings : ' . $employeeName);
         } ?>
     </div>
 
