@@ -8,8 +8,8 @@ ini_set('max_input_time', 300);
 ini_set('max_execution_time', 300);
 ini_set('memory_limit', '1024M');
 ini_set('display_errors', 0);
-$fileUploadSizeLimit = 20971520;
-$imageUploadSizeLimit = 2621440;
+$fileUploadSizeLimit = 1024 * 1024 * 20; // 20MB
+$imageUploadSizeLimit = 1024 * 1024 * 2.5; // 2.5MB
 
 $userId = $_SESSION[alias() . '_userId'] ?? null;
 $stationId = $_SESSION[alias() . '_stationId'] ?? null;
