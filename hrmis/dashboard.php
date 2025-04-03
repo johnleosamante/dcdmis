@@ -81,7 +81,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                     <div class="dropdown no-arrow">
                         <?php dropdownEllipsis() ?>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                            <?php linkDropdownItem(customUri('hrmis', 'Employees by Position'), 'View', 'fa-user');
+                            <?php linkDropdownItem(customUri('hrmis', 'Employees by Position'), 'View', 'fa-eye');
                             linkDropdownItem(customUri('export', 'employee-positions'), 'Export', 'fa-file-excel') ?>
                         </div>
                     </div>
