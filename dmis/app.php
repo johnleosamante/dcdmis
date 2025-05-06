@@ -249,6 +249,7 @@ if (isset($_POST['edit-user'])) {
 	$isHrmisUser = isset($_POST['hrmis']);
 	$isDmisUser = isset($_POST['dmis']);
 	$isHrtdmsUser = isset($_POST['hrtdms']);
+	$isHrmpsbUser = isset($_POST['hrmpsb']);
 	$showAlert = true;
 	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 	$message = 'Employee [' . $employee . '] user assignment has been set successfully.';
@@ -289,6 +290,14 @@ if (isset($_POST['edit-user'])) {
 		}
 	} else {
 		deleteUserRole($employeeId, 'HRTDMS');
+	}
+
+	if ($isHrmpsbUser) {
+		if (!isStationUser($employeeId, 'HRMPSB')) {
+			createUserRole($employeeId, $userRole, 'HRMPSB');
+		}
+	} else {
+		deleteUserRole($employeeId, 'HRMPSB');
 	}
 
 	createSystemLog($stationId, $userId, 'Assigned user privileges', $employeeId, clientIp());

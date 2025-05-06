@@ -1,6 +1,6 @@
 <?php
 // modules/districts/district-information.php
-if (!$isHrmis && !$isHrtdms && !$isDmis) {
+if (!$isHrmis && !$isHrtdms && !$isDmis && !$isHrmpsb) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
