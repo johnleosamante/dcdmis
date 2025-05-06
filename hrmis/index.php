@@ -22,6 +22,7 @@ require_once(root() . '/includes/database/other-information.php');
 require_once(root() . '/includes/database/references.php');
 require_once(root() . '/includes/database/section.php');
 require_once(root() . '/includes/database/utility.php');
+require_once(root() . '/includes/database/vacancy.php');
 require_once(root() . '/includes/database/psipop.php');
 require_once(root() . '/includes/database/card-type.php');
 require_once(root() . '/includes/database/system-log.php');

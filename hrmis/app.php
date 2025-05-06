@@ -696,12 +696,21 @@ if (isset($_POST['remove-employee'])) {
         return;
     }
 
+    $positionId = fetchAssoc(position($employeeId))['position_id'];
+    $stationId = fetchAssoc(station($employeeId))['station_id'];
+    $psipop = fetchAssoc(psipop($employeeId))['item'];
+    $dateVacated = date('Y-m-d');
+
     if (numRows(employee($employeeId)) > 0) {
         updateEmployeeStatus($reason, $employeeId);
     }
 
     if (affectedRows()) {
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
+
+        if (strtolower($reason) !== 'duplicate') {
+            createVacancy('open', $positionId, $stationId, $psipop, $employeeId, $dateVacated, $reason, $userId);
+        }
 
         createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
     } else {

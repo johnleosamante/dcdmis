@@ -7,6 +7,7 @@ $countActive = number_format(numRows(activeEmployees()));
 $countRetirable = number_format(numRows(retirableEmployees()));
 $countStepIncrement = number_format(numRows(employeeStepIncrement()));
 $countLoyaltyAward = number_format(numRows(employeeLoyaltyAward()));
+$countVacancy = number_format(numRows(vacancies()));
 $districtCount = number_format(numRows(districts()));
 $schoolCount = number_format(numRows(schools()));
 $sectionCount = number_format(numRows(sections()));
@@ -19,6 +20,7 @@ sidebarMenuItem(customUri('hrmis', 'Archived Employees'), 'Archived', 'fa-archiv
 sidebarDivider();
 sidebarMenuItem(customUri('hrmis', 'Step Increment'), 'Step', 'fa-plus', isset($url) && str_contains($url, 'Step'), $countStepIncrement);
 sidebarMenuItem(customUri('hrmis', 'Loyalty Award'), 'Loyalty', 'fa-award', isset($url) && str_contains($url, 'Loyalty'), $countLoyaltyAward);
+sidebarMenuItem(customUri('hrmis', 'Vacancies'), 'Vacancies', 'fa-users', isset($url) && str_contains($url, 'Vacancies'), $countVacancy);
 sidebarDivider();
 sidebarMenuItem(customUri('hrmis', 'Districts'), 'Districts', 'fa-map-marked-alt', isset($url) && str_contains($url, 'District'), $districtCount);
 sidebarMenuItem(customUri('hrmis', 'Schools'), 'Schools', 'fa-school', isset($url) && str_contains($url, 'School'), $schoolCount);
