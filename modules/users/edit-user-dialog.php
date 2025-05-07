@@ -45,6 +45,7 @@ if (numRows($employees) > 0) {
     $hrmisUser = isStationUser($employeeId, 'hrmis');
     $dmisUser = isStationUser($employeeId, 'dmis');
     $hrtdmsUser = isStationUser($employeeId, 'hrtdms');
+    $hrmpsbUser = isStationUser($employeeId, 'hrmpsb');
 }
 ?>
 
@@ -106,10 +107,17 @@ if (numRows($employees) > 0) {
                         </div>
                     </div>
 
-                    <div class="form-group mb-0">
+                    <div class="form-group">
                         <div class="form-check">
                             <input class="form-check-input" id="dmis" type="checkbox" name="dmis" <?= setActiveItem($dmisUser, true, 'checked') ?>>
                             <label class="form-check-label" for="dmis">Division Management Information System</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <div class="form-check">
+                            <input class="form-check-input" id="hrmpsb" type="checkbox" name="hrmpsb" <?= setActiveItem($hrmpsbUser, true, 'checked') ?>>
+                            <label class="form-check-label" for="hrmpsb">Human Resource Personnel Selection Board</label>
                         </div>
                     </div>
                 <?php } else {

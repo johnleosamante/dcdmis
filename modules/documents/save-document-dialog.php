@@ -138,7 +138,8 @@ if (numRows($documents) > 0) {
 
                     <div class="form-group">
                         <label class="mb-0" for="file-upload">Attachment</label>
-                        <input id="file-upload" name="file-upload" type="file" class="w-100">
+                        <input id="file-upload" name="file-upload[]" type="file" multiple class="w-100" accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/*, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        <div class="small mt-1">(.doc/docx, .xls/xlsx, .ppt/pptx, .jpg/jpeg, .png, .gif, .pdf)</div>
                     </div>
 
                     <?php requiredLegend(0) ?>

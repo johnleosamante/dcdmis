@@ -4,7 +4,7 @@ try {
     set_error_handler($onError);
     $con = mysqli_connect(HOSTNAME, USER, PASSWORD, DATABASE);
 } catch (Throwable $throwable) {
-    redirect(uri() . '/oops');
+    redirect(uri() . '/oops?e=500');
 } finally {
     restore_error_handler();
 }

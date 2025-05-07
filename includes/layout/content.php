@@ -134,6 +134,9 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Settings':
             $file = 'settings/page';
             break;
+        case 'Vacancies':
+            $file = 'vacancies/page';
+            break;
         case '404':
         default:
             $file = 'error/404';
