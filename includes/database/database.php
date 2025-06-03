@@ -17,7 +17,7 @@ function connection()
 
 function affectedRows()
 {
-    return mysqli_affected_rows(connection());
+    return mysqli_affected_rows(connection()) > 0;
 }
 
 function query($query)
