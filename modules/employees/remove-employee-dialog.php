@@ -25,7 +25,7 @@ if (numRows($employees) > 0) {
     $positionId = $positions['position_id'];
     $position = $positions['position'];
     $depedEmail = $employee['email'];
-    $picture = uri() . '/' . $employee['picture'];
+    $picture = file_exists(root() . '/' . $employee['picture']) ? uri() . '/' . $employee['picture'] : uri() . '/assets/img/user.png';
     $modalTitle = 'Remove Employee';
     $hasEmployee = true;
 }
@@ -34,7 +34,6 @@ if (numRows($employees) > 0) {
 <div class="modal-dialog <?= !$hasEmployee ? 'modal-sm' : '' ?>">
     <div class="modal-content">
         <?php modalHeader($modalTitle) ?>
-
         <form action="" method="POST">
             <div class="modal-body">
                 <?php if ($hasEmployee) {
