@@ -16,32 +16,32 @@ function messageAlert($show, $message, $success = true, $align = 'left')
     <?php endif;
 }
 
-function roundPill($text)
+function roundPill($text, $bgColor = 'primary', $textColor = 'light')
 {
-    $bgColor = 'primary';
-    $textColor = 'light';
-    switch (strtolower($text)) {
-        case 'active':
-            $bgColor = 'success';
-            break;
-        case 'transferred':
-            $bgColor = 'info';
-            break;
-        case 'suspended':
-            $bgColor = 'warning';
-            $textColor = 'secondary';
-            break;
-        case 'resigned':
-        case 'retired':
-        case 'dismissed':
-            $bgColor = 'danger';
-            break;
-        case 'deceased':
-            $bgColor = 'dark';
-            break;
-        default:
-            $bgColor = 'secondary';
-            break;
+    if ($bgColor === 'primary') {
+        switch (strtolower($text)) {
+            case 'active':
+                $bgColor = 'success';
+                break;
+            case 'transferred':
+                $bgColor = 'info';
+                break;
+            case 'suspended':
+                $bgColor = 'warning';
+                $textColor = 'secondary';
+                break;
+            case 'resigned':
+            case 'retired':
+            case 'dismissed':
+                $bgColor = 'danger';
+                break;
+            case 'deceased':
+                $bgColor = 'dark';
+                break;
+            default:
+                $bgColor = 'secondary';
+                break;
+        }
     } ?>
     <span class="py-1 px-3 small bg-<?= $bgColor ?> rounded-pill text-<?= $textColor ?>"><?= $text ?></span>
 <?php }
