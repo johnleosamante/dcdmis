@@ -17,14 +17,14 @@ function countTrainings($year)
     return numRows(query("SELECT `Training_code` AS `no` FROM tbl_seminar WHERE `Training_code` LIKE '%-{$year}-%';"));
 }
 
-function createTraining($no, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $unconsecutiveDate, $signatory, $hasCertificate, $division)
+function createTraining($no, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $nonconsecutiveDate, $signatory, $hasCertificate, $division)
 {
-    nonQuery("INSERT INTO tbl_seminar (`Training_Code`, `Title_of_training`, `covered_from`, `covered_to`, `hours`, `Category`, `conducted_by`, `sponsor`, `TVenue`, `signatory`, `unconsecutive_date`, `generate_certificate`, `functional_division`) VALUES ('{$no}', '{$title}', '{$from}', '{$to}', '{$hours}', '{$type}', '{$level}', '{$sponsor}', '{$venue}', '{$signatory}', '{$unconsecutiveDate}', '{$hasCertificate}', '{$division}');");
+    nonQuery("INSERT INTO tbl_seminar (`Training_Code`, `Title_of_training`, `covered_from`, `covered_to`, `hours`, `Category`, `conducted_by`, `sponsor`, `TVenue`, `signatory`, `unconsecutive_date` AS `nonconsecutive_date`, `generate_certificate`, `functional_division`) VALUES ('{$no}', '{$title}', '{$from}', '{$to}', '{$hours}', '{$type}', '{$level}', '{$sponsor}', '{$venue}', '{$signatory}', '{$nonconsecutiveDate}', '{$hasCertificate}', '{$division}');");
 }
 
-function updateTraining($no, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $unconsecutiveDate, $signatory, $hasCertificate, $division)
+function updateTraining($no, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $nonconsecutiveDate, $signatory, $hasCertificate, $division)
 {
-    nonQuery("UPDATE tbl_seminar SET Title_of_training='{$title}', covered_from='{$from}', covered_to='{$to}', `hours`='{$hours}', Category='{$type}', conducted_by='{$level}', `sponsor`='{$sponsor}', TVenue='{$venue}', `unconsecutive_date`='{$unconsecutiveDate}', `signatory`='{$signatory}', `generate_certificate`='{$hasCertificate}', `functional_division`='{$division}' WHERE Training_Code='{$no}' LIMIT 1;");
+    nonQuery("UPDATE tbl_seminar SET Title_of_training='{$title}', covered_from='{$from}', covered_to='{$to}', `hours`='{$hours}', Category='{$type}', conducted_by='{$level}', `sponsor`='{$sponsor}', TVenue='{$venue}', `unconsecutive_date`='{$nonconsecutiveDate}', `signatory`='{$signatory}', `generate_certificate`='{$hasCertificate}', `functional_division`='{$division}' WHERE Training_Code='{$no}' LIMIT 1;");
 }
 
 function scheduledTrainings()
