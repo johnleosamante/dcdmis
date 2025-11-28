@@ -19,7 +19,7 @@ function countTrainings($year)
 
 function createTraining($no, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $nonconsecutiveDate, $signatory, $hasCertificate, $division)
 {
-    nonQuery("INSERT INTO tbl_seminar (`Training_Code`, `Title_of_training`, `covered_from`, `covered_to`, `hours`, `Category`, `conducted_by`, `sponsor`, `TVenue`, `signatory`, `unconsecutive_date` AS `nonconsecutive_date`, `generate_certificate`, `functional_division`) VALUES ('{$no}', '{$title}', '{$from}', '{$to}', '{$hours}', '{$type}', '{$level}', '{$sponsor}', '{$venue}', '{$signatory}', '{$nonconsecutiveDate}', '{$hasCertificate}', '{$division}');");
+    nonQuery("INSERT INTO tbl_seminar (`Training_Code`, `Title_of_training`, `covered_from`, `covered_to`, `hours`, `Category`, `conducted_by`, `sponsor`, `TVenue`, `signatory`, `unconsecutive_date`, `generate_certificate`, `functional_division`) VALUES ('{$no}', '{$title}', '{$from}', '{$to}', '{$hours}', '{$type}', '{$level}', '{$sponsor}', '{$venue}', '{$signatory}', '{$nonconsecutiveDate}', '{$hasCertificate}', '{$division}');");
 }
 
 function updateTraining($no, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $nonconsecutiveDate, $signatory, $hasCertificate, $division)
