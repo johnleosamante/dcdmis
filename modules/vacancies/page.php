@@ -1,4 +1,9 @@
 <?php
+// modules/vacancies/page.php
+if (!$isHrmis && !$isHrmpsb) {
+    require_once root() . '/modules/error/403.php';
+    return;
+}
 
 messageAlert($showAlert, $message, $success);
 ?>
@@ -14,14 +19,24 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitle('Vacancies') ?>
+        <?php if (!$isHrmpsb) {
+            contentTitle('Vacancies');
+        } else {
+            contentTitleWithModal('Vacancies', uri() . '/modules/vacancies/save-vacancy-dialog.php', 'Add Vacancy', 'fa-plus');
+        } ?>
     </div>
 
     <div class="card-body">
-        <?php if ($isDmis) { ?>
+        <?php if ($isDmis || $isHrmpsb || $isHrmis) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
+                <?php if ($isHrmpsb) : ?>
+                    <div class="d-inline-block ml-2">
+                        <?php linkButtonSplit(customUri('hrmpsb', 'Publish Vacancies'), 'Publish', 'fa-newspaper', 'Publish Vacancies', 'success') ?>
+                    </div>
+                <?php endif; ?>
+
                 <div class="d-inline-block">
-                    <?php linkButtonSplit(customUri('export', 'users'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success') ?>
+                    <?php linkButtonSplit(customUri('export', 'vacancies'), 'Export', 'fa-file-excel', 'Export as Excel file', $isHrmis ? 'success' :  'warning') ?>
                 </div>
             </div>
         <?php } ?>
@@ -50,20 +65,46 @@ messageAlert($showAlert, $message, $success);
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= ++$count ?></td>
                             <td class="align-middle"><?= $row['position'] ?></td>
-                            <td class="align-middle"><?= $row['psipop'] ?></td>
-                            <td class="align-middle"><?= fetchAssoc(schoolById($row['station_id']))['name'] ?></td>
+                            <td class="align-middle">
+                                <?= toHandleNull($row['psipop'], 'N/A') ?>
+                            </td>
+                            <td class="align-middle">
+                                <?php if (empty($row['station_id'])) {
+                                    echo 'TO BE DETERMINED';
+                                } else {
+                                    linkItem(customUri($activeApp, 'School Information', $row['station_id']), fetchAssoc(schoolById($row['station_id']))['name']);
+                                } ?>
+                            </td>
                             <td class="align-middle">
                                 <?php if (!empty($row['employee_id'])) : ?>
                                     <?php $vice = fetchAssoc(employee($row['employee_id'])); ?>
-                                    <div>VICE: <?= toName($vice['lname'], $vice['fname'], $vice['mname'], $vice['ext'], true) ?></div>
-                                <?php endif; ?>
-                                <div><?= $row['reason'] ?></div>
+                                    <div>VICE: <?php
+                                                $employeeName = toName($vice['lname'], $vice['fname'], $vice['mname'], $vice['ext'], true);
+                                                if (!$isHrmis) {
+                                                    modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['employee_id']), $employeeName);
+                                                } else {
+                                                    linkItem(customUri('hrmis', 'Employee Information', $row['employee_id']), $employeeName);
+                                                }
+                                                ?>
+                                    </div>
+                                <?php endif;
+
+                                $isNewItem = strtolower($row['reason']) === 'new'; ?>
+
+                                <?= $isNewItem ? roundPill($row['reason'], 'success') : $row['reason'] ?>
                             </td>
-                            <td class="align-middle"><?= toLongDate($row['date_vacated']) ?></td>
+                            <td class="align-middle">
+                                <?= toLongDate($row['date_vacated']) ?>
+                            </td>
                             <?php if ($isHrmpsb) : ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                            <?php
+                                            modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Vacancy');
+                                            modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?c=' . cipher($row['id']) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Vacancy') ?>
+                                        </div>
                                     </div>
                                 </td>
                             <?php endif; ?>
@@ -73,12 +114,12 @@ messageAlert($showAlert, $message, $success);
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="5%">Photo</th>
-                        <th class="align-middle" width="20%">Name</th>
-                        <th class="align-middle" width="15%">Email Address</th>
+                        <th class="align-middle" width="5%">#</th>
                         <th class="align-middle" width="20%">Position</th>
-                        <th class="align-middle" width="25%">Station</th>
-                        <th class="align-middle" width="10%">Status</th>
+                        <th class="align-middle" width="10%">Item Number</th>
+                        <th class="align-middle" width="20%">Station</th>
+                        <th class="align-middle" width="20%">Remarks</th>
+                        <th class="align-middle" width="15%">Posted On</th>
                         <?php if ($isHrmpsb) : ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>
