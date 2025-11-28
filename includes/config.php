@@ -1,8 +1,8 @@
 <?php
 // include/config.php
 const HOSTNAME = 'localhost';
-const USER = 'root';
-const PASSWORD = '';
+const USER = 'chickenstalker';
+const PASSWORD = '82%a*f25RPG6';
 const DATABASE = 'dcdmis';
 const DOMAIN = 'depeddipolog.com';
 const PUBLIC_IP = '120.28.189.147';
