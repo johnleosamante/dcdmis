@@ -1,7 +1,7 @@
 <?php
 // modules/trainings/training-participants.php
 if (!$isHrtdms) {
-    require_once(root() . '/modules/error/403.php');
+    require_once root() . '/modules/error/403.php';
     return;
 }
 
@@ -38,7 +38,7 @@ messageAlert($showAlert, $message, $success);
                 </tr>
                 <tr>
                     <th class="pr-5" scope="row">Date</th>
-                    <td class="text-uppercase"><?= empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date'] ?></td>
+                    <td class="text-uppercase"><?= empty($training['nonconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['nonconsecutive_date'] ?></td>
                 </tr>
                 <?php if (!empty($training['hours'])) : ?>
                     <tr>
@@ -90,7 +90,7 @@ messageAlert($showAlert, $message, $success);
                             <th width="3%"></th>
                             <th class="align-middle" width="5%">Photo</th>
                             <th class="align-middle" width="37%">Name</th>
-                            <th class="align-mdille" width="10%">Status</th>
+                            <th class="align-middle" width="10%">Status</th>
                             <th class="align-middle" width="20%">Position</th>
                             <th class="align-middle" width="25%">Station</th>
                         </tr>
@@ -101,7 +101,7 @@ messageAlert($showAlert, $message, $success);
                         while ($row = fetchArray($employees)) {
                             if (!isTrainingParticipant($trainingId, $row['id'])) {
                                 $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                                $photo = uri() . '/' . $row['picture'];
+                                $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
                         ?>
                                 <tr class="text-uppercase">
                                     <td class="align-middle">
@@ -136,7 +136,7 @@ messageAlert($showAlert, $message, $success);
                             <th width="3%"></th>
                             <th class="align-middle" width="5%">Photo</th>
                             <th class="align-middle" width="37%">Name</th>
-                            <th class="align-mdille" width="10%">Status</th>
+                            <th class="align-middle" width="10%">Status</th>
                             <th class="align-middle" width="20%">Position</th>
                             <th class="align-middle" width="25%">Station</th>
                         </tr>
