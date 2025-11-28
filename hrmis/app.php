@@ -32,6 +32,12 @@ if (isset($_POST['add-employee'])) {
     $mobile = sanitize($_POST['mobile']);
     $image = 'assets/img/user.png';
     $status = sanitize($_POST['status']);
+    $crn = sanitize($_POST['gsis_id']);
+    $bp = sanitize($_POST['gsis_bp']);
+    $pagibig = sanitize($_POST['pagibig']);
+    $philhealth = sanitize($_POST['philhealth']);
+    $tin = sanitize($_POST['tin']);
+    $agencyId = sanitize($_POST['agency_id']);
     $showAlert = true;
     $employee = toName($lname, $fname, $mname, $ext, true);
     $success = false;
@@ -50,7 +56,7 @@ if (isset($_POST['add-employee'])) {
         return;
     }
 
-    createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status);
+    createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status, $crn, $bp, $pagibig, $philhealth, $tin, $agencyId);
     createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $employeeId);
     createOtherInformation(0, 0, '', 0, '', 0, '0000-00-00', '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', $employeeId);
     createStation($today, $eStationId, $ePositionId, $employeeId);
@@ -953,12 +959,12 @@ if (isset($_POST['approve-step-increment'])) {
     if (numRows($stepIncrement) > 0) {
         $esi = fetchAssoc($stepIncrement);
         $lastStep = $esi['date_last_step'];
-        $step = (int)$esi['step'];
+        $step = (int) $esi['step'];
         $now = new DateTime('now');
         $dls = new DateTime($lastStep);
         $serviceDuration = $now->diff($dls)->y;
 
-        $count = $serviceDuration < 21 ? (int)($serviceDuration / 3) : 7;
+        $count = $serviceDuration < 21 ? (int) ($serviceDuration / 3) : 7;
         $increment = $serviceDuration < 21 ? 3 * $count : 21;
         $step = $step < 8 ? $step + $count : 8;
 
@@ -987,7 +993,7 @@ if (isset($_POST['approve-loyalty-award'])) {
         $doa = new DateTime($ela['last_awarded_on']);
         $now = new DateTime('now');
 
-        $count = (int)($now->diff($doa)->y / 5);
+        $count = (int) ($now->diff($doa)->y / 5);
         $increment = ($count === 2) ? 10 : 5 * $count;
 
         updateLoyaltyAward(date('Y-m-d', strtotime("+{$increment} years", strtotime($ela['last_awarded_on']))), $employeeId);
