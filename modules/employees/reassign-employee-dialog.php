@@ -24,7 +24,7 @@ if (numRows($employees) > 0) {
     $station = $positions['station'];
     $positionId = $positions['position_id'];
     $position = $positions['position'];
-    $picture = uri() . '/' . $employee['picture'];
+    $picture = file_exists(root() . '/' . $employee['picture']) ? uri() . '/' . $employee['picture'] : uri() . '/assets/img/user.png';
     $modalTitle = 'Reassign Employee';
     $hasEmployee = true;
 }
