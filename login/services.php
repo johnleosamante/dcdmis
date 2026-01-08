@@ -17,27 +17,20 @@
                         </div>
 
                         <div class="card-body">
-                            <a href="<?= uri() . '/dts/track' ?>" title="Division Training Certificate Finder">Track</a> paper trail of documents created by schools, sections and offices within the schools division.
-                        </div>
-                    </div>
-
-                    <div class="card mb-4">
-                        <div class="card-header text-uppercase text-center font-weight-bold">
-                            Personnel Information System
-                        </div>
-
-                        <div class="card-body">
-                            Monitor individual details of teaching, teaching-related and non-teaching employees of the schools division.
+                            <a href="<?= uri() . '/dts/track' ?>" title="Division Training Certificate Finder">Track</a>
+                            paper trail of documents created by schools, sections and offices within the schools
+                            division.
                         </div>
                     </div>
 
                     <div class="card">
                         <div class="card-header text-uppercase text-center font-weight-bold">
-                            Learning Resource Materials
+                            Personnel Information System
                         </div>
 
                         <div class="card-body">
-                            Quality assured educational and learning materials accessible through a dedicated learning resource <a href="https://sites.google.com/deped.gov.ph/sdodipologlrms/home" title="SDO Dipolog Learning Resource Portal" target="_blank">portal</a>.
+                            Monitor individual details of teaching, teaching-related and non-teaching employees of the
+                            schools division.
                         </div>
                     </div>
                 </div>
@@ -49,11 +42,23 @@
                         </div>
 
                         <div class="card-body">
-                            Access the <a href="<?= uri() . '/hrtdms/repository' ?>" title="Division Training Certificate Finder">repository</a> of participant certificates for training programs conducted by the schools division.
+                            Access the <a href="<?= uri() . '/hrtdms/repository' ?>"
+                                title="Division Training Certificate Finder">repository</a> of participant certificates
+                            for training programs conducted by the schools division.
                         </div>
                     </div>
 
-                    <?php require_once(root() . '/modules/calendar/page.php') ?>
+                    <div class="card">
+                        <div class="card-header text-uppercase text-center font-weight-bold">
+                            Learning Resource Materials
+                        </div>
+
+                        <div class="card-body">
+                            Quality assured educational and learning materials accessible through a dedicated learning
+                            resource <a href="https://sites.google.com/deped.gov.ph/sdodipologlrms/home"
+                                title="SDO Dipolog Learning Resource Portal" target="_blank">portal</a>.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
