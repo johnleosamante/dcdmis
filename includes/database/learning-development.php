@@ -1,111 +1,203 @@
 <?php
-// includes/database/learning-development.php
-// tbl_seminar
-// tbl_seminar_participant
+// trainings
 function trainings()
 {
-    return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `hours`, `Category` AS `type`, `conducted_by` AS `level`, `sponsor`,`TVenue` AS `venue` FROM tbl_seminar ORDER BY `From` DESC, `To` DESC;");
+    $sql = "SELECT * FROM `trainings` ORDER BY `start_date` DESC, `end_date` DESC";
+    $results = query($sql);
+    return is_array($results) ? $results : [];
 }
 
-function training($id)
+function training($training_id)
 {
-    return query("SELECT `Training_code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `hours`, `Category` AS `type`, `conducted_by` AS `level`, `sponsor`, `functional_division`, `TVenue` AS `venue`, `unconsecutive_date`, `generate_certificate` FROM tbl_seminar WHERE `Training_code`='{$id}' LIMIT 1;");
+    return find("SELECT * FROM `trainings` WHERE `id` = ? LIMIT 1", [$training_id]);
 }
 
 function countTrainings($year)
 {
-    return numRows(query("SELECT `Training_code` AS `no` FROM tbl_seminar WHERE `Training_code` LIKE '%-{$year}-%';"));
+    $pattern = "%-{$year}-%";
+    $sql = "SELECT * FROM `trainings` WHERE `id` LIKE ?";
+    $result = query($sql, [$pattern]);
+    return is_array($result) ? count($result) : 0;
 }
 
-function createTraining($no, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $nonconsecutiveDate, $signatory, $hasCertificate, $division)
+function createTraining($training_id, $title, $start_date, $end_date, $number_of_hours, $training_type_id, $conducted_by, $sponsored_by, $venue, $unconsecutive_dates, $signatory_id, $has_certificate, $functional_division)
 {
-    nonQuery("INSERT INTO tbl_seminar (`Training_Code`, `Title_of_training`, `covered_from`, `covered_to`, `hours`, `Category`, `conducted_by`, `sponsor`, `TVenue`, `signatory`, `unconsecutive_date`, `generate_certificate`, `functional_division`) VALUES ('{$no}', '{$title}', '{$from}', '{$to}', '{$hours}', '{$type}', '{$level}', '{$sponsor}', '{$venue}', '{$signatory}', '{$nonconsecutiveDate}', '{$hasCertificate}', '{$division}');");
+    $data = [
+        'id' => $training_id,
+        'title' => $title,
+        'start_date' => $start_date,
+        'end_date' => $end_date,
+        'number_of_hours' => $number_of_hours,
+        'training_type_id' => $training_type_id,
+        'conducted_by' => $conducted_by,
+        'sponsored_by' => $sponsored_by,
+        'venue' => $venue,
+        'signatory_id' => $signatory_id,
+        'unconsecutive_dates' => $unconsecutive_dates,
+        'has_certificate' => $has_certificate,
+        'functional_division' => $functional_division
+    ];
+    return insert('trainings', $data);
 }
 
-function updateTraining($no, $title, $from, $to, $hours, $type, $level, $sponsor, $venue, $nonconsecutiveDate, $signatory, $hasCertificate, $division)
+function updateTraining($training_id, $title, $start_date, $end_date, $number_of_hours, $training_type_id, $conducted_by, $sponsored_by, $venue, $unconsecutive_dates, $signatory_id, $has_certificate, $functional_division)
 {
-    nonQuery("UPDATE tbl_seminar SET Title_of_training='{$title}', covered_from='{$from}', covered_to='{$to}', `hours`='{$hours}', Category='{$type}', conducted_by='{$level}', `sponsor`='{$sponsor}', TVenue='{$venue}', `unconsecutive_date`='{$nonconsecutiveDate}', `signatory`='{$signatory}', `generate_certificate`='{$hasCertificate}', `functional_division`='{$division}' WHERE Training_Code='{$no}' LIMIT 1;");
+    $data = [
+        'title' => $title,
+        'start_date' => $start_date,
+        'end_date' => $end_date,
+        'number_of_hours' => $number_of_hours,
+        'training_type_id' => $training_type_id,
+        'conducted_by' => $conducted_by,
+        'sponsored_by' => $sponsored_by,
+        'venue' => $venue,
+        'unconsecutive_dates' => $unconsecutive_dates,
+        'signatory_id' => $signatory_id,
+        'has_certificate' => $has_certificate,
+        'functional_division' => $functional_division
+    ];
+    return update('trainings', $data, '`id` = ?', [$training_id]);
 }
 
 function scheduledTrainings()
 {
-    return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `hours`, `Category` AS `type`, `conducted_by` AS `level`, `sponsor`, `functional_division`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` >= CURDATE() ORDER BY `From` DESC, `To` DESC;");
+    $results = query("SELECT * FROM `trainings` WHERE `end_date` >= CURDATE() ORDER BY `start_date` ASC, `end_date` ASC");
+    return is_array($results) ? $results : [];
 }
 
-function conductedTrainings($from, $to)
+function conductedTrainings($from_date, $to_date)
 {
-    return query("SELECT `Training_Code` AS `no`, Title_of_Training AS `title`, `covered_from` AS `from`, `covered_to` AS `to`, `hours`, `Category` AS `type`, `conducted_by` AS `level`, `sponsor`, `functional_division`, `TVenue` AS `venue` FROM tbl_seminar WHERE `covered_to` < CURDATE() AND (`covered_from` BETWEEN '{$from}' AND '{$to}' OR `covered_to` BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY))) ORDER BY `From` DESC, `To` DESC;");
+    $sql = "SELECT * FROM trainings  WHERE `end_date` < CURDATE() AND (`start_date` BETWEEN ? AND ? 
+            OR `end_date` BETWEEN ? AND DATE_ADD(?, INTERVAL 1 DAY)) ORDER BY `start_date` DESC";
+    return query($sql, [$from_date, $to_date, $from_date, $to_date]);
 }
 
-function trainingParticipants($no, $id = null)
+// station_assignments, training_participants
+function trainingParticipants($training_id, $person_id = null)
 {
-    $filter = $id === null ? '' : "AND tbl_employee.Emp_ID='{$id}' ";
-    return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS `month`, tbl_employee.Emp_Day AS `day`, tbl_employee.Emp_Year AS `year`, tbl_employee.EmpNo AS agency_id, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Email AS email, tbl_employee.Emp_Status AS status FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID INNER JOIN tbl_seminar_participant ON tbl_employee.Emp_ID = tbl_seminar_participant.Emp_ID WHERE Training_Code='{$no}' {$filter} ORDER BY tbl_employee.Emp_LName;");
+    $params = [$training_id];
+    $filter = "";
+    if ($person_id !== null) {
+        $filter = " AND p.`id` = ? ";
+        $params[] = $person_id;
+    }
+    $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
+                p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, p.`agency_id`, 
+                s.`position_id`, s.`station_id`, p.`profile_picture`, p.`email_address`, p.`status` 
+            FROM `persons` AS p
+            INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
+            INNER JOIN `training_participants` AS tp ON p.`id` = tp.`person_id` 
+            WHERE tp.`training_id` = ? {$filter} ORDER BY p.`last_name` ASC";
+    $results = query($sql, $params);
+    return is_array($results) ? $results : [];
 }
 
-function createTrainingParticipant($no, $id, $controlNo)
+// training_participants
+function createTrainingParticipant($training_id, $person_id, $control_no)
 {
-    nonQuery("INSERT INTO tbl_seminar_participant (`Training_Code`, `Emp_ID`, `control_no`) VALUES ('{$no}', '{$id}', '{$controlNo}');");
+    $data = [
+        'training_id' => $training_id,
+        'person_id' => $person_id,
+        'control_no' => $control_no
+    ];
+
+    return insert('training_participants', $data);
 }
 
-function deleteTrainingParticipant($no, $id)
+function deleteTrainingParticipant($training_id, $person_id)
 {
-    nonQuery("DELETE FROM tbl_seminar_participant WHERE `Training_Code`='{$no}' AND `Emp_ID`='{$id}';");
+    return delete('training_participants', '`training_id` = ? AND `person_id` = ?', [$training_id, $person_id]);
 }
 
-function deleteParticipantTrainings($id)
+function deleteParticipantTrainings($person_id)
 {
-    nonQuery("DELETE FROM tbl_seminar_participant WHERE `Emp_ID`='{$id}';");
+    return delete('training_participants', '`person_id` = ?', [$person_id]);
 }
 
-function isConductedTraining($no)
+// trainings
+function isConductedTraining($training_id)
 {
-    return numRows(query("SELECT `Training_Code` AS `no` FROM tbl_seminar WHERE `Training_Code`='{$no}' AND `covered_to` < CURDATE() LIMIT 1;")) > 0;
+    $sql = "SELECT `id` FROM `trainings` WHERE `id` = ? AND `start_date` < CURDATE() LIMIT 1";
+    $result = find($sql, [$training_id]);
+    return !empty($result);
 }
 
-function isTrainingParticipant($no, $id)
+// training_participants
+function isTrainingParticipant($training_id, $person_id)
 {
-    return numRows(query("SELECT `Training_Code` AS `no`, `Emp_ID` AS `id` FROM tbl_seminar_participant WHERE `Training_Code`='{$no}' AND `Emp_ID`='{$id}' LIMIT 1;")) > 0;
+    $sql = "SELECT `id` FROM `training_participants` WHERE `training_id` = ? AND `person_id` = ? LIMIT 1";
+    $result = find($sql, [$training_id, $person_id]);
+    return !empty($result);
 }
 
+// training_types
 function trainingTypes()
 {
-    return query("SELECT `id`, `type` FROM tbl_training_type;");
+    $results = query("SELECT `id`, `name` FROM `training_types` ORDER BY `name` ASC");
+    return is_array($results) ? $results : [];
 }
 
-function trainingType($id)
+function trainingType($training_type_id)
 {
-    $types = query("SELECT `type` FROM tbl_training_type WHERE `id`='{$id}';");
-    return numRows($types) > 0 ? fetchAssoc($types)['type'] : '';
+    $result = find("SELECT `name` FROM `training_types` WHERE `id` = ? LIMIT 1", [$training_type_id]);
+    return $result ? $result['name'] : '';
 }
 
+// training_sponsors
 function trainingSponsors()
 {
-    return query("SELECT `id`, `sponsor` FROM tbl_training_sponsor;");
+    return query("SELECT `id`, `name` FROM `training_sponsors` ORDER BY `sponsor` ASC");
 }
 
-function trainingSponsor($id)
+function trainingSponsor($training_sponsor_id)
 {
-    $sponsors = query("SELECT `sponsor` FROM tbl_training_sponsor WHERE `id`='{$id}';");
-    return numRows($sponsors) > 0 ? fetchAssoc($sponsors)['sponsor'] : '';
+    $result = find("SELECT `name` FROM `training_sponsors` WHERE `id` = ? LIMIT 1", [$training_sponsor_id]);
+    return $result ? $result['name'] : '';
 }
 
-function attendedTrainings($id)
+// trainings, training_participants, training_types, training_sponsors
+function attendedTrainings($person_id)
 {
-    return query("SELECT `tbl_seminar`.`Training_Code` AS `no`, `tbl_seminar`.`Title_of_training` AS `title`, `tbl_seminar`.`covered_from` AS `from`, `tbl_seminar`.`covered_to` AS `to`, `tbl_training_sponsor`.`sponsor` AS `level`, `tbl_seminar`.`sponsor`, `tbl_seminar`.`TVenue` AS `venue`, `tbl_training_type`.`type`, `tbl_seminar`.`hours`, `tbl_seminar`.`unconsecutive_date`, `tbl_seminar`.`signatory`, `tbl_seminar`.`generate_certificate`, `tbl_seminar_participant`.`Emp_ID` AS `id` FROM `tbl_seminar` INNER JOIN `tbl_seminar_participant` ON `tbl_seminar`.`Training_Code`=`tbl_seminar_participant`.`Training_Code` INNER JOIN `tbl_training_type` ON `tbl_seminar`.`Category`=`tbl_training_type`.`id` INNER JOIN `tbl_training_sponsor` ON `tbl_seminar`.`conducted_by`=`tbl_training_sponsor`.`id` WHERE `tbl_seminar_participant`.`Emp_ID`='{$id}' ORDER BY `tbl_seminar`.`covered_to` DESC;");
+    $sql = "SELECT t.`id`, t.`title`, t.`start_date`, t.`end_date`, ts.`name` AS `training_sponsor`, t.`sponsored_by`, 
+                t.`venue`, tt.`name` AS `training_type`, t.`number_of_hours`, t.`unconsecutive_dates`, t.`signatory_id`, 
+                t.`has_certificate`, tp.`person_id` 
+            FROM `trainings` AS t 
+            INNER JOIN `training_participants` AS tp ON t.`id` = tp.`training_id` 
+            INNER JOIN `training_types` AS tt ON t.`training_type_id` = tt.`id` 
+            INNER JOIN `training_sponsors` AS ts ON t.`conducted_by` = ts.`id` 
+            WHERE tp.`person_id` = ? ORDER BY t.`end_date` DESC";
+
+    $results = query($sql, [$person_id]);
+    return is_array($results) ? $results : [];
 }
 
-function attendedTraining($no, $id)
+function attendedTraining($training_id, $person_id)
 {
-    return query("SELECT `tbl_seminar`.`Training_Code` AS `no`, `tbl_seminar`.`Title_of_training` AS `title`, `tbl_seminar`.`covered_from` AS `from`, `tbl_seminar`.`covered_to` AS `to`, `tbl_training_sponsor`.`sponsor` AS `level`, `tbl_seminar`.`sponsor`, `tbl_seminar`.`TVenue` AS `venue`, `tbl_training_type`.`type`, `tbl_seminar`.`hours`, `tbl_seminar`.`unconsecutive_date`, `tbl_seminar`.`signatory`, `tbl_seminar`.`generate_certificate`, `tbl_seminar_participant`.`Emp_ID`, tbl_seminar_participant.control_no FROM `tbl_seminar` INNER JOIN `tbl_seminar_participant` ON `tbl_seminar`.`Training_Code`=`tbl_seminar_participant`.`Training_Code` INNER JOIN `tbl_training_type` ON `tbl_seminar`.`Category`=`tbl_training_type`.`id` INNER JOIN `tbl_training_sponsor` ON `tbl_seminar`.`conducted_by`=`tbl_training_sponsor`.`id` WHERE `tbl_seminar`.`Training_Code`='{$no}' AND `tbl_seminar_participant`.`Emp_ID`='{$id}' LIMIT 1;");
+    $sql = "SELECT t.`id`, t.`title`, t.`start_date`, t.`end_date`, ts.`name`, t.`sponsored_by`, 
+                t.`venue`, tt.`name`, t.`number_of_hours`, t.`unconsecutive_dates`, t.`signatory_id`, 
+                t.`has_certificate`, tp.`person_id, tp.`control_no` 
+            FROM `trainings` AS t 
+            INNER JOIN `training_participants` AS tp ON t.`id` = tp.`training_id` 
+            INNER JOIN `training_types` AS tt ON t.`training_type_id` = tt.`id` 
+            INNER JOIN `training_sponsors` AS ts ON t.`conducted_by` = ts.`id` 
+            WHERE t.`training_id` = ? AND tp.`person_id` = ? LIMIT 1";
+    return find($sql, [$training_id, $person_id]);
 }
 
+// trainings
 function conductedTrainingsByYear()
 {
-    return query("SELECT YEAR(`covered_to`) AS `name`, COUNT(*) as `count` FROM `tbl_seminar` GROUP BY YEAR(`covered_to`);");
+    $sql = "SELECT YEAR(`end_date`) AS `name`, COUNT(*) AS `count` FROM `trainings` 
+            WHERE `end_date` IS NOT NULL GROUP BY YEAR(`end_date`) ORDER BY `name` DESC";
+    return query($sql);
 }
 
+// trainings, training_participants
 function trainedEmployeesByYear()
 {
-    return query("SELECT YEAR(`covered_to`) AS `name`, COUNT(DISTINCT Emp_ID) AS `count` FROM `tbl_seminar` INNER JOIN `tbl_seminar_participant` ON `tbl_seminar`.`Training_Code`=`tbl_seminar_participant`.`Training_Code` GROUP BY YEAR(`covered_to`);");
+    $sql = "SELECT YEAR(s.`end_date`) AS `name`, COUNT(DISTINCT tp.`person_id`) AS `count` 
+            FROM `trainings` AS t 
+            INNER JOIN `training_participants` AS tp ON t.`id` = tp.`training_id` 
+            GROUP BY YEAR(t.`end_date`) ORDER BY `name` DESC";
+    return query($sql);
 }
