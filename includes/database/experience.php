@@ -1,37 +1,76 @@
 <?php
-// includes/database/experience.php
-// work_experience
-function experiences($id)
+// service_records
+
+function experiences($person_id)
 {
-    return query("SELECT `No` AS `no`, `From` AS `from`, `To` AS `to`, `ispresent`, `Position_Title` AS `position`, `position_code`, Job_Status AS `status`, Goverment AS isgovernment, Salary_Grade AS sg, Monthly_Salary AS salary, Organization AS organization, `organization_alias`, `leave_dates`, `isseparation`, `separation_date`, `separation_cause`, Emp_ID AS id FROM work_experience WHERE Emp_ID='{$id}' ORDER BY `From` DESC, `To` DESC;");
+    $sql = "SELECT * FROM `service_records` WHERE `person_id` = ? ORDER BY `from_date` DESC, `to_date` DESC";
+    $results = query($sql, [$person_id]);
+    return is_array($results) ? $results : [];
 }
 
-function experience($id, $no)
+function experience($person_id, $service_record_id)
 {
-    return query("SELECT `No` AS `no`, `From` AS `from`, `To` AS `to`, `ispresent`, `Position_Title` AS `position`, `position_code`, Job_Status AS `status`, Goverment AS isgovernment, Salary_Grade AS sg, Monthly_Salary AS salary, Organization AS organization, `organization_alias`, `leave_dates`, `isseparation`, `separation_date`, `separation_cause`, Emp_ID AS id FROM work_experience WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $sql = "SELECT * FROM `service_records` WHERE `person_id` = ? AND `id` = ? LIMIT 1";
+    return find($sql, [$person_id, $service_record_id]);
 }
 
-function createExperience($from, $to, $isPresent, $position, $positionCode, $status, $isGovernment, $sg, $salary, $organization, $organizationAlias, $leaveDates, $isSeparation, $separationDate, $separationCause, $id)
+// TODO
+function createExperience($from_date, $to_date, $is_present, $designation, $position_id, $appointment_status, $is_government_service, $salary_grade, $monthly_salary, $agency_company, $organizationAlias, $leave_wo_pay, $for_separation, $separation_date, $separation_cause, $person_id)
 {
-    nonQuery("INSERT INTO work_experience (`From`, `To`, ispresent, `Position_Title`, `position_code`, `Job_Status`, Goverment, Salary_Grade, Monthly_Salary, `Organization`,  `organization_alias`, `leave_dates`, `isseparation`, `separation_date`, `separation_cause`, Emp_ID) VALUES ('{$from}', '{$to}', '{$isPresent}', '{$position}', '{$positionCode}', '{$status}', '{$isGovernment}', '{$sg}', '{$salary}', '{$organization}', '{$organizationAlias}', '{$leaveDates}', '{$isSeparation}', '{$separationDate}', '{$separationCause}', '{$id}');");
+    $data = [
+        'from_date' => $from_date,
+        'to_date' => $to_date,
+        'is_present' => $is_present,
+        'designation' => $designation,
+        'position_id' => $position_id,
+        'appointment_status' => $appointment_status,
+        'is_government_service' => $is_government_service,
+        'salary_grade' => $salary_grade,
+        'monthly_salary' => $monthly_salary,
+        'agency_company' => $agency_company,
+        'leave_dates' => $leave_wo_pay,
+        'for_separation' => $for_separation,
+        'separation_date' => $separation_date,
+        'separation_cause' => $separation_cause,
+        'person_id' => $person_id
+    ];
+    return insert('service_records', $data);
 }
 
-function updateExperience($from, $to, $isPresent, $position, $positionCode, $status, $isGovernment, $sg, $salary, $organization, $organizationAlias, $leaveDates, $isSeparation, $separationDate, $separationCause, $id, $no)
+// TODO
+function updateExperience($from_date, $to_date, $is_present, $designation, $position_id, $appointment_status, $is_government_service, $salary_grade, $monthly_salary, $agency_company, $organizationAlias, $leave_wo_pay, $for_separation, $separation_date, $separation_cause, $person_id, $service_record_id)
 {
-    nonQuery("UPDATE work_experience SET `From`='{$from}', `To`='{$to}', ispresent='{$isPresent}', `Position_Title`='{$position}', `position_code`='{$positionCode}', Job_Status='{$status}', Goverment='{$isGovernment}', Salary_Grade='{$sg}', Monthly_Salary='{$salary}', `Organization`='{$organization}', `organization_alias`='{$organizationAlias}', `leave_dates`='{$leaveDates}', `isseparation`='{$isSeparation}', `separation_date`='{$separationDate}', `separation_cause`='{$separationCause}' WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'from_date' => $from_date,
+        'to_date' => $to_date,
+        'is_present' => $is_present,
+        'designation' => $designation,
+        'position_id' => $position_id,
+        'appointment_status' => $appointment_status,
+        'is_government_service' => $is_government_service,
+        'salary_grade' => $salary_grade,
+        'monthly_salary' => $monthly_salary,
+        'agency_company' => $agency_company,
+        'leave_wo_pay' => $leave_wo_pay,
+        'for_separation' => $for_separation,
+        'separation_date' => $separation_date,
+        'separation_cause' => $separation_cause
+    ];
+    return update('service_records', $data, '`person_id` = ? AND `id` = ?', [$person_id, $service_record_id]);
 }
 
-function deleteExperience($id, $no)
+function deleteExperience($person_id, $service_record_id)
 {
-    nonQuery("DELETE FROM work_experience WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('service_records', '`person_id` = ? AND `id` = ?', [$person_id, $service_record_id]);
 }
 
-function deleteExperiences($id)
+function deleteExperiences($person_id)
 {
-    nonQuery("DELETE FROM work_experience WHERE Emp_ID='{$id}';");
+    return delete('service_records', '`person_id` = ?', [$person_id]);
 }
 
 function governmentService($id)
 {
-    return query("SELECT `No` AS `no`, `From` AS `from`, `To` AS `to`, `ispresent`, `position_code` AS `position`, `organization_alias` AS `station`, `Salary_Grade` AS `sg`, `Monthly_Salary` AS `salary`, `Job_Status` AS `status`, `Goverment` AS `isgovernment`, `leave_dates`, `isseparation`, `separation_date`, `separation_cause`, `Emp_ID` AS `id` FROM `work_experience` WHERE `Emp_ID`='{$id}' AND `Goverment`='Y' ORDER BY `From` DESC;");
+    $sql = "SELECT * FROM `service_records` WHERE `person_id` = ? AND `is_government_service` = '1' ORDER BY `from_date` DESC";
+    return query($sql, [$id]);
 }
