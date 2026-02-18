@@ -1,32 +1,58 @@
 <?php
-// includes/database/education.php
-// educational_background
-function educationalBackgrounds($id)
+// educational_backgrounds
+function educationalBackgrounds($person_id)
 {
-    return query("SELECT `No` AS `no`, `Level` AS `level`, Name_of_School AS school, Course AS course, `From` AS `from`, `To` AS `to`, ispresent, Highest_Level AS highest, Year_Graduated AS year_graduated, Honor_Recieved AS scholarship, Emp_ID AS id FROM educational_background WHERE Emp_ID='{$id}' ORDER BY `From` ASC, `To` ASC;");
+    $sql = "SELECT * FROM `educational_backgrounds` WHERE `person_id` = ? ORDER BY `from_year` ASC, `to_year` ASC";
+    $results = query($sql, [$person_id]);
+    return is_array($results) ? $results : [];
 }
 
-function educationalBackground($id, $no)
+function educationalBackground($person_id, $educationl_background_id)
 {
-    return query("SELECT `No` AS `no`, `Level` AS `level`, Name_of_School AS school, Course AS course, `From` AS `from`, `To` AS `to`, ispresent, Highest_Level AS highest, Year_Graduated AS year_graduated, Honor_Recieved AS scholarship, Emp_ID AS id FROM educational_background WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $sql = "SELECT * FROM `educational_backgrounds` WHERE `person_id` = ? AND `id` = ? LIMIT 1";
+    return find($sql, [$person_id, $educationl_background_id]);
 }
 
-function createEducation($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $id)
+function createEducation($level, $school, $course, $from_year, $to_year, $is_present, $highest_level, $year_graduated, $honors_received, $person_id)
 {
-    nonQuery("INSERT INTO educational_background (`Level`, `Name_of_School`, `Course`, `From`, `To`, `ispresent`, Highest_Level, Year_Graduated, Honor_Recieved, Emp_ID) VALUES ('{$level}', '{$school}', '{$course}', '{$from}', '{$to}', '{$ispresent}', '{$highest}', '{$year}', '{$scholarship}', '{$id}');");
+    $data = [
+        'level' => $level,
+        'school' => $school,
+        'course' => $course,
+        'from_year' => $from_year,
+        'to_year' => $to_year,
+        'is_present' => $is_present,
+        'highest_level' => $highest_level,
+        'year_graduated' => $year_graduated,
+        'honors_received' => $honors_received,
+        'person_id' => $person_id
+    ];
+
+    return insert('educational_backgrounds', $data);
 }
 
-function updateEducation($level, $school, $course, $from, $to, $ispresent, $highest, $year, $scholarship, $id, $no)
+function updateEducation($level, $school, $course, $from_year, $to_year, $is_present, $highest_level, $year_graduated, $honors_received, $person_id, $educational_background_id)
 {
-    nonQuery("UPDATE educational_background SET `Level`='{$level}', Name_of_School='{$school}', Course='{$course}', `From`='{$from}', `To`='{$to}', `ispresent`='{$ispresent}', Highest_Level='{$highest}', Year_Graduated='{$year}', Honor_Recieved='{$scholarship}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'level' => $level,
+        'school' => $school,
+        'course' => $course,
+        'from_year' => $from_year,
+        'to_year' => $to_year,
+        'is_present' => $is_present,
+        'highest_level' => $highest_level,
+        'year_graduated' => $year_graduated,
+        'honors_received' => $honors_received
+    ];
+    return update('educational_backgrounds', $data, "`person_id` = ? AND `id` = ?", [$person_id, $educational_background_id]);
 }
 
-function deleteEducation($id, $no)
+function deleteEducation($person_id, $educational_background_id)
 {
-    nonQuery("DELETE FROM educational_background WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('educational_backgrounds', "`person_id` = ? AND `id` = ?", [$person_id, $educational_background_id]);
 }
 
-function deleteEducations($id)
+function deleteEducations($person_id)
 {
-    nonQuery("DELETE FROM educational_background WHERE Emp_ID='{$id}';");
+    return delete('educational_backgrounds', "`person_id` = ?", [$person_id]);
 }
