@@ -1,31 +1,49 @@
 <?php
-// tbl_201_file
-function fileAttachments($id)
+// 201_files
+function fileAttachments($person_id)
 {
-    return query("SELECT `No` AS `no`, `DateUpload` AS `datetime`, `description`, `filename`, `ext` FROM tbl_201_file WHERE `Emp_ID`='{$id}' ORDER BY `datetime` DESC;");
+    $results = query(
+        "SELECT * FROM `201_files` WHERE `person_id` = ? ORDER BY `created_at` DESC",
+        [$person_id]
+    );
+    return is_array($results) ? $results : [];
 }
 
-function fileAttachment($id, $no)
+function fileAttachment($person_id, $file_attachment_id)
 {
-    return query("SELECT `No` AS `no`, `DateUpload` AS `datetime`, `description`, `filename`, `ext` FROM tbl_201_file WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return find(
+        "SELECT * FROM `201_files` WHERE `person_id` = ? AND `id` = ? LIMIT 1",
+        [$person_id, $file_attachment_id]
+    );
 }
 
-function createFileAttachment($description, $filename, $ext, $id)
+function createFileAttachment($description, $file_name, $file_extension, $person_id)
 {
-    nonQuery("INSERT INTO tbl_201_file (`DateUpload`, `description`, `filename`, `ext`, `Emp_ID`) VALUES (NOW(), '{$description}', '{$filename}', '{$ext}', '{$id}');");
+    $data = [
+        `person_id` => $person_id,
+        'description' => $description,
+        'file_name' => $file_name,
+        'file_extension' => $file_extension
+    ];
+    return insert('201_files', $data);
 }
 
-function updateFileAttachment($description, $filename, $ext, $id, $no)
+function updateFileAttachment($description, $file_name, $file_extension, $person_id, $file_attachment_id)
 {
-    nonQuery("UPDATE tbl_201_file SET `DateUpload`=NOW(), `description`='{$description}', `filename`='{$filename}', `ext`='{$ext}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'description' => $description,
+        'file_name' => $file_name,
+        'file_extension' => $file_extension
+    ];
+    return update('201_files', $data, '`person_id` = ? AND `id` = ?', [$person_id, $file_attachment_id]);
 }
 
-function deleteFileAttachment($id, $no)
+function deleteFileAttachment($person_id, $file_attachment_id)
 {
-    nonQuery("DELETE FROM tbl_201_file WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('201_files', '`person_id` = ? AND `id` = ?', [$person_id, $file_attachment_id]);
 }
 
-function deleteFileAttachments($id)
+function deleteFileAttachments($person_id)
 {
-    nonQuery("DELETE FROM tbl_201_file WHERE Emp_ID='{$id}';");
+    return delete('201_files', '`person_id` = ?', [$person_id]);
 }
