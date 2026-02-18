@@ -1,5 +1,6 @@
 /.well-known/
 /aspnet_client/
+/calendar/
 /infowarden/
 /keys/
 /temp/
