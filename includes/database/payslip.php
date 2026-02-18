@@ -1,31 +1,43 @@
 <?php
 // payslips
-function payslips($employeeId)
+function payslips($person_id)
 {
-    return query("SELECT `id`, `employee_id`, `description`, `filename`, `ext`, `created_at`, `updated_at`, `created_by`, `updated_by` FROM `payslips` WHERE `employee_id`='{$employeeId}' ORDER BY `updated_at` DESC;");
+    $results = query("SELECT * FROM `payslips` WHERE `person_id` = ? ORDER BY `updated_at` DESC", [$person_id]);
+    return is_array($results) ? $results : [];
 }
 
-function payslip($employeeId, $id)
+function payslip($person_id, $payslip_id)
 {
-    return query("SELECT `id`, `employee_id`, `description`, `filename`, `ext`, `created_at`, `updated_at`, `created_by`, `updated_by` FROM `payslips` WHERE `employee_id`='{$employeeId}' AND `id`='{$id}' LIMIT 1;");
+    return find("SELECT * FROM `payslips` WHERE `person_id` = ? AND `id` = ? LIMIT 1", [$person_id, $payslip_id]);
 }
 
-function createPayslip($description, $filename, $ext, $employeeId)
+function createPayslip($description, $file_name, $file_extension, $person_id)
 {
-    nonQuery("INSERT INTO `payslips` (`employee_id`, `description`, `filename`, `ext`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES ('{$employeeId}', '{$description}', '{$filename}', '{$ext}', NOW(), NOW(), '{$employeeId}', '{$employeeId}');");
+    $data = [
+        'person_id' => $person_id,
+        'description' => $description,
+        'file_name' => $file_name,
+        'file_extension' => $file_extension
+    ];
+    return insert('payslips', $data);
 }
 
-function updatePayslip($description, $filename, $ext, $employeeId, $id)
+function updatePayslip($description, $file_name, $file_extension, $person_id, $payslip_id)
 {
-    nonQuery("UPDATE `payslips` SET `description`='{$description}', `filename`='{$filename}', `ext`='{$ext}', `updated_at`=NOW(), `updated_by`='{$employeeId}' WHERE `employee_id`='{$employeeId}' AND `id`='{$id}' LIMIT 1;");
+    $data = [
+        'description' => $description,
+        'file_name' => $file_name,
+        'file_extension' => $file_extension
+    ];
+    return update('payslips', $data, '`person_id` = ? AND `id` = ?', [$person_id, $payslip_id]);
 }
 
-function deletePayslip($employeeId, $id)
+function deletePayslip($person_id, $payslip_id)
 {
-    nonQuery("DELETE FROM `payslips` WHERE `employee_id`='{$employeeId}' AND `id`='{$id}' LIMIT 1;");
+    return delete('payslips', '`person_id` = ? AND `id` = ?', [$person_id, $payslip_id]);
 }
 
-function deletePayslips($employeeId)
+function deletePayslips($person_id)
 {
-    nonQuery("DELETE FROM `payslips` WHERE `employee_id`='{$employeeId}'");
+    return delete('payslips', '`person_id` = ?', [$person_id]);
 }
