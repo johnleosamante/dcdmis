@@ -1,24 +1,35 @@
 <?php
-// includes/database/position.php
-// tbl_job
-// tbl_station
-function position($id)
+// station_assignments, positions, schools
+function position($person_id)
 {
-    return query("SELECT tbl_station.Emp_ID AS `user`, tbl_station.Emp_DOA AS `date`, tbl_station.Emp_Position AS position_id, tbl_job.Job_description AS `position`, tbl_station.Emp_Station AS station_id, tbl_school.SchoolName AS station FROM (`tbl_station` INNER JOIN tbl_job ON tbl_job.Job_code = tbl_station.Emp_Position) INNER JOIN `tbl_school` ON tbl_station.Emp_Station=tbl_school.SchoolID WHERE tbl_station.Emp_ID='{$id}' ORDER BY `position` DESC LIMIT 1;");
+    $sql = "SELECT `sa`.`person_id`, `sa`.`assignment_date`, `sa`.`position_id`, 
+                `p`.`official_title`, `sa`.`station_id`, `s`.`name` AS `station`
+            FROM `station_assignments` AS `sa` 
+            INNER JOIN `positions` AS `p` ON `p`.`id` = `sa`.`position_id` 
+            INNER JOIN `schools` AS `s` ON `sa`.`station_id` = `s`.`id` 
+            WHERE `sa`.`person_id` = ? 
+            ORDER BY `sa`.`assignment_date` DESC LIMIT 1";
+    return find($sql, [$person_id]);
 }
 
-function positions($id = null)
+// positions
+function positions($position_id = null)
 {
-    $filter = $id === null ? '' : "WHERE Job_code='{$id}'";
-    return query("SELECT Job_code AS id, Job_description AS position, Job_Category AS category, Salary_Grade AS salary_grade FROM tbl_job {$filter} ORDER BY Job_description ASC;");
+    if ($position_id !== null) {
+        $sql = "SELECT * FROM `positions` WHERE id = ? LIMIT 1";
+        return find($sql, [$position_id]);
+    }
+    $sql = "SELECT * FROM `positions` ORDER BY `official_title` ASC";
+    return query($sql);
 }
 
 function positionCategories()
 {
-    return query("SELECT Job_Category AS `category` FROM tbl_job GROUP BY Job_Category ORDER BY Job_Category;");
+    return query("SELECT category FROM `positions` GROUP BY category ORDER BY category ASC");
 }
 
 function positionsByCategory($category)
 {
-    return query("SELECT Job_code AS id, Job_description AS position, Job_Category AS category FROM tbl_job WHERE Job_Category='{$category}' ORDER BY salary_grade DESC, Job_description ASC;");
+    $sql = "SELECT * FROM `positions` WHERE category = ? ORDER BY salary_grade DESC, `official_title` ASC";
+    return query($sql, [$category]);
 }
