@@ -1,32 +1,53 @@
 <?php
-// includes/database/eligibility.php
-// civil_service
-function eligibilities($id)
+// eligibilities
+function eligibilities($person_id)
 {
-    return query("SELECT `No` AS `no`, Carrer_Service AS eligibility, Rating AS rating, Date_of_Examination AS `date`, Place_of_Examination AS `place`, Number_of_Hour AS `license`, isapplicabledate AS isapplicable, Date_of_Validity AS `validity`, Emp_ID AS `id` FROM civil_service WHERE Emp_ID='{$id}' ORDER BY Date_of_Examination ASC;");
+    $sql = "SELECT * FROM `eligibilities`  WHERE `person_id` = ? ORDER BY `examination_date` ASC";
+    $results = query($sql, [$person_id]);
+    return is_array($results) ? $results : [];
 }
 
-function eligibility($id, $no)
+function eligibility($person_id, $eligibility_id)
 {
-    return query("SELECT `No` AS `no`, Carrer_Service AS eligibility, Rating AS rating, Date_of_Examination AS `date`, Place_of_Examination AS `place`, Number_of_Hour AS `license`, isapplicabledate AS isapplicable, Date_of_Validity AS `validity`, Emp_ID AS `id` FROM civil_service WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $sql = "SELECT * FROM `eligibilities` WHERE `person_id` = ? AND `id` = ? LIMIT 1";
+    return find($sql, [$person_id, $eligibility_id]);
 }
 
-function createEligibility($career, $rating, $examDate, $examPlace, $license, $is_applicable, $validity, $id)
+function createEligibility($title, $rating, $examination_date, $examination_venue, $license_number, $has_expiration, $expiration_date, $person_id)
 {
-    nonQuery("INSERT INTO civil_service (`Carrer_Service`, `Rating`, `Date_of_Examination`, `Place_of_Examination`, `Number_of_Hour`, `isapplicabledate`, `Date_of_Validity`, `Emp_ID`) VALUES ('{$career}', '{$rating}', '{$examDate}', '{$examPlace}', '{$license}', '{$is_applicable}', '{$validity}', '{$id}');");
+    $data = [
+        'title' => $title,
+        'rating' => $rating,
+        'examination_date' => $examination_date,
+        'examination_venue' => $examination_venue,
+        'license_number' => $license_number,
+        'has_expiration' => $has_expiration,
+        'expiration_date' => $expiration_date,
+        'person_id' => $person_id
+    ];
+    return insert('eligibilities', $data);
 }
 
-function updateEligibility($career, $rating, $examDate, $examPlace, $license, $is_applicable, $validity, $id, $no)
+function updateEligibility($title, $rating, $examination_date, $examination_venue, $license_number, $has_expiration, $expiration_date, $person_id, $eligibility_id)
 {
-    nonQuery("UPDATE civil_service SET `Carrer_Service`='{$career}', `Rating`='{$rating}', `Date_of_Examination`='{$examDate}', `Place_of_Examination`='{$examPlace}', `Number_of_Hour`='{$license}', `isapplicabledate`='{$is_applicable}', `Date_of_Validity`='{$validity}' WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'title' => $title,
+        'rating' => $rating,
+        'examination_date' => $examination_date,
+        'examination_venue' => $examination_venue,
+        'license_numnber' => $license_number,
+        'has_expiration' => $has_expiration,
+        'expiration_date' => $expiration_date
+    ];
+    return update('eligibilities', $data, "`person_id` = ? AND `id` = ?", [$person_id, $eligibility_id]);
 }
 
-function deleteEligibility($id, $no)
+function deleteEligibility($person_id, $eligibility_id)
 {
-    nonQuery("DELETE FROM civil_service WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('eligibilities', "`person_id` = ? AND `id` = ?", [$person_id, $eligibility_id]);
 }
 
-function deleteEligibilities($id)
+function deleteEligibilities($person_id)
 {
-    nonQuery("DELETE FROM civil_service WHERE Emp_ID='{$id}';");
+    return delete('eligibilities', "`person_id` = ?", [$person_id]);
 }
