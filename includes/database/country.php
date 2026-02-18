@@ -1,23 +1,22 @@
 <?php
-// includes/database/country.php
-// tbl_country
-// tbl_nationality
+// countries
 function countries()
 {
-    return query("SELECT id, country AS `name` FROM tbl_country ORDER BY country;");
+    return query("SELECT `id`, `name` FROM `countries` ORDER BY `name` ASC");
 }
 
-function country($id)
+function country($country_id)
 {
-    return query("SELECT id, country AS `name` FROM tbl_country WHERE id='{$id}';");
+    return find("SELECT `id`, `name` FROM `countries` WHERE `id` = ? LIMIT 1", [$country_id]);
 }
 
-function nationalities()
+// citizenships
+function citizenships()
 {
-    return query("SELECT id, nationality AS `name` FROM tbl_nationality ORDER BY nationality;");
+    return query("SELECT `id`, `country_id`, `name` FROM `citizenships` ORDER BY `name` ASC");
 }
 
-function nationality($id)
+function citizenship($citizenship_id)
 {
-    return query("SELECT id, nationality AS `name` FROM tbl_nationality WHERE id='{$id}';");
+    return find("SELECT `id`, `country_id`, `name` FROM `citizenships` WHERE `id` = ? LIMIT 1", [$citizenship_id]);
 }
