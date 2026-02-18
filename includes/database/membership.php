@@ -1,32 +1,41 @@
 <?php
-// includes/database/membership.php
-// tbl_membership
-function memberships($id)
+// memberships
+function memberships($person_id)
 {
-    return query("SELECT `No` AS `no`, Organization AS `organization`, Emp_ID AS id FROM tbl_membership WHERE Emp_ID='{$id}' ORDER BY Organization;");
+    $results = query("SELECT * FROM `memberships` WHERE `person_id` = ? ORDER BY `organization` ASC", [$person_id]);
+    return is_array($results) ? $results : [];
 }
 
-function membership($id, $no)
+function membership($person_id, $membership_id)
 {
-    return query("SELECT `No` AS `no`, Organization AS `organization`, Emp_ID AS id FROM tbl_membership WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return find("SELECT * FROM `memberships` WHERE `person_id` = ? AND `id` = ? LIMIT 1", [$person_id, $membership_id]);
 }
 
-function createMembership($membership, $id)
+function createMembership($organization, $person_id)
 {
-    nonQuery("INSERT INTO tbl_membership (`Organization`, `Emp_ID`) VALUES ('{$membership}', '{$id}');");
+    $data = [
+        'organization' => $organization,
+        'person_id' => $person_id
+    ];
+
+    return insert('memberships', $data);
 }
 
-function updateMembership($membership, $id, $no)
+function updateMembership($organization, $person_id, $membership_id)
 {
-    nonQuery("UPDATE tbl_membership SET Organization='{$membership}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'organization' => $organization
+    ];
+
+    return update('memberships', $data, '`person_id` = ? AND `id` = ?', [$person_id, $membership_id]);
 }
 
-function deleteMembership($id, $no)
+function deleteMembership($person_id, $membership_id)
 {
-    nonQuery("DELETE FROM tbl_membership WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('memberships', '`person_id` = ? AND `id` = ?', [$person_id, $membership_id]);
 }
 
-function deleteMemberships($id)
+function deleteMemberships($person_id)
 {
-    nonQuery("DELETE FROM tbl_membership WHERE Emp_ID='{$id}';");
+    return delete('memberships', '`person_id` = ?', [$person_id]);
 }
