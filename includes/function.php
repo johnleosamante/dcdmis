@@ -2,9 +2,10 @@
 // include/function.php
 require_once('config.php');
 
-$onError = function ($level, $message, $file, $line) {
-    throw new ErrorException($message, 0, $level, $file, $line);
-};
+function dd($value)
+{
+    die(var_dump($value));
+}
 
 function hashPassword($string)
 {
