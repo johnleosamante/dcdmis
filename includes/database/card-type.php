@@ -1,28 +1,49 @@
 <?php
-// includes/database/card-type.php
-// tbl_card_type
-// tbl_valid_id
+// card_types
 function cardTypes()
 {
-	return query("SELECT `id`, `card` AS `name` FROM tbl_card_type ORDER BY `card`;");
+	return query("SELECT `id`, `name` FROM `card_types` ORDER BY `name` ASC");
 }
 
-function cardType($id)
+function cardType($card_type_id)
 {
-	return query("SELECT `card` AS `name` FROM tbl_card_type WHERE `id`='{$id}' LIMIT 1;");
+	return find("SELECT `name` FROM `card_types` WHERE `id` = ? LIMIT 1", [$card_type_id]);
 }
 
-function employeeIdentification($id)
+// valid_ids
+function employeeIdentification($person_id)
 {
-	return query("SELECT `Government` AS `card`, `ID_Number` AS `number`, `Place_issued` AS `place`, `Date_issued` AS `date`, `Emp_ID` AS `id` FROM tbl_valid_id WHERE Emp_ID='{$id}';");
+	return find(
+		"SELECT `card_type_id`, `id_number`, `place_issued`, `date_issued` 
+        FROM `valid_ids` 
+        WHERE `person_id` = ? LIMIT 1",
+		[$person_id]
+	);
 }
 
-function createIdentification($card, $no, $place, $date, $id)
+function createIdentification($card_type_id, $id_number, $place_issued, $date_issued, $person_id)
 {
-	nonQuery("INSERT INTO tbl_valid_id (`Government`, `ID_Number`, `Place_issued`, `Date_issued`, `Emp_ID`) VALUES ('{$card}', '{$no}', '{$place}', '{$date}', '{$id}');");
+	$data = [
+		'card_type_id' => $card_type_id,
+		'id_number' => $id_number,
+		'place_issued' => $place_issued,
+		'date_issued' => $date_issued,
+		'person_ID' => $person_id
+	];
+	return insert('valid_ids', $data);
 }
 
-function updateIdentification($card, $no, $place, $date, $id)
+function updateIdentification($card_type_id, $id_number, $place_issued, $date_issued, $person_id)
 {
-	nonQuery("UPDATE tbl_valid_id SET `Government`='{$card}', `ID_Number`='{$no}', `Place_issued`='{$place}', `Date_issued`='{$date}' WHERE `Emp_ID`='{$id}';");
+	$data = [
+		'id_number' => $id_number,
+		'place_issued' => $place_issued,
+		'date_issued' => $date_issued
+	];
+	return update(
+		'valid_ids',
+		$data,
+		"`person_id` = ? AND `card_type_id` = ?",
+		[$person_id, $card_type_id]
+	);
 }
