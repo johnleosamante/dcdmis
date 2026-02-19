@@ -1,32 +1,36 @@
 <?php
-// includes/database/special-skill.php
-// tbl_special_skills
-function specialSkills($id)
+// skills
+function specialSkills($person_id)
 {
-    return query("SELECT `No` AS `no`, Special_Skills AS skill, Emp_ID AS id FROM tbl_special_skills WHERE Emp_ID='{$id}' ORDER BY Special_Skills;");
+    $results = query("SELECT * FROM `skills` WHERE `person_id` = ? ORDER BY `name` ASC", [$person_id]);
+    return is_array($results) ? $results : [];
 }
 
-function specialSkill($id, $no)
+function specialSkill($person_id, $skill_id)
 {
-    return query("SELECT `No` AS `no`, Special_Skills AS skill, Emp_ID AS id FROM tbl_special_skills WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return find("SELECT * FROM `skills` WHERE `person_id` = ? AND `id` = ? LIMIT 1", [$person_id, $skill_id]);
 }
 
-function createSpecialSkill($skill, $id)
+function createSpecialSkill($name, $person_id)
 {
-    nonQuery("INSERT INTO tbl_special_skills (`Special_Skills`, Emp_ID) VALUES ('{$skill}', '{$id}');");
+    $data = [
+        'name' => $name,
+        'person_id' => $person_id
+    ];
+    return insert('skills', $data);
 }
 
-function updateSpecialSkill($skill, $id, $no)
+function updateSpecialSkill($name, $person_id, $no)
 {
-    nonQuery("UPDATE tbl_special_skills SET Special_Skills='{$skill}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return update('skills', ['name' => $name], '`person_id` = ? AND `id` = ?', [$person_id, $no]);
 }
 
-function deleteSpecialSkill($id, $no)
+function deleteSpecialSkill($person_id, $skill_id)
 {
-    nonQuery("DELETE FROM tbl_special_skills WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('skills', '`person_id` = ? AND `id` = ?', [$person_id, $skill_id]);
 }
 
-function deleteSpecialSkills($id)
+function deleteSpecialSkills($person_id)
 {
-    nonQuery("DELETE FROM tbl_special_skills WHERE Emp_ID='{$id}';");
+    return delete('skills', '`person_id` = ?', [$person_id]);
 }
