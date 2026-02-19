@@ -18,13 +18,11 @@ if (isset($_POST['update-identification'])) {
     $date = sanitize($_POST['card-date']);
     $showAlert = true;
 
-    if (numRows(employeeIdentification($userId)) === 0) {
-        createIdentification($card, $number, $place, $date, $userId);
-    } else {
+    $identication = !employeeIdentification($userId) ?
+        createIdentification($card, $number, $place, $date, $userId) :
         updateIdentification($card, $number, $place, $date, $userId);
-    }
 
-    if (affectedRows()) {
+    if ($identication) {
         $message = 'Government issued ID has been updated successfully.';
         createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
     } else {
@@ -65,7 +63,7 @@ if (isset($_POST['save-payslip'])) {
             unlink(root() . '/' . $filename);
         }
 
-        $filename = 'uploads/payslip/' . $employeeId . '/' . $employeeId . '-' . date('YmdHis') . '.' . $ext;
+        $filename = "uploads/payslip/{$employeeId}/{$employeeId}-" . date('YmdHis') . ".{$ext}";
 
         move_uploaded_file($temp, '../' . $filename);
     }
@@ -78,19 +76,19 @@ if (isset($_POST['save-payslip'])) {
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    if (numRows(payslip($employeeId, $payslipId)) === 0) {
-        createPayslip($description, $filename, $ext, $employeeId);
+    if (!payslip($employeeId, $payslipId)) {
+        $payslip = createPayslip($description, $filename, $ext, $employeeId);
 
         $logMessage = 'Added payslip';
         $message = 'Payslip has been added successfully.';
     } else {
-        updatePayslip($description, $filename, $ext, $employeeId, $payslipId);
+        $payslip = updatePayslip($description, $filename, $ext, $employeeId, $payslipId);
 
         $logMessage = 'Updated payslip';
         $message = 'Payslip has been updated successfully.';
     }
 
-    if (!affectedRows()) {
+    if (!$payslip) {
         $message = 'No changes have been made to payslip.';
         return;
     }
@@ -105,15 +103,15 @@ if (isset($_POST['delete-payslip'])) {
     $payslipId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $showAlert = true;
     $filename = null;
-    $files = payslip($employeeId, $payslipId);
+    $file = payslip($employeeId, $payslipId);
+    $payslip = [];
 
-    if (numRows($files) > 0) {
-        $file = fetchAssoc($files);
+    if ($file) {
         $filename = $file['filename'];
-        deletePayslip($employeeId, $payslipId);
+        $payslip = deletePayslip($employeeId, $payslipId);
     }
 
-    if (affectedRows()) {
+    if ($payslip) {
         createSystemLog($stationId, $userId, 'Deleted employee payslip', $employeeId, clientIp());
         unlink(root() . '/' . $filename);
         $message = 'Payslip has been deleted successfully.';
