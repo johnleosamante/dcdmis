@@ -7,13 +7,12 @@ require_once(root() . '/includes/database/school.php');
 require_once(root() . '/includes/layout/components.php');
 
 $schoolId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$schools = schoolDetailsById($schoolId);
-$school = $schoolName = $address = $category = $districtCode = $alias = $telephone = $email = $website = $facebook = $logo = null;
+$school = schoolById($schoolId);
+$schoolName = $address = $category = $districtCode = $alias = $telephone = $email = $website = $facebook = $logo = null;
 $modalTitle = 'Add School';
 $notFound = true;
 
-if (numRows($schools) > 0) {
-    $school = fetchAssoc($schools);
+if ($school) {
     $schoolName = $school['name'];
     $address = $school['address'];
     $category = $school['category'];
@@ -38,26 +37,30 @@ if (numRows($schools) > 0) {
                     <div class="col-6">
                         <div class="form-group">
                             <label for="school-id" class="mb-0">School ID <?php showAsterisk() ?></label>
-                            <input type="text" id="school-id" name="school-id" class="form-control" value="<?= $schoolId ?>" required>
+                            <input type="text" id="school-id" name="school-id" class="form-control"
+                                value="<?= $schoolId ?>" required>
                         </div>
                     </div>
 
                     <div class="col-6">
                         <div class="form-group">
                             <label for="alias" class="mb-0">Alias <?php showAsterisk() ?></label>
-                            <input type="text" id="alias" name="alias" class="form-control" value="<?= $alias ?>" required>
+                            <input type="text" id="alias" name="alias" class="form-control" value="<?= $alias ?>"
+                                required>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="school-name" class="mb-0">Name <?php showAsterisk() ?></label>
-                    <input type="text" id="school-name" name="school-name" class="form-control" value="<?= $schoolName ?>" required>
+                    <input type="text" id="school-name" name="school-name" class="form-control"
+                        value="<?= $schoolName ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="address" class="mb-0">Address <?php showAsterisk() ?></label>
-                    <input type="text" id="address" name="address" class="form-control" value="<?= $address ?>" required>
+                    <input type="text" id="address" name="address" class="form-control" value="<?= $address ?>"
+                        required>
                 </div>
 
                 <div class="row">
@@ -67,9 +70,9 @@ if (numRows($schools) > 0) {
                             <select id="district" name="district" class="form-control" required>
                                 <option value="">Select district...</option>
                                 <?php $districts = districts();
-                                while ($district = fetchAssoc($districts)) : ?>
+                                foreach ($districts as $district): ?>
                                     <option value="<?= $district['id'] ?>" <?= setOptionSelected($district['id'], $districtCode) ?>><?= $district['name'] ?></option>
-                                <?php endwhile ?>
+                                <?php endforeach ?>
                             </select>
                         </div>
                     </div>
@@ -79,9 +82,12 @@ if (numRows($schools) > 0) {
                             <label for="category" class="mb-0">Category <?php showAsterisk() ?></label>
                             <select id="category" name="category" class="form-control" required>
                                 <option value="">Select category...</option>
-                                <option value="Elementary" <?= setOptionSelected('Elementary', $category) ?>>Elementary</option>
-                                <option value="Secondary" <?= setOptionSelected('Secondary', $category) ?>>Secondary</option>
-                                <option value="Integrated" <?= setOptionSelected('Integrated', $category) ?>>Integrated</option>
+                                <option value="Elementary" <?= setOptionSelected('Elementary', $category) ?>>Elementary
+                                </option>
+                                <option value="Secondary" <?= setOptionSelected('Secondary', $category) ?>>Secondary
+                                </option>
+                                <option value="Integrated" <?= setOptionSelected('Integrated', $category) ?>>Integrated
+                                </option>
                                 <option value="Office" <?= setOptionSelected('Office', $category) ?>>Office</option>
                             </select>
                         </div>
