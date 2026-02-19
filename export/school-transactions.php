@@ -27,18 +27,18 @@ require_once(root() . '/includes/database/document.php');
         $i = 1;
 
         $schools = schoolsExcept(divisionID());
-        while ($school = fetchAssoc($schools)) :
-        ?>
+        foreach ($schools as $school):
+            ?>
             <tr>
                 <td><?= $i++ ?></td>
                 <td><?= strtoupper($school['name']) ?></td>
-                <td><?= strtoupper(fetchAssoc(district($school['district']))['name']) ?></td>
-                <td><?= number_format(numRows(incomingDocuments($school['alias']))) ?></td>
-                <td><?= number_format(numRows(pendingDocuments($school['alias']))) ?></td>
-                <td><?= number_format(numRows(outgoingDocuments($school['alias']))) ?></td>
-                <td><?= number_format(numRows(ongoingDocuments($school['alias']))) ?></td>
+                <td><?= strtoupper(district($school['district']))['name'] ?></td>
+                <td><?= number_format(count(incomingDocuments($school['alias']))) ?></td>
+                <td><?= number_format(count(pendingDocuments($school['alias']))) ?></td>
+                <td><?= number_format(count(outgoingDocuments($school['alias']))) ?></td>
+                <td><?= number_format(count(ongoingDocuments($school['alias']))) ?></td>
             </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
         <tr>
             <td colspan="7"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>
