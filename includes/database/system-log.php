@@ -1,23 +1,32 @@
 <?php
-// includes/database/system-log.php
-// tbl_employee
-// tbl_system_logs
-function userLog($id)
+// system_logs
+function userLog($person_id)
 {
-    return query("SELECT `Time_Log` AS `datetime`, `Status` AS `activity`, `target_id` AS `target`, `IPAddress` AS `ip` FROM tbl_system_logs WHERE Emp_ID='{$id}' ORDER BY `Time_Log` DESC;");
+    $sql = "SELECT * FROM `system_logs` WHERE `person_id` = ? ORDER BY `created_at` DESC";
+    return query($sql, [$person_id]);
 }
 
-function systemLogs($from, $to)
+function systemLogs($from_date, $to_date)
 {
-    return query("SELECT `Time_log` AS `datetime`, `Status` AS `activity`, `Emp_ID` AS `target`, `IPAddress` AS `ip` FROM tbl_system_logs WHERE `Status` NOT LIKE '%document%' AND `Time_Log` BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY)) ORDER BY `Time_Log` DESC;");
+    $sql = "SELECT * FROM `system_logs` WHERE `status` NOT LIKE '%document%' 
+            AND `created_at` BETWEEN ? AND DATE_ADD(?, INTERVAL 1 DAY) ORDER BY `created_at` DESC";
+    return query($sql, [$from_date, $to_date]);
 }
 
-function createSystemLog($stationId, $id, $status, $targetId, $ip)
+function createSystemLog($station_id, $person_id, $status, $target_id, $ip)
 {
-    nonQuery("INSERT INTO tbl_system_logs (`SchoolID`, `Emp_ID`, `Time_Log`, `Status`, `target_id`, `IPAddress`) VALUES ('{$stationId}', '{$id}', NOW(), '{$status}', '{$targetId}', '{$ip}');");
+    $data = [
+        'station_id' => $station_id,
+        'person_id' => $person_id,
+        'status' => $status,
+        'target_id' => $target_id,
+        'ip' => $ip,
+    ];
+    return insert('system_logs', $data);
 }
 
-function employeeEditHistory($id)
+function employeeEditHistory($target_id)
 {
-    return query("SELECT `Time_log` AS `datetime`, `Status` AS `activity`, `Emp_ID` AS `editor`, `IPAddress` AS `ip` FROM tbl_system_logs WHERE `target_id`='{$id}' AND `Status` NOT LIKE '%logged%' ORDER BY `Time_Log` DESC;");
+    $sql = "SELECT * FROM `system_logs` WHERE `target_id` = ? AND `Status` NOT LIKE '%logged%' ORDER BY `created_at` DESC";
+    return query($sql, [$target_id]);
 }
