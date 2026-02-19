@@ -11,7 +11,7 @@ $employees = employeeSearch($search);
 messageAlert($showAlert, $message, $success);
 $isHrmis = $activeApp === 'hrmis';
 
-if (numRows($employees) === 0) {
+if (!$employees) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
@@ -40,14 +40,15 @@ if (numRows($employees) === 0) {
 
                 <tbody>
                     <?php
-                    while ($row = fetchArray($employees)) :
-                        $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
-                    ?>
+                    foreach ($employees as $row):
+                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? uri() . '/' . $row['profile_picture'] : uri() . '/assets/img/user.png';
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
                                         <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
@@ -67,14 +68,20 @@ if (numRows($employees) === 0) {
                                 roundPill($status);
                                 ?>
                             </td>
-                            <td class="align-middle"><?= toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y') ?></td>
-                            <td class="align-middle"><?= getDateDifference($row['year'], $row['month'], $row['day']) ?></td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']) ?>
+                                <?= toDate($row['birth_month'] . '/' . $row['birth_day'] . '/' . $row['birth_year'], 'F j, Y') ?>
+                            </td>
+                            <td class="align-middle">
+
+
+                                <?= getDateDifference($row['birth_year'], $row['birth_month'], $row['birth_day']) ?>
+                            </td>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
+                            <td class="align-middle">
+                                <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']) ?>
                             </td>
                             <td class="align-middle text-capitalize">
-                                <?php if ($status !== 'duplicate') : ?>
+                                <?php if ($status !== 'duplicate'): ?>
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
@@ -86,9 +93,9 @@ if (numRows($employees) === 0) {
                                             modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel') ?>
                                             <div class="dropdown-divider"></div>
                                             <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History') ?>
-                                            <?php if ($status === 'active') : ?>
+                                            <?php if ($status === 'active'): ?>
                                                 <div class="dropdown-divider"></div>
-                                            <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                                                <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
                                                 modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
                                                 modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
                                             endif ?>
@@ -97,7 +104,7 @@ if (numRows($employees) === 0) {
                                 <?php endif ?>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
