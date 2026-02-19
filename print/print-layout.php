@@ -2,7 +2,7 @@
 // print/print-layout.php
 class PDF extends PDF_Code128
 {
-    function Header()
+    public function Header()
     {
         global $departmentSeal;
         global $logoSize;
@@ -34,14 +34,14 @@ class PDF extends PDF_Code128
         if ($isSchoolPortal) {
             $this->Ln(5);
             $this->Cell(0, 0, strtoupper($address), 0, 0, 'C');
-            $lineY = $lineY + 5;
+            $lineY += 5;
         }
 
         $this->Line($margin, $lineY, $width - $margin, $lineY);
         $this->Ln(15);
     }
 
-    function Footer()
+    public function Footer()
     {
         global $footerLogos;
         global $stationLogo;
