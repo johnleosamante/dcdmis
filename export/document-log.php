@@ -15,10 +15,7 @@ require_once('../includes/database/position.php');
 require_once('../includes/database/utility.php');
 
 $documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$documents = document($documentId);
-
-$document = fetchAssoc($documents);
-?>
+$document = document($documentId); ?>
 
 <table>
     <thead>
@@ -28,7 +25,7 @@ $document = fetchAssoc($documents);
         </tr>
         <tr>
             <th>Type</th>
-            <td colspan="5"><?= fetchArray(documentType($document['type']))['name'] ?></td>
+            <td colspan="5"><?= documentType($document['document_type_id'])['name'] ?></td>
         </tr>
         <tr>
             <th>Description</th>
@@ -36,11 +33,11 @@ $document = fetchAssoc($documents);
         </tr>
         <tr>
             <th>Created On</th>
-            <td colspan="5"><?= toDate($document['datetime'], 'F d, Y h:i:s A') ?></td>
+            <td colspan="5"><?= toDate($document['created_at'], 'F d, Y h:i:s A') ?></td>
         </tr>
         <tr>
             <th>From</th>
-            <td colspan="5"><?= stationName($document['from']) ?></td>
+            <td colspan="5"><?= stationName($document['created_from']) ?></td>
         </tr>
         <tr>
             <th>Status</th>
@@ -58,15 +55,15 @@ $document = fetchAssoc($documents);
     <tbody>
         <?php
         $logs = documentLogs($documentId);
-        while ($log = fetchAssoc($logs)) : ?>
+        foreach ($logs as $log): ?>
             <tr>
-                <td><?= date('M d, Y h:i:s A', strtotime($log['datetime'])) ?></td>
-                <td><?= stationName($log['from']) ?></td>
-                <td><?= userName($log['user']) ?></td>
-                <td><?= fetchAssoc(position($log['user']))['position'] ?></td>
+                <td><?= date('M d, Y h:i:s A', strtotime($log['created_at'])) ?></td>
+                <td><?= stationName($log['received_from']) ?></td>
+                <td><?= userName($log['processed_by']) ?></td>
+                <td><?= position($log['processed_by'])['official_title'] ?></td>
                 <td><?= $log['status'] ?></td>
                 <td><?= $log['details'] ?></td>
             </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
     </tbody>
 </table>
