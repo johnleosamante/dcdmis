@@ -401,17 +401,16 @@ function updateTransactionFrom($new_alias, $old_alias)
 function documentByStatus($status, $person_id, $station_id, $from_date = '', $to_date = '')
 {
     $station_filter = "{$station_id}%";
-
     if (empty($from_date)) {
         $from_date = date('Y-m-d');
     }
     if (empty($to_date)) {
         $to_date = $from_date;
     }
-    $sql = "SELECT * FROM `system_logs` WHERE `status` = ? AND `target_id` LIKE ? AND `person_id` = ? 
-                AND `created_at` >= ? AND `created_at` < DATE_ADD(?, INTERVAL 1 DAY)
-            ORDER BY `created_at` DESC";
-    return query($sql, [$status, $station_filter, $person_id, $from_date, $to_date]);
+    $sql = "SELECT COUNT(*) AS `count` FROM `system_logs` WHERE `status` = ? AND `target_id` 
+            LIKE ? AND `person_id` = ? AND `created_at` >= ? AND `created_at` < DATE_ADD(?, INTERVAL 1 DAY)";
+    $row = find($sql, [$status, $station_filter, $person_id, $from_date, $to_date]);
+    return $row ? (int) $row['count'] : 0;
 }
 
 function documentSearch($string, $station_id)
