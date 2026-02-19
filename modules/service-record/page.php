@@ -12,10 +12,9 @@ if ($isPis && $userId !== $employeeId) {
     return;
 }
 
-$employees = employee($employeeId);
+$employee = employee($employeeId);
 
-if (numRows($employees) > 0) {
-    $employee = fetchAssoc($employees);
+if ($employee) {
     $employeeId = $employee['id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -59,7 +58,8 @@ if ($isHrmis) {
         <?php } ?>
 
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%"
+                cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">From</th>
@@ -67,12 +67,13 @@ if ($isHrmis) {
                         <th class="align-middle" width="10%">Designation</th>
                         <th class="align-middle" width="10%">Employment Status</th>
                         <th class="align-middle" width="10%">Annual Salary</th>
-                        <th class="align-middle" width="15%">Office Entity/Division<br>Station/Place/Branch of Assignment</th>
+                        <th class="align-middle" width="15%">Office Entity/Division<br>Station/Place/Branch of
+                            Assignment</th>
                         <th class="align-middle" width="10%">Leave Without Pay</th>
                         <th class="align-middle" width="5%">Separation Date</th>
                         <th class="align-middle" width="5%">Separation Cause</th>
                         <th class="align-middle" width="5%">Remarks</th>
-                        <?php if ($isHrmis) : ?>
+                        <?php if ($isHrmis): ?>
                             <th class="align-middle" width="5%">Actions</th>
                         <?php endif ?>
                     </tr>
@@ -82,39 +83,42 @@ if ($isHrmis) {
                     <?php
                     $services = experiences($employeeId);
 
-                    while ($service = fetchAssoc($services)) : ?>
+                    foreach ($services as $service): ?>
                         <tr>
-                            <td class="align-middle"><?= toDate($service['from']) ?></td>
-                            <td class="align-middle"><?= $service['ispresent'] ? 'PRESENT' : toDate($service['to']) ?></td>
-                            <td class="align-middle"><?= toHandleNull($service['position_code'], 'N/A') ?></td>
-                            <td class="align-middle"><?= $service['status'] ?></td>
-                            <td class="align-middle"><?= !empty($service['salary']) ? toCurrency($service['salary'] * 12) : 'N/A' ?></td>
-                            <td class="align-middle"><?= toHandleNull($service['organization_alias'], 'N/A') ?></td>
-                            <td class="align-middle"><?= toHandleNull($service['leave_dates'], 'N/A') ?></td>
+                            <td class="align-middle"><?= toDate($service['from_date']) ?></td>
+                            <td class="align-middle"><?= $service['is_present'] ? 'PRESENT' : toDate($service['to_date']) ?>
+                            </td>
+                            <td class="align-middle"><?= toHandleNull($service['position_id'], 'N/A') ?></td>
+                            <td class="align-middle"><?= $service['appointment_status'] ?></td>
                             <td class="align-middle">
-                                <?= $service['isseparation'] === '1' ? toDate($service['separation_date']) : 'N/A' ?>
+                                <?= !empty($service['monthly_salary']) ? toCurrency($service['monthly_salary'] * 12) : 'N/A' ?>
+                            </td>
+                            <td class="align-middle"><?= toHandleNull($service['agency_company'], 'N/A') ?></td>
+                            <td class="align-middle"><?= toHandleNull($service['leave_wo_pay'], 'N/A') ?></td>
+                            <td class="align-middle">
+                                <?= $service['for_separation'] === '1' ? toDate($service['separation_date']) : 'N/A' ?>
                             </td>
                             <td class="align-middle">
-                                <?= $service['isseparation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A' ?>
+                                <?= $service['for_separation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A' ?>
                             </td>
                             <td class="align-middle">
-                                <?= toHandleNull($service['sg']) ?>
+                                <?php //TODO ?>
                             </td>
-                            <?php if ($isHrmis) : ?>
+                            <?php if ($isHrmis): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                            <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Edit', 'fa-edit', 'Edit Service Record');
-                                            modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Copy', 'fa-copy', 'Copy Service Record') ?>
+                                            <?php modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['id']), 'Edit', 'fa-edit', 'Edit Service Record');
+                                            modalDropdownItem(uri() . '/modules/service-record/save-service-record-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($service['id']), 'Copy', 'fa-copy', 'Copy Service Record') ?>
                                             <div class="dropdown-divider"></div>
-                                            <?php modalDropdownItem(uri() . '/modules/service-record/delete-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['no']), 'Delete', 'fa-trash', 'Delete Service Record') ?>
+                                            <?php modalDropdownItem(uri() . '/modules/service-record/delete-service-record-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($service['id']), 'Delete', 'fa-trash', 'Delete Service Record') ?>
                                         </div>
                                     </div>
                                 </td>
                             <?php endif ?>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
@@ -124,12 +128,13 @@ if ($isHrmis) {
                         <th class="align-middle" width="10%">Designation</th>
                         <th class="align-middle" width="10%">Employment Status</th>
                         <th class="align-middle" width="10%">Annual Salary</th>
-                        <th class="align-middle" width="15%">Office Entity/Division<br>Station/Place/Branch of Assignment</th>
+                        <th class="align-middle" width="15%">Office Entity/Division<br>Station/Place/Branch of
+                            Assignment</th>
                         <th class="align-middle" width="10%">Leave Without Pay</th>
                         <th class="align-middle" width="5%">Separation Date</th>
                         <th class="align-middle" width="5%">Separation Cause</th>
                         <th class="align-middle" width="5%">Remarks</th>
-                        <?php if ($isHrmis) : ?>
+                        <?php if ($isHrmis): ?>
                             <th class="align-middle" width="5%">Actions</th>
                         <?php endif ?>
                     </tr>
