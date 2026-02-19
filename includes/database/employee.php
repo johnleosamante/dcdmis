@@ -158,7 +158,7 @@ function employeeStation()
     $sql = "SELECT s.`name`, COUNT(p.`id`) AS `count` FROM `station_assignments` AS sa 
             INNER JOIN `schools` AS s ON sa.`station_id` = s.`id` 
             INNER JOIN `persons` AS p ON p.`id` = sa.`person_id` 
-            INNER JOIN `districts` AS s ON s.`district_id` = s.`id` 
+            INNER JOIN `districts` AS d ON s.`district_id` = d.`id` 
             WHERE p.`status` = 'Active' GROUP BY s.`id`, s.`name`, s.`name` 
             ORDER BY s.`name` ASC, s.`name` ASC";
     return query($sql);
@@ -167,22 +167,22 @@ function employeeStation()
 // station_assignments, positions, persons
 function employeePosition()
 {
-    $sql = "SELECT pos.`name`, COUNT(p.`id`) AS `count` FROM `station_assignments` AS sa 
+    $sql = "SELECT pos.`official_title` AS `name`, COUNT(p.`id`) AS `count` FROM `station_assignments` AS sa 
             INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id` 
             INNER JOIN `persons` AS p ON p.`id` = sa.`person_id` 
-            WHERE p.`status` = 'Active' GROUP BY pos.`id`, pos.`name`, pos.`salary_grade` 
-            ORDER BY pos.`salary_grade` DESC, pos.`name` ASC";
+            WHERE p.`status` = 'Active' GROUP BY pos.`id`, pos.`official_title`, pos.`salary_grade` 
+            ORDER BY pos.`salary_grade` DESC, pos.`official_title` ASC";
     return query($sql);
 }
 
 function districtEmployee()
 {
-    $sql = "SELECT s.`name`, COUNT(p.`id`) AS `count` 
+    $sql = "SELECT d.`name`, COUNT(p.`id`) AS `count` 
             FROM `station_assignments` AS sa 
             INNER JOIN `schools` AS s ON sa.`station_id` = s.`id` 
             INNER JOIN `persons` AS p ON p.`id` = sa.`person_id` 
-            INNER JOIN `districts` AS s ON s.`district_id` = s.`id` 
-            WHERE p.`status` = 'Active' GROUP BY s.`id`, s.`name` ORDER BY s.`name` ASC";
+            INNER JOIN `districts` AS d ON s.`district_id` = d.`id` 
+            WHERE p.`status` = 'Active' GROUP BY d.`id`, d.`name` ORDER BY d.`name` ASC";
     return query($sql);
 }
 
