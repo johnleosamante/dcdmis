@@ -2,19 +2,18 @@
 // login/app.php
 function setUserSession($userId)
 {
-    $users = user($userId);
+    $user = user($userId);
 
-    if (numRows($users) === 1) {
-        $user = fetchAssoc($users);
+    if ($user) {
         $stationId = $_SESSION[alias() . '_stationId'] = $user['station_id'];
-        $_SESSION[alias() . '_code'] = $user['code'];
-        $_SESSION[alias() . '_portal'] = $user['portal'];
+        $_SESSION[alias() . '_code'] = $user['access'];
+        $_SESSION[alias() . '_portal'] = $user['link'];
 
-        if ($user['portal'] !== 'sch_portal') {
-            $_SESSION[alias() . '_station'] = $user['code'];
+        if ($user['link'] !== 'sch_portal') {
+            $_SESSION[alias() . '_station'] = $user['access'];
         } else {
-            $school = schoolById($user['code']);
-            $_SESSION[alias() . '_station'] = numRows($school) ? fetchAssoc($school)['alias'] : '';
+            $school = schoolById($user['access']);
+            $_SESSION[alias() . '_station'] = $school ? $school['alias'] : '';
         }
 
         createSystemLog($stationId, $userId, 'Logged in', $userId, clientIp());
@@ -39,31 +38,30 @@ if (isset($_POST['login'])) {
         return;
     }
 
-    $accounts = account($email);
+    $account = account($email);
 
-    if (numRows($accounts) === 0) {
+    if (!$account) {
         $message = 'Invalid login details! Try again.';
         return;
     }
 
-    $account = fetchAssoc($accounts);
-    $passwords = accountPassword($account['id'], $password);
+    $password = accountPassword($account['id'], $password);
 
-    if (numRows($passwords) === 0) {
-        $message = 'Invalid login details! Try again.';
+    if (!$password) {
+        $message = 'Invalid login details! Try again.' . var_dump($password);
         return;
     }
 
     $userId = $_SESSION[alias() . '_userId'] = $account['id'];
-    $email = $_SESSION[alias() . '_email'] = $account['email'];
+    $email = $_SESSION[alias() . '_email'] = $account['email_address'];
 
-    if (isset($_POST['remember']) && $_POST['remember'] === true) {
+    if (isset($_POST['remember'])) {
         setcookie(alias() . '_login', $account['email'], time() + getSeconds(8), '/', uri(), false, true);
     }
 
     setUserSession($userId);
 
-    if (fetchAssoc($passwords)['status'] === 'Default') {
+    if ($password['status'] === 'Default') {
         $_SESSION[alias() . '_change_password'] = true;
         redirect(uri() . '/login/change');
         return;
