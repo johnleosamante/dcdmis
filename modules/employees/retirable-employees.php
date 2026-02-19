@@ -45,7 +45,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
                         <th class="align-middle" width="25%">Station</th>
-                        <?php if (!$isHrtdms && !$isHrmpsb) : ?>
+                        <?php if (!$isHrtdms && !$isHrmpsb): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>
                     </tr>
@@ -54,14 +54,15 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = retirableEmployees();
-                    while ($row = fetchArray($query)) :
-                        $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
-                    ?>
+                    foreach ($query as $row):
+                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? uri() . '/' . $row['profile_picture'] : uri() . '/assets/img/user.png';
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
                                         <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
@@ -74,15 +75,17 @@ messageAlert($showAlert, $message, $success);
                                     modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                                 } ?>
                             </td>
-                            <td class="align-middle"><?= toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y') ?></td>
                             <td class="align-middle">
-                                <?= getDateDifference($row['year'], $row['month'], $row['day']) ?>
+                                <?= toDate($row['birth_month'] . '/' . $row['birth_day'] . '/' . $row['birth_year'], 'F j, Y') ?>
                             </td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']) ?>
+                                <?= getDateDifference($row['birth_year'], $row['birth_month'], $row['birth_day']) ?>
                             </td>
-                            <?php if (!$isHrtdms && !$isHrmpsb) : ?>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
+                            <td class="align-middle">
+                                <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']) ?>
+                            </td>
+                            <?php if (!$isHrtdms && !$isHrmpsb): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
@@ -105,7 +108,7 @@ messageAlert($showAlert, $message, $success);
                                 </td>
                             <?php endif; ?>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
@@ -116,7 +119,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
                         <th class="align-middle" width="25%">Station</th>
-                        <?php if (!$isHrtdms && !$isHrmpsb) : ?>
+                        <?php if (!$isHrtdms && !$isHrmpsb): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>
                     </tr>
