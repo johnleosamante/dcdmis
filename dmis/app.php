@@ -7,7 +7,7 @@ if (!isset($userId)) {
 	redirect(uri() . '/login');
 }
 
-if (numRows(userRole($userId, 'dmis')) === 0) {
+if (userRole($userId, 'dmis')) {
 	redirect(uri() . '/pis');
 }
 
@@ -262,7 +262,7 @@ if (isset($_POST['edit-user'])) {
 		if (numRows(dtsUser($employeeId)) > 0) {
 			updateUserRole($employeeId, $dtsStation, $dtsPortal);
 		} else {
-			createUserRole($employeeId, $userRole, $dtsStation, $dtsPortal);
+			createUserRole($employeeId, $dtsStation, $dtsPortal);
 		}
 	} else {
 		deleteUserRole($employeeId, $dtsStation);
@@ -270,7 +270,7 @@ if (isset($_POST['edit-user'])) {
 
 	if ($isHrmisUser) {
 		if (!isStationUser($employeeId, 'HRMIS')) {
-			createUserRole($employeeId, $userRole, 'HRMIS');
+			createUserRole($employeeId, 'HRMIS');
 		}
 	} else {
 		deleteUserRole($employeeId, 'HRMIS');
@@ -278,7 +278,7 @@ if (isset($_POST['edit-user'])) {
 
 	if ($isDmisUser) {
 		if (!isStationUser($employeeId, 'DMIS')) {
-			createUserRole($employeeId, $userRole, 'DMIS');
+			createUserRole($employeeId, 'DMIS');
 		}
 	} else {
 		deleteUserRole($employeeId, 'DMIS');
@@ -286,7 +286,7 @@ if (isset($_POST['edit-user'])) {
 
 	if ($isHrtdmsUser) {
 		if (!isStationUser($employeeId, 'HRTDMS')) {
-			createUserRole($employeeId, $userRole, 'HRTDMS');
+			createUserRole($employeeId, 'HRTDMS');
 		}
 	} else {
 		deleteUserRole($employeeId, 'HRTDMS');
@@ -294,7 +294,7 @@ if (isset($_POST['edit-user'])) {
 
 	if ($isHrmpsbUser) {
 		if (!isStationUser($employeeId, 'HRMPSB')) {
-			createUserRole($employeeId, $userRole, 'HRMPSB');
+			createUserRole($employeeId, 'HRMPSB');
 		}
 	} else {
 		deleteUserRole($employeeId, 'HRMPSB');
@@ -322,7 +322,8 @@ if (isset($_POST['reset-user'])) {
 			'Your temporary password is: ' . $temporaryPassword . PHP_EOL . PHP_EOL .
 			'Please login to: ' . uri() . '/login to confirm.' . PHP_EOL . PHP_EOL .
 			'If you did not request this change please contact us for assistance. Thank you.' . PHP_EOL . PHP_EOL . PHP_EOL .
-			'***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****';;
+			'***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****';
+		;
 
 		if (sendMail($userEmail, 'Employee Password Reset', $emailMessage)) {
 			createSystemLog($stationId, $userId, 'Password reset code sent', $employeeId, clientIp());
