@@ -12,10 +12,9 @@ if ($isPis && $userId !== $employeeId) {
     return;
 }
 
-$employees = employee($employeeId);
+$employee = employee($employeeId);
 
-if (numRows($employees) > 0) {
-    $employee = fetchAssoc($employees);
+if ($employee) {
     $employeeId = $employee['id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -42,12 +41,13 @@ if (!is_dir($uploadDirectory)) {
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithModal('Payslip : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus') ?>
+        <?php contentTitleWithModal('Payslip : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus') ?>
     </div>
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%"
+                cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="25%">Uploaded on</th>
@@ -60,7 +60,7 @@ if (!is_dir($uploadDirectory)) {
                     <?php
                     $payslips = payslips($employeeId);
 
-                    while ($payslip = fetchAssoc($payslips)) : ?>
+                    foreach ($payslips as $payslip): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= toDateTime($payslip['updated_at']) ?></td>
                             <td class="align-middle text-left"><?= $payslip['description'] ?></td>
@@ -69,8 +69,8 @@ if (!is_dir($uploadDirectory)) {
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                                         <?php
-                                        previewLinkDropdownItem(uri() . '/' . $payslip['filename'], 'Preview', 'fa-eye', 'Preview ' . $payslip['description']);
-                                        downloadLinkDropdownItem(uri() . '/' . $payslip['filename'], 'Download', 'fa-download', 'Download ' . $payslip['description'], $payslip['description'] . '.' . $payslip['ext'], true);
+                                        previewLinkDropdownItem(uri() . '/' . $payslip['file_name'], 'Preview', 'fa-eye', 'Preview ' . $payslip['description']);
+                                        downloadLinkDropdownItem(uri() . '/' . $payslip['file_name'], 'Download', 'fa-download', 'Download ' . $payslip['description'], $payslip['description'] . '.' . $payslip['file_extension'], true);
                                         modalDropdownItem(uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Edit', 'fa-edit', 'Edit Payslip') ?>
                                         <div class="dropdown-divider"></div>
                                         <?php modalDropdownItem(uri() . '/modules/payslip/delete-payslip-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Delete', 'fa-trash', 'Delete Payslip');
@@ -79,7 +79,7 @@ if (!is_dir($uploadDirectory)) {
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
