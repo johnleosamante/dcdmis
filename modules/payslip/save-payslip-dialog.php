@@ -13,10 +13,9 @@ $modalTitle = 'Add Payslip';
 
 if (isset($payslipId)) {
     $modalTitle = 'Edit Payslip';
-    $payslips = payslip($employeeId, $payslipId);
+    $payslip = payslip($employeeId, $payslipId);
 
-    if (numRows($payslips) > 0) {
-        $payslip = fetchAssoc($payslips);
+    if ($payslip) {
         $payslipId = $payslip['id'];
         $description = $payslip['description'];
         $filename = $payslip['filename'];
@@ -31,21 +30,23 @@ if (isset($payslipId)) {
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="modal-body">
                 <div class="form-group">
-                    <input id="file-upload" name="file-upload" type="file" class="w-100">
+                    <input id="file-upload" name="file-upload" type="file" class="w-100"
+                        accept="application/pdf, image/png, image/jpeg">
                 </div>
 
                 <div class="form-group">
                     <label for="description" class="mb-0">Description <?php showAsterisk() ?></label>
-                    <textarea id="description" name="description" class="form-control" placeholder="Type description..." title="Type payslip description..." rows="3" required><?= $description ?></textarea>
+                    <textarea id="description" name="description" class="form-control" placeholder="Type description..."
+                        title="Type payslip description..." rows="3" required><?= $description ?></textarea>
                 </div>
 
                 <?php requiredLegend(0) ?>
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
+                <input type="hidden" name="verifier" value="<?= $_GET['e'] ?? null ?>">
                 <?php
-                $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+                $verifier = $_GET['id'] ?? null;
                 $filename = !isset($_GET['c']) ? $filename : null;
                 ?>
                 <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
