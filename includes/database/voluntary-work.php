@@ -1,32 +1,51 @@
 <?php
-// includes/database/voluntary_work.php
-// voluntary_work
-function voluntaryWorks($id)
+// voluntary_works
+function voluntaryWorks($person_id)
 {
-    return query("SELECT `No` AS `no`, Name_of_Organization AS organization, `From` AS `from`, `To` AS `to`, ispresent, Number_of_Hour AS `hours`, Position AS `position`, Emp_ID AS id FROM voluntary_work WHERE Emp_ID='{$id}' ORDER BY `From` DESC, `To` DESC;");
+    $sql = "SELECT * FROM `voluntary_works` WHERE `id` = ? ORDER BY `is_present` DESC, `from_date` DESC, `to_date` DESC";
+    return query($sql, [$person_id]);
 }
 
-function voluntaryWork($id, $no)
+function voluntaryWork($person_id, $voluntary_work_id)
 {
-    return query("SELECT `No` AS `no`, Name_of_Organization AS organization, `From` AS `from`, `To` AS `to`, ispresent, Number_of_Hour AS `hours`, Position AS `position`, Emp_ID AS id FROM voluntary_work WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $sql = "SELECT * FROM `voluntary_works` WHERE `person_id` = ? AND `id` = ? LIMIT 1";
+    return find($sql, [$person_id, $voluntary_work_id]);
 }
 
-function createVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $id)
+function createVoluntaryWork($organization, $from_date, $to_date, $is_present, $number_of_hours, $position_nature_of_work, $person_id)
 {
-    nonQuery("INSERT INTO voluntary_work (Name_of_Organization, `From`, `To`, ispresent, Number_of_Hour, Position, Emp_ID) VALUES ('{$organization}', '{$from}', '{$to}', '{$isPresent}', '{$hours}', '{$position}', '{$id}');");
+    $data = [
+        'organization' => $organization,
+        'from_date' => $from_date,
+        'to_date' => $is_present ? null : $to_date,
+        'is_present' => $is_present ? 1 : 0,
+        'number_of_hours' => $number_of_hours,
+        'position_nature_of_work' => $position_nature_of_work,
+        'person_id' => $person_id
+    ];
+    return insert('voluntary_works', $data);
 }
 
-function updateVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $id, $no)
+function updateVoluntaryWork($organization, $from_date, $to_date, $is_present, $number_of_hours, $position_nature_of_work, $person_id, $voluntary_work_id)
 {
-    nonQuery("UPDATE voluntary_work SET Name_of_Organization='{$organization}', `From`='{$from}', `To`='{$to}', ispresent='{$isPresent}', Number_of_Hour='{$hours}', Position='{$position}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'organization' => $organization,
+        'from_date' => $from_date,
+        'to_date' => $is_present ? null : $to_date,
+        'is_present' => $is_present ? 1 : 0,
+        'number_of_hours' => $number_of_hours,
+        'position_nature_of_work' => $position_nature_of_work
+    ];
+
+    return update('voluntary_works', $data, '`person_id` = ? AND `id` = ?', [$person_id, $voluntary_work_id]);
 }
 
-function deleteVoluntaryWork($id, $no)
+function deleteVoluntaryWork($person_id, $voluntary_work_id)
 {
-    nonQuery("DELETE FROM voluntary_work WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('voluntary_works', '`person_id` = ? AND `id` = ?', [$person_id, $voluntary_work_id]);
 }
 
 function deleteVoluntaryWorks($id)
 {
-    nonQuery("DELETE FROM voluntary_work WHERE Emp_ID='{$id}';");
+    return delete('voluntary_works', '`person_id` = ?', [$id]);
 }
