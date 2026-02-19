@@ -69,7 +69,7 @@ if (isset($_POST['save-school'])) {
 		move_uploaded_file($temp, '../' . $logo);
 	}
 
-	if (numRows(schoolById($referenceSchoolId)) === 0) {
+	if (!schoolById($referenceSchoolId)) {
 		createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $telephone, $email, $website, $facebook, $logo);
 	} else {
 		updateUsersStation($schoolId, $referenceSchoolId);
@@ -99,7 +99,7 @@ if (isset($_POST['delete-school'])) {
 
 	$schools = schoolById($schoolId);
 
-	$target = numRows($schools) === 1 ? fetchAssoc($schools)['name'] : $schoolId;
+	$target = count($schools) === 1 ? $schools['name'] : $schoolId;
 
 	deleteSchool($schoolId);
 
@@ -124,7 +124,7 @@ if (isset($_POST['save-section'])) {
 	$showAlert = true;
 	$link = '[<a href="' . customUri('dmis', 'Section Information', $alias) . '" title="View ' . $section . ' information">' . strtoupper($section) . '</a>]';
 
-	if (numRows(section($referenceSectionId)) === 0) {
+	if (!section($referenceSectionId)) {
 		createSection($alias, $head, $section, $division);
 	} else {
 		updateUsersStation($alias, $referenceSectionId, strtolower($alias . '_portal'));
@@ -157,7 +157,7 @@ if (isset($_POST['save-district'])) {
 	$showAlert = true;
 	$link = '[<a href="' . customUri('dmis', 'District Information', $districtCode) . '" title="View ' . $districtName . ' information">' . strtoupper($districtName) . '</a>]';
 
-	if (numRows(district($referenceDistrictId)) === 0) {
+	if (!district($referenceDistrictId)) {
 		createDistrict($districtCode, $districtName, $districtHead);
 	} else {
 		updateDistrict($districtCode, $districtName, $districtHead, $referenceDistrictId);
@@ -182,7 +182,7 @@ if (isset($_POST['delete-employee'])) {
 
 	$employee = employee($employeeId);
 
-	$target = numRows($employee) === 1 ? userName($employeeId) : $employeeId;
+	$target = count($employee) === 1 ? userName($employeeId) : $employeeId;
 
 	if (isDuplicateEmployee($employeeId)) {
 		deleteFileAttachments($employeeId);
@@ -225,7 +225,7 @@ if (isset($_POST['delete-district'])) {
 
 	$districts = district($districtCode);
 
-	$target = numRows($districts) === 1 ? fetchAssoc($districts)['name'] : $districtCode;
+	$target = count($districts) === 1 ? $districts['name'] : $districtCode;
 
 	deleteDistrict($districtCode);
 
@@ -245,21 +245,21 @@ if (isset($_POST['edit-user'])) {
 	$userRole = 'Administrator';
 	$isDtsUser = isset($_POST['dts']);
 	$dtsStation = isset($_POST['dts-verifier']) ? sanitize($_POST['dts-verifier']) : null;
-	$dtsPortal = numRows(section($dtsStation)) > 0 ? strtolower($dtsStation . '_portal') : 'sch_portal';
+	$dtsPortal = section($dtsStation) ? strtolower("{$dtsStation}_portal") : 'sch_portal';
 	$isHrmisUser = isset($_POST['hrmis']);
 	$isDmisUser = isset($_POST['dmis']);
 	$isHrtdmsUser = isset($_POST['hrtdms']);
 	$isHrmpsbUser = isset($_POST['hrmpsb']);
 	$showAlert = true;
 	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
-	$message = 'Employee [' . $employee . '] user assignment has been set successfully.';
+	$message = "Employee [{$employee}] user assignment has been set successfully.";
 
 	if (empty($employeeId)) {
 		return;
 	}
 
 	if ($isDtsUser) {
-		if (numRows(dtsUser($employeeId)) > 0) {
+		if (dtsUser($employeeId)) {
 			updateUserRole($employeeId, $dtsStation, $dtsPortal);
 		} else {
 			createUserRole($employeeId, $dtsStation, $dtsPortal);
@@ -307,7 +307,7 @@ if (isset($_POST['reset-user'])) {
 	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$temporaryPassword = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
 	$emails = employee($employeeId);
-	$userEmail = numRows($emails) > 0 ? fetchAssoc($emails)['email'] : '';
+	$userEmail = $emails ? $emails['email'] : '';
 	$showAlert = true;
 	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 
