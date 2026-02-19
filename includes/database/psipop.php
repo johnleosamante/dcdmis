@@ -4,72 +4,62 @@
 // loyalty_awards
 function psipop($id)
 {
-    $sql = "SELECT 
-                `id` AS `no`, 
-                `item_number` AS `item`, 
-                `job_status` AS `status`, 
-                `original_appointment_date`, 
-                `date_promoted`, 
-                `eligibility` 
-            FROM `position_items` 
-            WHERE `person_id` = ? LIMIT 1";
-
-    return find($sql, [$id]);
+    return find("SELECT * FROM `position_items` WHERE `person_id` = ? LIMIT 1", [$id]);
 }
 
-function createPsipop($itemNo, $status, $originalAppointment, $datePromoted, $eligibility, $id)
+function createPsipop($item_number, $employment_status, $original_appointment_date, $latest_promotion_date, $eligibility, $person_id)
 {
     $data = [
-        'item_number' => $itemNo,
-        'job_status' => $status,
-        'original_appointment_date' => $originalAppointment,
-        'date_promoted' => $datePromoted,
+        'item_number' => $item_number,
+        'employment_status' => $employment_status,
+        'original_appointment_date' => $original_appointment_date,
+        'latest_promotion_date' => $latest_promotion_date,
         'eligibility' => $eligibility,
-        'person_id' => $id
+        'person_id' => $person_id
     ];
 
     return insert('position_items', $data);
 }
 
-function updatePsipop($itemNo, $status, $originalAppointment, $datePromoted, $eligibility, $id)
+function updatePsipop($item_number, $employment_status, $original_appointment_date, $latest_promotion_date, $eligibility, $person_id)
 {
     $data = [
-        'item_number' => $itemNo,
-        'job_status' => $status,
-        'original_appointment_date' => $originalAppointment,
-        'date_promoted' => $datePromoted,
-        'eligibility' => $eligibility
+        'item_number' => $item_number,
+        'employment_status' => $employment_status,
+        'original_appointment_date' => $original_appointment_date,
+        'latest_promotion_date' => $latest_promotion_date,
+        'eligibility' => $eligibility,
     ];
 
-    return update('position_items', $data, '`person_id` = ?', [$id]);
+    return update('position_items', $data, '`person_id` = ?', [$person_id]);
 }
 
-function deletePsipop($id)
+function deletePsipop($person_id)
 {
-    return delete('position_items', '`person_id` = ?', [$id]);
+    return delete('position_items', '`person_id` = ?', [$person_id]);
 }
 
-function createStepIncrement($dateLastStep, $stepNo, $sg, $id)
+function createStepIncrement($last_step_date, $step, $salary_grade, $person_id)
 {
     $data = [
-        'last_step_date' => $dateLastStep,
-        'step' => $stepNo,
-        'salary_grade' => $sg,
-        'person_id' => $id
+        'last_step_date' => $last_step_date,
+        'step' => $step,
+        'salary_grade' => $salary_grade,
+        'person_id' => $person_id
     ];
 
     return insert('step_increments', $data);
 }
 
-function updateStepIncrement($dateLastStep, $stepNo, $sg, $id)
+function updateStepIncrement($last_step_date, $step, $salary_grade, $person_id)
 {
     $data = [
-        'last_step_date' => $dateLastStep,
-        'step' => $stepNo,
-        'salary_grade' => $sg
+        'last_step_date' => $last_step_date,
+        'step' => $step,
+        'salary_grade' => $salary_grade
     ];
 
-    return update('step_increments', $data, '`person_id` = ?', [$id]);
+    return update('step_increments', $data, '`person_id` = ?', [$person_id]);
 }
 
 function deleteStepIncrement($id)
@@ -77,20 +67,20 @@ function deleteStepIncrement($id)
     return delete('step_increments', '`person_id` = ?', [$id]);
 }
 
-function createLoyaltyAward($dateLastAwarded, $id)
+function createLoyaltyAward($date_last_awarded, $id)
 {
     $data = [
         'person_id' => $id,
-        'date_last_awarded' => $dateLastAwarded
+        'date_last_awarded' => $date_last_awarded
     ];
 
     return insert('loyalty_awards', $data);
 }
 
-function updateLoyaltyAward($dateLastAwarded, $id)
+function updateLoyaltyAward($date_last_awarded, $id)
 {
     $data = [
-        'date_last_awarded' => $dateLastAwarded
+        'date_last_awarded' => $date_last_awarded
     ];
     return update('loyalty_awards', $data, '`person_id` = ?', [$id]);
 }
