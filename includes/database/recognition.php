@@ -1,32 +1,37 @@
 <?php
-// includes/database/recognition.php
-// tbl_recognition
-function recognitions($id)
+// recognitions
+function recognitions($person_id)
 {
-    return query("SELECT `No` AS `no`, Recognition AS `recognition`, Emp_ID AS id FROM tbl_recognition WHERE Emp_ID='{$id}' ORDER BY Recognition;");
+    $results = query("SELECT * FROM `recognitions` WHERE `person_id` = ? ORDER BY `title` ASC", [$person_id]);
+    return is_array($results) ? $results : [];
 }
 
-function recognition($id, $no)
+function recognition($person_id, $recognition_id)
 {
-    return query("SELECT `No` AS `no`, Recognition AS `recognition`, Emp_ID AS id FROM tbl_recognition WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return find("SELECT * FROM `recognitions` WHERE `person_id` = ? AND `id` = ? LIMIT 1", [$person_id, $recognition_id]);
 }
 
-function createRecognition($recognition, $id)
+function createRecognition($title, $person_id)
 {
-    nonQuery("INSERT INTO tbl_recognition (`Recognition`, Emp_ID) VALUES ('{$recognition}', '{$id}');");
+    $data = [
+        'title' => $title,
+        'person_id' => $person_id
+    ];
+
+    return insert('recognitions', $data);
 }
 
-function updateRecognition($recognition, $id, $no)
+function updateRecognition($title, $person_id, $recognition_id)
 {
-    nonQuery("UPDATE tbl_recognition SET Recognition='{$recognition}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return update('recognitions', ['title' => $title], '`person_id` = ? AND `recognition_id` = ?', [$person_id, $recognition_id]);
 }
 
-function deleteRecognition($id, $no)
+function deleteRecognition($person_id, $recognition_id)
 {
-    nonQuery("DELETE FROM tbl_recognition WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('recognitions', '`person_id` = ? AND `id` = ?', [$person_id, $recognition_id]);
 }
 
-function deleteRecognitions($id)
+function deleteRecognitions($person_id)
 {
-    nonQuery("DELETE FROM tbl_recognition WHERE Emp_ID='{$id}';");
+    return delete('recognitions', '`person_id` = ?', [$person_id]);
 }
