@@ -5,7 +5,7 @@ require_once('app.php');
 $url = isset($_GET['v']) ? sanitize(decode($_GET['v'])) : null;
 
 if (http_response_code() === 200) {
-    $page = isset($url) && !empty($url) ? $url . ' | ' . $appTitle : $appTitle;
+    $page = isset($url) && !empty($url) ? "{$url} | {$appTitle}" : $appTitle;
 } else {
     switch (http_response_code()) {
         case 403:
@@ -28,7 +28,7 @@ require_once(root() . '/includes/layout/components.php');
 
 <head>
     <?php require_once(root() . '/includes/layout/header.php') ?>
-    <?php if ($enableScripts) : ?>
+    <?php if ($enableScripts): ?>
         <link rel="stylesheet" href="<?= uri() ?>/assets/vendor/datatables/dataTables.bootstrap4.min.css">
         <link rel="stylesheet" href="<?= uri() ?>/assets/vendor/datatables-responsive/css/responsive.bootstrap4.min.css">
     <?php endif ?>
@@ -54,7 +54,7 @@ require_once(root() . '/includes/layout/components.php');
     <script src="<?= uri() ?>/assets/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="<?= uri() ?>/assets/js/sb-admin-2.min.js"></script>
 
-    <?php if ($enableScripts) : ?>
+    <?php if ($enableScripts): ?>
         <script src="<?= uri() ?>/assets/vendor/datatables/jquery.dataTables.min.js"></script>
         <script src="<?= uri() ?>/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
         <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/dataTables.responsive.min.js"></script>
