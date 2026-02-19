@@ -7,7 +7,7 @@ if (!isset($userId)) {
     redirect(uri() . '/login');
 }
 
-if (numRows(userRole($userId, $activeApp)) === 0) {
+if (!userRole($userId, $activeApp)) {
     redirect(uri() . '/pis');
 }
 
@@ -48,10 +48,9 @@ if (isset($_POST['add-employee'])) {
         return;
     }
 
-    $names = employeeName($lname, $fname, $mname, $ext);
+    $name = employeeName($lname, $fname, $mname, $ext);
 
-    if (numRows($names) > 0) {
-        $name = fetchAssoc($names);
+    if ($name) {
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $name['id']) . '" title="View ' . $employee . ' employee information">' . strtoupper($employee) . '</a>] already exist!  Operation has been cancelled.';
         return;
     }
@@ -60,14 +59,14 @@ if (isset($_POST['add-employee'])) {
     createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $employeeId);
     createOtherInformation(0, 0, '', 0, '', 0, '0000-00-00', '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', $employeeId);
     createStation($today, $eStationId, $ePositionId, $employeeId);
-    $sg = fetchAssoc(positions($ePositionId))['salary_grade'];
+    $sg = positions($ePositionId)['salary_grade'];
     createPsipop('', 'Permanent', $today, $today, '', $employeeId);
     createStepIncrement($today, '1', $sg, $employeeId);
 
     createIdentification('', '', '', $today, $employeeId);
-    createAccount($employeeId, hashPassword(generateStrongRandomPassword()));
+    $createdAccount = createAccount($employeeId, hashPassword(generateStrongRandomPassword()));
 
-    if (affectedRows()) {
+    if ($createdAccount) {
         $success = true;
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information">' . strtoupper($employee) . '</a>] was saved successfully.';
 
@@ -120,9 +119,9 @@ if (isset($_POST['update-personal-information'])) {
     $bday = date("d", $dob);
     $email = sanitize($_POST['email']);
 
-    updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), $bmonth, $bday, $byear, sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), sanitize($_POST['dual-citizenship-country']), sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), $email, sanitize($_POST['tin']), sanitize($_POST['agency-id']), $employeePhoto, $employeeId);
+    $updatedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), $bmonth, $bday, $byear, sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), sanitize($_POST['religion']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), sanitize($_POST['dual-citizenship-country']), sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), $email, sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
 
-    if (!affectedRows()) {
+    if (!$updatedEmployee) {
         $message = 'No changes have been made to personal information.';
         return;
     }
@@ -153,7 +152,7 @@ if (isset($_POST['update-family-background'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'family-background';
 
-    if (numRows(family($employeeId)) === 0) {
+    if (family($employeeId)) {
         createFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId);
     } else {
         updateFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId);
@@ -696,6 +695,7 @@ if (isset($_POST['promote-employee'])) {
 if (isset($_POST['remove-employee'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $reason = sanitize($_POST['reason']);
+    $skipVacancy = isset($_POST['skip_vacancy']) && $_POST['skip_vacancy'] === '1';
     $showAlert = true;
 
     if (empty($employeeId) || empty($reason)) {
@@ -703,8 +703,9 @@ if (isset($_POST['remove-employee'])) {
     }
 
     $positionId = fetchAssoc(position($employeeId))['position_id'];
-    $stationId = fetchAssoc(station($employeeId))['station_id'];
-    $psipop = fetchAssoc(psipop($employeeId))['item'];
+    $eStationId = fetchAssoc(station($employeeId))['station_id'];
+    $psipopData = psipop($employeeId);
+    $psipopItem = numRows($psipopData) > 0 ? fetchAssoc($psipopData)['item'] : '';
     $dateVacated = date('Y-m-d');
 
     if (numRows(employee($employeeId)) > 0) {
@@ -714,8 +715,10 @@ if (isset($_POST['remove-employee'])) {
     if (affectedRows()) {
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
 
-        if (strtolower($reason) !== 'duplicate') {
-            createVacancy('open', $positionId, $stationId, $psipop, $employeeId, $dateVacated, $reason, $userId);
+        // Create vacancy unless skipped or reason is Duplicate
+        if (!$skipVacancy && strtolower($reason) !== 'duplicate') {
+            createVacancy('open', $positionId, $eStationId, $psipopItem, $employeeId, $dateVacated, $reason);
+            $message .= ' A vacant item has been created for this position.';
         }
 
         createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
