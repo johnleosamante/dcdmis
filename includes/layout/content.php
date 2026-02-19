@@ -140,8 +140,14 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Publish Vacancies':
             $file = 'vacancies/publish-vacancies';
             break;
+        case 'Publication Details':
+            $file = 'vacancies/publication-details';
+            break;
         case 'Publications':
             $file = 'vacancies/publications';
+            break;
+        case 'Filled Vacancies':
+            $file = 'vacancies/filled-vacancies';
             break;
         case '404':
         default:
