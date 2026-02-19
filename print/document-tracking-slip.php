@@ -9,23 +9,35 @@ $multiplePage = true;
 $showBarCode = true;
 $showQR = true;
 $showStationInfo = false;
+$code = strtoupper(sanitize(decode($_GET['id'])));
+$title = "{$url} : {$code}";
 
 require_once(root() . '/includes/database/document.php');
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/position.php');
+require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/database/section.php');
 
-$code = strtoupper(sanitize(decode($_GET['id'])));
-$title = "{$url} : {$code}";
 $document = documentOrigin($code);
-$section = strtoupper(stationName($document['created_from']));
 
-$school = schoolById($document['created_from']);
+$originStationId = $document['created_from'];
+$isSchoolPortal = $originStationId !== divisionId();
+$section = strtoupper(stationName($originStationId));
+$school = schoolById($originStationId);
 $stationLogo = !empty($school['logo']) ? root() . '/' . $school['logo'] : null;
-$address = $school['address'];
-$telephone = $school['telephone'];
-$email = $school['email'];
-$website = $school['website'];
-$fbPage = $school['fb_page'];
+$address = $school['address'] ?? '';
+$telephone = $school['telephone'] ?? '';
+$email = $school['email'] ?? '';
+$website = $school['website'] ?? '';
+$fbPage = $school['fb_page'] ?? '';
+
+$dateCreated = toDate($document['created_at'], 'F d, Y');
+$description = toHandleEncoding($document['description']);
+$employee = toHandleEncoding(userName($document['processed_by'], true));
+$employeePosition = toHandleEncoding(position($document['processed_by'])['official_title']);
+$documentStatus = strtolower($document['status']);
+$status = str_contains($documentStatus, 'complete') ? ' (Completed)' : '';
+$status = str_contains($documentStatus, 'cancel') ? ' (Canceled)' : $status;
 
 require_once(root() . '/print/print-layout.php');
 
@@ -37,14 +49,6 @@ $pdf->SetAutoPageBreak(true, 35);
 $pdf->AddPage();
 $pdf->AddFont('calibri', '', 'calibri.php');
 $pdf->AddFont('calibrib', 'B', 'calibrib.php');
-
-$dateCreated = toDate($document['created_at'], 'F d, Y');
-$description = toHandleEncoding($document['description']);
-$employee = toHandleEncoding(userName($document['processed_by'], true));
-$employeePosition = toHandleEncoding(position($document['processed_by'])['official_title']);
-$documentStatus = strtolower($document['status']);
-$status = str_contains($documentStatus, 'complete') ? ' (Completed)' : '';
-$status = str_contains($documentStatus, 'cancel') ? ' (Canceled)' : $status;
 $pdf->SetFont('calibrib', 'B', 18);
 $pdf->Cell(0, 0, 'DOCUMENT TRACKING SLIP', 0, 0, 'C');
 $pdf->Ln(5);
