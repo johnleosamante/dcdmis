@@ -12,10 +12,9 @@ if ($isPis && $userId !== $employeeId) {
     return;
 }
 
-$employees = employee($employeeId);
+$employee = employee($employeeId);
 
-if (numRows($employees) > 0) {
-    $employee = fetchAssoc($employees);
+if ($employee) {
     $employeeId = $employee['id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -54,10 +53,10 @@ $employeePhoto = '';
         <?php
         if (!$isPis) {
             if (!$editMode) {
-                contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Edit Employee Information', $employeeId), 'Edit', 'fa-edit');
+                contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), customUri('hrmis', 'Edit Employee Information', $employeeId), 'Edit', 'fa-edit');
             } else {
-                $employeePhoto = file_exists(root() . '/' . $employee['picture']) ? uri() . '/' . $employee['picture'] : uri() . '/assets/img/user.png';
-                contentTitleWithLink('Update Employee Information : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), customUri('hrmis', 'Employee Information', $employeeId));
+                $employeePhoto = file_exists(root() . '/' . $employee['profile_picture']) ? uri() . '/' . $employee['profile_picture'] : uri() . '/assets/img/user.png';
+                contentTitleWithLink('Update Employee Information : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), customUri('hrmis', 'Employee Information', $employeeId));
             }
         } else {
             contentTitleWithLink('Employee Information', uri() . '/pis');
@@ -70,46 +69,60 @@ $employeePhoto = '';
     <div class="card-body pb-2">
         <ul class="nav nav-tabs mb-3">
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(!isset($activeTab) || $activeTab === 'personal-information') ?>" href="#personal-information" data-toggle="tab">Personal Information</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(!isset($activeTab) || $activeTab === 'personal-information') ?>"
+                    href="#personal-information" data-toggle="tab">Personal Information</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'family-background') ?>" href="#family-background" data-toggle="tab">Family Background</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'family-background') ?>"
+                    href="#family-background" data-toggle="tab">Family Background</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'children') ?>" href="#children" data-toggle="tab">Children</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'children') ?>"
+                    href="#children" data-toggle="tab">Children</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'educational-background') ?>" href="#educational-background" data-toggle="tab">Educational Background</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'educational-background') ?>"
+                    href="#educational-background" data-toggle="tab">Educational Background</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'civil-service-eligibility') ?>" href="#civil-service-eligibility" data-toggle="tab">Civil Service Eligibility</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'civil-service-eligibility') ?>"
+                    href="#civil-service-eligibility" data-toggle="tab">Civil Service Eligibility</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'work-experience') ?>" href="#work-experience" data-toggle="tab">Work Experience</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'work-experience') ?>"
+                    href="#work-experience" data-toggle="tab">Work Experience</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'voluntary-work') ?>" href="#voluntary-work" data-toggle="tab">Voluntary Work</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'voluntary-work') ?>"
+                    href="#voluntary-work" data-toggle="tab">Voluntary Work</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'learning-development') ?>" href="#learning-development" data-toggle="tab">Learning &amp; Development</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'learning-development') ?>"
+                    href="#learning-development" data-toggle="tab">Learning &amp; Development</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'special-skills') ?>" href="#special-skills" data-toggle="tab">Special Skills &amp; Hobbies</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'special-skills') ?>"
+                    href="#special-skills" data-toggle="tab">Special Skills &amp; Hobbies</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'recognition') ?>" href="#recognition" data-toggle="tab">Non-Academic Distinctions / Recognition</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'recognition') ?>"
+                    href="#recognition" data-toggle="tab">Non-Academic Distinctions / Recognition</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'membership') ?>" href="#membership" data-toggle="tab">Membership in Association / Organization</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'membership') ?>"
+                    href="#membership" data-toggle="tab">Membership in Association / Organization</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'other-information') ?>" href="#other-information" data-toggle="tab">Other Information</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'other-information') ?>"
+                    href="#other-information" data-toggle="tab">Other Information</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'reference') ?>" href="#reference" data-toggle="tab">References</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'reference') ?>"
+                    href="#reference" data-toggle="tab">References</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'government-id') ?>" href="#government-id" data-toggle="tab">Government Issued ID</a>
+                <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'government-id') ?>"
+                    href="#government-id" data-toggle="tab">Government Issued ID</a>
             </li>
         </ul>
 
