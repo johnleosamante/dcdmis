@@ -36,7 +36,8 @@ messageAlert($showAlert, $message, $success);
                                 <label for="date-from" class="font-weight-bold m-0">From:</label>
                             </div>
                             <div class="col-10">
-                                <input class="form-control" id="date-from" type="date" name="date-from" value="<?= $from ?>">
+                                <input class="form-control" id="date-from" type="date" name="date-from"
+                                    value="<?= $from ?>">
                             </div>
                         </div>
                     </div>
@@ -56,13 +57,15 @@ messageAlert($showAlert, $message, $success);
                 </div>
 
                 <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12">
-                    <button type="submit" class="btn btn-primary btn-block" name="transactions-summary-filter">Filter Date <i class="fa fa-filter"></i></button>
+                    <button type="submit" class="btn btn-primary btn-block" name="transactions-summary-filter">Filter
+                        Date <i class="fa fa-filter"></i></button>
                 </div>
             </div>
         </form>
 
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%"
+                cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="15%">Code</th>
@@ -76,19 +79,21 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = canceledDocuments($station, $from, $to);
-                    while ($row = fetchArray($query)) : ?>
+                    foreach ($query as $row): ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?></td>
+                            <td class="align-middle">
+                                <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
+                            </td>
                             <td class="text-left align-middle"><?= $row['description'] ?></td>
-                            <td class="align-middle"><?= toDatetime($row['postedon']) ?></td>
-                            <td class="align-middle"><?= toDatetime($row['canceledon']) ?></td>
+                            <td class="align-middle"><?= toDatetime($row['posted_on']) ?></td>
+                            <td class="align-middle"><?= toDatetime($row['canceled_on']) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 
-                                        if ($row['station'] === $station) {
+                                        if ($row['created_from'] === $station) {
                                             linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
                                         }
                                         ?>
@@ -96,7 +101,7 @@ messageAlert($showAlert, $message, $success);
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
