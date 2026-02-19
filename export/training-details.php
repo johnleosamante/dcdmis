@@ -12,11 +12,10 @@ require_once(root() . '/includes/database/learning-development.php');
 require_once(root() . '/includes/database/utility.php');
 
 $trainingId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$trainings = training($trainingId);
+$training = training($trainingId);
 $participants = trainingParticipants($trainingId);
 
-if (numRows($trainings) > 0) {
-    $training = fetchAssoc($trainings);
+if ($training) {
     $trainingId = $training['no'];
 } else {
     return;
@@ -35,9 +34,11 @@ if (numRows($trainings) > 0) {
         </tr>
         <tr>
             <th>Date</th>
-            <td colspan="3"><?= strtoupper(empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']) ?></td>
+            <td colspan="3">
+                <?= strtoupper(empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']) ?>
+            </td>
         </tr>
-        <?php if (!empty($training['hours'])) : ?>
+        <?php if (!empty($training['hours'])): ?>
             <tr>
                 <th>Hours</th>
                 <td colspan="3"><?= $training['hours'] ?></td>
@@ -51,13 +52,13 @@ if (numRows($trainings) > 0) {
             <th>Level</th>
             <td colspan="3"><?= strtoupper(trainingSponsor($training['level'])) ?></td>
         </tr>
-        <?php if (!empty($training['sponsor'])) : ?>
+        <?php if (!empty($training['sponsor'])): ?>
             <tr>
                 <th>Sponsor</th>
                 <td colspan="3"><?= strtoupper($training['sponsor']) ?></td>
             </tr>
         <?php endif ?>
-        <?php if (!empty($training['venue'])) : ?>
+        <?php if (!empty($training['venue'])): ?>
             <tr>
                 <th>Venue</th>
                 <td colspan="3"><?= strtoupper($training['venue']) ?></td>
@@ -65,7 +66,7 @@ if (numRows($trainings) > 0) {
         <?php endif ?>
         <tr>
             <th>Participants</th>
-            <td colspan="3"><?= strtoupper(numRows($participants)) ?></td>
+            <td colspan="3"><?= strtoupper(count($participants)) ?></td>
         </tr>
         <tr>
             <th>#</th>
@@ -79,16 +80,16 @@ if (numRows($trainings) > 0) {
         <?php
         $i = 1;
 
-        while ($row = fetchArray($participants)) :
-            $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-        ?>
+        foreach ($participants as $row):
+            $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
+            ?>
             <tr>
                 <td><?= $i++ ?></td>
                 <td><?= strtoupper($employeeName) ?></td>
-                <td><?= strtoupper(fetchAssoc(positions($row['position']))['position']) ?></td>
-                <td><?= strtoupper(fetchAssoc(schoolById($row['station']))['name']) ?></td>
+                <td><?= strtoupper(positions($row['position']))['position'] ?></td>
+                <td><?= strtoupper(schoolById($row['station']))['name'] ?></td>
             </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
         <tr>
             <td colspan="4"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>
