@@ -6,13 +6,12 @@ if (!$isDts) {
 }
 
 $documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$documents = document($documentId);
+$document = document($documentId);
 $documentType = 'Ongoing Documents';
 
 messageAlert($showAlert, $message, $success);
 
-if (numRows($documents) > 0) {
-    $document = fetchAssoc($documents);
+if ($document) {
     $documentId = $document['id'];
 
     if (isIncomingDocument($documentId, $station)) {
@@ -55,7 +54,7 @@ if (numRows($documents) > 0) {
         <table cellspacing="0">
             <tr>
                 <th class="align-top pr-3" scope="row">Type:</th>
-                <td class="text-uppercase"><?= fetchArray(documentType($document['type']))['name'] ?></td>
+                <td class="text-uppercase"><?= documentType($document['document_type_id'])['name'] ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Description:</th>
@@ -63,11 +62,11 @@ if (numRows($documents) > 0) {
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Created on:</th>
-                <td class="text-uppercase"><?= toDate($document['datetime'], 'F d, Y h:i:s A') ?></td>
+                <td class="text-uppercase"><?= toDate($document['created_at'], 'F d, Y h:i:s A') ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">From:</th>
-                <td class="text-uppercase"><?= stationName($document['from']) ?></td>
+                <td class="text-uppercase"><?= stationName($document['created_from']) ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Status:</th>
@@ -82,7 +81,7 @@ if (numRows($documents) > 0) {
                 <?php
                 $hasSuccess = false;
 
-                if ($station === $document['from'] || $isRecordsPortal) {
+                if ($station === $document['created_from'] || $isRecordsPortal) {
                     linkButtonSplit(customUri('print', 'Document Tracking Slip', $documentId), 'Print', 'fa-print', 'Print Document Tracking Slip', 'primary', true);
                 }
 
@@ -97,7 +96,8 @@ if (numRows($documents) > 0) {
                         if (!$isSchoolPortal) {
                             modalButtonSplit(uri() . '/modules/documents/forward-document-dialog.php?id=' . cipher($documentId), 'Forward', 'fa-share', 'Forward Document', 'info');
                         }
-                        if (isDocument($documentId, 'Restored')) break;
+                        if (isDocument($documentId, 'Restored'))
+                            break;
                         modalButtonSplit(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
                         break;
                     case 'Outgoing Documents':
@@ -106,12 +106,12 @@ if (numRows($documents) > 0) {
                         }
                         break;
                     case 'Completed Documents':
-                        if (isDocumentFrom($documentId, $station) && $document['from'] === $station && isDocument($documentId, 'Completed')) {
+                        if (isDocumentFrom($documentId, $station) && $document['created_from'] === $station && isDocument($documentId, 'Completed')) {
                             modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-minus-square', 'Mark Incomplete Document', 'danger');
                         }
                         break;
                     case 'Canceled Documents':
-                        if (isDocumentFrom($documentId, $station) && $document['from'] === $station && isDocument($documentId, 'Canceled')) {
+                        if (isDocumentFrom($documentId, $station) && $document['created_from'] === $station && isDocument($documentId, 'Canceled')) {
                             modalButtonSplit(uri() . '/modules/documents/restore-document-dialog.php?id=' . cipher($documentId), 'Restore', 'fa-undo', 'Restore Document', 'success');
                             $hasSuccess = true;
                         }
@@ -128,12 +128,12 @@ if (numRows($documents) > 0) {
 
                         $hasSuccess = true;
 
-                        if (isDocumentFrom($documentId, $station) && $document['from'] === $station && !isDocument($documentId, 'Cancel')) {
+                        if (isDocumentFrom($documentId, $station) && $document['created_from'] === $station && !isDocument($documentId, 'Cancel')) {
                             modalButtonSplit(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($documentId), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
                         }
                         break;
                     case 'Outgoing Documents':
-                        if (isDocumentFrom($documentId, $station) && $document['from'] === $station && !isDocument($documentId, 'Cancel')) {
+                        if (isDocumentFrom($documentId, $station) && $document['created_from'] === $station && !isDocument($documentId, 'Cancel')) {
                             modalButtonSplit(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($documentId), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
                         }
                         break;
@@ -141,7 +141,7 @@ if (numRows($documents) > 0) {
                         break;
                 }
 
-                if ($station === $document['from']) {
+                if ($station === $document['created_from']) {
                     linkButtonSplit(customUri('export', 'document-log', $documentId), 'Export', 'fa-file-excel', 'Export as Excel file', $hasSuccess ? 'warning' : 'success');
                 }
                 ?>
@@ -151,21 +151,20 @@ if (numRows($documents) > 0) {
         <div class="timeline">
             <?php
             $logs = documentLogs($documentId);
-            $totalLogs = numRows($logs);
             $logCount = 0;
 
-            while ($log = fetchAssoc($logs)) {
+            foreach ($logs as $log) {
                 $logCount++;
-                $from = stationName($log['from']);
-                $to = stationName($log['to']);
-                $displayName = userName($log['user']);
-                $user = fetchAssoc(employee($log['user']));
-                $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $user['picture'] : uri() . '/assets/img/user.png';
+                $from = stationName($log['received_from']);
+                $to = stationName($log['forwarded_to']);
+                $displayName = userName($log['processed_by']);
+                $user = employee($log['processed_by']);
+                $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '/' . $user['profile_picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
                 $hasDestination = !empty($to) && $to !== '-';
                 $status = $log['status'];
                 $details = $log['details'];
-                $attachment = $log['attachment'];
+                // TODO $attachment = $log['attachment'];
                 $isCompleted = str_contains(strtolower($status), 'complete');
                 $isCanceled = str_contains(strtolower($status), 'cancel');
                 $bgColor = '';
@@ -182,7 +181,7 @@ if (numRows($documents) > 0) {
                     $icon = 'flag';
                 }
 
-                if ($logCount >= 1  && !$hasDestination) {
+                if ($logCount >= 1 && !$hasDestination) {
                     $icon = 'check';
                 }
 
@@ -194,11 +193,11 @@ if (numRows($documents) > 0) {
                     $icon = 'times';
                     $bgColor = 'bg-danger';
                 }
-            ?>
+                ?>
                 <div class="timeline-item">
                     <div class="timeline-item-marker">
                         <div class="timeline-item-marker-text text-uppercase">
-                            <?= date('M d, Y', strtotime($log['datetime'])) . '<br>' . date('h:i:s A', strtotime($log['datetime'])) ?>
+                            <?= date('M d, Y', strtotime($log['created_at'])) . '<br>' . date('h:i:s A', strtotime($log['created_at'])) ?>
                         </div>
                         <div class="timeline-item-marker-indicator <?= $bgColor ?>">
                             <i class="fas fa-<?= $icon ?>"></i>
@@ -214,14 +213,20 @@ if (numRows($documents) > 0) {
 
                             <div class="card-body">
                                 <div>
-                                    <span class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
-                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px" width="40px">
+                                    <span
+                                        class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
+                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px"
+                                            width="40px">
                                     </span>
 
                                     <div class="ml-2 d-inline-block align-middle">
-                                        <div class="text-uppercase"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName) ?></div>
+                                        <div class="text-uppercase">
+                                            <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['processed_by']), $displayName) ?>
+                                        </div>
 
-                                        <div class="text-uppercase text-xs"><?= fetchAssoc(position($log['user']))['position'] ?></div>
+                                        <div class="text-uppercase text-xs">
+                                            <?= position($log['processed_by'])['official_title'] ?>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -229,12 +234,13 @@ if (numRows($documents) > 0) {
 
                                 <div class="font-weight-bold text-lg"><?= $status ?></div>
 
-                                <?php if (!empty($details)) : ?>
+                                <?php if (!empty($details)): ?>
                                     <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= $details ?></div>
                                 <?php endif ?>
                             </div>
 
-                            <?php if (!empty($attachment) && file_exists(root() . '/' . $attachment)) : ?>
+                            <?php //TODO if (!empty($attachment) && file_exists(root() . '/' . $attachment)):
+                                if (!true): ?>
                                 <div class="card-footer">
                                     <?php linkButtonSplit(uri() . '/' . $attachment, 'View Attachment', 'fa-eye', 'View Attachment', 'info', true) ?>
                                 </div>
