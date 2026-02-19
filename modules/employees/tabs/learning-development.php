@@ -2,13 +2,15 @@
 // modules/employees/tabs/learning-development.php
 ?>
 
-<div class="tab-pane fade<?= setActiveNavigation(isset($activeTab) && $activeTab === 'learning-development', 'show active') ?>" id="learning-development">
+<div class="tab-pane fade<?= setActiveNavigation(isset($activeTab) && $activeTab === 'learning-development', 'show active') ?>"
+    id="learning-development">
     <div class="row my-3">
         <div class="col table-responsive">
             <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="45%">Title of Learning &amp; Development Interventions / Training Programs</th>
+                        <th class="align-middle" width="45%">Title of Learning &amp; Development Interventions /
+                            Training Programs</th>
                         <th class="align-middle" width="5%">From</th>
                         <th class="align-middle" width="5%">To</th>
                         <th class="align-middle" width="5%">Number of Hours</th>
@@ -21,27 +23,28 @@
                     <?php
                     $learnings = attendedTrainings($employeeId);
 
-                    if (numRows($learnings) > 0) {
-                        while ($learning = fetchAssoc($learnings)) : ?>
+                    if ($learnings) {
+                        foreach ($learnings as $learning): ?>
                             <tr class="text-uppercase">
                                 <td class="align-middle"><?= $learning['title'] ?></td>
-                                <td class="align-middle"><?= toDate($learning['from']) ?></td>
-                                <td class="align-middle"><?= toDate($learning['to']) ?></td>
-                                <td class="align-middle"><?= $learning['hours'] ?></td>
-                                <td class="align-middle"><?= $learning['type'] ?></td>
-                                <td class="align-middle"><?= $learning['sponsor'] ?></td>
+                                <td class="align-middle"><?= toDate($learning['start_date']) ?></td>
+                                <td class="align-middle"><?= toDate($learning['end_date']) ?></td>
+                                <td class="align-middle"><?= $learning['number_of_hours'] ?></td>
+                                <td class="align-middle"><?= $learning['training_type'] ?></td>
+                                <td class="align-middle"><?= $learning['sponsored_by'] ?></td>
                             </tr>
-                        <?php endwhile;
+                        <?php endforeach;
                     } else { ?>
                         <tr>
-                            <td colspan="6" class="align-middle">No data available in table</td>
+                            <td colspan="6" class="align-middle">No data available.</td>
                         </tr>
                     <?php } ?>
                 </tbody>
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="45%">Title of Learning &amp; Development Interventions / Training Programs</th>
+                        <th class="align-middle" width="45%">Title of Learning &amp; Development Interventions /
+                            Training Programs</th>
                         <th class="align-middle" width="5%">From</th>
                         <th class="align-middle" width="5%">To</th>
                         <th class="align-middle" width="5%">Number of Hours</th>
