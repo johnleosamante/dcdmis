@@ -15,7 +15,7 @@ if (isset($_POST['update-password'])) {
         return;
     }
 
-    if (numRows(accountPassword($userId, hashPassword($oldPassword))) === 0) {
+    if (!accountPassword($userId, hashPassword($oldPassword))) {
         $message = 'You have entered an incorrect old password.';
         $oldPassword = $password = $passwordConfirm = $generatePassword = null;
         return;
@@ -36,9 +36,9 @@ if (isset($_POST['update-password'])) {
         return;
     }
 
-    updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
+    $updatedPassword = updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
 
-    if (affectedRows()) {
+    if ($updatedPassword) {
         $message = 'Your password has been updated successfully.';
         $success = true;
         $oldPassword = $password = $passwordConfirm = $generatePassword = null;
@@ -52,11 +52,11 @@ if (isset($_POST['update-contact-details'])) {
     $alternateEmail = sanitize($_POST['alternate-email']);
     $alternateMobile = sanitize($_POST['alternate-mobile']);
 
-    updateEmployeeContactDetails($alternateMobile, $alternateEmail, $userId);
+    $updatedContacts = updateEmployeeContactDetails($alternateMobile, $alternateEmail, $userId);
 
     $showAlert = true;
 
-    if (affectedRows()) {
+    if ($updatedContacts) {
         $message = 'Your contact details have been updated successfully.';
         createSystemLog($stationId, $userId, 'Updated contact details', $userId, clientIp());
     } else {
@@ -69,11 +69,11 @@ if (isset($_POST['update-professional-titles'])) {
     $before = sanitize($_POST['before-title']);
     $after = sanitize($_POST['after-title']);
 
-    updateProfessionalTitles($before, $after, $userId);
+    $updatedTitles = updateProfessionalTitles($before, $after, $userId);
 
     $showAlert = true;
 
-    if (affectedRows()) {
+    if ($updatedTitles) {
         $message = 'Your professional title have been updated successfully.';
         createSystemLog($stationId, $userId, 'Updated professional titles', $userId, clientIp());
     } else {
@@ -115,11 +115,11 @@ if (isset($_POST['update-profile-photo'])) {
         move_uploaded_file($temp, '../' . $employeePhoto);
     }
 
-    updateProfilePhoto($employeePhoto, $employeeId);
+    $updatedProfilePhoto = updateProfilePhoto($employeePhoto, $employeeId);
 
     $showAlert = true;
 
-    if (!affectedRows()) {
+    if (!$updatedProfilePhoto) {
         $message = 'No changes have been made to profile photo.';
         $success = false;
         return;
