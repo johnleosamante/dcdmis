@@ -82,9 +82,9 @@ function indigenousEmployeeCount()
                     THEN o.`indigenous_group` 
                     ELSE 'No' 
                 END AS `name`, 
-                COUNT(p.`person_id`) AS `count` 
+                COUNT(p.`id`) AS `count` 
             FROM `persons` p 
-            LEFT JOIN `other_informations` o ON p.`person_id` = o.`person_id` 
+            LEFT JOIN `other_informations` o ON p.`id` = o.`person_id` 
             WHERE p.`status` = 'Active' GROUP BY `name` ORDER BY `count` DESC";
     return query($sql);
 }
@@ -97,9 +97,9 @@ function pwdEmployeeCount()
                     THEN o.`disability` 
                     ELSE 'No' 
                 END AS `name`, 
-                COUNT(p.`person_id`) AS `count` 
+                COUNT(p.`id`) AS `count` 
             FROM `persons` p 
-            LEFT JOIN `other_informations` o ON p.`person_id` = o.`person_id` 
+            LEFT JOIN `other_informations` o ON p.`id` = o.`person_id` 
             WHERE p.`status` = 'Active' GROUP BY `name` ORDER BY `count` DESC";
     return query($sql);
 }
@@ -108,9 +108,9 @@ function soloParentEmployeeCount()
 {
     $sql = "SELECT 
                 CASE WHEN o.`is_solo_parent` = 1 THEN 'Yes' ELSE 'No' END AS `name`, 
-                COUNT(p.`person_id`) AS `count` 
+                COUNT(p.`id`) AS `count` 
             FROM `persons` p 
-            LEFT JOIN `other_informations` o ON p.`person_id` = o.`person_id` 
+            LEFT JOIN `other_informations` o ON p.`id` = o.`person_id` 
             WHERE p.`status` = 'Active' GROUP BY `name` ORDER BY `name` DESC";
     return query($sql);
 }
