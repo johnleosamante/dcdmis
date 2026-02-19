@@ -85,14 +85,14 @@ require_once(root() . '/includes/layout/components.php');
                         <option value="">Select position...</option>
                         <?php
                         $categories = positionCategories();
-                        while ($category = fetchAssoc($categories)): ?>
+                        foreach ($categories as $category): ?>
                             <optgroup label="<?= $category['category'] ?>">
                                 <?php $jobPositions = positionsByCategory($category['category']);
-                                while ($jobPosition = fetchArray($jobPositions)): ?>
-                                    <option value="<?= $jobPosition['id'] ?>"><?= $jobPosition['position'] ?></option>
-                                <?php endwhile ?>
+                                foreach ($jobPositions as $jobPosition): ?>
+                                    <option value="<?= $jobPosition['id'] ?>"><?= $jobPosition['official_title'] ?></option>
+                                <?php endforeach ?>
                             </optgroup>
-                        <?php endwhile ?>
+                        <?php endforeach ?>
                     </select>
                 </div>
 
@@ -103,16 +103,16 @@ require_once(root() . '/includes/layout/components.php');
                         <option value="">Select station...</option>
                         <?php
                         $districts = districts();
-                        while ($district = fetchAssoc($districts)): ?>
+                        foreach ($districts as $district): ?>
                             <optgroup label="<?= $district['name'] ?>">
                                 <?php
                                 $currentStation = isset($_GET['s']) ? sanitize(decode($_GET['s'])) : '';
                                 $schools = schoolsByDistrict($district['id']);
-                                while ($school = fetchAssoc($schools)): ?>
+                                foreach ($schools as $school): ?>
                                     <option value="<?= $school['id'] ?>" <?= setOptionSelected($school['id'], $currentStation) ?>><?= $school['name'] ?></option>
-                                <?php endwhile ?>
+                                <?php endforeach ?>
                             </optgroup>
-                        <?php endwhile ?>
+                        <?php endforeach ?>
                     </select>
                 </div>
 
