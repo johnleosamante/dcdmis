@@ -28,7 +28,8 @@ messageAlert($showAlert, $message, $success);
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%"
+                cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="15%">Code</th>
@@ -42,18 +43,20 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = pendingDocuments($station);
-                    while ($row = fetchArray($query)) {
-                    ?>
+                    foreach ($query as $row) {
+                        ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?></td>
+                            <td class="align-middle">
+                                <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
+                            </td>
                             <td class="text-left align-middle"><?= $row['description'] ?></td>
                             <td class="align-middle">
                                 <div>
-                                    <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['user']), userName($row['user'])) ?>
+                                    <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['processed_by']), userName($row['processed_by'])) ?>
                                 </div>
-                                <div class="small"><?= fetchAssoc(position($row['user']))['position'] ?></div>
+                                <div class="small"><?= position($row['processed_by'])['official_title'] ?></div>
                             </td>
-                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
+                            <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
@@ -66,7 +69,7 @@ messageAlert($showAlert, $message, $success);
 
                                         modalDropdownItem(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($row['id']), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document');
 
-                                        if ($row['station'] === $station) {
+                                        if ($row['created_from'] === $station) {
                                             linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
 
                                             if (!$isSchoolPortal) {
