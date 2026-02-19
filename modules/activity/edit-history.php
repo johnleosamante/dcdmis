@@ -1,10 +1,9 @@
 <?php
 // modules/activity/edit-history.php
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : $userId;
-$employees = employee($employeeId);
+$employee = employee($employeeId);
 
-if (numRows($employees) > 0) {
-    $employee = fetchAssoc($employees);
+if ($employee) {
     $employeeId = $employee['id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -31,12 +30,13 @@ if ($isHrmis) {
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitle('Edit History : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext']))) ?>
+        <?php contentTitle('Edit History : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension']))) ?>
     </div>
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-hovered mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover table-striped table-hovered mb-0 text-center" id="data-table" width="100%"
+                cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">#</th>
@@ -50,7 +50,7 @@ if ($isHrmis) {
                     <?php
                     $query = employeeEditHistory($employeeId);
                     $no = 0;
-                    while ($row = fetchAssoc($query)) : ?>
+                    foreach ($query as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= ++$no ?></td>
                             <td class="align-middle"><?= toDateTime($row['datetime']) ?></td>
@@ -58,11 +58,11 @@ if ($isHrmis) {
                             <td class="text-center align-middle">
                                 <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['editor']), userName($row['editor']));
 
-                                if ($isDmis || $isHrmis) : ?>
+                                if ($isDmis || $isHrmis): ?>
                                     <br><small><?= '(' . $row['ip'] . ')' ?></small>
                                 <?php endif ?>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
