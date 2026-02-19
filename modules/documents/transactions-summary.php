@@ -32,7 +32,8 @@ messageAlert($showAlert, $message, $success);
                                 <label for="date-from" class="font-weight-bold m-0">From:</label>
                             </div>
                             <div class="col-10">
-                                <input class="form-control" id="date-from" type="date" name="date-from" value="<?= $from ?>">
+                                <input class="form-control" id="date-from" type="date" name="date-from"
+                                    value="<?= $from ?>">
                             </div>
                         </div>
                     </div>
@@ -52,13 +53,15 @@ messageAlert($showAlert, $message, $success);
                 </div>
 
                 <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12">
-                    <button type="submit" class="btn btn-primary btn-block" name="transactions-summary-filter">Filter Date <i class="fa fa-filter"></i></button>
+                    <button type="submit" class="btn btn-primary btn-block" name="transactions-summary-filter">Filter
+                        Date <i class="fa fa-filter"></i></button>
                 </div>
             </div>
         </form>
 
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%"
+                cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">Photo</th>
@@ -66,7 +69,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="25%">Position</th>
                         <th class="align-middle" width="10%">Created</th>
                         <th class="align-middle" width="10%">Received</th>
-                        <?php if (!$isSchoolPortal) : ?>
+                        <?php if (!$isSchoolPortal): ?>
                             <th class="align-middle" width="10%">Forwarded</th>
                         <?php endif ?>
                         <th class="align-middle" width="10%">Completed</th>
@@ -76,31 +79,43 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php $query = portalUsers($station, $from, $to);
-
-                    while ($row = fetchArray($query)) :
-                        $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
-                    ?>
+                    foreach ($query as $row):
+                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? uri() . '/' . $row['profile_picture'] : uri() . '/assets/img/user.png';
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
                                         <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
                             </td>
-                            <td class="align-middle text-left"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName) ?></td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
-                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Created Document', $row['id'], $code, $from, $to))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Received Document', $row['id'], $code, $from, $to))) ?></td>
-                            <?php if (!$isSchoolPortal) : ?>
-                                <td class="align-middle"><?= number_format(numRows(documentByStatus('Forwarded Document', $row['id'], $code, $from, $to))) ?></td>
+                            <td class="align-middle text-left">
+                                <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName) ?>
+                            </td>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
+                            <td class="align-middle">
+                                <?= number_format(documentByStatus('Created Document', $row['id'], $code, $from, $to)) ?>
+                            </td>
+                            <td class="align-middle">
+                                <?= number_format(documentByStatus('Received Document', $row['id'], $code, $from, $to)) ?>
+                            </td>
+                            <?php if (!$isSchoolPortal): ?>
+                                <td class="align-middle">
+                                    <?= number_format(documentByStatus('Forwarded Document', $row['id'], $code, $from, $to)) ?>
+                                </td>
                             <?php endif ?>
-                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Completed Document', $row['id'], $code, $from, $to))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(documentByStatus('Canceled Document', $row['id'], $code, $from, $to))) ?></td>
+                            <td class="align-middle">
+                                <?= number_format(documentByStatus('Completed Document', $row['id'], $code, $from, $to)) ?>
+                            </td>
+                            <td class="align-middle">
+                                <?= number_format(documentByStatus('Canceled Document', $row['id'], $code, $from, $to)) ?>
+                            </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
@@ -110,7 +125,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="25%">Position</th>
                         <th class="align-middle" width="10%">Created</th>
                         <th class="align-middle" width="10%">Received</th>
-                        <?php if (!$isSchoolPortal) : ?>
+                        <?php if (!$isSchoolPortal): ?>
                             <th class="align-middle" width="10%">Forwarded</th>
                         <?php endif ?>
                         <th class="align-middle" width="10%">Completed</th>
