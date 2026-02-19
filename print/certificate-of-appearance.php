@@ -5,7 +5,7 @@ $margin = 8;
 $width = 210;
 $height = 148.5;
 
-$school = fetchArray(schoolDetailsById(divisionId()));
+$school = schoolById(divisionId());
 $address = $school['address'];
 $telephone = $school['telephone'];
 $email = $school['email'];
