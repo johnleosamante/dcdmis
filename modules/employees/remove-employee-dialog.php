@@ -5,21 +5,22 @@ require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/position.php');
 require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/database/psipop.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$employees = employee($employeeId);
+$employee = employee($employeeId);
 $modalTitle = 'Employee not found';
 $hasEmployee = false;
+$hasItemNumber = false;
 
-if (numRows($employees) > 0) {
-    $employee = fetchAssoc($employees);
+if ($employee) {
     $employeeId = $employee['id'];
     $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
     $sex = $employee['sex'];
     $status = $employee['status'];
-    $positions = fetchAssoc(position($employeeId));
+    $positions = position($employeeId);
     $stationId = $positions['station_id'];
     $station = $positions['station'];
     $positionId = $positions['position_id'];
@@ -28,6 +29,14 @@ if (numRows($employees) > 0) {
     $picture = file_exists(root() . '/' . $employee['picture']) ? uri() . '/' . $employee['picture'] : uri() . '/assets/img/user.png';
     $modalTitle = 'Remove Employee';
     $hasEmployee = true;
+
+    $psipopInfo = psipop($employeeId);
+    $itemNumber = '';
+
+    if ($psipopInfo) {
+        $itemNumber = $psipopInfo['item'] ?? '';
+        $hasItemNumber = !empty($itemNumber);
+    }
 }
 ?>
 
@@ -38,7 +47,7 @@ if (numRows($employees) > 0) {
             <div class="modal-body">
                 <?php if ($hasEmployee) {
                     employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status);
-                ?>
+                    ?>
                     <hr>
                     <div class="form-group">
                         <label for="reason" class="mb-0">Reason <?php showAsterisk() ?></label>
@@ -54,6 +63,26 @@ if (numRows($employees) > 0) {
                         </select>
                     </div>
 
+                    <div class="form-group mb-0" id="vacancy-option">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="skip-vacancy" name="skip_vacancy"
+                                value="1">
+                            <label class="custom-control-label" for="skip-vacancy">
+                                <strong>Do not create vacancy</strong>
+                                <small class="d-block text-muted">Check this if the position does not require a vacant
+                                    item</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <?php if ($hasItemNumber): ?>
+                        <div class="alert alert-info mt-3 mb-0 small">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Item Number: <strong><?= $itemNumber ?></strong> will be marked as vacant unless you check the
+                            option above.
+                        </div>
+                    <?php endif; ?>
+
                     <?php requiredLegend(0) ?>
                 <?php } else {
                     missingAlert($modalTitle);
@@ -61,7 +90,7 @@ if (numRows($employees) > 0) {
             </div>
 
             <div class="modal-footer">
-                <?php if ($hasEmployee) : ?>
+                <?php if ($hasEmployee): ?>
                     <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
                     <button class="btn btn-danger" name="remove-employee" type="submit">Continue</button>
                 <?php endif;
@@ -71,3 +100,18 @@ if (numRows($employees) > 0) {
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('reason').addEventListener('change', function () {
+        const vacancyOption = document.getElementById('vacancy-option');
+        const skipVacancy = document.getElementById('skip-vacancy');
+
+        if (this.value === 'Duplicate') {
+            vacancyOption.style.display = 'none';
+            skipVacancy.checked = true;
+        } else {
+            vacancyOption.style.display = 'block';
+            skipVacancy.checked = false;
+        }
+    });
+</script>
