@@ -2,13 +2,13 @@
 // station_assignments, positions, schools
 function position($person_id)
 {
-    $sql = "SELECT `sa`.`person_id`, `sa`.`assignment_date`, `sa`.`position_id`, 
-                `p`.`official_title`, `sa`.`station_id`, `s`.`name` AS `station`
-            FROM `station_assignments` AS `sa` 
-            INNER JOIN `positions` AS `p` ON `p`.`id` = `sa`.`position_id` 
-            INNER JOIN `schools` AS `s` ON `sa`.`station_id` = `s`.`id` 
-            WHERE `sa`.`person_id` = ? 
-            ORDER BY `sa`.`assignment_date` DESC LIMIT 1";
+    $sql = "SELECT sa.`person_id`, sa.`assignment_date`, sa.`position_id`, 
+                p.`official_title`, sa.`station_id`, s.`name` AS `station`, sa.`assignment_date`
+            FROM `station_assignments` AS sa 
+            INNER JOIN `positions` AS p ON p.`id` = sa.`position_id` 
+            INNER JOIN `schools` AS s ON sa.`station_id` = s.`id` 
+            WHERE sa.`person_id` = ? 
+            ORDER BY sa.`assignment_date` DESC LIMIT 1";
     return find($sql, [$person_id]);
 }
 
