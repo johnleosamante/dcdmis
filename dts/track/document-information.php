@@ -1,10 +1,9 @@
 <?php
 // dts/track/document-information.php
 $documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$documents = document($documentId);
+$document = document($documentId);
 
-if (numRows($documents) > 0) {
-    $document = fetchAssoc($documents);
+if ($document) {
     $documentId = $document['id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -16,7 +15,8 @@ if (numRows($documents) > 0) {
     <div class="row justify-content-center">
         <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12">
             <div class="input-group">
-                <input type="text" class="form-control small" placeholder="Search document..." aria-label="Search" name="primary-search-text" value="<?= $documentId ?>" autofocus required>
+                <input type="text" class="form-control small" placeholder="Search document..." aria-label="Search"
+                    name="primary-search-text" value="<?= $documentId ?>" autofocus required>
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit" name="primary-search-button">
                         <i class="fas fa-search fa-sm"></i>
@@ -50,7 +50,7 @@ if (numRows($documents) > 0) {
                 <th class="align-top pr-3" scope="row">Status:</th>
                 <td class="text-uppercase">
                     <?= strlen($document['details']) === 0 ? $document['status'] : $document['status'] . ' - ' . $document['details']
-                    ?>
+                        ?>
                 </td>
             </tr>
         </table>
@@ -58,15 +58,14 @@ if (numRows($documents) > 0) {
         <div class="mt-5 timeline">
             <?php
             $logs = documentLogs($documentId);
-            $totalLogs = numRows($logs);
             $logCount = 0;
 
-            while ($log = fetchAssoc($logs)) {
+            foreach ($logs as $log) {
                 $logCount++;
                 $from = stationName($log['from']);
                 $to = stationName($log['to']);
                 $displayName = userName($log['user']);
-                $user = fetchAssoc(employee($log['user']));
+                $user = employee($log['user']);
                 $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $user['picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
                 $hasDestination = !empty($to) && $to !== '-';
@@ -88,7 +87,7 @@ if (numRows($documents) > 0) {
                     $icon = 'flag';
                 }
 
-                if ($logCount >= 1  && !$hasDestination) {
+                if ($logCount >= 1 && !$hasDestination) {
                     $icon = 'check';
                 }
 
@@ -100,7 +99,7 @@ if (numRows($documents) > 0) {
                     $icon = 'times';
                     $bgColor = 'bg-danger';
                 }
-            ?>
+                ?>
                 <div class="timeline-item">
                     <div class="timeline-item-marker">
                         <div class="timeline-item-marker-text text-uppercase">
@@ -120,14 +119,20 @@ if (numRows($documents) > 0) {
 
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <span class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
-                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px" width="40px">
+                                    <span
+                                        class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
+                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px"
+                                            width="40px">
                                     </span>
 
                                     <div class="ml-2 d-inline-block align-middle">
-                                        <div class="text-uppercase"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName) ?></div>
+                                        <div class="text-uppercase">
+                                            <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName) ?>
+                                        </div>
 
-                                        <div class="text-uppercase text-xs"><?= fetchAssoc(position($log['user']))['position'] ?></div>
+                                        <div class="text-uppercase text-xs">
+                                            <?= fetchAssoc(position($log['user']))['position'] ?>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -135,7 +140,7 @@ if (numRows($documents) > 0) {
 
                                 <div class="font-weight-bold text-lg"><?= $status ?></div>
 
-                                <?php if (!empty($details)) : ?>
+                                <?php if (!empty($details)): ?>
                                     <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= $details ?></div>
                                 <?php endif ?>
                             </div>
