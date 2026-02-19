@@ -1,120 +1,192 @@
 <?php
-// includes/database/school.php
-// tbl_school
-// tbl_station
-// tbl_district
+// schools
 function schools()
 {
-    return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias, `Address` AS `address`, Incharg_ID AS `head`, District_code AS district, School_Category AS category, SchoolLogo AS logo FROM tbl_school ORDER BY SchoolName;");
+    return query("SELECT * FROM `schools` ORDER BY `name` ASC");
 }
 
-function districtSchools($id)
+function districtSchools($district_id)
 {
-    return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias, `Address` AS `address`, Incharg_ID AS `head`, District_code AS district, School_Category AS category, SchoolLogo AS logo FROM tbl_school WHERE District_code='{$id}' ORDER BY SchoolName;");
+    return query("SELECT * FROM `schools` WHERE district_id = ? ORDER BY `name` ASC", [$district_id]);
 }
 
-function schoolsExcept($id)
+function schoolsExcept($school_id)
 {
-    return query("SELECT SchoolID AS id, SchoolName AS `name`, Abraviate AS alias, `Address` AS `address`, Incharg_ID AS `head`, District_code AS district, School_Category AS category, SchoolLogo AS logo FROM tbl_school WHERE SchoolID <> '{$id}' ORDER BY SchoolName;");
+    $sql = "SELECT * FROM `schools` WHERE id <> ? ORDER BY `name` ASC";
+    return query($sql, [$school_id]);
 }
 
 function schoolByAlias($alias)
 {
-    return query("SELECT SchoolID AS id, SchoolName AS `name`, Incharg_ID AS `head` FROM tbl_school WHERE Abraviate='{$alias}' LIMIT 1;");
+    return find("SELECT * FROM `schools` WHERE alias = ? LIMIT 1", [$alias]);
 }
 
-function schoolById($id)
+function schoolById($school_id)
 {
-    return query("SELECT Abraviate AS alias, SchoolName AS `name`, Incharg_ID AS `head` FROM tbl_school WHERE SchoolID='{$id}' LIMIT 1;");
+    return find("SELECT * FROM `schools` WHERE id = ? LIMIT 1", [$school_id]);
 }
 
-function schoolDetailsById($id)
+function schoolsByDistrict($districtId)
 {
-    return query("SELECT Abraviate AS alias, SchoolName AS `name`, `Address` AS `address`, Incharg_ID AS `head`, District_code AS `district`, School_Category AS category, SchoolLogo AS `logo`, telephone, email, website, fb_page FROM tbl_school WHERE SchoolID='{$id}' LIMIT 1;");
-}
-
-function schoolsByDistrict($district)
-{
-    return query("SELECT SchoolID AS `id`, SchoolName AS `name` FROM tbl_school WHERE District_code='{$district}' ORDER BY SchoolName;");
+    return query("SELECT id, `name` FROM `schools` WHERE district_id = ? ORDER BY `name` ASC", [$districtId]);
 }
 
 function updateSchoolHead($schoolId, $headId)
 {
-    nonQuery("UPDATE tbl_school SET `Incharg_ID`='{$headId}' WHERE `SchoolID`='{$schoolId}';");
+    return update('schools', ['head_id' => $headId], 'id = ?', [$schoolId]);
 }
 
-function schoolEmployeeCount($id = null)
+// persons, station_assignments, schools, districts, positions
+function schoolEmployeeCount($school_id = null)
 {
-    $filter = isset($id) ? " AND tbl_school.SchoolID='{$id}'" : '';
-    return query("SELECT tbl_school.SchoolID AS id, SUM(CASE WHEN tbl_job.Job_Category = 'Teaching' AND tbl_employee.Emp_Sex = 'Male' THEN 1 ELSE 0 END) AS tmale, SUM(CASE WHEN tbl_job.Job_Category = 'Teaching-Related' AND tbl_employee.Emp_Sex = 'Male' THEN 1 ELSE 0 END) AS trmale, SUM(CASE WHEN tbl_job.Job_Category = 'Non-Teaching' AND tbl_employee.Emp_Sex = 'Male' THEN 1 ELSE 0 END) AS ntmale, SUM(CASE WHEN tbl_employee.Emp_Sex = 'Male' THEN 1 ELSE 0 END) AS male, SUM(CASE WHEN tbl_job.Job_Category = 'Teaching' AND tbl_employee.Emp_Sex = 'Female' THEN 1 ELSE 0 END) AS tfemale, SUM(CASE WHEN tbl_job.Job_Category = 'Teaching-Related' AND tbl_employee.Emp_Sex = 'Female' THEN 1 ELSE 0 END) AS trfemale, SUM(CASE WHEN tbl_job.Job_Category = 'Non-Teaching' AND tbl_employee.Emp_Sex = 'Female' THEN 1 ELSE 0 END) AS ntfemale, SUM(CASE WHEN tbl_employee.Emp_Sex = 'Female' THEN 1 ELSE 0 END) AS female, COUNT(*) AS total FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_school ON tbl_station.Emp_Station=tbl_school.SchoolID INNER JOIN tbl_district ON tbl_school.District_code=tbl_district.District_code INNER JOIN tbl_job ON tbl_station.Emp_Position=tbl_job.Job_code WHERE tbl_employee.Emp_Status='Active' {$filter} GROUP BY tbl_school.SchoolName ORDER BY tbl_district.District_Name, tbl_school.School_Category, tbl_school.SchoolName;");
+    $params = [];
+    $filter = "";
+    if (isset($school_id)) {
+        $filter = " AND s.`id` = ? ";
+        $params[] = $school_id;
+    }
+    $sql = "SELECT s.`id`, 
+                SUM(CASE WHEN pos.`category` = 'Teaching' AND p.`sex` = 'Male' THEN 1 ELSE 0 END) AS tmale, 
+                SUM(CASE WHEN pos.`category` = 'Teaching-Related' AND p.`sex` = 'Male' THEN 1 ELSE 0 END) AS trmale, 
+                SUM(CASE WHEN pos.`category` = 'Non-Teaching' AND p.`sex` = 'Male' THEN 1 ELSE 0 END) AS ntmale, 
+                SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS male, 
+                SUM(CASE WHEN pos.`category` = 'Teaching' AND p.`sex` = 'Female' THEN 1 ELSE 0 END) AS tfemale, 
+                SUM(CASE WHEN pos.`category` = 'Teaching-Related' AND p.`sex` = 'Female' THEN 1 ELSE 0 END) AS trfemale, 
+                SUM(CASE WHEN pos.`category` = 'Non-Teaching' AND p.`sex` = 'Female' THEN 1 ELSE 0 END) AS ntfemale, 
+                SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS female, 
+                COUNT(p.`id`) AS total 
+            FROM `persons` AS p 
+            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`person_id` 
+            INNER JOIN `schools` AS s ON sa.`station_id` = s.`id` 
+            INNER JOIN `districts` AS d ON s.`district_id` = d.`id` 
+            INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id` 
+            WHERE p.`status` = 'Active' 
+            {$filter} 
+            GROUP BY s.`id`, s.`name` 
+            ORDER BY d.`name`, s.`category`, s.`name`";
+    return query($sql, $params);
 }
 
-function createSchool($id, $name, $alias, $address, $district, $category, $telephone, $email, $website, $facebook, $logo)
+function createSchool($school_id, $name, $alias, $address, $district_id, $category, $telephone, $email, $website, $fb_page, $logo)
 {
-    nonQuery("INSERT INTO tbl_school (`SchoolID`, `SchoolName`, `Abraviate`, `Address`, `District_code`, `School_Category`, `telephone`, `email`, `website`, `fb_page`, `SchoolLogo`) VALUES ('{$id}', '{$name}', '{$alias}', '{$address}', '{$district}', '{$category}', '{$telephone}', '{$email}', '{$website}', '{$facebook}', '{$logo}');");
+    $data = [
+        'id' => $school_id,
+        'name' => $name,
+        'alias' => $alias,
+        'address' => $address,
+        'district_id' => $district_id,
+        'category' => $category,
+        'telephone' => $telephone,
+        'email' => $email,
+        'website' => $website,
+        'fb_page' => $fb_page,
+        'logo' => $logo
+    ];
+    return insert('schools', $data);
 }
 
 function updateSchool($id, $name, $alias, $address, $district, $category, $telephone, $email, $website, $facebook, $logo, $referenceId)
 {
-    nonQuery("UPDATE tbl_school SET `SchoolID`='{$id}', `SchoolName`='{$name}', `Abraviate`='{$alias}', `Address`='{$address}', `District_code`='{$district}', `School_Category`='{$category}', `telephone`='{$telephone}', `email`='{$email}', `website`='{$website}', `fb_page`='{$facebook}', `SchoolLogo`='{$logo}' WHERE `SchoolID`='{$referenceId}' LIMIT 1;");
+    $data = [
+        'id' => $id,
+        'name' => $name,
+        'alias' => $alias,
+        'address' => $address,
+        'district_id' => $district,
+        'category' => $category,
+        'telephone' => $telephone,
+        'email' => $email,
+        'website' => $website,
+        'fb_page' => $facebook,
+        'logo' => $logo
+    ];
+    return update('schools', $data, '`id` = ?', [$referenceId]);
 }
 
 function deleteSchool($id)
 {
-    nonQuery("DELETE FROM tbl_school WHERE `SchoolID`='{$id}' LIMIT 1;");
+    return delete('schools', '`id` = ?', [$id]);
 }
 
-function station($id)
+function station($person_id)
 {
-    return query("SELECT `No`, Emp_Position AS position_id, Emp_Station AS station_id, Emp_DOA AS doa, Emp_ID AS id FROM tbl_station WHERE Emp_ID='{$id}' ORDER BY Emp_DOA DESC LIMIT 1;");
+    return find("SELECT * FROM `station_assignments` WHERE `person_id` = ? ORDER BY `assignment_date` DESC LIMIT 1", [$person_id]);
 }
 
-function createStation($date, $stationId, $positionId, $id)
+function createStation($assignment_date, $station_id, $position_id, $person_id)
 {
-    nonQuery("INSERT INTO tbl_station (`Emp_DOA`, Emp_Station, Emp_Position, Emp_ID) VALUES ('{$date}', '{$stationId}', '{$positionId}', '{$id}');");
+    $data = [
+        'assignment_date' => $assignment_date,
+        'station_id' => $station_id,
+        'position_id' => $position_id,
+        'person_id' => $person_id
+    ];
+    return insert('station_assignments', $data);
 }
 
-function updateStation($date, $stationId, $positionId, $id)
+function updateStation($assignment_date, $station_id, $position_id, $person_id)
 {
-    nonQuery("UPDATE tbl_station SET Emp_Position='{$positionId}', Emp_Station='{$stationId}', Emp_DOA='{$date}' WHERE Emp_ID='{$id}';");
+    $data = [
+        'position_id' => $position_id,
+        'station_id' => $station_id,
+        'assignment_date' => $assignment_date
+    ];
+    return update('station_assignments', $data, '`person_id` = ?', [$person_id]);
 }
 
 function deleteStation($id)
 {
-    nonQuery("DELETE FROM tbl_station WHERE Emp_ID='{$id}';");
+    return delete('station_assignments', '`person_id` = ?', [$id]);
 }
 
-function updateStationID($newStationId, $oldStationId)
+function updateStationID($new_station_id, $old_station_id)
 {
-    nonQuery("UPDATE tbl_station SET `Emp_Station`='{$newStationId}' WHERE `Emp_Station`='{$oldStationId}';");
+    return update('station_assignments', ['station_id' => $new_station_id], '`station_id` = ?', [$old_station_id]);
 }
 
-function district($id)
+function district($district_id)
 {
-    return query("SELECT District_code AS `id`, District_Name AS `name`, Emp_ID AS `psds` FROM tbl_district WHERE District_code='{$id}' LIMIT 1;");
+    return find("SELECT * FROM `districts` WHERE `id` = ? LIMIT 1", [$district_id]);
 }
 
 function districts()
 {
-    return query("SELECT District_code AS `id`, District_Name AS `name`, Emp_ID AS `psds` FROM tbl_district ORDER BY District_Name ASC;");
+    return query("SELECT * FROM `districts` ORDER BY `name` ASC");
 }
 
 function districtSchoolCount($id)
 {
-    return query("SELECT SUM(CASE WHEN tbl_school.School_Category='Elementary' THEN 1 ELSE 0 END) AS es, SUM(CASE WHEN tbl_school.School_Category='Secondary' THEN 1 ELSE 0 END) AS hs, SUM(CASE WHEN tbl_school.School_Category='Integrated' THEN 1 ELSE 0 END) AS `is`, COUNT(*) AS `total` FROM tbl_school INNER JOIN tbl_district ON tbl_school.District_code=tbl_district.District_code WHERE tbl_school.District_code='{$id}' LIMIT 1;");
+    $sql = "SELECT 
+                SUM(CASE WHEN s.`category` = 'Elementary' THEN 1 ELSE 0 END) AS es, 
+                SUM(CASE WHEN s.`category` = 'Secondary' THEN 1 ELSE 0 END) AS hs, 
+                SUM(CASE WHEN s.`category` = 'Integrated' THEN 1 ELSE 0 END) AS `is`, 
+                COUNT(*) AS total 
+            FROM `schools` AS s INNER JOIN `districts` AS d ON s.`district_id` = d.`id` WHERE s.`district_id` = ? LIMIT 1";
+    return find($sql, [$id]);
 }
 
-function createDistrict($id, $district, $head)
+function createDistrict($district_id, $name, $supervisor_id)
 {
-    nonQuery("INSERT INTO tbl_district (`District_code`, `District_Name`, `Emp_ID`) VALUES ('{$id}', '{$district}', '{$head}');");
+    $data = [
+        'id' => $district_id,
+        'name' => $name,
+        'supervisor_id' => $supervisor_id
+    ];
+
+    return insert('districts', $data);
 }
 
-function updateDistrict($newCode, $district, $head, $oldCode)
+function updateDistrict($new_district_id, $name, $supervisor_id, $old_district_id)
 {
-    nonQuery("UPDATE tbl_district SET `District_code`='{$newCode}', `District_Name`='{$district}', `Emp_ID`='{$head}' WHERE `District_code`='{$oldCode}' LIMIT 1;");
+    $data = [
+        'id' => $new_district_id,
+        'name' => $name,
+        'supervisor_id' => $supervisor_id
+    ];
+    return update('districts', $data, '`id` = ?', [$old_district_id]);
 }
 
 function deleteDistrict($id)
 {
-    nonQuery("DELETE FROM tbl_district WHERE `District_code`='{$id}' LIMIT 1;");
+    return delete('districts', '`id` = ?', [$id]);
 }
