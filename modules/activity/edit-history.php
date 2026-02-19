@@ -53,10 +53,10 @@ if ($isHrmis) {
                     foreach ($query as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= ++$no ?></td>
-                            <td class="align-middle"><?= toDateTime($row['datetime']) ?></td>
-                            <td class="text-left align-middle"><?= $row['activity'] ?></td>
+                            <td class="align-middle"><?= toDateTime($row['created_at']) ?></td>
+                            <td class="text-left align-middle"><?= $row['status'] ?></td>
                             <td class="text-center align-middle">
-                                <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['editor']), userName($row['editor']));
+                                <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['person_id']), userName($row['person_id']));
 
                                 if ($isDmis || $isHrmis): ?>
                                     <br><small><?= '(' . $row['ip'] . ')' ?></small>
