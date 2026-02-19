@@ -2,10 +2,11 @@
 // modules/employees/tabs/educational-background.php
 ?>
 
-<div class="tab-pane fade<?= setActiveNavigation(isset($activeTab) && $activeTab === 'educational-background', 'show active') ?>" id="educational-background">
-    <?php if ($editMode) : ?>
+<div class="tab-pane fade<?= setActiveNavigation(isset($activeTab) && $activeTab === 'educational-background', 'show active') ?>"
+    id="educational-background">
+    <?php if ($editMode): ?>
         <div class="d-sm-flex justify-content-end my-3">
-            <?php modalButtonSplit(uri() . '/modules/employees/save/save-education-dialog.php?e=' . cipher($employeeId), 'Add',  'fa-plus', 'Add Education', 'primary') ?>
+            <?php modalButtonSplit(uri() . '/modules/employees/save/save-education-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Education', 'primary') ?>
         </div>
     <?php endif ?>
 
@@ -22,7 +23,7 @@
                         <th class="align-middle" width="10%">Highest Level / Units Earned</th>
                         <th class="align-middle" width="5%">Year Graduated</th>
                         <th class="align-middle" width="15%">Scholarship / Academic Honors Received</th>
-                        <?php if ($editMode) : ?>
+                        <?php if ($editMode): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
@@ -32,20 +33,20 @@
                     <?php
                     $educationalBackground = educationalBackgrounds($employeeId);
 
-                    if (numRows($educationalBackground) > 0) {
-                        while ($education = fetchAssoc($educationalBackground)) : ?>
+                    if ($educationalBackground) {
+                        foreach ($educationalBackground as $education): ?>
                             <tr class="text-uppercase">
                                 <td class="align-middle"><?= $education['level'] ?></td>
                                 <td class="align-middle"><?= $education['school'] ?></td>
                                 <td class="align-middle"><?= toHandleNull($education['course'], 'N/A') ?></td>
-                                <td class="align-middle"><?= $education['from'] ?></td>
+                                <td class="align-middle"><?= $education['from_year'] ?></td>
                                 <td class="align-middle">
-                                    <?= $education['ispresent'] ? 'PRESENT' : $education['to'] ?>
+                                    <?= $education['is_present'] ? 'PRESENT' : $education['to_year'] ?>
                                 </td>
-                                <td class="align-middle"><?= toHandleNull($education['highest'], 'N/A') ?></td>
+                                <td class="align-middle"><?= toHandleNull($education['highest_level'], 'N/A') ?></td>
                                 <td class="align-middle"><?= toHandleNull($education['year_graduated'], 'N/A') ?></td>
-                                <td class="align-middle"><?= toHandleNull($education['scholarship'], 'N/A') ?></td>
-                                <?php if ($editMode) : ?>
+                                <td class="align-middle"><?= toHandleNull($education['honors_received'], 'N/A') ?></td>
+                                <?php if ($editMode): ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
                                             <?php dropdownEllipsis() ?>
@@ -59,7 +60,7 @@
                                     </td>
                                 <?php endif ?>
                             </tr>
-                        <?php endwhile;
+                        <?php endforeach;
                     } else { ?>
                         <tr>
                             <td colspan="<?= $editMode ? '9' : '8' ?>" class="align-middle">No data available in table</td>
@@ -77,7 +78,7 @@
                         <th class="align-middle" width="10%">Highest Level / Units Earned</th>
                         <th class="align-middle" width="5%">Year Graduated</th>
                         <th class="align-middle" width="15%">Scholarship / Academic Honors Received</th>
-                        <?php if ($editMode) : ?>
+                        <?php if ($editMode): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
