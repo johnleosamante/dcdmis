@@ -3,14 +3,14 @@
 sidebarDivider();
 sidebarHeading('Employees');
 
-$countActive = number_format(numRows(activeEmployees()));
-$countRetirable = number_format(numRows(retirableEmployees()));
-$countStepIncrement = number_format(numRows(employeeStepIncrement()));
-$countLoyaltyAward = number_format(numRows(employeeLoyaltyAward()));
-$countVacancy = number_format(numRows(vacancies()));
-$districtCount = number_format(numRows(districts()));
-$schoolCount = number_format(numRows(schools()));
-$sectionCount = number_format(numRows(sections()));
+$countActive = number_format(count(activeEmployees()));
+$countRetirable = number_format(count(retirableEmployees()));
+$countStepIncrement = number_format(count(employeeStepIncrement()));
+$countLoyaltyAward = number_format(count(employeeLoyaltyAward()));
+$countVacancy = number_format(count(vacancies()));
+$districtCount = number_format(count(districts()));
+$schoolCount = number_format(count(schools()));
+$sectionCount = number_format(count(sections()));
 
 sidebarModalItem(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus');
 sidebarMenuItem(customUri('hrmis', 'Active Employees'), 'Active', 'fa-user-check', isset($url) && str_contains($url, 'Active'), $countActive);
