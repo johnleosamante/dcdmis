@@ -205,7 +205,7 @@ if (isset($_POST['update-publication'])) {
         clearPublicationItems($publicationId);
         $totalVacanciesLinked = 0;
         foreach ($vacancyIds as $vacancyId) {
-            addPublicationItem($publicationId, sanitize($vacancyId));
+            addPublicationItem($publicationId, sanitize($vacancyId), '', '');
             $totalVacanciesLinked++;
         }
 
