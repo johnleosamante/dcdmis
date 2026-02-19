@@ -42,7 +42,7 @@ if ($isHrmis) {
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
         <?php if ($isHrmis) {
-            contentTitleWithModal('Service Record : ' . strtoupper(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'])), uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus');
+            contentTitleWithModal('Service Record : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus');
         } else {
             contentTitleWithLink('Service Record', uri() . '/pis');
         } ?>
