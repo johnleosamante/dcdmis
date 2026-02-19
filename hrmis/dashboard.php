@@ -30,7 +30,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-pie py-2">
                     <canvas id="gender-pie-chart"></canvas>
                     <script>
-                        generateDoughnutChart(<?= json_encode(fetchAllAssoc(employeeGender())) ?>, <?= json_encode(array('#02a3fe', '#ec49a6')) ?>, 'gender-pie-chart');
+                        generateDoughnutChart(<?= json_encode(employeeGender()) ?>, <?= json_encode(array('#02a3fe', '#ec49a6')) ?>, 'gender-pie-chart');
                     </script>
                 </div>
             </div>
@@ -46,7 +46,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-bar h-auto">
                     <canvas id="gender-comparative-bar-chart"></canvas>
                     <script>
-                        generateComparativeBarChart(<?= json_encode(fetchAllAssoc(employeeGenderCategory())) ?>, <?= json_encode(array('#02a3fe', '#ec49a6')) ?>, 'gender-comparative-bar-chart');
+                        generateComparativeBarChart(<?= json_encode(employeeGenderCategory()) ?>, <?= json_encode(array('#02a3fe', '#ec49a6')) ?>, 'gender-comparative-bar-chart');
                     </script>
                 </div>
             </div>
@@ -65,7 +65,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                     <canvas id="category-doughnut-chart"></canvas>
                     <script>
                         <?php $employeeCategory = employeeCategory() ?>
-                        generatePieChart(<?= json_encode(fetchAllAssoc($employeeCategory)) ?>, generateColorPallete(<?= numRows($employeeCategory) ?>), 'category-doughnut-chart');
+                        generatePieChart(<?= json_encode($employeeCategory) ?>, generateColorPallete(<?= count($employeeCategory) ?>), 'category-doughnut-chart');
                     </script>
                 </div>
             </div>
@@ -92,7 +92,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                     <canvas id="position-bar-chart"></canvas>
                     <script>
                         <?php $employeePositions = employeePosition() ?>
-                        generateBarChart(<?= json_encode(fetchAllAssoc($employeePositions)) ?>, generateColorPallete(<?= numRows($employeePositions) ?>), 'position-bar-chart');
+                        generateBarChart(<?= json_encode($employeePositions) ?>, generateColorPallete(<?= count($employeePositions) ?>), 'position-bar-chart');
                     </script>
                 </div>
             </div>
@@ -111,14 +111,14 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                     <canvas id="district-polar-area-chart"></canvas>
                     <script>
                         <?php $districtEmployees = districtEmployee() ?>
-                        generatePolarAreaChart(<?= json_encode(fetchAllAssoc($districtEmployees)) ?>, generateColorPallete(<?= numRows($districtEmployees) ?>), 'district-polar-area-chart');
+                        generatePolarAreaChart(<?= json_encode($districtEmployees) ?>, generateColorPallete(<?= count($districtEmployees) ?>), 'district-polar-area-chart');
                     </script>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-9 col-lg-12">
+    <div class="col-xl-9 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Assignment</h6>
@@ -128,7 +128,60 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                     <canvas id="station-bar-chart"></canvas>
                     <script>
                         <?php $employeeStations = employeeStation() ?>
-                        generateBarChart(<?= json_encode(fetchAllAssoc($employeeStations)) ?>, generateColorPallete(<?= numRows($employeeStations) ?>), 'station-bar-chart');
+                        generateBarChart(<?= json_encode($employeeStations) ?>, generateColorPallete(<?= count($employeeStations) ?>), 'station-bar-chart');
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-4 col-lg-12 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Indigenous People</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie py-2">
+                    <canvas id="ip-polar-area-chart"></canvas>
+                    <script>
+                        <?php $indigenousEmployees = indigenousEmployeeCount() ?>
+                        generateDoughnutChart(<?= json_encode($indigenousEmployees) ?>, generateColorPallete(<?= count($indigenousEmployees) ?>), 'ip-polar-area-chart');
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-12 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Persons With Disability</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie py-2">
+                    <canvas id="pwd-polar-area-chart"></canvas>
+                    <script>
+                        <?php $pwdEmployees = pwdEmployeeCount() ?>
+                        generateDoughnutChart(<?= json_encode($pwdEmployees) ?>, generateColorPallete(<?= count($pwdEmployees) ?>), 'pwd-polar-area-chart');
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-12">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Solo Parents</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie py-2">
+                    <canvas id="solo-parent-polar-area-chart"></canvas>
+                    <script>
+                        <?php $soloParentEmployees = soloParentEmployeeCount() ?>
+                        generateDoughnutChart(<?= json_encode($soloParentEmployees) ?>, generateColorPallete(<?= count($soloParentEmployees) ?>), 'solo-parent-polar-area-chart');
                     </script>
                 </div>
             </div>
