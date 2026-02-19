@@ -23,10 +23,10 @@
 
                 <tbody>
                     <?php
-                    $organizations = memberships($employeeId);
+                    $memberships = memberships($employeeId);
 
-                    if (numRows($organizations) > 0) {
-                        while ($membership = fetchAssoc($organizations)) : ?>
+                    if ($memberships) {
+                        foreach ($memberships as $membership) : ?>
                             <tr class="text-uppercase">
                                 <td class="align-middle"><?= $membership['organization'] ?></td>
                                 <?php if ($editMode) : ?>
@@ -43,7 +43,7 @@
                                     </td>
                                 <?php endif ?>
                             </tr>
-                        <?php endwhile;
+                        <?php endforeach;
                     } else { ?>
                         <tr>
                             <td class="align-middle" colspan="<?= $editMode ? '2' : '1' ?>">No data available in table</td>
