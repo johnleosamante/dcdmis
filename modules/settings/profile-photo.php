@@ -1,6 +1,6 @@
 <?php
 // modules/settings/profile-photo.php
-$picture = fetchAssoc(employee($userId))['picture'];
+$picture = employee($userId)['profile_picture'];
 ?>
 <div class="tab-pane fade show active" id="profile-photo">
     <div class="row">
@@ -24,7 +24,8 @@ $picture = fetchAssoc(employee($userId))['picture'];
                 <img src="<?= $photo ?>" width="100%" class="border rounded" id="employee-photo">
 
                 <div class="mt-3 custom-file">
-                    <input id="image-upload" type="file" name="image-upload" class="custom-file-input">
+                    <input id="image-upload" type="file" name="image-upload" class="custom-file-input"
+                        accept="image/png, image/jpeg">
                     <label id="image-upload-label" class="custom-file-label" for="image-upload">Choose file</label>
                 </div>
 
@@ -34,8 +35,9 @@ $picture = fetchAssoc(employee($userId))['picture'];
 
         <div class="row mt-4">
             <div class="col-sm-12 col-md-12 col-lg-7 col-xl-4">
-                <input type="hidden" name="image-verifier" value="<?= cipher($employee['picture']) ?>">
-                <input name="update-profile-photo" type="submit" value="Update Profile Photo" class="btn btn-primary btn-block btn-lg">
+                <input type="hidden" name="image-verifier" value="<?= cipher($picture) ?>">
+                <input name="update-profile-photo" type="submit" value="Update Profile Photo"
+                    class="btn btn-primary btn-block btn-lg">
             </div>
         </div>
     </form>
