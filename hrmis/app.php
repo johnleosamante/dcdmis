@@ -180,7 +180,7 @@ if (isset($_POST['save-child'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'children';
 
-    if (numRows(child($employeeId, $childId)) === 0) {
+    if (!child($employeeId, $childId)) {
         createChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId);
 
         $logMessage = 'Added employee child';
@@ -541,13 +541,13 @@ if (isset($_POST['update-other-information'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'other-information';
 
-    if (numRows(otherInformation($employeeId)) === 0) {
-        createOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
+    if (!otherInformation($employeeId)) {
+        $otherInformation = createOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
     } else {
-        updateOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
+        $otherInformation = updateOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
     }
 
-    if (affectedRows()) {
+    if ($otherInformation) {
         $message = 'Other information has been updated successfully.';
 
         createSystemLog($stationId, $userId, 'Updated employee other information', $employeeId, clientIp());
@@ -608,7 +608,7 @@ if (isset($_POST['reassign-employee'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $positions = position($employeeId);
 
-    $positionId = numRows($positions) > 0 ? fetchAssoc($positions)['position_id'] : '';
+    $positionId = $positions ? $positions['position_id'] : '';
     $eStationId = sanitize($_POST['assignment']);
     $date = sanitize($_POST['assignment-date']);
 
@@ -618,18 +618,18 @@ if (isset($_POST['reassign-employee'])) {
 
     $showAlert = true;
 
-    if (numRows(user($employeeId)) > 0) {
+    if (user($employeeId)) {
         deleteUserRoles($employeeId);
     }
 
-    if (numRows(station($employeeId)) === 0) {
-        createStation($date, $eStationId, $positionId, $employeeId);
+    if (!station($employeeId)) {
+        $updatedStation = createStation($date, $eStationId, $positionId, $employeeId);
     } else {
         updateEmployeeStatus('Active', $employeeId);
-        updateStation($date, $eStationId, $positionId, $employeeId);
+        $updatedStation = updateStation($date, $eStationId, $positionId, $employeeId);
     }
 
-    if (affectedRows()) {
+    if ($updatedStation) {
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been reassigned successfully to [<a href="' . customUri('hrmis', 'School Information', $eStationId) . '" title="View ' . stationName($eStationId) . ' information">' . strtoupper(stationName($eStationId)) . '</a>].';
 
         createSystemLog($stationId, $userId, 'Reassigned employee', $employeeId, clientIp());
@@ -642,12 +642,11 @@ if (isset($_POST['reassign-employee'])) {
 if (isset($_POST['promote-employee'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $positionId = sanitize($_POST['position']);
-    $position = strtoupper(fetchAssoc(positions($positionId))['position']);
-    $stations = station($employeeId);
+    $position = strtoupper(positions($positionId)['position']);
+    $station = station($employeeId);
     $eStationId = '';
 
-    if (numRows($stations) > 0) {
-        $station = fetchAssoc($stations);
+    if ($station) {
         $eStationId = $station['station_id'];
     }
 
@@ -659,30 +658,29 @@ if (isset($_POST['promote-employee'])) {
 
     $showAlert = true;
 
-    $psipops = psipop($employeeId);
+    $psipop = psipop($employeeId);
     $status = $doa = $eligibility = null;
 
-    if (numRows($psipops) > 0) {
-        $psipop = fetchAssoc($psipops);
+    if ($psipop) {
         $status = $psipop['status'];
         $doa = $psipop['original_appointment'] ?? date('Y-m-d');
         $eligibility = $psipop['eligibility'];
         updatePsipop('', $status, $doa, $datePromoted, $eligibility, $employeeId);
     }
 
-    if (numRows(getEmployeeStepIncrement($employeeId)) > 0) {
-        $sg = fetchAssoc(positions($positionId))['salary_grade'];
+    if (getEmployeeStepIncrement($employeeId)) {
+        $sg = positions($positionId)['salary_grade'];
         updateStepIncrement($datePromoted, '1', $sg, $employeeId);
     }
 
-    if (numRows(station($employeeId)) === 0) {
-        createStation($datePromoted, $eStationId, $positionId, $employeeId);
+    if (!station($employeeId)) {
+        $createdStation = createStation($datePromoted, $eStationId, $positionId, $employeeId);
     } else {
         updateEmployeeStatus('Active', $employeeId);
-        updateStation($datePromoted, $eStationId, $positionId, $employeeId);
+        $createdStation = updateStation($datePromoted, $eStationId, $positionId, $employeeId);
     }
 
-    if (affectedRows()) {
+    if ($createdStation) {
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been promoted successfully to [' . $position . '].';
 
         createSystemLog($stationId, $userId, 'Promoted employee', $employeeId, clientIp());
@@ -702,17 +700,17 @@ if (isset($_POST['remove-employee'])) {
         return;
     }
 
-    $positionId = fetchAssoc(position($employeeId))['position_id'];
-    $eStationId = fetchAssoc(station($employeeId))['station_id'];
+    $positionId = position($employeeId)['position_id'];
+    $eStationId = station($employeeId)['station_id'];
     $psipopData = psipop($employeeId);
-    $psipopItem = numRows($psipopData) > 0 ? fetchAssoc($psipopData)['item'] : '';
+    $psipopItem = $psipopData ? $psipopData['item'] : '';
     $dateVacated = date('Y-m-d');
 
-    if (numRows(employee($employeeId)) > 0) {
-        updateEmployeeStatus($reason, $employeeId);
+    if (employee($employeeId)) {
+        $updatedEmployeeStatus = updateEmployeeStatus($reason, $employeeId);
     }
 
-    if (affectedRows()) {
+    if ($updatedEmployeeStatus) {
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
 
         // Create vacancy unless skipped or reason is Duplicate
@@ -733,11 +731,11 @@ if (isset($_POST['set-school-head'])) {
     $schoolId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $showAlert = true;
 
-    if (numRows(employee($employeeId)) > 0) {
-        updateSchoolHead($schoolId, $employeeId);
+    if (employee($employeeId)) {
+        $updatedSchoolHead = updateSchoolHead($schoolId, $employeeId);
     }
 
-    if (affectedRows()) {
+    if ($updatedSchoolHead) {
         $success = true;
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been successfully set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . strtoupper(stationName($schoolId)) . '</a>].';
 
@@ -817,18 +815,18 @@ if (isset($_POST['save-psipop'])) {
     $item = sanitize($_POST['item']);
     $doa = sanitize($_POST['doa']);
     $dlp = sanitize($_POST['dlp']);
-    $positionId = fetchAssoc(position($employeeId))['position_id'];
-    $salaryGrade = fetchAssoc(positions($positionId))['salary_grade'];
+    $positionId = position($employeeId)['position_id'];
+    $salaryGrade = positions($positionId)['salary_grade'];
     $employeeStep = getEmployeeStepIncrement($employeeId);
     $step = '1';
     $status = sanitize($_POST['status']);
     $eligibility = sanitize($_POST['eligibility']);
     $showAlert = true;
 
-    if (numRows($employeeStep) === 0) {
+    if (!$employeeStep) {
         createStepIncrement($dlp, $step, $salaryGrade, $employeeId);
     } else {
-        $esi = fetchAssoc($employeeStep);
+        $esi = $employeeStep;
         $step = $esi['step'];
 
         if (empty($esi['date_last_step'])) {
@@ -838,19 +836,17 @@ if (isset($_POST['save-psipop'])) {
 
     $employeeAward = getEmployeeLoyaltyAward($employeeId);
 
-    if (numRows($employeeAward) === 0) {
-        createLoyaltyAward($doa, $employeeId);
+    if (!$employeeAward) {
+        $createdLoyaltyAward = createLoyaltyAward($doa, $employeeId);
     } else {
-        $ela = fetchAssoc($employeeAward);
+        $ela = $employeeAward;
 
-        if (empty($ela['last_awarded_on'])) {
-            updateLoyaltyAward($doa, $employeeId);
-        }
+        $createdLoyaltyAward = empty($ela['last_awarded_on']) ? updateLoyaltyAward($doa, $employeeId) : null;
     }
 
-    updatePsipop($item, $status, $doa, $dlp, $eligibility, $employeeId);
+    $updatedPsipop = updatePsipop($item, $status, $doa, $dlp, $eligibility, $employeeId);
 
-    if (affectedRows()) {
+    if ($createdLoyaltyAward || $updatedPsipop) {
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>]' . "'s PSIPOP information has been updated successfully.";
 
         createSystemLog($stationId, $userId, 'Updated PSIPOP', $employeeId, clientIp());
@@ -905,19 +901,19 @@ if (isset($_POST['save-201-file'])) {
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    if (numRows(fileAttachment($employeeId, $fileId)) === 0) {
-        createFileAttachment($description, $filename, $ext, $employeeId);
+    if (!fileAttachment($employeeId, $fileId)) {
+        $updatedFileAttachment = createFileAttachment($description, $filename, $ext, $employeeId);
 
         $logMessage = 'Added 201 file';
         $message = '201 file has been added successfully.';
     } else {
-        updateFileAttachment($description, $filename, $ext, $employeeId, $fileId);
+        $updatedFileAttachment = updateFileAttachment($description, $filename, $ext, $employeeId, $fileId);
 
         $logMessage = 'Updated 201 file';
         $message = '201 file has been updated successfully.';
     }
 
-    if (!affectedRows()) {
+    if (!$updatedFileAttachment) {
         $message = 'No changes have been made to 201 file.';
         return;
     }
@@ -931,12 +927,11 @@ if (isset($_POST['delete-201-file'])) {
     $fileId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $showAlert = true;
     $filename = null;
-    $files = fileAttachment($employeeId, $fileId);
+    $file = fileAttachment($employeeId, $fileId);
 
-    if (numRows($files) > 0) {
-        $file = fetchAssoc($files);
+    if ($file) {
         $filename = $file['filename'];
-        deleteFileAttachment($employeeId, $fileId);
+        $deletedFile = deleteFileAttachment($employeeId, $fileId);
     }
 
     if (affectedRows()) {
@@ -953,14 +948,14 @@ if (isset($_POST['approve-step-increment'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $showAlert = true;
 
-    $positions = fetchAssoc(position($employeeId));
+    $positions = position($employeeId);
     $positionId = $positions['position_id'];
-    $sg = fetchAssoc(positions($positionId))['salary_grade'];
+    $sg = positions($positionId)['salary_grade'];
 
     $stepIncrement = getEmployeeStepIncrement($employeeId);
 
-    if (numRows($stepIncrement) > 0) {
-        $esi = fetchAssoc($stepIncrement);
+    if ($stepIncrement) {
+        $esi = $stepIncrement;
         $lastStep = $esi['date_last_step'];
         $step = (int) $esi['step'];
         $now = new DateTime('now');
@@ -990,8 +985,8 @@ if (isset($_POST['approve-loyalty-award'])) {
 
     $loyaltyAward = getEmployeeLoyaltyAward($employeeId);
 
-    if (numRows($loyaltyAward) > 0) {
-        $ela = fetchAssoc($loyaltyAward);
+    if ($loyaltyAward) {
+        $ela = $loyaltyAward;
 
         $doa = new DateTime($ela['last_awarded_on']);
         $now = new DateTime('now');
