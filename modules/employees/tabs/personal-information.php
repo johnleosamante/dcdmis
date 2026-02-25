@@ -297,7 +297,7 @@
                             <?php
                             $citizenship = '1';
                             $nationalityName = 'Filipino';
-                            $nationality = citizenship($employee['citizenship']);
+                            $nationality = citizenship($employee['citizenship_id']);
                             if ($nationality) {
                                 $nationalityName = $nationality['name'];
                                 $citizenship = $nationality['id'];
@@ -309,9 +309,9 @@
                                 <select class="form-control" id="citizenship" name="citizenship"
                                     <?= setActiveNavigation($editMode, 'title="Required field"') ?> required>
                                     <?php $nationalities = citizenships();
-                                    while ($nationality = fetchAssoc($nationalities)): ?>
+                                    foreach ($nationalities as $nationality): ?>
                                         <option value="<?= $nationality['id'] ?>" <?= setOptionSelected($nationality['id'], $citizenship) ?>><?= $nationality['name'] ?></option>
-                                    <?php endwhile ?>
+                                    <?php endforeach ?>
                                 </select>
                             <?php endif ?>
                         </div>
@@ -355,9 +355,9 @@
                                     <?= setActiveNavigation($editMode, 'title="Leave N/A if not applicable"') ?>>
                                     <option value="N/A">N/A</option>
                                     <?php $countries = countries();
-                                    while ($country = fetchAssoc($countries)): ?>
+                                    foreach ($countries as $country): ?>
                                         <option value="<?= $country['id'] ?>" <?= setOptionSelected($country['id'], $employee['dual_citizenship_country']) ?>><?= $country['name'] ?></option>
-                                    <?php endwhile ?>
+                                    <?php endforeach ?>
                                 </select>
                             <?php endif ?>
                         </div>
