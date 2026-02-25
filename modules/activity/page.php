@@ -47,14 +47,16 @@ messageAlert($showAlert, $message, $success);
                     foreach ($query as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= ++$no ?></td>
-                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
-                            <td class="text-left align-middle"><?= $row['activity'] ?></td>
+                            <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
+                            <td class="text-left align-middle"><?= $row['action'] ?></td>
                             <td class="text-center align-middle">
-                                <?php if (employee($row['target'])) {
-                                    $userLabel = $userId === $row['target'] ? 'YOU' : userName($row['target']);
-                                    modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['target']), $userLabel);
+                                <?php
+                                $target_id = $row['target_id'];
+                                if (employee($target_id)) {
+                                    $userLabel = $userId === $target_id ? 'YOU' : userName($target_id);
+                                    modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($target_id), $userLabel);
                                 } else {
-                                    echo $row['target'];
+                                    echo $target_id;
                                 } ?>
                                 <br><small><?= '(' . $row['ip'] . ')' ?></small>
                             </td>
