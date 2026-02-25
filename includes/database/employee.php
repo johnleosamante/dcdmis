@@ -257,7 +257,7 @@ function createEmployee($id, $last_name, $first_name, $middle_name, $ext, $sex, 
     return insert('persons', $data);
 }
 
-function updateEmployee($last_name, $first_name, $middle_name, $ext, $bmonth, $bday, $byear, $pob, $sex, $civilStatus, $civilStatusSpecify, $religion, $citizenship, $dualCitizenship, $country, $rlot, $rstreet, $rsubdivision, $rbarangay, $rcity, $rprovince, $rzip, $plot, $pstreet, $psubdivision, $pbarangay, $pcity, $pprovince, $pzip, $height, $weight, $bloodType, $umid, $crn, $bp, $pagibig, $philhealth, $philsys, $sss, $telephone, $mobile, $email, $tin, $agency_id, $prc, $photo, $id)
+function updateEmployee($last_name, $first_name, $middle_name, $ext, $bmonth, $bday, $byear, $pob, $sex, $civilStatus, $civilStatusSpecify, $religion, $citizenship_id, $dualCitizenship, $country, $rlot, $rstreet, $rsubdivision, $rbarangay, $rcity, $rprovince, $rzip, $plot, $pstreet, $psubdivision, $pbarangay, $pcity, $pprovince, $pzip, $height, $weight, $bloodType, $umid, $crn, $bp, $pagibig, $philhealth, $philsys, $sss, $telephone, $mobile, $email, $tin, $agency_id, $prc, $photo, $id)
 {
     $data = [
         'last_name' => $last_name,
@@ -272,7 +272,7 @@ function updateEmployee($last_name, $first_name, $middle_name, $ext, $bmonth, $b
         'civil_status' => $civilStatus,
         'specify_other_civil_status' => $civilStatusSpecify,
         'religion' => $religion,
-        'citizenship' => $citizenship,
+        'citizenship_id' => $citizenship_id,
         'dual_citizenship_type' => $dualCitizenship,
         'dual_citizenship_country' => $country,
         'residence_lot' => $rlot,
