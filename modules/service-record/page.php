@@ -88,7 +88,7 @@ if ($isHrmis) {
                             <td class="align-middle"><?= toDate($service['from_date']) ?></td>
                             <td class="align-middle"><?= $service['is_present'] ? 'PRESENT' : toDate($service['to_date']) ?>
                             </td>
-                            <td class="align-middle"><?= toHandleNull($service['position_id'], 'N/A') ?></td>
+                            <td class="align-middle"><?= toHandleNull($service['designation'], 'N/A') ?></td>
                             <td class="align-middle"><?= $service['appointment_status'] ?></td>
                             <td class="align-middle">
                                 <?= !empty($service['monthly_salary']) ? toCurrency($service['monthly_salary'] * 12) : 'N/A' ?>
@@ -102,7 +102,7 @@ if ($isHrmis) {
                                 <?= $service['for_separation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A' ?>
                             </td>
                             <td class="align-middle">
-                                <?php //TODO ?>
+                                <?= $service['salary_grade_step_increment'] ?>
                             </td>
                             <?php if ($isHrmis): ?>
                                 <td class="align-middle text-capitalize">
