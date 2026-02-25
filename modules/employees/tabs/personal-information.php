@@ -14,7 +14,7 @@
 
                 <?php if ($editMode): ?>
                     <div class="mt-3 mb-2 custom-file">
-                        <input id="image-upload" type="file" name="image-upload" class="custom-file-input">
+                        <input id="image-upload" type="file" name="image-upload" class="custom-file-input" accept="image/png, image/jpeg">
                         <label id="image-upload-label" class="custom-file-label" for="image-upload">Choose file</label>
                     </div>
 
