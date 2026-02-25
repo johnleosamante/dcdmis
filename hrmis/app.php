@@ -44,36 +44,36 @@ if (isset($_POST['add-employee'])) {
     $today = date('Y-m-d');
 
     if (!isValidEmail($email, 'deped.gov.ph')) {
-        $message = 'The DepEd Email Address you entered is invalid! Operation has been cancelled.';
+        $message = 'The DepEd Email Address you entered is invalid!';
         return;
     }
 
     $name = employeeName($lname, $fname, $mname, $ext);
 
     if ($name) {
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $name['id']) . '" title="View ' . $employee . ' employee information">' . strtoupper($employee) . '</a>] already exist!  Operation has been cancelled.';
+        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $name['id']) . '" title="View ' . $employee . ' employee information">' . strtoupper($employee) . '</a>] already exist!';
         return;
     }
 
-    createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status, $crn, $bp, $pagibig, $philhealth, $tin, $agencyId);
-    createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $employeeId);
-    createOtherInformation(0, 0, '', 0, '', 0, '0000-00-00', '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', $employeeId);
-    createStation($today, $eStationId, $ePositionId, $employeeId);
+    $createdEmployee = createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status, $crn, $bp, $pagibig, $philhealth, $tin, $agencyId);
+    $createdFamily = createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $employeeId);
+    $createdOtherInformation = createOtherInformation(0, 0, '', 0, '', 0, '0000-00-00', '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', $employeeId);
+    $createdStation = createStation($today, $eStationId, $ePositionId, $employeeId);
     $sg = positions($ePositionId)['salary_grade'];
-    createPsipop('', 'Permanent', $today, $today, '', $employeeId);
-    createStepIncrement($today, '1', $sg, $employeeId);
-
-    createIdentification('', '', '', $today, $employeeId);
+    $createdPsipop = createPsipop('', 'Permanent', $today, $today, '', $employeeId);
+    $createdStepIncrement = createStepIncrement($today, '1', $sg, $employeeId);
+    $createdIdentification = createIdentification('', '', '', $today, $employeeId);
     $createdAccount = createAccount($employeeId, hashPassword(generateStrongRandomPassword()));
 
-    if ($createdAccount) {
-        $success = true;
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information">' . strtoupper($employee) . '</a>] was saved successfully.';
-
-        createSystemLog($stationId, $userId, 'Registered employee', $employeeId, clientIp());
-    } else {
+    if (!($createdEmployee && $createdFamily && $createdOtherInformation && $createdStation && $createdPsipop && $createdStepIncrement && $createdIdentification && $createdAccount)) {
         $message = 'Employee was not saved successfully.';
+        return;
     }
+
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information">' . strtoupper($employee) . '</a>] was saved successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Registered employee', $employeeId, clientIp());
 }
 
 if (isset($_POST['update-personal-information'])) {
@@ -107,10 +107,8 @@ if (isset($_POST['update-personal-information'])) {
         }
 
         $uploadDate = date('YmdHis');
-
         $employeePhoto = "uploads/images/{$employeeId}/{$employeeId}{$uploadDate}.{$ext}";
-
-        move_uploaded_file($temp, '../' . $employeePhoto);
+        move_uploaded_file($temp, "../{$employeePhoto}");
     }
 
     $dob = isset($_POST['dob']) ? strtotime($_POST['dob']) : strtotime(date('Y-m-d'));
@@ -128,7 +126,6 @@ if (isset($_POST['update-personal-information'])) {
 
     $message = 'Personal information has been updated successfully.';
     $success = true;
-
     createSystemLog($stationId, $userId, 'Updated employee personal information', $employeeId, clientIp());
 }
 
@@ -156,13 +153,14 @@ if (isset($_POST['update-family-background'])) {
         createFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId) :
         updateFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId);
 
-    if ($affectedFamily) {
-        $message = 'Family background has been updated successfully.';
-        createSystemLog($stationId, $userId, 'Updated employee family background', $employeeId, clientIp());
-    } else {
+    if (!$affectedFamily) {
         $message = 'No changes have been made to family background.';
-        $success = false;
+        return;
     }
+
+    $success = true;
+    $message = 'Family background has been updated successfully.';
+    createSystemLog($stationId, $userId, 'Updated employee family background', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-child'])) {
@@ -187,12 +185,12 @@ if (isset($_POST['save-child'])) {
         $message = 'Child has been updated successfully.';
     }
 
-    if ($affectedChild) {
-        createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    } else {
+    if (!$affectedChild) {
         $message = 'No changes have been made to children.';
-        $success = false;
+        return;
     }
+
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
 if (isset($_POST['delete-child'])) {
@@ -200,17 +198,15 @@ if (isset($_POST['delete-child'])) {
     $childId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'children';
+    $deletedChild = deleteChild($employeeId, $childId);
 
-    deleteChild($employeeId, $childId);
-
-    if (affectedRows()) {
-        $message = 'Child has been deleted successfully.';
-
-        createSystemLog($stationId, $userId, 'Deleted employee child', $employeeId, clientIp());
-    } else {
+    if (!$deletedChild) {
         $message = 'No changes have been made to children.';
-        $success = false;
+        return;
     }
+
+    $message = 'Child has been deleted successfully.';
+    createSystemLog($stationId, $userId, 'Deleted employee child', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-education'])) {
@@ -230,23 +226,23 @@ if (isset($_POST['save-education'])) {
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'educational-background';
 
     if (empty($educationId)) {
-        createEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId);
+        $affectedEducation = createEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId);
 
         $logMessage = 'Added employee education';
         $message = 'Educational background has been added successfully.';
     } else {
-        updateEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId, $educationId);
+        $affectedEducation = updateEducation($level, $school, $course, $from, $to, $isPresent, $highest, $year, $scholarship, $employeeId, $educationId);
 
         $logMessage = 'Updated employee education';
         $message = 'Educational background has been updated successfully.';
     }
 
-    if (affectedRows()) {
-        createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    } else {
-        $message = 'No changes have been made to educational background.';
-        $success = false;
+    if (!$affectedEducation) {
+        $message = $message = 'No changes have been made to educational background.';
+        return;
     }
+
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
 if (isset($_POST['delete-education'])) {
@@ -255,16 +251,14 @@ if (isset($_POST['delete-education'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'educational-background';
 
-    deleteEducation($employeeId, $educationId);
+    $affectedEducation = deleteEducation($employeeId, $educationId);
 
-    if (affectedRows()) {
-        $message = 'Educational background has been deleted successfully.';
-
-        createSystemLog($stationId, $userId, 'Deleted employee education', $employeeId, clientIp());
-    } else {
+    if (!$affectedEducation) {
         $message = 'No changes have been made to educational background.';
-        $success = false;
+        return;
     }
+
+    createSystemLog($stationId, $userId, 'Deleted employee education', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-eligibility'])) {
