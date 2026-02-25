@@ -16,18 +16,17 @@ $modalTitle = 'Add Civil Service Eligibility';
 
 if (isset($eligibilityId)) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Civil Service Eligibility' : 'Edit Civil Service Eligibility';
-    $eligibilities = eligibility($employeeId, $eligibilityId);
+    $eligibility = eligibility($employeeId, $eligibilityId);
 
-    if (numRows($eligibilities) > 0) {
-        $eligibility = fetchArray($eligibilities);
-        $eligibilityId = $eligibility['no'];
-        $career = $eligibility['eligibility'];
+    if ($eligibility) {
+        $eligibilityId = $eligibility['id'];
+        $career = $eligibility['title'];
         $rating = $eligibility['rating'];
-        $examDate = toDate($eligibility['date'], 'Y-m-d');
-        $examPlace = $eligibility['place'];
-        $license = $eligibility['license'];
-        $isApplicable = $eligibility['isapplicable'] === 'y';
-        $validity = $isApplicable ? toDate($eligibility['validity'], 'Y-m-d') : date('Y-m-d');
+        $examDate = toDate($eligibility['examination_date'], 'Y-m-d');
+        $examPlace = $eligibility['examination_venue'];
+        $license = $eligibility['license_number'];
+        $isApplicable = $eligibility['has_expiration'];
+        $validity = $isApplicable ? toDate($eligibility['expiration_date'], 'Y-m-d') : date('Y-m-d');
     }
 }
 ?>
@@ -39,36 +38,44 @@ if (isset($eligibilityId)) {
         <form method="POST" action="">
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="career" class="mb-0">Career Service / RA 1080 (Board/Bar) / Under Special Laws / CES / CSEE / Barangay Eligibility / Driver's License: <?php showAsterisk() ?></label>
-                    <input id="career" name="career" type="text" class="form-control" title="Required field" value="<?= $career ?>" required>
+                    <label for="career" class="mb-0">Career Service / RA 1080 (Board/Bar) / Under Special Laws / CES /
+                        CSEE / Barangay Eligibility / Driver's License: <?php showAsterisk() ?></label>
+                    <input id="career" name="career" type="text" class="form-control" title="Required field"
+                        value="<?= $career ?>" required>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="rating" class="mb-0">Rating <br>(if applicable):</label>
-                            <input id="rating" name="rating" type="number" class="form-control" min="0" step="0.01" title="Leave blank if not applicable" value="<?= $rating ?>">
+                            <input id="rating" name="rating" type="number" class="form-control" min="0" step="0.01"
+                                title="Leave blank if not applicable" value="<?= $rating ?>">
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="exam-date" class="mb-0">Date of Examination / Conferment: <?php showAsterisk() ?></label>
-                            <input id="exam-date" name="exam-date" type="date" class="form-control" title="Required field" value="<?= $examDate ?>" required>
+                            <label for="exam-date" class="mb-0">Date of Examination / Conferment:
+                                <?php showAsterisk() ?></label>
+                            <input id="exam-date" name="exam-date" type="date" class="form-control"
+                                title="Required field" value="<?= $examDate ?>" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="exam-place" class="mb-0">Place of Examination / Conferment: <?php showAsterisk() ?></label>
-                    <input id="exam-place" name="exam-place" type="text" class="form-control" title="Required field" value="<?= $examPlace ?>" required>
+                    <label for="exam-place" class="mb-0">Place of Examination / Conferment:
+                        <?php showAsterisk() ?></label>
+                    <input id="exam-place" name="exam-place" type="text" class="form-control" title="Required field"
+                        value="<?= $examPlace ?>" required>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="license" class="mb-0">License No. (if applicable):</label>
-                            <input id="license" type="text" name="license" class="form-control" title="Leave blank if not applicable" value="<?= $license ?>">
+                            <input id="license" type="text" name="license" class="form-control"
+                                title="Leave blank if not applicable" value="<?= $license ?>">
                         </div>
                     </div>
 
@@ -80,12 +87,14 @@ if (isset($eligibilityId)) {
                                 </div>
                                 <div class="col-6">
                                     <div class="form-check" title="Check if validity is applicable">
-                                        <input class="form-check-input" id="is-applicable" type="checkbox" name="is-applicable" value="1" <?= setItemChecked($isApplicable) ?>>
+                                        <input class="form-check-input" id="is-applicable" type="checkbox"
+                                            name="is-applicable" value="1" <?= setItemChecked($isApplicable) ?>>
                                         <label class="form-check-label" for="is-applicable">Applicable</label>
                                     </div>
                                 </div>
                             </div>
-                            <input id="validity" name="validity" type="date" class="form-control" value="<?= $validity ?>">
+                            <input id="validity" name="validity" type="date" class="form-control"
+                                value="<?= $validity ?>">
                         </div>
                     </div>
                 </div>
