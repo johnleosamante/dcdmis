@@ -20,9 +20,10 @@
 
             <?php messageAlert($showAlert, $message, $success) ?>
 
-            <form action="" method="POST">
+            <form action="" method="POST" class="mb-0">
                 <div class="form-group">
-                    <input class="form-control" id="email" name="email" type="email" placeholder="juan.delacruz@deped.gov.ph" value="<?= $userEmail ?>" autofocus required>
+                    <input class="form-control" id="email" name="email" type="email"
+                        placeholder="juan.delacruz@deped.gov.ph" value="" autofocus required>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block" name="reset-password">Reset Password</button>
@@ -30,7 +31,8 @@
         </div>
 
         <div class="card-footer text-center">
-            <a class="small" href="<?= uri() . '/login' ?>" title="Login to your account">Login to your account instead</a>
+            <a class="small" href="<?= uri() . '/login' ?>" title="Login to your account">Login to your account
+                instead</a>
         </div>
     </div>
 </div>
