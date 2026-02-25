@@ -54,9 +54,11 @@ if ($isHrmis) {
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= ++$no ?></td>
                             <td class="align-middle"><?= toDateTime($row['created_at']) ?></td>
-                            <td class="text-left align-middle"><?= $row['status'] ?></td>
+                            <td class="text-left align-middle"><?= $row['action'] ?></td>
                             <td class="text-center align-middle">
-                                <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['person_id']), userName($row['person_id']));
+                                <?php
+                                $person_id = $row['person_id'];
+                                modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($person_id), userName($person_id));
 
                                 if ($isDmis || $isHrmis): ?>
                                     <br><small><?= '(' . $row['ip'] . ')' ?></small>
