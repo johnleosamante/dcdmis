@@ -4,6 +4,12 @@
 
 <div class="tab-pane fade<?= setActiveNavigation(isset($activeTab) && $activeTab === 'work-experience', 'show active') ?>"
     id="work-experience">
+    <?php if ($editMode): ?>
+        <div class="d-sm-flex justify-content-end my-3">
+            <?php modalButtonSplit(uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus', 'Add Work Experience', 'primary') ?>
+        </div>
+    <?php endif ?>
+
     <div class="row my-3">
         <div class="col table-responsive">
             <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
@@ -39,7 +45,7 @@
                                 <td class="align-middle">
                                     <?= !empty($experience['monthly_salary']) ? toCurrency($experience['monthly_salary']) : 'N/A' ?>
                                 </td>
-                                <td class="align-middle"><?php //TODO ?></td>
+                                <td class="align-middle"><?= $experience['salary_grade_step_increment'] ?></td>
                                 <td class="align-middle"><?= $experience['appointment_status'] ?></td>
                                 <td class="align-middle"><?= (bool) $experience['is_government_service'] ? 'Y' : 'N' ?>
                                 </td>
