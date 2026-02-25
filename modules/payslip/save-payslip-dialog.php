@@ -18,7 +18,7 @@ if (isset($payslipId)) {
     if ($payslip) {
         $payslipId = $payslip['id'];
         $description = $payslip['description'];
-        $filename = $payslip['filename'];
+        $filename = $payslip['file_name'];
     }
 }
 ?>
