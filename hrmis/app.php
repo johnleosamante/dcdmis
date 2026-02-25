@@ -15,6 +15,8 @@ if (isset($_POST['primary-search-button'])) {
     redirect(customUri('hrmis', 'Employee Search', sanitize($_POST['primary-search-text'])));
 }
 
+$success = false;
+
 if (isset($_POST['add-employee'])) {
     $employeeId = getDatetimeAsId();
     $lname = sanitize($_POST['lname']);
@@ -40,7 +42,6 @@ if (isset($_POST['add-employee'])) {
     $agencyId = sanitize($_POST['agency_id']);
     $showAlert = true;
     $employee = toName($lname, $fname, $mname, $ext, true);
-    $success = false;
     $today = date('Y-m-d');
 
     if (!isValidEmail($email, 'deped.gov.ph')) {
@@ -81,7 +82,6 @@ if (isset($_POST['update-personal-information'])) {
     $employeePhoto = isset($_POST['image-verifier']) ? sanitize(decipher($_POST['image-verifier'])) : $defaultImage;
     $ext = null;
     $showAlert = true;
-    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'personal-information';
 
     if (is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
@@ -126,6 +126,7 @@ if (isset($_POST['update-personal-information'])) {
 
     $message = 'Personal information has been updated successfully.';
     $success = true;
+
     createSystemLog($stationId, $userId, 'Updated employee personal information', $employeeId, clientIp());
 }
 
@@ -158,8 +159,9 @@ if (isset($_POST['update-family-background'])) {
         return;
     }
 
-    $success = true;
     $message = 'Family background has been updated successfully.';
+    $success = true;
+
     createSystemLog($stationId, $userId, 'Updated employee family background', $employeeId, clientIp());
 }
 
@@ -190,6 +192,8 @@ if (isset($_POST['save-child'])) {
         return;
     }
 
+    $success = true;
+
     createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
@@ -205,7 +209,9 @@ if (isset($_POST['delete-child'])) {
         return;
     }
 
+    $success = true;
     $message = 'Child has been deleted successfully.';
+
     createSystemLog($stationId, $userId, 'Deleted employee child', $employeeId, clientIp());
 }
 
@@ -242,6 +248,8 @@ if (isset($_POST['save-education'])) {
         return;
     }
 
+    $success = true;
+
     createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
@@ -257,6 +265,8 @@ if (isset($_POST['delete-education'])) {
         $message = 'No changes have been made to educational background.';
         return;
     }
+
+    $success = true;
 
     createSystemLog($stationId, $userId, 'Deleted employee education', $employeeId, clientIp());
 }
@@ -276,23 +286,23 @@ if (isset($_POST['save-eligibility'])) {
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
 
     if (empty($eligibilityId)) {
-        createEligibility($career, $rating, $examDate, $examPlace, $license, $isApplicable, $validity, $employeeId);
-
+        $affectedEligibility = createEligibility($career, $rating, $examDate, $examPlace, $license, $isApplicable, $validity, $employeeId);
         $logMessage = 'Added employee eligibility';
         $message = 'Civil service eligibility has been added successfully.';
     } else {
-        updateEligibility($career, $rating, $examDate, $examPlace, $license, $isApplicable, $validity, $employeeId, $eligibilityId);
-
+        $affectedEligibility = updateEligibility($career, $rating, $examDate, $examPlace, $license, $isApplicable, $validity, $employeeId, $eligibilityId);
         $logMessage = 'Updated employee eligibility';
         $message = 'Civil service eligibility has been updated successfully.';
     }
 
-    if (affectedRows()) {
-        createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    } else {
+    if (!$affectedEligibility) {
         $message = 'No changes have been made to civil service eligibility.';
-        $success = false;
+        return;
     }
+
+    $success = true;
+
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
 if (isset($_POST['delete-eligibility'])) {
@@ -301,15 +311,17 @@ if (isset($_POST['delete-eligibility'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
 
-    deleteEligibility($employeeId, $eligibilityId);
+    $affectedEligibility = deleteEligibility($employeeId, $eligibilityId);
 
-    if (affectedRows()) {
-        $message = 'Civil service eligibility has been deleted successfully.';
-
-        createSystemLog($stationId, $userId, 'Deleted employee eligibility', $employeeId, clientIp());
-    } else {
+    if (!$affectedEligibility) {
         $message = 'No changes have been made to civil service eligibility.';
+        return;
     }
+
+    $message = 'Civil service eligibility has been deleted successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Deleted employee eligibility', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-voluntary-work'])) {
