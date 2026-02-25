@@ -92,7 +92,7 @@ function updateChild($last_name, $first_name, $name_extension, $middle_name, $bi
         'birthdate' => $birthdate,
     ];
 
-    return update('children', $data, '`person_id` = ? AND `child_id` = ?', [$person_id, $child_id]);
+    return update('children', $data, '`person_id` = ? AND `id` = ?', [$person_id, $child_id]);
 }
 
 function deleteChild($person_id, $child_id)
