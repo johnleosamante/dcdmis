@@ -35,7 +35,7 @@ function updateEligibility($title, $rating, $examination_date, $examination_venu
         'rating' => $rating,
         'examination_date' => $examination_date,
         'examination_venue' => $examination_venue,
-        'license_numnber' => $license_number,
+        'license_number' => $license_number,
         'has_expiration' => $has_expiration,
         'expiration_date' => $expiration_date
     ];
