@@ -25,24 +25,23 @@ require_once(root() . '/includes/database/learning-development.php');
 require_once(root() . '/includes/database/position.php');
 
 $employeeId = isset($_GET['p']) ? sanitize(decode($_GET['p'])) : null;
-$trainings = attendedTraining($code, $employeeId);
+$training = attendedTraining($code, $employeeId);
 
-if (numRows($trainings) === 0) {
+if (!$training) {
     redirect(customUri($activeApp, '404'));
 }
 
-$employee = fetchAssoc(employee($employeeId));
-$employeeName = strtoupper(toHandleEncoding(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true)));
-$title = $url . ' | ' . $code . ' | ' . $employeeName;
+$employee = employee($employeeId);
+$employeeName = strtoupper(toHandleEncoding(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true)));
+$title = "{$url} | {$code} | {$employeeName}";
 $pronoun = $employee['sex'] === 'Male' ? 'his' : 'her';
-$training = fetchAssoc($trainings);
 $trainingTitle = toHandleEncoding($training['title']);
-$trainingDate = empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']);
+$trainingDate = empty($training['unconsecutive_date']) ? toDateRange($training['start_date'], $training['end_date']) : toHandleEncoding($training['unconsecutive_date']);
 $trainingVenue = toHandleEncoding($training['venue']);
-$lastDate = strtotime($training['to']);
+$lastDate = strtotime($training['end_date']);
 $lastDay = toOrdinal(date('j', $lastDate));
-$givenDate = $lastDay . ' day of ' . date('F, Y', $lastDate);
-$signatory = $training['signatory'];
+$givenDate = "{$lastDay} day of " . date('F, Y', $lastDate);
+$signatory = $training['signatory_id'];
 
 if (empty($signatory)) {
     redirect(customUri($activeApp, 'Certificate of Participation'));
@@ -50,7 +49,7 @@ if (empty($signatory)) {
 
 $signatoryName = toHandleEncoding(userName($signatory, true));
 $signatureWidth = 45;
-$position = toHandleEncoding(fetchAssoc(position($signatory))['position']);
+$position = toHandleEncoding(position($signatory)['official_title']);
 $code = customUri('print', 'Certificate of Participation', $code, DOMAIN) . '&p=' . encode($employeeId);
 
 $pdf = new PDF('L', 'mm', array($width, $height));
