@@ -2,7 +2,7 @@
 // voluntary_works
 function voluntaryWorks($person_id)
 {
-    $sql = "SELECT * FROM `voluntary_works` WHERE `id` = ? ORDER BY `is_present` DESC, `from_date` DESC, `to_date` DESC";
+    $sql = "SELECT * FROM `voluntary_works` WHERE `person_id` = ? ORDER BY `is_present` DESC, `from_date` DESC, `to_date` DESC";
     return query($sql, [$person_id]);
 }
 
@@ -17,8 +17,8 @@ function createVoluntaryWork($organization, $from_date, $to_date, $is_present, $
     $data = [
         'organization' => $organization,
         'from_date' => $from_date,
-        'to_date' => $is_present ? null : $to_date,
-        'is_present' => $is_present ? 1 : 0,
+        'to_date' => $to_date,
+        'is_present' => $is_present,
         'number_of_hours' => $number_of_hours,
         'position_nature_of_work' => $position_nature_of_work,
         'person_id' => $person_id
