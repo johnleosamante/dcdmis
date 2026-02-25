@@ -175,12 +175,12 @@ function attendedTraining($training_id, $person_id)
 {
     $sql = "SELECT t.`id`, t.`title`, t.`start_date`, t.`end_date`, ts.`name`, t.`sponsored_by`, 
                 t.`venue`, tt.`name`, t.`number_of_hours`, t.`unconsecutive_dates`, t.`signatory_id`, 
-                t.`has_certificate`, tp.`person_id, tp.`control_no` 
+                t.`has_certificate`, tp.`person_id`, tp.`control_no` 
             FROM `trainings` AS t 
             INNER JOIN `training_participants` AS tp ON t.`id` = tp.`training_id` 
             INNER JOIN `training_types` AS tt ON t.`training_type_id` = tt.`id` 
             INNER JOIN `training_sponsors` AS ts ON t.`conducted_by` = ts.`id` 
-            WHERE t.`training_id` = ? AND tp.`person_id` = ? LIMIT 1";
+            WHERE t.`id` = ? AND tp.`person_id` = ? LIMIT 1";
     return find($sql, [$training_id, $person_id]);
 }
 
@@ -195,7 +195,7 @@ function conductedTrainingsByYear()
 // trainings, training_participants
 function trainedEmployeesByYear()
 {
-    $sql = "SELECT YEAR(s.`end_date`) AS `name`, COUNT(DISTINCT tp.`person_id`) AS `count` 
+    $sql = "SELECT YEAR(t.`end_date`) AS `name`, COUNT(DISTINCT tp.`person_id`) AS `count` 
             FROM `trainings` AS t 
             INNER JOIN `training_participants` AS tp ON t.`id` = tp.`training_id` 
             GROUP BY YEAR(t.`end_date`) ORDER BY `name` DESC";
