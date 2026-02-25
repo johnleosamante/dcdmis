@@ -152,15 +152,12 @@ if (isset($_POST['update-family-background'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'family-background';
 
-    if (family($employeeId)) {
-        createFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId);
-    } else {
+    $affectedFamily = !family($employeeId) ?
+        createFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId) :
         updateFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId);
-    }
 
-    if (affectedRows()) {
+    if ($affectedFamily) {
         $message = 'Family background has been updated successfully.';
-
         createSystemLog($stationId, $userId, 'Updated employee family background', $employeeId, clientIp());
     } else {
         $message = 'No changes have been made to family background.';
@@ -181,18 +178,16 @@ if (isset($_POST['save-child'])) {
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'children';
 
     if (!child($employeeId, $childId)) {
-        createChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId);
-
+        $affectedChild = createChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId);
         $logMessage = 'Added employee child';
         $message = 'Child has been added successfully.';
     } else {
-        updateChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId, $childId);
-
+        $affectedChild = updateChild($clast, $cfirst, $cext, $cmiddle, $cdob, $employeeId, $childId);
         $logMessage = 'Updated employee child';
         $message = 'Child has been updated successfully.';
     }
 
-    if (affectedRows()) {
+    if ($affectedChild) {
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
     } else {
         $message = 'No changes have been made to children.';
@@ -330,25 +325,25 @@ if (isset($_POST['save-voluntary-work'])) {
     $from = sanitize($_POST['from']);
     $isPresent = isset($_POST['is-present']) ? '1' : '0';
     $to = sanitize($_POST['to']);
-    $hours = isset($_POST['hours']) ? $_POST['hours'] : 0;
+    $hours = $_POST['hours'] ?? 0;
     $position = sanitize($_POST['position']);
     $logMessage = '';
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
 
     if (empty($voluntaryId)) {
-        createVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId);
+        $affectedVoluntaryWork = createVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId);
 
         $logMessage = 'Added employee voluntary work';
         $message = 'Voluntary work has been added successfully.';
     } else {
-        updateVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId, $voluntaryId);
+        $affectedVoluntaryWork = updateVoluntaryWork($organization, $from, $to, $isPresent, $hours, $position, $employeeId, $voluntaryId);
 
         $logMessage = 'Updated employee voluntary work';
         $message = 'Voluntary work has been updated successfully.';
     }
 
-    if (affectedRows()) {
+    if ($affectedVoluntaryWork) {
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
     } else {
         $message = 'No changes have been made to voluntary work.';
