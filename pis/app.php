@@ -107,7 +107,7 @@ if (isset($_POST['delete-payslip'])) {
     $payslip = [];
 
     if ($file) {
-        $filename = $file['filename'];
+        $filename = $file['file_name'];
         $payslip = deletePayslip($employeeId, $payslipId);
     }
 
