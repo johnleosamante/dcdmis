@@ -8,10 +8,9 @@ if (!$isDts) {
 
 $search = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $documents = documentSearch($search, $station);
-$results = numRows($documents);
 $isDts = $activeApp === 'dts';
 
-if ($results === 0) {
+if ($documents === 0) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
@@ -36,14 +35,16 @@ if ($results === 0) {
                 </thead>
 
                 <tbody>
-                    <?php while ($row = fetchArray($documents)) : ?>
+                    <?php foreach ($documents as $row): ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?></td>
+                            <td class="align-middle">
+                                <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
+                            </td>
                             <td class="text-left align-middle"><?= $row['description'] ?></td>
                             <td class="align-middle text-uppercase">
-                                <?= stationName($row['from']) ?>
+                                <?= stationName($row['created_from']) ?>
                             </td>
-                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
+                            <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
                             <td class="align-middle"><?= $row['status'] ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
@@ -57,7 +58,7 @@ if ($results === 0) {
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
