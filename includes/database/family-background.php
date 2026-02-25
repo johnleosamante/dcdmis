@@ -97,7 +97,7 @@ function updateChild($last_name, $first_name, $name_extension, $middle_name, $bi
 
 function deleteChild($person_id, $child_id)
 {
-    return delete('children', '`person_id` = ? AND `child_id` = ?', [$person_id, $child_id]);
+    return delete('children', '`person_id` = ? AND `id` = ?', [$person_id, $child_id]);
 }
 
 function deleteChildren($person_id)
