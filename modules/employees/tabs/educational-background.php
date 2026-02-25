@@ -51,10 +51,10 @@
                                         <div class="dropdown no-arrow">
                                             <?php dropdownEllipsis() ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                                <?php modalDropdownItem(uri() . '/modules/employees/save/save-education-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Edit', 'fa-edit', 'Edit Education');
-                                                modalDropdownItem(uri() . '/modules/employees/save/save-education-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Copy', 'fa-copy', 'Copy Education') ?>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/save/save-education-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($education['id']), 'Edit', 'fa-edit', 'Edit Education');
+                                                modalDropdownItem(uri() . '/modules/employees/save/save-education-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($education['id']), 'Copy', 'fa-copy', 'Copy Education') ?>
                                                 <div class="dropdown-divider"></div>
-                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($education['no']), 'Delete', 'fa-trash', 'Delete Education') ?>
+                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-education-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($education['id']), 'Delete', 'fa-trash', 'Delete Education') ?>
                                             </div>
                                         </div>
                                     </td>
