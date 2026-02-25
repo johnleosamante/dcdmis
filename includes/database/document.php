@@ -417,7 +417,7 @@ function documentSearch($string, $station_id)
 {
     $searchTerm = "%{$string}%";
 
-    $sql = "SELECT t.`id`, t.`description`, t.`created_from`, t.`status` t.`created_at`,  
+    $sql = "SELECT t.`id`, t.`description`, t.`created_from`, t.`status`, t.`created_at`  
             FROM `document_transactions` AS t 
             INNER JOIN `document_transaction_logs` AS l ON t.`id` = l.`document_transaction_id` 
             WHERE (t.`id` LIKE ? OR t.`description` LIKE ? OR l.`details` LIKE ?) 
