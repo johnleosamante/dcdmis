@@ -349,12 +349,14 @@ if (isset($_POST['save-voluntary-work'])) {
         $message = 'Voluntary work has been updated successfully.';
     }
 
-    if ($affectedVoluntaryWork) {
-        createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    } else {
+    if (!$affectedVoluntaryWork) {
         $message = 'No changes have been made to voluntary work.';
-        $success = false;
+        return;
     }
+
+    $success = true;
+
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
 if (isset($_POST['delete-voluntary-work'])) {
@@ -363,16 +365,17 @@ if (isset($_POST['delete-voluntary-work'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
 
-    deleteVoluntaryWork($employeeId, $voluntaryId);
+    $affectedVoluntaryWork = deleteVoluntaryWork($employeeId, $voluntaryId);
 
-    if (affectedRows()) {
-        $message = 'Voluntary work has been deleted successfully.';
-
-        createSystemLog($stationId, $userId, 'Deleted employee voluntary work', $employeeId, clientIp());
-    } else {
+    if (!$affectedVoluntaryWork) {
         $message = 'No changes have been made to voluntary work.';
-        $success = false;
+        return;
     }
+
+    $message = 'Voluntary work has been deleted successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Deleted employee voluntary work', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-special-skill'])) {
@@ -384,23 +387,23 @@ if (isset($_POST['save-special-skill'])) {
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
 
     if (empty($skillId)) {
-        createSpecialSkill($skill, $employeeId);
-
+        $affectedSkill = createSpecialSkill($skill, $employeeId);
         $logMessage = 'Added employee special skill';
         $message = 'Special skill / hobby has been added successfully.';
     } else {
-        updateSpecialSkill($skill, $employeeId, $skillId);
-
+        $affectedSkill = updateSpecialSkill($skill, $employeeId, $skillId);
         $logMessage = 'Updated employee special skill';
         $message = 'Special skill / hobby has been updated successfully.';
     }
 
-    if (affectedRows()) {
-        createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    } else {
+    if (!$affectedSkill) {
         $message = 'No changes have been made to special skill / hobby.';
-        $success = false;
+        return;
     }
+
+    $success = true;
+
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
 if (isset($_POST['delete-special-skill'])) {
@@ -409,16 +412,17 @@ if (isset($_POST['delete-special-skill'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
 
-    deleteSpecialSkill($employeeId, $skillId);
+    $affectedSkill = deleteSpecialSkill($employeeId, $skillId);
 
-    if (affectedRows()) {
-        $message = 'Special skill / hobby has been deleted successfully.';
-
-        createSystemLog($stationId, $userId, 'Deleted employee special skill', $employeeId, clientIp());
-    } else {
+    if (!$affectedSkill) {
         $message = 'No changes have been made to special skill / hobby.';
-        $success = false;
+        return;
     }
+
+    $message = 'Special skill / hobby has been deleted successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Deleted employee special skill', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-recognition'])) {
@@ -430,23 +434,23 @@ if (isset($_POST['save-recognition'])) {
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
 
     if (empty($recognitionId)) {
-        createRecognition($recognition, $employeeId);
-
+        $affectedRecognition = createRecognition($recognition, $employeeId);
         $logMessage = 'Added employee recognition';
         $message = 'Non-academic distinction / recognition has been added successfully.';
     } else {
-        updateRecognition($recognition, $employeeId, $recognitionId);
-
+        $affectedRecognition = updateRecognition($recognition, $employeeId, $recognitionId);
         $logMessage = 'Updated employee recognition';
         $message = 'Non-academic distinction / recognition has been updated successfully.';
     }
 
-    if (affectedRows()) {
-        createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    } else {
+    if (!$affectedRecognition) {
         $message = 'No changes have been made to non-academic distinction / recognition.';
-        $success = false;
+        return;
     }
+
+    $success = true;
+
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
 if (isset($_POST['delete-recognition'])) {
@@ -455,16 +459,17 @@ if (isset($_POST['delete-recognition'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
 
-    deleteRecognition($employeeId, $recognitionId);
+    $affectedRecognition = deleteRecognition($employeeId, $recognitionId);
 
-    if (affectedRows()) {
-        $message = 'Non-academic distinction / recognition has been deleted successfully.';
-
-        createSystemLog($stationId, $userId, 'Deleted employee recognition', $employeeId, clientIp());
-    } else {
+    if (!$affectedRecognition) {
         $message = 'No changes have been made to non-academic distinction / recognition.';
-        $success = false;
+        return;
     }
+
+    $message = 'Non-academic distinction / recognition has been deleted successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Deleted employee recognition', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-membership'])) {
@@ -476,23 +481,23 @@ if (isset($_POST['save-membership'])) {
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
 
     if (empty($membershipId)) {
-        createMembership($membership, $employeeId);
-
+        $affectedMembership = createMembership($membership, $employeeId);
         $logMessage = 'Added employee membership';
         $message = 'Membership in Association / Organization has been added successfully.';
     } else {
-        updateMembership($membership, $employeeId, $membershipId);
-
+        $affectedMembership = updateMembership($membership, $employeeId, $membershipId);
         $logMessage = 'Updated employee membership';
         $message = 'Membership in association / organization has been updated successfully.';
     }
 
-    if (affectedRows()) {
-        createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    } else {
+    if (!$affectedMembership) {
         $message = 'No changes have been made to membership in association / organization.';
-        $success = false;
+        return;
     }
+
+    $success = true;
+
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
 if (isset($_POST['delete-membership'])) {
@@ -501,16 +506,17 @@ if (isset($_POST['delete-membership'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
 
-    deleteMembership($employeeId, $membershipId);
+    $affectedMembership = deleteMembership($employeeId, $membershipId);
 
-    if (affectedRows()) {
-        $message = 'Membership in association / organization has been deleted successfully.';
-
-        createSystemLog($stationId, $userId, 'Deleted employee membership', $employeeId, clientIp());
-    } else {
+    if (!$affectedMembership) {
         $message = 'No changes have been made to membership in association / organization.';
-        $success = false;
+        return;
     }
+
+    $message = 'Membership in association / organization has been deleted successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Deleted employee membership', $employeeId, clientIp());
 }
 
 if (isset($_POST['update-other-information'])) {
@@ -542,20 +548,19 @@ if (isset($_POST['update-other-information'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'other-information';
 
-    if (!otherInformation($employeeId)) {
-        $otherInformation = createOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
-    } else {
-        $otherInformation = updateOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
-    }
+    $affectedOtherInformation = !otherInformation($employeeId) ?
+        createOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId) :
+        updateOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
 
-    if ($otherInformation) {
-        $message = 'Other information has been updated successfully.';
-
-        createSystemLog($stationId, $userId, 'Updated employee other information', $employeeId, clientIp());
-    } else {
+    if (!$affectedOtherInformation) {
         $message = 'No changes have been made to other information.';
-        $success = false;
+        return;
     }
+
+    $message = 'Other information has been updated successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Updated employee other information', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-reference'])) {
@@ -569,23 +574,23 @@ if (isset($_POST['save-reference'])) {
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
 
     if (empty($referenceId)) {
-        createReference($name, $address, $contact, $employeeId);
-
+        $affectedReference = createReference($name, $address, $contact, $employeeId);
         $logMessage = 'Added employee reference';
         $message = 'Reference has been added successfully.';
     } else {
-        updateReference($name, $address, $contact, $employeeId, $referenceId);
-
+        $affectedReference = updateReference($name, $address, $contact, $employeeId, $referenceId);
         $logMessage = 'Updated employee reference';
         $message = 'Reference has been updated successfully.';
     }
 
-    if (affectedRows()) {
-        createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    } else {
+    if (!$affectedReference) {
         $message = 'No changes have been made to reference.';
-        $success = false;
+        return;
     }
+
+    $success = true;
+
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
 if (isset($_POST['delete-reference'])) {
@@ -593,16 +598,17 @@ if (isset($_POST['delete-reference'])) {
     $referenceId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
 
-    deleteReference($employeeId, $referenceId);
+    $affectedReference = deleteReference($employeeId, $referenceId);
 
-    if (affectedRows()) {
-        $message = 'Reference has been deleted successfully.';
-
-        createSystemLog($stationId, $userId, 'Deleted employee reference', $employeeId, clientIp());
-    } else {
+    if (!$affectedReference) {
         $message = 'No changes have been made to reference.';
-        $success = false;
+        return;
     }
+
+    $message = 'Reference has been deleted successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Deleted employee reference', $employeeId, clientIp());
 }
 
 if (isset($_POST['reassign-employee'])) {
@@ -624,20 +630,21 @@ if (isset($_POST['reassign-employee'])) {
     }
 
     if (!station($employeeId)) {
-        $updatedStation = createStation($date, $eStationId, $positionId, $employeeId);
+        $affectedStation = createStation($date, $eStationId, $positionId, $employeeId);
     } else {
         updateEmployeeStatus('Active', $employeeId);
-        $updatedStation = updateStation($date, $eStationId, $positionId, $employeeId);
+        $affectedStation = updateStation($date, $eStationId, $positionId, $employeeId);
     }
 
-    if ($updatedStation) {
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been reassigned successfully to [<a href="' . customUri('hrmis', 'School Information', $eStationId) . '" title="View ' . stationName($eStationId) . ' information">' . strtoupper(stationName($eStationId)) . '</a>].';
-
-        createSystemLog($stationId, $userId, 'Reassigned employee', $employeeId, clientIp());
-    } else {
+    if (!$affectedStation) {
         $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] assignment has been made.';
-        $success = false;
+        return;
     }
+
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been reassigned successfully to [<a href="' . customUri('hrmis', 'School Information', $eStationId) . '" title="View ' . stationName($eStationId) . ' information">' . strtoupper(stationName($eStationId)) . '</a>].';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Reassigned employee', $employeeId, clientIp());
 }
 
 if (isset($_POST['promote-employee'])) {
@@ -675,20 +682,21 @@ if (isset($_POST['promote-employee'])) {
     }
 
     if (!station($employeeId)) {
-        $createdStation = createStation($datePromoted, $eStationId, $positionId, $employeeId);
+        $affectedStation = createStation($datePromoted, $eStationId, $positionId, $employeeId);
     } else {
         updateEmployeeStatus('Active', $employeeId);
-        $createdStation = updateStation($datePromoted, $eStationId, $positionId, $employeeId);
+        $affectedStation = updateStation($datePromoted, $eStationId, $positionId, $employeeId);
     }
 
-    if ($createdStation) {
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been promoted successfully to [' . $position . '].';
-
-        createSystemLog($stationId, $userId, 'Promoted employee', $employeeId, clientIp());
-    } else {
+    if (!$affectedStation) {
         $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] information has been made.';
-        $success = false;
+        return;
     }
+
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been promoted successfully to [' . $position . '].';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Promoted employee', $employeeId, clientIp());
 }
 
 if (isset($_POST['remove-employee'])) {
@@ -708,22 +716,27 @@ if (isset($_POST['remove-employee'])) {
     $dateVacated = date('Y-m-d');
 
     if (employee($employeeId)) {
-        $updatedEmployeeStatus = updateEmployeeStatus($reason, $employeeId);
+        $affectedEmployeeStatus = updateEmployeeStatus($reason, $employeeId);
     }
 
-    if ($updatedEmployeeStatus) {
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
-
-        // Create vacancy unless skipped or reason is Duplicate
-        if (!$skipVacancy && strtolower($reason) !== 'duplicate') {
-            createVacancy('open', $positionId, $eStationId, $psipopItem, $employeeId, $dateVacated, $reason);
-            $message .= ' A vacant item has been created for this position.';
-        }
-
-        createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
-    } else {
+    if (!$affectedEmployeeStatus) {
         $message = 'No changes to employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.';
-        $success = false;
+        return;
+    }
+
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
+
+    if ($skipVacancy && strtolower($reason) === 'duplicate') {
+        return;
+    }
+
+    if (createVacancy('open', $positionId, $eStationId, $psipopItem, $employeeId, $dateVacated, $reason)) {
+        $message .= ' A vacant item has been created for this position.';
+
+        createSystemLog($stationId, $userId, 'Created vacant item', $employeeId, clientIp());
     }
 }
 
@@ -733,18 +746,18 @@ if (isset($_POST['set-school-head'])) {
     $showAlert = true;
 
     if (employee($employeeId)) {
-        $updatedSchoolHead = updateSchoolHead($schoolId, $employeeId);
+        $affectedSchoolHead = updateSchoolHead($schoolId, $employeeId);
     }
 
-    if ($updatedSchoolHead) {
-        $success = true;
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been successfully set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . strtoupper(stationName($schoolId)) . '</a>].';
-
-        createSystemLog($stationId, $userId, 'Set School Head', $employeeId, clientIp());
-    } else {
+    if (!$affectedSchoolHead) {
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] was not set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . strtoupper(stationName($schoolId)) . '</a>].';
-        $success = false;
+        return;
     }
+
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been successfully set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . strtoupper(stationName($schoolId)) . '</a>].';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Set School Head', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-service-record'])) {
@@ -774,23 +787,23 @@ if (isset($_POST['save-service-record'])) {
     }
 
     if (empty($serviceId)) {
-        createExperience($from, $to, $isPresent, $position, $positionCode, $status, $isGovernment, $sg, $salary, $station, $stationAlias, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId);
-
+        $affectedExperience = createExperience($from, $to, $isPresent, $position, $positionCode, $status, $isGovernment, $sg, $salary, $station, $stationAlias, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId);
         $logMessage = 'Added service record';
         $message = 'Service record has been added successfully.';
     } else {
-        updateExperience($from, $to, $isPresent, $position, $positionCode, $status, $isGovernment, $sg, $salary, $station, $stationAlias, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId, $serviceId);
-
+        $affectedExperience = updateExperience($from, $to, $isPresent, $position, $positionCode, $status, $isGovernment, $sg, $salary, $station, $stationAlias, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId, $serviceId);
         $logMessage = 'Updated service record';
         $message = 'Service record has been updated successfully.';
     }
 
-    if (affectedRows()) {
-        createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    } else {
+    if (!$affectedExperience) {
         $message = 'No changes have been made to service record.';
-        $success = false;
+        return;
     }
+
+    $success = true;
+
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
 if (isset($_POST['delete-service-record'])) {
@@ -799,16 +812,17 @@ if (isset($_POST['delete-service-record'])) {
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
 
-    deleteExperience($employeeId, $serviceId);
+    $affectedExperience = deleteExperience($employeeId, $serviceId);
 
-    if (affectedRows()) {
-        $message = 'Service record has been deleted successfully.';
-
-        createSystemLog($stationId, $userId, 'Deleted employee service record', $employeeId, clientIp());
-    } else {
+    if (!$affectedExperience) {
         $message = 'No changes have been made to service record.';
-        $success = false;
+        return;
     }
+
+    $message = 'Service record has been deleted successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Deleted employee service record', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-psipop'])) {
@@ -816,56 +830,54 @@ if (isset($_POST['save-psipop'])) {
     $item = sanitize($_POST['item']);
     $doa = sanitize($_POST['doa']);
     $dlp = sanitize($_POST['dlp']);
-    $positionId = position($employeeId)['position_id'];
-    $salaryGrade = positions($positionId)['salary_grade'];
-    $employeeStep = getEmployeeStepIncrement($employeeId);
-    $step = '1';
     $status = sanitize($_POST['status']);
     $eligibility = sanitize($_POST['eligibility']);
-    $showAlert = true;
+
+    $employeePosition = position($employeeId);
+    $positionId = $employeePosition['position_id'] ?? null;
+    $salaryGrade = positions($positionId)['salary_grade'] ?? null;
+
+    $changesMade = false;
+
+    $employeeStep = getEmployeeStepIncrement($employeeId);
 
     if (!$employeeStep) {
-        createStepIncrement($dlp, $step, $salaryGrade, $employeeId);
-    } else {
-        $esi = $employeeStep;
-        $step = $esi['step'];
-
-        if (empty($esi['date_last_step'])) {
-            updateStepIncrement($dlp, $step, $salaryGrade, $employeeId);
-        }
+        $initialStep = '1';
+        $changesMade = createStepIncrement($dlp, $initialStep, $salaryGrade, $employeeId);
+    } elseif (empty($esi['date_last_step'])) {
+        $changesMade = updateStepIncrement($dlp, $employeeStep['step'], $salaryGrade, $employeeId);
     }
 
     $employeeAward = getEmployeeLoyaltyAward($employeeId);
 
     if (!$employeeAward) {
-        $createdLoyaltyAward = createLoyaltyAward($doa, $employeeId);
-    } else {
-        $ela = $employeeAward;
-
-        $createdLoyaltyAward = empty($ela['last_awarded_on']) ? updateLoyaltyAward($doa, $employeeId) : null;
+        $changesMade = createLoyaltyAward($doa, $employeeId);
+    } elseif (empty($employeeAward['last_awarded_on'])) {
+        $changesMade = updateLoyaltyAward($doa, $employeeId);
     }
 
-    $updatedPsipop = updatePsipop($item, $status, $doa, $dlp, $eligibility, $employeeId);
+    $changesMade = updatePsipop($item, $status, $doa, $dlp, $eligibility, $employeeId);
 
-    if ($createdLoyaltyAward || $updatedPsipop) {
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>]' . "'s PSIPOP information has been updated successfully.";
-
-        createSystemLog($stationId, $userId, 'Updated PSIPOP', $employeeId, clientIp());
-    } else {
+    if (!$changesMade) {
         $message = 'No changes have been made to employee PSIPOP information.';
-        $success = false;
+        return;
     }
+
+    $employeeName = userName($employeeId, true);
+    $viewLink = customUri('hrmis', 'Employee Information', $employeeId);
+    $message = "Employee [<a href='{$viewLink}' title='View {$employeeName} employee information'>{$employeeName}</a>]'s PSIPOP information has been updated successfully.";
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Updated PSIPOP', $employeeId, clientIp());
 }
 
 if (isset($_POST['save-201-file'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $fileId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $description = sanitize($_POST['description']);
-    $filename = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
-    $ext = $logMessage = '';
-    $message = 'No changes have been made to 201 file.';
+    $oldFilename = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
+    $newFilename = $oldFilename;
     $showAlert = true;
-    $success = false;
 
     if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
         $temp = $_FILES['file-upload']['tmp_name'];
@@ -875,52 +887,49 @@ if (isset($_POST['save-201-file'])) {
             return;
         }
 
-        $mimeType = mime_content_type($temp);
-        $allowedFileTypes = ['application/pdf'];
-
-        if (!in_array($mimeType, $allowedFileTypes)) {
+        if (mime_content_type($temp) !== 'applicationd/pdf') {
             $message = 'The choosen file is not an acceptable file (pdf). No changes have been made to 201 file.';
             return;
         }
 
         $ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
+        $newFilename = "uploads/201_files/{$employeeId}/{$employeeId}-" . date('YmdHis') . ".{$ext}";
 
-        if (!empty($filename) && file_exists(root() . '/' . $filename)) {
-            unlink(root() . '/' . $filename);
+        if (!move_uploaded_file($temp, "../{$newFilename}")) {
+            $message = 'Failed to upload 201 file.';
+            return;
         }
 
-        $filename = 'uploads/201_files/' . $employeeId . '/' . $employeeId . '-' . date('YmdHis') . '.' . $ext;
-
-        move_uploaded_file($temp, '../' . $filename);
+        if (!empty($oldFilename) && file_exists(root() . '/' . $oldFilename)) {
+            unlink(root() . '/' . $oldFilename);
+        }
     }
 
-    if (empty($filename)) {
+    if (empty($newFilename)) {
         $message = 'No changes have been made to 201 file.';
-        $success = false;
         return;
-    } else {
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    if (!fileAttachment($employeeId, $fileId)) {
-        $updatedFileAttachment = createFileAttachment($description, $filename, $ext, $employeeId);
+    $ext = pathinfo($newFilename, PATHINFO_EXTENSION);
+    $hasExistingRecord = fileAttachment($employeeId, $fileId);
 
+    if (!$hasExistingRecord) {
+        $affectedFileAttachment = createFileAttachment($description, $filename, $ext, $employeeId);
         $logMessage = 'Added 201 file';
-        $message = '201 file has been added successfully.';
     } else {
-        $updatedFileAttachment = updateFileAttachment($description, $filename, $ext, $employeeId, $fileId);
-
+        $affectedFileAttachment = updateFileAttachment($description, $filename, $ext, $employeeId, $fileId);
         $logMessage = 'Updated 201 file';
-        $message = '201 file has been updated successfully.';
     }
 
-    if (!$updatedFileAttachment) {
+    if (!$affectedFileAttachment) {
         $message = 'No changes have been made to 201 file.';
         return;
     }
+
+    $message = "201 file has been " . ($hasExistingRecord ? "updated" : "added") . " successfully.";
+    $success = true;
 
     createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    $success = true;
 }
 
 if (isset($_POST['delete-201-file'])) {
@@ -929,20 +938,23 @@ if (isset($_POST['delete-201-file'])) {
     $showAlert = true;
     $filename = null;
     $file = fileAttachment($employeeId, $fileId);
+    $affectedFile = false;
 
     if ($file) {
         $filename = $file['filename'];
-        $deletedFile = deleteFileAttachment($employeeId, $fileId);
+        $affectedFile = deleteFileAttachment($employeeId, $fileId);
     }
 
-    if (affectedRows()) {
-        createSystemLog($stationId, $userId, 'Deleted employee 201 file', $employeeId, clientIp());
-        unlink(root() . '/' . $filename);
-        $message = '201 file has been deleted successfully.';
-    } else {
+    if (!$affectedFile) {
         $message = 'No changes have been made to 201 file.';
-        $success = false;
+        return;
     }
+
+    $message = '201 file has been deleted successfully.';
+    $success = true;
+
+    unlink(root() . '/' . $filename);
+    createSystemLog($stationId, $userId, 'Deleted employee 201 file', $employeeId, clientIp());
 }
 
 if (isset($_POST['approve-step-increment'])) {
@@ -954,6 +966,7 @@ if (isset($_POST['approve-step-increment'])) {
     $sg = positions($positionId)['salary_grade'];
 
     $stepIncrement = getEmployeeStepIncrement($employeeId);
+    $affectedStepIncrement = false;
 
     if ($stepIncrement) {
         $esi = $stepIncrement;
@@ -967,23 +980,24 @@ if (isset($_POST['approve-step-increment'])) {
         $increment = $serviceDuration < 21 ? 3 * $count : 21;
         $step = $step < 8 ? $step + $count : 8;
 
-        updateStepIncrement(date('Y-m-d', strtotime("+{$increment} years", strtotime($esi['date_last_step']))), $step, $sg, $employeeId);
+        $affectedStepIncrement = updateStepIncrement(date('Y-m-d', strtotime("+{$increment} years", strtotime($esi['date_last_step']))), $step, $sg, $employeeId);
     }
 
-    if (affectedRows()) {
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>]' . "'s step increment " . 'has been approved successfully.';
-
-        createSystemLog($stationId, $userId, 'Approved employee step increment', $employeeId, clientIp());
-    } else {
+    if (!$affectedStepIncrement) {
         $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] information has been made.';
-        $success = false;
+        return;
     }
+
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>]' . "'s step increment " . 'has been approved successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Approved employee step increment', $employeeId, clientIp());
 }
 
 if (isset($_POST['approve-loyalty-award'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $showAlert = true;
-
+    $affectedLoyaltyAward = false;
     $loyaltyAward = getEmployeeLoyaltyAward($employeeId);
 
     if ($loyaltyAward) {
@@ -995,15 +1009,16 @@ if (isset($_POST['approve-loyalty-award'])) {
         $count = (int) ($now->diff($doa)->y / 5);
         $increment = ($count === 2) ? 10 : 5 * $count;
 
-        updateLoyaltyAward(date('Y-m-d', strtotime("+{$increment} years", strtotime($ela['last_awarded_on']))), $employeeId);
+        $affectedLoyaltyAward = updateLoyaltyAward(date('Y-m-d', strtotime("+{$increment} years", strtotime($ela['last_awarded_on']))), $employeeId);
     }
 
-    if (affectedRows()) {
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>]' . "'s loyalty award " . 'has been approved successfully.';
-
-        createSystemLog($stationId, $userId, 'Approved employee loyalty award', $employeeId, clientIp());
-    } else {
+    if (!$affectedLoyaltyAward) {
         $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] information has been made.';
-        $success = false;
+        return;
     }
+
+    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>]' . "'s loyalty award " . 'has been approved successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Approved employee loyalty award', $employeeId, clientIp());
 }
