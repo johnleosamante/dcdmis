@@ -92,7 +92,7 @@ if ($isHrmis) {
                             <td class="align-middle"><?= $training['sponsored_by'] ?></td>
                             <td class="align-middle"><?= $training['venue'] ?></td>
                             <td class="align-middle text-capitalize">
-                                <?php if ($training['has_certificate'] === '1'): ?>
+                                <?php if ($training['has_certificate']): ?>
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
