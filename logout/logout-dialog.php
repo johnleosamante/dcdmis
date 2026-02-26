@@ -15,7 +15,7 @@ $modalTitle = 'Logout';
         </div>
 
         <div class="modal-footer">
-            <form method="POST" action="<?= uri() . '/logout' ?>">
+            <form method="POST" action="<?= "{$baseUri}/logout" ?>">
                 <button type="submit" class="btn btn-danger">Continue</button>
             </form>
             <?php cancelModalButton() ?>
