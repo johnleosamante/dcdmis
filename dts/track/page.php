@@ -8,22 +8,16 @@
     </div>
 
     <?php
-    if (!isset($url) || $url === 'track-document') {
-        require_once('track-document.php');
-    } else {
-        $file = '';
+    $file = !isset($url) || $url === 'track-document' ?
+        'track-document.php' :
+        match ($url) {
+            'Document Information' => 'document-information.php',
+            default => 'track-document.php'
+        };
 
-        switch ($url) {
-            case 'Document Information':
-                $file = 'document-information.php';
-                break;
-            default:
-                $file = 'track-document.php';
-                break;
-        }
-        require_once("{$file}");
-    }
+    require_once("{$file}");
     ?>
 
-    <a class="d-block text-center mx-2 mb-5" href="<?= uri() . '/login' ?>" title="Go to login page">Already have an account? Login instead</a>
+    <a class="d-block text-center mx-2 mb-5" href="<?= uri() . '/login' ?>" title="Go to login page">Already have an
+        account? Login instead</a>
 </div>
