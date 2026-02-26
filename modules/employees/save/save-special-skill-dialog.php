@@ -14,12 +14,11 @@ $modalTitle = 'Add Special Skill / Hobby';
 
 if (isset($skillId)) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Special Skill / Hobby' : 'Edit Special Skill / Hobby';
-    $specialSkills = specialSkill($employeeId, $skillId);
+    $specialSkill = specialSkill($employeeId, $skillId);
 
-    if (numRows($specialSkills) > 0) {
-        $specialSkill = fetchArray($specialSkills);
-        $skillId = $specialSkill['no'];
-        $skill = $specialSkill['skill'];
+    if ($specialSkill) {
+        $skillId = $specialSkill['id'];
+        $skill = $specialSkill['name'];
     }
 }
 ?>
@@ -32,16 +31,17 @@ if (isset($skillId)) {
             <div class="modal-body">
                 <div class="form-group">
                     <label for="skill" class="mb-0">Special Skill / Hobby: <?php showAsterisk() ?></label>
-                    <input id="skill" type="text" name="skill" class="form-control" title="Required field" value="<?= $skill ?>" required>
+                    <input id="skill" type="text" name="skill" class="form-control" title="Required field"
+                        value="<?= $skill ?>" required>
                 </div>
 
                 <?php requiredLegend(0) ?>
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
+                <input type="hidden" name="verifier" value="<?= $_GET['e'] ?? null ?>">
                 <?php
-                $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+                $verifier = $_GET['id'] ?? null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
                 <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
