@@ -2,8 +2,6 @@
 // modules/settings/app.php
 $oldPassword = $password = $passwordConfirm = $generatePassword = null;
 
-$success = false;
-
 if (isset($_POST['update-password'])) {
     $showAlert = true;
     $oldPassword = sanitize($_POST['old-password']);
@@ -93,7 +91,7 @@ if (isset($_POST['update-profile-photo'])) {
     if (is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
         $temp = $_FILES['image-upload']['tmp_name'];
 
-        if ($_FILES['image-upload']['size'] > $imageUploadSizeLimit) {
+        if ($_FILES['image-upload']['size'] > IMAGE_UPLOAD_SIZE_LIMIT) {
             $message = 'The chosen file exceeds the upload file limit (2.5 MB). No changes have been made to personal information.';
             return;
         }
