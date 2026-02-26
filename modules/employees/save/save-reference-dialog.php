@@ -14,14 +14,13 @@ $modalTitle = 'Add Reference';
 
 if (isset($referenceId)) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Reference' : 'Edit Reference';
-    $references = reference($employeeId, $referenceId);
+    $reference = reference($employeeId, $referenceId);
 
-    if (numRows($references) > 0) {
-        $reference = fetchArray($references);
-        $referenceId = $reference['no'];
+    if ($reference) {
+        $referenceId = $reference['id'];
         $name = $reference['name'];
         $address = $reference['address'];
-        $contact = $reference['telephone'];
+        $contact = $reference['contact'];
     }
 }
 ?>
@@ -34,17 +33,20 @@ if (isset($referenceId)) {
             <div class="modal-body">
                 <div class="form-group">
                     <label for="name" class="mb-0">Name: <?php showAsterisk() ?></label>
-                    <input type="text" id="name" name="name" class="form-control" title="Required field" value="<?= $name ?>" required>
+                    <input type="text" id="name" name="name" class="form-control" title="Required field"
+                        value="<?= $name ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="address" class="mb-0">Address: <?php showAsterisk() ?></label>
-                    <input type="text" id="address" name="address" class="form-control" title="Required field" value="<?= $address ?>" required>
+                    <input type="text" id="address" name="address" class="form-control" title="Required field"
+                        value="<?= $address ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="telephone" class="mb-0">Contact Number: <?php showAsterisk() ?></label>
-                    <input type="text" id="telephone" name="telephone" class="form-control" title="Required field" value="<?= $contact ?>" required>
+                    <input type="text" id="telephone" name="telephone" class="form-control" title="Required field"
+                        value="<?= $contact ?>" required>
                 </div>
 
                 <?php requiredLegend(0) ?>
