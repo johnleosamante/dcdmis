@@ -1,6 +1,6 @@
 <?php
 // login/app.php
-function setUserSession($user_id)
+function setUserSession($user_id, $prefix)
 {
     $user = user($user_id);
 
@@ -8,7 +8,6 @@ function setUserSession($user_id)
         return;
     }
 
-    $prefix = alias() . '_';
     $portal = $user['link'];
     $access = $user['access'];
     $station_id = $user['station_id'];
@@ -30,9 +29,6 @@ function setUserSession($user_id)
 }
 
 $appTitle = $page = 'Login';
-$success = false;
-$prefix = alias() . '_';
-$baseUrl = uri();
 
 if (isset($_POST['login'])) {
     $email = sanitize($_POST['email'] ?? '');
@@ -59,25 +55,24 @@ if (isset($_POST['login'])) {
         return;
     }
 
-    $userId = $account['id'];
-    $_SESSION["{$prefix}userId"] = $userId;
+    $_SESSION["{$prefix}userId"] = $userId = $account['id'];
     $_SESSION["{$prefix}email"] = $account['email_address'];
 
     if (isset($_POST['remember'])) {
         setcookie("{$prefix}login", $account['email_address'], time() + getSeconds(8), '/', uri(), false, true);
     }
 
-    setUserSession($userId);
+    setUserSession($userId, $prefix);
 
     if ($accountPassword['status'] === 'Default') {
         $_SESSION["{$prefix}change_password"] = true;
-        redirect("{$baseUrl}/login/change");
+        redirect("{$baseUri}/login/change");
         return;
     }
 
-    redirect("{$baseUrl}/{$activeApp}");
+    redirect("{$baseUri}/{$activeApp}");
 }
 
 if (isset($userId)) {
-    redirect("{$baseUrl}/{$activeApp}");
+    redirect("{$baseUri}/{$activeApp}");
 }
