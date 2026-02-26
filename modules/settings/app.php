@@ -2,9 +2,10 @@
 // modules/settings/app.php
 $oldPassword = $password = $passwordConfirm = $generatePassword = null;
 
+$success = false;
+
 if (isset($_POST['update-password'])) {
     $showAlert = true;
-    $success = false;
     $oldPassword = sanitize($_POST['old-password']);
     $password = sanitize($_POST['password']);
     $passwordConfirm = sanitize($_POST['password-confirm']);
@@ -36,55 +37,58 @@ if (isset($_POST['update-password'])) {
         return;
     }
 
-    $updatedPassword = updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
+    $affectedAccountPassword = updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
 
-    if ($updatedPassword) {
-        $message = 'Your password has been updated successfully.';
-        $success = true;
-        $oldPassword = $password = $passwordConfirm = $generatePassword = null;
-        createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
-    } else {
+    if (!$affectedAccountPassword) {
         $message = 'No changes have been made to your password.';
+        return;
     }
+
+    $message = 'Your password has been updated successfully.';
+    $success = true;
+    $oldPassword = $password = $passwordConfirm = $generatePassword = null;
+
+    createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
 }
 
 if (isset($_POST['update-contact-details'])) {
     $alternateEmail = sanitize($_POST['alternate-email']);
     $alternateMobile = sanitize($_POST['alternate-mobile']);
-
-    $updatedContacts = updateEmployeeContactDetails($alternateMobile, $alternateEmail, $userId);
-
     $showAlert = true;
+    $affectedContactDetails = updateEmployeeContactDetails($alternateMobile, $alternateEmail, $userId);
 
-    if ($updatedContacts) {
-        $message = 'Your contact details have been updated successfully.';
-        createSystemLog($stationId, $userId, 'Updated contact details', $userId, clientIp());
-    } else {
+    if (!$affectedContactDetails) {
         $message = 'No changes have been made to your contact details.';
-        $success = false;
+        return;
     }
+
+    $message = 'Your contact details have been updated successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Updated contact details', $userId, clientIp());
 }
 
 if (isset($_POST['update-professional-titles'])) {
     $before = sanitize($_POST['before-title']);
     $after = sanitize($_POST['after-title']);
-
-    $updatedTitles = updateProfessionalTitles($before, $after, $userId);
-
     $showAlert = true;
+    $affectedProfessionalTitles = updateProfessionalTitles($before, $after, $userId);
 
-    if ($updatedTitles) {
-        $message = 'Your professional title have been updated successfully.';
-        createSystemLog($stationId, $userId, 'Updated professional titles', $userId, clientIp());
-    } else {
+    if (!$affectedProfessionalTitles) {
         $message = 'No changes have been made to your professional title.';
-        $success = false;
+        return;
     }
+
+    $message = 'Your professional title have been updated successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Updated professional titles', $userId, clientIp());
 }
 
 if (isset($_POST['update-profile-photo'])) {
     $employeePhoto = isset($_POST['image-verifier']) ? sanitize(decipher($_POST['image-verifier'])) : '';
     $employeeId = $userId;
+    $showAlert = true;
 
     if (is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
         $temp = $_FILES['image-upload']['tmp_name'];
@@ -115,13 +119,10 @@ if (isset($_POST['update-profile-photo'])) {
         move_uploaded_file($temp, '../' . $employeePhoto);
     }
 
-    $updatedProfilePhoto = updateProfilePhoto($employeePhoto, $employeeId);
+    $affectedProfilePhoto = updateProfilePhoto($employeePhoto, $employeeId);
 
-    $showAlert = true;
-
-    if (!$updatedProfilePhoto) {
+    if (!$affectedProfilePhoto) {
         $message = 'No changes have been made to profile photo.';
-        $success = false;
         return;
     }
 
