@@ -14,21 +14,19 @@ function experience($person_id, $service_record_id)
     return find($sql, [$person_id, $service_record_id]);
 }
 
-// TODO
-function createExperience($from_date, $to_date, $is_present, $designation, $position_id, $appointment_status, $is_government_service, $salary_grade, $monthly_salary, $agency_company, $organizationAlias, $leave_wo_pay, $for_separation, $separation_date, $separation_cause, $person_id)
+function createExperience($from_date, $to_date, $is_present, $designation, $appointment_status, $is_government_service, $salary_grade_step_increment, $monthly_salary, $agency_company, $leave_wo_pay, $for_separation, $separation_date, $separation_cause, $person_id)
 {
     $data = [
         'from_date' => $from_date,
         'to_date' => $to_date,
         'is_present' => $is_present,
         'designation' => $designation,
-        'position_id' => $position_id,
         'appointment_status' => $appointment_status,
         'is_government_service' => $is_government_service,
-        'salary_grade' => $salary_grade,
+        'salary_grade_step_increment' => $salary_grade_step_increment,
         'monthly_salary' => $monthly_salary,
         'agency_company' => $agency_company,
-        'leave_dates' => $leave_wo_pay,
+        'leave_wo_pay' => $leave_wo_pay,
         'for_separation' => $for_separation,
         'separation_date' => $separation_date,
         'separation_cause' => $separation_cause,
@@ -37,18 +35,16 @@ function createExperience($from_date, $to_date, $is_present, $designation, $posi
     return insert('service_records', $data);
 }
 
-// TODO
-function updateExperience($from_date, $to_date, $is_present, $designation, $position_id, $appointment_status, $is_government_service, $salary_grade, $monthly_salary, $agency_company, $organizationAlias, $leave_wo_pay, $for_separation, $separation_date, $separation_cause, $person_id, $service_record_id)
+function updateExperience($from_date, $to_date, $is_present, $designation, $appointment_status, $is_government_service, $salary_grade_step_increment, $monthly_salary, $agency_company, $leave_wo_pay, $for_separation, $separation_date, $separation_cause, $person_id, $service_record_id)
 {
     $data = [
         'from_date' => $from_date,
         'to_date' => $to_date,
         'is_present' => $is_present,
         'designation' => $designation,
-        'position_id' => $position_id,
         'appointment_status' => $appointment_status,
         'is_government_service' => $is_government_service,
-        'salary_grade' => $salary_grade,
+        'salary_grade_step_increment' => $salary_grade_step_increment,
         'monthly_salary' => $monthly_salary,
         'agency_company' => $agency_company,
         'leave_wo_pay' => $leave_wo_pay,
