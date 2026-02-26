@@ -11,6 +11,8 @@ if (isset($_POST['primary-search-button'])) {
     redirect(customUri('pis', 'Search', sanitize($_POST['primary-search-text'])));
 }
 
+$success = false;
+
 if (isset($_POST['update-identification'])) {
     $card = sanitize($_POST['card-type']);
     $number = sanitize($_POST['card-number']);
@@ -22,13 +24,15 @@ if (isset($_POST['update-identification'])) {
         createIdentification($card, $number, $place, $date, $userId) :
         updateIdentification($card, $number, $place, $date, $userId);
 
-    if ($identication) {
-        $message = 'Government issued ID has been updated successfully.';
-        createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
-    } else {
+    if (!$identication) {
         $message = 'No changes have been made to government issued ID.';
-        $success = false;
+        return;
     }
+
+    $message = 'Government issued ID has been updated successfully.';
+    $success = true;
+
+    createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
 }
 
 if (isset($_POST['save-payslip'])) {
@@ -39,7 +43,6 @@ if (isset($_POST['save-payslip'])) {
     $ext = $logMessage = '';
     $message = 'No changes have been made to payslip.';
     $showAlert = true;
-    $success = false;
 
     if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
         $temp = $_FILES['file-upload']['tmp_name'];
@@ -93,8 +96,9 @@ if (isset($_POST['save-payslip'])) {
         return;
     }
 
-    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
     $success = true;
+
+    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
 
 
@@ -111,12 +115,14 @@ if (isset($_POST['delete-payslip'])) {
         $payslip = deletePayslip($employeeId, $payslipId);
     }
 
-    if ($payslip) {
-        createSystemLog($stationId, $userId, 'Deleted employee payslip', $employeeId, clientIp());
-        unlink(root() . '/' . $filename);
-        $message = 'Payslip has been deleted successfully.';
-    } else {
+    if (!$payslip) {
         $message = 'No changes have been made to payslip.';
-        $success = false;
+        return;
     }
+
+    $message = 'Payslip has been deleted successfully.';
+    $success = true;
+
+    unlink(root() . '/' . $filename);
+    createSystemLog($stationId, $userId, 'Deleted employee payslip', $employeeId, clientIp());
 }
