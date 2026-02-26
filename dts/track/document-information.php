@@ -40,11 +40,11 @@ if ($document) {
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Created on:</th>
-                <td class="text-uppercase"><?= toDate($document['datetime'], 'F d, Y h:i:s A') ?></td>
+                <td class="text-uppercase"><?= toDate($document['created_at'], 'F d, Y h:i:s A') ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">From:</th>
-                <td class="text-uppercase"><?= stationName($document['from']) ?></td>
+                <td class="text-uppercase"><?= stationName($document['created_from']) ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Status:</th>
@@ -62,11 +62,11 @@ if ($document) {
 
             foreach ($logs as $log) {
                 $logCount++;
-                $from = stationName($log['from']);
-                $to = stationName($log['to']);
-                $displayName = userName($log['user']);
-                $user = employee($log['user']);
-                $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $user['picture'] : uri() . '/assets/img/user.png';
+                $from = stationName($log['received_from']);
+                $to = stationName($log['forwarded_to']);
+                $displayName = userName($log['processed_by']);
+                $user = employee($log['processed_by']);
+                $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '/' . $user['profile_picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
                 $hasDestination = !empty($to) && $to !== '-';
                 $status = $log['status'];
@@ -103,7 +103,7 @@ if ($document) {
                 <div class="timeline-item">
                     <div class="timeline-item-marker">
                         <div class="timeline-item-marker-text text-uppercase">
-                            <?= date('M d, Y', strtotime($log['datetime'])) . '<br>' . date('h:i:s A', strtotime($log['datetime'])) ?>
+                            <?= date('M d, Y', strtotime($log['created_at'])) . '<br>' . date('h:i:s A', strtotime($log['created_at'])) ?>
                         </div>
                         <div class="timeline-item-marker-indicator <?= $bgColor ?>">
                             <i class="fas fa-<?= $icon ?>"></i>
@@ -127,11 +127,11 @@ if ($document) {
 
                                     <div class="ml-2 d-inline-block align-middle">
                                         <div class="text-uppercase">
-                                            <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName) ?>
+                                            <?= $displayName ?>
                                         </div>
 
                                         <div class="text-uppercase text-xs">
-                                            <?= fetchAssoc(position($log['user']))['position'] ?>
+                                            <?= position($log['processed_by'])['official_title'] ?>
                                         </div>
                                     </div>
                                 </div>
