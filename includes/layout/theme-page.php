@@ -4,21 +4,13 @@ require_once('app.php');
 
 $url = isset($_GET['v']) ? sanitize(decode($_GET['v'])) : null;
 
-if (http_response_code() === 200) {
-    $page = isset($url) && !empty($url) ? "{$url} | {$appTitle}" : $appTitle;
-} else {
-    switch (http_response_code()) {
-        case 403:
-            $page = 'Access Denied';
-            break;
-        case 404:
-            $page = 'Page Not Found';
-            break;
-        default:
-            $page = 'Unexpected Error';
-            break;
-    }
-}
+$page = http_response_code() === 200 ?
+    isset($url) && !empty($url) ? "{$url} | {$appTitle}" : $appTitle :
+    match (http_response_code()) {
+        403 => 'Access Denied',
+        404 => 'Page Not Found',
+        default => 'Unexpected Error'
+    };
 
 require_once(root() . '/includes/layout/components.php');
 ?>
