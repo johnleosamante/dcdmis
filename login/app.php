@@ -1,32 +1,45 @@
 <?php
 // login/app.php
-function setUserSession($userId)
+function setUserSession($user_id)
 {
-    $user = user($userId);
+    $user = user($user_id);
 
-    if ($user) {
-        $stationId = $_SESSION[alias() . '_stationId'] = $user['station_id'];
-        $_SESSION[alias() . '_code'] = $user['access'];
-        $_SESSION[alias() . '_portal'] = $user['link'];
-
-        if ($user['link'] !== 'sch_portal') {
-            $_SESSION[alias() . '_station'] = $user['access'];
-        } else {
-            $school = schoolById($user['access']);
-            $_SESSION[alias() . '_station'] = $school ? $school['alias'] : '';
-        }
-
-        createSystemLog($stationId, $userId, 'Logged in', $userId, clientIp());
+    if (!$user) {
+        return;
     }
+
+    $prefix = alias() . '_';
+    $portal = $user['link'];
+    $access = $user['access'];
+    $station_id = $user['station_id'];
+
+    $_SESSION["{$prefix}stationId"] = $station_id;
+    $_SESSION["{$prefix}code"] = $access;
+    $_SESSION["{$prefix}portal"] = $portal;
+
+    if ($portal === 'sch_portal') {
+        $school = schoolById($access);
+        $stationName = $school['alias'] ?? '';
+    } else {
+        $stationName = $access;
+    }
+
+    $_SESSION["{$prefix}station"] = $stationName;
+
+    createSystemLog($station_id, $user_id, 'Logged in', $user_id, clientIp());
 }
 
 $appTitle = $page = 'Login';
+$success = false;
+$prefix = alias() . '_';
+$baseUrl = uri();
 
 if (isset($_POST['login'])) {
-    $email = sanitize($_POST['email']);
-    $password = hashPassword(sanitize($_POST['password']));
+    $email = sanitize($_POST['email'] ?? '');
+    $password = sanitize($_POST['password'] ?? '');
+    $hashedPassword = hashPassword($password);
+
     $showAlert = true;
-    $success = false;
 
     if (empty($email) || empty($password)) {
         $message = 'All fields are required.';
@@ -39,37 +52,32 @@ if (isset($_POST['login'])) {
     }
 
     $account = account($email);
+    $accountPassword = $account ? accountPassword($account['id'], $hashedPassword) : null;
 
-    if (!$account) {
+    if (!$account || !$accountPassword) {
         $message = 'Invalid login details! Try again.';
         return;
     }
 
-    $password = accountPassword($account['id'], $password);
-
-    if (!$password) {
-        $message = 'Invalid login details! Try again.' . var_dump($password);
-        return;
-    }
-
-    $userId = $_SESSION[alias() . '_userId'] = $account['id'];
-    $email = $_SESSION[alias() . '_email'] = $account['email_address'];
+    $userId = $account['id'];
+    $_SESSION["{$prefix}userId"] = $userId;
+    $_SESSION["{$prefix}email"] = $account['email_address'];
 
     if (isset($_POST['remember'])) {
-        setcookie(alias() . '_login', $account['email'], time() + getSeconds(8), '/', uri(), false, true);
+        setcookie("{$prefix}login", $account['email_address'], time() + getSeconds(8), '/', uri(), false, true);
     }
 
     setUserSession($userId);
 
-    if ($password['status'] === 'Default') {
-        $_SESSION[alias() . '_change_password'] = true;
-        redirect(uri() . '/login/change');
+    if ($accountPassword['status'] === 'Default') {
+        $_SESSION["{$prefix}change_password"] = true;
+        redirect("{$baseUrl}/login/change");
         return;
     }
 
-    redirect(uri() . '/' . $activeApp);
+    redirect("{$baseUrl}/{$activeApp}");
 }
 
 if (isset($userId)) {
-    redirect(uri() . '/' . $activeApp);
+    redirect("{$baseUrl}/{$activeApp}");
 }
