@@ -767,13 +767,11 @@ if (isset($_POST['save-service-record'])) {
     $isPresent = isset($_POST['is-present']) ? '1' : '0';
     $to = sanitize($_POST['to']);
     $position = sanitize($_POST['position']);
-    $positionCode = sanitize($_POST['position-code']);
     $status = sanitize($_POST['status']);
     $isGovernment = sanitize($_POST['is-government']);
     $sg = sanitize($_POST['sg-step']);
     $salary = isset($_POST['salary']) ? sanitize($_POST['salary']) : '0';
     $station = sanitize($_POST['station']);
-    $stationAlias = sanitize($_POST['station-alias']);
     $leaveDates = sanitize($_POST['leave']);
     $isSeparation = isset($_POST['is-separation']) ? '1' : '0';
     $separationDate = $separationCause = null;
@@ -787,11 +785,11 @@ if (isset($_POST['save-service-record'])) {
     }
 
     if (empty($serviceId)) {
-        $affectedExperience = createExperience($from, $to, $isPresent, $position, $positionCode, $status, $isGovernment, $sg, $salary, $station, $stationAlias, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId);
+        $affectedExperience = createExperience($from, $to, $isPresent, $position, $status, $isGovernment, $sg, $salary, $station, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId);
         $logMessage = 'Added service record';
         $message = 'Service record has been added successfully.';
     } else {
-        $affectedExperience = updateExperience($from, $to, $isPresent, $position, $positionCode, $status, $isGovernment, $sg, $salary, $station, $stationAlias, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId, $serviceId);
+        $affectedExperience = updateExperience($from, $to, $isPresent, $position, $status, $isGovernment, $sg, $salary, $station, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId, $serviceId);
         $logMessage = 'Updated service record';
         $message = 'Service record has been updated successfully.';
     }
