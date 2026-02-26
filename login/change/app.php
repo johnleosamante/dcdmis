@@ -1,16 +1,16 @@
 <?php
 // login/change/app.php
-if (!isset($_SESSION[alias() . '_change_password']) || $_SESSION[alias() . '_change_password'] !== true) {
-    redirect(uri() . '/login');
+
+if (!isset($_SESSION["{$prefix}change_password"]) || $_SESSION["{$prefix}change_password"] !== true) {
+    redirect("{$baseUri}/login");
 }
 
 $appTitle = $page = 'Change Password';
-$email = isset($_SESSION[alias() . '_email']) ? $_SESSION[alias() . '_email'] : '';
+$email = $_SESSION["{$prefix}email"] ?? '';
 $oldPassword = $password = $passwordConfirm = $generatePassword = null;
 
 if (isset($_POST['change-password'])) {
     $showAlert = true;
-    $success = false;
     $password = sanitize($_POST['password']);
     $passwordConfirm = sanitize($_POST['password-confirm']);
 
@@ -29,16 +29,18 @@ if (isset($_POST['change-password'])) {
         return;
     }
 
-    updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
+    $affectedAccountPassword = updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
 
-    if (affectedRows()) {
-        $message = 'Your password has been updated successfully.';
-        $success = true;
-        $oldPassword = $password = $passwordConfirm = $generatePassword = null;
-        createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
-        unset($_SESSION[alias() . '_change_password']);
-        redirect(uri() . '/login');
-    } else {
+    if (!$affectedAccountPassword) {
         $message = 'No changes have been made to your password.';
+        return;
     }
+
+    $message = 'Your password has been updated successfully.';
+    $success = true;
+    $oldPassword = $password = $passwordConfirm = $generatePassword = null;
+
+    createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
+    unset($_SESSION["{$prefix}change_password"]);
+    redirect("{$baseUri}/login");
 }
