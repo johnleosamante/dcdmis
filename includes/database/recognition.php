@@ -23,7 +23,7 @@ function createRecognition($title, $person_id)
 
 function updateRecognition($title, $person_id, $recognition_id)
 {
-    return update('recognitions', ['title' => $title], '`person_id` = ? AND `recognition_id` = ?', [$person_id, $recognition_id]);
+    return update('recognitions', ['title' => $title], '`person_id` = ? AND `id` = ?', [$person_id, $recognition_id]);
 }
 
 function deleteRecognition($person_id, $recognition_id)
