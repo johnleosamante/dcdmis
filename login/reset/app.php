@@ -1,7 +1,6 @@
 <?php
 // login/reset/app.php
 $appTitle = $page = 'Forgot Password';
-
 $userEmail = null;
 
 if (isset($_POST['reset-password'])) {
@@ -17,7 +16,7 @@ if (isset($_POST['reset-password'])) {
     }
 
     if (!isValidEmail($userEmail, 'deped.gov.ph')) {
-        $message = 'Please use an authorized @deped.gov.php email address.';
+        $message = 'Please use an authorized @deped.gov.ph email address.';
         return;
     }
 
