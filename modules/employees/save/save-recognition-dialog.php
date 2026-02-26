@@ -14,12 +14,11 @@ $modalTitle = 'Add Recognition';
 
 if (isset($recognitionId)) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Recognition' : 'Edit Recognition';
-    $recognitionDataSet = recognition($employeeId, $recognitionId);
+    $recognitionData = recognition($employeeId, $recognitionId);
 
-    if (numRows($recognitionDataSet) > 0) {
-        $recognitionData = fetchArray($recognitionDataSet);
-        $recognitionId = $recognitionData['no'];
-        $recognition = $recognitionData['recognition'];
+    if ($recognitionData) {
+        $recognitionId = $recognitionData['id'];
+        $recognition = $recognitionData['title'];
     }
 }
 ?>
@@ -31,17 +30,19 @@ if (isset($recognitionId)) {
         <form method="POST" action="">
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="recognition" class="mb-0">Non-Academic Distinction / Recognition: <?php showAsterisk() ?></label>
-                    <input id="recognition" type="text" name="recognition" class="form-control" title="Required field" value="<?= $recognition ?>" required>
+                    <label for="recognition" class="mb-0">Non-Academic Distinction / Recognition:
+                        <?php showAsterisk() ?></label>
+                    <input id="recognition" type="text" name="recognition" class="form-control" title="Required field"
+                        value="<?= $recognition ?>" required>
                 </div>
 
                 <?php requiredLegend(0) ?>
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
+                <input type="hidden" name="verifier" value="<?= $_GET['e'] ?? null ?>">
                 <?php
-                $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+                $verifier = $_GET['id'] ?? null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
                 <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
