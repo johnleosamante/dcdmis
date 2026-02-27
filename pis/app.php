@@ -36,9 +36,8 @@ if (isset($_POST['save-payslip'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $payslipId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $description = sanitize($_POST['description']);
-    $filename = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
-    $ext = $logMessage = '';
-    $message = 'No changes have been made to payslip.';
+    $oldFilename = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
+    $newFilename = $oldFilename;
     $showAlert = true;
 
     if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
@@ -49,49 +48,46 @@ if (isset($_POST['save-payslip'])) {
             return;
         }
 
-        $mimeType = mime_content_type($temp);
-        $allowedFileTypes = ['application/pdf', 'image/png', 'image/jpeg'];
-
-        if (!in_array($mimeType, $allowedFileTypes)) {
-            $message = 'The choosen file is not an acceptable file (pdf, png, jpeg). No changes have been made to payslip.';
+        if (mime_content_type($temp) !== 'application/pdf') {
+            $message = 'The choosen file is not an acceptable file (pdf). No changes have been made to payslip.';
             return;
         }
 
         $ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
+        $newFilename = "uploads/payslip/{$employeeId}/{$employeeId}-" . date('YmdHis') . ".{$ext}";
 
-        if (!empty($filename) && file_exists(root() . "/{$filename}")) {
-            unlink(root() . "/{$filename}");
+        if (!move_uploaded_file($temp, "../{$newFilename}")) {
+            $message = 'Failed to upload payslip.';
+            return;
         }
 
-        $filename = "uploads/payslip/{$employeeId}/{$employeeId}-" . date('YmdHis') . ".{$ext}";
-
-        move_uploaded_file($temp, "../{$filename}");
+        if (!empty($oldFilename) && file_exists(root() . "/{$oldFilename}")) {
+            unlink(root() . "/{$oldFilename}");
+        }
     }
 
-    if (empty($filename)) {
+    if (empty($newFilename)) {
         $message = 'No changes have been made to payslip.';
-        $success = false;
         return;
-    } else {
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    if (!payslip($employeeId, $payslipId)) {
-        $payslip = createPayslip($description, $filename, $ext, $employeeId);
+    $ext = pathinfo($newFilename, PATHINFO_EXTENSION);
+    $hasExistingRecord = payslip($employeeId, $payslipId);
+
+    if (!$hasExistingRecord) {
+        $affectedPayslip = createPayslip($description, $newFilename, $ext, $employeeId);
         $logMessage = 'Added payslip';
-        $message = 'Payslip has been added successfully.';
     } else {
-        $payslip = updatePayslip($description, $filename, $ext, $employeeId, $payslipId);
-
+        $affectedPayslip = updatePayslip($description, $newFilename, $ext, $employeeId, $payslipId);
         $logMessage = 'Updated payslip';
-        $message = 'Payslip has been updated successfully.';
     }
 
-    if (!$payslip) {
+    if (!$affectedPayslip) {
         $message = 'No changes have been made to payslip.';
         return;
     }
 
+    $message = "Payslip has been " . ($hasExistingRecord ? "updated" : "added") . " successfully.";
     $success = true;
 
     createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
