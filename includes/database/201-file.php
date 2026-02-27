@@ -20,7 +20,7 @@ function fileAttachment($person_id, $file_attachment_id)
 function createFileAttachment($description, $file_name, $file_extension, $person_id)
 {
     $data = [
-        `person_id` => $person_id,
+        'person_id' => $person_id,
         'description' => $description,
         'file_name' => $file_name,
         'file_extension' => $file_extension
