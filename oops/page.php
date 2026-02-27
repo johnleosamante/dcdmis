@@ -9,7 +9,7 @@
         </div>
 
         <div class="card-body text-center">
-            <?php require_once(root() . '/modules/error/' . $file . '.php'); ?>
+            <?php require_once(root() . "/modules/error/{$file}.php"); ?>
         </div>
     </div>
 </div>
