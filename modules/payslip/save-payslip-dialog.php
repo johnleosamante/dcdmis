@@ -8,11 +8,12 @@ require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $payslipId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
 $description = $filename = null;
 $modalTitle = 'Add Payslip';
 
 if (isset($payslipId)) {
-    $modalTitle = 'Edit Payslip';
+    $modalTitle = $employeeId === $copiedId ? 'Copy Payslip' : 'Edit Payslip';
     $payslip = payslip($employeeId, $payslipId);
 
     if ($payslip) {
@@ -31,7 +32,7 @@ if (isset($payslipId)) {
             <div class="modal-body">
                 <div class="form-group">
                     <input id="file-upload" name="file-upload" type="file" class="w-100"
-                        accept="application/pdf, image/png, image/jpeg">
+                        title="Upload 201 file (pdf)..." accept="application/pdf">
                 </div>
 
                 <div class="form-group">
@@ -47,6 +48,7 @@ if (isset($payslipId)) {
                 <input type="hidden" name="verifier" value="<?= $_GET['e'] ?? null ?>">
                 <?php
                 $verifier = $_GET['id'] ?? null;
+                $verifier = $employeeId === $copiedId ? null : $verifier;
                 $filename = !isset($_GET['c']) ? $filename : null;
                 ?>
                 <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
