@@ -100,7 +100,6 @@ function getEmployeeLoyaltyAward($person_id)
     return find("SELECT person_id, date_last_awarded FROM `loyalty_awards` WHERE `person_id` = ? LIMIT 1", [$person_id]);
 }
 
-// TODO
 function loyaltyAward($person_id)
 {
     $sql = "SELECT * FROM (
@@ -114,7 +113,6 @@ function loyaltyAward($person_id)
     return find($sql, [$person_id]);
 }
 
-// TODO
 function stepIncrement($person_id)
 {
     $sql = "SELECT * FROM (
