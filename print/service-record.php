@@ -28,25 +28,26 @@ require_once(root() . '/includes/database/utility.php');
 
 $employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 
-if (numRows(employee($employeeId)) === 0) {
+$employee = employee($employeeId);
+
+if (!$employee) {
     redirect(customUri($activeApp, 'Service Record'));
 }
 
-$employee = fetchAssoc(employee($employeeId));
-$lname = $employee['lname'];
-$fname = $employee['fname'];
-$mname = $employee['mname'];
-$ext = $employee['ext'];
-$title = $url . ' | ' . toName($lname, $fname, $mname, $ext, true) . ' | ' . date('Y-m-d');
-$bp = toHandleNull($employee['bp']);
+$lname = $employee['last_name'];
+$fname = $employee['first_name'];
+$mname = $employee['middle_name'];
+$ext = $employee['name_extension'];
+$title = "{$url} | " . toName($lname, $fname, $mname, $ext, true) . ' | ' . date('Y-m-d');
+$bp = toHandleNull($employee['gsis_bp']);
 $agencyId = toHandleNull($employee['agency_id']);
-$bmonth = $employee['month'];
-$bday = $employee['day'];
-$byear = $employee['year'];
+$bmonth = $employee['birth_month'];
+$bday = $employee['birth_day'];
+$byear = $employee['birth_year'];
 $bdate = date('F d, Y', strtotime("$byear-$bmonth-$bday"));
-$bplace = $employee['pob'];
-$signatory = fetchAssoc(section('PER'))['head'];
-$position = fetchAssoc(position($signatory))['position'];
+$bplace = $employee['place_of_birth'];
+$signatory = section('PER')['head_id'];
+$position = position($signatory)['official_title'];
 $pdf = new PDF('P', 'mm', array($width, $height));
 $pdf->SetTitle($title);
 $pdf->AliasNbPages();
@@ -156,19 +157,138 @@ $pdf->Ln($lineHeight);
 $services = governmentService($employeeId);
 $pdf->SetFont('calibri', '', 8);
 
-if (numRows($services) > 0) {
-    while ($service = fetchAssoc($services)) {
-        $pdf->Cell($colOne / 2, $lineHeight - 2, toDate($service['from'], 'm/d/y'), 1, 0, 'C');
-        $pdf->Cell($colOne / 2, $lineHeight - 2, $service['ispresent'] ? 'PRESENT' : toDate($service['to'], 'm/d/y'), 1, 0, 'C');
-        $pdf->Cell($colTwo / 3, $lineHeight - 2, $service['position'], 1, 0, 'C');
-        $pdf->Cell($colTwo / 3, $lineHeight - 2, strtoupper($service['status']), 1, 0, 'C');
-        $pdf->Cell($colTwo / 3, $lineHeight - 2, toCurrency($service['salary'] * 12, ''), 1, 0, 'C');
-        $pdf->Cell($colThree, $lineHeight - 2, $service['station'], 1, 0, 'C');
-        $pdf->Cell($colFour, $lineHeight - 2, toHandleNull($service['leave_dates'], 'N/A'), 1, 0, 'C');
-        $pdf->Cell($colFive / 2, $lineHeight - 2, $service['isseparation'] === '1' ? toDate($service['separation_date'], 'm/d/y') : 'N/A', 1, 0, 'C');
-        $pdf->Cell($colFive / 2, $lineHeight - 2, $service['isseparation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A', 1, 0, 'C');
-        $pdf->Cell($colSix, $lineHeight - 2, toHandleNull($service['sg']), 1, 0, 'C');
-        $pdf->Ln($lineHeight - 2);
+if ($services) {
+    foreach ($services as $service) {
+        // Prepare designation and assignment columns to compute required row height
+        $origFontFamily = 'calibri';
+        $origFontSize = 8;
+        $pdf->SetFont($origFontFamily, '', $origFontSize);
+
+        $designation = trim($service['designation']);
+        $assignment = trim($service['agency_company']);
+
+        // target widths for wrapping columns
+        $wDesignation = $colTwo / 3;
+        $wAssignment = $colThree;
+
+        // function to estimate lines for text at current font
+        $estimateLines = function ($txt, $w) use ($pdf) {
+            $txt = trim($txt);
+            if ($txt === '')
+                return 1;
+            $width = $pdf->GetStringWidth($txt);
+            $lines = (int) ceil($width / ($w - 1));
+            return max(1, $lines);
+        };
+
+        // keep original font size (no resizing)
+        $fontSize = $origFontSize;
+        $pdf->SetFont($origFontFamily, '', $fontSize);
+
+        $dLines = $estimateLines($designation, $wDesignation);
+        $aLines = $estimateLines($assignment, $wAssignment);
+        $maxLines = max($dLines, $aLines, 1);
+        // cap at 5 lines
+        $maxRows = 5;
+        if ($maxLines > $maxRows) {
+            $maxLines = $maxRows;
+        }
+
+        // use a compact fixed line height to avoid extra spacing
+        $lineH = 3; // 3mm per wrapped line
+        $rowH = $lineH * $maxLines;
+
+        // helper: trim text to a maximum number of lines
+        $fitToLines = function ($txt, $w, $maxLines) use ($pdf) {
+            $words = preg_split('/\s+/', trim($txt));
+            $lines = [];
+            $current = '';
+            foreach ($words as $word) {
+                $test = $current === '' ? $word : $current . ' ' . $word;
+                if ($pdf->GetStringWidth($test) <= $w - 1) {
+                    $current = $test;
+                } else {
+                    $lines[] = $current;
+                    $current = $word;
+                    if (count($lines) == $maxLines) {
+                        break;
+                    }
+                }
+            }
+            if (count($lines) < $maxLines && $current !== '') {
+                $lines[] = $current;
+            }
+            // if text was trimmed, add ellipsis on last line
+            if (count($lines) == $maxLines) {
+                $reconstructed = implode(' ', $lines);
+                if (strlen($reconstructed) < strlen($txt)) {
+                    $lines[$maxLines - 1] = rtrim($lines[$maxLines - 1], '.') . '...';
+                }
+            }
+            return implode("\n", $lines);
+        };
+
+        // build padded/wrapped versions for the limited lines
+        $designationP = $fitToLines($designation, $wDesignation, $maxLines);
+        $assignmentP = $fitToLines($assignment, $wAssignment, $maxLines);
+        // pad shorter texts to reach maxLines
+        $pad = function ($txt, $linesNeeded) {
+            $current = substr_count($txt, "\n") + 1;
+            if ($current < $linesNeeded) {
+                $txt .= str_repeat("\n", $linesNeeded - $current);
+            }
+            return $txt;
+        };
+        $designationP = $pad($designationP, $maxLines);
+        $assignmentP = $pad($assignmentP, $maxLines);
+
+        // prepare other columns text
+        $dateFrom = toDate($service['from_date'], 'm/d/y');
+        $dateTo = $service['is_present'] ? 'PRESENT' : toDate($service['to_date'], 'm/d/y');
+        $employment = strtoupper($service['appointment_status']);
+        $salary = toCurrency($service['monthly_salary'] * 12, '');
+        $leave = toHandleNull($service['leave_wo_pay'], 'N/A');
+        $sepDate = $service['for_separation'] === '1' ? toDate($service['separation_date'], 'm/d/y') : 'N/A';
+        $sepCause = $service['for_separation'] === '1' ? toHandleNull($service['separation_cause'], 'N/A') : 'N/A';
+        $remarks = toHandleNull($service['salary_grade_step_increment']);
+
+        $x = $pdf->GetX();
+        $y = $pdf->GetY();
+
+        // Date From (single line, but row height expands)
+        $pdf->SetXY($x, $y);
+        $pdf->Cell($colOne / 2, $rowH, $dateFrom, 1, 0, 'C');
+
+        // Date To
+        $pdf->Cell($colOne / 2, $rowH, $dateTo, 1, 0, 'C');
+
+        // designation (wrapping) with single rectangle border
+        $pdf->SetXY($x + $colOne, $y);
+        $pdf->Rect($x + $colOne, $y, $wDesignation, $rowH);
+        $pdf->MultiCell($wDesignation, $lineH, $designationP, 0, 'C');
+
+        // Employment Status (fixed height)
+        $pdf->SetXY($x + $colOne + $wDesignation, $y);
+        $pdf->Cell($colTwo / 3, $rowH, $employment, 1, 0, 'C');
+
+        // Annual Salary
+        $pdf->Cell($colTwo / 3, $rowH, $salary, 1, 0, 'C');
+
+        // assignment (wrapping) with single rectangle border
+        $pdf->SetXY($x + $colOne + $colTwo, $y);
+        $pdf->Rect($x + $colOne + $colTwo, $y, $wAssignment, $rowH);
+        $pdf->MultiCell($wAssignment, $lineH, $assignmentP, 0, 'C');
+
+        // other fixed small columns: leave, separation, remarks
+        $pdf->SetXY($x + $colOne + $colTwo + $colThree, $y);
+        $pdf->Cell($colFour, $rowH, $leave, 1, 0, 'C');
+
+        $pdf->Cell($colFive / 2, $rowH, $sepDate, 1, 0, 'C');
+        $pdf->Cell($colFive / 2, $rowH, $sepCause, 1, 0, 'C');
+        $pdf->Cell($colSix, $rowH, $remarks, 1, 0, 'C');
+
+        // move to next row position
+        $pdf->SetXY($x, $y + $rowH);
     }
 } else {
     $pdf->SetFontSize(10);
@@ -197,7 +317,7 @@ $pdf->Cell(40, $lineHeight, 'Date', 0, 0, 'C');
 $pdf->Ln($lineHeight - 2);
 $pdf->AddFont('times', '', 'times.php');
 $pdf->SetFont('times', '', 10);
-$pdf->Cell($tableWidth / 3 + 5, $lineHeight, $position . ' (Personnel Officer)', 0, 0, 'C');
+$pdf->Cell($tableWidth / 3 + 5, $lineHeight, "{$position} (Personnel Officer)", 0, 0, 'C');
 $pdf->Line($margin, $pdf->GetY() + $lineHeight - 2, $margin + $tableWidth / 3 + 5, $pdf->GetY() + $lineHeight - 2);
 $pdf->Line(($tableWidth / 3) * 2, $pdf->GetY() + $lineHeight - 2, (($tableWidth / 3) * 2) + 40, $pdf->GetY() + $lineHeight - 2);
 $pdf->Ln($lineHeight / 2);
