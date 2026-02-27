@@ -32,7 +32,7 @@ if ($employee) {
     $position = $positions['official_title'];
     $depedEmail = $employee['email_address'];
     $tin = $employee['tin'];
-    $picture = uri() . '/' . $employee['profile_picture'];
+    $picture = file_exists(root() . '/' . $employee['profile_picture']) ? uri() . '/' . $employee['profile_picture'] : uri() . '/assets/img/user.png';
     $modalTitle = 'Employee PSIPOP Information';
     $hasEmployee = true;
 
