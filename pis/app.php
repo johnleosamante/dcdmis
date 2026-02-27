@@ -1,17 +1,15 @@
 <?php
 // pis/app.php
-$activeApp = $_SESSION[alias() . '_activeApp'] = 'pis';
+$activeApp = $_SESSION["{$prefix}activeApp"] = HOME;
 $page = $appTitle = 'Personnel Information System';
 
 if (!isset($userId)) {
-    redirect(uri() . '/login');
+    redirect("{$baseUri}/login");
 }
 
 if (isset($_POST['primary-search-button'])) {
     redirect(customUri('pis', 'Search', sanitize($_POST['primary-search-text'])));
 }
-
-$success = false;
 
 if (isset($_POST['update-identification'])) {
     $card = sanitize($_POST['card-type']);
@@ -19,7 +17,6 @@ if (isset($_POST['update-identification'])) {
     $place = sanitize($_POST['card-place']);
     $date = sanitize($_POST['card-date']);
     $showAlert = true;
-
     $identication = !employeeIdentification($userId) ?
         createIdentification($card, $number, $place, $date, $userId) :
         updateIdentification($card, $number, $place, $date, $userId);
@@ -47,7 +44,7 @@ if (isset($_POST['save-payslip'])) {
     if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
         $temp = $_FILES['file-upload']['tmp_name'];
 
-        if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
+        if ($_FILES['file-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
             $message = 'The choosen file exceeds the upload file limit (20 MB). No changes have been made to payslip.';
             return;
         }
@@ -62,13 +59,13 @@ if (isset($_POST['save-payslip'])) {
 
         $ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
 
-        if (!empty($filename) && file_exists(root() . '/' . $filename)) {
-            unlink(root() . '/' . $filename);
+        if (!empty($filename) && file_exists(root() . "/{$filename}")) {
+            unlink(root() . "/{$filename}");
         }
 
         $filename = "uploads/payslip/{$employeeId}/{$employeeId}-" . date('YmdHis') . ".{$ext}";
 
-        move_uploaded_file($temp, '../' . $filename);
+        move_uploaded_file($temp, "../{$filename}");
     }
 
     if (empty($filename)) {
@@ -81,7 +78,6 @@ if (isset($_POST['save-payslip'])) {
 
     if (!payslip($employeeId, $payslipId)) {
         $payslip = createPayslip($description, $filename, $ext, $employeeId);
-
         $logMessage = 'Added payslip';
         $message = 'Payslip has been added successfully.';
     } else {
