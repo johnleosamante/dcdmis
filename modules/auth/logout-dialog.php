@@ -1,6 +1,6 @@
 <?php
 // logout/logout-dialog.php
-require_once('../includes/function.php');
+require_once('../../includes/function.php');
 require_once(root() . '/includes/layout/components.php');
 
 $modalTitle = 'Logout';
@@ -15,7 +15,7 @@ $modalTitle = 'Logout';
         </div>
 
         <div class="modal-footer">
-            <form method="POST" action="<?= "{$baseUri}/logout" ?>">
+            <form method="POST" action="<?= "{$baseUri}/modules/auth" ?>">
                 <button type="submit" class="btn btn-danger">Continue</button>
             </form>
             <?php cancelModalButton() ?>
