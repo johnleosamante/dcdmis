@@ -1,6 +1,6 @@
 <?php
 // logout/index.php
-require_once('../includes/function.php');
+require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/system-log.php');
 
