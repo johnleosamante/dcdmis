@@ -26,7 +26,7 @@ if (isset($serviceRecordId)) {
         $to = $isPresent ? date('Y-m-d') : toDate($service['to_date'], 'Y-m-d');
         $position = $service['designation'];
         $positionCode = $service['position_id'];
-        $isgovernment = $service['is_government_service'];
+        $isgovernment = $service['is_government_service'] ? 'Y' : 'N';
         $sg = $service['salary_grade_step_increment'];
         $salary = $service['monthly_salary'];
         $organization = $service['agency_company'];
