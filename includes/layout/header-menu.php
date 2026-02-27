@@ -198,7 +198,8 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
 
                 <div class="dropdown-divider"></div>
 
-                <?php modalDropdownItem(uri() . '/logout/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout') ?>
+                <?php //dd($baseUri);
+                modalDropdownItem(uri() . '/modules/auth/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout') ?>
             </div>
         </li>
     </ul>
