@@ -11,19 +11,19 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Step</li>
         </ol>
     </nav>
 
     <div class="d-inline-block">
-        <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus') ?>
+        <?php modalButtonSplit("{$baseUri}/modules/employees/save-employee-dialog.php", 'Add Employee', 'fa-user-plus') ?>
     </div>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithLink('Employees Eligible for Step Increment', uri() . '/hrmis') ?>
+        <?php contentTitleWithLink('Employees Eligible for Step Increment', "{$baseUri}/hrmis") ?>
     </div>
 
     <div class="card-body">
@@ -51,22 +51,23 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = employeeStepIncrement();
-                    while ($row = fetchArray($query)) :
-                        $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
-                        $sg = $row['sg'];
+                    foreach ($query as $row):
+                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? "{$baseUri}/" . $row['profile_picture'] : "{$baseUri}/assets/img/user.png";
+                        $sg = $row['salary_grade'];
                         $step = !empty($row['step']) ? $row['step'] : 1;
                         $lastStepDate = $row['last_step_date'];
                         $now = new DateTime('now');
                         $dls = new DateTime($lastStepDate);
-                        $count = (int)($now->diff($dls)->y / 3);
-                        $nextStep = (int)$step + $count;
-                        $nextStep =  $nextStep <= 8 ? $nextStep : 8;
-                    ?>
+                        $count = (int) ($now->diff($dls)->y / 3);
+                        $nextStep = (int) $step + $count;
+                        $nextStep = $nextStep <= 8 ? $nextStep : 8;
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
                                         <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
@@ -75,9 +76,9 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle text-left">
                                 <?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName) ?>
                             </td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']) ?>
+                                <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']) ?>
                             </td>
                             <td class="align-middle"><?= date('F j, Y', strtotime($lastStepDate)) ?></td>
                             <td class="align-middle"><?= "{$sg}-{$step}" ?></td>
@@ -99,7 +100,7 @@ messageAlert($showAlert, $message, $success);
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
