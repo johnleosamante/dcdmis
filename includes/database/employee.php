@@ -231,24 +231,24 @@ function celebrantEmployees($month, $station_id = null)
     return is_array($results) ? $results : [];
 }
 
-function createEmployee($id, $last_name, $first_name, $middle_name, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status, $crn = '', $bp = '', $pagibig = '', $philhealth = '', $tin = '', $agency_id = '')
+function createEmployee($person_id, $last_name, $first_name, $middle_name, $name_extension, $sex, $birth_month, $birth_day, $birth_year, $email_address, $mobile_number, $profile_picture, $status, $gsis_crn = '', $gsis_bp = '', $pagibig = '', $philhealth = '', $tin = '', $agency_id = '')
 {
     $data = [
-        'id' => $id,
+        'id' => $person_id,
         'last_name' => $last_name,
         'first_name' => $first_name,
         'middle_name' => $middle_name,
-        'name_extension' => $ext,
+        'name_extension' => $name_extension,
         'sex' => $sex,
-        'birth_month' => $bmonth,
-        'birth_day' => $bday,
-        'birth_year' => $byear,
-        'email_address' => $email,
-        'mobile_number' => $mobile,
-        'profile_picture' => $image,
+        'birth_month' => $birth_month,
+        'birth_day' => $birth_day,
+        'birth_year' => $birth_year,
+        'email_address' => $email_address,
+        'mobile_number' => $mobile_number,
+        'profile_picture' => $profile_picture,
         'status' => $status,
-        'gsis_crn' => $crn,
-        'gsis_bp' => $bp,
+        'gsis_crn' => $gsis_crn,
+        'gsis_bp' => $gsis_bp,
         'pagibig' => $pagibig,
         'philhealth' => $philhealth,
         'tin' => $tin,
