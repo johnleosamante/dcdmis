@@ -1,14 +1,14 @@
 <?php
 // dmis/app.php
-$activeApp = $_SESSION[alias() . '_activeApp'] = 'dmis';
+$activeApp = $_SESSION["{$prefix}activeApp"] = 'dmis';
 $page = $appTitle = 'Division Management Information System';
 
 if (!isset($userId)) {
-	redirect(uri() . '/login');
+	redirect("{$baseUri}/login");
 }
 
 if (userRole($userId, 'dmis')) {
-	redirect(uri() . '/pis');
+	redirect("{$baseUri}/pis");
 }
 
 if (isset($_POST['primary-search-button'])) {
@@ -29,8 +29,6 @@ if (isset($_POST['save-school'])) {
 	$website = sanitize($_POST['website']);
 	$facebook = sanitize($_POST['facebook']);
 	$logo = isset($_POST['image-verifier']) ? sanitize(decipher($_POST['image-verifier'])) : '';
-	$status = 'saved';
-	$logMessage = 'Added school';
 	$showAlert = true;
 	$link = '[<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . strtoupper($schoolName) . '</a>]';
 
@@ -52,11 +50,11 @@ if (isset($_POST['save-school'])) {
 
 		$ext = pathinfo($_FILES['logo-upload']['name'], PATHINFO_EXTENSION);
 
-		if (!empty($logo) && file_exists(root() . '/' . $logo)) {
-			unlink(root() . '/' . $logo);
+		if (!empty($logo) && file_exists(root() . "/{$logo}")) {
+			unlink(root() . "/{$logo}");
 		}
 
-		$uploadDirectory = root() . '/uploads/school_logo/' . $schoolId;
+		$uploadDirectory = root() . "/uploads/school_logo/{$schoolId}";
 
 		if (!is_dir($uploadDirectory)) {
 			mkdir($uploadDirectory, 0777, true);
@@ -66,30 +64,58 @@ if (isset($_POST['save-school'])) {
 
 		$logo = "uploads/school_logo/{$schoolId}/{$schoolId}{$uploadDate}.{$ext}";
 
-		move_uploaded_file($temp, '../' . $logo);
+		move_uploaded_file($temp, "../{$logo}");
 	}
 
-	if (!schoolById($referenceSchoolId)) {
-		createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $telephone, $email, $website, $facebook, $logo);
-	} else {
-		updateUsersStation($schoolId, $referenceSchoolId);
-		updateStationID($schoolId, $referenceSchoolId);
-		updateTransactionLogFrom($alias, $referenceAlias);
-		updateTransactionLogTo($alias, $referenceAlias);
-		updateTransactionFrom($alias, $referenceAlias);
-		updateSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $telephone, $email, $website, $facebook, $logo, $referenceSchoolId);
+	beginTransaction();
 
-		$status = 'updated';
-		$logMessage = 'Updated school';
+	try {
+		if (!schoolById($referenceSchoolId)) {
+			if (createSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $telephone, $email, $website, $facebook, $logo) === false) {
+				throw new Exception('Failed to create school');
+			}
+			$status = 'saved';
+			$logMessage = 'Added school';
+		} else {
+			if (updateUsersStation($schoolId, $referenceSchoolId) === false) {
+				throw new Exception('Failed to update user station');
+			}
+
+			if (updateStationID($schoolId, $referenceSchoolId) === false) {
+				throw new Exception('Failed to update station ID');
+			}
+
+			if (updateTransactionLogFrom($alias, $referenceAlias) === false) {
+				throw new Exception("Failed to update transaction logs from {$link}.");
+			}
+
+			if (updateTransactionLogTo($alias, $referenceAlias) === false) {
+				throw new Exception("Failed to update transaction logs to {$link}.");
+			}
+
+			if (updateTransactionFrom($alias, $referenceAlias) === false) {
+				throw new Exception("Failed to update transactions from {$link}.");
+			}
+
+			if (updateSchool($schoolId, $schoolName, $alias, $address, $districtCode, $category, $telephone, $email, $website, $facebook, $logo, $referenceSchoolId) === false) {
+				throw new Exception('Failed to update school');
+			}
+
+			$status = 'updated';
+			$logMessage = 'Updated school';
+		}
+
+		commit();
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
+		return;
 	}
 
-	if (affectedRows()) {
-		$message = 'School ' . $link . ' has been ' . $status . ' successfully.';
-
+	if ($success) {
+		$message = "School {$link} has been {$status} successfully.";
 		createSystemLog($stationId, $userId, $logMessage, $schoolId, clientIp());
-	} else {
-		$message = 'No changes have been made to school ' . $link . '.';
-		$success = false;
 	}
 }
 
@@ -101,16 +127,17 @@ if (isset($_POST['delete-school'])) {
 
 	$target = count($schools) === 1 ? $schools['name'] : $schoolId;
 
-	deleteSchool($schoolId);
+	$affectedSchool = deleteSchool($schoolId);
 
-	if (affectedRows()) {
-		$message = 'School has been deleted successfully.';
-
-		createSystemLog($stationId, $userId, 'Deleted school', $target, clientIp());
-	} else {
+	if (!$affectedSchool) {
 		$message = 'No changes have been made to school.';
-		$success = false;
+		return;
 	}
+
+	$message = 'School has been deleted successfully.';
+	$success = true;
+
+	createSystemLog($stationId, $userId, 'Deleted school', $target, clientIp());
 }
 
 if (isset($_POST['save-section'])) {
@@ -119,32 +146,56 @@ if (isset($_POST['save-section'])) {
 	$section = sanitize($_POST['section']);
 	$division = sanitize($_POST['division']);
 	$head = sanitize($_POST['head']);
-	$status = 'saved';
-	$logMessage = 'Added section';
 	$showAlert = true;
 	$link = '[<a href="' . customUri('dmis', 'Section Information', $alias) . '" title="View ' . $section . ' information">' . strtoupper($section) . '</a>]';
 
-	if (!section($referenceSectionId)) {
-		createSection($alias, $head, $section, $division);
-	} else {
-		updateUsersStation($alias, $referenceSectionId, strtolower($alias . '_portal'));
-		updateTransactionLogFrom($alias, $referenceSectionId);
-		updateTransactionLogTo($alias, $referenceSectionId);
-		updateTransactionFrom($alias, $referenceSectionId);
-		updateSection($alias, $head, $section, $division, $referenceSectionId);
+	beginTransaction();
 
-		$status = 'updated';
-		$logMessage = 'Updated section';
+	try {
+		if (!section($referenceSectionId)) {
+			if (createSection($alias, $head, $section, $division) === false) {
+				throw new Exception('Failed to create section.');
+			}
+
+			$status = 'saved';
+			$logMessage = 'Added section';
+		} else {
+			if (updateUsersStation($alias, $referenceSectionId, strtolower("{$alias}_portal")) === false) {
+				throw new Exception('Failed to update user station');
+			}
+
+			if (updateTransactionLogFrom($alias, $referenceSectionId) === false) {
+				throw new Exception("Failed to update transaction logs from {$link}.");
+			}
+
+			if (updateTransactionLogTo($alias, $referenceSectionId) === false) {
+				throw new Exception("Failed to update transaction logs to {$link}.");
+			}
+
+			if (updateTransactionFrom($alias, $referenceSectionId) === false) {
+				throw new Exception("Failed to update transactions from {$link}.");
+			}
+
+			if (updateSection($alias, $head, $section, $division, $referenceSectionId) === false) {
+				throw new Exception('Failed to update section.');
+			}
+
+			$status = 'updated';
+			$logMessage = 'Updated section';
+		}
+
+		commit();
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
+		return;
 	}
 
-	if (affectedRows()) {
-		$message = 'Section ' . $link . ' has been ' . $status . ' successfully.';
+	$message = "Section {$link} has been {$status} successfully.";
+	$success = true;
 
-		createSystemLog($stationId, $userId, $logMessage, $alias, clientIp());
-	} else {
-		$message = 'No changes have been made to section ' . $link . '.';
-		$success = false;
-	}
+	createSystemLog($stationId, $userId, $logMessage, $alias, clientIp());
 }
 
 if (isset($_POST['save-district'])) {
@@ -152,71 +203,137 @@ if (isset($_POST['save-district'])) {
 	$districtCode = sanitize($_POST['code']);
 	$districtName = sanitize($_POST['district']);
 	$districtHead = sanitize($_POST['head']);
-	$status = 'saved';
-	$logMessage = 'Added district';
 	$showAlert = true;
 	$link = '[<a href="' . customUri('dmis', 'District Information', $districtCode) . '" title="View ' . $districtName . ' information">' . strtoupper($districtName) . '</a>]';
 
 	if (!district($referenceDistrictId)) {
-		createDistrict($districtCode, $districtName, $districtHead);
+		$affectedDistrict = createDistrict($districtCode, $districtName, $districtHead);
+		$status = 'saved';
+		$logMessage = 'Added district';
 	} else {
-		updateDistrict($districtCode, $districtName, $districtHead, $referenceDistrictId);
-
+		$affectedDistrict = updateDistrict($districtCode, $districtName, $districtHead, $referenceDistrictId);
 		$status = 'updated';
 		$logMessage = 'Updated district';
 	}
 
-	if (affectedRows()) {
-		$message = 'District ' . $link . ' has been ' . $status . ' successfully.';
-
-		createSystemLog($stationId, $userId, $logMessage, $districtCode, clientIp());
-	} else {
-		$message = 'No changes have been made to district ' . $link . '.';
-		$success = false;
+	if (!$affectedDistrict) {
+		$message = "No changes have been made to district {$link}.";
+		return;
 	}
+
+	$message = "District {$link} has been {$status} successfully.";
+	$success = true;
+
+	createSystemLog($stationId, $userId, $logMessage, $districtCode, clientIp());
 }
 
 if (isset($_POST['delete-employee'])) {
 	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$showAlert = true;
-
 	$employee = employee($employeeId);
-
 	$target = count($employee) === 1 ? userName($employeeId) : $employeeId;
 
-	if (isDuplicateEmployee($employeeId)) {
-		deleteFileAttachments($employeeId);
-		deleteAccount($employeeId);
-		deleteUserRoles($employeeId);
-		deleteEducations($employeeId);
-		deleteEligibilities($employeeId);
-		deleteExperiences($employeeId);
-		deleteChildren($employeeId);
-		deleteFamily($employeeId);
-		deleteParticipantTrainings($employeeId);
-		deleteMemberships($employeeId);
-		deleteOtherInformation($employeeId);
-		deletePayslips($employeeId);
-		deleteRecognitions($employeeId);
-		deleteReferences($employeeId);
-		deleteSpecialSkills($employeeId);
-		deleteVoluntaryWorks($employeeId);
-		deletePsipop($employeeId);
-		deleteStepIncrement($employeeId);
-		deleteLoyaltyAward($employeeId);
-		deleteStepIncrement($employeeId);
-		deleteStation($employeeId);
-		deleteEmployee($employeeId);
+	if (!$employeeId || !isDuplicateEmployee($employeeId)) {
+		$message = "Employee record not found of already deleted.";
+		return;
 	}
 
-	if (affectedRows()) {
-		$message = 'Employee has been deleted successfully.';
+	beginTransaction();
 
-		createSystemLog($stationId, $userId, 'Deleted employee', $target, clientIp());
-	} else {
-		$message = 'No changes have been made to employee information.';
-		$success = false;
+	try {
+		if (deleteFileAttachments($employeeId) === false) {
+			throw new Exception('Failed to delete employee 201 file attachments.');
+		}
+
+		if (deleteAccount($employeeId) === false) {
+			throw new Exception('Failed to delete employee user credentials.');
+		}
+
+		if (deleteUserRoles($employeeId) === false) {
+			throw new Exception('Failed to delete employee user permissions.');
+		}
+
+		if (deleteEducations($employeeId) === false) {
+			throw new Exception('Failed to delete employee educational backgrounds.');
+		}
+
+		if (deleteEligibilities($employeeId) === false) {
+			throw new Exception('Failed to delete employee eligibilities.');
+		}
+
+		if (deleteExperiences($employeeId) === false) {
+			throw new Exception('Failed to delete employee service records.');
+		}
+
+		if (deleteChildren($employeeId) === false) {
+			throw new Exception('Failed to delete employee children.');
+		}
+
+		if (deleteFamily($employeeId) === false) {
+			throw new Exception('Failed to delete employee family background.');
+		}
+
+		if (deleteParticipantTrainings($employeeId) === false) {
+			throw new Exception('Failed to delete employee attended trainings.');
+		}
+
+		if (deleteMemberships($employeeId) === false) {
+			throw new Exception('Failed to delete employee memberships.');
+		}
+
+		if (deleteOtherInformation($employeeId) === false) {
+			throw new Exception('Failed to delete employee other information.');
+		}
+
+		if (deletePayslips($employeeId) === false) {
+			throw new Exception('Failed to delete employee payslips.');
+		}
+
+		if (deleteRecognitions($employeeId) === false) {
+			throw new Exception('Failed to delete employee recognitions.');
+		}
+
+		if (deleteReferences($employeeId) === false) {
+			throw new Exception('Failed to delete employee references.');
+		}
+
+		if (deleteSpecialSkills($employeeId) === false) {
+			throw new Exception('Failed to delete employee special skills.');
+		}
+
+		if (deleteVoluntaryWorks($employeeId) === false) {
+			throw new Exception('Failed to delete employee voluntary works.');
+		}
+
+		if (deletePsipop($employeeId) === false) {
+			throw new Exception('Failed to delete employee position items.');
+		}
+
+		if (deleteStepIncrement($employeeId) === false) {
+			throw new Exception('Failed to delete employee step increments.');
+		}
+
+		if (deleteLoyaltyAward($employeeId) === false) {
+			throw new Exception('Failed to delete employee loyalty award.');
+		}
+
+		if (deleteStation($employeeId) === false) {
+			throw new Exception('Failed to delete employee station.');
+		}
+
+		if (deleteEmployee($employeeId) === false) {
+			throw new Exception('Failed to delete employee.');
+		}
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
+		return;
 	}
+
+	$message = 'Employee has been deleted successfully.';
+	$success = true;
+
+	createSystemLog($stationId, $userId, 'Deleted employee', $target, clientIp());
 }
 
 if (isset($_POST['delete-district'])) {
@@ -227,78 +344,67 @@ if (isset($_POST['delete-district'])) {
 
 	$target = count($districts) === 1 ? $districts['name'] : $districtCode;
 
-	deleteDistrict($districtCode);
+	$affetctedDistrict = deleteDistrict($districtCode);
 
-	if (affectedRows()) {
-		$message = 'District has been deleted successfully.';
-
-		createSystemLog($stationId, $userId, 'Deleted district', $target, clientIp());
-	} else {
+	if (!$affectedDistrict) {
 		$message = 'No changes have been made to district.';
-		$success = false;
+		return;
 	}
+
+	$message = 'District has been deleted successfully.';
+	$success = true;
+
+	createSystemLog($stationId, $userId, 'Deleted district', $target, clientIp());
 }
 
 if (isset($_POST['edit-user'])) {
 	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-	$userEmail = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
-	$userRole = 'Administrator';
-	$isDtsUser = isset($_POST['dts']);
+
+	if (!$employeeId)
+		return;
+
 	$dtsStation = isset($_POST['dts-verifier']) ? sanitize($_POST['dts-verifier']) : null;
 	$dtsPortal = section($dtsStation) ? strtolower("{$dtsStation}_portal") : 'sch_portal';
-	$isHrmisUser = isset($_POST['hrmis']);
-	$isDmisUser = isset($_POST['dmis']);
-	$isHrtdmsUser = isset($_POST['hrtdms']);
-	$isHrmpsbUser = isset($_POST['hrmpsb']);
-	$showAlert = true;
-	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
-	$message = "Employee [{$employee}] user assignment has been set successfully.";
 
-	if (empty($employeeId)) {
+	$systems = [
+		'HRMIS' => isset($_POST['hrmis']),
+		'DMIS' => isset($_POST['dmis']),
+		'HRTDMS' => isset($_POST['hrtdms'])
+	];
+
+	$showAlert = true;
+
+	beginTransaction();
+
+	try {
+		if (isset($_POST['dts'])) {
+			dtsUser($employeeId)
+				? updateUserRole($employeeId, $dtsStation, $dtsPortal)
+				: createUserRole($employeeId, $dtsStation, $dtsPortal);
+		} else {
+			deleteUserRole($employeeId, $dtsStation);
+		}
+
+		foreach ($systems as $systemCode => $isEnabled) {
+			if ($isEnabled) {
+				if (!isStationUser($employeeId, $systemCode)) {
+					createUserRole($employeeId, $systemCode);
+				}
+			} else {
+				deleteUserRole($employeeId, $systemCode);
+			}
+		}
+
+		commit();
+	} catch (Exception $e) {
+		rollBack();
+		$message = 'Failed to update user assignments: ' . $e->getMessage();
 		return;
 	}
 
-	if ($isDtsUser) {
-		if (dtsUser($employeeId)) {
-			updateUserRole($employeeId, $dtsStation, $dtsPortal);
-		} else {
-			createUserRole($employeeId, $dtsStation, $dtsPortal);
-		}
-	} else {
-		deleteUserRole($employeeId, $dtsStation);
-	}
-
-	if ($isHrmisUser) {
-		if (!isStationUser($employeeId, 'HRMIS')) {
-			createUserRole($employeeId, 'HRMIS');
-		}
-	} else {
-		deleteUserRole($employeeId, 'HRMIS');
-	}
-
-	if ($isDmisUser) {
-		if (!isStationUser($employeeId, 'DMIS')) {
-			createUserRole($employeeId, 'DMIS');
-		}
-	} else {
-		deleteUserRole($employeeId, 'DMIS');
-	}
-
-	if ($isHrtdmsUser) {
-		if (!isStationUser($employeeId, 'HRTDMS')) {
-			createUserRole($employeeId, 'HRTDMS');
-		}
-	} else {
-		deleteUserRole($employeeId, 'HRTDMS');
-	}
-
-	if ($isHrmpsbUser) {
-		if (!isStationUser($employeeId, 'HRMPSB')) {
-			createUserRole($employeeId, 'HRMPSB');
-		}
-	} else {
-		deleteUserRole($employeeId, 'HRMPSB');
-	}
+	$employeeLink = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . "{$baseUri}/modules/users/user-info-dialog.php?id=" . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
+	$message = "Employee [{$employeeLink}] user assignment has been set successfully.";
+	$successs = true;
 
 	createSystemLog($stationId, $userId, 'Assigned user privileges', $employeeId, clientIp());
 }
@@ -309,46 +415,55 @@ if (isset($_POST['reset-user'])) {
 	$emails = employee($employeeId);
 	$userEmail = $emails ? $emails['email'] : '';
 	$showAlert = true;
-	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
+	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . "{$baseUri}/modules/users/user-info-dialog.php?id=" . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 
-	updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
+	$affectedAccountPassword = updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
 
-	if (affectedRows()) {
-		$message = 'Employee [' . $employee . '] password has been reset successfully. An email has been sent to [' . $userEmail . '].';
-
-		createSystemLog($stationId, $userId, 'Reset user password', $employeeId, clientIp());
-
-		$emailMessage = 'Good day! Your request for password reset has been approved!' . PHP_EOL . PHP_EOL .
-			'Your temporary password is: ' . $temporaryPassword . PHP_EOL . PHP_EOL .
-			'Please login to: ' . uri() . '/login to confirm.' . PHP_EOL . PHP_EOL .
-			'If you did not request this change please contact us for assistance. Thank you.' . PHP_EOL . PHP_EOL . PHP_EOL .
-			'***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****';
-		;
-
-		if (sendMail($userEmail, 'Employee Password Reset', $emailMessage)) {
-			createSystemLog($stationId, $userId, 'Password reset code sent', $employeeId, clientIp());
-		}
-	} else {
-		$message = 'No changes have been made to employee [' . $employee . ']  password.';
-		$success = false;
+	if (!$affectedAccountPassword) {
+		$message = "No changes have been made to employee [{$employee}]  password.";
+		return;
 	}
+
+	$message = "Employee [{$employee}] password has been reset successfully. An email has been sent to [{$userEmail}].";
+
+	createSystemLog($stationId, $userId, 'Reset user password', $employeeId, clientIp());
+
+	$subject = "Employee Password Reset";
+	$loginUrl = "{$baseUri}/login";
+
+	$emailBody = "Good day!\n\n
+                Your request for password reset has been approved!\n\n
+                Your temporary password is: {$temporaryPassword}\n\n
+                Please login to: {$loginUrl} to confirm.\n\n
+                If you did not request this change please contact us for assistance. Thank you.";
+
+	if (!sendMail($userEmail, 'Employee Password Reset', $emailMessage)) {
+		$message = "We encountered an error sending the email. Please try again later.";
+		error_log("Failed to send reset email to: {$userEmail}");
+		return;
+	}
+
+	$success = true;
+
+	createSystemLog($stationId, $userId, 'Password reset code sent', $employeeId, clientIp());
 }
 
 if (isset($_POST['remove-user'])) {
 	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$showAlert = true;
-	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
+	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . "{$baseUri}/modules/users/user-info-dialog.php?id=" . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 
-	deleteUserRoles($employeeId);
+	$affectedUserRoles = deleteUserRoles($employeeId);
 
-	if (affectedRows()) {
-		$message = 'Employee [' . $employee . '] user privileges have been removed successfully.';
-
-		createSystemLog($stationId, $userId, 'Removed user privileges', $employeeId, clientIp());
-	} else {
-		$message = 'No changes have been made to employee [' . $employee . '] user privileges.';
-		$success = false;
+	if (!$affectedUserRoles) {
+		$message = "No changes have been made to employee [{$employee}] user privileges.";
+		return;
 	}
+
+	$message = "Employee [{$employee}] user privileges have been removed successfully.";
+	$success = true;
+
+	createSystemLog($stationId, $userId, 'Removed user privileges', $employeeId, clientIp());
 }
 
 $fromDate = isset($_GET['from']) ? sanitize($_GET['from']) : date('Y') . '-01-01';
