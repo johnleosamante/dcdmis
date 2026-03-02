@@ -1,21 +1,19 @@
 <?php
 // hrmis/app.php
-$activeApp = $_SESSION[alias() . '_activeApp'] = 'hrmis';
+$activeApp = $_SESSION["{$prefix}activeApp"] = 'hrmis';
 $page = $appTitle = 'Human Resource Management Information System';
 
 if (!isset($userId)) {
-    redirect(uri() . '/login');
+    redirect("{$baseUri}/login");
 }
 
 if (!userRole($userId, $activeApp)) {
-    redirect(uri() . '/pis');
+    redirect("{$baseUri}/" . HOME);
 }
 
 if (isset($_POST['primary-search-button'])) {
     redirect(customUri('hrmis', 'Employee Search', sanitize($_POST['primary-search-text'])));
 }
-
-$success = false;
 
 if (isset($_POST['add-employee'])) {
     $employeeId = getDatetimeAsId();
@@ -56,25 +54,52 @@ if (isset($_POST['add-employee'])) {
         return;
     }
 
-    $createdEmployee = createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status, $crn, $bp, $pagibig, $philhealth, $tin, $agencyId);
-    $createdFamily = createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $employeeId);
-    $createdOtherInformation = createOtherInformation(0, 0, '', 0, '', 0, '0000-00-00', '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', $employeeId);
-    $createdStation = createStation($today, $eStationId, $ePositionId, $employeeId);
-    $sg = positions($ePositionId)['salary_grade'];
-    $createdPsipop = createPsipop('', 'Permanent', $today, $today, '', $employeeId);
-    $createdStepIncrement = createStepIncrement($today, '1', $sg, $employeeId);
-    $createdIdentification = createIdentification('', '', '', $today, $employeeId);
-    $createdAccount = createAccount($employeeId, hashPassword(generateStrongRandomPassword()));
+    beginTransaction();
 
-    if (!($createdEmployee && $createdFamily && $createdOtherInformation && $createdStation && $createdPsipop && $createdStepIncrement && $createdIdentification && $createdAccount)) {
-        $message = 'Employee was not saved successfully.';
-        return;
+    try {
+        if (createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status, $crn, $bp, $pagibig, $philhealth, $tin, $agencyId) === false) {
+            throw new Exception('Failed to save employee information.');
+        }
+
+        if (createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $employeeId) === false) {
+            throw new Exception('Failed to create family background.');
+        }
+
+        if (createOtherInformation(0, 0, '', 0, '', 0, '0000-00-00', '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0, '', $employeeId) === false) {
+            throw new Exception('Failed to create other information.');
+        }
+
+        if (createStation($today, $eStationId, $ePositionId, $employeeId) === false) {
+            throw new Exception('Failed to assign employee station.');
+        }
+
+        if (createPsipop('', 'Permanent', $today, $today, '', $employeeId) === false) {
+            throw new Exception('Failed to create PSIPOP entry.');
+        }
+
+        $sg = positions($ePositionId)['salary_grade'];
+        if (createStepIncrement($today, '1', $sg, $employeeId) === false) {
+            throw new Exception('Failed to create step increment record.');
+        }
+
+        if (createIdentification(null, '', '', $today, $employeeId) === false) {
+            throw new Exception('Failed to create identification.');
+        }
+
+        if (createAccount($employeeId, hashPassword(generateStrongRandomPassword())) === false) {
+            throw new Exception('Failed to create user account.');
+        }
+
+        commit();
+
+        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information">' . strtoupper($employee) . '</a>] was saved successfully.';
+        $success = true;
+
+        createSystemLog($stationId, $userId, 'Registered employee', $employeeId, clientIp());
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
     }
-
-    $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . $employee . ' employee information">' . strtoupper($employee) . '</a>] was saved successfully.';
-    $success = true;
-
-    createSystemLog($stationId, $userId, 'Registered employee', $employeeId, clientIp());
 }
 
 if (isset($_POST['update-personal-information'])) {
@@ -117,9 +142,9 @@ if (isset($_POST['update-personal-information'])) {
     $bday = date("d", $dob);
     $email = sanitize($_POST['email']);
 
-    $updatedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), $bmonth, $bday, $byear, sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), sanitize($_POST['religion']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), sanitize($_POST['dual-citizenship-country']), sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), $email, sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
+    $affectedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), $bmonth, $bday, $byear, sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), sanitize($_POST['religion']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), sanitize($_POST['dual-citizenship-country']), sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), $email, sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
 
-    if (!$updatedEmployee) {
+    if (!$affectedEmployee) {
         $message = 'No changes have been made to personal information.';
         return;
     }
@@ -209,8 +234,8 @@ if (isset($_POST['delete-child'])) {
         return;
     }
 
-    $success = true;
     $message = 'Child has been deleted successfully.';
+    $success = true;
 
     createSystemLog($stationId, $userId, 'Deleted employee child', $employeeId, clientIp());
 }
@@ -244,7 +269,7 @@ if (isset($_POST['save-education'])) {
     }
 
     if (!$affectedEducation) {
-        $message = $message = 'No changes have been made to educational background.';
+        $message = 'No changes have been made to educational background.';
         return;
     }
 
@@ -768,7 +793,7 @@ if (isset($_POST['save-service-record'])) {
     $to = sanitize($_POST['to']);
     $position = sanitize($_POST['position']);
     $status = sanitize($_POST['status']);
-    $isGovernment = sanitize($_POST['is-government']);
+    $isGovernment = sanitize($_POST['is-government']) === 'Y' ? '1' : '0';
     $sg = sanitize($_POST['sg-step']);
     $salary = isset($_POST['salary']) ? sanitize($_POST['salary']) : '0';
     $station = sanitize($_POST['station']);
@@ -830,7 +855,7 @@ if (isset($_POST['save-psipop'])) {
     $dlp = sanitize($_POST['dlp']);
     $status = sanitize($_POST['status']);
     $eligibility = sanitize($_POST['eligibility']);
-
+    $showAlert = true;
     $employeePosition = position($employeeId);
     $positionId = $employeePosition['position_id'] ?? null;
     $salaryGrade = positions($positionId)['salary_grade'] ?? null;
@@ -842,7 +867,7 @@ if (isset($_POST['save-psipop'])) {
     if (!$employeeStep) {
         $initialStep = '1';
         $changesMade = createStepIncrement($dlp, $initialStep, $salaryGrade, $employeeId);
-    } elseif (empty($esi['date_last_step'])) {
+    } elseif (empty($employeeStep['last_step_date'])) {
         $changesMade = updateStepIncrement($dlp, $employeeStep['step'], $salaryGrade, $employeeId);
     }
 
@@ -880,12 +905,12 @@ if (isset($_POST['save-201-file'])) {
     if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
         $temp = $_FILES['file-upload']['tmp_name'];
 
-        if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
+        if ($_FILES['file-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
             $message = 'The choosen file exceeds the upload file limit (20 MB). No changes have been made to 201 file.';
             return;
         }
 
-        if (mime_content_type($temp) !== 'applicationd/pdf') {
+        if (mime_content_type($temp) !== 'application/pdf') {
             $message = 'The choosen file is not an acceptable file (pdf). No changes have been made to 201 file.';
             return;
         }
@@ -898,8 +923,8 @@ if (isset($_POST['save-201-file'])) {
             return;
         }
 
-        if (!empty($oldFilename) && file_exists(root() . '/' . $oldFilename)) {
-            unlink(root() . '/' . $oldFilename);
+        if (!empty($oldFilename) && file_exists(root() . "/{$oldFilename}")) {
+            unlink(root() . "/{$oldFilename}");
         }
     }
 
@@ -912,10 +937,10 @@ if (isset($_POST['save-201-file'])) {
     $hasExistingRecord = fileAttachment($employeeId, $fileId);
 
     if (!$hasExistingRecord) {
-        $affectedFileAttachment = createFileAttachment($description, $filename, $ext, $employeeId);
+        $affectedFileAttachment = createFileAttachment($description, $newFilename, $ext, $employeeId);
         $logMessage = 'Added 201 file';
     } else {
-        $affectedFileAttachment = updateFileAttachment($description, $filename, $ext, $employeeId, $fileId);
+        $affectedFileAttachment = updateFileAttachment($description, $newFilename, $ext, $employeeId, $fileId);
         $logMessage = 'Updated 201 file';
     }
 
@@ -939,7 +964,7 @@ if (isset($_POST['delete-201-file'])) {
     $affectedFile = false;
 
     if ($file) {
-        $filename = $file['filename'];
+        $filename = $file['file_name'];
         $affectedFile = deleteFileAttachment($employeeId, $fileId);
     }
 
@@ -968,7 +993,7 @@ if (isset($_POST['approve-step-increment'])) {
 
     if ($stepIncrement) {
         $esi = $stepIncrement;
-        $lastStep = $esi['date_last_step'];
+        $lastStep = $esi['last_step_date'];
         $step = (int) $esi['step'];
         $now = new DateTime('now');
         $dls = new DateTime($lastStep);
