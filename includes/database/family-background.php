@@ -25,7 +25,6 @@ function createFamily($spouse_last_name, $spouse_first_name, $spouse_name_extens
         'mother_first_name' => $mother_first_name,
         'mother_middle_name' => $mother_middle_name
     ];
-
     return insert('family_backgrounds', $data);
 }
 
@@ -48,7 +47,6 @@ function updateFamily($spouse_last_name, $spouse_first_name, $spouse_name_extens
         'mother_first_name' => $mother_first_name,
         'mother_middle_name' => $mother_middle_name
     ];
-
     return update('family_backgrounds', $data, '`person_id` = ?', [$person_id]);
 }
 
@@ -91,7 +89,6 @@ function updateChild($last_name, $first_name, $name_extension, $middle_name, $bi
         'middle_name' => $middle_name,
         'birthdate' => $birthdate,
     ];
-
     return update('children', $data, '`person_id` = ? AND `id` = ?', [$person_id, $child_id]);
 }
 
