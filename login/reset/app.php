@@ -35,7 +35,7 @@ if (isset($_POST['reset-password'])) {
     $affectedAccountPassword = updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
 
     $subject = "Employee Password Reset";
-    $loginUrl = uri() . '/login';
+    $loginUrl = "{$baseUri}/login";
 
     $emailBody = "Good day!\n\n
                 Your request for password reset has been approved!\n\n
