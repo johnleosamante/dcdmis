@@ -31,13 +31,16 @@ messageAlert($showAlert, $message, $success);
     <div class="card-body">
         <ul class="nav nav-tabs mb-3">
             <li class="nav-item">
-                <a class="nav-link text-secondary" href="#previous-month" data-toggle="tab"><?php echo date('F Y', strtotime($now . ' - 1 month')) ?></a>
+                <a class="nav-link text-secondary" href="#previous-month"
+                    data-toggle="tab"><?php echo date('F Y', strtotime("{$now} - 1 month")) ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary active" href="#current-month" data-toggle="tab"><?php echo date('F Y') ?></a>
+                <a class="nav-link text-secondary active" href="#current-month"
+                    data-toggle="tab"><?php echo date('F Y') ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-secondary" href="#next-month" data-toggle="tab"><?php echo date('F Y', strtotime($now . ' + 1 month')) ?></a>
+                <a class="nav-link text-secondary" href="#next-month"
+                    data-toggle="tab"><?php echo date('F Y', strtotime("{$now} + 1 month")) ?></a>
             </li>
         </ul>
 
@@ -47,12 +50,12 @@ messageAlert($showAlert, $message, $success);
             while ($months < 3) {
                 switch ($months) {
                     case 0:
-                        $datetimeString = $now . ' - 1 month';
+                        $datetimeString = "{$now} - 1 month";
                         $tabID = 'previous-month';
                         $table = 'data-table-previous';
                         break;
                     case 2:
-                        $datetimeString = $now . ' + 1 month';
+                        $datetimeString = "{$now} + 1 month";
                         $tabID = 'next-month';
                         $table = 'data-table-next';
                         break;
@@ -62,12 +65,13 @@ messageAlert($showAlert, $message, $success);
                         $table = 'data-table';
                         break;
                 }
-            ?>
+                ?>
                 <div class="tab-pane fade <?php echo setActiveItem($months, 1, 'show active') ?>" id="<?php echo $tabID ?>">
                     <?php $bmonth = date('m', strtotime($datetimeString)) ?>
                     <div class="row">
                         <div class="col table-responsive">
-                            <table class="table table-hover mb-0 text-center" id="<?php echo $table ?>" width="100%" cellspacing="0">
+                            <table class="table table-hover mb-0 text-center" id="<?php echo $table ?>" width="100%"
+                                cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th class="align-middle" width="5%">Photo</th>
@@ -83,28 +87,37 @@ messageAlert($showAlert, $message, $success);
                                 <tbody>
                                     <?php
                                     $query = celebrantEmployees($bmonth);
-                                    if (numRows($query) > 0) {
-                                        while ($row = fetchArray($query)) :
-                                            $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                                            $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
-                                    ?>
+                                    if ($query) {
+                                        foreach ($query as $row):
+                                            $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                                            $photo = file_exists(root() . '/' . $row['profile_picture']) ? uri() . '/' . $row['profile_picture'] : uri() . '/assets/img/user.png';
+                                            ?>
                                             <tr class="text-uppercase">
                                                 <td class="align-middle">
                                                     <div class="image-container">
-                                                        <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                                            <img height="100%" src="<?php echo $photo ?>" alt="<?php echo $employeeName ?>">
+                                                        <span
+                                                            class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                                            <img height="100%" src="<?php echo $photo ?>"
+                                                                alt="<?php echo $employeeName ?>">
                                                         </span>
                                                         <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                                     </div>
                                                 </td>
-                                                <td class="align-middle text-left"><?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName) ?></td>
-                                                <td class="align-middle"><?php echo toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y') ?></td>
-                                                <td class="align-middle">
-                                                    <?php echo getDateDifference($row['year'], $row['month'], $row['day']) ?>
+                                                <td class="align-middle text-left">
+                                                    <?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName) ?>
                                                 </td>
-                                                <td class="align-middle"><?php echo fetchAssoc(positions($row['position']))['position'] ?></td>
                                                 <td class="align-middle">
-                                                    <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']) ?>
+                                                    <?php echo toDate($row['birth_month'] . '/' . $row['birth_day'] . '/' . $row['birth_year'], 'F j, Y') ?>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <?php echo getDateDifference($row['birth_year'], $row['birth_month'], $row['birth_day']) ?>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <?php echo positions($row['position_id'])['official_title'] ?>
+                                                </td>
+                                                <td class="align-middle">
+
+                                                    <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']); ?>
                                                 </td>
                                                 <td class="align-middle text-capitalize">
                                                     <div class="dropdown no-arrow">
@@ -127,7 +140,7 @@ messageAlert($showAlert, $message, $success);
                                                     </div>
                                                 </td>
                                             </tr>
-                                        <?php endwhile;
+                                        <?php endforeach;
                                     } else { ?>
                                         <tr>
                                             <td colspan="8" class="align-middle">No data available in table</td>
@@ -150,7 +163,7 @@ messageAlert($showAlert, $message, $success);
                         </div>
                     </div>
                 </div>
-            <?php
+                <?php
                 $months++;
             } ?>
         </div>
