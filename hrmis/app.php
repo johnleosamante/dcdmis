@@ -1026,13 +1026,13 @@ if (isset($_POST['approve-loyalty-award'])) {
     if ($loyaltyAward) {
         $ela = $loyaltyAward;
 
-        $doa = new DateTime($ela['last_awarded_on']);
+        $doa = new DateTime($ela['date_last_awarded']);
         $now = new DateTime('now');
 
         $count = (int) ($now->diff($doa)->y / 5);
         $increment = ($count === 2) ? 10 : 5 * $count;
 
-        $affectedLoyaltyAward = updateLoyaltyAward(date('Y-m-d', strtotime("+{$increment} years", strtotime($ela['last_awarded_on']))), $employeeId);
+        $affectedLoyaltyAward = updateLoyaltyAward(date('Y-m-d', strtotime("+{$increment} years", strtotime($ela['date_last_awarded']))), $employeeId);
     }
 
     if (!$affectedLoyaltyAward) {
