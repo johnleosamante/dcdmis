@@ -49,14 +49,15 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = employeeLoyaltyAward();
-                    while ($row = fetchArray($query)) :
-                        $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
-                    ?>
+                    foreach ($query as $row):
+                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? "{$baseUri}/" . $row['profile_picture'] : "{$baseUri}/assets/img/user.png";
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
                                         <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
@@ -65,13 +66,13 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle text-left">
                                 <?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName) ?>
                             </td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']) ?>
+                                <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']) ?>
                             </td>
-                            <td class="align-middle"><?= toDate($row['original_appointment'], 'F j, Y') ?></td>
-                            <td class="align-middle"><?= $row['years_active'] ?></td>
-                            <td class="align-middle"><?= toDate($row['last_awarded_on'], 'F j, Y') ?></td>
+                            <td class="align-middle"><?= toDate($row['original_appointment_date'], 'F j, Y') ?></td>
+                            <td class="align-middle"><?= $row['total_years_service'] ?></td>
+                            <td class="align-middle"><?= toDate($row['date_last_awarded'], 'F j, Y') ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
@@ -89,7 +90,7 @@ messageAlert($showAlert, $message, $success);
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
