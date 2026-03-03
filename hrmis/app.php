@@ -1003,7 +1003,7 @@ if (isset($_POST['approve-step-increment'])) {
         $increment = $serviceDuration < 21 ? 3 * $count : 21;
         $step = $step < 8 ? $step + $count : 8;
 
-        $affectedStepIncrement = updateStepIncrement(date('Y-m-d', strtotime("+{$increment} years", strtotime($esi['date_last_step']))), $step, $sg, $employeeId);
+        $affectedStepIncrement = updateStepIncrement(date('Y-m-d', strtotime("+{$increment} years", strtotime($lastStep))), $step, $sg, $employeeId);
     }
 
     if (!$affectedStepIncrement) {
