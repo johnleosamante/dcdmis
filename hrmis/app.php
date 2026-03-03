@@ -675,7 +675,7 @@ if (isset($_POST['reassign-employee'])) {
 if (isset($_POST['promote-employee'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $positionId = sanitize($_POST['position']);
-    $position = strtoupper(positions($positionId)['position']);
+    $position = strtoupper(positions($positionId)['official_title']);
     $station = station($employeeId);
     $eStationId = '';
 
@@ -695,8 +695,8 @@ if (isset($_POST['promote-employee'])) {
     $status = $doa = $eligibility = null;
 
     if ($psipop) {
-        $status = $psipop['status'];
-        $doa = $psipop['original_appointment'] ?? date('Y-m-d');
+        $status = $psipop['employment_status'];
+        $doa = $psipop['original_appointment_date'] ?? date('Y-m-d');
         $eligibility = $psipop['eligibility'];
         updatePsipop('', $status, $doa, $datePromoted, $eligibility, $employeeId);
     }
@@ -727,7 +727,7 @@ if (isset($_POST['promote-employee'])) {
 if (isset($_POST['remove-employee'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $reason = sanitize($_POST['reason']);
-    $skipVacancy = isset($_POST['skip_vacancy']) && $_POST['skip_vacancy'] === '1';
+    $skipVacancy = isset($_POST['skip_vacancy']);
     $showAlert = true;
 
     if (empty($employeeId) || empty($reason)) {
@@ -737,7 +737,7 @@ if (isset($_POST['remove-employee'])) {
     $positionId = position($employeeId)['position_id'];
     $eStationId = station($employeeId)['station_id'];
     $psipopData = psipop($employeeId);
-    $psipopItem = $psipopData ? $psipopData['item'] : '';
+    $psipopItem = $psipopData ? $psipopData['item_number'] : '';
     $dateVacated = date('Y-m-d');
 
     if (employee($employeeId)) {
@@ -754,7 +754,7 @@ if (isset($_POST['remove-employee'])) {
 
     createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
 
-    if ($skipVacancy && strtolower($reason) === 'duplicate') {
+    if ($skipVacancy || strtolower($reason) === 'duplicate') {
         return;
     }
 
