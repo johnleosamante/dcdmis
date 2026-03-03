@@ -17,16 +17,16 @@ $hasItemNumber = false;
 
 if ($employee) {
     $employeeId = $employee['id'];
-    $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
+    $employeeName = toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true);
     $sex = $employee['sex'];
     $status = $employee['status'];
     $positions = position($employeeId);
     $stationId = $positions['station_id'];
     $station = $positions['station'];
     $positionId = $positions['position_id'];
-    $position = $positions['position'];
-    $depedEmail = $employee['email'];
-    $picture = file_exists(root() . '/' . $employee['picture']) ? uri() . '/' . $employee['picture'] : uri() . '/assets/img/user.png';
+    $position = $positions['official_title'];
+    $depedEmail = $employee['email_address'];
+    $picture = file_exists(root() . '/' . $employee['profile_picture']) ? "{$baseUri}/" . $employee['profile_picture'] : "{$baseUri}/assets/img/user.png";
     $modalTitle = 'Remove Employee';
     $hasEmployee = true;
 
@@ -34,7 +34,7 @@ if ($employee) {
     $itemNumber = '';
 
     if ($psipopInfo) {
-        $itemNumber = $psipopInfo['item'] ?? '';
+        $itemNumber = $psipopInfo['item_number'] ?? '';
         $hasItemNumber = !empty($itemNumber);
     }
 }
@@ -63,7 +63,7 @@ if ($employee) {
                         </select>
                     </div>
 
-                    <div class="form-group mb-0" id="vacancy-option">
+                    <div class="form-group mb-2" id="vacancy-option">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="skip-vacancy" name="skip_vacancy"
                                 value="1">
@@ -76,10 +76,13 @@ if ($employee) {
                     </div>
 
                     <?php if ($hasItemNumber): ?>
-                        <div class="alert alert-info mt-3 mb-0 small">
-                            <i class="fas fa-info-circle mr-1"></i>
-                            Item Number: <strong><?= $itemNumber ?></strong> will be marked as vacant unless you check the
-                            option above.
+                        <div class="alert alert-info p-2 my-2 small d-flex align-items-start">
+                            <i class="fas fa-info-circle mt-1 mr-1"></i>
+                            <div>
+                                Item Number: <strong><?= $itemNumber ?>
+                                </strong> will be marked as vacant unless you check the
+                                option above or is duplicate employee.
+                            </div>
                         </div>
                     <?php endif; ?>
 
