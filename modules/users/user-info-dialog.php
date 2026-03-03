@@ -24,7 +24,7 @@ if ($employee) {
     $positionId = $position['position_id'];
     $position = $position['official_title'];
     $depedEmail = $employee['email_address'];
-    $picture = file_exists(root() . '/' . $employee['profile_picture']) ? uri() . '/' . $employee['profile_picture'] : uri() . '/assets/img/user.png';
+    $picture = file_exists(root() . '/' . $employee['profile_picture']) ? "{$baseUri}/" . $employee['profile_picture'] : "{$baseUri}/assets/img/user.png";
     $modalTitle = 'Employee Information';
     $hasEmployee = true;
 }
