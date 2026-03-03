@@ -1,14 +1,14 @@
 <?php
 // dts/app.php
-$activeApp = $_SESSION[alias() . '_activeApp'] = 'dts';
+$activeApp = $_SESSION["{$prefix}activeApp"] = 'dts';
 $page = $appTitle = 'Document Tracking System';
 
 if (!isset($userId)) {
-	redirect(uri() . '/login');
+	redirect("{$baseUri}/login");
 }
 
 if (!isset($portal) || empty($portal)) {
-	redirect(uri() . '/pis');
+	redirect("{$baseUri}/pis");
 }
 
 if (isset($_POST['primary-search-button'])) {
@@ -34,7 +34,7 @@ if (isset($_POST['save-document'])) {
 	$showAlert = true;
 
 	$year = date('y');
-	$documentId = strlen($documentId) > 0 ? $documentId : $code . '-' . $year . '-' . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
+	$documentId = !empty($documentId) ? $documentId : "{$code}-{$year}-" . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
 	// $uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
 
 	// $allowedTypes = [
