@@ -103,18 +103,3 @@ if ($employee) {
         </form>
     </div>
 </div>
-
-<script>
-    document.getElementById('reason').addEventListener('change', function () {
-        const vacancyOption = document.getElementById('vacancy-option');
-        const skipVacancy = document.getElementById('skip-vacancy');
-
-        if (this.value === 'Duplicate') {
-            vacancyOption.style.display = 'none';
-            skipVacancy.checked = true;
-        } else {
-            vacancyOption.style.display = 'block';
-            skipVacancy.checked = false;
-        }
-    });
-</script>
