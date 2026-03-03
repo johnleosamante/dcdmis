@@ -11,7 +11,7 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Vacancies</li>
         </ol>
     </nav>
@@ -22,7 +22,7 @@ messageAlert($showAlert, $message, $success);
         <?php if (!$isHrmpsb) {
             contentTitle('Vacancies');
         } else {
-            contentTitleWithModal('Vacancies', uri() . '/modules/vacancies/save-vacancy-dialog.php', 'Add Vacancy', 'fa-plus');
+            contentTitleWithModal('Vacancies', "{$baseUri}/modules/vacancies/save-vacancy-dialog.php", 'Add Vacancy', 'fa-plus');
         } ?>
     </div>
 
@@ -33,7 +33,7 @@ messageAlert($showAlert, $message, $success);
                     <div class="d-inline-block ml-2">
                         <?php linkButtonSplit(customUri('hrmpsb', 'Publish Vacancies'), 'Publish', 'fa-newspaper', 'Publish Vacancies', 'success') ?>
                     </div>
-                <?php endif; ?>
+                <?php endif ?>
 
                 <div class="d-inline-block">
                     <?php linkButtonSplit(customUri('export', 'vacancies'), 'Export', 'fa-file-excel', 'Export as Excel file', $isHrmis ? 'success' : 'warning') ?>
@@ -41,7 +41,6 @@ messageAlert($showAlert, $message, $success);
             </div>
         <?php } ?>
 
-        <!-- Position Category Filter -->
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="category-filter" class="small font-weight-bold text-uppercase">Filter by Category</label>
@@ -49,11 +48,11 @@ messageAlert($showAlert, $message, $success);
                     <option value="">All Categories</option>
                     <?php
                     $categories = positionCategories();
-                    while ($category = fetchAssoc($categories)): ?>
+                    foreach ($categories as $category): ?>
                         <option value="<?= $category['category'] ?>">
                             <?= $category['category'] ?>
                         </option>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </select>
             </div>
         </div>
@@ -72,33 +71,29 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="10%">Published</th>
                         <?php if ($isHrmpsb): ?>
                             <th class="align-middle" width="10%">Action</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php
                     $count = 0;
-                    $query = vacantItems(); // Use the more detailed query
-                    while ($row = fetchArray($query)): ?>
+                    $query = vacantItems();
+                    foreach ($query as $row): ?>
                         <tr class="text-uppercase" data-category="<?= $row['category'] ?>">
                             <td class="align-middle"><?= ++$count ?></td>
-                            <td class="align-middle"><?= $row['position'] ?></td>
+                            <td class="align-middle"><?= $row['official_title'] ?></td>
                             <td class="align-middle"><?= $row['category'] ?></td>
                             <td class="align-middle"><?= $row['salary_grade'] ?></td>
                             <td class="align-middle">
                                 <?= toHandleNull($row['item_number'], 'N/A') ?>
                             </td>
                             <td class="align-middle">
-                                <?php if (empty($row['station_id'])) {
-                                    echo '<span class="text-muted">TO BE DETERMINED</span>';
+                                <?php $school = schoolById($row['station_id']);
+                                if ($school) {
+                                    linkItem(customUri($activeApp, 'School Information', $row['station_id']), $school['name']);
                                 } else {
-                                    $school = fetchAssoc(schoolById($row['station_id']));
-                                    if ($school) {
-                                        linkItem(customUri($activeApp, 'School Information', $row['station_id']), $school['name']);
-                                    } else {
-                                        echo '<span class="text-muted">Unknown</span>';
-                                    }
+                                    echo '<span class="text-muted">TO BE DETERMINED</span>';
                                 } ?>
                             </td>
                             <td class="align-middle">
@@ -108,8 +103,8 @@ messageAlert($showAlert, $message, $success);
                                 <?php if (!empty($row['publication_code'])): ?>
                                     <span class="badge badge-success"><?= $row['publication_code'] ?></span>
                                 <?php else: ?>
-                                    <span class="badge badge-secondary">Unpublished</span>
-                                <?php endif; ?>
+                                    <span class="badge badge-secondary">Not Published</span>
+                                <?php endif ?>
                             </td>
                             <?php if ($isHrmpsb): ?>
                                 <td class="align-middle text-capitalize">
@@ -124,9 +119,9 @@ messageAlert($showAlert, $message, $success);
                                         </div>
                                     </div>
                                 </td>
-                            <?php endif; ?>
+                            <?php endif ?>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
@@ -138,9 +133,10 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="12%">Item Number</th>
                         <th class="align-middle" width="20%">Station</th>
                         <th class="align-middle" width="15%">Date Vacated</th>
+                        <th class="align-middle" width="10%">Published</th>
                         <?php if ($isHrmpsb): ?>
                             <th class="align-middle" width="10%">Action</th>
-                        <?php endif; ?>
+                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>
