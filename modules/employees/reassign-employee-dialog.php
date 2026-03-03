@@ -23,7 +23,7 @@ if ($employee) {
     $station = $positions['station'];
     $positionId = $positions['position_id'];
     $position = $positions['official_title'];
-    $picture = file_exists(root() . '/' . $employee['profile_picture']) ? uri() . '/' . $employee['profile_picture'] : uri() . '/assets/img/user.png';
+    $picture = file_exists(root() . '/' . $employee['profile_picture']) ? "{$baseUri}/" . $employee['profile_picture'] : "{$baseUri}/assets/img/user.png";
     $modalTitle = 'Reassign Employee';
     $hasEmployee = true;
 }
