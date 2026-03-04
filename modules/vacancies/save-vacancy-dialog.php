@@ -18,10 +18,9 @@ $modalTitle = 'Add Vacancy';
 
 if (isset($vacancyId)) {
     $modalTitle = $vacancyId === $copiedId ? 'Copy Vacancy' : 'Edit Vacancy';
-    $vacancyDataSet = vacancy($vacancyId);
+    $vacancy = vacancy($vacancyId);
 
-    if (numRows($vacancyDataSet) > 0) {
-        $vacancy = fetchArray($vacancyDataSet);
+    if ($vacancy) {
         $vacancyId = $vacancy['id'];
         $positionId = $vacancy['position_id'];
         $itemNo = $vacancy['item_number'];
@@ -45,18 +44,18 @@ if (isset($vacancyId)) {
                             <option value="">Select position...</option>
                             <?php
                             $categories = positionCategories();
-                            while ($category = fetchAssoc($categories)): ?>
+                            foreach ($categories as $category): ?>
                                 <optgroup label="<?= $category['category'] ?>">
                                     <?php $jobPositions = positionsByCategory($category['category']);
-                                    while ($jobPosition = fetchArray($jobPositions)): ?>
-                                        <option value="<?= $jobPosition['id'] ?>" <?= setOptionSelected($jobPosition['id'], $positionId) ?>><?= $jobPosition['position'] ?></option>
-                                    <?php endwhile ?>
+                                    foreach ($jobPositions as $jobPosition): ?>
+                                        <option value="<?= $jobPosition['id'] ?>" <?= setOptionSelected($jobPosition['id'], $positionId) ?>><?= $jobPosition['official_title'] ?></option>
+                                    <?php endforeach ?>
                                 </optgroup>
-                            <?php endwhile ?>
+                            <?php endforeach ?>
                         </select>
                     <?php else: ?>
                         <input id="position" type="text" class="form-control"
-                            value="<?= fetchArray(positions($positionId))['position'] ?>" readonly>
+                            value="<?= positions($positionId)['official_title'] ?>" readonly>
                     <?php endif; ?>
                 </div>
 
@@ -72,16 +71,17 @@ if (isset($vacancyId)) {
                         <option value="">Select station...</option>
                         <?php
                         $districts = districts();
-                        while ($district = fetchAssoc($districts)): ?>
+                        foreach ($districts as $district): ?>
                             <optgroup label="<?= $district['name'] ?>">
                                 <?php
                                 $schools = schoolsByDistrict($district['id']);
-                                while ($school = fetchAssoc($schools)): ?>
+                                foreach ($schools as $school): ?>
                                     <option value="<?= $school['id'] ?>" <?= setOptionSelected($school['id'], $stationId) ?>>
-                                        <?= $school['name'] ?></option>
-                                <?php endwhile ?>
+                                        <?= $school['name'] ?>
+                                    </option>
+                                <?php endforeach ?>
                             </optgroup>
-                        <?php endwhile ?>
+                        <?php endforeach ?>
                     </select>
                 </div>
 
