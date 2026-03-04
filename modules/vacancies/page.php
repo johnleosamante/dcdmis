@@ -41,9 +41,12 @@ messageAlert($showAlert, $message, $success);
             </div>
         <?php } ?>
 
-        <div class="row mb-3">
+        <div class="row mb-3 align-items-center">
+            <div class="col-auto">
+                <label for="category-filter" class="small font-weight-bold text-uppercase mb-0">Filter by
+                    Category</label>
+            </div>
             <div class="col-md-4">
-                <label for="category-filter" class="small font-weight-bold text-uppercase">Filter by Category</label>
                 <select id="category-filter" class="form-control" onchange="filterByCategory(this.value)">
                     <option value="">All Categories</option>
                     <?php
@@ -58,18 +61,16 @@ messageAlert($showAlert, $message, $success);
         </div>
 
         <div class="table-responsive">
-            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">#</th>
-                        <th class="align-middle" width="20%">Position</th>
+                        <th class="align-middle" width="25%">Position / Salary Grade</th>
                         <th class="align-middle" width="10%">Category</th>
-                        <th class="align-middle" width="8%">SG</th>
-                        <th class="align-middle" width="12%">Item Number</th>
-                        <th class="align-middle" width="20%">Station</th>
+                        <th class="align-middle" width="35%">Station</th>
                         <th class="align-middle" width="15%">Date Vacated</th>
-                        <th class="align-middle" width="10%">Published</th>
-                        <?php if ($isHrmpsb): ?>
+                        <th class="align-middle" width="10%">Publication Code</th>
+                        <?php if ($isPersonnel): ?>
                             <th class="align-middle" width="10%">Action</th>
                         <?php endif ?>
                     </tr>
@@ -82,12 +83,13 @@ messageAlert($showAlert, $message, $success);
                     foreach ($query as $row): ?>
                         <tr class="text-uppercase" data-category="<?= $row['category'] ?>">
                             <td class="align-middle"><?= ++$count ?></td>
-                            <td class="align-middle"><?= $row['official_title'] ?></td>
-                            <td class="align-middle"><?= $row['category'] ?></td>
-                            <td class="align-middle"><?= $row['salary_grade'] ?></td>
                             <td class="align-middle">
-                                <?= toHandleNull($row['item_number'], 'N/A') ?>
+                                <div><?= $row['official_title'] . ' (' . $row['salary_grade'] . ')' ?></div>
+                                <?php if ($row['item_number']) {
+                                    echo '<div class="small">' . $row['item_number'] . '</div>';
+                                } ?>
                             </td>
+                            <td class="align-middle"><?= $row['category'] ?></td>
                             <td class="align-middle">
                                 <?php $school = schoolById($row['station_id']);
                                 if ($school) {
@@ -101,12 +103,14 @@ messageAlert($showAlert, $message, $success);
                             </td>
                             <td class="align-middle">
                                 <?php if (!empty($row['publication_code'])): ?>
+                                    <?php $isPublished = true; ?>
                                     <span class="badge badge-success"><?= $row['publication_code'] ?></span>
                                 <?php else: ?>
+                                    <?php $isPublished = false; ?>
                                     <span class="badge badge-secondary">Not Published</span>
                                 <?php endif ?>
                             </td>
-                            <?php if ($isHrmpsb): ?>
+                            <?php if ($isPersonnel): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
@@ -114,7 +118,9 @@ messageAlert($showAlert, $message, $success);
                                             <?php
                                             modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Vacancy');
                                             modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?c=' . cipher($row['id']) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Vacancy');
-                                            modalDropdownItem(uri() . '/modules/vacancies/fill-vacancy-dialog.php?id=' . cipher($row['id']), 'Fill Vacancy', 'fa-user-plus', 'Assign Employee');
+                                            if ($isPublished) {
+                                                modalDropdownItem(uri() . '/modules/vacancies/fill-vacancy-dialog.php?id=' . cipher($row['id']), 'Fill Vacancy', 'fa-user-plus', 'Assign Employee');
+                                            }
                                             modalDropdownItem(uri() . '/modules/vacancies/delete-vacancy-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Vacancy') ?>
                                         </div>
                                     </div>
@@ -122,19 +128,20 @@ messageAlert($showAlert, $message, $success);
                             <?php endif ?>
                         </tr>
                     <?php endforeach ?>
+                    <tr id="no-data-row" style="display:none;">
+                        <td colspan="9" class="text-center text-muted">No available data for the selected category.</td>
+                    </tr>
                 </tbody>
 
                 <tfoot>
                     <tr>
                         <th class="align-middle" width="5%">#</th>
-                        <th class="align-middle" width="20%">Position</th>
+                        <th class="align-middle" width="25%">Position / Salary Grade</th>
                         <th class="align-middle" width="10%">Category</th>
-                        <th class="align-middle" width="8%">SG</th>
-                        <th class="align-middle" width="12%">Item Number</th>
-                        <th class="align-middle" width="20%">Station</th>
+                        <th class="align-middle" width="35%">Station</th>
                         <th class="align-middle" width="15%">Date Vacated</th>
-                        <th class="align-middle" width="10%">Published</th>
-                        <?php if ($isHrmpsb): ?>
+                        <th class="align-middle" width="10%">Publication Code</th>
+                        <?php if ($isPersonnel): ?>
                             <th class="align-middle" width="10%">Action</th>
                         <?php endif ?>
                     </tr>
@@ -146,13 +153,27 @@ messageAlert($showAlert, $message, $success);
 
 <script>
     function filterByCategory(category) {
-        const rows = document.querySelectorAll('#data-table tbody tr');
-        rows.forEach(row => {
+        const tbody = document.querySelector('#data-table tbody');
+        const allRows = Array.from(tbody.querySelectorAll('tr'));
+        const dataRows = allRows.filter(r => !r.id || r.id !== 'no-data-row');
+        const noDataRow = tbody.querySelector('#no-data-row');
+
+        let visibleCount = 0;
+        dataRows.forEach(row => {
             if (category === '' || row.dataset.category === category) {
                 row.style.display = '';
+                visibleCount++;
             } else {
                 row.style.display = 'none';
             }
         });
+
+        if (noDataRow) {
+            noDataRow.style.display = visibleCount === 0 ? '' : 'none';
+        }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        filterByCategory(document.getElementById('category-filter').value);
+    });
 </script>
