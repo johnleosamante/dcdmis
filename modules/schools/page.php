@@ -11,7 +11,7 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Schools</li>
         </ol>
     </nav>
@@ -37,7 +37,8 @@ messageAlert($showAlert, $message, $success);
         <?php } ?>
 
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%"
+                cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">Logo</th>
@@ -47,7 +48,8 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="20%">Head of Office</th>
                         <th class="align-middle text-mars" width="5%"><i class="fa fa-user fw"></i> Male</th>
                         <th class="align-middle text-venus" width="5%"><i class="fa fa-user fw"></i> Female</th>
-                        <th class="align-middle" width="5%" title="Total Personnel"><i class="fa fa-user-friends fw"></i> Total</th>
+                        <th class="align-middle" width="5%" title="Total Personnel"><i
+                                class="fa fa-user-friends fw"></i> Total</th>
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </thead>
@@ -55,10 +57,10 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = schools();
-                    while ($row = fetchArray($query)) :
-                        $logo = !empty($row['logo']) ? uri() . '/' . $row['logo'] : uri() . '/uploads/division/division.png';
+                    foreach ($query as $row):
+                        $logo = !empty($row['logo']) ? "{$baseUri}/" . $row['logo'] : "{$baseUri}/uploads/division/division.png";
                         $schoolName = $row['name'];
-                    ?>
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
@@ -68,36 +70,37 @@ messageAlert($showAlert, $message, $success);
                                 </div>
                             </td>
                             <td class="align-middle text-left">
-                                <div><?php linkItem(customUri($activeApp, 'School Information', $row['id']), $schoolName . ' (' . $row['alias'] . ')') ?></div>
+                                <div>
+                                    <?php linkItem(customUri($activeApp, 'School Information', $row['id']), "{$schoolName} (" . $row['alias'] . ')') ?>
+                                </div>
                                 <div class="small"><?= $row['id'] . ' | ' . $row['address'] ?></div>
                             </td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'District Information', $row['district']), fetchAssoc(district($row['district']))['name']) ?>
+                                <?php linkItem(customUri($activeApp, 'District Information', $row['district_id']), district($row['district_id'])['name']) ?>
                             </td>
                             <td class="align-middle"><?= $row['category'] ?></td>
                             <td class="align-middle">
-                                <?php if (!empty($row['head'])) : ?>
+                                <?php if (!empty($row['head_id'])): ?>
                                     <div>
                                         <?php if ($isHrmis) {
-                                            linkItem(customUri('hrmis', 'Employee Information', $row['head']), userName($row['head']));
+                                            linkItem(customUri('hrmis', 'Employee Information', $row['head_id']), userName($row['head_id']));
                                         } else {
-                                            modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['head']), userName($row['head']));
+                                            modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['head_id']), userName(person_id: $row['head_id']));
                                         } ?>
                                     </div>
-                                <?php
-                                    $positions = position($row['head']);
-                                    echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
-                                else :
+                                    <?php
+                                    $position = position($row['head_id']);
+                                    echo $position ? '<div class="small">' . $position['official_title'] . '</div>' : '';
+                                else:
                                     echo 'To be assigned';
                                 endif ?>
                             </td>
 
                             <?php
-                            $employeeCount = schoolEmployeeCount($row['id']);
+                            $count = schoolEmployeeCount($row['id']);
                             $male = $female = $total = 0;
 
-                            if (numRows($employeeCount) > 0) {
-                                $count = fetchAssoc($employeeCount);
+                            if ($count) {
                                 $male = $count['male'];
                                 $female = $count['female'];
                                 $total = $count['total'];
@@ -115,9 +118,9 @@ messageAlert($showAlert, $message, $success);
 
                                         if ($isDmis) {
                                             modalDropdownItem(uri() . '/modules/schools/save-school-dialog.php?id=' . cipher($row['id']) . '&e=' . cipher($row['alias']), 'Edit', 'fa-edit', 'Edit School');
-                                            if ((int)$total === 0) { ?>
+                                            if ((int) $total === 0) { ?>
                                                 <div class="dropdown-divider"></div>
-                                        <?php
+                                                <?php
                                                 modalDropdownItem(uri() . '/modules/schools/delete-school-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete School');
                                             }
                                         }
@@ -126,7 +129,7 @@ messageAlert($showAlert, $message, $success);
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
