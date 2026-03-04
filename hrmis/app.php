@@ -1045,3 +1045,74 @@ if (isset($_POST['approve-loyalty-award'])) {
 
     createSystemLog($stationId, $userId, 'Approved employee loyalty award', $employeeId, clientIp());
 }
+
+if (isset($_POST['save-vacancy'])) {
+    $vacancyId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+    $position = null;
+    $positionId = $_POST['position'] ?? null;
+    $itemNumber = sanitize($_POST['item_number'] ?? '');
+    $stationId = $_POST['station'] ?? null;
+    $datePosted = $_POST['date_posted'] ?? date('Y-m-d');
+    $showAlert = true;
+    $status = 'Added vacancy';
+
+    if (empty($positionId)) {
+        $message = 'Please select a position.';
+        return;
+    }
+
+    if (empty($itemNumber)) {
+        $message = 'Please enter an item number.';
+        return;
+    }
+
+    if (empty($vacancyId) && doesItemNumberExist($itemNumber)) {
+        $message = "Item number [$itemNumber] already exists.";
+        return;
+    }
+
+    if (empty($vacancyId)) {
+        $position = strtoupper(positions($positionId)['official_title']);
+        $affectedVacancy = createVacancy('open', $positionId, $stationId, $itemNumber, null, $datePosted, 'new');
+        $message = "Vacancy for [$position] with item number [$itemNumber] has been added successfully.";
+    } else {
+        $vacancy = vacancy($vacancyId);
+        $vacancyStatus = $vacancy['status'] ?? 'open';
+        $vacancyPosition = $vacancy['position_id'] ?? null;
+        $vacancyReason = $vacancy['reason'] ?? 'new';
+        $itemNumber = empty($vacancy['item_number']) ? $itemNumber : $vacancy['item_number'];
+        $affectedVacancy = updateVacancy($vacancyId, $vacancyStatus, $vacancyPosition, $stationId, $itemNumber, $datePosted, $vacancyReason);
+        $status = 'Updated vacancy';
+        $message = "Vacancy with item number [$itemNumber] has been updated successfully.";
+    }
+
+    if ($affectedVacancy) {
+        $success = true;
+        createSystemLog($stationId ?? 'HRMPSB', $userId, $status, $itemNumber, clientIp());
+    } else {
+        $message = 'Vacancy was not saved successfully.';
+    }
+}
+
+if (isset($_POST['delete-vacancy'])) {
+    $vacancyId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+    $showAlert = true;
+
+    if (empty($vacancyId)) {
+        $message = 'Invalid vacancy selected.';
+        return;
+    }
+
+    $vacancy = vacancy($vacancyId);
+    $position = positions($vacancy['position_id'])['official_title'];
+    $itemNumber = empty($vacancy['item_number']) ? 'N/A' : $vacancy['item_number'];
+    $deletedVacancy = deleteVacancy($vacancyId);
+
+    if ($deletedVacancy) {
+        $message = "Vacancy for [{$position}] with item number [{$itemNumber}] has been deleted successfully.";
+        $success = true;
+        createSystemLog('HRMPSB', $userId, 'Deleted vacancy', $itemNumber, clientIp());
+    } else {
+        $message = 'Vacancy was not deleted successfully.';
+    }
+}
