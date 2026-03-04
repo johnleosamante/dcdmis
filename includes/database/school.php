@@ -64,7 +64,7 @@ function schoolEmployeeCount($school_id = null)
             {$filter} 
             GROUP BY s.`id`, s.`name` 
             ORDER BY d.`name`, s.`category`, s.`name`";
-    return query($sql, $params);
+    return find($sql, $params);
 }
 
 function createSchool($school_id, $name, $alias, $address, $district_id, $category, $telephone, $email, $website, $fb_page, $logo)
