@@ -1,6 +1,6 @@
 <?php
 // modules/vacancies/page.php
-if (!$isHrmis && !$isHrmpsb) {
+if (!$isHrmis) {
     require_once root() . '/modules/error/403.php';
     return;
 }
@@ -19,25 +19,25 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php if (!$isHrmpsb) {
-            contentTitle('Vacancies');
+        <?php if ($isPersonnel) {
+            contentTitleWithModal('Vacancies', "{$baseUri}/modules/vacancies/save-vacancy-dialog.php", 'Add', 'fa-plus');
         } else {
-            contentTitleWithModal('Vacancies', "{$baseUri}/modules/vacancies/save-vacancy-dialog.php", 'Add Vacancy', 'fa-plus');
+            contentTitle('Vacancies');
         } ?>
     </div>
 
     <div class="card-body">
-        <?php if ($isDmis || $isHrmpsb || $isHrmis) { ?>
+        <?php if ($isDmis || $isHrmis) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
-                <?php if ($isHrmpsb): ?>
-                    <div class="d-inline-block ml-2">
-                        <?php linkButtonSplit(customUri('hrmpsb', 'Publish Vacancies'), 'Publish', 'fa-newspaper', 'Publish Vacancies', 'success') ?>
-                    </div>
-                <?php endif ?>
-
-                <div class="d-inline-block">
+                <div class="d-inline-block ml-2">
                     <?php linkButtonSplit(customUri('export', 'vacancies'), 'Export', 'fa-file-excel', 'Export as Excel file', $isHrmis ? 'success' : 'warning') ?>
                 </div>
+
+                <?php if ($isPersonnel): ?>
+                    <div class="d-inline-block">
+                        <?php linkButtonSplit(customUri('hrmis', 'Publish Vacancies'), 'Publish', 'fa-newspaper', 'Publish Vacancies', 'info') ?>
+                    </div>
+                <?php endif ?>
             </div>
         <?php } ?>
 
@@ -87,7 +87,7 @@ messageAlert($showAlert, $message, $success);
                                 <td class="align-middle">
                                     <div><?= $row['official_title'] . ' (' . $row['salary_grade'] . ')' ?></div>
                                     <?php if ($row['item_number']) {
-                                        echo '<div class="small">' . $row['item_number'] . '</div>';
+                                        echo '<div class="badge badge-info small">' . $row['item_number'] . '</div>';
                                     } ?>
                                 </td>
                                 <td class="align-middle"><?= $row['category'] ?></td>
