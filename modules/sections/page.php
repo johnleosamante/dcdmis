@@ -11,7 +11,7 @@ messageAlert($showAlert, $message, $success);
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?php echo uri() . '/' . $activeApp; ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">Sections</li>
         </ol>
     </nav>
@@ -36,7 +36,8 @@ messageAlert($showAlert, $message, $success);
         <?php } ?>
 
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%"
+                cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="25%">Section</th>
@@ -52,26 +53,28 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = sections();
-                    while ($row = fetchAssoc($query)) : ?>
+                    foreach ($query as $row): ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle text-center"><?php linkItem(customUri($activeApp, 'Section Information', $row['id']), $row['name']); ?></td>
-                            <td class="align-middle text-center"><?php echo $row['division']; ?></td>
+                            <td class="align-middle text-center">
+                                <?php linkItem(customUri($activeApp, 'Section Information', $row['id']), $row['name']); ?>
+                            </td>
+                            <td class="align-middle text-center"><?= $row['functional_division'] ?></td>
                             <td class="align-middle">
                                 <div>
                                     <?php if ($isHrmis) {
-                                        linkItem(customUri('hrmis', 'Employee Information', $row['head']), userName($row['head']));
+                                        linkItem(customUri('hrmis', 'Employee Information', $row['head_id']), userName($row['head_id']));
                                     } else {
-                                        modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['head']), userName($row['head']));
+                                        modalItem("{$baseUri}/modules/users/user-info-dialog.php?id=" . cipher($row['head_id']), userName($row['head_id']));
                                     } ?>
                                 </div>
-                                <div class="small"><?php echo fetchAssoc(position($row['head']))['position']; ?></div>
+                                <div class="small"><?= position($row['head_id'])['official_title'] ?>
+                                </div>
                             </td>
                             <?php
-                            $sectionCount = sectionEmployeeCount($row['id']);
+                            $count = sectionEmployeeCount($row['id']);
                             $male = $female = $total = 0;
 
-                            if (numRows($sectionCount) > 0) {
-                                $count = fetchAssoc($sectionCount);
+                            if ($count) {
                                 $male = $count['male'];
                                 $female = $count['female'];
                                 $total = $count['total'];
@@ -94,7 +97,7 @@ messageAlert($showAlert, $message, $success);
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
