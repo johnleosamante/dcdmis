@@ -95,11 +95,7 @@ function vacantItems($position_id = null)
     }
     $sql = "SELECT v.`id`, v.`status`, v.`position_id`, p.`official_title`, p.`category`, 
                 p.`salary_grade`, v.`station_id`, v.`item_number`, v.`vacated_by`, 
-                v.`date_vacated`, v.`reason`, v.`created_at`, (
-                    SELECT vp.`code` FROM `vacancy_publications` AS vp 
-                    INNER JOIN `vacancy_publication_items` AS vpi ON vp.`id` = vpi.`publication_id` 
-                    WHERE vpi.`vacancy_id` = v.`id` LIMIT 1
-                ) AS `publication_code` 
+                v.`date_vacated`, v.`reason`, v.`created_at`
             FROM `vacancies` AS v 
             INNER JOIN `positions` AS p ON v.`position_id` = p.`id` 
             WHERE v.`status` = 'open' {$filter} ORDER BY p.`official_title` ASC";
