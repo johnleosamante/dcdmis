@@ -80,57 +80,63 @@ messageAlert($showAlert, $message, $success);
                     <?php
                     $count = 0;
                     $query = vacantItems();
-                    foreach ($query as $row): ?>
-                        <tr class="text-uppercase" data-category="<?= $row['category'] ?>">
-                            <td class="align-middle"><?= ++$count ?></td>
-                            <td class="align-middle">
-                                <div><?= $row['official_title'] . ' (' . $row['salary_grade'] . ')' ?></div>
-                                <?php if ($row['item_number']) {
-                                    echo '<div class="small">' . $row['item_number'] . '</div>';
-                                } ?>
-                            </td>
-                            <td class="align-middle"><?= $row['category'] ?></td>
-                            <td class="align-middle">
-                                <?php $school = schoolById($row['station_id']);
-                                if ($school) {
-                                    linkItem(customUri($activeApp, 'School Information', $row['station_id']), $school['name']);
-                                } else {
-                                    echo '<span class="text-muted">TO BE DETERMINED</span>';
-                                } ?>
-                            </td>
-                            <td class="align-middle">
-                                <?= toLongDate($row['date_vacated']) ?>
-                            </td>
-                            <td class="align-middle">
-                                <?php if (!empty($row['publication_code'])): ?>
-                                    <?php $isPublished = true; ?>
-                                    <span class="badge badge-success"><?= $row['publication_code'] ?></span>
-                                <?php else: ?>
-                                    <?php $isPublished = false; ?>
-                                    <span class="badge badge-secondary">Not Published</span>
-                                <?php endif ?>
-                            </td>
-                            <?php if ($isPersonnel): ?>
-                                <td class="align-middle text-capitalize">
-                                    <div class="dropdown no-arrow">
-                                        <?php dropdownEllipsis() ?>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                            <?php
-                                            modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Vacancy');
-                                            modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?c=' . cipher($row['id']) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Vacancy');
-                                            if ($isPublished) {
-                                                modalDropdownItem(uri() . '/modules/vacancies/fill-vacancy-dialog.php?id=' . cipher($row['id']), 'Fill Vacancy', 'fa-user-plus', 'Assign Employee');
-                                            }
-                                            modalDropdownItem(uri() . '/modules/vacancies/delete-vacancy-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Vacancy') ?>
-                                        </div>
-                                    </div>
+                    if ($query) {
+                        foreach ($query as $row): ?>
+                            <tr class="text-uppercase" data-category="<?= $row['category'] ?>">
+                                <td class="align-middle"><?= ++$count ?></td>
+                                <td class="align-middle">
+                                    <div><?= $row['official_title'] . ' (' . $row['salary_grade'] . ')' ?></div>
+                                    <?php if ($row['item_number']) {
+                                        echo '<div class="small">' . $row['item_number'] . '</div>';
+                                    } ?>
                                 </td>
-                            <?php endif ?>
+                                <td class="align-middle"><?= $row['category'] ?></td>
+                                <td class="align-middle">
+                                    <?php $school = schoolById($row['station_id']);
+                                    if ($school) {
+                                        linkItem(customUri($activeApp, 'School Information', $row['station_id']), $school['name']);
+                                    } else {
+                                        echo '<span class="text-muted">TO BE DETERMINED</span>';
+                                    } ?>
+                                </td>
+                                <td class="align-middle">
+                                    <?= toLongDate($row['date_vacated']) ?>
+                                </td>
+                                <td class="align-middle">
+                                    <?php if (!empty($row['publication_code'])): ?>
+                                        <?php $isPublished = true; ?>
+                                        <span class="badge badge-success"><?= $row['publication_code'] ?></span>
+                                    <?php else: ?>
+                                        <?php $isPublished = false; ?>
+                                        <span class="badge badge-secondary">Not Published</span>
+                                    <?php endif ?>
+                                </td>
+                                <?php if ($isPersonnel): ?>
+                                    <td class="align-middle text-capitalize">
+                                        <div class="dropdown no-arrow">
+                                            <?php dropdownEllipsis() ?>
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                                <?php
+                                                modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Vacancy');
+                                                modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?c=' . cipher($row['id']) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Vacancy');
+                                                if ($isPublished) {
+                                                    modalDropdownItem(uri() . '/modules/vacancies/fill-vacancy-dialog.php?id=' . cipher($row['id']), 'Fill Vacancy', 'fa-user-plus', 'Assign Employee');
+                                                }
+                                                modalDropdownItem(uri() . '/modules/vacancies/delete-vacancy-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Vacancy') ?>
+                                            </div>
+                                        </div>
+                                    </td>
+                                <?php endif ?>
+                            </tr>
+                        <?php endforeach ?>
+                        <tr id="no-data-row" style="display:none;">
+                            <td colspan="9" class="text-center text-muted">No data available for the selected category.</td>
                         </tr>
-                    <?php endforeach ?>
-                    <tr id="no-data-row" style="display:none;">
-                        <td colspan="9" class="text-center text-muted">No available data for the selected category.</td>
-                    </tr>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="9" class="text-center text-muted">No data available in table.</td>
+                        </tr>
+                    <?php } ?>
                 </tbody>
 
                 <tfoot>
