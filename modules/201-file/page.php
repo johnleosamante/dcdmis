@@ -73,7 +73,7 @@ if (!is_dir($uploadDirectory)) {
                     foreach ($results as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
-                            <td class="align-middle text-left"><?= $row['description'] ?></td>
+                            <td class="align-middle text-left"><?= e($row['description']) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
