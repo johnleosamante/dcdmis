@@ -22,11 +22,11 @@ if ($training) {
         <table cellspacing="0">
             <tr>
                 <th class="pr-5" scope="row">Code</th>
-                <td class="text-uppercase"><?= $training['id'] ?></td>
+                <td class="text-uppercase"><?= e($training['id']) ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-5" scope="row">Title</th>
-                <td class="text-uppercase"><?= $training['title'] ?></td>
+                <td class="text-uppercase"><?= e($training['title']) ?></td>
             </tr>
             <tr>
                 <th class="pr-5" scope="row">Date</th>
@@ -37,7 +37,7 @@ if ($training) {
             <?php if (!empty($training['number_of_hours'])): ?>
                 <tr>
                     <th class="pr-5" scope="row">Hours</th>
-                    <td class="text-uppercase"><?= $training['number_of_hours'] ?></td>
+                    <td class="text-uppercase"><?= e($training['number_of_hours']) ?></td>
                 </tr>
             <?php endif ?>
             <tr>
@@ -55,13 +55,13 @@ if ($training) {
             <?php if (!empty($training['sponsor'])): ?>
                 <tr>
                     <th class="align-top pr-5" scope="row">Sponsor</th>
-                    <td class="text-uppercase"><?= $training['sponsor'] ?></td>
+                    <td class="text-uppercase"><?= e($training['sponsor']) ?></td>
                 </tr>
             <?php endif ?>
             <?php if (!empty($training['venue'])): ?>
                 <tr>
                     <th class="align-top pr-5" scope="row">Venue</th>
-                    <td class="text-uppercase"><?= $training['venue'] ?></td>
+                    <td class="text-uppercase"><?= e($training['venue']) ?></td>
                 </tr>
             <?php endif ?>
             <tr>
@@ -95,13 +95,13 @@ if ($training) {
                             <div class="image-container">
                                 <span
                                     class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                    <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                    <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                 </span>
                                 <div class="sex-sign"><?php sex($row['sex']) ?></div>
                             </div>
                         </td>
                         <td class="align-middle text-left">
-                            <?= $employeeName ?>
+                            <?= e($employeeName) ?>
                         </td>
                         <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
                         <td class="align-middle"><?= schoolById($row['station_id'])['name'] ?></td>
