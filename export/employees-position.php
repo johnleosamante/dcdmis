@@ -22,13 +22,13 @@ if (!isset($_GET['v']) || empty($_GET['v'])) {
 		$i = 1;
 		$rows = employeePositions();
 
-		foreach ($rows as $row) : ?>
+		foreach ($rows as $row): ?>
 			<tr>
 				<td><?= $i++ ?></td>
-				<td><?= $row['position'] ?></td>
-				<td><?= $row['male'] ?></td>
-				<td><?= $row['female'] ?></td>
-				<td><?= $row['total'] ?></td>
+				<td><?= e($row['official_title']) ?></td>
+				<td><?= e($row['male']) ?></td>
+				<td><?= e($row['female']) ?></td>
+				<td><?= e($row['total']) ?></td>
 			</tr>
 		<?php endforeach ?>
 		<tr>
