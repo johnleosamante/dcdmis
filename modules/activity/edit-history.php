@@ -54,7 +54,7 @@ if ($isHrmis) {
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= ++$no ?></td>
                             <td class="align-middle"><?= toDateTime($row['created_at']) ?></td>
-                            <td class="text-left align-middle"><?= $row['action'] ?></td>
+                            <td class="text-left align-middle"><?= e($row['action']) ?></td>
                             <td class="text-center align-middle">
                                 <?php
                                 $person_id = $row['person_id'];
