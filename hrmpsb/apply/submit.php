@@ -233,7 +233,7 @@ if ($error) {
                                 </div>
                                 <h1 class="h4 text-gray-900 mb-4">Application Submitted!</h1>
                                 <p class="mb-4">Thank you for your application, <strong>
-                                        <?= $fullName ?>
+                                        <?= e($fullName) ?>
                                     </strong>.</p>
                                 <p class="mb-4">Your application for the position has been successfully recorded. We will
                                     contact you via email or mobile number regarding the status of your application.</p>
