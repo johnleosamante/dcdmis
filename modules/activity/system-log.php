@@ -24,6 +24,7 @@ messageAlert($showAlert, $message, $success);
 
     <div class="card-body">
         <form action="" method="POST" class="mb-3">
+            <?= csrf_field(); ?>
             <div class="row">
                 <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12">
                     <div class="form-group">
@@ -33,7 +34,7 @@ messageAlert($showAlert, $message, $success);
                             </div>
                             <div class="col-10">
                                 <input class="form-control" id="date-from" type="date" name="date-from"
-                                    value="<?= $fromDate ?>">
+                                    value="<?= e($fromDate) ?>">
                             </div>
                         </div>
                     </div>
@@ -47,7 +48,7 @@ messageAlert($showAlert, $message, $success);
                             </div>
                             <div class="col-10">
                                 <input class="form-control" id="date-to" type="date" name="date-to"
-                                    value="<?= $toDate ?>">
+                                    value="<?= e($toDate) ?>">
                             </div>
                         </div>
                     </div>
@@ -80,7 +81,7 @@ messageAlert($showAlert, $message, $success);
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= ++$no ?></td>
                             <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
-                            <td class="text-left align-middle"><?= $row['activity'] ?></td>
+                            <td class="text-left align-middle"><?= e($row['activity']) ?></td>
                             <td class="text-center align-middle">
                                 <?php $userLabel = $userId === $row['target'] ? 'YOU' : userName($row['target']);
                                 modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['target']), $userLabel);
