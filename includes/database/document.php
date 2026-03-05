@@ -2,7 +2,7 @@
 // transaction_purposes
 function documentPurpose()
 {
-    $sql = "SELECT `purpose` FROM `transaction_purposes` ORDER BY `purpose` ASC";
+    $sql = "SELECT `name` FROM `transaction_purposes` ORDER BY `name` ASC";
     $result = query($sql);
     return is_array($result) ? $result : [];
 }
@@ -293,7 +293,7 @@ function documentLog($document_transaction_id)
 function documentLogs($document_transaction_id)
 {
     return query(
-        "SELECT `processed_by`, `received_from`, `forwarded_to`, `status`, `details`, `created_at` FROM `document_transaction_logs` 
+        "SELECT `id`, `processed_by`, `received_from`, `forwarded_to`, `status`, `details`, `created_at` FROM `document_transaction_logs` 
         WHERE `document_transaction_id` = ? ORDER BY `created_at` DESC",
         [$document_transaction_id]
     );
@@ -356,6 +356,25 @@ function updateDocumentStatus($document_transaction_id, $status, $is_unread = tr
     return update('document_transactions', $data, '`id` = ?', [$document_transaction_id]);
 }
 
+function documentLogAttachments($document_transaction_id, $document_transaction_log_id)
+{
+    return query(
+        "SELECT `id`, `file_name`, `file_extension` FROM `document_transaction_log_attachments` WHERE `document_transaction_id` = ? AND `document_transaction_log_id` = ?",
+        [$document_transaction_id, $document_transaction_log_id]
+    );
+}
+
+function createDocumentLogAttachment($document_transaction_id, $document_transaction_log_id, $file_name, $file_extension)
+{
+    $data = [
+        'document_transaction_id' => $document_transaction_id,
+        'document_transaction_log_id' => $document_transaction_log_id,
+        'file_name' => $file_name,
+        'file_extension' => $file_extension
+    ];
+    return insert('document_transaction_log_attachments', $data);
+}
+
 // document_transaction_logs
 function updateTransactionLogFrom($new_alias, $old_alias)
 {
@@ -400,7 +419,7 @@ function updateTransactionFrom($new_alias, $old_alias)
 // system_logs
 function documentByStatus($status, $person_id, $station_id, $from_date = '', $to_date = '')
 {
-    $station_filter = "{$station_id}%";
+    $station_filter = "$station_id%";
     if (empty($from_date)) {
         $from_date = date('Y-m-d');
     }
