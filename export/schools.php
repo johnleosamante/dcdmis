@@ -41,27 +41,30 @@ require_once(root() . '/includes/database/utility.php');
     <tbody>
         <?php
         $i = 1;
-        $query = schoolEmployeeCount();
+        $query = schools();
 
-        while ($row = fetchArray($query)) : ?>
+        foreach ($query as $row): ?>
             <tr>
                 <td><?= $i++ ?></td>
-                <td><?= $row['id'] ?></td>
+                <td><?= e($row['id']) ?></td>
                 <td><?= strtoupper($row['name']) ?></td>
-                <td><?= strtoupper($row['district']) ?></td>
+                <td><?= strtoupper(district($row['district_id'])['name']) ?></td>
                 <td><?= strtoupper($row['category']) ?></td>
-                <td><?= strtoupper(userName($row['head'])) ?></td>
-                <td><?= $row['tmale'] ?></td>
-                <td><?= $row['trmale'] ?></td>
-                <td><?= $row['ntmale'] ?></td>
-                <td><strong><?= $row['male'] ?></strong></td>
-                <td><?= $row['tfemale'] ?></td>
-                <td><?= $row['trfemale'] ?></td>
-                <td><?= $row['ntfemale'] ?></td>
-                <td><strong><?= $row['female'] ?></strong></td>
-                <td><strong><?= $row['total'] ?></strong></td>
+                <td><?= strtoupper(userName($row['head_id'])) ?></td>
+
+                <?php $count = schoolEmployeeCount($row['id']); ?>
+
+                <td><?= e($count['tmale']) ?></td>
+                <td><?= e($count['trmale']) ?></td>
+                <td><?= e($count['ntmale']) ?></td>
+                <td><strong><?= e($count['male']) ?></strong></td>
+                <td><?= e($count['tfemale']) ?></td>
+                <td><?= e($count['trfemale']) ?></td>
+                <td><?= e($count['ntfemale']) ?></td>
+                <td><strong><?= e($count['female']) ?></strong></td>
+                <td><strong><?= e($count['total']) ?></strong></td>
             </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
         <tr>
             <td colspan="15"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>
