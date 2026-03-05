@@ -12,11 +12,12 @@ if ($document) {
 ?>
 
 <form class="mx-auto mb-4" method="POST" action="">
+    <?= csrf_field(); ?>
     <div class="row justify-content-center">
         <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12">
             <div class="input-group">
                 <input type="text" class="form-control small" placeholder="Search document..." aria-label="Search"
-                    name="primary-search-text" value="<?= $documentId ?>" autofocus required>
+                    name="primary-search-text" value="<?= e($documentId) ?>" autofocus required>
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit" name="primary-search-button">
                         <i class="fas fa-search fa-sm"></i>
@@ -36,7 +37,7 @@ if ($document) {
         <table cellspacing="0">
             <tr>
                 <th class="align-top pr-3" scope="row">Description:</th>
-                <td class="text-uppercase"><?= $document['description'] ?></td>
+                <td class="text-uppercase"><?= e($document['description']) ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Created on:</th>
@@ -105,15 +106,15 @@ if ($document) {
                         <div class="timeline-item-marker-text text-uppercase">
                             <?= date('M d, Y', strtotime($log['created_at'])) . '<br>' . date('h:i:s A', strtotime($log['created_at'])) ?>
                         </div>
-                        <div class="timeline-item-marker-indicator <?= $bgColor ?>">
-                            <i class="fas fa-<?= $icon ?>"></i>
+                        <div class="timeline-item-marker-indicator <?= e($bgColor) ?>">
+                            <i class="fas fa-<?= e($icon) ?>"></i>
                         </div>
                     </div>
                     <div class="timeline-item-content pt-0">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase mb-0">
-                                    <?= $from ?>
+                                    <?= e($from) ?>
                                 </h5>
                             </div>
 
@@ -121,13 +122,13 @@ if ($document) {
                                 <div class="mb-3">
                                     <span
                                         class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
-                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px"
+                                        <img src="<?= e($displayPhoto) ?>" alt="<?= e($displayName) ?>" height="40px"
                                             width="40px">
                                     </span>
 
                                     <div class="ml-2 d-inline-block align-middle">
                                         <div class="text-uppercase">
-                                            <?= $displayName ?>
+                                            <?= e($displayName) ?>
                                         </div>
 
                                         <div class="text-uppercase text-xs">
@@ -138,10 +139,10 @@ if ($document) {
 
                                 <?= $hasDestination ? '<div class="mb-3">Forwarded to ' . strtoupper($to) . '</div>' : '' ?>
 
-                                <div class="font-weight-bold text-lg"><?= $status ?></div>
+                                <div class="font-weight-bold text-lg"><?= e($status) ?></div>
 
                                 <?php if (!empty($details)): ?>
-                                    <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= $details ?></div>
+                                    <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= e($details) ?></div>
                                 <?php endif ?>
                             </div>
                         </div>
