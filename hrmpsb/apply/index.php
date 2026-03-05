@@ -73,8 +73,8 @@ if ($code) {
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Online Application Form</h1>
                                         <?php if ($publication): ?>
-                                            <h2 class="h5 text-primary mb-2"><?= $publication['title'] ?></h2>
-                                            <p class="mb-4"><?= $publication['description'] ?></p>
+                                            <h2 class="h5 text-primary mb-2"><?= e($publication['title']) ?></h2>
+                                            <p class="mb-4"><?= e($publication['description']) ?></p>
                                             <p class="small text-muted mb-4">
                                                 Application Period:
                                                 <span
@@ -89,13 +89,14 @@ if ($code) {
                                     <?php if ($error): ?>
                                         <div class="alert alert-danger text-center">
                                             <i class="fas fa-exclamation-circle mr-1"></i>
-                                            <?= $error ?>
+                                            <?= e($error) ?>
                                         </div>
                                         <div class="text-center mt-4">
                                             <a href="<?= uri() ?>" class="btn btn-secondary">Go to Homepage</a>
                                         </div>
                                     <?php else: ?>
                                         <form class="user" action="submit.php" method="POST" enctype="multipart/form-data">
+    <?= csrf_field(); ?>
                                             <input type="hidden" name="publication_id"
                                                 value="<?= cipher($publication['id']) ?>">
 
@@ -135,21 +136,21 @@ if ($code) {
                                                                     <tr>
                                                                         <td class="text-center align-middle">
                                                                             <input type="checkbox" name="position_ids[]"
-                                                                                value="<?= cipher($pid) ?>" id="pos_<?= $pid ?>"
+                                                                                value="<?= cipher($pid) ?>" id="pos_<?= e($pid) ?>"
                                                                                 style="transform: scale(1.2);">
                                                                         </td>
                                                                         <td class="align-middle">
-                                                                            <label for="pos_<?= $pid ?>"
+                                                                            <label for="pos_<?= e($pid) ?>"
                                                                                 class="mb-0 font-weight-bold"
                                                                                 style="cursor: pointer;">
-                                                                                <?= $group['position'] ?>
+                                                                                <?= e($group['position']) ?>
                                                                             </label>
                                                                             <div class="small text-muted">Salary Grade
-                                                                                <?= $group['salary_grade'] ?></div>
+                                                                                <?= e($group['salary_grade']) ?></div>
                                                                         </td>
                                                                         <td class="align-middle">
                                                                             <span class="badge badge-success badge-pill px-3 py-2">
-                                                                                <?= $group['count'] ?>
+                                                                                <?= e($group['count']) ?>
                                                                                 Item<?= $group['count'] > 1 ? 's' : '' ?> Available
                                                                             </span>
                                                                         </td>
