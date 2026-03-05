@@ -35,7 +35,7 @@ require_once(root() . '/includes/database/utility.php');
             <tr>
                 <td><?= $i++ ?></td>
                 <td><?= strtoupper($row['name']) ?></td>
-                <td><?= userName($row['psds'], true) ?></td>
+                <td><?= userName($row['supervisor_id'], true) ?></td>
                 <?php
                 $count = districtSchoolCount($row['id']);
                 $es = $hs = $is = $total = 0;
@@ -50,7 +50,7 @@ require_once(root() . '/includes/database/utility.php');
                 <td><?= toHandleNull($es, '0') ?></td>
                 <td><?= toHandleNull($hs, '0') ?></td>
                 <td><?= toHandleNull($is, '0') ?></td>
-                <td><?= $total ?></td>
+                <td><?= e($total) ?></td>
             </tr>
         <?php endforeach ?>
         <tr>
