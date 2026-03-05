@@ -37,9 +37,9 @@ require_once(root() . '/includes/database/utility.php');
             <tr>
                 <td><?= $i++ ?></td>
                 <td><?= strtoupper($row['name']) ?></td>
-                <td><?= strtoupper($row['division']) ?></td>
-                <td><?= userName($row['head'], true) ?></td>
-                <td><?= strtoupper(position($row['head']))['position'] ?></td>
+                <td><?= strtoupper($row['functional_division']) ?></td>
+                <td><?= userName($row['head_id'], true) ?></td>
+                <td><?= strtoupper(position($row['head_id'])['official_title']) ?></td>
                 <?php
                 $count = sectionEmployeeCount($row['id']);
                 $male = $female = $total = 0;
@@ -50,9 +50,9 @@ require_once(root() . '/includes/database/utility.php');
                     $total = $count['total'];
                 }
                 ?>
-                <td><?= $male ?></td>
-                <td><?= $female ?></td>
-                <td><?= $total ?></td>
+                <td><?= e($male) ?></td>
+                <td><?= e($female) ?></td>
+                <td><?= e($total) ?></td>
             </tr>
         <?php endforeach ?>
         <tr>
