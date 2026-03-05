@@ -21,6 +21,7 @@
             <?php messageAlert($showAlert, $message, $success) ?>
 
             <form action="" method="POST" class="mb-0">
+                <?= csrf_field(); ?>
                 <div class="form-group">
                     <input class="form-control" id="email" name="email" type="email"
                         placeholder="juan.delacruz@deped.gov.ph" value="" autofocus required>
