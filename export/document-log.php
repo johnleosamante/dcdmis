@@ -21,7 +21,7 @@ $document = document($documentId); ?>
     <thead>
         <tr>
             <th>ID</th>
-            <td colspan="5"><?= $document['id'] ?></td>
+            <td colspan="5"><?= e($document['id']) ?></td>
         </tr>
         <tr>
             <th>Type</th>
@@ -29,7 +29,7 @@ $document = document($documentId); ?>
         </tr>
         <tr>
             <th>Description</th>
-            <td colspan="5"><?= $document['description'] ?></td>
+            <td colspan="5"><?= e($document['description']) ?></td>
         </tr>
         <tr>
             <th>Created On</th>
@@ -41,7 +41,7 @@ $document = document($documentId); ?>
         </tr>
         <tr>
             <th>Status</th>
-            <td colspan="5"><?= $document['status'] ?></td>
+            <td colspan="5"><?= e($document['status']) ?></td>
         </tr>
         <tr>
             <th>Datetime</th>
@@ -61,8 +61,8 @@ $document = document($documentId); ?>
                 <td><?= stationName($log['received_from']) ?></td>
                 <td><?= userName($log['processed_by']) ?></td>
                 <td><?= position($log['processed_by'])['official_title'] ?></td>
-                <td><?= $log['status'] ?></td>
-                <td><?= $log['details'] ?></td>
+                <td><?= e($log['status']) ?></td>
+                <td><?= e($log['details']) ?></td>
             </tr>
         <?php endforeach ?>
     </tbody>
