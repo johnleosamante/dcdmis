@@ -28,19 +28,19 @@ require_once(root() . '/includes/database/school.php');
         $i = 1;
         $query = employeeLoyaltyAward();
 
-        while ($row = fetchArray($query)) :
-            $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-        ?>
+        foreach ($query as $row):
+            $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+            ?>
             <tr>
                 <td><?= $i++ ?></td>
                 <td><?= strtoupper($employeeName) ?></td>
-                <td><?= strtoupper(fetchAssoc(positions($row['position']))['position']) ?></td>
-                <td><?= strtoupper(fetchAssoc(schoolById($row['station']))['name']) ?></td>
-                <td><?= toDate($row['original_appointment'], 'F j, Y') ?></td>
-                <td><?= $row['years_active'] ?></td>
-                <td><?= toDate($row['last_awarded_on'], 'F j, Y') ?></td>
+                <td><?= strtoupper(positions($row['position_id'])['official_title']) ?></td>
+                <td><?= strtoupper(schoolById($row['station_id'])['name']) ?></td>
+                <td><?= toDate($row['original_appointment_date'], 'F j, Y') ?></td>
+                <td><?= e($row['total_years_service']) ?></td>
+                <td><?= toDate($row['date_last_awarded'], 'F j, Y') ?></td>
             </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
 
         <tr>
             <td colspan="7"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
