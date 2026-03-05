@@ -25,7 +25,7 @@ if ($district) {
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
             <li class="breadcrumb-item active"><a href="<?= customUri($activeApp, 'Districts') ?>">Districts</a></li>
-            <li class="breadcrumb-item active"><?= $districtName ?></li>
+            <li class="breadcrumb-item active"><?= e($districtName) ?></li>
         </ol>
     </nav>
 </div>
@@ -44,7 +44,7 @@ if ($district) {
             <table cellspacing="0">
                 <tr>
                     <th class="pr-5 align-top" scope="row">District</th>
-                    <td class="text-uppercase"><?= $districtName ?></td>
+                    <td class="text-uppercase"><?= e($districtName) ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5 align-top" scope="row">Supervisor</th>
@@ -91,7 +91,7 @@ if ($district) {
                                 <div class="image-container">
                                     <span
                                         class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $logo ?>" alt="<?= $schoolName ?>">
+                                        <img height="100%" src="<?= e($logo) ?>" alt="<?= e($schoolName) ?>">
                                     </span>
                                 </div>
                             </td>
@@ -108,7 +108,7 @@ if ($district) {
                                     linkItem(customUri($activeApp, 'District Information', $district['id']), $district['name']);
                                 } ?>
                             </td>
-                            <td class="align-middle"><?= $row['category'] ?></td>
+                            <td class="align-middle"><?= e($row['category']) ?></td>
                             <td class="align-middle">
                                 <div>
                                     <?php if ($isHrmis) {
@@ -134,9 +134,9 @@ if ($district) {
                             }
                             ?>
 
-                            <td class="align-middle"><?= $male ?></td>
-                            <td class="align-middle"><?= $female ?></td>
-                            <td class="align-middle"><?= $total ?></td>
+                            <td class="align-middle"><?= e($male) ?></td>
+                            <td class="align-middle"><?= e($female) ?></td>
+                            <td class="align-middle"><?= e($total) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
