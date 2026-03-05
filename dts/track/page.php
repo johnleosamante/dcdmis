@@ -4,7 +4,7 @@
 <div class="col-12">
     <div class="mt-5 mb-4 text-center">
         <?php displayLogo(120, 120, '0', uri(), title()) ?>
-        <h1 class="my-2"><?= $appTitle ?></h1>
+        <h1 class="my-2"><?= e($appTitle) ?></h1>
     </div>
 
     <?php
