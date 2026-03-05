@@ -31,3 +31,7 @@ $hasPortal = !empty($portal);
 $isSchoolPortal = $portal === 'sch_portal';
 $isRecordsPortal = $portal === 'rec_portal';
 $isPersonnel = $code === 'PER';
+
+if (function_exists('verify_csrf_token')) {
+    verify_csrf_token();
+}
