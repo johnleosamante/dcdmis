@@ -48,7 +48,7 @@ messageAlert($showAlert, $message, $success);
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= ++$no ?></td>
                             <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
-                            <td class="text-left align-middle"><?= $row['action'] ?></td>
+                            <td class="text-left align-middle"><?= e($row['action']) ?></td>
                             <td class="text-center align-middle">
                                 <?php
                                 $target_id = $row['target_id'];
