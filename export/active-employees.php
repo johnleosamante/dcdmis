@@ -40,7 +40,7 @@ $filter = isset($_GET['id']) ? "{$filter} AND sa.`station_id`='" . sanitize(deco
 		<?php
 		$i = 1;
 		$rows = query(
-			"SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, 
+			"SELECT p.`agency_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, 
 				p.`gsis_crn`, p.`gsis_bp`, p.`pagibig`, p.`philhealth`, p.`sss`, p.`tin`, p.`mobile_number`, p.`email_address`, pos.`official_title` AS `position`, 
 				s.`name` AS `school`, p.`residence_street`, p.`residence_subdivision`, p.`residence_barangay`, p.`residence_city`, p.`residence_province` 
 			FROM `persons` AS p 
@@ -54,7 +54,7 @@ $filter = isset($_GET['id']) ? "{$filter} AND sa.`station_id`='" . sanitize(deco
 			<tr>
 				<td><?= $i++ ?></td>
 				<td><?= strtoupper($row['school']) ?></td>
-				<td><?= $row['id'] ?></td>
+				<td><?= e($row['agency_id']) ?></td>
 				<td><?= strtoupper($row['last_name']) ?></td>
 				<td><?= strtoupper($row['first_name']) ?></td>
 				<td><?= strtoupper($row['middle_name']) ?></td>
@@ -63,14 +63,14 @@ $filter = isset($_GET['id']) ? "{$filter} AND sa.`station_id`='" . sanitize(deco
 				<td><?= $row['birth_year'] . '-' . $row['birth_month'] . '-' . $row['birth_day'] ?></td>
 				<td><?= strtoupper($row['position']) ?></td>
 				<?php if ($isHrmis): ?>
-					<td><?= $row['gsis_crn'] ?></td>
-					<td><?= $row['gsis_bp'] ?></td>
-					<td><?= $row['pagibig'] ?></td>
-					<td><?= $row['philhealth'] ?></td>
-					<td><?= $row['sss'] ?></td>
-					<td><?= $row['tin'] ?></td>
+					<td><?= e($row['gsis_crn']) ?></td>
+					<td><?= e($row['gsis_bp']) ?></td>
+					<td><?= e($row['pagibig']) ?></td>
+					<td><?= e($row['philhealth']) ?></td>
+					<td><?= e($row['sss']) ?></td>
+					<td><?= e($row['tin']) ?></td>
 				<?php endif ?>
-				<td><?= $row['mobile_number'] ?></td>
+				<td><?= e($row['mobile_number']) ?></td>
 				<td><?= strtolower($row['email_address']) ?></td>
 				<td><?= strtoupper(toAddress('', $row['residence_street'], $row['residence_subdivision'], $row['residence_barangay'], $row['residence_city'], $row['residence_province'])) ?>
 				</td>
