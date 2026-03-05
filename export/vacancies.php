@@ -8,7 +8,8 @@ if (!isset($_GET['v']) || empty($_GET['v'])) {
 require_once root() . '/includes/database/account.php';
 require_once root() . '/includes/database/position.php';
 require_once root() . '/includes/database/school.php';
-require_once root() . '/includes/database/vacancies.php';
+require_once root() . '/includes/database/vacancy.php';
+require_once root() . '/includes/database/employee.php';
 ?>
 
 <table>
@@ -19,7 +20,7 @@ require_once root() . '/includes/database/vacancies.php';
             <th>Item Number</th>
             <th>Station</th>
             <th>Remarks</th>
-            <th>Date Posted</th>
+            <th>Date Vacated</th>
         </tr>
     </thead>
 
@@ -27,31 +28,31 @@ require_once root() . '/includes/database/vacancies.php';
         <?php
         $rowCount = 0;
         $query = vacancies();
-        while ($row = fetchArray($query)): ?>
+        foreach ($query as $row): ?>
             <tr>
                 <td><?= ++$rowCount ?></td>
-                <td><?= $row['position'] ?></td>
-                <td><?= toHandleNull($row['psipop'], 'N/A') ?></td>
+                <td><?= e($row['official_title']) ?></td>
+                <td><?= toHandleNull($row['item_number'], 'N/A') ?></td>
                 <td>
                     <?php if (empty($row['station_id'])) {
                         echo 'TO BE DETERMINED';
                     } else {
-                        echo fetchAssoc(schoolById($row['station_id']))['name'];
+                        echo schoolById($row['station_id'])['name'];
                     } ?>
                 </td>
                 <td>
-                    <?php if (!empty($row['employee_id'])): ?>
-                        <?php $vice = fetchAssoc(employee($row['employee_id'])); ?>
+                    <?php if (!empty($row['vacated_by'])): ?>
+                        <?php $vice = employee($row['vacated_by']); ?>
                         VICE:
-                        <?= toName($vice['lname'], $vice['fname'], $vice['mname'], $vice['ext'], true); ?>
+                        <?= strtoupper(toName($vice['last_name'], $vice['first_name'], $vice['middle_name'], $vice['name_extension'], true)); ?>
                     <?php endif; ?>
 
                     <?= strtoupper($row['reason']) ?>
                 </td>
                 <td>
-
+                    <?= $row['date_vacated'] ?>
                 </td>
             </tr>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
     </tbody>
 </table>
