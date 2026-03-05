@@ -4,6 +4,7 @@
 
 <div class="card-body">
     <form action="" method="POST" class="mb-3">
+        <?= csrf_field(); ?>
         <div class="row">
             <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12">
                 <div class="form-group">
@@ -13,7 +14,7 @@
                         </div>
                         <div class="col-10">
                             <input class="form-control" id="date-from" type="date" name="date-from"
-                                value="<?= $fromDate ?>">
+                                value="<?= e($fromDate) ?>">
                         </div>
                     </div>
                 </div>
@@ -26,7 +27,8 @@
                             <label for="date-to" class="font-weight-bold m-0">To:</label>
                         </div>
                         <div class="col-10">
-                            <input class="form-control" id="date-to" type="date" name="date-to" value="<?= $toDate ?>">
+                            <input class="form-control" id="date-to" type="date" name="date-to"
+                                value="<?= e($toDate) ?>">
                         </div>
                     </div>
                 </div>
