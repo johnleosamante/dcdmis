@@ -35,30 +35,31 @@ if (!isset($_GET['v']) || empty($_GET['v'])) {
 	<tbody>
 		<?php
 		$i = 1;
-		$rows = query("SELECT * FROM (SELECT tbl_employee.EmpNo AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS `bmonth`, tbl_employee.Emp_Day AS `bday`, tbl_employee.Emp_Year AS `byear`, YEAR(CURRENT_DATE) - CONVERT(tbl_employee.Emp_Year, DECIMAL) AS year_age, tbl_employee.Emp_GSIS AS crn, tbl_employee.Emp_GSIS_BP AS bp, tbl_employee.Emp_PAGIBIG AS pagibig, tbl_employee.Emp_PHILHEALTH AS philhealth, tbl_employee.Emp_SSS AS sss, tbl_employee.Emp_TIN AS tin, tbl_employee.Emp_Cell_No AS contact, tbl_employee.Emp_Email AS email, tbl_job.Job_description AS position, tbl_school.SchoolName AS school, tbl_employee.Emp_Res_Street AS street, tbl_employee.Emp_Res_Subdivision AS subdivision, tbl_employee.Emp_Res_Barangay AS barangay, tbl_employee. Emp_Res_City AS city, tbl_employee.Emp_Address AS province FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID=tbl_station.Emp_ID INNER JOIN tbl_school ON tbl_station.Emp_Station=tbl_school.SchoolID INNER JOIN tbl_job ON tbl_station.Emp_Position=tbl_job.Job_code WHERE Emp_Status='Active') AS retirables WHERE year_age >= 60 ORDER BY school, lname;");
-		foreach ($rows as $row) : ?>
+		$rows = query("SELECT * FROM (SELECT p.`agency_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, YEAR(CURRENT_DATE) - CONVERT(p.`birth_year`, DECIMAL) AS year_age, p.`gsis_crn`, p.`gsis_bp`, p.`pagibig`, p.`philhealth`, p.`sss`, p.`tin`, p.`mobile_number`, p.`email_address`, pos.`official_title`, s.`name` AS school, p.`residence_street`, p.`residence_subdivision`, p.`residence_barangay`, p.`residence_city`, p.`residence_province` FROM `persons` AS p INNER JOIN `station_assignments` AS sa ON p.`id`=sa.`person_id` INNER JOIN `schools` AS s ON sa.`station_id`=s.`id` INNER JOIN `positions` AS pos ON sa.`position_id`=pos.`id` WHERE p.`status`='Active') AS retirables WHERE year_age >= 60 ORDER BY school, last_name;");
+		foreach ($rows as $row): ?>
 			<tr>
 				<td><?= $i++ ?></td>
 				<td><?= strtoupper($row['school']) ?></td>
-				<td><?= $row['id'] ?></td>
-				<td><?= strtoupper($row['lname']) ?></td>
-				<td><?= strtoupper($row['fname']) ?></td>
-				<td><?= strtoupper($row['mname']) ?></td>
-				<td><?= strtoupper($row['ext']) ?></td>
+				<td><?= e($row['agency_id']) ?></td>
+				<td><?= strtoupper($row['last_name']) ?></td>
+				<td><?= strtoupper($row['first_name']) ?></td>
+				<td><?= strtoupper($row['middle_name']) ?></td>
+				<td><?= strtoupper($row['name_extension']) ?></td>
 				<td><?= strtoupper($row['sex'])[0] ?></td>
-				<td><?= $row['byear'] . '-' . $row['bmonth'] . '-' . $row['bday'] ?></td>
-				<td><?= getDateDifference($row['byear'], $row['bmonth'], $row['bday']) ?></td>
+				<td><?= $row['birth_year'] . '-' . $row['birth_month'] . '-' . $row['birth_day'] ?></td>
+				<td><?= getDateDifference($row['birth_year'], $row['birth_month'], $row['birth_day']) ?></td>
 				</td>
-				<td><?= strtoupper($row['position']) ?></td>
-				<td><?= $row['crn'] ?></td>
-				<td><?= $row['bp'] ?></td>
-				<td><?= $row['pagibig'] ?></td>
-				<td><?= $row['philhealth'] ?></td>
-				<td><?= $row['sss'] ?></td>
-				<td><?= $row['tin'] ?></td>
-				<td><?= $row['contact'] ?></td>
-				<td><?= strtolower($row['email']) ?></td>
-				<td><?= strtoupper(toAddress('', $row['street'], $row['subdivision'], $row['barangay'], $row['city'], $row['province'])) ?></td>
+				<td><?= strtoupper($row['official_title']) ?></td>
+				<td><?= e($row['gsis_crn']) ?></td>
+				<td><?= e($row['gsis_bp']) ?></td>
+				<td><?= e($row['pagibig']) ?></td>
+				<td><?= e($row['philhealth']) ?></td>
+				<td><?= e($row['sss']) ?></td>
+				<td><?= e($row['tin']) ?></td>
+				<td><?= e($row['mobile_number']) ?></td>
+				<td><?= strtolower($row['email_address']) ?></td>
+				<td><?= strtoupper(toAddress('', $row['residence_street'], $row['residence_subdivision'], $row['residence_barangay'], $row['residence_city'], $row['residence_province'])) ?>
+				</td>
 			</tr>
 		<?php endforeach ?>
 	</tbody>
