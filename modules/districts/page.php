@@ -27,7 +27,7 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
-        <?php if ($isDmis) { ?>
+        <?php if ($isHrmis || $isDmis) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
                 <div class="d-inline-block">
                     <?php linkButtonSplit(customUri('export', 'districts'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success') ?>
@@ -82,7 +82,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle"><?= toHandleNull($es, '0') ?></td>
                             <td class="align-middle"><?= toHandleNull($hs, '0') ?></td>
                             <td class="align-middle"><?= toHandleNull($is, '0') ?></td>
-                            <td class="align-middle"><?= $total ?></td>
+                            <td class="align-middle"><?= e($total) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
