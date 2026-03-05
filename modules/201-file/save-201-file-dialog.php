@@ -29,6 +29,7 @@ if (isset($attachmentId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="" enctype="multipart/form-data">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <input id="file-upload" name="file-upload" type="file" title="Upload 201 file (pdf)..."
@@ -38,7 +39,7 @@ if (isset($attachmentId)) {
                 <div class="form-group">
                     <label for="description" class="mb-0">Description <?php showAsterisk() ?></label>
                     <textarea id="description" name="description" class="form-control" placeholder="Type description..."
-                        title="Type 201 file description..." rows="3" required><?= $description ?></textarea>
+                        title="Type 201 file description..." rows="3" required><?= e($description) ?></textarea>
                 </div>
 
                 <?php requiredLegend(0) ?>
@@ -51,7 +52,7 @@ if (isset($attachmentId)) {
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 $filename = !isset($_GET['c']) ? $filename : null;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="data-verifier" value="<?= e($verifier) ?>">
                 <input type="hidden" name="file-verifier" value="<?= cipher($filename) ?>">
                 <button type="submit" class="btn btn-primary" name="save-201-file">Continue</button>
                 <?php cancelModalButton() ?>
