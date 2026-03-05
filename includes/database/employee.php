@@ -342,7 +342,7 @@ function updateProfilePhoto($photo, $id)
 
 function employeePositions()
 {
-    $sql = "SELECT pos.`name` AS `position`, 
+    $sql = "SELECT pos.`official_title`, 
                 SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`, 
                 SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`, 
                 COUNT(p.id) AS `total` 
@@ -350,8 +350,8 @@ function employeePositions()
             INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`person_id` 
             INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id` 
             WHERE p.`status` = 'Active' 
-            GROUP BY pos.`id`, pos.`name`, pos.`salary_grade` 
-            ORDER BY pos.`salary_grade` DESC, pos.`name` ASC";
+            GROUP BY pos.`id`, pos.`official_title`, pos.`salary_grade` 
+            ORDER BY pos.`salary_grade` DESC, pos.`official_title` ASC";
     return query($sql);
 }
 
