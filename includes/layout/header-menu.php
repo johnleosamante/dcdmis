@@ -14,6 +14,7 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
     <?php if ($isDts || $isHrmis || $isHrtdms): ?>
         <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-0 my-2 my-md-0 mw-100 navbar-search" method="POST"
             action="">
+            <?= csrf_field(); ?>
             <div class="input-group">
                 <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search"
                     name="primary-search-text" autofocus required>
@@ -38,6 +39,7 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                 <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                     aria-labelledby="searchDropdown">
                     <form class="form-inline mr-auto w-100 navbar-search" method="POST" action="">
+                            <?= csrf_field(); ?>
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search..."
                                 aria-label="Search" name="primary-search-text" required>
@@ -78,7 +80,7 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                 aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <?php if ($alertCount): ?>
-                    <span class="badge badge-danger badge-counter"><?= $alertCount ?></span>
+                    <span class="badge badge-danger badge-counter"><?= e($alertCount) ?></span>
                 <?php endif ?>
             </a>
 
@@ -97,7 +99,7 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                             </div>
                             <div>
                                 <div class="small text-gray-500"><?= date('F d, Y') ?></div>
-                                <span class="font-weight-bold">You are qualified for Step Increment <?= $increment ?>!</span>
+                                <span class="font-weight-bold">You are qualified for Step Increment <?= e($increment) ?>!</span>
                             </div>
                         </a>
                     <?php endif ?>
@@ -159,7 +161,7 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                 </span>
 
                 <span class="d-flex justify-content-center align-middle img-profile rounded-circle overflow-hidden">
-                    <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="100%">
+                    <img src="<?= e($displayPhoto) ?>" alt="<?= e($displayName) ?>" height="100%">
                 </span>
             </a>
 
@@ -209,10 +211,10 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
     <?php
     $school = schoolById($stationId);
     if ($school): ?>
-        <h1 class="h3 m-0"><?= $school['name'] ?></h1>
+        <h1 class="h3 m-0"><?= e($school['name']) ?></h1>
 
         <?php if (!empty($school['address'])): ?>
-            <div class="small m-0"><?= $school['address'] ?></div>
+            <div class="small m-0"><?= e($school['address']) ?></div>
         <?php endif;
     endif ?>
 
