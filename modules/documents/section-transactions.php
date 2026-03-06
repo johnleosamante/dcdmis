@@ -13,7 +13,8 @@
                 </div>
             <?php } ?>
 
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table-next" width="100%" cellspacing="0">
+            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table-next"
+                width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="40%">Section Name / Functional Division</th>
@@ -27,18 +28,20 @@
                 <tbody>
                     <?php
                     $sections = sections();
-                    while ($section = fetchAssoc($sections)) : ?>
+                    foreach ($sections as $section): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle text-left">
-                                <div><?php linkItem(customUri($activeApp, 'Section Information', $section['id']), $section['name']) ?></div>
-                                <div class="small"><?= $section['division'] ?></div>
+                                <div>
+                                    <?php linkItem(customUri($activeApp, 'Section Information', $section['id']), $section['name']) ?>
+                                </div>
+                                <div class="small"><?= e($section['division']) ?></div>
                             </td>
-                            <td class="align-middle"><?= number_format(numRows(incomingDocuments($section['id']))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(pendingDocuments($section['id']))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(outgoingDocuments($section['id']))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(ongoingDocuments($section['id']))) ?></td>
+                            <td class="align-middle"><?= number_format(count(incomingDocuments($section['id']))) ?></td>
+                            <td class="align-middle"><?= number_format(count(pendingDocuments($section['id']))) ?></td>
+                            <td class="align-middle"><?= number_format(count(outgoingDocuments($section['id']))) ?></td>
+                            <td class="align-middle"><?= number_format(count(ongoingDocuments($section['id']))) ?></td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
