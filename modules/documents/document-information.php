@@ -40,7 +40,7 @@ if ($document) {
             <li class="breadcrumb-item">
                 <a href="<?= customUri('dts', $documentType) ?>"><?= trim($documentType, ' Documents') ?></a>
             </li>
-            <li class="breadcrumb-item active"><?= $documentId ?></li>
+            <li class="breadcrumb-item active"><?= e($documentId) ?></li>
         </ol>
     </nav>
 </div>
@@ -58,7 +58,7 @@ if ($document) {
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Description:</th>
-                <td class="text-uppercase"><?= $document['description'] ?></td>
+                <td class="text-uppercase"><?= e($document['description']) ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Created on:</th>
@@ -71,7 +71,7 @@ if ($document) {
             <tr>
                 <th class="align-top pr-3" scope="row">Status:</th>
                 <td class="text-uppercase">
-                    <?= $document['status'] ?>
+                    <?= e($document['status']) ?>
                 </td>
             </tr>
         </table>
@@ -155,6 +155,7 @@ if ($document) {
 
             foreach ($logs as $log) {
                 $logCount++;
+                $logId = $log['id'];
                 $from = stationName($log['received_from']);
                 $to = stationName($log['forwarded_to']);
                 $displayName = userName($log['processed_by']);
@@ -164,7 +165,6 @@ if ($document) {
                 $hasDestination = !empty($to) && $to !== '-';
                 $status = $log['status'];
                 $details = $log['details'];
-                // TODO $attachment = $log['attachment'];
                 $isCompleted = str_contains(strtolower($status), 'complete');
                 $isCanceled = str_contains(strtolower($status), 'cancel');
                 $bgColor = '';
@@ -199,15 +199,15 @@ if ($document) {
                         <div class="timeline-item-marker-text text-uppercase">
                             <?= date('M d, Y', strtotime($log['created_at'])) . '<br>' . date('h:i:s A', strtotime($log['created_at'])) ?>
                         </div>
-                        <div class="timeline-item-marker-indicator <?= $bgColor ?>">
-                            <i class="fas fa-<?= $icon ?>"></i>
+                        <div class="timeline-item-marker-indicator <?= e($bgColor) ?>">
+                            <i class="fas fa-<?= e($icon) ?>"></i>
                         </div>
                     </div>
                     <div class="timeline-item-content pt-0">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase mb-0">
-                                    <?= $from ?>
+                                    <?= e($from) ?>
                                 </h5>
                             </div>
 
@@ -215,7 +215,7 @@ if ($document) {
                                 <div>
                                     <span
                                         class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
-                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px"
+                                        <img src="<?= e($displayPhoto) ?>" alt="<?= e($displayName) ?>" height="40px"
                                             width="40px">
                                     </span>
 
@@ -232,22 +232,26 @@ if ($document) {
 
                                 <?= $hasDestination ? '<div class="mb-3">Forwarded to ' . strtoupper($to) . '</div>' : '' ?>
 
-                                <div class="font-weight-bold text-lg"><?= $status ?></div>
+                                <div class="font-weight-bold text-lg"><?= e($status) ?></div>
 
                                 <?php if (!empty($details)): ?>
-                                    <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= $details ?></div>
+                                    <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= e($details) ?></div>
                                 <?php endif ?>
                             </div>
 
-                            <?php //TODO if (!empty($attachment) && file_exists(root() . '/' . $attachment)):
-                                if (!true): ?>
+                            <?php $documentLogAttachments = documentLogAttachments($documentId, $logId);
+
+                            if ($documentLogAttachments): ?>
                                 <div class="card-footer">
-                                    <?php linkButtonSplit(uri() . '/' . $attachment, 'View Attachment', 'fa-eye', 'View Attachment', 'info', true) ?>
-                                </div>
-                            <?php endif ?>
+                                    <?php foreach ($documentLogAttachments as $attachment) {
+                                        $file = explode('_', $attachment['file_name'], 2);
+                                        linkButtonSplit("$baseUri/" . $attachment['file_name'], $file[1], 'fa-paperclip', "View $file[1]", 'secondary', true);
+                                    } ?>
+                                        </div>
+                                <?php endif ?>
+                            </div>
                         </div>
                     </div>
-                </div>
             <?php } ?>
         </div>
     </div>
