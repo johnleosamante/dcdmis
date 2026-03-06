@@ -49,7 +49,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
                             </td>
-                            <td class="text-left align-middle"><?= $row['description'] ?></td>
+                            <td class="text-left align-middle"><?= e($row['description']) ?></td>
                             <td class="align-middle">
                                 <div>
                                     <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['processed_by']), userName($row['processed_by'])) ?>
