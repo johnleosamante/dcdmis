@@ -36,6 +36,7 @@ $description = toHandleEncoding($document['description']);
 $employee = toHandleEncoding(userName($document['processed_by'], true));
 $employeePosition = toHandleEncoding(position($document['processed_by'])['official_title']);
 $documentStatus = strtolower($document['status']);
+$details = toHandleEncoding($document['details']);
 $status = str_contains($documentStatus, 'complete') ? ' (Completed)' : '';
 $status = str_contains($documentStatus, 'cancel') ? ' (Canceled)' : $status;
 
@@ -88,4 +89,15 @@ if ($document['processed_by'] !== $document['head_id']) {
     $pdf->SetFont('calibri', '', 11);
     $pdf->Cell($innerPage / 2, 0, $stationHeadPosition, 0, 0, 'C');
     $pdf->Ln();
+}
+
+if (strlen($details)) {
+    $pdf->Ln(12);
+    $pdf->SetX($margin);
+    $pdf->SetFont('calibrib', 'B', 11);
+    $pdf->Cell($margin, 0, 'NOTE:');
+    $pdf->Ln(2);
+    $pdf->SetFont('calibri', '', 9);
+    $pdf->Write(5, $details);
+    $pdf->Ln(20);
 }
