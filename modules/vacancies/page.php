@@ -52,8 +52,8 @@ messageAlert($showAlert, $message, $success);
                     <?php
                     $categories = positionCategories();
                     foreach ($categories as $category): ?>
-                        <option value="<?= $category['category'] ?>">
-                            <?= $category['category'] ?>
+                        <option value="<?= e($category['category']) ?>">
+                            <?= e($category['category']) ?>
                         </option>
                     <?php endforeach ?>
                 </select>
@@ -82,7 +82,7 @@ messageAlert($showAlert, $message, $success);
                     $query = vacantItems();
                     if ($query) {
                         foreach ($query as $row): ?>
-                            <tr class="text-uppercase" data-category="<?= $row['category'] ?>">
+                            <tr class="text-uppercase" data-category="<?= e($row['category']) ?>">
                                 <td class="align-middle"><?= ++$count ?></td>
                                 <td class="align-middle">
                                     <div><?= $row['official_title'] . ' (' . $row['salary_grade'] . ')' ?></div>
@@ -90,7 +90,7 @@ messageAlert($showAlert, $message, $success);
                                         echo '<div class="badge badge-info small">' . $row['item_number'] . '</div>';
                                     } ?>
                                 </td>
-                                <td class="align-middle"><?= $row['category'] ?></td>
+                                <td class="align-middle"><?= e($row['category']) ?></td>
                                 <td class="align-middle">
                                     <?php $school = schoolById($row['station_id']);
                                     if ($school) {
@@ -105,7 +105,7 @@ messageAlert($showAlert, $message, $success);
                                 <td class="align-middle">
                                     <?php if (!empty($row['publication_code'])): ?>
                                         <?php $isPublished = true; ?>
-                                        <span class="badge badge-success"><?= $row['publication_code'] ?></span>
+                                        <span class="badge badge-success"><?= e($row['publication_code']) ?></span>
                                     <?php else: ?>
                                         <?php $isPublished = false; ?>
                                         <span class="badge badge-secondary">Not Published</span>
