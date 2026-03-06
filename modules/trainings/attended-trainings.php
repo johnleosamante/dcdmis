@@ -35,7 +35,7 @@ messageAlert($showAlert, $message, $success);
             <?php if ($isHrtdms): ?>
                 <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Schools') ?>">Schools</a></li>
                 <li class="breadcrumb-item"><a
-                        href="<?= customUri($activeApp, 'School Information', $schoolId) ?>"><?= $schoolName ?></a></li>
+                        href="<?= customUri($activeApp, 'School Information', $schoolId) ?>"><?= e($schoolName) ?></a></li>
                 <li class="breadcrumb-item active">Employee Trainings</li>
             <?php else: ?>
                 <li class="breadcrumb-item active">Trainings</li>
@@ -84,13 +84,13 @@ if ($isHrmis) {
                     $trainings = attendedTrainings($employeeId);
                     foreach ($trainings as $training): ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?= $training['title'] ?></td>
+                            <td class="align-middle"><?= e($training['title']) ?></td>
                             <td class="align-middle"><?= toDate($training['start_date']) ?></td>
                             <td class="align-middle"><?= toDate($training['end_date']) ?></td>
-                            <td class="align-middle"><?= $training['number_of_hours'] ?></td>
-                            <td class="align-middle"><?= $training['training_type'] ?></td>
-                            <td class="align-middle"><?= $training['sponsored_by'] ?></td>
-                            <td class="align-middle"><?= $training['venue'] ?></td>
+                            <td class="align-middle"><?= e($training['number_of_hours']) ?></td>
+                            <td class="align-middle"><?= e($training['training_type']) ?></td>
+                            <td class="align-middle"><?= e($training['sponsored_by']) ?></td>
+                            <td class="align-middle"><?= e($training['venue']) ?></td>
                             <td class="align-middle text-capitalize">
                                 <?php if ($training['has_certificate']): ?>
                                     <div class="dropdown no-arrow">
