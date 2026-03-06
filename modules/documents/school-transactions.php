@@ -37,7 +37,7 @@
                             <td class="align-middle">
                                 <div class="image-container">
                                     <span class="d-flex justify-content-center align-middle school-logo overflow-hidden">
-                                        <img height="100%" src="<?= $logo ?>" alt="<?= $schoolName ?>">
+                                        <img height="100%" src="<?= e($logo) ?>" alt="<?= e($schoolName) ?>">
                                     </span>
                                 </div>
                             </td>
