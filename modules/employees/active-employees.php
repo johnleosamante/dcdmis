@@ -80,7 +80,7 @@ messageAlert($showAlert, $message, $success);
                                 <div class="image-container">
                                     <span
                                         class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                        <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
