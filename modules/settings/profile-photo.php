@@ -17,11 +17,12 @@ $picture = employee($userId)['profile_picture'];
     </div>
 
     <form action="" method="POST" enctype="multipart/form-data" class="py-2">
+        <?= csrf_field(); ?>
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-7 col-xl-4">
                 <?php $photo = file_exists(root() . '/' . $picture) ? uri() . '/' . $picture : uri() . '/assets/img/user.png';
                 ?>
-                <img src="<?= $photo ?>" width="100%" class="border rounded" id="employee-photo">
+                <img src="<?= e($photo) ?>" width="100%" class="border rounded" id="employee-photo">
 
                 <div class="mt-3 custom-file">
                     <input id="image-upload" type="file" name="image-upload" class="custom-file-input"
