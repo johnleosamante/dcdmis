@@ -35,6 +35,7 @@ if (isset($vacancyId)) {
         <?php modalHeader($modalTitle); ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="position" class="mb-0">Position <?php showAsterisk($isNewItem) ?></label>
@@ -45,10 +46,10 @@ if (isset($vacancyId)) {
                             <?php
                             $categories = positionCategories();
                             foreach ($categories as $category): ?>
-                                <optgroup label="<?= $category['category'] ?>">
+                                <optgroup label="<?= e($category['category']) ?>">
                                     <?php $jobPositions = positionsByCategory($category['category']);
                                     foreach ($jobPositions as $jobPosition): ?>
-                                        <option value="<?= $jobPosition['id'] ?>" <?= setOptionSelected($jobPosition['id'], $positionId) ?>><?= $jobPosition['official_title'] ?></option>
+                                        <option value="<?= e($jobPosition['id']) ?>" <?= setOptionSelected($jobPosition['id'], $positionId) ?>><?= e($jobPosition['official_title']) ?></option>
                                     <?php endforeach ?>
                                 </optgroup>
                             <?php endforeach ?>
@@ -62,7 +63,7 @@ if (isset($vacancyId)) {
                 <div class="form-group">
                     <label for="item_number" class="mb-0">Item Number <?= showAsterisk($isNewItem) ?></label>
                     <input id="item_number" <?= $isNewItem ? 'name="item_number"' : '' ?> class="form-control"
-                        type="text" placeholder="Enter item number..." value="<?= $itemNo ?>" <?= $isNewItem ? 'required' : 'readonly' ?>>
+                        type="text" placeholder="Enter item number..." value="<?= e($itemNo) ?>" <?= $isNewItem ? 'required' : 'readonly' ?>>
                 </div>
 
                 <div class="form-group">
@@ -72,12 +73,12 @@ if (isset($vacancyId)) {
                         <?php
                         $districts = districts();
                         foreach ($districts as $district): ?>
-                            <optgroup label="<?= $district['name'] ?>">
+                            <optgroup label="<?= e($district['name']) ?>">
                                 <?php
                                 $schools = schoolsByDistrict($district['id']);
                                 foreach ($schools as $school): ?>
-                                    <option value="<?= $school['id'] ?>" <?= setOptionSelected($school['id'], $stationId) ?>>
-                                        <?= $school['name'] ?>
+                                    <option value="<?= e($school['id']) ?>" <?= setOptionSelected($school['id'], $stationId) ?>>
+                                        <?= e($school['name']) ?>
                                     </option>
                                 <?php endforeach ?>
                             </optgroup>
@@ -88,7 +89,7 @@ if (isset($vacancyId)) {
                 <div class="form-group">
                     <label for="date_posted" class="mb-0">Date Posted</label>
                     <input id="date_posted" name="date_posted" type="date" class="form-control"
-                        value="<?= $datePosted ?>">
+                        value="<?= e($datePosted) ?>">
                 </div>
 
                 <?php requiredLegend(0) ?>
@@ -96,9 +97,9 @@ if (isset($vacancyId)) {
 
             <div class="modal-footer">
                 <?php $verifier = $vacancyId === $copiedId ? null : $vacancyId; ?>
-                <input type="hidden" name="verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="verifier" value="<?= e($verifier) ?>">
                 <?php if (!$isNewItem): ?>
-                    <input type="hidden" name="position" value="<?= $positionId ?>">
+                    <input type="hidden" name="position" value="<?= e($positionId) ?>">
                 <?php endif; ?>
                 <button class="btn btn-primary" name="save-vacancy" type="submit">Continue</button>
                 <?php cancelModalButton() ?>
