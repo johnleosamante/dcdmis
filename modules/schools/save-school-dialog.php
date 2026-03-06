@@ -32,20 +32,21 @@ if ($school) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="" enctype="multipart/form-data">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
                             <label for="school-id" class="mb-0">School ID <?php showAsterisk() ?></label>
                             <input type="text" id="school-id" name="school-id" class="form-control"
-                                value="<?= $schoolId ?>" required>
+                                value="<?= e($schoolId) ?>" required>
                         </div>
                     </div>
 
                     <div class="col-6">
                         <div class="form-group">
                             <label for="alias" class="mb-0">Alias <?php showAsterisk() ?></label>
-                            <input type="text" id="alias" name="alias" class="form-control" value="<?= $alias ?>"
+                            <input type="text" id="alias" name="alias" class="form-control" value="<?= e($alias) ?>"
                                 required>
                         </div>
                     </div>
@@ -54,12 +55,12 @@ if ($school) {
                 <div class="form-group">
                     <label for="school-name" class="mb-0">Name <?php showAsterisk() ?></label>
                     <input type="text" id="school-name" name="school-name" class="form-control"
-                        value="<?= $schoolName ?>" required>
+                        value="<?= e($schoolName) ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="address" class="mb-0">Address <?php showAsterisk() ?></label>
-                    <input type="text" id="address" name="address" class="form-control" value="<?= $address ?>"
+                    <input type="text" id="address" name="address" class="form-control" value="<?= e($address) ?>"
                         required>
                 </div>
 
@@ -71,7 +72,7 @@ if ($school) {
                                 <option value="">Select district...</option>
                                 <?php $districts = districts();
                                 foreach ($districts as $district): ?>
-                                    <option value="<?= $district['id'] ?>" <?= setOptionSelected($district['id'], $districtCode) ?>><?= $district['name'] ?></option>
+                                    <option value="<?= e($district['id']) ?>" <?= setOptionSelected($district['id'], $districtCode) ?>><?= e($district['name']) ?></option>
                                 <?php endforeach ?>
                             </select>
                         </div>
@@ -96,22 +97,23 @@ if ($school) {
 
                 <div class="form-group">
                     <label for="telephone" class="mb-0">Telephone</label>
-                    <input type="text" id="telephone" name="telephone" class="form-control" value="<?= $telephone ?>">
+                    <input type="text" id="telephone" name="telephone" class="form-control"
+                        value="<?= e($telephone) ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="email" class="mb-0">Email <?php showAsterisk() ?></label>
-                    <input type="text" id="email" name="email" class="form-control" value="<?= $email ?>" required>
+                    <input type="text" id="email" name="email" class="form-control" value="<?= e($email) ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="website" class="mb-0">Website</label>
-                    <input type="text" id="website" name="website" class="form-control" value="<?= $website ?>">
+                    <input type="text" id="website" name="website" class="form-control" value="<?= e($website) ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="facebook" class="mb-0">Facebook</label>
-                    <input type="text" id="facebook" name="facebook" class="form-control" value="<?= $facebook ?>">
+                    <input type="text" id="facebook" name="facebook" class="form-control" value="<?= e($facebook) ?>">
                 </div>
 
                 <div class="form-group">
