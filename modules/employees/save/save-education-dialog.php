@@ -38,6 +38,7 @@ if (isset($educationId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="level" class="mb-0">Level: <?php showAsterisk() ?></label>
@@ -55,7 +56,7 @@ if (isset($educationId)) {
                 <div class="form-group">
                     <label for="school" class="mb-0">Name of School (Write in full): <?php showAsterisk() ?></label>
                     <input id="school" name="school" type="text" class="form-control" placeholder="Type name..."
-                        title="Type name of school..." required value="<?= $school ?>">
+                        title="Type name of school..." required value="<?= e($school) ?>">
                 </div>
 
                 <div class="form-group">
@@ -63,7 +64,7 @@ if (isset($educationId)) {
                     <input id="course" name="course" type="text" class="form-control"
                         placeholder="Type basic education / degree / course..."
                         title=" Type basic education / degree / course, Leave blank if not applicable..."
-                        value="<?= $course ?>">
+                        value="<?= e($course) ?>">
                 </div>
 
                 <div class="row">
@@ -71,7 +72,7 @@ if (isset($educationId)) {
                         <div class="form-group">
                             <label for="from" class="mb-0">Attendance from: <?php showAsterisk() ?></label>
                             <input id="from" name="from" type="number" step="1" min="0" class="form-control"
-                                title="Type start attendance year..." value="<?= $from ?>" required>
+                                title="Type start attendance year..." value="<?= e($from) ?>" required>
                         </div>
                     </div>
 
@@ -90,7 +91,7 @@ if (isset($educationId)) {
                                 </div>
                             </div>
                             <input id="to" name="to" type="number" step="1" min="0" class="form-control"
-                                title="Type end attendance year..." value="<?= $to ?>" required>
+                                title="Type end attendance year..." value="<?= e($to) ?>" required>
                         </div>
                     </div>
                 </div>
@@ -103,7 +104,7 @@ if (isset($educationId)) {
                             <input id="highest" name="highest" type="text" class="form-control"
                                 placeholder="Type highest level / units earned..."
                                 title="Type highest level / units earned, Leave blank if not applicable..."
-                                value="<?= $highestLevel ?>">
+                                value="<?= e($highestLevel) ?>">
                         </div>
                     </div>
 
@@ -112,7 +113,7 @@ if (isset($educationId)) {
                             <label for="year" class="mb-0">Year Graduated:<br>(if graduated)</label>
                             <input id="year" name="year" type="number" step="1" min="0" class="form-control"
                                 title="Type year graduated, Leave blank if not applicable..."
-                                value="<?= $yearGraduated ?>">
+                                value="<?= e($yearGraduated) ?>">
                         </div>
                     </div>
                 </div>
@@ -122,7 +123,7 @@ if (isset($educationId)) {
                     <input id="scholarship" name="scholarship" type="text" class="form-control"
                         placeholder="Type scholarship / academic honors received..."
                         title="Type scholarship / academic honors received, Leave blank if not applicable..."
-                        value="<?= $honorReceived ?>">
+                        value="<?= e($honorReceived) ?>">
                 </div>
 
                 <?php requiredLegend(0) ?>
@@ -134,7 +135,7 @@ if (isset($educationId)) {
                 $verifier = isset($_GET['id']) ? $_GET['id'] : null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="data-verifier" value="<?= e($verifier) ?>">
                 <button type="submit" class="btn btn-primary" name="save-education">Continue</button>
                 <?php cancelModalButton() ?>
             </div>
