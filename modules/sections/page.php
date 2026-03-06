@@ -27,7 +27,7 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
-        <?php if ($isDmis) { ?>
+        <?php if ($isHrmis || $isDmis) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
                 <div class="d-inline-block">
                     <?php linkButtonSplit(customUri('export', 'sections'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
@@ -58,7 +58,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle text-center">
                                 <?php linkItem(customUri($activeApp, 'Section Information', $row['id']), $row['name']); ?>
                             </td>
-                            <td class="align-middle text-center"><?= $row['functional_division'] ?></td>
+                            <td class="align-middle text-center"><?= e($row['functional_division']) ?></td>
                             <td class="align-middle">
                                 <div>
                                     <?php if ($isHrmis) {
