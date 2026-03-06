@@ -26,19 +26,20 @@ $publication = fetchAssoc(publication($id));
     </div>
 
     <div class="text-center font-weight-bold mb-3">
-        <?= $publication['title'] ?>
+        <?= e($publication['title']) ?>
     </div>
 
     <div class="text-center text-muted small">
         Code:
-        <?= $publication['code'] ?><br>
+        <?= e($publication['code']) ?><br>
         This action cannot be undone. Associated applications may lose their reference.
     </div>
 </div>
 
 <div class="modal-footer">
     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-    <form action="<?= uri() . '/hrmpsb/app.php' ?>" method="POST">
+    <form action="<?= uri() . '/hrmpsb/app.php' ?>
+    <?= csrf_field(); ?>" method="POST">
         <input type="hidden" name="verifier" value="<?= cipher($id) ?>">
         <button type="submit" name="delete-publication" class="btn btn-danger">Delete</button>
     </form>
