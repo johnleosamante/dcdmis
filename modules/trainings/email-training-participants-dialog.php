@@ -9,15 +9,14 @@ require_once(root() . '/includes/layout/components.php');
 $trainingId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $employeeId = isset($_GET['p']) ? sanitize(decipher($_GET['p'])) : null;
 
-$trainings = training($trainingId);
+$training = training($trainingId);
 $modalTitle = 'Training not found';
 $numberOfParticipants = 0;
-$notFound  = true;
+$notFound = true;
 $trainingParticipants = null;
 
-if (numRows($trainings) > 0) {
+if ($training) {
     $modalTitle = isset($employeeId) ? 'Email Participant' : 'Email All Participants';
-    $training = fetchAssoc($trainings);
     $trainingId = $training['no'];
     $notFound = false;
 }
@@ -30,7 +29,7 @@ if (numRows($trainings) > 0) {
         <div class="modal-body">
             <?php if (!$notFound) {
                 $trainingParticipants = trainingParticipants($trainingId, $employeeId);
-                $numberOfParticipants = numRows($trainingParticipants);
+                $numberOfParticipants = count($trainingParticipants);
                 if ($numberOfParticipants > 0) {
                     if ($numberOfParticipants === 1) {
                         echo 'Are you sure you want to continue to send email to this participant?';
@@ -39,35 +38,39 @@ if (numRows($trainings) > 0) {
                     } ?>
 
                     <div class="mt-2 p-2 text-light bg-secondary rounded">
-                        <?php if ($numberOfParticipants > 1) : ?>
+                        <?php if ($numberOfParticipants > 1): ?>
                             <ol class="mb-0">
-                                <?php while ($participant = fetchAssoc($trainingParticipants)) : ?>
-                                    <li><?= strtoupper(toName($participant['lname'], $participant['fname'], $participant['mname'], $participant['ext'])) ?></li>
-                                <?php endwhile ?>
+                                <?php foreach ($trainingParticipants as $participant): ?>
+                                    <li><?= strtoupper(toName($participant['last_name'], $participant['first_name'], $participant['middle_name'], $participant['name_extension'])) ?>
+                                    </li>
+                                <?php endforeach ?>
                             </ol>
-                        <?php else : ?>
-                            <?php while ($participant = fetchAssoc($trainingParticipants)) : ?>
-                                <div class="m-0 pl-3"><?= strtoupper(toName($participant['lname'], $participant['fname'], $participant['mname'], $participant['ext'])) ?></div>
-                            <?php endwhile ?>
+                        <?php else: ?>
+                            <?php foreach ($trainingParticipants as $participant): ?>
+                                <div class="m-0 pl-3">
+                                    <?= strtoupper(toName($participant['last_name'], $participant['first_name'], $participant['middle_name'], $participant['name_extension'])) ?>
+                                </div>
+                            <?php endforeach ?>
                         <?php endif ?>
                     </div>
-            <?php }
+                <?php }
             } else {
                 missingAlert($modalTitle);
             } ?>
         </div>
 
         <div class="modal-footer">
-            <?php if (!$notFound) : ?>
+            <?php if (!$notFound): ?>
                 <form action="" method="POST">
-                    <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
-                    <?php if (isset($_GET['p'])) : ?>
-                        <input type="hidden" name="data-verifier" value="<?= $_GET['p'] ?>">
+                    <?= csrf_field(); ?>
+                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?? null ?>">
+                    <?php if (isset($_GET['p'])): ?>
+                        <input type="hidden" name="data-verifier" value="<?= e($_GET['p']) ?>">
                     <?php endif ?>
                     <button class="btn btn-primary" name="email-participants" type="submit">Yes, Continue</button>
                 <?php endif;
             cancelModalButton();
-            if (!$notFound) : ?>
+            if (!$notFound): ?>
                 </form>
             <?php endif ?>
         </div>
