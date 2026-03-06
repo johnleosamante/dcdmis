@@ -54,6 +54,7 @@ if (numRows($employees) > 0) {
         <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasUser) {
                     employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status) ?>
@@ -69,54 +70,59 @@ if (numRows($employees) > 0) {
                         </div>
                     </div>
 
-                    <?php if ($dtsDivisionUser) : ?>
+                    <?php if ($dtsDivisionUser): ?>
                         <div class="form-group pl-3 mt-n3">
                             <select name="dts-verifier" class="form-control">
                                 <option value="">Select section...</option>
                                 <?php
                                 $divisions = functionalDivisions();
-                                while ($division = fetchAssoc($divisions)) : ?>
-                                    <optgroup label="<?= $division['name'] ?>">
+                                while ($division = fetchAssoc($divisions)): ?>
+                                    <optgroup label="<?= e($division['name']) ?>">
                                         <?php
                                         $sections = sections($division['id']);
                                         while ($section = fetchAssoc($sections)) {
                                             if ($section['id'] !== $station) { ?>
-                                                <option value="<?= $section['id'] ?>" <?= setOptionSelected($section['id'], $dtsUserStation) ?>><?= $section['name'] ?></option>
-                                        <?php
+                                                <option value="<?= e($section['id']) ?>" <?= setOptionSelected($section['id'], $dtsUserStation) ?>><?= e($section['name']) ?></option>
+                                                <?php
                                             }
                                         } ?>
                                     </optgroup>
                                 <?php endwhile ?>
                             </select>
                         </div>
-                    <?php else : ?>
-                        <input type="hidden" name="dts-verifier" value="<?= $userStationId ?>">
+                    <?php else: ?>
+                        <input type="hidden" name="dts-verifier" value="<?= e($userStationId) ?>">
                     <?php endif ?>
 
                     <div class="form-group">
                         <div class="form-check">
-                            <input class="form-check-input" id="hrmis" type="checkbox" name="hrmis" <?= setActiveItem($hrmisUser, true, 'checked') ?>>
+                            <input class="form-check-input" id="hrmis" type="checkbox" name="hrmis"
+                                <?= setActiveItem($hrmisUser, true, 'checked') ?>>
                             <label class="form-check-label" for="hrmis">Human Resource Management Information System</label>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="form-check">
-                            <input class="form-check-input" id="hrtdms" type="checkbox" name="hrtdms" <?= setActiveItem($hrtdmsUser, true, 'checked') ?>>
-                            <label class="form-check-label" for="hrtdms">HR Training &amp; Development Management System</label>
+                            <input class="form-check-input" id="hrtdms" type="checkbox" name="hrtdms"
+                                <?= setActiveItem($hrtdmsUser, true, 'checked') ?>>
+                            <label class="form-check-label" for="hrtdms">HR Training &amp; Development Management
+                                System</label>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="form-check">
-                            <input class="form-check-input" id="dmis" type="checkbox" name="dmis" <?= setActiveItem($dmisUser, true, 'checked') ?>>
+                            <input class="form-check-input" id="dmis" type="checkbox" name="dmis"
+                                <?= setActiveItem($dmisUser, true, 'checked') ?>>
                             <label class="form-check-label" for="dmis">Division Management Information System</label>
                         </div>
                     </div>
 
                     <div class="form-group mb-0">
                         <div class="form-check">
-                            <input class="form-check-input" id="hrmpsb" type="checkbox" name="hrmpsb" <?= setActiveItem($hrmpsbUser, true, 'checked') ?>>
+                            <input class="form-check-input" id="hrmpsb" type="checkbox" name="hrmpsb"
+                                <?= setActiveItem($hrmpsbUser, true, 'checked') ?>>
                             <label class="form-check-label" for="hrmpsb">Human Resource Personnel Selection Board</label>
                         </div>
                     </div>
@@ -126,7 +132,7 @@ if (numRows($employees) > 0) {
             </div>
 
             <div class="modal-footer">
-                <?php if ($hasUser) : ?>
+                <?php if ($hasUser): ?>
                     <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
                     <input type="hidden" name="data-verifier" value="<?= cipher($depedEmail) ?>">
                     <button class="btn btn-primary" name="edit-user" type="submit">Continue</button>
