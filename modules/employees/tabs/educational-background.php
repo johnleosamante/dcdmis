@@ -36,10 +36,10 @@
                     if ($educationalBackground) {
                         foreach ($educationalBackground as $education): ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?= $education['level'] ?></td>
-                                <td class="align-middle"><?= $education['school'] ?></td>
+                                <td class="align-middle"><?= e($education['level']) ?></td>
+                                <td class="align-middle"><?= e($education['school']) ?></td>
                                 <td class="align-middle"><?= toHandleNull($education['course'], 'N/A') ?></td>
-                                <td class="align-middle"><?= $education['from_year'] ?></td>
+                                <td class="align-middle"><?= e($education['from_year']) ?></td>
                                 <td class="align-middle">
                                     <?= $education['is_present'] ? 'PRESENT' : $education['to_year'] ?>
                                 </td>
