@@ -63,7 +63,7 @@ if (!is_dir($uploadDirectory)) {
                     foreach ($payslips as $payslip): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= toDateTime($payslip['updated_at']) ?></td>
-                            <td class="align-middle text-left"><?= $payslip['description'] ?></td>
+                            <td class="align-middle text-left"><?= e($payslip['description']) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
