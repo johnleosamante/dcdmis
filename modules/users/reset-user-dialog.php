@@ -38,21 +38,24 @@ if (numRows($employees) > 0) {
         <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasEmployee) {
                     employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status);
-                ?>
+                    ?>
                     <hr>
-                    <div class="text-center bg-secondary text-light rounded p-2 h2 mt-3 mb-0"><?= $randomPassword ?></div>
-                    <div class="text-center mt-1 small"><em>The user will receive an email containing the above code to be used as the temporary password.</em></div>
+                    <div class="text-center bg-secondary text-light rounded p-2 h2 mt-3 mb-0"><?= e($randomPassword) ?>
+                    </div>
+                    <div class="text-center mt-1 small"><em>The user will receive an email containing the above code to be
+                            used as the temporary password.</em></div>
                 <?php } else {
                     missingAlert($modalTitle);
                 } ?>
             </div>
 
             <div class="modal-footer">
-                <?php if ($hasEmployee) : ?>
-                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
+                <?php if ($hasEmployee): ?>
+                    <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
                     <input type="hidden" name="data-verifier" value="<?= cipher($randomPassword) ?>">
                     <button class="btn btn-danger" name="reset-user" type="submit">Continue</button>
                 <?php endif;
