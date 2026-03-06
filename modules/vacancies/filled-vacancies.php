@@ -56,10 +56,10 @@ messageAlert($showAlert, $message, $success);
                                 <?= ++$count ?>
                             </td>
                             <td class="align-middle">
-                                <?= $row['position'] ?>
+                                <?= e($row['position']) ?>
                             </td>
                             <td class="align-middle">
-                                <?= $row['salary_grade'] ?>
+                                <?= e($row['salary_grade']) ?>
                             </td>
                             <td class="align-middle">
                                 <?= toHandleNull($row['item_number'], 'N/A') ?>
