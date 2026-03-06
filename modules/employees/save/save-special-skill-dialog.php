@@ -28,7 +28,7 @@ if (isset($skillId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="">
-                    <?= csrf_field(); ?>
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="skill" class="mb-0">Special Skill / Hobby: <?php showAsterisk() ?></label>
