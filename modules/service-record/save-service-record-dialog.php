@@ -44,13 +44,14 @@ if (isset($serviceRecordId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="from" class="mb-0">Inclusive Dates From <?php showAsterisk() ?></label>
                             <input id="from" type="date" name="from" class="form-control" title="Required field"
-                                value="<?= $from ?>" required>
+                                value="<?= e($from) ?>" required>
                         </div>
                     </div>
 
@@ -69,7 +70,7 @@ if (isset($serviceRecordId)) {
                                 </div>
                             </div>
                             <input id="to" type="date" name="to" class="form-control" title="Required field"
-                                value="<?= $to ?>" required>
+                                value="<?= e($to) ?>" required>
                         </div>
                     </div>
                 </div>
@@ -79,7 +80,7 @@ if (isset($serviceRecordId)) {
                         <div class="form-group">
                             <label for="position" class="mb-0">Designation <?php showAsterisk() ?></label>
                             <input id="position" type="text" name="position" class="form-control" title="Required field"
-                                value="<?= $position ?>" required>
+                                value="<?= e($position) ?>" required>
                         </div>
                     </div>
                 </div>
@@ -126,7 +127,7 @@ if (isset($serviceRecordId)) {
                         <div class="form-group">
                             <label for="sg-step" class="mb-0">Salary Grade &amp; Step Increment</label>
                             <input id="sg-step" type="text" name="sg-step" class="form-control"
-                                title="Leave blank if not applicable" value="<?= $sg ?>">
+                                title="Leave blank if not applicable" value="<?= e($sg) ?>">
                         </div>
                     </div>
 
@@ -134,7 +135,7 @@ if (isset($serviceRecordId)) {
                         <div class="form-group">
                             <label for="salary" class="mb-0">Monthly<br>Salary</label>
                             <input id="salary" type="number" name="salary" class="form-control" min="0" step="1"
-                                title="Leave blank if not applicable" value="<?= $salary ?>">
+                                title="Leave blank if not applicable" value="<?= e($salary) ?>">
                         </div>
                     </div>
                 </div>
@@ -145,7 +146,7 @@ if (isset($serviceRecordId)) {
                             <label for="station" class="mb-0">Office Entity / Division / Station / Place / Branch of
                                 Assignment <?php showAsterisk() ?></label>
                             <input id="station" type="text" name="station" class="form-control" title="Required field"
-                                value="<?= $organization ?>" required>
+                                value="<?= e($organization) ?>" required>
                         </div>
                     </div>
                 </div>
@@ -155,7 +156,7 @@ if (isset($serviceRecordId)) {
                 <div class="form-group">
                     <label for="leave" class="mb-0">Leave Without Pay</label>
                     <input id="leave" type="text" name="leave" class="form-control"
-                        title="Leave blank if not applicable" value="<?= $leave ?>">
+                        title="Leave blank if not applicable" value="<?= e($leave) ?>">
                 </div>
 
                 <div class="form-check mb-2" title="Check for separation">
@@ -169,7 +170,7 @@ if (isset($serviceRecordId)) {
                         <div class="form-group">
                             <label for="separation-date" class="mb-0">Date</label>
                             <input id="separation-date" type="date" name="separation-date" class="form-control"
-                                title="Leave blank if not applicable" value="<?= $separationDate ?>">
+                                title="Leave blank if not applicable" value="<?= e($separationDate) ?>">
                         </div>
                     </div>
 
@@ -177,7 +178,7 @@ if (isset($serviceRecordId)) {
                         <div class="form-group">
                             <label for="separation-cause" class="mb-0">Cause</label>
                             <input id="separation-cause" type="text" name="separation-cause" class="form-control"
-                                title="Leave blank if not applicable" value="<?= $separationCause ?>">
+                                title="Leave blank if not applicable" value="<?= e($separationCause) ?>">
                         </div>
                     </div>
                 </div>
@@ -191,7 +192,7 @@ if (isset($serviceRecordId)) {
                 $verifier = $_GET['id'] ?? null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="data-verifier" value="<?= e($verifier) ?>">
                 <button type="submit" class="btn btn-primary" name="save-service-record">Continue</button>
                 <?php cancelModalButton() ?>
             </div>
