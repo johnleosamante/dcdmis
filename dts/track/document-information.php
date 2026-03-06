@@ -50,8 +50,7 @@ if ($document) {
             <tr>
                 <th class="align-top pr-3" scope="row">Status:</th>
                 <td class="text-uppercase">
-                    <?= strlen($document['details']) === 0 ? $document['status'] : $document['status'] . ' - ' . $document['details']
-                        ?>
+                    <?= $document['status'] ?>
                 </td>
             </tr>
         </table>
@@ -140,10 +139,6 @@ if ($document) {
                                 <?= $hasDestination ? '<div class="mb-3">Forwarded to ' . strtoupper($to) . '</div>' : '' ?>
 
                                 <div class="font-weight-bold text-lg"><?= e($status) ?></div>
-
-                                <?php if (!empty($details)): ?>
-                                    <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= e($details) ?></div>
-                                <?php endif ?>
                             </div>
                         </div>
                     </div>
