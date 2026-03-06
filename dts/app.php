@@ -17,13 +17,102 @@ if (isset($_POST['primary-search-button'])) {
 	$document = documentSearch($search, $station);
 
 	if ($document) {
-		redirect(customUri('dts', 'Document Information', $search));
+		redirect(customUri('dts', 'Document Search', $search));
 	}
-
-	redirect(customUri('dts', 'Document Search', $search));
 }
 
 if (isset($_POST['save-document'])) {
+	$purpose = sanitize($_POST['purpose']);
+	$details = sanitize($_POST['details']);
+	$type = sanitize($_POST['document-type']);
+	$destination = $isSchoolPortal ? 'REC' : sanitize($_POST['destination']);
+	$showAlert = true;
+	$year = date('y');
+	$documentId = !empty($documentId) ? $documentId : "{$code}-{$year}-" . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
+	$description = sanitize($_POST['description']);
+	$section = section($code);
+
+	if ($section) {
+		$headId = $section['head_id'];
+	} else {
+		$school = schoolById($code);
+		$headId = $school ? $school['head_id'] : '';
+	}
+
+	if (empty($description)) {
+		$message = 'No new document has been created. Please provide a description for the document.';
+		$success = false;
+		return;
+	}
+
+	beginTransaction();
+
+	try {
+		createDocument($documentId, $description, $type, $station, $purpose, $headId, $details);
+		$documentLogId = createDocumentLog($documentId, $userId, $station, $destination, $purpose, true, $details);
+
+		commit();
+
+		$upload_response = '';
+
+		if (!empty($_FILES['file-upload']['name'][0])) {
+			$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
+
+			$allowedTypes = [
+				'image/jpeg',
+				'image/png',
+				'image/gif',
+				'application/pdf',
+				'application/msword',
+				'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+				'application/vnd.ms-powerpoint',
+				'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+				'application/vnd.ms-excel',
+				'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+			];
+
+			if (!is_dir($uploadDirectory)) {
+				mkdir($uploadDirectory, 0777, true);
+			}
+
+			foreach ($_FILES['file-upload']['tmp_name'] as $key => $tmp_name) {
+				$fileName = basename($_FILES['file-upload']['name'][$key]);
+				$fileType = $_FILES['file-upload']['type'][$key];
+				$fileSize = $_FILES['file-upload']['size'][$key];
+				$targetFilePath = "$uploadDirectory/" . time() . "_$fileName";
+				$extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+				if (!in_array($fileType, $allowedTypes)) {
+					$upload_response .= "<br>File type not allowed: $fileName";
+					continue;
+				}
+
+				if ($fileSize > FILE_UPLOAD_SIZE_LIMIT) {
+					$upload_response .= "<br>File too large (Max 20MB): $fileName";
+					continue;
+				}
+
+				if (move_uploaded_file($tmp_name, $targetFilePath)) {
+					$attachment = $targetFilePath;
+					$upload_response .= "<br>File uploaded: $fileName";
+					createDocumentLogAttachment($documentId, $documentLogId, $attachment, ".$extension");
+				} else {
+					$upload_response .= "<br>Error uploading: $fileName";
+				}
+			}
+		}
+
+		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been saved successfully.' . $upload_response;
+		$success = true;
+
+		createSystemLog($stationId, $userId, 'Created document', $documentId, clientIp());
+	} catch (Exception) {
+		rollBack();
+		$message = 'No new document has been created.';
+	}
+}
+
+if (isset($_POST['edit-document'])) {
 	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$purpose = sanitize($_POST['purpose']);
 	$details = sanitize($_POST['details']);
