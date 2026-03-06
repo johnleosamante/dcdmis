@@ -28,12 +28,13 @@ if (isset($membershipId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="membership" class="mb-0">Membership in Association / Organization:
                         <?php showAsterisk() ?></label>
                     <input id="membership" type="text" name="membership" class="form-control" title="Required field"
-                        value="<?= $membership ?>" required>
+                        value="<?= e($membership) ?>" required>
                 </div>
 
                 <?php requiredLegend(0) ?>
@@ -45,7 +46,7 @@ if (isset($membershipId)) {
                 $verifier = $_GET['id'] ?? null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="data-verifier" value="<?= e($verifier) ?>">
                 <button type="submit" class="btn btn-primary" name="save-membership">Continue</button>
                 <?php cancelModalButton() ?>
             </div>
