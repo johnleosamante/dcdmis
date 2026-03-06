@@ -58,7 +58,7 @@ messageAlert($showAlert, $message, $success);
                                 <div class="image-container">
                                     <span
                                         class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                        <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
@@ -71,7 +71,7 @@ messageAlert($showAlert, $message, $success);
                                 <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']) ?>
                             </td>
                             <td class="align-middle"><?= toDate($row['original_appointment_date'], 'F j, Y') ?></td>
-                            <td class="align-middle"><?= $row['total_years_service'] ?></td>
+                            <td class="align-middle"><?= e($row['total_years_service']) ?></td>
                             <td class="align-middle"><?= toDate($row['date_last_awarded'], 'F j, Y') ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
