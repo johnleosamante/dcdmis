@@ -44,6 +44,7 @@ if ($employee) {
     <div class="modal-content">
         <?php modalHeader($modalTitle) ?>
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasEmployee) {
                     employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status);
@@ -79,7 +80,7 @@ if ($employee) {
                         <div class="alert alert-info p-2 my-2 small d-flex align-items-start">
                             <i class="fas fa-info-circle mt-1 mr-1"></i>
                             <div>
-                                Item Number: <strong><?= $itemNumber ?>
+                                Item Number: <strong><?= e($itemNumber) ?>
                                 </strong> will be marked as vacant unless you check the
                                 option above or is duplicate employee.
                             </div>
@@ -94,7 +95,7 @@ if ($employee) {
 
             <div class="modal-footer">
                 <?php if ($hasEmployee): ?>
-                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
+                    <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
                     <button class="btn btn-danger" name="remove-employee" type="submit">Continue</button>
                 <?php endif;
 
