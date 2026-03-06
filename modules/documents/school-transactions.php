@@ -13,7 +13,8 @@
                 </div>
             <?php } ?>
 
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table-previous" width="100%" cellspacing="0">
+            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table-previous"
+                width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">Logo</th>
@@ -28,11 +29,11 @@
                 <tbody>
                     <?php
                     $schools = schoolsExcept(divisionID());
-                    while ($school = fetchAssoc($schools)) :
+                    foreach ($schools as $school):
                         $logo = !empty($school['logo']) ? uri() . '/' . $school['logo'] : uri() . '/uploads/division/division.png';
                         $schoolName = $school['name'];
-                        $district = fetchAssoc(district($school['district']))['name'];
-                    ?>
+                        $district = district($school['district'])['name'];
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
@@ -42,15 +43,18 @@
                                 </div>
                             </td>
                             <td class="align-middle text-left">
-                                <div><?php linkItem(customUri($activeApp, 'School Information', $school['id']), $schoolName . ' (' . $school['alias'] . ')') ?></div>
-                                <div class="small"><?= $school['id'] . ' | ' . $district . ' | ' . $school['address'] ?></div>
+                                <div>
+                                    <?php linkItem(customUri($activeApp, 'School Information', $school['id']), "$schoolName (" . $school['alias'] . ')') ?>
+                                </div>
+                                <div class="small"><?= $school['id'] . ' | ' . $district . ' | ' . $school['address'] ?>
+                                </div>
                             </td>
-                            <td class="align-middle"><?= number_format(numRows(incomingDocuments($school['alias']))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(pendingDocuments($school['alias']))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(outgoingDocuments($school['alias']))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(ongoingDocuments($school['alias']))) ?></td>
+                            <td class="align-middle"><?= number_format(count(incomingDocuments($school['alias']))) ?></td>
+                            <td class="align-middle"><?= number_format(count(pendingDocuments($school['alias']))) ?></td>
+                            <td class="align-middle"><?= number_format(count(outgoingDocuments($school['alias']))) ?></td>
+                            <td class="align-middle"><?= number_format(count(ongoingDocuments($school['alias']))) ?></td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
