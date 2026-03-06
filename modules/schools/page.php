@@ -65,7 +65,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <div class="image-container">
                                     <span class="d-flex justify-content-center align-middle school-logo overflow-hidden">
-                                        <img height="100%" src="<?= $logo ?>" alt="<?= $schoolName ?>">
+                                        <img height="100%" src="<?= e($logo) ?>" alt="<?= e($schoolName) ?>">
                                     </span>
                                 </div>
                             </td>
@@ -78,7 +78,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?php linkItem(customUri($activeApp, 'District Information', $row['district_id']), district($row['district_id'])['name']) ?>
                             </td>
-                            <td class="align-middle"><?= $row['category'] ?></td>
+                            <td class="align-middle"><?= e($row['category']) ?></td>
                             <td class="align-middle">
                                 <?php if (!empty($row['head_id'])): ?>
                                     <div>
@@ -107,9 +107,9 @@ messageAlert($showAlert, $message, $success);
                             }
                             ?>
 
-                            <td class="align-middle text-mars"><strong><?= $male ?></strong></td>
-                            <td class="align-middle text-venus"><strong><?= $female ?></strong></td>
-                            <td class="align-middle"><strong><?= $total ?></strong></td>
+                            <td class="align-middle text-mars"><strong><?= e($male) ?></strong></td>
+                            <td class="align-middle text-venus"><strong><?= e($female) ?></strong></td>
+                            <td class="align-middle"><strong><?= e($total) ?></strong></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
