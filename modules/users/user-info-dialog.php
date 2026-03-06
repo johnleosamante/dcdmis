@@ -35,6 +35,7 @@ if ($employee) {
         <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasEmployee) {
                     employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status);
