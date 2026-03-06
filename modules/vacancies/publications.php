@@ -54,10 +54,10 @@ messageAlert($showAlert, $message, $success);
                         ?>
                         <tr>
                             <td class="align-middle"><?= ++$count ?></td>
-                            <td class="align-middle font-weight-bold"><?= $row['code'] ?></td>
-                            <td class="align-middle text-left"><?= $row['title'] ?></td>
+                            <td class="align-middle font-weight-bold"><?= e($row['code']) ?></td>
+                            <td class="align-middle text-left"><?= e($row['title']) ?></td>
                             <td class="align-middle">
-                                <span class="badge badge-secondary"><?= $vacancyCount ?> Items</span>
+                                <span class="badge badge-secondary"><?= e($vacancyCount) ?> Items</span>
                             </td>
                             <td class="align-middle"><?= toLongDate($row['open_date']) ?></td>
                             <td class="align-middle"><?= toLongDate($row['close_date']) ?></td>
