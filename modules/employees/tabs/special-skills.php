@@ -29,7 +29,7 @@
                     if ($skills) {
                         foreach ($skills as $skill): ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?= $skill['name'] ?></td>
+                                <td class="align-middle"><?= e($skill['name']) ?></td>
                                 <?php if ($editMode): ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
