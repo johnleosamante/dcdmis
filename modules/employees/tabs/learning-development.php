@@ -26,12 +26,12 @@
                     if ($learnings) {
                         foreach ($learnings as $learning): ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?= $learning['title'] ?></td>
+                                <td class="align-middle"><?= e($learning['title']) ?></td>
                                 <td class="align-middle"><?= toDate($learning['start_date']) ?></td>
                                 <td class="align-middle"><?= toDate($learning['end_date']) ?></td>
-                                <td class="align-middle"><?= $learning['number_of_hours'] ?></td>
-                                <td class="align-middle"><?= $learning['training_type'] ?></td>
-                                <td class="align-middle"><?= $learning['sponsored_by'] ?></td>
+                                <td class="align-middle"><?= e($learning['number_of_hours']) ?></td>
+                                <td class="align-middle"><?= e($learning['training_type']) ?></td>
+                                <td class="align-middle"><?= e($learning['sponsored_by']) ?></td>
                             </tr>
                         <?php endforeach;
                     } else { ?>
