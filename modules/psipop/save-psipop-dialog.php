@@ -53,6 +53,7 @@ if ($employee) {
         <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
+                    <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasEmployee) {
                     employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $empStatus) ?>
@@ -61,26 +62,26 @@ if ($employee) {
                     <div class="form-group">
                         <label for="item" class="mb-0">Item Number <?php showAsterisk() ?></label>
                         <input type="text" id="item" name="item" class="form-control" placeholder="Type item number..."
-                            title="Type employee PSIPOP item number..." value="<?= $item ?>" required>
+                            title="Type employee PSIPOP item number..." value="<?= e($item) ?>" required>
                     </div>
 
                     <div class="form-group">
                         <label for="position" class="mb-0">Position</label>
-                        <input type="text" id="position" class="form-control" value="<?= $position ?>" readonly>
+                        <input type="text" id="position" class="form-control" value="<?= e($position) ?>" readonly>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="salary-grade" class="mb-0">Salary Grade</label>
-                                <input type="text" id="salary-grade" class="form-control" value="<?= $salaryGrade ?>"
+                                <input type="text" id="salary-grade" class="form-control" value="<?= e($salaryGrade) ?>"
                                     readonly>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="step" class="mb-0">Step Increment</label>
-                                <input type="text" id="step" class="form-control" value="<?= $step ?>" readonly>
+                                <input type="text" id="step" class="form-control" value="<?= e($step) ?>" readonly>
                             </div>
                         </div>
                     </div>
@@ -89,13 +90,13 @@ if ($employee) {
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="dob" class="mb-0">Date of Birth</label>
-                                <input type="text" id="dob" class="form-control" value="<?= $dob ?>" readonly>
+                                <input type="text" id="dob" class="form-control" value="<?= e($dob) ?>" readonly>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="tin" class="mb-0">Tax Identification Number</label>
-                                <input type="text" id="tin" class="form-control" value="<?= $tin ?>" readonly>
+                                <input type="text" id="tin" class="form-control" value="<?= e($tin) ?>" readonly>
                             </div>
                         </div>
                     </div>
@@ -106,14 +107,14 @@ if ($employee) {
                                 <label for="doa" class="mb-0">Date of Original<br>Appointment
                                     <?php showAsterisk() ?></label>
                                 <input type="date" id="doa" name="doa" class="form-control"
-                                    title="Set date of original appointment..." value="<?= $doa ?>" required>
+                                    title="Set date of original appointment..." value="<?= e($doa) ?>" required>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="dlp" class="mb-0">Date of Last<br>Promotion <?php showAsterisk() ?></label>
                                 <input type="date" id="dlp" name="dlp" class="form-control"
-                                    title="Set date of last promotion..." value="<?= $dlp ?>" required>
+                                    title="Set date of last promotion..." value="<?= e($dlp) ?>" required>
                             </div>
                         </div>
                     </div>
@@ -148,7 +149,7 @@ if ($employee) {
                                 <label for="eligibility" class="mb-0">Eligibility <?php showAsterisk() ?></label>
                                 <input type="text" id="eligibility" name="eligibility" class="form-control"
                                     placeholder="Type eligibility..." title="Type employee eligibility..."
-                                    value="<?= $eligibility ?>" required>
+                                    value="<?= e($eligibility) ?>" required>
                             </div>
                         </div>
                     </div>
