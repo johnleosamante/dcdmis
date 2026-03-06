@@ -50,11 +50,11 @@ messageAlert($showAlert, $message, $success);
                                 <td class="align-middle">
                                     <?php linkItem(customUri('hrtdms', 'Training Details', $training['no']), $training['no']) ?>
                                 </td>
-                                <td class="align-middle text-left"><?= $training['title'] ?></td>
+                                <td class="align-middle text-left"><?= e($training['title']) ?></td>
                                 <td class="align-middle"><?= toDate($training['from']) ?></td>
                                 <td class="align-middle"><?= toDate($training['to']) ?></td>
                                 <td class="align-middle"><?= trainingType($training['type']) ?></td>
-                                <td class="align-middle"><?= $training['sponsor'] ?></td>
+                                <td class="align-middle"><?= e($training['sponsor']) ?></td>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
