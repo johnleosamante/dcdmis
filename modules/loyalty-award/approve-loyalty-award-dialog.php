@@ -35,6 +35,7 @@ if ($employee) {
         <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasEmployee) {
                     employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status);
@@ -49,7 +50,7 @@ if ($employee) {
 
             <div class="modal-footer">
                 <?php if ($hasEmployee): ?>
-                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
+                    <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
                     <button class="btn btn-success" name="approve-loyalty-award" type="submit">Yes, Continue</button>
                 <?php endif;
 
