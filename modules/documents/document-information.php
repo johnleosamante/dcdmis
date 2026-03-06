@@ -247,11 +247,11 @@ if ($document) {
                                         $file = explode('_', $attachment['file_name'], 2);
                                         linkButtonSplit("$baseUri/" . $attachment['file_name'], $file[1], 'fa-paperclip', "View $file[1]", 'secondary', true);
                                     } ?>
-                                        </div>
-                                <?php endif ?>
-                            </div>
+                                </div>
+                            <?php endif ?>
                         </div>
                     </div>
+                </div>
             <?php } ?>
         </div>
     </div>
