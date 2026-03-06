@@ -27,6 +27,7 @@ if ($family) {
     id="family-background">
     <?php if ($editMode): ?>
         <form action="" method="POST">
+            <?= csrf_field(); ?>
         <?php endif ?>
         <div class="row mt-3">
             <div class="col">
@@ -40,7 +41,7 @@ if ($family) {
                             <label for="slast" class="mb-0 small">Last Name</label>
                             <input id="slast" name="slast" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $slast ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($slast) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
 
@@ -49,7 +50,7 @@ if ($family) {
                             <label for="sfirst" class="mb-0 small">First Name</label>
                             <input id="sfirst" name="sfirst" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $sfirst ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($sfirst) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
 
@@ -57,7 +58,7 @@ if ($family) {
                         <div class="form-group">
                             <label for="sext" class="mb-0 small">Extension</label>
                             <input id="sext" name="sext" type="text" class="form-control"
-                                <?= setActiveNavigation($editMode, 'title="Example: Jr., Sr., III (Leave blank if not applicable)"') ?> value="<?= $sext ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                <?= setActiveNavigation($editMode, 'title="Example: Jr., Sr., III (Leave blank if not applicable)"') ?> value="<?= e($sext) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
 
@@ -66,7 +67,7 @@ if ($family) {
                             <label for="smiddle" class="mb-0 small">Middle Name</label>
                             <input id="smiddle" name="smiddle" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $smiddle ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($smiddle) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
                 </div>
@@ -77,7 +78,7 @@ if ($family) {
                             <label for="swork" class="mb-0 small">Occupation</label>
                             <input id="swork" name="swork" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $swork ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($swork) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
 
@@ -86,7 +87,7 @@ if ($family) {
                             <label for="sbusiness" class="mb-0 small">Employer/Business Name</label>
                             <input id="sbusiness" name="sbusiness" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $soffice ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($soffice) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
                 </div>
@@ -97,7 +98,7 @@ if ($family) {
                             <label for="sbusiness-address" class="mb-0 small">Business Address</label>
                             <input id="sbusiness-address" name="sbusiness-address" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $sofficeAddress ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($sofficeAddress) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
 
@@ -106,7 +107,7 @@ if ($family) {
                             <label for="stelephone" class="mb-0 small">Telephone No.</label>
                             <input id="stelephone" name="stelephone" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $stelephone ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($stelephone) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
                 </div>
@@ -121,7 +122,7 @@ if ($family) {
                             <label for="flast" class="mb-0 small">Last Name</label>
                             <input id="flast" name="flast" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $flast ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($flast) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
 
@@ -130,7 +131,7 @@ if ($family) {
                             <label for="ffirst" class="mb-0 small">First Name</label>
                             <input id="ffirst" name="ffirst" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $ffirst ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($ffirst) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
 
@@ -138,7 +139,7 @@ if ($family) {
                         <div class="form-group">
                             <label for="fext" class="mb-0 small">Extension</label>
                             <input id="fext" name="fext" type="text" class="form-control"
-                                <?= setActiveNavigation($editMode, 'title="Example: Jr., Sr., III (Leave blank if not applicable)"') ?> value="<?= $fext ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                <?= setActiveNavigation($editMode, 'title="Example: Jr., Sr., III (Leave blank if not applicable)"') ?> value="<?= e($fext) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
 
@@ -147,7 +148,7 @@ if ($family) {
                             <label for="fmiddle" class="mb-0 small">Middle Name</label>
                             <input id="fmiddle" name="fmiddle" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $fmiddle ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($fmiddle) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
                 </div>
@@ -162,7 +163,7 @@ if ($family) {
                             <label for="mlast" class="mb-0 small">Last Name</label>
                             <input id="mlast" name="mlast" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $mlast ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($mlast) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
 
@@ -171,7 +172,7 @@ if ($family) {
                             <label for="mfirst" class="mb-0 small">First Name</label>
                             <input id="mfirst" name="mfirst" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $mfirst ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($mfirst) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
 
@@ -180,7 +181,7 @@ if ($family) {
                             <label for="mmiddle" class="mb-0 small">Middle Name</label>
                             <input id="mmiddle" name="mmiddle" type="text" class="form-control"
                                 <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                value="<?= $mmiddle ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                                value="<?= e($mmiddle) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
                 </div>
