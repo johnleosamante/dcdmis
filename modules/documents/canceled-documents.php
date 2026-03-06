@@ -28,6 +28,7 @@ messageAlert($showAlert, $message, $success);
 
     <div class="card-body">
         <form action="" method="POST" class="mb-3">
+            <?= csrf_field(); ?>
             <div class="row">
                 <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12">
                     <div class="form-group">
@@ -37,7 +38,7 @@ messageAlert($showAlert, $message, $success);
                             </div>
                             <div class="col-10">
                                 <input class="form-control" id="date-from" type="date" name="date-from"
-                                    value="<?= $from ?>">
+                                    value="<?= e($from) ?>">
                             </div>
                         </div>
                     </div>
@@ -50,7 +51,8 @@ messageAlert($showAlert, $message, $success);
                                 <label for="date-to" class="font-weight-bold m-0">To:</label>
                             </div>
                             <div class="col-10">
-                                <input class="form-control" id="date-to" type="date" name="date-to" value="<?= $to ?>">
+                                <input class="form-control" id="date-to" type="date" name="date-to"
+                                    value="<?= e($to) ?>">
                             </div>
                         </div>
                     </div>
@@ -84,7 +86,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
                             </td>
-                            <td class="text-left align-middle"><?= $row['description'] ?></td>
+                            <td class="text-left align-middle"><?= e($row['description']) ?></td>
                             <td class="align-middle"><?= toDatetime($row['posted_on']) ?></td>
                             <td class="align-middle"><?= toDatetime($row['canceled_on']) ?></td>
                             <td class="align-middle text-capitalize">
