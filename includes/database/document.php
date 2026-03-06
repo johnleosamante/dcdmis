@@ -438,9 +438,16 @@ function documentSearch($string, $station_id)
 
     $sql = "SELECT t.`id`, t.`description`, t.`created_from`, t.`status`, t.`created_at`  
             FROM `document_transactions` AS t 
-            INNER JOIN `document_transaction_logs` AS l ON t.`id` = l.`document_transaction_id` 
-            WHERE (t.`id` LIKE ? OR t.`description` LIKE ? OR l.`details` LIKE ?) 
-                AND (l.`received_from` = ? OR l.`forwarded_to` = ?) 
-            GROUP BY t.`id` ORDER BY t.`created_at` DESC";
+            WHERE (
+                t.`id` LIKE ?
+                OR MATCH(t.`description`) AGAINST (? IN BOOLEAN MODE)
+                OR EXISTS (
+                    SELECT 1
+                    FROM `document_transaction_logs` AS l
+                    WHERE l.`document_transaction_id` = t.`id`
+                        AND MATCH(l.`details`) AGAINST(? IN BOOLEAN MODE)
+                        AND (l.`received_from` = ? OR l.`forwarded_to` = ?)
+                )
+            ) ORDER BY t.`created_at` DESC LIMIT 1000;";
     return query($sql, [$searchTerm, $searchTerm, $searchTerm, $station_id, $station_id]);
 }
