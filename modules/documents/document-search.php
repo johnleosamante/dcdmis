@@ -10,9 +10,14 @@ $search = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $documents = documentSearch($search, $station);
 $isDts = $activeApp === 'dts';
 
-if ($documents === 0) {
+if (!$documents) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
+}
+
+if (count($documents) === 1000) {
+    $message = "Showing top 1000 search results for [$search].";
+    messageAlert(true, $message);
 }
 ?>
 
