@@ -64,7 +64,7 @@ function documentFrom($document_transaction_id, $station_id)
 
 function documentOrigin($document_transaction_id)
 {
-    $sql = "SELECT t.`id`, t.`description`, t.`document_type_id`, t.`status`, t.`head_id`, t.`created_from`, 
+    $sql = "SELECT t.`id`, t.`description`, t.`document_type_id`, t.`status`, t.`details` , t.`head_id`, t.`created_from`, 
                 t.`created_at`, l.`processed_by`, l.`received_from` 
             FROM `document_transactions` AS t 
             INNER JOIN `document_transaction_logs` AS l ON t.`id` = l.`document_transaction_id` 
