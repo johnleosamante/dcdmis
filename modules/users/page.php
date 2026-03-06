@@ -56,13 +56,13 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <div class="image-container">
                                     <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                        <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
                             </td>
                             <td class="align-middle text-left"><?php modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName) ?></td>
-                            <td class="align-middle text-lowercase"><?= $row['email'] ?></td>
+                            <td class="align-middle text-lowercase"><?= e($row['email']) ?></td>
                             <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
                             <td class="align-middle">
                                 <?php linkItem(customUri($activeApp, 'School Information', $row['assignment']), fetchAssoc(schoolById($row['assignment']))['name']) ?>
