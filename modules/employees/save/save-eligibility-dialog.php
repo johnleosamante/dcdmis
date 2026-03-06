@@ -36,12 +36,13 @@ if (isset($eligibilityId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="career" class="mb-0">Career Service / RA 1080 (Board/Bar) / Under Special Laws / CES /
                         CSEE / Barangay Eligibility / Driver's License: <?php showAsterisk() ?></label>
                     <input id="career" name="career" type="text" class="form-control" title="Required field"
-                        value="<?= $career ?>" required>
+                        value="<?= e($career) ?>" required>
                 </div>
 
                 <div class="row">
@@ -49,7 +50,7 @@ if (isset($eligibilityId)) {
                         <div class="form-group">
                             <label for="rating" class="mb-0">Rating <br>(if applicable):</label>
                             <input id="rating" name="rating" type="number" class="form-control" min="0" step="0.01"
-                                title="Leave blank if not applicable" value="<?= $rating ?>">
+                                title="Leave blank if not applicable" value="<?= e($rating) ?>">
                         </div>
                     </div>
 
@@ -58,7 +59,7 @@ if (isset($eligibilityId)) {
                             <label for="exam-date" class="mb-0">Date of Examination / Conferment:
                                 <?php showAsterisk() ?></label>
                             <input id="exam-date" name="exam-date" type="date" class="form-control"
-                                title="Required field" value="<?= $examDate ?>" required>
+                                title="Required field" value="<?= e($examDate) ?>" required>
                         </div>
                     </div>
                 </div>
@@ -67,7 +68,7 @@ if (isset($eligibilityId)) {
                     <label for="exam-place" class="mb-0">Place of Examination / Conferment:
                         <?php showAsterisk() ?></label>
                     <input id="exam-place" name="exam-place" type="text" class="form-control" title="Required field"
-                        value="<?= $examPlace ?>" required>
+                        value="<?= e($examPlace) ?>" required>
                 </div>
 
                 <div class="row">
@@ -75,7 +76,7 @@ if (isset($eligibilityId)) {
                         <div class="form-group">
                             <label for="license" class="mb-0">License No. (if applicable):</label>
                             <input id="license" type="text" name="license" class="form-control"
-                                title="Leave blank if not applicable" value="<?= $license ?>">
+                                title="Leave blank if not applicable" value="<?= e($license) ?>">
                         </div>
                     </div>
 
@@ -94,7 +95,7 @@ if (isset($eligibilityId)) {
                                 </div>
                             </div>
                             <input id="validity" name="validity" type="date" class="form-control"
-                                value="<?= $validity ?>">
+                                value="<?= e($validity) ?>">
                         </div>
                     </div>
                 </div>
@@ -108,7 +109,7 @@ if (isset($eligibilityId)) {
                 $verifier = isset($_GET['id']) ? $_GET['id'] : null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="data-verifier" value="<?= e($verifier) ?>">
                 <button type="submit" class="btn btn-primary" name="save-eligibility">Continue</button>
                 <?php cancelModalButton() ?>
             </div>
