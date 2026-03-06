@@ -27,11 +27,12 @@ if ($document) {
         <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasDocument) { ?>
                     <div class="form-group">
                         <label for="code" class="mb-0">Code</label>
-                        <input id="code" type="text" value="<?= $documentId ?>" class="form-control text-uppercase"
+                        <input id="code" type="text" value="<?= e($documentId) ?>" class="form-control text-uppercase"
                             disabled>
                     </div>
 
@@ -44,7 +45,7 @@ if ($document) {
                     <div class="form-group">
                         <label for="description" class="mb-0">Description</label>
                         <textarea id="description" class="form-control text-uppercase" rows="3"
-                            disabled><?= $description ?></textarea>
+                            disabled><?= e($description) ?></textarea>
                     </div>
 
                     <div class="form-group">
@@ -61,7 +62,7 @@ if ($document) {
 
             <div class="modal-footer">
                 <?php if ($hasDocument): ?>
-                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
+                    <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
                     <button class="btn btn-danger" name="cancel-document" type="submit">Continue</button>
                 <?php endif ?>
                 <?php cancelModalButton() ?>
