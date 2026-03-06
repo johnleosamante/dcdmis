@@ -35,12 +35,13 @@ if (isset($voluntaryId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="organization" class="mb-0">Name & Address of Organization (Write in full):
                         <?php showAsterisk() ?></label>
                     <textarea id="organization" name="organization" class="form-control" title="Required field" rows="3"
-                        required><?= $organization ?></textarea>
+                        required><?= e($organization) ?></textarea>
                 </div>
 
                 <div class="row">
@@ -48,7 +49,7 @@ if (isset($voluntaryId)) {
                         <div class="form-group">
                             <label for="from" class="mb-0">Inclusive Dates From: <?php showAsterisk() ?></label>
                             <input id="from" type="date" name="from" class="form-control" title="Required field"
-                                value="<?= $from ?>" required>
+                                value="<?= e($from) ?>" required>
                         </div>
                     </div>
 
@@ -65,7 +66,7 @@ if (isset($voluntaryId)) {
                                 </div>
                             </div>
                             <input id="to" type="date" name="to" class="form-control" title="Required field"
-                                value="<?= $to ?>" required>
+                                value="<?= e($to) ?>" required>
                         </div>
                     </div>
                 </div>
@@ -73,13 +74,13 @@ if (isset($voluntaryId)) {
                 <div class="form-group">
                     <label for="hours" class="mb-0">Number of Hours:</label>
                     <input id="hours" type="number" name="hours" min="0" step="1" class="form-control"
-                        title="Leave blank if not applicable" value="<?= $hours ?>">
+                        title="Leave blank if not applicable" value="<?= e($hours) ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="position" class="mb-0">Position: <?php showAsterisk() ?></label>
                     <input id="position" type="text" name="position" class="form-control" title="Required field"
-                        value="<?= $position ?>" required>
+                        value="<?= e($position) ?>" required>
                 </div>
 
                 <?php requiredLegend(0) ?>
@@ -91,7 +92,7 @@ if (isset($voluntaryId)) {
                 $verifier = $_GET['id'] ?? null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="data-verifier" value="<?= e($verifier) ?>">
                 <button type="submit" class="btn btn-primary" name="save-voluntary-work">Continue</button>
                 <?php cancelModalButton() ?>
             </div>
