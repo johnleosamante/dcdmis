@@ -40,13 +40,13 @@
                                 <td class="align-middle">
                                     <?= $experience['is_present'] ? 'PRESENT' : toDate($experience['to_date']) ?>
                                 </td>
-                                <td class="align-middle"><?= $experience['designation'] ?></td>
-                                <td class="align-middle"><?= $experience['agency_company'] ?></td>
+                                <td class="align-middle"><?= e($experience['designation']) ?></td>
+                                <td class="align-middle"><?= e($experience['agency_company']) ?></td>
                                 <td class="align-middle">
                                     <?= !empty($experience['monthly_salary']) ? toCurrency($experience['monthly_salary']) : 'N/A' ?>
                                 </td>
-                                <td class="align-middle"><?= $experience['salary_grade_step_increment'] ?></td>
-                                <td class="align-middle"><?= $experience['appointment_status'] ?></td>
+                                <td class="align-middle"><?= e($experience['salary_grade_step_increment']) ?></td>
+                                <td class="align-middle"><?= e($experience['appointment_status']) ?></td>
                                 <td class="align-middle"><?= (bool) $experience['is_government_service'] ? 'Y' : 'N' ?>
                                 </td>
                                 <?php if ($editMode): ?>
