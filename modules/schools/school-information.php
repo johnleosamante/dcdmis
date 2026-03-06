@@ -38,7 +38,7 @@ if ($school) {
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Schools') ?>">Schools</a></li>
-            <li class="breadcrumb-item active"><?= $schoolName ?></li>
+            <li class="breadcrumb-item active"><?= e($schoolName) ?></li>
         </ol>
     </nav>
 </div>
@@ -58,14 +58,14 @@ if ($school) {
     <div class="card-body">
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-4 col-xl-2">
-                <img src="<?= $logo ?>" width="100%">
+                <img src="<?= e($logo) ?>" width="100%">
             </div>
             <div class="col-sm-12 col-md-12 col-lg-8 col-xl-10">
                 <div class="table-responsive">
                     <table cellspacing="0">
                         <tr>
                             <th class="pr-5 align-top" scoper="row">School ID</th>
-                            <td class="text-uppercase"><?= $schoolId ?></td>
+                            <td class="text-uppercase"><?= e($schoolId) ?></td>
                         </tr>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">Name</th>
@@ -73,15 +73,15 @@ if ($school) {
                         </tr>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">Address</th>
-                            <td class="text-uppercase"><?= $address ?></td>
+                            <td class="text-uppercase"><?= e($address) ?></td>
                         </tr>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">District</th>
-                            <td class="text-uppercase"><?= $district ?></td>
+                            <td class="text-uppercase"><?= e($district) ?></td>
                         </tr>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">Category</th>
-                            <td class="text-uppercase"><?= $category ?></td>
+                            <td class="text-uppercase"><?= e($category) ?></td>
                         </tr>
                         <?php if (!empty($head)): ?>
                             <tr>
@@ -104,30 +104,30 @@ if ($school) {
                         <?php if (!empty($telephone)): ?>
                             <tr>
                                 <th class="pr-5 align-top" scoper="row">Telephone</th>
-                                <td class="text-uppercase"><?= $telephone ?></td>
+                                <td class="text-uppercase"><?= e($telephone) ?></td>
                             </tr>
                         <?php endif ?>
                         <?php if (!empty($email)): ?>
                             <tr>
                                 <th class="pr-5 align-top" scoper="row">Email Address</th>
-                                <td class="text-lowercase"><?= $email ?></td>
+                                <td class="text-lowercase"><?= e($email) ?></td>
                             </tr>
                         <?php endif ?>
                         <?php if (!empty($website)): ?>
                             <tr>
                                 <th class="pr-5 align-top" scoper="row">Website</th>
-                                <td class="text-lowercase"><?= $website ?></td>
+                                <td class="text-lowercase"><?= e($website) ?></td>
                             </tr>
                         <?php endif ?>
                         <?php if (!empty($fbPage)): ?>
                             <tr>
                                 <th class="pr-5 align-top" scoper="row">Facebook Page</th>
-                                <td class="text-lowercase"><?= $fbPage ?></td>
+                                <td class="text-lowercase"><?= e($fbPage) ?></td>
                             </tr>
                         <?php endif ?>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">Personnel</th>
-                            <td class="text-lowercase"><?= $personnel ?></td>
+                            <td class="text-lowercase"><?= e($personnel) ?></td>
                         </tr>
                     </table>
                 </div>
@@ -180,7 +180,7 @@ if ($school) {
                                 <div class="image-container">
                                     <span
                                         class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                        <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
@@ -201,7 +201,7 @@ if ($school) {
                             </td>
                             <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
                             <?php if (!$isHrtdms): ?>
-                                <td class="align-middle text-lowercase"><?= $row['email_address'] ?></td>
+                                <td class="align-middle text-lowercase"><?= e($row['email_address']) ?></td>
                             <?php else: ?>
                                 <td class="align-middle text-lowercase">
                                     <?php
@@ -209,7 +209,7 @@ if ($school) {
                                     if ($count > 0) {
                                         echo $count;
                                     } else { ?>
-                                        <span class="text-danger font-weight-bold"><?= $count ?></span>
+                                        <span class="text-danger font-weight-bold"><?= e($count) ?></span>
                                     <?php } ?>
                                 </td>
                             <?php endif ?>
@@ -217,7 +217,7 @@ if ($school) {
                                 <td class="align-middle"><?php progressBar(pdsProgress($row['id'])) ?></td>
                             <?php } else { ?>
                                 <?php if (!$isHrtdms): ?>
-                                    <td class="align-middle"><?= $row['mobile'] ?></td>
+                                    <td class="align-middle"><?= e($row['mobile']) ?></td>
                                 <?php endif ?>
                             <?php } ?>
                             <td class="align-middle text-capitalize">
