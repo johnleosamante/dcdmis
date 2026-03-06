@@ -41,7 +41,7 @@ $btnText = $isEdit ? 'Update Publication' : 'Publish Vacancies';
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="<?= customUri('hrmpsb', 'Vacancies') ?>">Vacancies</a></li>
-            <li class="breadcrumb-item active"><?= $pageTitle ?></li>
+            <li class="breadcrumb-item active"><?= e($pageTitle) ?></li>
         </ol>
     </nav>
 </div>
@@ -53,6 +53,7 @@ $btnText = $isEdit ? 'Update Publication' : 'Publish Vacancies';
 
     <div class="card-body">
         <form method="POST">
+    <?= csrf_field(); ?>
             <?php if ($isEdit): ?>
                 <input type="hidden" name="verifier" value="<?= cipher($publication['id']) ?>">
             <?php endif; ?>
@@ -142,9 +143,9 @@ $btnText = $isEdit ? 'Update Publication' : 'Publish Vacancies';
                             <tr class="text-uppercase">
                                 <td class="align-middle">
                                     <input type="checkbox" class="vacancy-checkbox" name="vacancy_ids[]"
-                                        value="<?= $row['id'] ?>" <?= $isChecked ?>>
+                                        value="<?= e($row['id']) ?>" <?= e($isChecked) ?>>
                                 </td>
-                                <td class="align-middle font-weight-bold text-left"><?= $row['position'] ?></td>
+                                <td class="align-middle font-weight-bold text-left"><?= e($row['position']) ?></td>
                                 <td class="align-middle"><?= toHandleNull($row['item_number'], 'N/A') ?></td>
                                 <td class="align-middle">
                                     <?php if (empty($row['station_id'])) {
@@ -166,9 +167,9 @@ $btnText = $isEdit ? 'Update Publication' : 'Publish Vacancies';
                     <span class="text-muted small">
                         <span id="selected-count"><?= count($selectedVacancyIds) ?></span> item(s) selected
                     </span>
-                    <button class="btn btn-primary btn-lg" name="<?= $formAction ?>" type="submit">
-                        <i class="fas <?= $btnIcon ?> fa-fw mr-1"></i>
-                        <?= $btnText ?>
+                    <button class="btn btn-primary btn-lg" name="<?= e($formAction) ?>" type="submit">
+                        <i class="fas <?= e($btnIcon) ?> fa-fw mr-1"></i>
+                        <?= e($btnText) ?>
                     </button>
                 </div>
             <?php else: ?>
