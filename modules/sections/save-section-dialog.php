@@ -10,13 +10,12 @@ require_once(root() . '/includes/database/utility.php');
 require_once(root() . '/includes/layout/components.php');
 
 $sectionAlias = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$sections = section($sectionAlias);
-$section = $sectionName = $sectionHead = $sectionDivision = null;
+$section = section($sectionAlias);
+$sectionName = $sectionHead = $sectionDivision = null;
 $modalTitle = 'New Section';
 $notFound = true;
 
-if (numRows($sections) > 0) {
-    $section = fetchAssoc($sections);
+if ($section) {
     $sectionName = $section['name'];
     $sectionHead = $section['head'];
     $sectionDivision = $section['division'];
@@ -29,23 +28,26 @@ if (numRows($sections) > 0) {
         <?php modalHeader($modalTitle); ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="alias" class="mb-0">Alias <?php showAsterisk(); ?></label>
-                    <input type="text" id="alias" name="alias" class="form-control" minlength="3" maxlength="3" value="<?php echo $sectionAlias; ?>" required>
+                    <input type="text" id="alias" name="alias" class="form-control" minlength="3" maxlength="3"
+                        value="<?php echo $sectionAlias; ?>" required>
                 </div>
                 <div class="form-group">
                     <label for="section" class="mb-0">Name <?php showAsterisk(); ?></label>
-                    <input type="text" id="section" name="section" class="form-control" value="<?php echo $sectionName; ?>" required>
+                    <input type="text" id="section" name="section" class="form-control"
+                        value="<?php echo $sectionName; ?>" required>
                 </div>
                 <div class="form-group">
                     <label for="division" class="mb-0">Functional Division <?php showAsterisk(); ?></label>
                     <select id="division" name="division" class="form-control" required>
                         <option value="">Select functional division...</option>
                         <?php $divisions = functionalDivisions();
-                        while ($division = fetchAssoc($divisions)) : ?>
+                        foreach ($divisions as $division): ?>
                             <option value="<?php echo $division['id']; ?>" <?php echo setOptionSelected($division['id'], $sectionDivision); ?>><?php echo $division['name']; ?></option>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="form-group">
@@ -53,17 +55,18 @@ if (numRows($sections) > 0) {
                     <select id="head" name="head" class="form-control" required>
                         <option value="">Select section head...</option>
                         <?php $employees = activeEmployees(divisionId());
-                        while ($employee = fetchAssoc($employees)) : ?>
-                            <option value="<?php echo $employee['id']; ?>" title="<?php echo fetchAssoc(position($employee['id']))['position']; ?>" <?php echo setOptionSelected($employee['id'], $sectionHead); ?>>
-                                <?php echo userName($employee['id']); ?>
+                        foreach ($employees as $employee): ?>
+                            <option value="<?= $employee['id'] ?>" title="<?= position($employee['id'])['position'] ?>"
+                                <?= setOptionSelected($employee['id'], $sectionHead) ?>>
+                                <?= userName($employee['id']) ?>
                             </option>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <?php requiredLegend(0); ?>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null; ?>">
+                <input type="hidden" name="verifier" value="<?= $_GET['id'] ?? null ?>">
                 <button class="btn btn-primary" name="save-section" type="submit">Continue</button>
                 <?php cancelModalButton(); ?>
             </div>
