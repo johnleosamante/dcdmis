@@ -34,19 +34,20 @@ if ($employee) {
         <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasEmployee) { ?>
                     <div class="image-container">
                         <span
                             class="d-flex justify-content-center align-middle employee-photo photo-4x rounded-circle overflow-hidden">
-                            <img height="100%" src="<?= $picture ?>" alt="<?= $employeeName ?>">
+                            <img height="100%" src="<?= e($picture) ?>" alt="<?= e($employeeName) ?>">
                         </span>
                         <div class="sex-sign"><?php sex($sex) ?></div>
                     </div>
 
-                    <div class="text-center text-uppercase my-1 h4"><?= $employeeName ?></div>
-                    <div class="text-center text-uppercase my-1 h5"><?= $position ?></div>
-                    <div class="text-center text-uppercase my-1 h6"><?= $station ?></div>
+                    <div class="text-center text-uppercase my-1 h4"><?= e($employeeName) ?></div>
+                    <div class="text-center text-uppercase my-1 h5"><?= e($position) ?></div>
+                    <div class="text-center text-uppercase my-1 h6"><?= e($station) ?></div>
 
                     <hr>
 
@@ -58,12 +59,12 @@ if ($employee) {
                             <?php
                             $districts = districts();
                             foreach ($districts as $district): ?>
-                                <optgroup label="<?= $district['name'] ?>">
+                                <optgroup label="<?= e($district['name']) ?>">
                                     <?php
                                     $schools = schoolsByDistrict($district['id']);
                                     foreach ($schools as $school): ?>
-                                        <option value="<?= $school['id'] ?>" <?= setOptionSelected($school['id'], $stationId) ?>>
-                                            <?= $school['name'] ?>
+                                        <option value="<?= e($school['id']) ?>" <?= setOptionSelected($school['id'], $stationId) ?>>
+                                            <?= e($school['name']) ?>
                                         </option>
                                     <?php endforeach ?>
                                 </optgroup>
@@ -85,7 +86,7 @@ if ($employee) {
 
             <div class="modal-footer">
                 <?php if ($hasEmployee): ?>
-                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
+                    <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
                     <button class="btn btn-primary" name="reassign-employee" type="submit">Continue</button>
                 <?php endif;
                 cancelModalButton() ?>
