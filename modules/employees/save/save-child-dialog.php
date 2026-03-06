@@ -33,17 +33,18 @@ if (isset($childId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="clast" class="mb-0">Last Name <?php showAsterisk() ?></label>
                     <input id="clast" type="text" name="clast" class="form-control" placeholder="ex. DELA CRUZ"
-                        title="ex. DELA CRUZ" value="<?= $lname ?>" required>
+                        title="ex. DELA CRUZ" value="<?= e($lname) ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="cfirst" class="mb-0">First Name <?php showAsterisk() ?></label>
                     <input id="cfirst" type="text" name="cfirst" class="form-control" placeholder="ex. JUAN"
-                        title="ex. JUAN" value="<?= $fname ?>" required>
+                        title="ex. JUAN" value="<?= e($fname) ?>" required>
                 </div>
 
                 <div class="row">
@@ -52,7 +53,7 @@ if (isset($childId)) {
                             <label for="cmiddle" class="mb-0">Middle Name</label>
                             <input id="cmiddle" type="text" name="cmiddle" class="form-control"
                                 placeholder="ex. BAUTISTA" title=" ex. BAUTISTA, Leave blank if not applicable"
-                                value="<?= $mname ?>">
+                                value="<?= e($mname) ?>">
                         </div>
                     </div>
 
@@ -61,7 +62,7 @@ if (isset($childId)) {
                             <label for="cext" class="mb-0">Extension</label>
                             <input id="cext" type="text" name="cext" class="form-control"
                                 placeholder="ex. JR., SR., III"
-                                title=" ex. JR., SR., III, Leave blank if not applicable" value="<?= $ext ?>">
+                                title=" ex. JR., SR., III, Leave blank if not applicable" value="<?= e($ext) ?>">
                         </div>
                     </div>
                 </div>
@@ -81,7 +82,7 @@ if (isset($childId)) {
                 $verifier = isset($_GET['id']) ? $_GET['id'] : null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="data-verifier" value="<?= e($verifier) ?>">
                 <button type="submit" class="btn btn-primary" name="save-child">Continue</button>
                 <?php cancelModalButton() ?>
             </div>
