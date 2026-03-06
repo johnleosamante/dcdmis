@@ -10,13 +10,12 @@ require_once(root() . '/includes/database/utility.php');
 require_once(root() . '/includes/layout/components.php');
 
 $districtCode = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$districts = district($districtCode);
+$district = district($districtCode);
 $districtName = $districtHead = null;
 $modalTitle = 'Add District';
 $notFound = true;
 
-if (numRows($districts) > 0) {
-    $district = fetchAssoc($districts);
+if ($district) {
     $districtName = $district['name'];
     $districtHead = $district['psds'];
     $modalTitle = 'Edit District';
@@ -28,15 +27,19 @@ if (numRows($districts) > 0) {
         <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="code" class="mb-0">Alias <?php showAsterisk() ?></label>
-                    <input type="text" id="code" name="code" class="form-control" placeholder="Type alias..." title="Type district alias.." minlength="3" maxlength="5" value="<?= $districtCode ?>" required>
+                    <input type="text" id="code" name="code" class="form-control" placeholder="Type alias..."
+                        title="Type district alias.." minlength="3" maxlength="5" value="<?= e($districtCode) ?>"
+                        required>
                 </div>
 
                 <div class="form-group">
                     <label for="district" class="mb-0">Name <?php showAsterisk() ?></label>
-                    <input type="text" id="district" name="district" class="form-control" placeholder="Type name..." title="Type district name..." value="<?= $districtName ?>" required>
+                    <input type="text" id="district" name="district" class="form-control" placeholder="Type name..."
+                        title="Type district name..." value="<?= e($districtName) ?>" required>
                 </div>
 
                 <div class="form-group">
@@ -45,11 +48,13 @@ if (numRows($districts) > 0) {
                         <option value="">Select district supervisor...</option>
 
                         <?php $employees = districtSupervisors();
-                        while ($employee = fetchAssoc($employees)) : ?>
-                            <option value="<?= $employee['id'] ?>" title="<?= fetchAssoc(position($employee['id']))['position'] ?>" <?= setOptionSelected($employee['id'], $districtHead) ?>>
+                        foreach ($employees as $employee): ?>
+                            <option value="<?= e($employee['id']) ?>"
+                                title="<?= position($employee['id'])['official_title'] ?>"
+                                <?= setOptionSelected($employee['id'], $districtHead) ?>>
                                 <?= userName($employee['id']) ?>
                             </option>
-                        <?php endwhile ?>
+                        <?php endforeach ?>
                     </select>
                 </div>
 
@@ -57,7 +62,7 @@ if (numRows($districts) > 0) {
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
+                <input type="hidden" name="verifier" value="<?= $_GET['id'] ?? null ?>">
                 <button class="btn btn-primary" name="save-district" type="submit">Continue</button>
                 <?php cancelModalButton() ?>
             </div>
