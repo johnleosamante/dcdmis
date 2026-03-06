@@ -13,6 +13,7 @@ require_once(root() . '/includes/layout/components.php');
         <?php modalHeader('Add Employee') ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="lname" class="mb-0">Last Name <?php showAsterisk() ?></label>
@@ -86,10 +87,11 @@ require_once(root() . '/includes/layout/components.php');
                         <?php
                         $categories = positionCategories();
                         foreach ($categories as $category): ?>
-                            <optgroup label="<?= $category['category'] ?>">
+                            <optgroup label="<?= e($category['category']) ?>">
                                 <?php $jobPositions = positionsByCategory($category['category']);
                                 foreach ($jobPositions as $jobPosition): ?>
-                                    <option value="<?= $jobPosition['id'] ?>"><?= $jobPosition['official_title'] ?></option>
+                                    <option value="<?= e($jobPosition['id']) ?>"><?= e($jobPosition['official_title']) ?>
+                                    </option>
                                 <?php endforeach ?>
                             </optgroup>
                         <?php endforeach ?>
@@ -104,12 +106,12 @@ require_once(root() . '/includes/layout/components.php');
                         <?php
                         $districts = districts();
                         foreach ($districts as $district): ?>
-                            <optgroup label="<?= $district['name'] ?>">
+                            <optgroup label="<?= e($district['name']) ?>">
                                 <?php
                                 $currentStation = isset($_GET['s']) ? sanitize(decode($_GET['s'])) : '';
                                 $schools = schoolsByDistrict($district['id']);
                                 foreach ($schools as $school): ?>
-                                    <option value="<?= $school['id'] ?>" <?= setOptionSelected($school['id'], $currentStation) ?>><?= $school['name'] ?></option>
+                                    <option value="<?= e($school['id']) ?>" <?= setOptionSelected($school['id'], $currentStation) ?>><?= e($school['name']) ?></option>
                                 <?php endforeach ?>
                             </optgroup>
                         <?php endforeach ?>
