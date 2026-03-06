@@ -33,13 +33,13 @@
                     if ($voluntaryWork) {
                         foreach ($voluntaryWork as $voluntary): ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?= $voluntary['organization'] ?></td>
+                                <td class="align-middle"><?= e($voluntary['organization']) ?></td>
                                 <td class="align-middle"><?= toDate($voluntary['from_date']) ?></td>
                                 <td class="align-middle">
                                     <?= $voluntary['is_present'] ? 'PRESENT' : toDate($voluntary['to_date']) ?>
                                 </td>
                                 <td class="align-middle"><?= toHandleNull($voluntary['number_of_hours'], 'N/A') ?></td>
-                                <td class="align-middle"><?= $voluntary['position_nature_of_work'] ?></td>
+                                <td class="align-middle"><?= e($voluntary['position_nature_of_work']) ?></td>
                                 <?php if ($editMode): ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
