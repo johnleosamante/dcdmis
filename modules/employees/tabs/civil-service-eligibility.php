@@ -35,10 +35,10 @@
                     if ($eligibilities) {
                         foreach ($eligibilities as $eligibility): ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?= $eligibility['title'] ?></td>
+                                <td class="align-middle"><?= e($eligibility['title']) ?></td>
                                 <td class="align-middle"><?= toHandleNull($eligibility['rating'], 'N/A') ?></td>
                                 <td class="align-middle"><?= toDate($eligibility['examination_date']) ?></td>
-                                <td class="align-middle"><?= $eligibility['examination_venue'] ?></td>
+                                <td class="align-middle"><?= e($eligibility['examination_venue']) ?></td>
                                 <td class="align-middle"><?= toHandleNull($eligibility['license_number'], 'N/A') ?></td>
                                 <td class="align-middle">
                                     <?php
