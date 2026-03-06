@@ -29,7 +29,7 @@
                     if ($recognitions) {
                         foreach ($recognitions as $recognition): ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?= $recognition['title'] ?></td>
+                                <td class="align-middle"><?= e($recognition['title']) ?></td>
                                 <?php if ($editMode): ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
