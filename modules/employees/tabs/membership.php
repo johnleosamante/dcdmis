@@ -29,7 +29,7 @@
                     if ($memberships) {
                         foreach ($memberships as $membership): ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?= $membership['organization'] ?></td>
+                                <td class="align-middle"><?= e($membership['organization']) ?></td>
                                 <?php if ($editMode): ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
