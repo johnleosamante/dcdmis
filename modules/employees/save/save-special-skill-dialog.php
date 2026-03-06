@@ -28,11 +28,12 @@ if (isset($skillId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="">
+                    <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="skill" class="mb-0">Special Skill / Hobby: <?php showAsterisk() ?></label>
                     <input id="skill" type="text" name="skill" class="form-control" title="Required field"
-                        value="<?= $skill ?>" required>
+                        value="<?= e($skill) ?>" required>
                 </div>
 
                 <?php requiredLegend(0) ?>
@@ -44,7 +45,7 @@ if (isset($skillId)) {
                 $verifier = $_GET['id'] ?? null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="data-verifier" value="<?= e($verifier) ?>">
                 <button type="submit" class="btn btn-primary" name="save-special-skill">Continue</button>
                 <?php cancelModalButton() ?>
             </div>
