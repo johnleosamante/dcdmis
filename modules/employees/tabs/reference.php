@@ -31,7 +31,7 @@
                     if ($references) {
                         foreach ($references as $reference): ?>
                             <tr class="text-uppercase">
-                                <td class="align-middle"><?= $reference['name'] ?></td>
+                                <td class="align-middle"><?= e($reference['name']) ?></td>
                                 <td class="align-middle"><?= toHandleNull($reference['address'], 'N/A') ?></td>
                                 <td class="align-middle"><?= toHandleNull($reference['contact'], 'N/A') ?></td>
                                 <?php if ($editMode): ?>
