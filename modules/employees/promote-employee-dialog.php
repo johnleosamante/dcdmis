@@ -34,19 +34,20 @@ if ($employee) {
         <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasEmployee) { ?>
                     <div class="image-container">
                         <span
                             class="d-flex justify-content-center align-middle employee-photo photo-4x rounded-circle overflow-hidden">
-                            <img height="100%" src="<?= $picture ?>" alt="<?= $employeeName ?>">
+                            <img height="100%" src="<?= e($picture) ?>" alt="<?= e($employeeName) ?>">
                         </span>
                         <div class="sex-sign"><?php sex($sex) ?></div>
                     </div>
 
-                    <div class="text-center text-uppercase my-1 h4"><?= $employeeName ?></div>
-                    <div class="text-center text-uppercase my-1 h5"><?= $position ?></div>
-                    <div class="text-center text-uppercase my-1 h6"><?= $station ?></div>
+                    <div class="text-center text-uppercase my-1 h4"><?= e($employeeName) ?></div>
+                    <div class="text-center text-uppercase my-1 h5"><?= e($position) ?></div>
+                    <div class="text-center text-uppercase my-1 h6"><?= e($station) ?></div>
 
                     <hr>
 
@@ -58,10 +59,10 @@ if ($employee) {
                             <?php
                             $categories = positionCategories();
                             foreach ($categories as $category): ?>
-                                <optgroup label="<?= $category['category'] ?>">
+                                <optgroup label="<?= e($category['category']) ?>">
                                     <?php $jobPositions = positionsByCategory($category['category']);
                                     foreach ($jobPositions as $jobPosition): ?>
-                                        <option value="<?= $jobPosition['id'] ?>" <?= setOptionSelected($jobPosition['id'], $positionId) ?>><?= $jobPosition['official_title'] ?></option>
+                                        <option value="<?= e($jobPosition['id']) ?>" <?= setOptionSelected($jobPosition['id'], $positionId) ?>><?= e($jobPosition['official_title']) ?></option>
                                     <?php endforeach ?>
                                 </optgroup>
                             <?php endforeach ?>
@@ -82,7 +83,7 @@ if ($employee) {
 
             <div class="modal-footer">
                 <?php if ($hasEmployee): ?>
-                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
+                    <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
                     <button class="btn btn-primary" name="promote-employee" type="submit">Continue</button>
                 <?php endif;
                 cancelModalButton() ?>
