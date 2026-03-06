@@ -28,7 +28,7 @@ $personnel = count($query);
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Sections') ?>">Sections</a></li>
-            <li class="breadcrumb-item active"><?= $sectionName ?></li>
+            <li class="breadcrumb-item active"><?= e($sectionName) ?></li>
         </ol>
     </nav>
 </div>
@@ -47,7 +47,7 @@ $personnel = count($query);
             <table cellspacing="0">
                 <tr>
                     <th class="pr-5 align-top" scope="row">Section</th>
-                    <td class="text-uppercase"><?= $sectionName ?></td>
+                    <td class="text-uppercase"><?= e($sectionName) ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5 align-top" scope="row">Section Head</th>
@@ -64,7 +64,7 @@ $personnel = count($query);
                 </tr>
                 <tr>
                     <th class="pr-5 align-top" scoper="row">Personnel</th>
-                    <td class="text-lowercase"><?= $personnel ?></td>
+                    <td class="text-lowercase"><?= e($personnel) ?></td>
                 </tr>
             </table>
         </div>
@@ -106,7 +106,7 @@ $personnel = count($query);
                                 <div class="image-container">
                                     <span
                                         class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                        <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
@@ -129,7 +129,7 @@ $personnel = count($query);
                             </td>
                             <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
                             <?php if (!$isHrtdms): ?>
-                                <td class="align-middle text-lowercase"><?= $row['email_address'] ?></td>
+                                <td class="align-middle text-lowercase"><?= e($row['email_address']) ?></td>
                             <?php else: ?>
                                 <td class="align-middle text-lowercase">
                                     <?php
@@ -137,7 +137,7 @@ $personnel = count($query);
                                     if ($count > 0) {
                                         echo $count;
                                     } else { ?>
-                                        <span class="text-danger font-weight-bold"><?= $count ?></span>
+                                        <span class="text-danger font-weight-bold"><?= e($count) ?></span>
                                     <?php } ?>
                                 </td>
                             <?php endif ?>
@@ -145,7 +145,7 @@ $personnel = count($query);
                                 <td class="align-middle"><?php progressBar(pdsProgress($row['id'])) ?></td>
                             <?php } else { ?>
                                 <?php if (!$isHrtdms): ?>
-                                    <td class="align-middle"><?= $row['mobile'] ?></td>
+                                    <td class="align-middle"><?= e($row['mobile']) ?></td>
                                 <?php endif ?>
                             <?php } ?>
                             <td class="align-middle text-capitalize">
