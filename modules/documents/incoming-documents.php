@@ -50,12 +50,12 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
                             </td>
-                            <td class="text-left align-middle"><?= $row['description'] ?></td>
+                            <td class="text-left align-middle"><?= e($row['description']) ?></td>
                             <td class="align-middle text-uppercase">
                                 <?= stationName($row['received_from']) ?>
                             </td>
                             <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
-                            <td class="align-middle"><?= $row['status'] ?></td>
+                            <td class="align-middle"><?= e($row['status']) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
