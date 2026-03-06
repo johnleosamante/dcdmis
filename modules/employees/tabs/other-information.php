@@ -37,6 +37,7 @@ if ($information) {
     id="other-information">
     <?php if ($editMode): ?>
         <form action="" method="POST">
+            <?= csrf_field(); ?>
         <?php endif ?>
 
         <div class="mt-3">
@@ -76,7 +77,7 @@ if ($information) {
 
             <div class="form-group mb-0 pl-3">
                 <label for="related-details" class="m-0">If YES, give details:</label>
-                <input id="related-details" name="related-details" type="text" value="<?= $relatedDetails ?>"
+                <input id="related-details" name="related-details" type="text" value="<?= e($relatedDetails) ?>"
                     class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
             </div>
         </div>
@@ -97,7 +98,7 @@ if ($information) {
 
                         <div class="form-group">
                             <label for="guilty-details" class="m-0">If YES, give details:</label>
-                            <input id="guilty-details" name="guilty-details" type="text" value="<?= $guiltyDetails ?>"
+                            <input id="guilty-details" name="guilty-details" type="text" value="<?= e($guiltyDetails) ?>"
                                 class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
                         </div>
                     </div>
@@ -126,7 +127,7 @@ if ($information) {
 
                         <div class="form-group mb-0">
                             <label for="case-status" class="m-0">Status of Case/s:</label>
-                            <input id="case-status" name="case-status" type="text" value="<?= $caseStatus ?>"
+                            <input id="case-status" name="case-status" type="text" value="<?= e($caseStatus) ?>"
                                 class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
                         </div>
                     </div>
@@ -152,7 +153,7 @@ if ($information) {
 
                 <div class="form-group mb-0">
                     <label for="convicted-details" class="mb-0">If YES, give details:</label>
-                    <input id="convicted-details" name="convicted-details" type="text" value="<?= $convictedDetails ?>"
+                    <input id="convicted-details" name="convicted-details" type="text" value="<?= e($convictedDetails) ?>"
                         class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
                 </div>
             </div>
@@ -177,7 +178,7 @@ if ($information) {
 
                 <div class="form-group mb-0">
                     <label for="separated-details" class="mb-0">If YES, give details:</label>
-                    <input id="separated-details" name="separated-details" type="text" value="<?= $separatedDetails ?>"
+                    <input id="separated-details" name="separated-details" type="text" value="<?= e($separatedDetails) ?>"
                         class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
                 </div>
             </div>
@@ -202,7 +203,7 @@ if ($information) {
                         <div class="form-group">
                             <label for="candidate-details" class="m-0">If YES, give details:</label>
                             <input id="candidate-details" name="candidate-details" type="text"
-                                value="<?= $candidateDetails ?>" class="form-control" title="Leave blank if NO"
+                                value="<?= e($candidateDetails) ?>" class="form-control" title="Leave blank if NO"
                                 <?= !$editMode ? ' readonly' : '' ?>>
                         </div>
                     </div>
@@ -222,7 +223,7 @@ if ($information) {
                         <div class="form-group mb-0">
                             <label for="resigned-details" class="m-0">If YES, give details:</label>
                             <input id="resigned-details" name="resigned-details" type="text"
-                                value="<?= $resignedDetails ?>" class="form-control" title="Leave blank if NO"
+                                value="<?= e($resignedDetails) ?>" class="form-control" title="Leave blank if NO"
                                 <?= !$editMode ? ' readonly' : '' ?>>
                         </div>
                     </div>
@@ -255,14 +256,14 @@ if ($information) {
                         }
                         ?>
                         <input id="immigrant-country" name="immigrant-country" type="text"
-                            value="<?= $immigrantCountryName ?>" class="form-control" title="Leave N/A if NO" readonly>
+                            value="<?= e($immigrantCountryName) ?>" class="form-control" title="Leave N/A if NO" readonly>
                     <?php else: ?>
                         <select class="form-control" id="immigrant-country" name="immigrant-country"
                             title="Leave N/A if NO">
                             <option value="">N/A</option>
                             <?php $countries = countries();
                             foreach ($countries as $country): ?>
-                                <option value="<?= $country['id'] ?>" <?= setOptionSelected($country['id'], $immigrantCountry) ?>><?= $country['name'] ?></option>
+                                <option value="<?= e($country['id']) ?>" <?= setOptionSelected($country['id'], $immigrantCountry) ?>><?= e($country['name']) ?></option>
                             <?php endforeach ?>
                         </select>
                     <?php endif ?>
@@ -292,7 +293,7 @@ if ($information) {
                         <div class="form-group mb-0">
                             <label for="indigenous-specify" class="m-0">If YES, please specify:</label>
                             <input id="indigenous-specify" name="indigenous-specify" type="text"
-                                value="<?= $isIndigenousSpecify ?>" title="Leave blank if NO" class="form-control"
+                                value="<?= e($isIndigenousSpecify) ?>" title="Leave blank if NO" class="form-control"
                                 <?= !$editMode ? ' readonly' : '' ?>>
                         </div>
                     </div>
@@ -312,7 +313,7 @@ if ($information) {
                         <div class="form-group mb-0">
                             <label for="differently-abled-specify" class="m-0">If YES, please specify ID No:</label>
                             <input id="differently-abled-specify" name="differently-abled-specify" type="text"
-                                value="<?= $isDifferentlyAbledSpecify ?>" title="Leave blank if NO" class="form-control"
+                                value="<?= e($isDifferentlyAbledSpecify) ?>" title="Leave blank if NO" class="form-control"
                                 <?= !$editMode ? ' readonly' : '' ?>>
                         </div>
                     </div>
@@ -332,7 +333,7 @@ if ($information) {
                         <div class="form-group mb-0">
                             <label for="solo-parent-specify" class="m-0">If YES, please specify ID No:</label>
                             <input id="solo-parent-specify" name="solo-parent-specify" type="text"
-                                value="<?= $soloParentSpecify ?>" class="form-control" title="Leave blank if NO"
+                                value="<?= e($soloParentSpecify) ?>" class="form-control" title="Leave blank if NO"
                                 <?= !$editMode ? ' readonly' : '' ?>>
                         </div>
                     </div>
