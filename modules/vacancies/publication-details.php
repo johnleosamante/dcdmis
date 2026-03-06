@@ -28,7 +28,7 @@ messageAlert($showAlert, $message, $success);
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="<?= customUri('hrmpsb', 'Publications') ?>">Publications</a></li>
             <li class="breadcrumb-item active">
-                <?= $code ?>
+                <?= e($code) ?>
             </li>
         </ol>
     </nav>
@@ -125,13 +125,13 @@ messageAlert($showAlert, $message, $success);
                         ?>
                         <tr>
                             <td>
-                                <?= $item['position'] ?>
+                                <?= e($item['position']) ?>
                             </td>
                             <td>
-                                <?= $item['item_number'] ?>
+                                <?= e($item['item_number']) ?>
                             </td>
                             <td>
-                                <?= $item['salary_grade'] ?>
+                                <?= e($item['salary_grade']) ?>
                             </td>
                             <td>
                                 <?php
@@ -179,19 +179,19 @@ messageAlert($showAlert, $message, $success);
                                 <?= toLongDate($app['submitted_on']) ?>
                             </td>
                             <td class="font-weight-bold text-uppercase">
-                                <?= $app['applicant_name'] ?>
+                                <?= e($app['applicant_name']) ?>
                             </td>
                             <td>
-                                <?= $app['position'] ?><br><small>
-                                    <?= $app['item_number'] ?>
+                                <?= e($app['position']) ?><br><small>
+                                    <?= e($app['item_number']) ?>
                                 </small>
                             </td>
                             <td>
                                 <div><i class="fas fa-envelope mr-1 text-gray-400"></i>
-                                    <?= $app['email'] ?>
+                                    <?= e($app['email']) ?>
                                 </div>
                                 <div><i class="fas fa-phone mr-1 text-gray-400"></i>
-                                    <?= $app['mobile'] ?>
+                                    <?= e($app['mobile']) ?>
                                 </div>
                             </td>
                             <td>
