@@ -11,7 +11,7 @@ $participants = trainingParticipants($trainingId);
 $participantsCount = count($participants);
 
 if ($training) {
-    $trainingId = $training['no'];
+    $trainingId = $training['id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
@@ -25,26 +25,26 @@ messageAlert($showAlert, $message, $success);
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item">
-                <?php if (strtotime($training['from']) < strtotime(date('Y-m-d'))): ?>
+                <?php if (strtotime($training['start_date']) < strtotime(date('Y-m-d'))): ?>
                     <a href="<?= customUri('hrtdms', 'Conducted Trainings') ?>">Conducted Trainings</a>
                 <?php else: ?>
                     <a href="<?= customUri('hrtdms', 'Scheduled Trainings') ?>">Scheduled Trainings</a>
                 <?php endif ?>
             </li>
-            <li class="breadcrumb-item active">HRTD-24-0005</li>
+            <li class="breadcrumb-item active"><?= e($training['id']) ?></li>
         </ol>
     </nav>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithModal('Training Details', uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['no']), 'Edit', 'fa-edit') ?>
+        <?php contentTitleWithModal('Training Details', uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['id']), 'Edit', 'fa-edit') ?>
     </div>
 
     <div class="card-body">
         <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
             <div class="d-inline-block">
-                <?php linkButtonSplit(customUri('export', 'training-details', $training['no']), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+                <?php linkButtonSplit(customUri('export', 'training-details', $training['id']), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
             </div>
         </div>
 
@@ -52,7 +52,7 @@ messageAlert($showAlert, $message, $success);
             <table cellspacing="0">
                 <tr>
                     <th class="pr-5" scope="row">Code</th>
-                    <td class="text-uppercase"><?= e($training['no']) ?></td>
+                    <td class="text-uppercase"><?= e($training['id']) ?></td>
                 </tr>
                 <tr>
                     <th class="align-top pr-5" scope="row">Title</th>
@@ -61,7 +61,7 @@ messageAlert($showAlert, $message, $success);
                 <tr>
                     <th class="pr-5" scope="row">Date</th>
                     <td class="text-uppercase">
-                        <?= empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']) ?>
+                        <?= empty($training['unconsecutive_date']) ? toDateRange($training['start_date'], $training['end_date']) : toHandleEncoding($training['unconsecutive_date']) ?>
                     </td>
                 </tr>
                 <?php if (!empty($training['hours'])): ?>
@@ -72,12 +72,12 @@ messageAlert($showAlert, $message, $success);
                 <?php endif ?>
                 <tr>
                     <th class="pr-5" scope="row">Type</th>
-                    <td class="text-uppercase"><?= trainingType($training['type']) ?></td>
+                    <td class="text-uppercase"><?= trainingType($training['training_type_id']) ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5" scope="row">Level</th>
                     <?php
-                    $functional_division = $training['functional_division'];
+                    $functional_division = $training['functional_division_id'];
                     $functional_divisions = functionalDivision($functional_division);
                     $training_functional_division = '';
                     if (count($functional_divisions) > 0) {
@@ -85,7 +85,8 @@ messageAlert($showAlert, $message, $success);
                     }
                     $functional_division = (!empty($functional_division) && strtolower($functional_division) !== 'n/a') ? " ($training_functional_division)" : '';
                     ?>
-                    <td class="text-uppercase"><?= trainingSponsor($training['level']) . $functional_division ?></td>
+                    <td class="text-uppercase"><?= trainingSponsor($training['conducted_by']) . $functional_division ?>
+                    </td>
                 </tr>
                 <?php if (!empty($training['sponsor'])): ?>
                     <tr>
@@ -131,7 +132,7 @@ messageAlert($showAlert, $message, $success);
                     <?php
                     foreach ($participants as $row):
                         $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
-                        $photo = uri() . '/' . $row['picture'];
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? "{$baseUri}/" . $row['profile_picture'] : "{$baseUri}/assets/img/user.png";
                         ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
@@ -152,18 +153,18 @@ messageAlert($showAlert, $message, $success);
                                 roundPill($status);
                                 ?>
                             </td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
-                            <td class="align-middle"><?= fetchAssoc(schoolById($row['station']))['name'] ?></td>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
+                            <td class="align-middle"><?= schoolById($row['station_id'])['name'] ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php
                                         if ($training['has_certificate']):
-                                            linkDropdownItem(customUri('print', 'Certificate of Participation', $training['no']) . '&p=' . encode($row['id']), 'Certificate', 'fa-certificate', 'View Certificate of Participation', true) ?>
+                                            linkDropdownItem(customUri('print', 'Certificate of Participation', $training['id']) . '&p=' . encode($row['id']), 'Certificate', 'fa-certificate', 'View Certificate of Participation', true) ?>
                                         <?php endif;
-                                        linkDropdownItem(customUri('print', 'Certificate of Appearance', $training['no']) . '&p=' . encode($row['id']), 'Appearance', 'fa-stamp', 'View Certificate of Appearance', true);
-                                        modalDropDownItem(uri() . '/modules/trainings/email-training-participants-dialog.php?id=' . cipher($training['no']) . '&p=' . encode($row['id']), 'Email', 'fa-envelope', 'Send Email to Participant') ?>
+                                        linkDropdownItem(customUri('print', 'Certificate of Appearance', $training['id']) . '&p=' . encode($row['id']), 'Appearance', 'fa-stamp', 'View Certificate of Appearance', true);
+                                        modalDropDownItem(uri() . '/modules/trainings/email-training-participants-dialog.php?id=' . cipher($training['id']) . '&p=' . encode($row['id']), 'Email', 'fa-envelope', 'Send Email to Participant') ?>
                                         <div class="dropdown-divider"></div>
                                         <?php modalDropdownItem(uri() . '/modules/trainings/remove-participant-dialog.php?e=' . cipher($row['id']) . '&id=' . cipher($trainingId), 'Remove', 'fa-trash', 'Remove Participant') ?>
                                     </div>
