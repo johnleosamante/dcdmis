@@ -10,7 +10,7 @@ $training = training($trainingId);
 $employees = employees();
 
 if ($training) {
-    $trainingId = $training['no'];
+    $trainingId = $training['id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
@@ -29,7 +29,7 @@ messageAlert($showAlert, $message, $success);
             <table cellspacing="0">
                 <tr>
                     <th class="align-top pr-5" scope="row">Code</th>
-                    <td class="text-uppercase"><?= e($training['no']) ?></td>
+                    <td class="text-uppercase"><?= e($training['id']) ?></td>
                 </tr>
                 <tr>
                     <th class="align-top pr-5" scope="row">Title</th>
@@ -38,7 +38,7 @@ messageAlert($showAlert, $message, $success);
                 <tr>
                     <th class="pr-5" scope="row">Date</th>
                     <td class="text-uppercase">
-                        <?= empty($training['nonconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['nonconsecutive_date'] ?>
+                        <?= empty($training['unconsecutive_dates']) ? toLongDate($training['start_date']) . ' - ' . toLongDate($training['end_date']) : $training['unconsecutive_dates'] ?>
                     </td>
                 </tr>
                 <?php if (!empty($training['hours'])): ?>
@@ -49,12 +49,12 @@ messageAlert($showAlert, $message, $success);
                 <?php endif ?>
                 <tr>
                     <th class="pr-5" scope="row">Type</th>
-                    <td class="text-uppercase"><?= trainingType($training['type']) ?></td>
+                    <td class="text-uppercase"><?= trainingType($training['training_type_id']) ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5" scope="row">Level</th>
                     <?php
-                    $functional_division = $training['functional_division'];
+                    $functional_division = $training['functional_division_id'];
                     $functional_divisions = functionalDivision($functional_division);
                     $training_functional_division = '';
                     if ($functional_divisions) {
@@ -62,7 +62,8 @@ messageAlert($showAlert, $message, $success);
                     }
                     $functional_division = (!empty($functional_division) && strtolower($functional_division) !== 'n/a') ? " ($training_functional_division)" : '';
                     ?>
-                    <td class="text-uppercase"><?= trainingSponsor($training['level']) . $functional_division ?></td>
+                    <td class="text-uppercase"><?= trainingSponsor($training['conducted_by']) . $functional_division ?>
+                    </td>
                 </tr>
                 <?php if (!empty($training['sponsor'])): ?>
                     <tr>
@@ -78,7 +79,7 @@ messageAlert($showAlert, $message, $success);
                 <?php endif ?>
                 <tr>
                     <th class="align-top pr-5" scope="row">Participants</th>
-                    <td class="text-uppercase"><?= numRows(trainingParticipants($trainingId)) ?></td>
+                    <td class="text-uppercase"><?= count(trainingParticipants($trainingId)) ?></td>
                 </tr>
             </table>
         </div>
@@ -100,7 +101,7 @@ messageAlert($showAlert, $message, $success);
 
                     <tbody>
                         <?php
-                        while ($row = fetchArray($employees)) {
+                        foreach ($employees as $row) {
                             if (!isTrainingParticipant($trainingId, $row['id'])) {
                                 $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
                                 $photo = file_exists(root() . '/' . $row['profile_picture']) ? "$baseUri/" . $row['profile_picture'] : "$baseUri/assets/img/user.png";
@@ -128,8 +129,8 @@ messageAlert($showAlert, $message, $success);
                                         roundPill($status);
                                         ?>
                                     </td>
-                                    <td class="align-middle"><?= positions($row['position'])['position'] ?></td>
-                                    <td class="align-middle"><?= schoolById($row['station'])['name'] ?></td>
+                                    <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
+                                    <td class="align-middle"><?= schoolById($row['station_id'])['name'] ?></td>
                                 </tr>
                             <?php }
                         } ?>
