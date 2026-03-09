@@ -20,27 +20,27 @@ function countTrainings($year)
     return is_array($result) ? count($result) : 0;
 }
 
-function createTraining($training_id, $title, $start_date, $end_date, $number_of_hours, $training_type_id, $conducted_by, $sponsored_by, $venue, $unconsecutive_dates, $signatory_id, $has_certificate, $functional_division)
+function createTraining($training_id, $title, $start_date, $end_date, $number_of_hours, $training_type_id, $conducted_by, $sponsored_by, $venue, $unconsecutive_dates, $signatory_id, $has_certificate, $functional_division_id)
 {
     $data = [
         'id' => $training_id,
         'title' => $title,
         'start_date' => $start_date,
         'end_date' => $end_date,
-        'number_of_hours' => $number_of_hours,
-        'training_type_id' => $training_type_id,
         'conducted_by' => $conducted_by,
+        'functional_division_id' => $functional_division_id,
         'sponsored_by' => $sponsored_by,
         'venue' => $venue,
-        'signatory_id' => $signatory_id,
         'unconsecutive_dates' => $unconsecutive_dates,
+        'training_type_id' => $training_type_id,
+        'number_of_hours' => $number_of_hours,
+        'signatory_id' => $signatory_id,
         'has_certificate' => $has_certificate,
-        'functional_division' => $functional_division
     ];
     return insert('trainings', $data);
 }
 
-function updateTraining($training_id, $title, $start_date, $end_date, $number_of_hours, $training_type_id, $conducted_by, $sponsored_by, $venue, $unconsecutive_dates, $signatory_id, $has_certificate, $functional_division)
+function updateTraining($training_id, $title, $start_date, $end_date, $number_of_hours, $training_type_id, $conducted_by, $sponsored_by, $venue, $unconsecutive_dates, $signatory_id, $has_certificate, $functional_division_id)
 {
     $data = [
         'title' => $title,
@@ -54,7 +54,7 @@ function updateTraining($training_id, $title, $start_date, $end_date, $number_of
         'unconsecutive_dates' => $unconsecutive_dates,
         'signatory_id' => $signatory_id,
         'has_certificate' => $has_certificate,
-        'functional_division' => $functional_division
+        'functional_division_id' => $functional_division_id
     ];
     return update('trainings', $data, '`id` = ?', [$training_id]);
 }
@@ -133,7 +133,7 @@ function isTrainingParticipant($training_id, $person_id)
 // training_types
 function trainingTypes()
 {
-    $results = query("SELECT `id`, `name` FROM `training_types` ORDER BY `name` ASC");
+    $results = query("SELECT `id`, `name` FROM `training_types`");
     return is_array($results) ? $results : [];
 }
 
@@ -146,7 +146,7 @@ function trainingType($training_type_id)
 // training_sponsors
 function trainingSponsors()
 {
-    return query("SELECT `id`, `name` FROM `training_sponsors` ORDER BY `sponsor` ASC");
+    return query("SELECT `id`, `name` FROM `training_sponsors`");
 }
 
 function trainingSponsor($training_sponsor_id)
