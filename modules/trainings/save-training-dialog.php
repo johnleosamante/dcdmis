@@ -16,18 +16,18 @@ $modalTitle = 'Add Training';
 $notFound = true;
 
 if ($training) {
-    $trainingId = $training['no'];
+    $trainingId = $training['id'];
     $title = $training['title'];
-    $dateFrom = $training['from'];
-    $dateTo = $training['to'];
-    $hours = $training['hours'];
-    $trainingType = $training['type'];
-    $trainingLevel = $training['level'];
-    $sponsorName = $training['sponsor'];
-    $functionalDivisionId = empty($training['functional_division']) ? null : $training['functional_division'];
+    $dateFrom = $training['start_date'];
+    $dateTo = $training['end_date'];
+    $hours = $training['number_of_hours'];
+    $trainingType = $training['training_type_id'];
+    $trainingLevel = $training['conducted_by'];
+    $sponsorName = $training['sponsored_by'];
+    $functionalDivisionId = empty($training['functional_division_id']) ? null : $training['functional_division_id'];
     $venue = $training['venue'];
-    $unconsecutiveDates = $training['unconsecutive_date'];
-    $generateCertificate = $training['generate_certificate'] === '1';
+    $unconsecutiveDates = $training['unconsecutive_dates'];
+    $generateCertificate = $training['has_certificate'] === 1;
     $modalTitle = 'Edit Training';
     $notFound = false;
 }
@@ -96,7 +96,7 @@ if ($training) {
                                 <?php
                                 $types = trainingTypes();
                                 foreach ($types as $type): ?>
-                                    <option value="<?= e($type['id']) ?>" <?= setOptionSelected($type['id'], $trainingType) ?>><?= e($type['type']) ?></option>
+                                    <option value="<?= e($type['id']) ?>" <?= setOptionSelected($type['id'], $trainingType) ?>><?= e($type['name']) ?></option>
                                 <?php endforeach ?>
                             </select>
                         </div>
@@ -113,7 +113,7 @@ if ($training) {
                                 <?php
                                 $sponsors = trainingSponsors();
                                 foreach ($sponsors as $sponsor): ?>
-                                    <option value="<?= e($sponsor['id']) ?>" <?= setOptionSelected($sponsor['id'], $trainingLevel) ?>><?= e($sponsor['sponsor']) ?></option>
+                                    <option value="<?= e($sponsor['id']) ?>" <?= setOptionSelected($sponsor['id'], $trainingLevel) ?>><?= e($sponsor['name']) ?></option>
                                 <?php endforeach ?>
                             </select>
                         </div>
@@ -154,7 +154,7 @@ if ($training) {
 
                 <div class="form-check mb-3">
                     <input class="form-check-input" id="has-certificate" type="checkbox" name="has-certificate"
-                        value="1" <?= setItemChecked($generateCertificate) ?>>
+                        <?= setItemChecked($generateCertificate) ?>>
                     <label class="form-check-label" for="has-certificate">Generate certificate</label>
                 </div>
 
