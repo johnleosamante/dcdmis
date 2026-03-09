@@ -17,7 +17,7 @@ $trainingParticipants = null;
 
 if ($training) {
     $modalTitle = isset($employeeId) ? 'Email Participant' : 'Email All Participants';
-    $trainingId = $training['no'];
+    $trainingId = $training['id'];
     $notFound = false;
 }
 ?>
