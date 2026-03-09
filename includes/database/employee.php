@@ -18,7 +18,7 @@ function findEmployeeByEmail($email)
 function employees()
 {
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
-                p.`sex`, p.`position_id`, p.`station_id`, p.`profile_picture`, p.`status`
+                p.`sex`, s.`position_id`, s.`station_id`, p.`profile_picture`, p.`status`
             FROM `persons` AS p
             INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
             WHERE p.`status` <> 'Duplicate' ORDER BY p.`last_name` ASC";
