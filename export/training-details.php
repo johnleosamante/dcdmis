@@ -16,7 +16,7 @@ $training = training($trainingId);
 $participants = trainingParticipants($trainingId);
 
 if ($training) {
-    $trainingId = $training['no'];
+    $trainingId = $training['id'];
 } else {
     return;
 }
