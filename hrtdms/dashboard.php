@@ -30,7 +30,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 					<canvas id="conducted-trainings-bar-chart"></canvas>
 					<script>
 						<?php $conductedTrainingByYear = conductedTrainingsByYear() ?>
-						generateBarChart(<?= json_encode(fetchAllAssoc($conductedTrainingByYear)) ?>, generateColorPallete(<?= numRows($conductedTrainingByYear) ?>), 'conducted-trainings-bar-chart');
+						generateBarChart(<?= json_encode($conductedTrainingByYear) ?>, generateColorPallete(<?= count($conductedTrainingByYear) ?>), 'conducted-trainings-bar-chart');
 					</script>
 				</div>
 			</div>
@@ -47,7 +47,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 					<canvas id="trained-employees-bar-chart"></canvas>
 					<script>
 						<?php $trainedEmployeesByYear = trainedEmployeesByYear() ?>
-						generateBarChart(<?= json_encode(fetchAllAssoc($trainedEmployeesByYear)) ?>, generateColorPallete(<?= numRows($trainedEmployeesByYear) ?>), 'trained-employees-bar-chart');
+						generateBarChart(<?= json_encode($trainedEmployeesByYear) ?>, generateColorPallete(<?= count($trainedEmployeesByYear) ?>), 'trained-employees-bar-chart');
 					</script>
 				</div>
 			</div>
