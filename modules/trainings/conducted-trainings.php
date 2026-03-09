@@ -84,28 +84,28 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $trainings = conductedTrainings($fromDate, $toDate);
-                    while ($training = fetchAssoc($trainings)): ?>
+                    foreach ($trainings as $training): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
-                                <?php linkItem(customUri('hrtdms', 'Training Details', $training['no']), $training['no']) ?>
+                                <?php linkItem(customUri('hrtdms', 'Training Details', $training['id']), $training['id']) ?>
                             </td>
                             <td class="align-middle text-left"><?= e($training['title']) ?></td>
-                            <td class="align-middle"><?= toDate($training['from']) ?></td>
-                            <td class="align-middle"><?= toDate($training['to']) ?></td>
-                            <td class="align-middle"><?= trainingType($training['type']) ?></td>
-                            <td class="align-middle"><?= e($training['sponsor']) ?></td>
+                            <td class="align-middle"><?= toDate($training['start_date']) ?></td>
+                            <td class="align-middle"><?= toDate($training['end_date']) ?></td>
+                            <td class="align-middle"><?= trainingType($training['training_type_id']) ?></td>
+                            <td class="align-middle"><?= e($training['sponsored_by']) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                                        <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['no']), 'View', 'fa-eye', 'View Training');
-                                        linkDropdownItem(customUri('hrtdms', 'Add Training Participants', $training['no']), 'Add', 'fa-user-plus', 'Add Participants');
-                                        modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['no']), 'Edit', 'fa-edit', 'Edit Training') ?>
+                                        <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['id']), 'View', 'fa-eye', 'View Training');
+                                        linkDropdownItem(customUri('hrtdms', 'Add Training Participants', $training['id']), 'Add', 'fa-user-plus', 'Add Participants');
+                                        modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['id']), 'Edit', 'fa-edit', 'Edit Training') ?>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
