@@ -9,24 +9,23 @@ require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$employees = employee($employeeId);
+$employee = employee($employeeId);
 $modalTitle = 'Employee not found';
 $hasEmployee = false;
 $depedEmail = $temporaryPassword = '';
 
-if (numRows($employees) > 0) {
-    $employee = fetchAssoc($employees);
+if ($employee) {
     $employeeId = $employee['id'];
-    $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
+    $employeeName = toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true);
     $sex = $employee['sex'];
     $status = $employee['status'];
-    $positions = fetchAssoc(position($employeeId));
+    $positions = position($employeeId);
     $stationId = $positions['station_id'];
     $station = $positions['station'];
     $positionId = $positions['position_id'];
-    $position = $positions['position'];
-    $depedEmail = $employee['email'];
-    $picture = file_exists(root() . '/' . $employee['picture']) ? uri() . '/' . $employee['picture'] : uri() . '/assets/img/user.png';
+    $position = $positions['official_title'];
+    $depedEmail = $employee['email_address'];
+    $picture = file_exists(root() . '/' . $employee['profile_picture']) ? "$baseUri/" . $employee['profile_picture'] : "$baseUri/assets/img/user.png";
     $modalTitle = 'Reset User Password';
     $hasEmployee = true;
     $randomPassword = generateStrongRandomPassword();
