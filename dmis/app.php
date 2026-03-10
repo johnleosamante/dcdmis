@@ -4,11 +4,11 @@ $activeApp = $_SESSION["{$prefix}activeApp"] = 'dmis';
 $page = $appTitle = 'Division Management Information System';
 
 if (!isset($userId)) {
-	redirect("{$baseUri}/login");
+	redirect("$baseUri/login");
 }
 
-if (userRole($userId, 'dmis')) {
-	redirect("{$baseUri}/pis");
+if (!userRole($userId, 'dmis')) {
+	redirect("$baseUri/pis");
 }
 
 if (isset($_POST['primary-search-button'])) {
@@ -404,7 +404,7 @@ if (isset($_POST['edit-user'])) {
 
 	$employeeLink = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . "{$baseUri}/modules/users/user-info-dialog.php?id=" . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 	$message = "Employee [{$employeeLink}] user assignment has been set successfully.";
-	$successs = true;
+	$success = true;
 
 	createSystemLog($stationId, $userId, 'Assigned user privileges', $employeeId, clientIp());
 }
@@ -413,7 +413,7 @@ if (isset($_POST['reset-user'])) {
 	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$temporaryPassword = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
 	$emails = employee($employeeId);
-	$userEmail = $emails ? $emails['email'] : '';
+	$userEmail = $emails ? $emails['email_address'] : '';
 	$showAlert = true;
 	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . "{$baseUri}/modules/users/user-info-dialog.php?id=" . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 
@@ -424,7 +424,7 @@ if (isset($_POST['reset-user'])) {
 		return;
 	}
 
-	$message = "Employee [{$employee}] password has been reset successfully. An email has been sent to [{$userEmail}].";
+	$message = "Employee [{$employee}] password has been reset successfully.";
 
 	createSystemLog($stationId, $userId, 'Reset user password', $employeeId, clientIp());
 
@@ -437,12 +437,13 @@ if (isset($_POST['reset-user'])) {
                 Please login to: {$loginUrl} to confirm.\n\n
                 If you did not request this change please contact us for assistance. Thank you.";
 
-	if (!sendMail($userEmail, 'Employee Password Reset', $emailMessage)) {
-		$message = "We encountered an error sending the email. Please try again later.";
+	if (!sendMail($userEmail, 'Employee Password Reset', $emailBody)) {
+		$message .= " Unfortunately, we encountered an error sending the email. Please try again later.";
 		error_log("Failed to send reset email to: {$userEmail}");
 		return;
 	}
 
+	$message .= " An email has been sent to [{$userEmail}].";
 	$success = true;
 
 	createSystemLog($stationId, $userId, 'Password reset code sent', $employeeId, clientIp());
