@@ -43,7 +43,8 @@ function updateEmployeeContactDetails($alternate_mobile_number, $alternate_email
 {
     $data = [
         'alternate_mobile_number' => $alternate_mobile_number,
-        'alternate_email_address' => $alternate_email_address
+        'alternate_email_address' => $alternate_email_address,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('persons', $data, '`id` = ?', [$person_id]);
 }
@@ -252,7 +253,9 @@ function createEmployee($person_id, $last_name, $first_name, $middle_name, $name
         'pagibig' => $pagibig,
         'philhealth' => $philhealth,
         'tin' => $tin,
-        'agency_id' => $agency_id
+        'agency_id' => $agency_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('persons', $data);
 }
@@ -305,7 +308,8 @@ function updateEmployee($last_name, $first_name, $middle_name, $ext, $bmonth, $b
         'tin' => $tin,
         'agency_id' => $agency_id,
         'prc' => $prc,
-        'profile_picture' => $photo
+        'profile_picture' => $photo,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('persons', $data, '`id` = ?', [$id]);
 }
@@ -323,7 +327,11 @@ function deleteEmployee($id)
 
 function updateEmployeeStatus($status, $id)
 {
-    return update('persons', ['status' => $status], '`id` = ?', [$id]);
+    $data = [
+        'status' => $status,
+        'updated_at' => date('Y-m-d H:i:s'),
+    ];
+    return update('persons', $data, '`id` = ?', [$id]);
 }
 
 function updateProfessionalTitles($name_prefix, $name_suffix, $id)
@@ -331,13 +339,18 @@ function updateProfessionalTitles($name_prefix, $name_suffix, $id)
     $data = [
         'name_prefix' => $name_prefix,
         'name_suffix' => $name_suffix,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('persons', $data, '`id` = ?', [$id]);
 }
 
 function updateProfilePhoto($photo, $id)
 {
-    return update('persons', ['profile_picture' => $photo], '`id` = ?', [$id]);
+    $data = [
+        'profile_picture' => $photo,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+    return update('persons', $data, '`id` = ?', [$id]);
 }
 
 function employeePositions()

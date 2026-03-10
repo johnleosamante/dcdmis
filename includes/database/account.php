@@ -24,7 +24,9 @@ function createAccount($person_id, $password)
     $data = [
         'person_id' => $person_id,
         'password' => $password,
-        'status' => 'Default'
+        'status' => 'Default',
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('credentials', $data);
 }
@@ -36,7 +38,10 @@ function deleteAccount($person_id)
 
 function updateAccountPassword($person_id, $password, $status = null)
 {
-    $data = ['password' => $password];
+    $data = [
+        'password' => $password,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
 
     if (!empty($status)) {
         $data['status'] = $status;
@@ -78,14 +83,19 @@ function createUserRole($person_id, $access, $link = null)
     $data = [
         'person_id' => $person_id,
         'access' => $access,
-        'link' => $link
+        'link' => $link,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('user_permissions', $data);
 }
 
 function updateUserRole($person_id, $access, $link = null)
 {
-    $data = ['access' => $access];
+    $data = [
+        'access' => $access,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
     if (!empty($link)) {
         $data['link'] = $link;
     }
@@ -104,7 +114,10 @@ function deleteUserRoles($person_id)
 
 function updateUsersStation($new_access, $old_access, $link = null)
 {
-    $data = ['access' => $new_access];
+    $data = [
+        'access' => $new_access,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
     if (!empty($link)) {
         $data['link'] = $link;
     }

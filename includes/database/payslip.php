@@ -17,7 +17,9 @@ function createPayslip($description, $file_name, $file_extension, $person_id)
         'person_id' => $person_id,
         'description' => $description,
         'file_name' => $file_name,
-        'file_extension' => $file_extension
+        'file_extension' => $file_extension,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('payslips', $data);
 }
@@ -27,7 +29,8 @@ function updatePayslip($description, $file_name, $file_extension, $person_id, $p
     $data = [
         'description' => $description,
         'file_name' => $file_name,
-        'file_extension' => $file_extension
+        'file_extension' => $file_extension,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('payslips', $data, '`person_id` = ? AND `id` = ?', [$person_id, $payslip_id]);
 }

@@ -20,7 +20,9 @@ function createVacancy($status, $position_id, $station_id, $item_number, $vacate
         'item_number' => $item_number,
         'vacated_by' => $vacated_by,
         'date_vacated' => $date_vacated,
-        'reason' => $reason
+        'reason' => $reason,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('vacancies', $data);
 }
@@ -33,14 +35,19 @@ function updateVacancy($vacancy_id, $status, $position_id, $station_id, $item_nu
         'station_id' => $station_id,
         'item_number' => $item_number,
         'date_vacated' => $date_vacated,
-        'reason' => $reason
+        'reason' => $reason,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('vacancies', $data, '`id` = ?', [$vacancy_id]);
 }
 
 function updateFilledVacancy($vacancy_id)
 {
-    return update('vacancies', ['status' => 'filled'], '`id` = ?', [$vacancy_id]);
+    $data = [
+        'status' => 'filled',
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+    return update('vacancies', $data, '`id` = ?', [$vacancy_id]);
 }
 
 // vacancies, positions
@@ -69,7 +76,11 @@ function deleteVacancy($vacancy_id)
 
 function fillVacancy($vacancy_id)
 {
-    return update('vacancies', ['status' => 'filled'], '`id` = ?', [$vacancy_id]);
+    $data = [
+        'status' => 'filled',
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+    return update('vacancies', $data, '`id` = ?', [$vacancy_id]);
 }
 
 // vacancies, positions
@@ -181,7 +192,9 @@ function createPublication($code, $title, $description, $open_date, $close_date,
         'description' => $description,
         'open_date' => $open_date,
         'close_date' => $close_date,
-        'status' => $status
+        'status' => $status,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('vacancy_publications', $data);
 }
@@ -193,7 +206,8 @@ function updatePublication($vacancy_publication_id, $title, $description, $open_
         'description' => $description,
         'open_date' => $open_date,
         'close_date' => $close_date,
-        'status' => $status
+        'status' => $status,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('vacancy_publications', $data, '`id` = ?', [$vacancy_publication_id]);
 }
@@ -229,7 +243,9 @@ function addPublicationItem($publication_id, $vacancy_id, $position_id, $plantil
         'publication_id' => $publication_id,
         'vacancy_id' => $vacancy_id,
         'position_id' => $position_id,
-        'plantilla_item_id' => $plantilla_item_id
+        'plantilla_item_id' => $plantilla_item_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return insert('vacancy_publication_items', $data);
@@ -348,7 +364,9 @@ function createApplicant($code, $fname, $mname, $lname, $ext, $email, $mobile, $
         'is_pwd' => $pwd ? 1 : 0,
         'ethnic_group' => $ethnic,
         'education' => $education,
-        'eligibility' => $eligibility
+        'eligibility' => $eligibility,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('applicants', $data);
 }
@@ -370,7 +388,8 @@ function updateApplicant($id, $fname, $mname, $lname, $ext, $mobile, $resumePath
         'is_pwd' => $pwd ? 1 : 0,
         'ethnic_group' => $ethnic,
         'education' => $education,
-        'eligibility' => $eligibility
+        'eligibility' => $eligibility,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('applicants', $data, '`id` = ?', [$id]);
 }
@@ -396,7 +415,9 @@ function createApplicationEntry($publicationId, $vacancyId, $applicantId)
         'mobile' => $app['mobile'],
         'resume_path' => $app['resume_path'],
         'status' => 'pending',
-        'submitted_on' => date('Y-m-d H:i:s')
+        'submitted_on' => date('Y-m-d H:i:s'),
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('vacancy_applications', $data);
 }
@@ -412,14 +433,20 @@ function createApplication($publicationId, $vacancyId, $applicantName, $email, $
         'mobile' => $mobile,
         'resume_path' => $resumePath,
         'status' => 'pending',
-        'submitted_on' => date('Y-m-d H:i:s')
+        'submitted_on' => date('Y-m-d H:i:s'),
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('vacancy_applications', $data);
 }
 
 function updateApplicationStatus($id, $status)
 {
-    return update('vacancy_applications', ['status' => $status], '`id` = ?', [$id]);
+    $data = [
+        'status' => $status,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+    return update('vacancy_applications', $data, '`id` = ?', [$id]);
 }
 
 function countApplicationsByPublication($publicationId)

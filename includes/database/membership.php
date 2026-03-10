@@ -15,7 +15,9 @@ function createMembership($organization, $person_id)
 {
     $data = [
         'organization' => $organization,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return insert('memberships', $data);
@@ -24,7 +26,8 @@ function createMembership($organization, $person_id)
 function updateMembership($organization, $person_id, $membership_id)
 {
     $data = [
-        'organization' => $organization
+        'organization' => $organization,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return update('memberships', $data, '`person_id` = ? AND `id` = ?', [$person_id, $membership_id]);

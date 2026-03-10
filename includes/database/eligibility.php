@@ -23,7 +23,9 @@ function createEligibility($title, $rating, $examination_date, $examination_venu
         'license_number' => $license_number,
         'has_expiration' => $has_expiration,
         'expiration_date' => $expiration_date,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('eligibilities', $data);
 }
@@ -37,7 +39,8 @@ function updateEligibility($title, $rating, $examination_date, $examination_venu
         'examination_venue' => $examination_venue,
         'license_number' => $license_number,
         'has_expiration' => $has_expiration,
-        'expiration_date' => $expiration_date
+        'expiration_date' => $expiration_date,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('eligibilities', $data, "`person_id` = ? AND `id` = ?", [$person_id, $eligibility_id]);
 }

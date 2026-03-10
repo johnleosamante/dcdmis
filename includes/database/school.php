@@ -33,7 +33,11 @@ function schoolsByDistrict($districtId)
 
 function updateSchoolHead($schoolId, $headId)
 {
-    return update('schools', ['head_id' => $headId], 'id = ?', [$schoolId]);
+    $data = [
+        'head_id' => $headId,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+    return update('schools', $data, 'id = ?', [$schoolId]);
 }
 
 // persons, station_assignments, schools, districts, positions
@@ -80,7 +84,9 @@ function createSchool($school_id, $name, $alias, $address, $district_id, $catego
         'email' => $email,
         'website' => $website,
         'fb_page' => $fb_page,
-        'logo' => $logo
+        'logo' => $logo,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('schools', $data);
 }
@@ -98,7 +104,8 @@ function updateSchool($id, $name, $alias, $address, $district, $category, $telep
         'email' => $email,
         'website' => $website,
         'fb_page' => $facebook,
-        'logo' => $logo
+        'logo' => $logo,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('schools', $data, '`id` = ?', [$referenceId]);
 }
@@ -119,7 +126,9 @@ function createStation($assignment_date, $station_id, $position_id, $person_id)
         'assignment_date' => $assignment_date,
         'station_id' => $station_id,
         'position_id' => $position_id,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('station_assignments', $data);
 }
@@ -129,7 +138,8 @@ function updateStation($assignment_date, $station_id, $position_id, $person_id)
     $data = [
         'position_id' => $position_id,
         'station_id' => $station_id,
-        'assignment_date' => $assignment_date
+        'assignment_date' => $assignment_date,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('station_assignments', $data, '`person_id` = ?', [$person_id]);
 }
@@ -141,7 +151,11 @@ function deleteStation($id)
 
 function updateStationID($new_station_id, $old_station_id)
 {
-    return update('station_assignments', ['station_id' => $new_station_id], '`station_id` = ?', [$old_station_id]);
+    $data = [
+        'station_id' => $new_station_id,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+    return update('station_assignments', $data, '`station_id` = ?', [$old_station_id]);
 }
 
 function district($district_id)
@@ -170,7 +184,9 @@ function createDistrict($district_id, $name, $supervisor_id)
     $data = [
         'id' => $district_id,
         'name' => $name,
-        'supervisor_id' => $supervisor_id
+        'supervisor_id' => $supervisor_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return insert('districts', $data);
@@ -181,7 +197,8 @@ function updateDistrict($new_district_id, $name, $supervisor_id, $old_district_i
     $data = [
         'id' => $new_district_id,
         'name' => $name,
-        'supervisor_id' => $supervisor_id
+        'supervisor_id' => $supervisor_id,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('districts', $data, '`id` = ?', [$old_district_id]);
 }

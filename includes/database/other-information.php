@@ -32,7 +32,9 @@ function createOtherInformation($has_third_degree, $has_fourth_degree, $relation
         'disability' => $disability,
         'is_solo_parent' => $is_solo_parent,
         'solo_parent_id' => $solo_parent_id,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('other_informations', $data);
 }
@@ -64,6 +66,7 @@ function updateOtherInformation($has_third_degree, $has_fourth_degree, $relation
         'disability' => $disability,
         'is_solo_parent' => $is_solo_parent,
         'solo_parent_id' => $solo_parent_id,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('other_informations', $data, '`person_id` = ?', [$person_id]);
 }

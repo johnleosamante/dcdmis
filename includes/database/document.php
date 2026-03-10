@@ -92,7 +92,9 @@ function createDocument($document_transaction_id, $description, $document_type_i
         'status' => $status,
         'is_unread' => '1',
         'head_id' => $head_id,
-        'details' => $details
+        'details' => $details,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('document_transactions', $data);
 }
@@ -101,7 +103,8 @@ function updateDocument($document_transaction_id, $description, $document_type_i
 {
     $data = [
         'status' => $status,
-        'details' => $details
+        'details' => $details,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     if ($update_description) {
         $data['description'] = $description;
@@ -308,7 +311,9 @@ function createDocumentLog($document_transaction_id, $processed_by, $received_fr
         'status' => $purpose,
         'document_transaction_id' => $document_transaction_id,
         'is_new' => $is_new,
-        'details' => $details
+        'details' => $details,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('document_transaction_logs', $data);
 }
@@ -331,18 +336,18 @@ function updateDocumentLog($document_transaction_id, $processed_by, $received_fr
         'status' => $purpose,
         'is_new' => $is_new,
         'details' => $details,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('document_transaction_logs', $data, '`id` = ?', [$log_id]);
 }
 
 function updateDocumentLogsDone($document_transaction_id)
 {
-    return update(
-        'document_transaction_logs',
-        ['is_new' => false],
-        "`document_transaction_id` = ? AND `is_new` = 1",
-        [$document_transaction_id,]
-    );
+    $data = [
+        'is_new' => false,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+    return update('document_transaction_logs', $data, "`document_transaction_id` = ? AND `is_new` = 1", [$document_transaction_id]);
 }
 
 // document_transactions
@@ -351,7 +356,8 @@ function updateDocumentStatus($document_transaction_id, $status, $is_unread = tr
     $data = [
         'status' => $status,
         'is_unread' => $is_unread,
-        'details' => $details
+        'details' => $details,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('document_transactions', $data, '`id` = ?', [$document_transaction_id]);
 }
@@ -370,7 +376,9 @@ function createDocumentLogAttachment($document_transaction_id, $document_transac
         'document_transaction_id' => $document_transaction_id,
         'document_transaction_log_id' => $document_transaction_log_id,
         'file_name' => $file_name,
-        'file_extension' => $file_extension
+        'file_extension' => $file_extension,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('document_transaction_log_attachments', $data);
 }
@@ -378,12 +386,16 @@ function createDocumentLogAttachment($document_transaction_id, $document_transac
 // document_transaction_logs
 function updateTransactionLogFrom($new_alias, $old_alias)
 {
+    $data = [
+        'received_from' => $new_alias,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
     if ($new_alias === $old_alias) {
         return 0;
     }
     return update(
         'document_transaction_logs',
-        ['received_from' => $new_alias],
+        $data,
         '`received_from` = ?',
         [$old_alias]
     );
@@ -391,12 +403,16 @@ function updateTransactionLogFrom($new_alias, $old_alias)
 
 function updateTransactionLogTo($new_alias, $old_alias)
 {
+    $data = [
+        'forwarded_to' => $new_alias,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
     if ($new_alias === $old_alias) {
         return 0;
     }
     return update(
         'document_transaction_logs',
-        ['forwarded_to' => $new_alias],
+        $data,
         '`forwarded_to` = ?',
         [$old_alias]
     );
@@ -405,12 +421,16 @@ function updateTransactionLogTo($new_alias, $old_alias)
 // document_transactions
 function updateTransactionFrom($new_alias, $old_alias)
 {
+    $data = [
+        'created_from' => $new_alias,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
     if ($new_alias === $old_alias) {
         return 0;
     }
     return update(
         'document_transactions',
-        ['created_from' => $new_alias],
+        $data,
         '`created_from` = ?',
         [$old_alias]
     );

@@ -15,14 +15,20 @@ function createSpecialSkill($name, $person_id)
 {
     $data = [
         'name' => $name,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('skills', $data);
 }
 
 function updateSpecialSkill($name, $person_id, $no)
 {
-    return update('skills', ['name' => $name], '`person_id` = ? AND `id` = ?', [$person_id, $no]);
+    $data = [
+        'name' => $name,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+    return update('skills', $data, '`person_id` = ? AND `id` = ?', [$person_id, $no]);
 }
 
 function deleteSpecialSkill($person_id, $skill_id)

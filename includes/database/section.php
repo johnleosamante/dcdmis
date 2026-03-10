@@ -57,7 +57,9 @@ function createSection($section_id, $head_id, $name, $functional_division_id)
         'id' => $section_id,
         'head_id' => $head_id,
         'name' => $name,
-        'functional_division_id' => $functional_division_id
+        'functional_division_id' => $functional_division_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('sections', $data);
 }
@@ -68,7 +70,8 @@ function updateSection($new_section_id, $head_id, $name, $functional_division_id
         'id' => $new_section_id,
         'head_id' => $head_id,
         'name' => $name,
-        'functional_division_id' => $functional_division_id
+        'functional_division_id' => $functional_division_id,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('sections', $data, '`id` = ?', [$old_section_id]);
 }

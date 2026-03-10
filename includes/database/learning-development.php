@@ -36,6 +36,8 @@ function createTraining($training_id, $title, $start_date, $end_date, $number_of
         'number_of_hours' => $number_of_hours,
         'signatory_id' => $signatory_id,
         'has_certificate' => $has_certificate,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('trainings', $data);
 }
@@ -54,7 +56,8 @@ function updateTraining($training_id, $title, $start_date, $end_date, $number_of
         'unconsecutive_dates' => $unconsecutive_dates,
         'signatory_id' => $signatory_id,
         'has_certificate' => $has_certificate,
-        'functional_division_id' => $functional_division_id
+        'functional_division_id' => $functional_division_id,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('trainings', $data, '`id` = ?', [$training_id]);
 }

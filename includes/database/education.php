@@ -25,7 +25,9 @@ function createEducation($level, $school, $course, $from_year, $to_year, $is_pre
         'highest_level' => $highest_level,
         'year_graduated' => $year_graduated,
         'honors_received' => $honors_received,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return insert('educational_backgrounds', $data);
@@ -42,7 +44,8 @@ function updateEducation($level, $school, $course, $from_year, $to_year, $is_pre
         'is_present' => $is_present,
         'highest_level' => $highest_level,
         'year_graduated' => $year_graduated,
-        'honors_received' => $honors_received
+        'honors_received' => $honors_received,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('educational_backgrounds', $data, "`person_id` = ? AND `id` = ?", [$person_id, $educational_background_id]);
 }

@@ -15,7 +15,9 @@ function createPsipop($item_number, $employment_status, $original_appointment_da
         'original_appointment_date' => $original_appointment_date,
         'latest_promotion_date' => $latest_promotion_date,
         'eligibility' => $eligibility,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return insert('position_items', $data);
@@ -29,6 +31,7 @@ function updatePsipop($item_number, $employment_status, $original_appointment_da
         'original_appointment_date' => $original_appointment_date,
         'latest_promotion_date' => $latest_promotion_date,
         'eligibility' => $eligibility,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return update('position_items', $data, '`person_id` = ?', [$person_id]);
@@ -45,7 +48,9 @@ function createStepIncrement($last_step_date, $step, $salary_grade, $person_id)
         'last_step_date' => $last_step_date,
         'step' => $step,
         'salary_grade' => $salary_grade,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return insert('step_increments', $data);
@@ -56,7 +61,8 @@ function updateStepIncrement($last_step_date, $step, $salary_grade, $person_id)
     $data = [
         'last_step_date' => $last_step_date,
         'step' => $step,
-        'salary_grade' => $salary_grade
+        'salary_grade' => $salary_grade,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return update('step_increments', $data, '`person_id` = ?', [$person_id]);
@@ -71,7 +77,9 @@ function createLoyaltyAward($date_last_awarded, $id)
 {
     $data = [
         'person_id' => $id,
-        'date_last_awarded' => $date_last_awarded
+        'date_last_awarded' => $date_last_awarded,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return insert('loyalty_awards', $data);
@@ -80,7 +88,8 @@ function createLoyaltyAward($date_last_awarded, $id)
 function updateLoyaltyAward($date_last_awarded, $id)
 {
     $data = [
-        'date_last_awarded' => $date_last_awarded
+        'date_last_awarded' => $date_last_awarded,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('loyalty_awards', $data, '`person_id` = ?', [$id]);
 }

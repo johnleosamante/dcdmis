@@ -21,6 +21,8 @@ function createSystemLog($station_id, $person_id, $action, $target_id, $ip)
         'action' => $action,
         'target_id' => $target_id,
         'ip' => $ip,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('system_logs', $data);
 }

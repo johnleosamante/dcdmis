@@ -23,7 +23,9 @@ function createFileAttachment($description, $file_name, $file_extension, $person
         'person_id' => $person_id,
         'description' => $description,
         'file_name' => $file_name,
-        'file_extension' => $file_extension
+        'file_extension' => $file_extension,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('201_files', $data);
 }
@@ -33,7 +35,8 @@ function updateFileAttachment($description, $file_name, $file_extension, $person
     $data = [
         'description' => $description,
         'file_name' => $file_name,
-        'file_extension' => $file_extension
+        'file_extension' => $file_extension,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('201_files', $data, '`person_id` = ? AND `id` = ?', [$person_id, $file_attachment_id]);
 }

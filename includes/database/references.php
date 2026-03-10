@@ -17,7 +17,9 @@ function createReference($name, $address, $contact, $person_id)
         'name' => $name,
         'address' => $address,
         'contact' => $contact,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('references', $data);
 }
@@ -27,7 +29,8 @@ function updateReference($name, $address, $contact, $person_id, $reference_id)
     $data = [
         'name' => $name,
         'address' => $address,
-        'contact' => $contact
+        'contact' => $contact,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return update('references', $data, '`person_id` = ? AND `id` = ?', [$person_id, $reference_id]);

@@ -30,7 +30,9 @@ function createExperience($from_date, $to_date, $is_present, $designation, $appo
         'for_separation' => $for_separation,
         'separation_date' => $separation_date,
         'separation_cause' => $separation_cause,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('service_records', $data);
 }
@@ -50,7 +52,8 @@ function updateExperience($from_date, $to_date, $is_present, $designation, $appo
         'leave_wo_pay' => $leave_wo_pay,
         'for_separation' => $for_separation,
         'separation_date' => $separation_date,
-        'separation_cause' => $separation_cause
+        'separation_cause' => $separation_cause,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('service_records', $data, '`person_id` = ? AND `id` = ?', [$person_id, $service_record_id]);
 }

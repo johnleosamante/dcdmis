@@ -28,7 +28,9 @@ function createIdentification($card_type_id, $id_number, $place_issued, $date_is
 		'id_number' => $id_number,
 		'place_issued' => $place_issued,
 		'date_issued' => $date_issued,
-		'person_ID' => $person_id
+		'person_ID' => $person_id,
+		'created_at' => date('Y-m-d H:i:s'),
+		'updated_at' => date('Y-m-d H:i:s')
 	];
 	return insert('valid_ids', $data);
 }
@@ -38,7 +40,8 @@ function updateIdentification($card_type_id, $id_number, $place_issued, $date_is
 	$data = [
 		'id_number' => $id_number,
 		'place_issued' => $place_issued,
-		'date_issued' => $date_issued
+		'date_issued' => $date_issued,
+		'updated_at' => date('Y-m-d H:i:s')
 	];
 	return update(
 		'valid_ids',

@@ -23,7 +23,9 @@ function createFamily($spouse_last_name, $spouse_first_name, $spouse_name_extens
         'father_middle_name' => $father_middle_name,
         'mother_last_name' => $mother_last_name,
         'mother_first_name' => $mother_first_name,
-        'mother_middle_name' => $mother_middle_name
+        'mother_middle_name' => $mother_middle_name,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('family_backgrounds', $data);
 }
@@ -45,7 +47,8 @@ function updateFamily($spouse_last_name, $spouse_first_name, $spouse_name_extens
         'father_middle_name' => $father_middle_name,
         'mother_last_name' => $mother_last_name,
         'mother_first_name' => $mother_first_name,
-        'mother_middle_name' => $mother_middle_name
+        'mother_middle_name' => $mother_middle_name,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('family_backgrounds', $data, '`person_id` = ?', [$person_id]);
 }
@@ -75,7 +78,9 @@ function createChild($last_name, $first_name, $name_extension, $middle_name, $bi
         'name_extension' => $name_extension,
         'middle_name' => $middle_name,
         'birthdate' => $birthdate,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return insert('children', $data);
 }
@@ -88,6 +93,7 @@ function updateChild($last_name, $first_name, $name_extension, $middle_name, $bi
         'name_extension' => $name_extension,
         'middle_name' => $middle_name,
         'birthdate' => $birthdate,
+        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('children', $data, '`person_id` = ? AND `id` = ?', [$person_id, $child_id]);
 }

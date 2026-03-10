@@ -15,7 +15,9 @@ function createRecognition($title, $person_id)
 {
     $data = [
         'title' => $title,
-        'person_id' => $person_id
+        'person_id' => $person_id,
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
     return insert('recognitions', $data);
@@ -23,7 +25,11 @@ function createRecognition($title, $person_id)
 
 function updateRecognition($title, $person_id, $recognition_id)
 {
-    return update('recognitions', ['title' => $title], '`person_id` = ? AND `id` = ?', [$person_id, $recognition_id]);
+    $data = [
+        'title' => $title,
+        'updated_at' => date('Y-m-d H:i:s'),
+    ];
+    return update('recognitions', $data, '`person_id` = ? AND `id` = ?', [$person_id, $recognition_id]);
 }
 
 function deleteRecognition($person_id, $recognition_id)
