@@ -48,24 +48,27 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = users();
-                    while ($row = fetchArray($query)) :
-                        $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
-                    ?>
+                    foreach ($query as $row):
+                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? uri() . '/' . $row['profile_picture'] : uri() . '/assets/img/user.png';
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
                                         <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
                             </td>
-                            <td class="align-middle text-left"><?php modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName) ?></td>
-                            <td class="align-middle text-lowercase"><?= e($row['email']) ?></td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
+                            <td class="align-middle text-left">
+                                <?php modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName) ?>
+                            </td>
+                            <td class="align-middle text-lowercase"><?= e($row['email_address']) ?></td>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'School Information', $row['assignment']), fetchAssoc(schoolById($row['assignment']))['name']) ?>
+                                <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']) ?>
                             </td>
                             <td class="align-middle">
                                 <?php
@@ -91,7 +94,7 @@ messageAlert($showAlert, $message, $success);
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
