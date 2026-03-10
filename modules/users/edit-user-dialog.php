@@ -11,41 +11,38 @@ require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$employees = employee($employeeId);
+$employee = employee($employeeId);
 $dtsUser = $hrmisUser = $dmisUser = $hrtdmsUser = $dtsDivisionUser = false;
 $stationId = $depedEmail = $dtsUserStation = '';
 $modalTitle = 'User not found';
 $hasUser = false;
 $notFound = true;
 
-if (numRows($employees) > 0) {
-    $employee = fetchAssoc($employees);
+if ($employee) {
     $employeeId = $employee['id'];
-    $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
+    $employeeName = toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true);
     $sex = $employee['sex'];
     $status = $employee['status'];
-    $positions = fetchAssoc(position($employeeId));
-    $userStationId = $positions['station_id'];
-    $station = $positions['station'];
-    $positionId = $positions['position_id'];
-    $position = $positions['position'];
-    $depedEmail = $employee['email'];
-    $picture = file_exists(root() . '/' . $employee['picture']) ? uri() . '/' . $employee['picture'] : uri() . '/assets/img/user.png';
+    $position = position($employeeId);
+    $userStationId = $position['station_id'];
+    $station = $position['station'];
+    $positionId = $position['position_id'];
+    $position = $position['official_title'];
+    $depedEmail = $employee['email_address'];
+    $picture = file_exists(root() . '/' . $employee['profile_picture']) ? uri() . '/' . $employee['profile_picture'] : uri() . '/assets/img/user.png';
     $modalTitle = 'Edit User';
     $hasUser = true;
     $dts = dtsUser($employeeId);
     $dtsDivisionUser = $userStationId === divisionId();
 
-    if (numRows($dts) > 0) {
+    if ($dts) {
         $dtsUser = true;
-        $userData = fetchArray($dts);
-        $dtsUserStation = $userData['station'];
+        $dtsUserStation = $dts['access'];
     }
 
-    $hrmisUser = isStationUser($employeeId, 'hrmis');
-    $dmisUser = isStationUser($employeeId, 'dmis');
-    $hrtdmsUser = isStationUser($employeeId, 'hrtdms');
-    $hrmpsbUser = isStationUser($employeeId, 'hrmpsb');
+    $hrmisUser = (bool) isStationUser($employeeId, 'hrmis');
+    $dmisUser = (bool) isStationUser($employeeId, 'dmis');
+    $hrtdmsUser = (bool) isStationUser($employeeId, 'hrtdms');
 }
 ?>
 
@@ -76,18 +73,18 @@ if (numRows($employees) > 0) {
                                 <option value="">Select section...</option>
                                 <?php
                                 $divisions = functionalDivisions();
-                                while ($division = fetchAssoc($divisions)): ?>
+                                foreach ($divisions as $division): ?>
                                     <optgroup label="<?= e($division['name']) ?>">
                                         <?php
                                         $sections = sections($division['id']);
-                                        while ($section = fetchAssoc($sections)) {
+                                        foreach ($sections as $section) {
                                             if ($section['id'] !== $station) { ?>
                                                 <option value="<?= e($section['id']) ?>" <?= setOptionSelected($section['id'], $dtsUserStation) ?>><?= e($section['name']) ?></option>
                                                 <?php
                                             }
                                         } ?>
                                     </optgroup>
-                                <?php endwhile ?>
+                                <?php endforeach ?>
                             </select>
                         </div>
                     <?php else: ?>
@@ -118,14 +115,6 @@ if (numRows($employees) > 0) {
                             <label class="form-check-label" for="dmis">Division Management Information System</label>
                         </div>
                     </div>
-
-                    <div class="form-group mb-0">
-                        <div class="form-check">
-                            <input class="form-check-input" id="hrmpsb" type="checkbox" name="hrmpsb"
-                                <?= setActiveItem($hrmpsbUser, true, 'checked') ?>>
-                            <label class="form-check-label" for="hrmpsb">Human Resource Personnel Selection Board</label>
-                        </div>
-                    </div>
                 <?php } else {
                     missingAlert($modalTitle);
                 } ?>
@@ -133,7 +122,7 @@ if (numRows($employees) > 0) {
 
             <div class="modal-footer">
                 <?php if ($hasUser): ?>
-                    <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
+                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?? null ?>">
                     <input type="hidden" name="data-verifier" value="<?= cipher($depedEmail) ?>">
                     <button class="btn btn-primary" name="edit-user" type="submit">Continue</button>
                 <?php endif ?>
