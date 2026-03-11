@@ -162,10 +162,10 @@ function setItemChecked($condition)
     return $condition ? ' checked' : '';
 }
 
-function getDateDifference($year, $month, $day)
+function getDateDifference($date)
 {
     $now = new DateTime();
-    $bdate = new DateTime("{$year}-{$month}-{$day}");
+    $bdate = new DateTime($date);
     return $now->diff($bdate)->y;
 }
 
