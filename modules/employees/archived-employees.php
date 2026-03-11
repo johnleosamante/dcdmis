@@ -74,7 +74,7 @@ messageAlert($showAlert, $message, $success);
                                 ?>
                             </td>
                             <td class="align-middle">
-                                <?= toDate($row['birth_month'] . '/' . $row['birth_day'] . '/' . $row['birth_year'], 'F j, Y') ?>
+                                <?= toDate($row['birthdate'], 'F j, Y') ?>
                             </td>
                             <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
                             <td class="align-middle">
