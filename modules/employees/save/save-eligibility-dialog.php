@@ -14,7 +14,7 @@ $examDate = $validity = date('Y-m-d');
 $isApplicable = true;
 $modalTitle = 'Add Civil Service Eligibility';
 
-if (isset($eligibilityId)) {
+if ($eligibilityId) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Civil Service Eligibility' : 'Edit Civil Service Eligibility';
     $eligibility = eligibility($employeeId, $eligibilityId);
 
