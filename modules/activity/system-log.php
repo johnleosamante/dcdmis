@@ -5,7 +5,12 @@ if (!$isDmis) {
     return;
 }
 
-messageAlert($showAlert, $message, $success);
+$query = systemLogs($fromDate, $toDate);
+
+if (count($query) === 1000) {
+    $message = "Showing top 1,000 system logs for " . toDate($fromDate, 'F j, Y') . ' - ' . toDate($toDate, 'F j, Y') . ".";
+    messageAlert(true, $message);
+}
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -75,23 +80,22 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = systemLogs($fromDate, $toDate);
                     $no = 0;
-                    while ($row = fetchAssoc($query)): ?>
+                    foreach ($query as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= ++$no ?></td>
-                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
-                            <td class="text-left align-middle"><?= e($row['activity']) ?></td>
+                            <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
+                            <td class="text-left align-middle"><?= e($row['action']) ?></td>
                             <td class="text-center align-middle">
-                                <?php $userLabel = $userId === $row['target'] ? 'YOU' : userName($row['target']);
-                                modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['target']), $userLabel);
+                                <?php $userLabel = $userId === $row['target_id'] ? 'YOU' : userName($row['target_id']);
+                                modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['target_id']), $userLabel);
 
                                 if ($isDmis || $isHrmis): ?>
                                     <br><small><?= '(' . $row['ip'] . ')' ?></small>
                                 <?php endif ?>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
