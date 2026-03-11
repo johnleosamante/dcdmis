@@ -20,7 +20,7 @@ if ($employee) {
     $employeeId = $employee['id'];
     $employeeName = toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true);
     $sex = $employee['sex'];
-    $dob = $employee['birth_month'] . '/' . $employee['birth_day'] . '/' . $employee['birth_year'];
+    $dob = $employee['birthdate'];
     $empStatus = $employee['status'];
     $positions = position($employeeId);
     $stationId = $positions['station_id'];
@@ -53,7 +53,7 @@ if ($employee) {
         <?php modalHeader($modalTitle) ?>
 
         <form action="" method="POST">
-                    <?= csrf_field(); ?>
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasEmployee) {
                     employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $empStatus) ?>
