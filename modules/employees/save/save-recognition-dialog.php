@@ -12,7 +12,7 @@ $copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
 $recognition = '';
 $modalTitle = 'Add Recognition';
 
-if (isset($recognitionId)) {
+if ($recognitionId) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Recognition' : 'Edit Recognition';
     $recognitionData = recognition($employeeId, $recognitionId);
 
