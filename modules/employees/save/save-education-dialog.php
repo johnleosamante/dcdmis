@@ -14,7 +14,7 @@ $from = $to = date('Y');
 $isPresent = false;
 $modalTitle = 'Add Educational Background';
 
-if (isset($educationId)) {
+if ($educationId) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Educational Background' : 'Edit Educational Background';
     $education = educationalBackground($employeeId, $educationId);
 
