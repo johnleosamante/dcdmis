@@ -52,7 +52,7 @@ if ($district) {
                             <option value="<?= e($employee['id']) ?>"
                                 title="<?= position($employee['id'])['official_title'] ?>"
                                 <?= setOptionSelected($employee['id'], $districtHead) ?>>
-                                <?= userName($employee['id']) ?>
+                                <?= userName($employee['id'], true) ?>
                             </option>
                         <?php endforeach ?>
                     </select>
