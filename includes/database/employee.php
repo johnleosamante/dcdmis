@@ -71,7 +71,7 @@ function activeEmployees($station_id = null)
         $params[] = $station_id;
     }
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
-                p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, p.`agency_id`, 
+                p.`sex`, p.`birthdate`, p.`agency_id`, 
                 s.`position_id`, s.`station_id`, p.`profile_picture`, 
                 p.`email_address`, p.`mobile_number` 
             FROM `persons` AS p
@@ -88,7 +88,7 @@ function retirableEmployees($station_id = null)
     $birthYearLimit = $currentYear - $retirementAge;
     $params = [$birthYearLimit];
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
-                p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, p.`agency_id`, 
+                p.`sex`, p.`birthdate`, p.`agency_id`, 
                 ($currentYear - CAST(p.`birth_year` AS UNSIGNED)) AS `year_age`, 
                 s.`position_id`, s.`station_id`, p.`profile_picture` 
             FROM `persons` AS p 
@@ -107,7 +107,7 @@ function archivedEmployees($activeStatuses = ['Active', 'Registered'])
 {
     $placeholders = implode(',', array_fill(0, count($activeStatuses), '?'));
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
-                p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, p.`agency_id`, 
+                p.`sex`, p.`birthdate`, p.`agency_id`, 
                 s.`position_id`, s.`station_id`, p.`profile_picture`, p.`status`
             FROM `persons` AS p
             INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
@@ -133,7 +133,7 @@ function employeeSearch($text)
         $text
     ];
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,
-                p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, p.`agency_id`, 
+                p.`sex`, p.`birthdate`, p.`agency_id`, 
                 s.`position_id`, s.`station_id`, p.`profile_picture`, p.`status` 
             FROM `persons` AS p 
             INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
@@ -213,26 +213,28 @@ function employeeGenderCategory()
 
 function celebrantEmployees($month, $station_id = null)
 {
-    $params = [$month];
-    $currentYear = (int) date('Y');
-
+    if ($month < 1 || $month > 12) {
+        return [];
+    }
+    $params = [(int) $month];
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
-                p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, p.`agency_id`, 
-                ($currentYear - CAST(p.`birth_year` AS UNSIGNED)) AS `year_age`, 
-                sa.`position_id`, sa.`station_id`, p.`profile_picture` 
+                   p.`sex`, p.`birthdate`, p.`agency_id`, 
+                   TIMESTAMPDIFF(YEAR, p.`birthdate`, CURDATE()) AS `current_age`, 
+                   sa.`position_id`, sa.`station_id`, p.`profile_picture` 
             FROM `persons` AS p 
             INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`person_id` 
-            WHERE p.`status` = 'Active' AND p.`birth_month` = ?";
+            WHERE p.`status` = 'Active' 
+              AND MONTH(p.`birthdate`) = ?";
     if ($station_id !== null) {
         $sql .= " AND sa.`station_id` = ?";
         $params[] = $station_id;
     }
-    $sql .= " ORDER BY CAST(p.`birth_day` AS UNSIGNED) ASC";
+    $sql .= " ORDER BY DAY(p.`birthdate`) ASC, p.`last_name` ASC";
     $results = query($sql, $params);
     return is_array($results) ? $results : [];
 }
 
-function createEmployee($person_id, $last_name, $first_name, $middle_name, $name_extension, $sex, $birth_month, $birth_day, $birth_year, $email_address, $mobile_number, $profile_picture, $status, $gsis_crn = '', $gsis_bp = '', $pagibig = '', $philhealth = '', $tin = '', $agency_id = '')
+function createEmployee($person_id, $last_name, $first_name, $middle_name, $name_extension, $sex, $birthdate, $email_address, $mobile_number, $profile_picture, $status, $gsis_crn = '', $gsis_bp = '', $pagibig = '', $philhealth = '', $tin = '', $agency_id = '')
 {
     $data = [
         'id' => $person_id,
@@ -241,9 +243,7 @@ function createEmployee($person_id, $last_name, $first_name, $middle_name, $name
         'middle_name' => $middle_name,
         'name_extension' => $name_extension,
         'sex' => $sex,
-        'birth_month' => $birth_month,
-        'birth_day' => $birth_day,
-        'birth_year' => $birth_year,
+        'birthdate' => $birthdate,
         'email_address' => $email_address,
         'mobile_number' => $mobile_number,
         'profile_picture' => $profile_picture,
@@ -260,41 +260,39 @@ function createEmployee($person_id, $last_name, $first_name, $middle_name, $name
     return insert('persons', $data);
 }
 
-function updateEmployee($last_name, $first_name, $middle_name, $ext, $bmonth, $bday, $byear, $pob, $sex, $civilStatus, $civilStatusSpecify, $religion, $citizenship_id, $dualCitizenship, $country, $rlot, $rstreet, $rsubdivision, $rbarangay, $rcity, $rprovince, $rzip, $plot, $pstreet, $psubdivision, $pbarangay, $pcity, $pprovince, $pzip, $height, $weight, $bloodType, $umid, $crn, $bp, $pagibig, $philhealth, $philsys, $sss, $telephone, $mobile, $email, $tin, $agency_id, $prc, $photo, $id)
+function updateEmployee($last_name, $first_name, $middle_name, $name_extension, $birthdate, $place_of_birth, $sex, $civil_status, $specify_other_civil_status, $religion, $citizenship_id, $dual_citizenship_type, $dual_citizenship_country_id, $residence_lot, $residence_street, $residence_subdivision, $residence_barangay, $residence_city, $residence_province, $residence_zip, $permanent_lot, $permanent_street, $permanent_subdivision, $permanent_barangay, $permanent_city, $permanent_province, $permanent_zip, $height, $weight, $blood_type, $umid, $crn, $bp, $pagibig, $philhealth, $philsys, $sss, $telephone, $mobile, $email, $tin, $agency_id, $prc, $photo, $id)
 {
     $data = [
         'last_name' => $last_name,
         'first_name' => $first_name,
         'middle_name' => $middle_name,
-        'name_extension' => $ext,
-        'birth_month' => $bmonth,
-        'birth_day' => $bday,
-        'birth_year' => $byear,
-        'place_of_birth' => $pob,
+        'name_extension' => $name_extension,
+        'birthdate' => $birthdate,
+        'place_of_birth' => $place_of_birth,
         'sex' => $sex,
-        'civil_status' => $civilStatus,
-        'specify_other_civil_status' => $civilStatusSpecify,
+        'civil_status' => $civil_status,
+        'specify_other_civil_status' => $specify_other_civil_status,
         'religion' => $religion,
         'citizenship_id' => $citizenship_id,
-        'dual_citizenship_type' => $dualCitizenship,
-        'dual_citizenship_country' => $country,
-        'residence_lot' => $rlot,
-        'residence_street' => $rstreet,
-        'residence_subdivision' => $rsubdivision,
-        'residence_barangay' => $rbarangay,
-        'residence_city' => $rcity,
-        'residence_province' => $rprovince,
-        'residence_zip' => $rzip,
-        'permanent_lot' => $plot,
-        'permanent_street' => $pstreet,
-        'permanent_subdivision' => $psubdivision,
-        'permanent_barangay' => $pbarangay,
-        'permanent_city' => $pcity,
-        'permanent_province' => $pprovince,
-        'permanent_zip' => $pzip,
+        'dual_citizenship_type' => $dual_citizenship_type,
+        'dual_citizenship_country_id' => $dual_citizenship_country_id,
+        'residence_lot' => $residence_lot,
+        'residence_street' => $residence_street,
+        'residence_subdivision' => $residence_subdivision,
+        'residence_barangay' => $residence_barangay,
+        'residence_city' => $residence_city,
+        'residence_province' => $residence_province,
+        'residence_zip' => $residence_zip,
+        'permanent_lot' => $permanent_lot,
+        'permanent_street' => $permanent_street,
+        'permanent_subdivision' => $permanent_subdivision,
+        'permanent_barangay' => $permanent_barangay,
+        'permanent_city' => $permanent_city,
+        'permanent_province' => $permanent_province,
+        'permanent_zip' => $permanent_zip,
         'height' => $height,
         'weight' => $weight,
-        'blood_type' => $bloodType,
+        'blood_type' => $blood_type,
         'umid_id' => $umid,
         'gsis_crn' => $crn,
         'gsis_bp' => $bp,
