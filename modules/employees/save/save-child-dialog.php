@@ -13,7 +13,7 @@ $fname = $mname = $lname = $ext = '';
 $bdate = date('Y-M-d');
 $modalTitle = 'Add Child Name';
 
-if (isset($childId)) {
+if ($childId) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Child Name' : 'Edit Child Name';
     $child = child($employeeId, $childId);
 
