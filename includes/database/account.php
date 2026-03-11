@@ -155,8 +155,7 @@ function sectionUsers($access)
 {
     return query(
         "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, 
-            p.`name_extension`, p.`sex`, p.`birth_month`, p.`birth_day`, 
-            p.`birth_year`, p.`agency_id`, s.`position_id`, 
+            p.`name_extension`, p.`sex`, p.`birthdate`, p.`agency_id`, s.`position_id`, 
             s.`station_id`, p.`profile_picture`, p.`email_address`, p.`mobile_number` 
         FROM `persons` p 
         INNER JOIN `station_assignments` s ON p.`id` = s.`person_id` 
