@@ -47,7 +47,7 @@ if (!isset($_GET['v']) || empty($_GET['v'])) {
 				<td><?= strtoupper($row['name_extension']) ?></td>
 				<td><?= strtoupper($row['sex'])[0] ?></td>
 				<td><?= $row['birth_year'] . '-' . $row['birth_month'] . '-' . $row['birth_day'] ?></td>
-				<td><?= getDateDifference($row['birth_year'], $row['birth_month'], $row['birth_day']) ?></td>
+				<td><?= getDateDifference($row['birthdate']) ?></td>
 				</td>
 				<td><?= strtoupper($row['official_title']) ?></td>
 				<td><?= e($row['gsis_crn']) ?></td>
