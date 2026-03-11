@@ -10,7 +10,12 @@ if ($employee) {
     return;
 }
 
-messageAlert($showAlert, $message, $success);
+$query = userLog($employeeId);
+
+if (count($query) === 1000) {
+    $message = "Showing top 1,000 user activity logs for " . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true)) . ".";
+    messageAlert(true, $message);
+}
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -42,7 +47,6 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = userLog($employeeId);
                     $no = 0;
                     foreach ($query as $row): ?>
                         <tr class="text-uppercase">
