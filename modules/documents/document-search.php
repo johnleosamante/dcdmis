@@ -16,7 +16,7 @@ if (!$documents) {
 }
 
 if (count($documents) === 1000) {
-    $message = "Showing top 1000 search results for [$search].";
+    $message = "Showing top 1,000 search results for [$search].";
     messageAlert(true, $message);
 }
 ?>
