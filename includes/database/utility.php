@@ -27,12 +27,13 @@ function userName($person_id, $uppercase = false)
             $user['name_extension'],
             true
         );
-        if ($uppercase) {
-            $formattedName = strtoupper($formattedName);
-        }
         $prefix = toString($user['name_prefix'], '', ' ');
         $suffix = toString($user['name_suffix'], ', ');
-        return "{$prefix}{$formattedName}{$suffix}";
+        $formattedName = "{$prefix}{$formattedName}{$suffix}";
+        if ($uppercase) {
+            return strtoupper($formattedName);
+        }
+        return $formattedName;
     }
     return $person_id;
 }
