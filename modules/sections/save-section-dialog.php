@@ -56,9 +56,10 @@ if ($section) {
                         <option value="">Select section head...</option>
                         <?php $employees = activeEmployees(divisionId());
                         foreach ($employees as $employee): ?>
-                            <option value="<?= $employee['id'] ?>" title="<?= position($employee['id'])['position'] ?>"
+                            <option value="<?= $employee['id'] ?>"
+                                title="<?= position($employee['id'])['official_title'] ?>"
                                 <?= setOptionSelected($employee['id'], $sectionHead) ?>>
-                                <?= userName($employee['id']) ?>
+                                <?= userName($employee['id'], true) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
