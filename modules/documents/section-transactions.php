@@ -34,7 +34,7 @@
                                 <div>
                                     <?php linkItem(customUri($activeApp, 'Section Information', $section['id']), $section['name']) ?>
                                 </div>
-                                <div class="small"><?= e($section['division']) ?></div>
+                                <div class="small"><?= e($section['functional_division']) ?></div>
                             </td>
                             <td class="align-middle"><?= number_format(count(incomingDocuments($section['id']))) ?></td>
                             <td class="align-middle"><?= number_format(count(pendingDocuments($section['id']))) ?></td>
