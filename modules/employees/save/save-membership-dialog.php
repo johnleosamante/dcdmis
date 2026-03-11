@@ -12,7 +12,7 @@ $copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
 $membership = '';
 $modalTitle = 'Add Membership in Association / Organization';
 
-if (isset($membershipId)) {
+if ($membershipId) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Membership in Association / Organization' : 'Edit Membership in Association / Organization';
     $membershipData = membership($employeeId, $membershipId);
 
