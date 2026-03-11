@@ -87,7 +87,6 @@ if ($training) {
                 <?php
                 foreach ($participants as $row):
                     $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
-                    $photo = uri() . '/' . $row['profile_picture'];
                     $photo = file_exists(root() . '/' . $row['profile_picture']) ? uri() . '/' . $row['profile_picture'] : uri() . '/assets/img/user.png';
                     ?>
                     <tr class="text-uppercase">
