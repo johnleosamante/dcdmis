@@ -107,10 +107,10 @@ messageAlert($showAlert, $message, $success);
                                                     <?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName) ?>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <?php echo toDate($row['birth_month'] . '/' . $row['birth_day'] . '/' . $row['birth_year'], 'F j, Y') ?>
+                                                    <?php echo toDate($row['birthdate'], 'F j, Y') ?>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <?php echo getDateDifference($row['birth_year'], $row['birth_month'], $row['birth_day']) ?>
+                                                    <?php echo getDateDifference($row['birthdate']) ?>
                                                 </td>
                                                 <td class="align-middle">
                                                     <?php echo positions($row['position_id'])['official_title'] ?>
