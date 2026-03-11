@@ -12,7 +12,7 @@ $copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
 $skill = '';
 $modalTitle = 'Add Special Skill / Hobby';
 
-if (isset($skillId)) {
+if ($skillId) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Special Skill / Hobby' : 'Edit Special Skill / Hobby';
     $specialSkill = specialSkill($employeeId, $skillId);
 
