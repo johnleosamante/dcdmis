@@ -65,11 +65,11 @@
                             <label for="dob" class="mb-0">Date of Birth <?php showAsterisk($editMode) ?></label>
                             <?php if (!$editMode): ?>
                                 <input id="dob" type="text" class="form-control"
-                                    value="<?= $employee['birth_month'] . '/' . $employee['birth_day'] . '/' . $employee['birth_year'] ?>"
+                                    value="<?= $employee['birthdate'] ?>"
                                     readonly>
                             <?php else: ?>
                                 <input id="dob" name="dob" type="date" class="form-control" title="Required field"
-                                    value="<?= toDate($employee['birth_year'] . '-' . $employee['birth_month'] . '-' . $employee['birth_day'], 'Y-m-d') ?>"
+                                    value="<?= $employee['birthdate'] ?>"
                                     required>
                             <?php endif ?>
                         </div>
