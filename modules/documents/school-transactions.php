@@ -32,7 +32,7 @@
                     foreach ($schools as $school):
                         $logo = !empty($school['logo']) ? uri() . '/' . $school['logo'] : uri() . '/uploads/division/division.png';
                         $schoolName = $school['name'];
-                        $district = district($school['district'])['name'];
+                        $district = district($school['district_id'])['name'];
                         ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
