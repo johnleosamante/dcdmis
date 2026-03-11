@@ -85,8 +85,8 @@ function trainingParticipants($training_id, $person_id = null)
         $params[] = $person_id;
     }
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
-                p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, p.`agency_id`, 
-                s.`position_id`, s.`station_id`, p.`profile_picture`, p.`email_address`, p.`status` 
+                p.`sex`, p.`birthdate`, p.`agency_id`, s.`position_id`, 
+                s.`station_id`, p.`profile_picture`, p.`email_address`, p.`status` 
             FROM `persons` AS p
             INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
             INNER JOIN `training_participants` AS tp ON p.`id` = tp.`person_id` 
