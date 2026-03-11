@@ -12,7 +12,7 @@ $copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
 $name = $address = $contact = '';
 $modalTitle = 'Add Reference';
 
-if (isset($referenceId)) {
+if ($referenceId) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Reference' : 'Edit Reference';
     $reference = reference($employeeId, $referenceId);
 
