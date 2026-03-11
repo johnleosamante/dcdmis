@@ -14,7 +14,7 @@ $from = $to = date('Y-m-d');
 $isPresent = false;
 $modalTitle = 'Add Voluntary Work';
 
-if (isset($voluntaryId)) {
+if ($voluntaryId) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Voluntary Work' : 'Edit Voluntary Work';
     $voluntaryWork = voluntaryWork($employeeId, $voluntaryId);
 
