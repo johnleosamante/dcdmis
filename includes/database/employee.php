@@ -54,10 +54,10 @@ function districtSupervisors($supervisorRoles = ['PSDS', 'SDS'])
 {
     $placeholders = implode(',', array_fill(0, count($supervisorRoles), '?'));
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, 
-                p.`name_extension`, p.`position_id` 
+                p.`name_extension`, s.`position_id` 
             FROM `persons` AS p   
             INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
-            WHERE p.`status` = 'Active' AND p.`position_id` IN ($placeholders) 
+            WHERE p.`status` = 'Active' AND s.`position_id` IN ($placeholders) 
             ORDER BY p.`last_name` ASC";
     return query($sql, $supervisorRoles);
 }
