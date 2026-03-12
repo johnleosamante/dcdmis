@@ -40,9 +40,8 @@ messageAlert($showAlert, $message, $success);
                 cellspacing="0">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="25%">Section</th>
-                        <th class="align-middle" width="25%">Functional Division</th>
-                        <th class="align-middle" width="30%">Section Head</th>
+                        <th class="align-middle" width="45%">Section</th>
+                        <th class="align-middle" width="35%">Head</th>
                         <th class="align-middle text-mars" width="5%"><i class="fa fa-user fw"></i> Male</th>
                         <th class="align-middle text-venus" width="5%"><i class="fa fa-user fw"></i> Female</th>
                         <th class="align-middle" width="5%"><i class="fa fa-user-friends fw"></i> Total</th>
@@ -56,9 +55,13 @@ messageAlert($showAlert, $message, $success);
                     foreach ($query as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle text-center">
-                                <?php linkItem(customUri($activeApp, 'Section Information', $row['id']), $row['name']); ?>
+                                <div>
+                                    <?= linkItem(customUri($activeApp, 'Section Information', $row['id']), $row['name']); ?>
+                                </div>
+                                <div class="small">
+                                    <?= e($row['functional_division']) ?>
+                                </div>
                             </td>
-                            <td class="align-middle text-center"><?= e($row['functional_division']) ?></td>
                             <td class="align-middle">
                                 <div>
                                     <?php if ($isHrmis) {
@@ -102,9 +105,8 @@ messageAlert($showAlert, $message, $success);
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="25%">Section</th>
-                        <th class="align-middle" width="25%">Functional Division</th>
-                        <th class="align-middle" width="30%">Section Head</th>
+                        <th class="align-middle" width="45%">Section</th>
+                        <th class="align-middle" width="35%">Head</th>
                         <th class="align-middle text-mars" width="5%">Male</th>
                         <th class="align-middle text-venus" width="5%">Female</th>
                         <th class="align-middle" width="5%">Total</th>
