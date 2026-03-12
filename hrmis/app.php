@@ -23,9 +23,6 @@ if (isset($_POST['add-employee'])) {
     $ext = sanitize($_POST['ext']);
     $sex = sanitize($_POST['sex']);
     $bdate = strtotime(sanitize($_POST['bdate']));
-    $bmonth = date('m', $bdate);
-    $bday = date('d', $bdate);
-    $byear = date('Y', $bdate);
     $ePositionId = sanitize($_POST['position']);
     $eStationId = sanitize($_POST['station']);
     $email = sanitize($_POST['email']);
@@ -57,7 +54,7 @@ if (isset($_POST['add-employee'])) {
     beginTransaction();
 
     try {
-        if (createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bmonth, $bday, $byear, $email, $mobile, $image, $status, $crn, $bp, $pagibig, $philhealth, $tin, $agencyId) === false) {
+        if (createEmployee($employeeId, $lname, $fname, $mname, $ext, $sex, $bdate, $email, $mobile, $image, $status, $crn, $bp, $pagibig, $philhealth, $tin, $agencyId) === false) {
             throw new Exception('Failed to save employee information.');
         }
 
