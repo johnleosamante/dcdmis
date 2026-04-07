@@ -232,15 +232,15 @@ if (
 	checkFieldValidity(
 		"password-group",
 		validPasswordLength &&
-			hasUppercasePassword &&
-			hasLowercasePassword &&
-			hasNumberPassword &&
-			hasSpecialPassword
+		hasUppercasePassword &&
+		hasLowercasePassword &&
+		hasNumberPassword &&
+		hasSpecialPassword
 	);
 	checkFieldValidity(
 		"password-confirm-group",
 		confirmPasswordValue.length > 0 &&
-			passwordValue === confirmPasswordValue
+		passwordValue === confirmPasswordValue
 	);
 
 	password.addEventListener("input", () => {
@@ -261,15 +261,15 @@ if (
 		checkFieldValidity(
 			"password-group",
 			validPasswordLength &&
-				hasUppercasePassword &&
-				hasLowercasePassword &&
-				hasNumberPassword &&
-				hasSpecialPassword
+			hasUppercasePassword &&
+			hasLowercasePassword &&
+			hasNumberPassword &&
+			hasSpecialPassword
 		);
 		checkFieldValidity(
 			"password-confirm-group",
 			confirmPasswordValue.length > 0 &&
-				passwordValue === confirmPasswordValue
+			passwordValue === confirmPasswordValue
 		);
 	});
 
@@ -280,7 +280,7 @@ if (
 		checkFieldValidity(
 			"password-confirm-group",
 			confirmPasswordValue.length > 0 &&
-				passwordValue === confirmPasswordValue
+			passwordValue === confirmPasswordValue
 		);
 	});
 }
@@ -298,7 +298,6 @@ if (
 ) {
 	let beforeTitleValue = beforeTitle.value;
 	let afterTitleValue = afterTitle.value;
-	let userNameValue = userName.value;
 
 	beforeTitle.addEventListener("input", () => {
 		beforeTitleValue =
