@@ -50,7 +50,7 @@ if ($document) {
             <tr>
                 <th class="align-top pr-3" scope="row">Status:</th>
                 <td class="text-uppercase">
-                    <?= $document['status'] ?>
+                    <?= documentTransactionStatus($document['status_id']) ?>
                 </td>
             </tr>
         </table>
@@ -64,12 +64,12 @@ if ($document) {
                 $logCount++;
                 $from = stationName($log['received_from']);
                 $to = stationName($log['forwarded_to']);
-                $displayName = userName($log['processed_by']);
-                $user = employee($log['processed_by']);
+                $displayName = userName($log['processor_id']);
+                $user = employee($log['processor_id']);
                 $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '/' . $user['profile_picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
                 $hasDestination = !empty($to) && $to !== '-';
-                $status = $log['status'];
+                $status = documentTransactionStatus($log['status_id']);
                 $details = $log['details'];
                 $isCompleted = str_contains(strtolower($status), 'complete');
                 $isCanceled = str_contains(strtolower($status), 'cancel');
@@ -131,7 +131,7 @@ if ($document) {
                                         </div>
 
                                         <div class="text-uppercase text-xs">
-                                            <?= position($log['processed_by'])['official_title'] ?>
+                                            <?= position($log['processor_id'])['official_title'] ?>
                                         </div>
                                     </div>
                                 </div>
