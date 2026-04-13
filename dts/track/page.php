@@ -15,9 +15,14 @@
             default => 'track-document.php'
         };
 
-    require_once("{$file}");
+    require_once($file);
     ?>
 
-    <a class="d-block text-center mx-2 mb-5" href="<?= uri() . '/login' ?>" title="Go to login page">Already have an
-        account? Login instead</a>
+    <?php if (isset($userId)): ?>
+        <a class="d-block text-center mx-2 mb-5" href="<?= uri() . '/' . $activeApp ?>" title="Go to dashboard">Go to
+            Dashboard</a>
+    <?php else: ?>
+        <a class="d-block text-center mx-2 mb-5" href="<?= uri() . '/login' ?>" title="Go to login page">Already have an
+            account? Login instead</a>
+    <?php endif ?>
 </div>
