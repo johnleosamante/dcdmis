@@ -33,16 +33,10 @@ require_once root() . '/includes/database/employee.php';
                 <td><?= ++$rowCount ?></td>
                 <td><?= e($row['official_title']) ?></td>
                 <td><?= toHandleNull($row['item_number'], 'N/A') ?></td>
+                <td><?= schoolById($row['station_id'])['name']; ?></td>
                 <td>
-                    <?php if (empty($row['station_id'])) {
-                        echo 'TO BE DETERMINED';
-                    } else {
-                        echo schoolById($row['station_id'])['name'];
-                    } ?>
-                </td>
-                <td>
-                    <?php if (!empty($row['vacated_by'])): ?>
-                        <?php $vice = employee($row['vacated_by']); ?>
+                    <?php if (!empty($row['vacated_by_id'])): ?>
+                        <?php $vice = employee($row['vacated_by_id']); ?>
                         VICE:
                         <?= strtoupper(toName($vice['last_name'], $vice['first_name'], $vice['middle_name'], $vice['name_extension'], true)); ?>
                     <?php endif; ?>
