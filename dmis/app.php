@@ -11,13 +11,9 @@ if (!userRole($userId, 'dmis')) {
 	redirect("$baseUri/pis");
 }
 
-if (isset($_POST['primary-search-button'])) {
-	redirect(customUri('dmis', 'Search', sanitize($_POST['primary-search-text'])));
-}
-
 if (isset($_POST['save-school'])) {
-	$referenceSchoolId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-	$referenceAlias = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+	$referenceSchoolId = sanitize(decipher($_POST['verifier'] ?? null));
+	$referenceAlias = sanitize(decipher($_POST['data-verifier'] ?? null));
 	$schoolId = sanitize($_POST['school-id']);
 	$schoolName = sanitize($_POST['school-name']);
 	$alias = sanitize($_POST['alias']);
@@ -28,7 +24,7 @@ if (isset($_POST['save-school'])) {
 	$email = sanitize($_POST['email']);
 	$website = sanitize($_POST['website']);
 	$facebook = sanitize($_POST['facebook']);
-	$logo = isset($_POST['image-verifier']) ? sanitize(decipher($_POST['image-verifier'])) : '';
+	$logo = sanitize(decipher($_POST['image-verifier'] ?? null));
 	$showAlert = true;
 	$link = '[<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . strtoupper($schoolName) . '</a>]';
 
@@ -120,13 +116,10 @@ if (isset($_POST['save-school'])) {
 }
 
 if (isset($_POST['delete-school'])) {
-	$schoolId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$schoolId = sanitize(decipher($_POST['verifier'] ?? null));
 	$showAlert = true;
-
 	$schools = schoolById($schoolId);
-
 	$target = count($schools) === 1 ? $schools['name'] : $schoolId;
-
 	$affectedSchool = deleteSchool($schoolId);
 
 	if (!$affectedSchool) {
@@ -141,7 +134,7 @@ if (isset($_POST['delete-school'])) {
 }
 
 if (isset($_POST['save-section'])) {
-	$referenceSectionId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$referenceSectionId = sanitize(decipher($_POST['verifier'] ?? null));
 	$alias = sanitize($_POST['alias']);
 	$section = sanitize($_POST['section']);
 	$division = sanitize($_POST['division']);
@@ -199,7 +192,7 @@ if (isset($_POST['save-section'])) {
 }
 
 if (isset($_POST['save-district'])) {
-	$referenceDistrictId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$referenceDistrictId = sanitize(decipher($_POST['verifier'] ?? null));
 	$districtCode = sanitize($_POST['code']);
 	$districtName = sanitize($_POST['district']);
 	$districtHead = sanitize($_POST['head']);
@@ -228,7 +221,7 @@ if (isset($_POST['save-district'])) {
 }
 
 if (isset($_POST['delete-employee'])) {
-	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$employeeId = sanitize(decipher($_POST['verifier'] ?? null));
 	$showAlert = true;
 	$employee = employee($employeeId);
 	$target = count($employee) === 1 ? userName($employeeId) : $employeeId;
@@ -337,7 +330,7 @@ if (isset($_POST['delete-employee'])) {
 }
 
 if (isset($_POST['delete-district'])) {
-	$districtCode = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$districtCode = sanitize(decipher($_POST['verifier'] ?? null));
 	$showAlert = true;
 
 	$districts = district($districtCode);
@@ -358,12 +351,12 @@ if (isset($_POST['delete-district'])) {
 }
 
 if (isset($_POST['edit-user'])) {
-	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$employeeId = sanitize(decipher($_POST['verifier'] ?? null));
 
 	if (!$employeeId)
 		return;
 
-	$dtsStation = isset($_POST['dts-verifier']) ? sanitize($_POST['dts-verifier']) : null;
+	$dtsStation = sanitize($_POST['dts-verifier'] ?? null);
 	$dtsPortal = section($dtsStation) ? strtolower("{$dtsStation}_portal") : 'sch_portal';
 
 	$systems = [
@@ -410,8 +403,8 @@ if (isset($_POST['edit-user'])) {
 }
 
 if (isset($_POST['reset-user'])) {
-	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-	$temporaryPassword = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
+	$employeeId = sanitize(decipher($_POST['verifier'] ?? null));
+	$temporaryPassword = sanitize(decipher($_POST['data-verifier'] ?? null));
 	$emails = employee($employeeId);
 	$userEmail = $emails ? $emails['email_address'] : '';
 	$showAlert = true;
@@ -450,7 +443,7 @@ if (isset($_POST['reset-user'])) {
 }
 
 if (isset($_POST['remove-user'])) {
-	$employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$employeeId = sanitize(decipher($_POST['verifier'] ?? null));
 	$showAlert = true;
 	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . "{$baseUri}/modules/users/user-info-dialog.php?id=" . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 
