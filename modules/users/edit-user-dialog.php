@@ -60,7 +60,7 @@ if ($employee) {
 
                     <div class="text-center text-capitalize h5 px-2 mb-3">User Assignment</div>
 
-                    <div class="form-group">
+                    <div class="form-group mb-0">
                         <div class="form-check">
                             <input class="form-check-input" id="dts" type="checkbox" name="dts" <?= setActiveItem($dtsUser, true, 'checked') ?>>
                             <label class="form-check-label" for="dts">Document Tracking System</label>
@@ -68,7 +68,7 @@ if ($employee) {
                     </div>
 
                     <?php if ($dtsDivisionUser): ?>
-                        <div class="form-group pl-3 mt-n3">
+                        <div class="form-group ml-1 pl-3 mb-0">
                             <select name="dts-verifier" class="form-control">
                                 <option value="">Select section...</option>
                                 <?php
@@ -91,7 +91,7 @@ if ($employee) {
                         <input type="hidden" name="dts-verifier" value="<?= e($userStationId) ?>">
                     <?php endif ?>
 
-                    <div class="form-group">
+                    <div class="form-group mt-2 mb-0">
                         <div class="form-check">
                             <input class="form-check-input" id="hrmis" type="checkbox" name="hrmis"
                                 <?= setActiveItem($hrmisUser, true, 'checked') ?>>
@@ -99,7 +99,7 @@ if ($employee) {
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mt-2 mb-0">
                         <div class="form-check">
                             <input class="form-check-input" id="hrtdms" type="checkbox" name="hrtdms"
                                 <?= setActiveItem($hrtdmsUser, true, 'checked') ?>>
@@ -108,7 +108,7 @@ if ($employee) {
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mt-2 mb-0">
                         <div class="form-check">
                             <input class="form-check-input" id="dmis" type="checkbox" name="dmis"
                                 <?= setActiveItem($dmisUser, true, 'checked') ?>>
