@@ -2,11 +2,11 @@
 // dmis/sidebar-menu.php
 sidebarDivider();
 
-$employeeCount = number_format(count(activeEmployees()));
-$districtCount = number_format(count(districts()));
-$schoolCount = number_format(count(schools()));
-$sectionCount = number_format(count(sections()));
-$userCount = number_format(count(users()));
+$employeeCount = number_format(countActiveEmployees());
+$districtCount = number_format(countDistricts());
+$schoolCount = number_format(countSchools());
+$sectionCount = number_format(countSections());
+$userCount = number_format(countUsers());
 
 sidebarMenuItem(customUri('dmis', 'Employees'), 'Employees', 'fa-users', isset($url) && str_contains($url, 'Employees'), $employeeCount);
 sidebarMenuItem(customUri('dmis', 'Districts'), 'Districts', 'fa-map-marked-alt', isset($url) && str_contains($url, 'District'), $districtCount);
