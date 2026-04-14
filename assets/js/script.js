@@ -5,8 +5,6 @@ if (window.history.replaceState) {
 }
 
 $(document).ready(function () {
-	$("div.auto-hide").fadeIn(300).delay(60000).fadeOut(300);
-
 	let dtProps = {
 		responsive: true,
 		pagingType: "simple",
