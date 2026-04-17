@@ -2,10 +2,10 @@
 // dts/sidebar-menu.php
 sidebarDivider();
 
-$countIncoming = number_format(count(incomingDocuments($station)));
-$countPending = number_format(count(pendingDocuments($station)));
-$countOutgoing = number_format(count(outgoingDocuments($station)));
-$countOngoing = number_format(count(ongoingDocuments($station)));
+$countIncoming = number_format(countIncomingDocuments($station));
+$countPending = number_format(countPendingDocuments($station));
+$countOutgoing = number_format(countOutgoingDocuments($station));
+$countOngoing = number_format(countOngoingDocuments($station));
 
 sidebarModalItem(uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus');
 sidebarMenuItem(customUri('dts', 'Incoming Documents'), 'Incoming', 'fa-file-download', isset($url) && str_contains($url, 'Incoming'), $countIncoming);
