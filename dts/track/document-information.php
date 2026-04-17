@@ -36,6 +36,12 @@ if ($document) {
     <div class="card-body">
         <table cellspacing="0">
             <tr>
+                <th class="align-top pr-3" scope="row">Type:</th>
+                <td class="text-uppercase">
+                    <?= documentType($document['document_type_id']) ?>
+                </td>
+            </tr>
+            <tr>
                 <th class="align-top pr-3" scope="row">Description:</th>
                 <td class="text-uppercase"><?= e($document['description']) ?></td>
             </tr>
