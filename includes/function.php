@@ -4,7 +4,13 @@ require_once('config.php');
 
 function dd($value)
 {
-    die(var_dump($value));
+    echo '<pre>';
+    ob_start();
+    var_dump($value);
+    $output = ob_get_clean();
+    echo htmlspecialchars($output);
+    echo '</pre>';
+    die();
 }
 
 function hashPassword($string)
