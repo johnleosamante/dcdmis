@@ -32,7 +32,7 @@ function toAddress(string $lot, string $street, string $subdivision, string $bar
     return toString($lot, '', ', ') . toString($street, '', ', ') . toString($subdivision, '', ', ') . toString($barangay, '', ', ') . toString($city) . toString($province, ', ');
 }
 
-function toHandleNull(string $value, string $default = ''): string
+function toHandleNull(string|null $value, string $default = ''): string
 {
     return !empty($value) ? $value : $default;
 }
