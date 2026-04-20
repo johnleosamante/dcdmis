@@ -50,7 +50,8 @@ if ($training) {
                 $functional_division = functionalDivision($training['functional_division_id']);
                 $functional_division = (!empty($functional_division) && strtolower($functional_division['name']) !== 'n/a') ? " ({$functional_division['name']})" : '';
                 ?>
-                <td class="text-uppercase"><?= trainingSponsor($training['conducted_by']) . $functional_division ?></td>
+                <td class="text-uppercase"><?= trainingSponsor($training['training_level_id']) . $functional_division ?>
+                </td>
             </tr>
             <?php if (!empty($training['sponsor'])): ?>
                 <tr>
