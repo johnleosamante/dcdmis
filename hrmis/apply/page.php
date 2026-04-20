@@ -1,5 +1,5 @@
 <?php
-$code = sanitize($_GET['p'] ?? null);
+$code = sanitize($_GET['p'] ?? '');
 ?>
 
 <div class="col-12">
