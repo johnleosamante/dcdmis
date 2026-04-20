@@ -2,6 +2,10 @@
 // hrtdms/repository/conducted-trainings.php
 ?>
 
+<div class="card-header">
+    <?= contentTitle('Conducted Trainings') ?>
+</div>
+
 <div class="card-body">
     <form action="" method="POST" class="mb-3">
         <?= csrf_field(); ?>
@@ -42,8 +46,7 @@
     </form>
 
     <div class="table-responsive">
-        <table class="table table-striped table-bordered table-hover mb-0 text-center" id="data-table" width="100%"
-            cellspacing="0">
+        <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th class="align-middle" width="65%">Title of Division Training</th>
@@ -54,16 +57,22 @@
             <tbody>
                 <?php
                 $trainings = conductedTrainings($fromDate, $toDate);
-                foreach ($trainings as $training): ?>
-                    <tr class="text-uppercase">
-                        <td class="align-middle text-left">
-                            <?php linkItem(customUri('hrtdms/repository', 'Training Details', $training['id']), $training['title']) ?>
-                        </td>
-                        <td class="align-middle">
-                            <?= empty($training['unconsecutive_date']) ? toDateRange($training['start_date'], $training['end_date']) : toHandleEncoding($training['unconsecutive_date']) ?>
-                        </td>
+                if ($trainings) {
+                    foreach ($trainings as $training) { ?>
+                        <tr class="text-uppercase">
+                            <td class="align-middle text-left">
+                                <?php linkItem(customUri('hrtdms/repository', 'Training Details', $training['id']), toTruncate($training['title'])) ?>
+                            </td>
+                            <td class="align-middle">
+                                <?= empty($training['unconsecutive_date']) ? toDateRange($training['start_date'], $training['end_date']) : toHandleEncoding($training['unconsecutive_date']) ?>
+                            </td>
+                        </tr>
+                    <?php }
+                } else { ?>
+                    <tr>
+                        <td colspan="2" class="text-center text-muted">No data available in table</td>
                     </tr>
-                <?php endforeach ?>
+                <?php } ?>
             </tbody>
 
             <tfoot>
