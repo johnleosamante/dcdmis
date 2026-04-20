@@ -1117,6 +1117,7 @@ if (isset($_POST['save-psipop'])) {
 if (isset($_POST['save-201-file'])) {
     $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
     $fileId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $fileTypeId = sanitize($_POST['type']);
     $description = sanitize($_POST['description']);
     $oldFilename = sanitize(decipher($_POST['file-verifier'] ?? null));
     $newFilename = $oldFilename;
@@ -1160,10 +1161,10 @@ if (isset($_POST['save-201-file'])) {
         $hasExistingRecord = fileAttachment($employeeId, $fileId);
 
         if (!$hasExistingRecord) {
-            $affectedFileAttachment = createFileAttachment($description, $newFilename, $ext, $employeeId);
+            $affectedFileAttachment = createFileAttachment($fileTypeId, $description, $newFilename, $ext, $employeeId);
             $logMessage = 'Added 201 file';
         } else {
-            $affectedFileAttachment = updateFileAttachment($description, $newFilename, $ext, $employeeId, $fileId);
+            $affectedFileAttachment = updateFileAttachment($fileTypeId, $description, $newFilename, $ext, $employeeId, $fileId);
             $logMessage = 'Updated 201 file';
         }
 
