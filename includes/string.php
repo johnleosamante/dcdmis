@@ -1,94 +1,85 @@
 <?php
 // include/string.php
-function toString($string, $prefix = null, $suffix = null, $ischar = false)
+function toString($string, $prefix = null, $suffix = null, $ischar = false): string
 {
-    if (empty($string)) return '';
-    if (strtolower($string) === 'n/a') return '';
-    if ($ischar) $string = $string[0];
-    return $prefix . $string . $suffix;
+    if (empty($string))
+        return '';
+    if (strtolower($string) === 'n/a')
+        return '';
+    if ($ischar)
+        $string = $string[0];
+    return "{$prefix}{$string}{$suffix}";
 }
 
-function toName($lastName, $firstName, $middleName = '', $extension = '', $fnameFirst = false, $middleInitial = true)
+function toName(string $last_name, string $first_name, string|null $middle_name = null, string|null $extension = null, $fname_first = false, $middle_initial = true): string
 {
-    if (strlen($middleName) > 0 && $middleName !== ' ' && strtoupper($middleName) !== 'n/a') {
-        $suffix = $middleInitial ? '.' : '';
-        $middleName = toString($middleName, ' ', $suffix, $middleInitial);
+    if (strlen($middle_name) > 0 && $middle_name !== ' ' && strtoupper($middle_name) !== 'n/a') {
+        $suffix = $middle_initial ? '.' : '';
+        $middle_name = toString($middle_name, ' ', $suffix, $middle_initial);
     } else {
-        $middleName = '';
+        $middle_name = '';
     }
 
-    if (!$fnameFirst) {
-        return $lastName . toString($firstName, ', ') . toString($extension, ' ') . $middleName;
+    if (!$fname_first) {
+        return $last_name . toString($first_name, ', ') . toString($extension, ' ') . $middle_name;
     } else {
-        return $firstName . toString($middleName) . toString($lastName, ' ') . toString($extension, ', ');
+        return $first_name . toString($middle_name) . toString($last_name, ' ') . toString($extension, ', ');
     }
 }
 
-function toAddress($lot, $street, $subdivision, $barangay, $city, $province = '')
+function toAddress(string $lot, string $street, string $subdivision, string $barangay, string $city, string $province = ''): string
 {
     return toString($lot, '', ', ') . toString($street, '', ', ') . toString($subdivision, '', ', ') . toString($barangay, '', ', ') . toString($city) . toString($province, ', ');
 }
 
-function toHandleNull($value, $default = '')
+function toHandleNull(string $value, string $default = ''): string
 {
     return !empty($value) ? $value : $default;
 }
 
-function toDate($date, $format = 'm/d/Y', $default = '')
+function toDate(string $date, string $format = 'm/d/Y', string $default = ''): string
 {
     return strtotime($date) ? date($format, strtotime($date)) : $default;
 }
 
-function toLongDate($date, $default = '')
+function toLongDate(string $date, string $default = ''): string
 {
     return toDate($date, 'F j, Y', $default);
 }
 
-function toDatetime($date)
+function toDatetime(string $date, string $separator = '<br>'): string
 {
-    return strtotime($date) ? date('F j, Y', strtotime($date)) . '<br>' . date('h:i:s A', strtotime($date)) : $date;
+    return strtotime($date) ? date('F j, Y', strtotime($date)) . $separator . date('h:i:s A', strtotime($date)) : $date;
 }
 
-function toCurrency($value, $currency = '&#8369;')
+function toCurrency(string $value, string $currency = '&#8369;'): string
 {
     $number = is_numeric($value) ? $value : 0;
-    return $currency . ' ' . number_format(floatval($number), 2);
+    return "$currency " . number_format(floatval($number), 2);
 }
 
-function sanitize($input)
+function sanitize(string $text): string
 {
-    return isset($input) ? htmlspecialchars(stripslashes(trim($input)), ENT_QUOTES) : '';
+    return isset($text) ? htmlspecialchars(stripslashes(trim($text)), ENT_QUOTES) : null;
 }
 
-function removeTags($input)
+function toHandleEncoding(string $text)
 {
-    return isset($input) ? strip_tags($input) : null;
+    return mb_convert_encoding(html_entity_decode($text, ENT_QUOTES), 'ISO-8859-1', 'UTF-8');
 }
 
-function convertTags($input)
-{
-    return isset($input) ? htmlentities($input) : null;
-}
-
-function toHandleEncoding($string)
-{
-    return mb_convert_encoding(html_entity_decode($string, ENT_QUOTES), 'ISO-8859-1', 'UTF-8');
-}
-
-function randomPassword($length)
+function randomPassword(int $length): string
 {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*?';
     $charLength = strlen($characters);
     $randomString = '';
-
     for ($i = 0; $i < $length; $i++) {
         $randomString .= $characters[rand(0, $charLength - 1)];
     }
-
     return $randomString;
 }
 
-function checkPasswordStrength($password)
+function checkPasswordStrength(string $password): bool
 {
     $hasUppercase = preg_match('/[A-Z]/', $password);
     $hasLowercase = preg_match('/[a-z]/', $password);
@@ -97,28 +88,25 @@ function checkPasswordStrength($password)
     return $hasUppercase && $hasLowercase && $hasNumber && $hasSpecialCharacter;
 }
 
-function generateStrongRandomPassword()
+function generateStrongRandomPassword(): string
 {
     $strongPassword = false;
     $randomPassword = '';
     $length = rand(10, 12);
-
     while (!$strongPassword) {
         $randomPassword = randomPassword($length);
         $strongPassword = checkPasswordStrength($randomPassword);
     }
-
     return $randomPassword;
 }
 
-function toDateRange($from, $to)
+function toDateRange(string $from, string $to): string
 {
     $from = strtotime($from);
     $to = strtotime($to);
     $sameDay = $from === $to;
     $sameYear = date('Y', $from) === date('Y', $to);
     $sameMonth = date('m', $from) === date('m', $to);
-
     if ($sameDay) {
         return date('F j, Y', $from);
     } elseif ($sameYear && $sameMonth) {
@@ -130,12 +118,21 @@ function toDateRange($from, $to)
     }
 }
 
-function toOrdinal($number)
+function toOrdinal(int $number): string
 {
-    $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
+    $ends = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'];
     if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
-        return $number . 'th';
+        return "{$number}th";
     } else {
         return $number . $ends[$number % 10];
     }
+}
+
+function toTruncate(string $text, int $length = 200): string
+{
+    $text = htmlspecialchars(trim($text), ENT_QUOTES);
+    if (mb_strlen($text) > $length) {
+        return mb_substr($text, 0, $length) . '...';
+    }
+    return $text;
 }
