@@ -3,14 +3,15 @@
 sidebarDivider();
 sidebarHeading('Employees');
 
-$countActive = number_format(count(activeEmployees()));
-$countRetirable = number_format(count(retirableEmployees()));
-$countStepIncrement = number_format(count(employeeStepIncrement()));
-$countLoyaltyAward = number_format(count(employeeLoyaltyAward()));
-$countVacancy = number_format(count(vacancies()));
-$districtCount = number_format(count(districts()));
-$schoolCount = number_format(count(schools()));
-$sectionCount = number_format(count(sections()));
+$countActive = number_format(countActiveEmployees());
+$countRetirable = number_format(countRetirableEmployees());
+$countStepIncrement = number_format(countEmployeeStepIncrement());
+$countLoyaltyAward = number_format(countEmployeeLoyaltyAward());
+$countVacancy = number_format(countVacancies());
+$countPublications = number_format(countPublications());
+$districtCount = number_format(countDistricts());
+$schoolCount = number_format(countSchools());
+$sectionCount = number_format(countSections());
 
 sidebarModalItem(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus');
 sidebarMenuItem(customUri('hrmis', 'Active Employees'), 'Active', 'fa-user-check', isset($url) && str_contains($url, 'Active'), $countActive);
@@ -20,7 +21,14 @@ sidebarMenuItem(customUri('hrmis', 'Archived Employees'), 'Archived', 'fa-archiv
 sidebarDivider();
 sidebarMenuItem(customUri('hrmis', 'Step Increment'), 'Step', 'fa-plus', isset($url) && str_contains($url, 'Step'), $countStepIncrement);
 sidebarMenuItem(customUri('hrmis', 'Loyalty Award'), 'Loyalty', 'fa-award', isset($url) && str_contains($url, 'Loyalty'), $countLoyaltyAward);
-sidebarMenuItem(customUri('hrmis', 'Vacancies'), 'Vacancies', 'fa-users', isset($url) && str_contains($url, 'Vacancies'), $countVacancy);
+sidebarDivider();
+if ($isHrmis && $isPersonnel) {
+    sidebarMenuItem(customUri('hrmis', 'Positions'), 'Positions', 'fa-user-tie', isset($url) && str_contains($url, 'Positions'));
+    sidebarMenuItem(customUri('hrmis', 'Plantilla Items'), 'Plantilla Items', 'fa-list', isset($url) && str_contains($url, 'Plantilla Items'));
+    sidebarDivider();
+}
+sidebarMenuItem(customUri('hrmis', 'Vacancies'), 'Vacancies', 'fa-user-times', isset($url) && str_contains($url, 'Vacancies'), $countVacancy);
+sidebarMenuItem(customUri('hrmis', 'Publications'), 'Publications', 'fa-newspaper', isset($url) && str_contains($url, 'Publications'), $countPublications);
 sidebarDivider();
 sidebarMenuItem(customUri('hrmis', 'Districts'), 'Districts', 'fa-map-marked-alt', isset($url) && str_contains($url, 'District'), $districtCount);
 sidebarMenuItem(customUri('hrmis', 'Schools'), 'Schools', 'fa-school', isset($url) && str_contains($url, 'School'), $schoolCount);
