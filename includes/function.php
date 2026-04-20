@@ -124,7 +124,7 @@ function clientIp()
 function redirect($url = null)
 {
     if ($url !== null) {
-        header("Location: {$url}");
+        header("Location: $url");
         exit;
     }
 }
