@@ -1385,25 +1385,22 @@ if (isset($_POST['save-plantilla-item'])) {
     $position_id = sanitize($_POST['position'] ?? null);
     $station_id = sanitize($_POST['station'] ?? null);
     $employment_status = sanitize($_POST['employment-status'] ?? null);
-    $is_vacant = isset($_POST['is-vacant']) ? 1 : 0;
     $is_dissolve = isset($_POST['is-dissolve']) ? 1 : 0;
     $showAlert = true;
 
     beginTransaction();
 
     try {
-        $error = doesItemNumberExist($item_number) ? 'Item number already exists.' : 'Failed to save plantilla item.';
-
-        if (plantillaItem($plantillaItemId)) {
-            $result = updatePlantillaItem($plantillaItemId, $position_id, $item_number, $employment_status, $station_id, $is_vacant, $is_dissolve);
-            $message = "Plantilla item [$item_number] updated successfully.";
-        } else {
-            $result = createPlantillaItem($position_id, $item_number, $employment_status, $station_id, $is_vacant, 0);
+        if (!plantillaItem($plantillaItemId)) {
+            $affectedPlantillaItem = createPlantillaItem($position_id, $item_number, $employment_status, $station_id, $is_dissolve);
             $message = "Plantilla item [$item_number] created successfully.";
+        } else {
+            $affectedPlantillaItem = updatePlantillaItem($plantillaItemId, $position_id, $item_number, $employment_status, $station_id, $is_dissolve);
+            $message = "Plantilla item [$item_number] updated successfully.";
         }
 
-        if (!$result) {
-            $message = $error;
+        if ($affectedPlantillaItem === false) {
+            $message = doesItemNumberExist($item_number) ? 'Item number already exists.' : 'No changes have been made to plantilla items.';
             return;
         }
 
