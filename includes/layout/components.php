@@ -11,8 +11,7 @@ function displayLogo($width, $height, $marginBottom = '3', $url = '', $text = ''
 function messageAlert($show, $message, $success = true, $align = 'left')
 {
     if ($show): ?>
-        <div
-            class="alert alert-<?= $success ? 'success' : 'danger' ?> text-<?= e($align) ?> p-2 auto-hide d-flex align-items-start">
+        <div class="alert alert-<?= $success ? 'success' : 'danger' ?> text-<?= e($align) ?> p-2 d-flex align-items-start">
             <i class="fa fas fa-<?= $success ? 'info' : 'exclamation' ?>-circle mt-1 mr-1"></i>
             <div>
                 <?= $message ?>
@@ -164,7 +163,7 @@ function scrollToTop()
 function showAsterisk($show = true)
 {
     if ($show): ?>
-        <span class="text-danger"> *</span>
+        <span class="text-danger small"> *</span>
     <?php endif;
 }
 
@@ -278,7 +277,9 @@ function modalButtonSplit($link, $text, $icon, $title = '', $color = 'primary')
     <a href="#" data-toggle="modal" data-target="#modal" class="btn btn-<?= e($color) ?>  btn-icon-split btn-sm my-1"
         title="<?= e($title) ?>" onclick="loadData('<?= e($link) ?>')">
         <span class="icon text-white-50"><i class="fas <?= e($icon) ?> fa-fw"></i></span>
-        <span class="text"><?= e($text) ?></span>
+        <?php if (!empty($text)): ?>
+            <span class="text"><?= e($text) ?></span>
+        <?php endif ?>
     </a>
 <?php }
 
@@ -375,12 +376,12 @@ function missingAlert($text, $icon = 'fa-times-circle', $color = 'text-danger')
 { ?>
     <div class="error mx-auto text-center <?= e($color) ?>"><i class="fas <?= e($icon) ?> fa-fw"></i></div>
     <p class="lead text-center text-gray-800 mt-1 mb-0"><?= e($text) ?></p>
-    <p class="text-center text-gray-500 mb-0">Sorry, we couldn't find what you're looking for...</p>
+    <p class="text-center text-gray-600 mb-0">Sorry, we couldn't find what you're looking for...</p>
 <?php }
 
 function requiredLegend($marginBottom = 2)
 { ?>
-    <div class="text-danger mb-<?= e($marginBottom) ?>">* Required field</div>
+    <div class="text-danger small mb-<?= e($marginBottom) ?>">* Required field</div>
 <?php }
 
 function progressBar($value, $min = 50)
