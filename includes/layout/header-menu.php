@@ -39,7 +39,7 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                 <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                     aria-labelledby="searchDropdown">
                     <form class="form-inline mr-auto w-100 navbar-search" method="POST" action="">
-                            <?= csrf_field(); ?>
+                        <?= csrf_field(); ?>
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search..."
                                 aria-label="Search" name="primary-search-text" required>
@@ -80,7 +80,7 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                 aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <?php if ($alertCount): ?>
-                    <span class="badge badge-danger badge-counter"><?= e($alertCount) ?></span>
+                    <span class="badge badge-danger badge-counter badge-pill"><?= e($alertCount) ?></span>
                 <?php endif ?>
             </a>
 
