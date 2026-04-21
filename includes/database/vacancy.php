@@ -117,7 +117,7 @@ function vacantItemsForUpdate($publication_id, $position_id = null)
     return query($sql, $params);
 }
 
-function VacantPlantillaItems()
+function vacantPlantillaItems()
 {
     $sql = "SELECT p.`id`, p.`item_number`, p.`position_id`, p.`station_id`,
                 pos.`official_title`, pos.`salary_grade`, pos.`category`,
@@ -125,7 +125,7 @@ function VacantPlantillaItems()
             FROM `plantilla_items` AS p
             INNER JOIN `positions` AS pos ON p.`position_id` = pos.`id`
             INNER JOIN `schools` AS s ON p.`station_id` = s.`id`
-            WHERE p.`is_vacant` = 1 AND p.`is_dissolve` = 0 AND p.`id` NOT IN (SELECT `plantilla_item_id` FROM `vacancies`)
+            WHERE p.`is_dissolve` = 0 AND p.`id` NOT IN (SELECT `plantilla_item_id` FROM `vacancies`)
             ORDER BY pos.`category` ASC, pos.`official_title` ASC, p.`item_number` ASC";
     return query($sql);
 }
