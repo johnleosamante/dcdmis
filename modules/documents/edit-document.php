@@ -28,7 +28,7 @@ if ($document) {
     $hasDocument = !str_contains($documentStatus, 'complete') && !str_contains($documentStatus, 'cancel') && $documentLogs['received_from'] === $station;
     $pageTitle = $hasDocument ? 'Edit Document' : 'Document not found';
 
-    if ($station === $document['created_from']) {
+    if (count($documentLogs) === 1 && $station === $document['created_from']) {
         $attribute = '';
         $isDescriptionEditable = $_SESSION[alias() . '_editableDescription'] = true;
     } else {
