@@ -4,6 +4,7 @@ require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/position.php');
+require_once(root() . '/includes/database/plantilla.php');
 require_once(root() . '/includes/database/school.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
@@ -12,6 +13,7 @@ $employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $employee = employee($employeeId);
 $modalTitle = 'Employee not found';
 $hasEmployee = false;
+$itemNumber = null;
 
 if ($employee) {
     $employeeId = $employee['id'];
@@ -22,10 +24,17 @@ if ($employee) {
     $stationId = $position['station_id'];
     $station = $position['station'];
     $positionId = $position['position_id'];
+    $currentSG = $position['salary_grade'];
     $position = $position['official_title'];
     $picture = file_exists(root() . '/' . $employee['profile_picture']) ? "{$baseUri}/" . $employee['profile_picture'] : "{$baseUri}//assets/img/user.png";
     $modalTitle = 'Promote Employee';
     $hasEmployee = true;
+
+    $employeeItem = employeeItemNumber($employeeId);
+
+    if ($employeeItem) {
+        $itemNumber = $employeeItem['item_number'] ?? null;
+    }
 }
 ?>
 
@@ -60,7 +69,7 @@ if ($employee) {
                             $categories = positionCategories();
                             foreach ($categories as $category): ?>
                                 <optgroup label="<?= e($category['category']) ?>">
-                                    <?php $jobPositions = positionsByCategory($category['category']);
+                                    <?php $jobPositions = positionsByCategory($category['category'], $currentSG);
                                     foreach ($jobPositions as $jobPosition): ?>
                                         <option value="<?= e($jobPosition['id']) ?>" <?= setOptionSelected($jobPosition['id'], $positionId) ?>><?= e($jobPosition['official_title']) ?></option>
                                     <?php endforeach ?>
@@ -75,6 +84,30 @@ if ($employee) {
                             value="<?= toDate($doa, 'Y-m-d', date('Y-m-d')) ?>" title="Set date of effectivity..." required>
                     </div>
 
+                    <div class="form-group mb-2" id="vacancy-option">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="skip-vacancy" name="skip_vacancy"
+                                value="1">
+                            <label class="custom-control-label" for="skip-vacancy">
+                                <strong>Do not create vacancy</strong>
+                                <small class="d-block text-muted">Check this if the position does not require creation of a
+                                    vacant
+                                    item</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <?php if ($itemNumber): ?>
+                        <div class="alert alert-info p-2 my-2 small d-flex align-items-start">
+                            <i class="fas fa-info-circle mt-1 mr-1"></i>
+                            <div>
+                                Item Number: <strong>
+                                    <?= e($itemNumber) ?>
+                                </strong> will be marked as vacant unless you check the
+                                option above.
+                            </div>
+                        </div>
+                    <?php endif; ?>
                     <?php requiredLegend(0) ?>
                 <?php } else {
                     missingAlert($modalTitle);
