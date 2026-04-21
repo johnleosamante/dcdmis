@@ -16,9 +16,9 @@ function stationName($station_id)
     return $station_id;
 }
 
-function userName($person_id, $uppercase = false)
+function userName($employee_id, $uppercase = false)
 {
-    $user = employee($person_id);
+    $user = employee($employee_id);
     if ($user) {
         $formattedName = toName(
             $user['last_name'],
@@ -35,13 +35,13 @@ function userName($person_id, $uppercase = false)
         }
         return $formattedName;
     }
-    return $person_id;
+    return $employee_id;
 }
 
-function pdsProgress($person_id)
+function pdsProgress($employee_id)
 {
     $progress = 15;
-    $educationCount = count(educationalBackgrounds($person_id) ?: []);
+    $educationCount = count(educationalBackgrounds($employee_id) ?: []);
     if ($educationCount === 1) {
         $progress += 5;
     } elseif ($educationCount === 2) {
@@ -49,13 +49,13 @@ function pdsProgress($person_id)
     } elseif ($educationCount >= 3) {
         $progress += 25;
     }
-    if (!empty(eligibilities($person_id))) {
+    if (!empty(eligibilities($employee_id))) {
         $progress += 25;
     }
-    if (!empty(experiences($person_id))) {
+    if (!empty(experiences($employee_id))) {
         $progress += 20;
     }
-    if (!empty(attendedTrainings($person_id))) {
+    if (!empty(attendedTrainings($employee_id))) {
         $progress += 15;
     }
     return min($progress, 100);
