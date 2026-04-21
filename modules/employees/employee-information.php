@@ -5,7 +5,7 @@ if (!$isPis && !$isHrmis) {
     return;
 }
 
-$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+$employeeId = (int) sanitize(decode($_GET['id'] ?? null));
 
 if ($isPis && $userId !== $employeeId) {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -125,6 +125,12 @@ $employeePhoto = '';
                     href="#government-id" data-toggle="tab">Government Issued ID</a>
             </li>
         </ul>
+
+        <div class="d-sm-flex align-items-center flex-row-reverse my-2">
+            <div class="d-inline-block">
+                <?php linkButtonSplit(customUri('print', 'Personal Data Sheet', $employeeId), 'Print', 'fa-print', 'Print file', 'success', true) ?>
+            </div>
+        </div>
 
         <div class="tab-content mt-2">
             <?php
