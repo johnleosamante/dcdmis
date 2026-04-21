@@ -41,97 +41,69 @@ messageAlert($showAlert, $message, $success);
             </div>
         <?php } ?>
 
-        <div class="row mb-3 align-items-center">
-            <div class="col-auto">
-                <label for="category-filter" class="small font-weight-bold text-uppercase mb-0">Filter by
-                    Category</label>
-            </div>
-            <div class="col-md-4">
-                <select id="category-filter" class="form-control" onchange="filterByCategory(this.value)">
-                    <option value="">All Categories</option>
-                    <?php
-                    $categories = positionCategories();
-                    foreach ($categories as $category): ?>
-                        <option value="<?= e($category['category']) ?>">
-                            <?= e($category['category']) ?>
-                        </option>
-                    <?php endforeach ?>
-                </select>
-            </div>
-        </div>
-
         <div class="table-responsive">
-            <table class="table table-hover mb-0 text-center" width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" width="100%" cellspacing="0" id="data-table">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="5%">#</th>
-                        <th class="align-middle" width="25%">Position / Salary Grade</th>
+                        <th class="align-middle" width="30%">Position / Salary Grade / Item Number</th>
                         <th class="align-middle" width="10%">Category</th>
                         <th class="align-middle" width="35%">Station</th>
-                        <th class="align-middle" width="15%">Date Vacated</th>
+                        <th class="align-middle" width="15%">Date Vacated / Posted</th>
                         <th class="align-middle" width="10%">Publication Code</th>
                         <?php if ($isPersonnel): ?>
-                            <th class="align-middle" width="10%">Action</th>
+                            <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php
-                    $count = 0;
                     $query = vacantItems();
                     if ($query) {
                         foreach ($query as $row): ?>
                             <tr class="text-uppercase" data-category="<?= e($row['category']) ?>">
-                                <td class="align-middle"><?= ++$count ?></td>
                                 <td class="align-middle">
                                     <div><?= $row['official_title'] . ' (' . $row['salary_grade'] . ')' ?></div>
                                     <?php if ($row['item_number']) {
-                                        echo '<div class="badge badge-info small">' . $row['item_number'] . '</div>';
+                                        echo '<div class="badge badge-info badge-pill small">' . $row['item_number'] . '</div>';
                                     } ?>
                                 </td>
                                 <td class="align-middle"><?= e($row['category']) ?></td>
                                 <td class="align-middle">
                                     <?php $school = schoolById($row['station_id']);
-                                    if ($school) {
-                                        linkItem(customUri($activeApp, 'School Information', $row['station_id']), $school['name']);
-                                    } else {
-                                        echo '<span class="text-muted">TO BE DETERMINED</span>';
-                                    } ?>
+                                    linkItem(customUri($activeApp, 'School Information', $row['station_id']), $school['name']); ?>
                                 </td>
                                 <td class="align-middle">
                                     <?= toLongDate($row['date_vacated']) ?>
                                 </td>
                                 <td class="align-middle">
-                                    <?php if (!empty($row['publication_code'])): ?>
-                                        <?php $isPublished = true; ?>
-                                        <span class="badge badge-success"><?= e($row['publication_code']) ?></span>
-                                    <?php else: ?>
-                                        <?php $isPublished = false; ?>
-                                        <span class="badge badge-secondary">Not Published</span>
-                                    <?php endif ?>
+                                    <?php
+                                    $publication = publicationCodes($row['id']);
+                                    if ($publication) {
+                                        foreach ($publication as $pub) { ?>
+                                            <span class="badge badge-success badge-pill">
+                                                <a class="text-white" href="<?= uri() . '/hrmis/apply?p=' . e($pub['code']) ?>"
+                                                    target="_blank">
+                                                    <?= e($pub['code']) ?>
+                                                </a>
+                                            </span>
+                                        <?php }
+                                    } else { ?>
+                                        <span class="badge badge-secondary badge-pill">Not Published</span>
+                                    <?php } ?>
                                 </td>
                                 <?php if ($isPersonnel): ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
                                             <?php dropdownEllipsis() ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                                <?php
-                                                modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Vacancy');
-                                                modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?c=' . cipher($row['id']) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Vacancy');
-                                                if ($isPublished) {
-                                                    modalDropdownItem(uri() . '/modules/vacancies/fill-vacancy-dialog.php?id=' . cipher($row['id']), 'Fill Vacancy', 'fa-user-plus', 'Assign Employee');
-                                                }
-                                                modalDropdownItem(uri() . '/modules/vacancies/delete-vacancy-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Vacancy') ?>
+                                                <?php modalDropdownItem(uri() . '/modules/vacancies/delete-vacancy-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Vacancy') ?>
                                             </div>
                                         </div>
                                     </td>
                                 <?php endif ?>
                             </tr>
                         <?php endforeach ?>
-                        <tr id="no-data-row" style="display:none;">
-                            <td colspan="9" class="text-center text-muted">No data available for the selected category.</td>
-                        </tr>
                     <?php } else { ?>
                         <tr>
                             <td colspan="9" class="text-center text-muted">No data available in table.</td>
@@ -141,14 +113,13 @@ messageAlert($showAlert, $message, $success);
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="5%">#</th>
-                        <th class="align-middle" width="25%">Position / Salary Grade</th>
+                        <th class="align-middle" width="30%">Position / Salary Grade / Item Number</th>
                         <th class="align-middle" width="10%">Category</th>
                         <th class="align-middle" width="35%">Station</th>
-                        <th class="align-middle" width="15%">Date Vacated</th>
+                        <th class="align-middle" width="15%">Date Vacated / Posted</th>
                         <th class="align-middle" width="10%">Publication Code</th>
                         <?php if ($isPersonnel): ?>
-                            <th class="align-middle" width="10%">Action</th>
+                            <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
                 </tfoot>
@@ -156,30 +127,3 @@ messageAlert($showAlert, $message, $success);
         </div>
     </div>
 </div>
-
-<script>
-    function filterByCategory(category) {
-        const tbody = document.querySelector('#data-table tbody');
-        const allRows = Array.from(tbody.querySelectorAll('tr'));
-        const dataRows = allRows.filter(r => !r.id || r.id !== 'no-data-row');
-        const noDataRow = tbody.querySelector('#no-data-row');
-
-        let visibleCount = 0;
-        dataRows.forEach(row => {
-            if (category === '' || row.dataset.category === category) {
-                row.style.display = '';
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        if (noDataRow) {
-            noDataRow.style.display = visibleCount === 0 ? '' : 'none';
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        filterByCategory(document.getElementById('category-filter').value);
-    });
-</script>
