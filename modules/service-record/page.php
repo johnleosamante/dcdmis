@@ -5,7 +5,7 @@ if (!$isPis && !$isHrmis) {
     return;
 }
 
-$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+$employeeId = (int) sanitize(decode($_GET['id'] ?? null));
 
 if ($isPis && $userId !== $employeeId) {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -58,8 +58,7 @@ if ($isHrmis) {
         <?php } ?>
 
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%"
-                cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">From</th>
