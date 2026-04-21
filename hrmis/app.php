@@ -1300,7 +1300,101 @@ if (isset($_POST['approve-loyalty-award'])) {
 }
 
 if (isset($_POST['save-position'])) {
+    $referencePositionId = sanitize(decipher($_POST['verifier'] ?? null));
+    $positionId = sanitize($_POST['position-id']);
+    $official_title = sanitize($_POST['official-title']);
+    $salary_grade = sanitize($_POST['salary-grade']);
+    $category = sanitize($_POST['category']);
+    $showAlert = true;
 
+    if (empty($official_title)) {
+        $message = 'Please enter the official title.';
+        return;
+    }
+
+    if (empty($salary_grade)) {
+        $message = 'Please enter the salary grade.';
+        return;
+    }
+
+    if (empty($category)) {
+        $message = 'Please select a category.';
+        return;
+    }
+
+    beginTransaction();
+
+    try {
+        if (!positions($referencePositionId)) {
+            $affectedPosition = createPosition($positionId, $official_title, $salary_grade, $category);
+
+            if ($affectedPosition === false) {
+                $message = 'Position was not saved successfully.';
+                return;
+            }
+
+            createSystemLog($stationId, $userId, 'Created position', $positionId, clientIp());
+            commit();
+
+            $message = "Position [$official_title] (SG $salary_grade) has been added successfully.";
+        } else {
+            $affectedPosition = updatePosition($positionId, $official_title, $salary_grade, $category, $referencePositionId);
+
+            if ($affectedPosition === false) {
+                $message = 'No changes have been made to the position.';
+                return;
+            }
+
+            createSystemLog($stationId, $userId, 'Updated position', $positionId, clientIp());
+            commit();
+
+            $message = "Position [$official_title] (SG $salary_grade) has been updated successfully.";
+        }
+
+        $success = true;
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
+
+if (isset($_POST['delete-position'])) {
+    $positionId = sanitize(decipher($_POST['verifier'] ?? null));
+    $showAlert = true;
+    $message = 'Position was not deleted successfully.';
+
+    if (empty($positionId)) {
+        $message = 'Invalid position selected.';
+        return;
+    }
+
+    beginTransaction();
+
+    try {
+        $position = positions($positionId);
+
+        if (!$position) {
+            $message = 'Position not found.';
+            return;
+        }
+
+        $positionTitle = strtoupper($position['official_title']);
+        $affectedPosition = deletePosition($positionId);
+
+        if ($affectedPosition === false) {
+            $message = 'Position was not deleted successfully.';
+            return;
+        }
+
+        createSystemLog($stationId, $userId, 'Deleted position', $positionId, clientIp());
+        commit();
+
+        $message = "Position [$positionTitle] has been deleted successfully.";
+        $success = true;
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
 }
 
 if (isset($_POST['save-vacancy'])) {
