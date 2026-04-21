@@ -1,6 +1,6 @@
 <?php
 // modules/employees/tabs/government-id.php
-$card = $number = $place = $date = 'N/A';
+$cardType = $card = $number = $place = $date = null;
 
 if ($isPis) {
     $date = date('Y-m-d');
