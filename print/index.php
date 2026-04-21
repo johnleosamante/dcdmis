@@ -33,6 +33,9 @@ switch ($url) {
     case 'Service Record':
         $file = 'service-record';
         break;
+    case 'Personal Data Sheet':
+        $file = 'personal-data-sheet';
+        break;
     default:
         redirect(customUri($activeApp, '404'));
         break;
@@ -47,4 +50,5 @@ require_once(root() . '/includes/plugin/code128/code128.php');
 require_once(root() . '/includes/plugin/phpqrcode/qrlib.php');
 require_once(root() . "/print/{$file}.php");
 
+ob_clean();
 $pdf->Output("I", "{$title}.pdf");
