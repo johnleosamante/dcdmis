@@ -68,9 +68,9 @@ require_once(root() . '/includes/layout/components.php');
                     <select name="purpose" id="purpose" class="form-control" title="Select document purpose..."
                         required>
                         <option value="">Select purpose...</option>
-                        <?php $documentPurposes = documentPurpose();
+                        <?php $documentPurposes = documentTransactionStatus();
                         foreach ($documentPurposes as $documentPurpose): ?>
-                            <option value="<?= e($documentPurpose['name']) ?>">
+                            <option value="<?= e($documentPurpose['id']) ?>">
                                 <?= e($documentPurpose['name']) ?>
                             </option>
                         <?php endforeach ?>
