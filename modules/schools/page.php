@@ -1,6 +1,6 @@
 <?php
 // modules/schools/page.php
-if (!$isHrmis && !$isHrtdms && !$isDmis && !$isHrmpsb) {
+if (!$isHrmis && !$isHrtdms && !$isDmis) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -23,8 +23,7 @@ messageAlert($showAlert, $message, $success);
             contentTitleWithModal('Schools', uri() . '/modules/schools/save-school-dialog.php', 'Add', 'fa-plus');
         } else {
             contentTitle('Schools');
-        }
-        ?>
+        } ?>
     </div>
 
     <div class="card-body">
@@ -37,8 +36,7 @@ messageAlert($showAlert, $message, $success);
         <?php } ?>
 
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%"
-                cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">Logo</th>
@@ -58,7 +56,7 @@ messageAlert($showAlert, $message, $success);
                     <?php
                     $query = schools();
                     foreach ($query as $row):
-                        $logo = !empty($row['logo']) ? "{$baseUri}/" . $row['logo'] : "{$baseUri}/uploads/division/division.png";
+                        $logo = ($row['logo'] !== null && file_exists(root() . '/' . $row['logo'])) ? "{$baseUri}/" . $row['logo'] : "{$baseUri}/uploads/division/division.png";
                         $schoolName = $row['name'];
                         ?>
                         <tr class="text-uppercase">
@@ -85,7 +83,7 @@ messageAlert($showAlert, $message, $success);
                                         <?php if ($isHrmis) {
                                             linkItem(customUri('hrmis', 'Employee Information', $row['head_id']), userName($row['head_id']));
                                         } else {
-                                            modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['head_id']), userName(person_id: $row['head_id']));
+                                            modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['head_id']), userName($row['head_id']));
                                         } ?>
                                     </div>
                                     <?php
