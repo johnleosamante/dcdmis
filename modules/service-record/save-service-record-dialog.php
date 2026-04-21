@@ -9,7 +9,7 @@ require_once(root() . '/includes/string.php');
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $serviceRecordId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
-$service = $position = $positionCode = $organization = $organizationAlias = $status = $isgovernment = $leave = $separationCause = $sg = null;
+$service = $position = $organization = $organizationAlias = $status = $isgovernment = $leave = $separationCause = $sg = null;
 $salary = 0;
 $from = $to = $separationDate = date('Y-m-d');
 $isPresent = $isSeparation = false;
@@ -25,7 +25,6 @@ if (isset($serviceRecordId)) {
         $isPresent = $service['is_present'];
         $to = $isPresent ? date('Y-m-d') : toDate($service['to_date'], 'Y-m-d');
         $position = $service['designation'];
-        $positionCode = $service['position_id'];
         $isgovernment = $service['is_government_service'] ? 'Y' : 'N';
         $sg = $service['salary_grade_step_increment'];
         $salary = $service['monthly_salary'];
