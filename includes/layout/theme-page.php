@@ -53,7 +53,7 @@ require_once(root() . '/includes/layout/components.php');
         <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <?php endif ?>
 
-    <script src="<?= uri() ?>/assets/js/script.js?v=1.2"></script>
+    <script src="<?= uri() ?>/assets/js/script.js?v=1.2.3"></script>
 </body>
 
 </html>
