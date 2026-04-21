@@ -58,9 +58,13 @@ function toCurrency(string $value, string $currency = '&#8369;'): string
     return "$currency " . number_format(floatval($number), 2);
 }
 
-function sanitize(string $text): string
+function sanitize(?string $text): ?string
 {
-    return isset($text) ? htmlspecialchars(stripslashes(trim($text)), ENT_QUOTES) : null;
+    $trimmed = isset($text) ? trim($text) : null;
+    if ($trimmed === null || $trimmed === '') {
+        return null;
+    }
+    return htmlspecialchars(stripslashes($trimmed), ENT_QUOTES);
 }
 
 function toHandleEncoding(string $text)
