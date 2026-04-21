@@ -25,9 +25,9 @@ class PDF extends PDF_Code128
         $this->Cell(0, 0, region(), 0, 0, 'C');
         $this->Ln(5);
         $this->Cell(0, 0, division(), 0, 0, 'C');
+        $this->Ln(5);
 
         if (!empty($section)) {
-            $this->Ln(5);
             $this->Cell(0, 0, $section, 0, 0, 'C');
         }
 
@@ -38,7 +38,7 @@ class PDF extends PDF_Code128
         }
 
         $this->Line($margin, $lineY, $width - $margin, $lineY);
-        $this->Ln(15);
+        $this->Ln(10);
     }
 
     public function Footer()
