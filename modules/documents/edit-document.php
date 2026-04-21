@@ -1,18 +1,17 @@
 <?php
-// modules/documents/save-document-dialog.php
-require_once('../../includes/function.php');
-require_once(root() . '/includes/string.php');
-require_once(root() . '/includes/database/database.php');
-require_once(root() . '/includes/database/document.php');
-require_once(root() . '/includes/database/section.php');
-require_once(root() . '/includes/database/school.php');
-require_once(root() . '/includes/layout/components.php');
+// modules/documents/edit-document.php
+if (!$isDts) {
+    require_once(root() . '/modules/error/403.php');
+    return;
+}
 
-$documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+
 $document = documentLog($documentId);
+$documentLogs = null;
 $description = $destination = $type = $purpose = $details = $attribute = $filename = '';
 $isDescriptionEditable = true;
-$modalTitle = 'New Document';
+$pageTitle = 'New Document';
 $hasDocument = true;
 $forRelease = false;
 $notFound = true;
@@ -22,12 +21,12 @@ if ($document) {
     $type = $document['document_type_id'];
     $description = $document['description'];
     $destination = $document['forwarded_to'];
-    $purpose = $document['status'];
+    $purpose = $document['status_id'];
     $details = $document['details'];
     $documentLogs = documentLogs($documentId)[0];
-    // $filename = $documentLogs['attachment'];
-    $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['received_from'] === $station;
-    $modalTitle = $hasDocument ? 'Edit Document' : 'Document not found';
+    $documentStatus = strtolower(documentTransactionStatus($documentLogs['status_id']));
+    $hasDocument = !str_contains($documentStatus, 'complete') && !str_contains($documentStatus, 'cancel') && $documentLogs['received_from'] === $station;
+    $pageTitle = $hasDocument ? 'Edit Document' : 'Document not found';
 
     if ($station === $document['created_from']) {
         $attribute = '';
@@ -37,33 +36,53 @@ if ($document) {
         $isDescriptionEditable = $_SESSION[alias() . '_editableDescription'] = false;
     }
 
-    $forRelease = str_contains(strtolower($document['status']), 'release') && $documentLogs['received_from'] === 'RECORD' && $isRecordsPortal;
+    $forRelease = str_contains(strtolower($document['status_id']), 'release') && $documentLogs['received_from'] === 'RECORD' && $isRecordsPortal;
     $notFound = false;
+} else {
+    require_once(root() . '/modules/error/404.php');
+    return;
 }
+
+$documentTypeDisplay = 'Outgoing Documents';
+
+messageAlert($showAlert, $message, $success);
 ?>
 
-<div class="modal-dialog <?= !$hasDocument ? 'modal-sm' : '' ?>">
-    <div class="modal-content">
-        <?php modalHeader($modalTitle) ?>
+<div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
+    <nav class="d-flex align-items-center flex-row m-0">
+        <ol class="breadcrumb m-0 p-0 bg-transparent">
+            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <li class="breadcrumb-item">
+                <a href="<?= customUri('dts', $documentTypeDisplay) ?>"><?= trim($documentTypeDisplay, ' Documents') ?></a>
+            </li>
+            <li class="breadcrumb-item"><a href="<?= customUri('dts', 'Document Information', $documentId) ?>"><?= e($documentId) ?></a></li>
+            <li class="breadcrumb-item active">Edit</li>
+        </ol>
+    </nav>
+</div>
 
-        <form action="" method="POST" enctype="multipart/form-data">
-            <div class="modal-body">
-                <?php if ($hasDocument) { ?>
-                    <?php if (!$notFound): ?>
-                        <div class="form-group">
-                            <label for="code" class="mb-0">Code</label>
-                            <input id="code" type="text" value="<?= $documentId ?>" class="form-control text-uppercase"
-                                disabled>
-                        </div>
-                    <?php endif ?>
+<form action="" method="POST" enctype="multipart/form-data">
+    <?= csrf_field() ?>
+    <div class="card border-left-primary shadow mb-4">
+        <div class="card-header py-3">
+            <?php contentTitle("Edit Document: " . $document['id']) ?>
+        </div>
 
-                    <div class="form-group">
-                        <label for="document-type" class="mb-0">Document Type
-                            <?php showAsterisk($isDescriptionEditable) ?>
-                        </label>
+        <div class="card-body">
+            <table cellspacing="0" width="100%">
+                <tr>
+                    <th class="align-top pr-3 pt-2" width="20%" scope="row">Code:</th>
+                    <td class="pb-2" width="80%">
+                        <input id="code" type="text" value="<?= e($documentId) ?>" class="form-control text-uppercase" disabled>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="align-top pr-3 pt-2" width="20%" scope="row">
+                        Document Type <?php showAsterisk($isDescriptionEditable) ?>
+                    </th>
+                    <td class="pb-2" width="80%">
                         <?php if ($isDescriptionEditable): ?>
-                            <select name="document-type" id="document-type" class="form-control" title="Select document type..."
-                                required>
+                            <select name="document-type" id="document-type" class="form-control" title="Select document type..." required>
                                 <option value="">Select type...</option>
                                 <?php
                                 $documentTypes = $isSchoolPortal ? documentTypes(true) : documentTypes(false);
@@ -75,114 +94,128 @@ if ($document) {
                                 <option value="1" <?= setOptionSelected('1', $type) ?>>Others</option>
                             </select>
                         <?php else: ?>
-                            <input id="document-type-name" type="text" class="form-control"
-                                value="<?= documentType($type)['name'] ?>" class="form-control" disabled>
+                            <input id="document-type-name" type="text" class="form-control" value="<?= documentType($type) ?>" disabled>
                             <input type="hidden" name="document-type" value="<?= $type ?>">
                         <?php endif ?>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description" class="mb-0">Description
-                            <?php showAsterisk($isDescriptionEditable) ?>
-                        </label>
-                        <textarea id="description" name="description" class="form-control" rows="3"
-                            placeholder="Type description..." title="Type document description..." <?= $attribute ?>
-                            required><?= $description ?></textarea>
-                    </div>
-
-                    <?php if (!$isSchoolPortal): ?>
-                        <div class="form-group">
-                            <label class="mb-0" for="destination">Destination
-                                <?php showAsterisk() ?>
-                            </label>
-                            <?php if (!$forRelease) { ?>
-                                <select name="destination" id="destination" class="form-control"
-                                    title="Select document destination..." required>
-                                    <option value="">Select destination...</option>
-                                    <?php
-                                    $divisions = functionalDivisions();
-                                    foreach ($divisions as $division): ?>
-                                        <optgroup label="<?= $division['name'] ?>">
-                                            <?php
-                                            $sections = sections($division['id']);
-                                            foreach ($sections as $section) {
-                                                if ($section['id'] !== $station) { ?>
-                                                    <option value="<?= $section['id'] ?>" <?= setOptionSelected($section['id'], $destination) ?>>
-                                                        <?= $section['name'] ?>
-                                                    </option>
-                                                    <?php
-                                                }
-                                            } ?>
-                                        </optgroup>
-                                    <?php endforeach ?>
-                                </select>
-                            <?php } else {
-                                $school = schoolByAlias($destination);
-
-                                if ($school) {
-                                    $school = $school['name'];
-                                }
-                                ?>
-                                <input id="destination" class="form-control" type="text" value="<?= $school ?>" disabled>
-                                <input name="destination" class="form-control" type="hidden" value="<?= $destination ?>" required>
-                            <?php } ?>
-                        </div>
-                    <?php endif ?>
-
-                    <div class="form-group">
-                        <label class="mb-0" for="purpose">Purpose
-                            <?php showAsterisk() ?>
-                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="align-top pr-3 pt-2" width="20%" scope="row">
+                        Description <?php showAsterisk($isDescriptionEditable) ?>
+                    </th>
+                    <td class="pb-2" width="80%">
+                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Type description..." title="Type document description..." <?= $attribute ?> required><?= e($description) ?></textarea>
+                    </td>
+                </tr>
+                <?php if (!$isSchoolPortal): ?>
+                <tr>
+                    <th class="align-top pr-3 pt-2" scope="row">
+                        Destination <?php showAsterisk() ?>
+                    </th>
+                    <td class="pb-2">
+                        <?php if (!$forRelease) { ?>
+                            <select name="destination" id="destination" class="form-control" title="Select document destination..." required>
+                                <option value="">Select destination...</option>
+                                <?php
+                                $divisions = functionalDivisions();
+                                foreach ($divisions as $division): ?>
+                                    <optgroup label="<?= $division['name'] ?>">
+                                        <?php
+                                        $sections = sections($division['id']);
+                                        foreach ($sections as $section) {
+                                            if ($section['id'] !== $station) { ?>
+                                                <option value="<?= $section['id'] ?>" <?= setOptionSelected($section['id'], $destination) ?>>
+                                                    <?= $section['name'] ?>
+                                                </option>
+                                                <?php
+                                            }
+                                        } ?>
+                                    </optgroup>
+                                <?php endforeach ?>
+                            </select>
+                        <?php } else {
+                            $school = schoolByAlias($destination);
+                            if ($school) {
+                                $school = $school['name'];
+                            }
+                            ?>
+                            <input id="destination" class="form-control" type="text" value="<?= e($school) ?>" disabled>
+                            <input name="destination" class="form-control" type="hidden" value="<?= e($destination) ?>" required>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <?php endif ?>
+                <tr>
+                    <th class="align-top pr-3 pt-2" scope="row">
+                        Purpose <?php showAsterisk() ?>
+                    </th>
+                    <td class="pb-2">
                         <?php if (!$forRelease): ?>
-                            <select name="purpose" id="purpose" class="form-control" title="Select document purpose..."
-                                required>
+                            <select name="purpose" id="purpose" class="form-control" title="Select document purpose..." required>
                                 <option value="">Select purpose...</option>
                                 <?php
-                                $documentPurposes = documentPurpose();
+                                $documentPurposes = documentTransactionStatus();
                                 foreach ($documentPurposes as $documentPurpose): ?>
-                                    <option value="<?= $documentPurpose['purpose'] ?>"
-                                        <?= setOptionSelected($documentPurpose['purpose'], $purpose) ?>>
-                                        <?= $documentPurpose['purpose'] ?>
+                                    <option value="<?= $documentPurpose['id'] ?>" <?= setOptionSelected($documentPurpose['id'], $purpose) ?>>
+                                        <?= $documentPurpose['name'] ?>
                                     </option>
                                 <?php endforeach ?>
                             </select>
                         <?php else: ?>
-                            <input id="purpose" name="purpose" class="form-control" type="text" value="<?= $purpose ?>" required
-                                readonly>
+                            <input id="purpose" name="purpose" class="form-control" type="text" value="<?= e($purpose) ?>" required readonly>
                         <?php endif ?>
-                    </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="align-top pr-3 pt-2" scope="row">Additional details:</th>
+                    <td class="pb-2">
+                        <textarea id="details" name="details" class="form-control" rows="2" placeholder="Type additional details..." title="Type additional details..."><?= e($details) ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="align-top pr-3 pt-2" scope="row">Attachment:</th>
+                    <td class="pb-2">
+                        <?php
+                        if ($documentLogs) {
+                            $logId = $documentLogs['id'];
+                            $documentLogAttachments = documentLogAttachments($logId);
 
-                    <div class="form-group">
-                        <label class="mb-0" for="details">Additional details</label>
-                        <textarea id="details" name="details" class="form-control" rows="2"
-                            placeholder="Type additional details..."
-                            title="Type additional details..."><?= $details ?></textarea>
-                    </div>
+                            if ($documentLogAttachments) { ?>
+                                <div class="small text-muted">Current attachments will be preserved. Uploading files will attach new ones.</div>
+                                <div class="my-3">
+                                    <div class="list-group">
+                                        <?php foreach ($documentLogAttachments as $attachment) {
+                                            $file = explode('_', $attachment['file_name'], 2);
+                                            ?>
+                                            <div class="list-group-item d-flex justify-content-between align-items-center px-2 py-1">
+                                                <div class="d-flex align-items-center">
+                                                    <?php linkButtonSplit("$baseUri/" . $attachment['file_name'], $file[1], 'fa-paperclip', "View $file[1]", 'secondary', true); ?>
+                                                </div>
+                                                <div class="ml-2">
+                                                    <?= modalButtonSplit(uri() . '/modules/documents/delete-attachment-dialog.php?id=' . cipher($attachment['id']), '', 'fa-trash-alt', 'Delete Attachment', 'danger') ?>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            <?php }
+                        } ?>
 
-                    <?php // TODO
-                        if (false): ?>
-                        <div class="form-group">
-                            <label class="mb-0" for="file-upload">Attachment</label>
-                            <input id="file-upload" name="file-upload[]" type="file" multiple class="w-100"
-                                accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/*, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                            <div class="small mt-1">(.doc/docx, .xls/xlsx, .ppt/pptx, .jpg/jpeg, .png, .gif, .pdf)</div>
-                        </div>
-                    <?php endif ?>
+                        <input id="file-upload" name="file-upload[]" type="file" multiple class="w-100" accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/*, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        <div class="small mt-1 text-muted">(.doc/docx, .xls/xlsx, .ppt/pptx, .jpg/jpeg, .png, .gif, .pdf)</div>
+                        
+                    </td>
+                </tr>
+            </table>
 
-                    <?php requiredLegend(0) ?>
-                <?php } else {
-                    missingAlert($modalTitle);
-                } ?>
+            <?php requiredLegend(0) ?>
+
+            <div class="d-flex align-items-center flex-row-reverse pt-3">
+                <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? e($_GET['id']) : null ?>">
+                <input type="hidden" name="file-verifier" value="<?= cipher($filename ?? '') ?>">
+                <button class="btn btn-primary ml-2" name="edit-document" type="submit">Save Changes</button>
+                <a href="<?= customUri('dts', 'Document Information', $documentId) ?>" class="btn btn-secondary">Cancel</a>
             </div>
-
-            <div class="modal-footer">
-                <?php if ($hasDocument): ?>
-                    <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
-                    <input type="hidden" name="file-verifier" value="<?= cipher($filename) ?>">
-                    <button class="btn btn-primary" name="save-document" type="submit">Continue</button>
-                <?php endif ?>
-                <?php cancelModalButton() ?>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
