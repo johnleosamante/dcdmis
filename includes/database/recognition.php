@@ -1,43 +1,40 @@
 <?php
 // recognitions
-function recognitions($person_id)
+function recognitions($employee_id)
 {
-    $results = query("SELECT * FROM `recognitions` WHERE `person_id` = ? ORDER BY `title` ASC", [$person_id]);
+    $results = query("SELECT * FROM `recognitions` WHERE `employee_id` = ? ORDER BY `title` ASC", [$employee_id]);
     return is_array($results) ? $results : [];
 }
 
-function recognition($person_id, $recognition_id)
+function recognition($employee_id, $recognition_id)
 {
-    return find("SELECT * FROM `recognitions` WHERE `person_id` = ? AND `id` = ? LIMIT 1", [$person_id, $recognition_id]);
+    return find("SELECT * FROM `recognitions` WHERE `employee_id` = ? AND `id` = ? LIMIT 1", [$employee_id, $recognition_id]);
 }
 
-function createRecognition($title, $person_id)
+function createRecognition($title, $employee_id)
 {
     $data = [
         'title' => $title,
-        'person_id' => $person_id,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'employee_id' => $employee_id
     ];
 
     return insert('recognitions', $data);
 }
 
-function updateRecognition($title, $person_id, $recognition_id)
+function updateRecognition($title, $employee_id, $recognition_id)
 {
     $data = [
-        'title' => $title,
-        'updated_at' => date('Y-m-d H:i:s'),
+        'title' => $title
     ];
-    return update('recognitions', $data, '`person_id` = ? AND `id` = ?', [$person_id, $recognition_id]);
+    return update('recognitions', $data, '`employee_id` = ? AND `id` = ?', [$employee_id, $recognition_id]);
 }
 
-function deleteRecognition($person_id, $recognition_id)
+function deleteRecognition($employee_id, $recognition_id)
 {
-    return delete('recognitions', '`person_id` = ? AND `id` = ?', [$person_id, $recognition_id]);
+    return delete('recognitions', '`employee_id` = ? AND `id` = ?', [$employee_id, $recognition_id]);
 }
 
-function deleteRecognitions($person_id)
+function deleteRecognitions($employee_id)
 {
-    return delete('recognitions', '`person_id` = ?', [$person_id]);
+    return delete('recognitions', '`employee_id` = ?', [$employee_id]);
 }
