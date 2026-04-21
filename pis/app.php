@@ -17,17 +17,23 @@ if (isset($_POST['update-identification'])) {
     $place = sanitize($_POST['card-place']);
     $date = sanitize($_POST['card-date']);
     $showAlert = true;
-    $identication = !employeeIdentification($userId) ?
+    $result = !employeeIdentification($userId) ?
         createIdentification($card, $number, $place, $date, $userId) :
         updateIdentification($card, $number, $place, $date, $userId);
 
-    if (!$identication) {
+    if ($result === false) {
+        $message = 'We encountered an error on our end. Please try again later.';
+        return;
+    }
+
+    $success = true;
+
+    if ($result === 0) {
         $message = 'No changes have been made to government issued ID.';
         return;
     }
 
     $message = 'Government issued ID has been updated successfully.';
-    $success = true;
 
     createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
 }
@@ -74,21 +80,29 @@ if (isset($_POST['save-payslip'])) {
     $ext = pathinfo($newFilename, PATHINFO_EXTENSION);
     $hasExistingRecord = payslip($employeeId, $payslipId);
 
+
+
     if (!$hasExistingRecord) {
-        $affectedPayslip = createPayslip($description, $newFilename, $ext, $employeeId);
+        $result = createPayslip($description, $newFilename, $ext, $employeeId);
         $logMessage = 'Added payslip';
     } else {
-        $affectedPayslip = updatePayslip($description, $newFilename, $ext, $employeeId, $payslipId);
+        $result = updatePayslip($description, $newFilename, $ext, $employeeId, $payslipId);
         $logMessage = 'Updated payslip';
     }
 
-    if (!$affectedPayslip) {
+    if ($result === false) {
+        $message = 'We encountered an error on our end. Please try again later.';
+        return;
+    }
+
+    $success = true;
+
+    if ($result === 0 && $hasExistingRecord) {
         $message = 'No changes have been made to payslip.';
         return;
     }
 
     $message = "Payslip has been " . ($hasExistingRecord ? "updated" : "added") . " successfully.";
-    $success = true;
 
     createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 }
@@ -100,20 +114,26 @@ if (isset($_POST['delete-payslip'])) {
     $showAlert = true;
     $filename = null;
     $file = payslip($employeeId, $payslipId);
-    $payslip = [];
+    $result = false;
 
     if ($file) {
         $filename = $file['file_name'];
-        $payslip = deletePayslip($employeeId, $payslipId);
+        $result = deletePayslip($employeeId, $payslipId);
     }
 
-    if (!$payslip) {
+    if ($result === false) {
+        $message = 'We encountered an error on our end. Please try again later.';
+        return;
+    }
+
+    $success = true;
+
+    if ($result === 0) {
         $message = 'No changes have been made to payslip.';
         return;
     }
 
     $message = 'Payslip has been deleted successfully.';
-    $success = true;
 
     unlink(root() . '/' . $filename);
     createSystemLog($stationId, $userId, 'Deleted employee payslip', $employeeId, clientIp());
