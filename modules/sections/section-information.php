@@ -7,12 +7,13 @@ if (!$isHrmis && !$isHrtdms && !$isDmis) {
 
 $sectionId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $section = section($sectionId);
-$sectionName = $head = null;
+$functionalDivision = $sectionName = $head = null;
 
 messageAlert($showAlert, $message, $success);
 
 if ($section) {
     $sectionName = $section['name'];
+    $functionalDivision = functionalDivision($section['functional_division_id'])['name'];
     $head = $section['head_id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -48,6 +49,10 @@ $personnel = count($query);
                 <tr>
                     <th class="pr-5 align-top" scope="row">Section</th>
                     <td class="text-uppercase"><?= e($sectionName) ?></td>
+                </tr>
+                <tr>
+                    <th class="pr-5 align-top" scope="row">Functional Division</th>
+                    <td class="text-uppercase"><?= e($functionalDivision) ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5 align-top" scope="row">Section Head</th>
@@ -145,7 +150,7 @@ $personnel = count($query);
                                 <td class="align-middle"><?php progressBar(pdsProgress($row['id'])) ?></td>
                             <?php } else { ?>
                                 <?php if (!$isHrtdms): ?>
-                                    <td class="align-middle"><?= e($row['mobile']) ?></td>
+                                    <td class="align-middle"><?= e($row['mobile_number']) ?></td>
                                 <?php endif ?>
                             <?php } ?>
                             <td class="align-middle text-capitalize">
