@@ -6,6 +6,12 @@ if (!$isDts) {
 }
 
 messageAlert($showAlert, $message, $success);
+
+$query = receivedDocuments($station, $from, $to);
+if (count($query) === 1000) {
+    $message = "Showing latest 1,000 received documents as of " . toDate($from, 'F j, Y') . ' - ' . toDate($to, 'F j, Y') . ".";
+    messageAlert(true, $message);
+}
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -66,8 +72,7 @@ messageAlert($showAlert, $message, $success);
         </form>
 
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%"
-                cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="15%">Code</th>
@@ -80,21 +85,20 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = receivedDocuments($station, $from, $to);
                     foreach ($query as $row) {
                         ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
                             </td>
-                            <td class="text-left align-middle"><?= e($row['description']) ?></td>
+                            <td class="text-left align-middle"><?= toTruncate($row['description']) ?></td>
                             <td class="align-middle">
                                 <div>
-                                    <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['receiver']), userName($row['receiver'])) ?>
+                                    <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['processor_id']), userName($row['processor_id'])) ?>
                                 </div>
-                                <div class="small"><?= fetchAssoc(position($row['receiver']))['position'] ?></div>
+                                <div class="small"><?= position($row['processor_id'])['official_title'] ?></div>
                             </td>
-                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
+                            <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
