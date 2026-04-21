@@ -344,7 +344,7 @@
                             <?php if (!$editMode): ?>
                                 <?php
                                 $countryName = 'N/A';
-                                $country = country($employee['dual_citizenship_country']);
+                                $country = country($employee['dual_citizenship_country_id']);
                                 if ($country) {
                                     $countryName = $country['name'];
                                 }
@@ -357,7 +357,7 @@
                                     <option value="N/A">N/A</option>
                                     <?php $countries = countries();
                                     foreach ($countries as $country): ?>
-                                        <option value="<?= e($country['id']) ?>" <?= setOptionSelected($country['id'], $employee['dual_citizenship_country']) ?>><?= e($country['name']) ?></option>
+                                        <option value="<?= e($country['id']) ?>" <?= setOptionSelected($country['id'], $employee['dual_citizenship_country_id']) ?>><?= e($country['name']) ?></option>
                                     <?php endforeach ?>
                                 </select>
                             <?php endif ?>
