@@ -4,16 +4,17 @@ require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/position.php');
+require_once(root() . '/includes/database/plantilla.php');
 require_once(root() . '/includes/database/school.php');
 require_once(root() . '/includes/database/psipop.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
-$employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$employeeId = sanitize(decipher($_GET['id'] ?? null));
 $employee = employee($employeeId);
 $modalTitle = 'Employee not found';
 $hasEmployee = false;
-$hasItemNumber = false;
+$itemNumber = null;
 
 if ($employee) {
     $employeeId = $employee['id'];
@@ -29,13 +30,10 @@ if ($employee) {
     $picture = file_exists(root() . '/' . $employee['profile_picture']) ? "{$baseUri}/" . $employee['profile_picture'] : "{$baseUri}/assets/img/user.png";
     $modalTitle = 'Remove Employee';
     $hasEmployee = true;
+    $employeeItem = employeeItemNumber($employeeId);
 
-    $psipopInfo = psipop($employeeId);
-    $itemNumber = '';
-
-    if ($psipopInfo) {
-        $itemNumber = $psipopInfo['item_number'] ?? '';
-        $hasItemNumber = !empty($itemNumber);
+    if ($employeeItem) {
+        $itemNumber = $employeeItem['item_number'] ?? null;
     }
 }
 ?>
@@ -70,13 +68,14 @@ if ($employee) {
                                 value="1">
                             <label class="custom-control-label" for="skip-vacancy">
                                 <strong>Do not create vacancy</strong>
-                                <small class="d-block text-muted">Check this if the position does not require a vacant
+                                <small class="d-block text-muted">Check this if the position does not require creation of a
+                                    vacant
                                     item</small>
                             </label>
                         </div>
                     </div>
 
-                    <?php if ($hasItemNumber): ?>
+                    <?php if ($itemNumber): ?>
                         <div class="alert alert-info p-2 my-2 small d-flex align-items-start">
                             <i class="fas fa-info-circle mt-1 mr-1"></i>
                             <div>
