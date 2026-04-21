@@ -13,8 +13,7 @@
                 </div>
             <?php } ?>
 
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table-next"
-                width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table-next" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="40%">Section Name / Functional Division</th>
