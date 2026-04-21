@@ -5,32 +5,35 @@ if (!$isDts) {
     return;
 }
 
-$documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+$documentId = sanitize(decode($_GET['id'] ?? null));
 $document = document($documentId);
-$documentType = 'Ongoing Documents';
 
-messageAlert($showAlert, $message, $success);
-
-if ($document) {
-    $documentId = $document['id'];
-
-    if (isIncomingDocument($documentId, $station)) {
-        $documentType = 'Incoming Documents';
-    } elseif (isPendingDocument($documentId, $station)) {
-        $documentType = 'Pending Documents';
-    } elseif (isOutgoingDocument($documentId, $station)) {
-        $documentType = 'Outgoing Documents';
-    } elseif (isCompletedDocument($documentId, $station)) {
-        $documentType = 'Completed Documents';
-    } elseif (isReceivedDocument($documentId, $station)) {
-        $documentType = 'Received Documents';
-    } elseif (isCanceledDocument($documentId, $station)) {
-        $documentType = 'Canceled Documents';
-    }
-} else {
+if ($document === false) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
+
+messageAlert($showAlert, $message, $success);
+
+$documentId = $document['id'];
+$documentType = 'Ongoing Documents';
+
+if (isCompletedDocument($documentId, $station)) {
+    $documentType = 'Completed Documents';
+} elseif (isCanceledDocument($documentId, $station)) {
+    $documentType = 'Canceled Documents';
+} elseif (isIncomingDocument($documentId, $station)) {
+    $documentType = 'Incoming Documents';
+} elseif (isPendingDocument($documentId, $station)) {
+    $documentType = 'Pending Documents';
+} elseif (isOutgoingDocument($documentId, $station)) {
+    $documentType = 'Outgoing Documents';
+} elseif (isReceivedDocument($documentId, $station)) {
+    $documentType = 'Received Documents';
+}
+
+// echo "$documentId ($documentType)";
+// return;
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -54,7 +57,9 @@ if ($document) {
         <table cellspacing="0">
             <tr>
                 <th class="align-top pr-3" scope="row">Type:</th>
-                <td class="text-uppercase"><?= documentType($document['document_type_id'])['name'] ?></td>
+                <td class="text-uppercase">
+                    <?= documentType($document['document_type_id']) ?>
+                </td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Description:</th>
@@ -71,7 +76,7 @@ if ($document) {
             <tr>
                 <th class="align-top pr-3" scope="row">Status:</th>
                 <td class="text-uppercase">
-                    <?= e($document['status']) ?>
+                    <?= documentTransactionStatus($document['status_id']) ?>
                 </td>
             </tr>
         </table>
@@ -81,9 +86,7 @@ if ($document) {
                 <?php
                 $hasSuccess = false;
 
-                if ($station === $document['created_from'] || $isRecordsPortal) {
-                    linkButtonSplit(customUri('print', 'Document Tracking Slip', $documentId), 'Print', 'fa-print', 'Print Document Tracking Slip', 'primary', true);
-                }
+                linkButtonSplit(customUri('print', 'Document Tracking Slip', $documentId), 'Print', 'fa-print', 'Print Document Tracking Slip', 'primary', true);
 
                 switch ($documentType) {
                     case 'Incoming Documents':
@@ -102,7 +105,7 @@ if ($document) {
                         break;
                     case 'Outgoing Documents':
                         if (!isDocument($documentId, 'Complete') && !isDocument($documentId, 'Cancel')) {
-                            modalButtonSplit(uri() . '/modules/documents/save-document-dialog.php?id=' . cipher($documentId), 'Edit', 'fa-edit', 'Edit Document', 'info');
+                            linkButtonSplit(customUri('dts', 'Edit Document', $documentId), 'Edit', 'fa-edit', 'Edit Document', 'info');
                         }
                         break;
                     case 'Completed Documents':
@@ -141,9 +144,7 @@ if ($document) {
                         break;
                 }
 
-                if ($station === $document['created_from']) {
-                    linkButtonSplit(customUri('export', 'document-log', $documentId), 'Export', 'fa-file-excel', 'Export as Excel file', $hasSuccess ? 'warning' : 'success');
-                }
+                linkButtonSplit(customUri('export', 'document-log', $documentId), 'Export', 'fa-file-excel', 'Export as Excel file', 'warning');
                 ?>
             </div>
         </div>
@@ -158,12 +159,12 @@ if ($document) {
                 $logId = $log['id'];
                 $from = stationName($log['received_from']);
                 $to = stationName($log['forwarded_to']);
-                $displayName = userName($log['processed_by']);
-                $user = employee($log['processed_by']);
+                $displayName = userName($log['processor_id']);
+                $user = employee($log['processor_id']);
                 $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '/' . $user['profile_picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
                 $hasDestination = !empty($to) && $to !== '-';
-                $status = $log['status'];
+                $status = documentTransactionStatus($log['status_id']);
                 $details = $log['details'];
                 $isCompleted = str_contains(strtolower($status), 'complete');
                 $isCanceled = str_contains(strtolower($status), 'cancel');
@@ -221,11 +222,11 @@ if ($document) {
 
                                     <div class="ml-2 d-inline-block align-middle">
                                         <div class="text-uppercase">
-                                            <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['processed_by']), $displayName) ?>
+                                            <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['processor_id']), $displayName) ?>
                                         </div>
 
                                         <div class="text-uppercase text-xs">
-                                            <?= position($log['processed_by'])['official_title'] ?>
+                                            <?= position($log['processor_id'])['official_title'] ?>
                                         </div>
                                     </div>
                                 </div>
@@ -239,7 +240,7 @@ if ($document) {
                                 <?php endif ?>
                             </div>
 
-                            <?php $documentLogAttachments = documentLogAttachments($documentId, $logId);
+                            <?php $documentLogAttachments = documentLogAttachments($logId);
 
                             if ($documentLogAttachments): ?>
                                 <div class="card-footer">
