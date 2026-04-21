@@ -9,7 +9,7 @@ require_once(root() . '/includes/string.php');
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $attachmentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
-$description = $filename = null;
+$description = $filename = $document_type = null;
 $modalTitle = 'Add 201 File';
 
 if (isset($attachmentId)) {
@@ -18,6 +18,7 @@ if (isset($attachmentId)) {
 
     if ($attachment) {
         $attachmentId = $attachment['id'];
+        $document_type = $attachment['file_type_id'];
         $description = $attachment['description'];
         $filename = $attachment['file_name'];
     }
@@ -32,14 +33,30 @@ if (isset($attachmentId)) {
             <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
-                    <input id="file-upload" name="file-upload" type="file" title="Upload 201 file (pdf)..."
-                        class="w-100" accept="application/pdf">
+                    <label for="type" class="mb-0">Document Type <?php showAsterisk() ?>
+                    </label>
+                    <select id="type" name="type" class="form-control" title="Select document type..." required>
+                        <option value="">Select document type...</option>
+                        <?php
+                        $types = fileTypes();
+                        foreach ($types as $type): ?>
+                            <option value="<?= e($type['id']) ?>" <?= setOptionSelected($type['id'], $document_type) ?>>
+                                <?= e($type['name']) ?>
+                            </option>
+                        <?php endforeach ?>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="description" class="mb-0">Description <?php showAsterisk() ?></label>
+                    <label for="description" class="mb-0">Description <?php showAsterisk() ?>
+                    </label>
                     <textarea id="description" name="description" class="form-control" placeholder="Type description..."
                         title="Type 201 file description..." rows="3" required><?= e($description) ?></textarea>
+                </div>
+
+                <div class="form-group">
+                    <input id="file-upload" name="file-upload" type="file" title="Upload 201 file (pdf)..."
+                        class="w-100" accept="application/pdf">
                 </div>
 
                 <?php requiredLegend(0) ?>
