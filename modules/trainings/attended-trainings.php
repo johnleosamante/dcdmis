@@ -5,7 +5,7 @@ if (!$isPis && !$isHrmis && !$isHrtdms) {
     return;
 }
 
-$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+$employeeId = (int) sanitize(decode($_GET['id'] ?? null));
 
 if ($isPis && $userId !== $employeeId) {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -63,8 +63,7 @@ if ($isHrmis) {
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover mb-0 text-center" id="data-table" width="100%"
-                cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="35%">Title of Learning &amp; Development Interventions /
@@ -97,8 +96,8 @@ if ($isHrmis) {
                                         <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                                             <?php
-                                            linkDropdownItem(customUri('print', 'Certificate of Participation', $training['id']) . '&p=' . encode($employeeId), 'Download', 'fa-download', 'Download Certificate', true);
-                                            linkDropdownItem(customUri('print', 'Certificate of Appearance', $training['id']) . '&p=' . encode($employeeId), 'Appearance', 'fa-stamp', 'View Certificate of Appearance', true);
+                                            linkDropdownItem(customUri('print', 'Certificate of Participation', $training['id']) . '&p=' . encode($employeeId), 'Participation', 'fa-star', 'Certificate of Participation', true);
+                                            linkDropdownItem(customUri('print', 'Certificate of Appearance', $training['id']) . '&p=' . encode($employeeId), 'Appearance', 'fa-stamp', 'Certificate of Appearance', true);
                                             ?>
                                         </div>
                                     </div>
