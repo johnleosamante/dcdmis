@@ -47,7 +47,7 @@ function uri($domain = null)
 {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
     $root = $domain !== null ? $domain : $_SERVER['HTTP_HOST'];
-    return $protocol . $root;
+    return "{$protocol}{$root}";
 }
 
 function isWeekend()
@@ -59,13 +59,6 @@ function isWeekend()
 function isOfficialTime($startTime = '06:30:00', $endTime = '18:30:00')
 {
     return (time() >= strtotime($startTime) && time() <= strtotime($endTime));
-}
-
-function restrictPublicAccess($isHoliday)
-{
-    if (isWeekend() || !isOfficialTime() || $isHoliday) {
-        redirect(uri() . '/oops');
-    }
 }
 
 function customUri($page, $view, $id = null, $domain = null)
