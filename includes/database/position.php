@@ -39,3 +39,30 @@ function positionsByCategory($category, $salary_grade = null)
     $sql .= " ORDER BY salary_grade DESC, `official_title` ASC";
     return query($sql, $params);
 }
+
+function createPosition($position_id, $official_title, $salary_grade, $category)
+{
+    $data = [
+        'id' => $position_id,
+        'official_title' => $official_title,
+        'salary_grade' => $salary_grade,
+        'category' => $category
+    ];
+    return insert('positions', $data);
+}
+
+function updatePosition($position_id, $official_title, $salary_grade, $category, $reference_position_id)
+{
+    $data = [
+        'id' => $position_id,
+        'official_title' => $official_title,
+        'salary_grade' => $salary_grade,
+        'category' => $category
+    ];
+    return update('positions', $data, '`id` = ?', [$reference_position_id]);
+}
+
+function deletePosition($position_id)
+{
+    return delete('positions', '`id` = ?', [$position_id]);
+}
