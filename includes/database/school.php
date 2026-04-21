@@ -5,6 +5,13 @@ function schools()
     return query("SELECT * FROM `schools` ORDER BY `name` ASC");
 }
 
+function countSchools()
+{
+    $sql = "SELECT COUNT(*) AS `count` FROM `schools`";
+    $result = find($sql);
+    return (int) ($result['count'] ?? 0);
+}
+
 function districtSchools($district_id)
 {
     return query("SELECT * FROM `schools` WHERE district_id = ? ORDER BY `name` ASC", [$district_id]);
@@ -34,13 +41,12 @@ function schoolsByDistrict($districtId)
 function updateSchoolHead($schoolId, $headId)
 {
     $data = [
-        'head_id' => $headId,
-        'updated_at' => date('Y-m-d H:i:s')
+        'head_id' => $headId
     ];
     return update('schools', $data, 'id = ?', [$schoolId]);
 }
 
-// persons, station_assignments, schools, districts, positions
+// employees, station_assignments, schools, districts, positions
 function schoolEmployeeCount($school_id = null)
 {
     $params = [];
@@ -59,8 +65,8 @@ function schoolEmployeeCount($school_id = null)
                 SUM(CASE WHEN pos.`category` = 'Non-Teaching' AND p.`sex` = 'Female' THEN 1 ELSE 0 END) AS ntfemale, 
                 SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS female, 
                 COUNT(p.`id`) AS total 
-            FROM `persons` AS p 
-            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`person_id` 
+            FROM `employees` AS p 
+            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`employee_id` 
             INNER JOIN `schools` AS s ON sa.`station_id` = s.`id` 
             INNER JOIN `districts` AS d ON s.`district_id` = d.`id` 
             INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id` 
@@ -84,9 +90,7 @@ function createSchool($school_id, $name, $alias, $address, $district_id, $catego
         'email' => $email,
         'website' => $website,
         'fb_page' => $fb_page,
-        'logo' => $logo,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'logo' => $logo
     ];
     return insert('schools', $data);
 }
@@ -104,8 +108,7 @@ function updateSchool($id, $name, $alias, $address, $district, $category, $telep
         'email' => $email,
         'website' => $website,
         'fb_page' => $facebook,
-        'logo' => $logo,
-        'updated_at' => date('Y-m-d H:i:s')
+        'logo' => $logo
     ];
     return update('schools', $data, '`id` = ?', [$referenceId]);
 }
@@ -115,45 +118,41 @@ function deleteSchool($id)
     return delete('schools', '`id` = ?', [$id]);
 }
 
-function station($person_id)
+function station($employee_id)
 {
-    return find("SELECT * FROM `station_assignments` WHERE `person_id` = ? ORDER BY `assignment_date` DESC LIMIT 1", [$person_id]);
+    return find("SELECT * FROM `station_assignments` WHERE `employee_id` = ? ORDER BY `assignment_date` DESC LIMIT 1", [$employee_id]);
 }
 
-function createStation($assignment_date, $station_id, $position_id, $person_id)
+function createStation($assignment_date, $station_id, $position_id, $employee_id)
 {
     $data = [
         'assignment_date' => $assignment_date,
         'station_id' => $station_id,
         'position_id' => $position_id,
-        'person_id' => $person_id,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'employee_id' => $employee_id
     ];
     return insert('station_assignments', $data);
 }
 
-function updateStation($assignment_date, $station_id, $position_id, $person_id)
+function updateStation($assignment_date, $station_id, $position_id, $employee_id)
 {
     $data = [
         'position_id' => $position_id,
         'station_id' => $station_id,
-        'assignment_date' => $assignment_date,
-        'updated_at' => date('Y-m-d H:i:s')
+        'assignment_date' => $assignment_date
     ];
-    return update('station_assignments', $data, '`person_id` = ?', [$person_id]);
+    return update('station_assignments', $data, '`employee_id` = ?', [$employee_id]);
 }
 
 function deleteStation($id)
 {
-    return delete('station_assignments', '`person_id` = ?', [$id]);
+    return delete('station_assignments', '`employee_id` = ?', [$id]);
 }
 
 function updateStationID($new_station_id, $old_station_id)
 {
     $data = [
-        'station_id' => $new_station_id,
-        'updated_at' => date('Y-m-d H:i:s')
+        'station_id' => $new_station_id
     ];
     return update('station_assignments', $data, '`station_id` = ?', [$old_station_id]);
 }
@@ -166,6 +165,13 @@ function district($district_id)
 function districts()
 {
     return query("SELECT * FROM `districts` ORDER BY `name` ASC");
+}
+
+function countDistricts()
+{
+    $sql = "SELECT COUNT(*) AS `count` FROM `districts`";
+    $result = find($sql);
+    return (int) ($result['count'] ?? 0);
 }
 
 function districtSchoolCount($id)
@@ -184,9 +190,7 @@ function createDistrict($district_id, $name, $supervisor_id)
     $data = [
         'id' => $district_id,
         'name' => $name,
-        'supervisor_id' => $supervisor_id,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'supervisor_id' => $supervisor_id
     ];
 
     return insert('districts', $data);
@@ -198,7 +202,6 @@ function updateDistrict($new_district_id, $name, $supervisor_id, $old_district_i
         'id' => $new_district_id,
         'name' => $name,
         'supervisor_id' => $supervisor_id,
-        'updated_at' => date('Y-m-d H:i:s')
     ];
     return update('districts', $data, '`id` = ?', [$old_district_id]);
 }
