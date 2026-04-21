@@ -29,7 +29,7 @@ if (isset($payslipId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="" enctype="multipart/form-data">
-                    <?= csrf_field(); ?>
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <input id="file-upload" name="file-upload" type="file" class="w-100"
