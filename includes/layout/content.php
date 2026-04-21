@@ -33,6 +33,9 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Document Search':
             $file = 'documents/document-search';
             break;
+        case 'Edit Document':
+            $file = 'documents/edit-document';
+            break;
         case 'Receive Document':
             $file = 'documents/receive-document';
             break;
@@ -109,6 +112,15 @@ if (!isset($url) || $url === 'dashboard') {
             break;
         case 'Schools':
             $file = 'schools/page';
+            break;
+        case 'Positions':
+            $file = 'positions/page';
+            break;
+        case 'Position Information':
+            $file = 'positions/position-information';
+            break;
+        case 'Plantilla Items':
+            $file = 'positions/plantilla-items';
             break;
         case 'School Information':
             $file = 'schools/school-information';
