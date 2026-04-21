@@ -17,8 +17,8 @@ $notFound = true;
 
 if ($section) {
     $sectionName = $section['name'];
-    $sectionHead = $section['head'];
-    $sectionDivision = $section['division'];
+    $sectionHead = $section['head_id'];
+    $sectionDivision = $section['functional_division_id'];
     $modalTitle = 'Edit Section';
 }
 ?>
