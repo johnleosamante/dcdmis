@@ -28,7 +28,8 @@ require_once(root() . '/includes/layout/components.php');
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
             <div class="sidebar-brand d-flex align-items-center justify-content-center">
                 <a href="<?= uri() ?>" title="<?= title() ?>">
-                    <img class="sidebar-brand-icon" src="<?= uri() ?>/uploads/division/division.png" alt="<?= title() ?>" width="60">
+                    <img class="sidebar-brand-icon" src="<?= uri() ?>/uploads/division/division.png"
+                        alt="<?= title() ?>" width="60">
                 </a>
             </div>
 
@@ -67,7 +68,7 @@ require_once(root() . '/includes/layout/components.php');
     <script src="<?= uri() ?>/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="<?= uri() ?>/assets/js/script.js?v=1.2.2"></script>
+    <script src="<?= uri() ?>/assets/js/script.js?v=1.2.3"></script>
 </body>
 
 </html>
