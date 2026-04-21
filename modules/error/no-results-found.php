@@ -23,8 +23,4 @@
             </div>
         </div>
     </form>
-
-    <?php if (isset($userId)): ?>
-        <a href="<?= uri() . '/' . $activeApp ?>" title="Go to dashboard">Go to Dashboard</a>
-    <?php endif ?>
 </div>
