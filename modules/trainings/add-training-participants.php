@@ -62,7 +62,8 @@ messageAlert($showAlert, $message, $success);
                     }
                     $functional_division = (!empty($functional_division) && strtolower($functional_division) !== 'n/a') ? " ($training_functional_division)" : '';
                     ?>
-                    <td class="text-uppercase"><?= trainingSponsor($training['conducted_by']) . $functional_division ?>
+                    <td class="text-uppercase">
+                        <?= trainingSponsor($training['training_level_id']) . $functional_division ?>
                     </td>
                 </tr>
                 <?php if (!empty($training['sponsor'])): ?>
