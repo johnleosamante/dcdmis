@@ -35,9 +35,14 @@ if (isset($_POST['update-password'])) {
         return;
     }
 
-    $affectedAccountPassword = updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
+    $result = updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
 
-    if (!$affectedAccountPassword) {
+    if ($result === false) {
+        $message = 'We encountered an error on our end. Please try again later.';
+        return;
+    }
+
+    if ($result === 0) {
         $message = 'No changes have been made to your password.';
         return;
     }
@@ -53,9 +58,14 @@ if (isset($_POST['update-contact-details'])) {
     $alternateEmail = sanitize($_POST['alternate-email']);
     $alternateMobile = sanitize($_POST['alternate-mobile']);
     $showAlert = true;
-    $affectedContactDetails = updateEmployeeContactDetails($alternateMobile, $alternateEmail, $userId);
+    $result = updateEmployeeContactDetails($alternateMobile, $alternateEmail, $userId);
 
-    if (!$affectedContactDetails) {
+    if ($result === false) {
+        $message = 'We encountered an error on our end. Please try again later.';
+        return;
+    }
+
+    if ($result === 0) {
         $message = 'No changes have been made to your contact details.';
         return;
     }
@@ -70,9 +80,14 @@ if (isset($_POST['update-professional-titles'])) {
     $before = sanitize($_POST['before-title']);
     $after = sanitize($_POST['after-title']);
     $showAlert = true;
-    $affectedProfessionalTitles = updateProfessionalTitles($before, $after, $userId);
+    $result = updateProfessionalTitles($before, $after, $userId);
 
-    if (!$affectedProfessionalTitles) {
+    if ($result === false) {
+        $message = 'We encountered an error on our end. Please try again later.';
+        return;
+    }
+
+    if ($result === 0) {
         $message = 'No changes have been made to your professional title.';
         return;
     }
