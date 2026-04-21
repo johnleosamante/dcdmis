@@ -98,17 +98,19 @@ messageAlert($showAlert, $message, $success);
                                             <?php
                                             linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History');
 
-                                            switch ($status) {
-                                                case 'resigned':
-                                                case 'transferred':
-                                                case 'dismissed':
-                                                case 'suspended': ?>
-                                                    <div class="dropdown-divider"></div>
-                                                    <?php
-                                                    modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                                                    break;
-                                                default:
-                                                    break;
+                                            if ($isPersonnel) {
+                                                switch ($status) {
+                                                    case 'resigned':
+                                                    case 'transferred':
+                                                    case 'dismissed':
+                                                    case 'suspended': ?>
+                                                        <div class="dropdown-divider"></div>
+                                                        <?php
+                                                        modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
                                             }
                                             ?>
                                         </div>
