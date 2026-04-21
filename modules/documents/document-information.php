@@ -32,8 +32,7 @@ if (isCompletedDocument($documentId, $station)) {
     $documentType = 'Received Documents';
 }
 
-// echo "$documentId ($documentType)";
-// return;
+$logs = documentLogs($documentId);
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -104,17 +103,17 @@ if (isCompletedDocument($documentId, $station)) {
                         modalButtonSplit(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
                         break;
                     case 'Outgoing Documents':
-                        if (!isDocument($documentId, 'Complete') && !isDocument($documentId, 'Cancel')) {
+                        if (!isDocument($documentId, 'Complete') && !isDocument($documentId, 'cancel')) {
                             linkButtonSplit(customUri('dts', 'Edit Document', $documentId), 'Edit', 'fa-edit', 'Edit Document', 'info');
                         }
                         break;
-                    case 'Completed Documents':
-                        if (isDocumentFrom($documentId, $station) && $document['created_from'] === $station && isDocument($documentId, 'Completed')) {
-                            modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-minus-square', 'Mark Incomplete Document', 'danger');
+                    case 'Received Documents':
+                        if (isDocument($documentId, 'complete') && $logs[0]['received_from'] === $station) {
+                            modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-times-circle', 'Mark Incomplete Document', 'danger');
                         }
                         break;
                     case 'Canceled Documents':
-                        if (isDocumentFrom($documentId, $station) && $document['created_from'] === $station && isDocument($documentId, 'Canceled')) {
+                        if (isDocumentFrom($documentId, $station) && $document['created_from'] === $station && isDocument($documentId, 'cancel')) {
                             modalButtonSplit(uri() . '/modules/documents/restore-document-dialog.php?id=' . cipher($documentId), 'Restore', 'fa-undo', 'Restore Document', 'success');
                             $hasSuccess = true;
                         }
@@ -151,7 +150,6 @@ if (isCompletedDocument($documentId, $station)) {
 
         <div class="timeline">
             <?php
-            $logs = documentLogs($documentId);
             $logCount = 0;
 
             foreach ($logs as $log) {
