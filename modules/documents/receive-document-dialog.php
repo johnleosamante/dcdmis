@@ -8,7 +8,7 @@ require_once(root() . '/includes/layout/components.php');
 
 $documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $document = document($documentId);
-$description = $type = '';
+$description = $type = $details = null;
 $modalTitle = 'Document not found';
 $hasDocument = false;
 
@@ -16,9 +16,10 @@ if ($document) {
     $documentId = $document['id'];
     $description = $document['description'];
     $type = $document['document_type_id'];
-    $details = $document['details'];
-    $documentLogs = documentLogs($documentId);
-    $hasDocument = !str_contains(strtolower($documentLogs[0]['status']), 'complete') && !str_contains(strtolower($documentLogs[0]['status']), 'cancel') && $documentLogs[0]['forwarded_to'] === $station;
+    $documentLogs = documentLogs($documentId)[0];
+    $status = strtolower(documentTransactionStatus($documentLogs['status_id']));
+    $details = $documentLogs['details'];
+    $hasDocument = !str_contains($status, 'complete') && !str_contains($status, 'cancel') && $documentLogs['forwarded_to'] === $station;
     $modalTitle = $hasDocument ? 'Receive Document' : $modalTitle;
 }
 ?>
@@ -39,8 +40,7 @@ if ($document) {
 
                     <div class="form-group">
                         <label for="type" class="mb-0">Type</label>
-                        <input id="type" class="form-control text-uppercase" value="<?= documentType($type)['name'] ?>"
-                            disabled>
+                        <input id="type" class="form-control text-uppercase" value="<?= documentType($type) ?>" disabled>
                     </div>
 
                     <div class="form-group">
