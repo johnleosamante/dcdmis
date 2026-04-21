@@ -1,9 +1,9 @@
 <?php
 // system_logs
-function userLog($person_id)
+function userLog($employee_id)
 {
-    $sql = "SELECT * FROM `system_logs` WHERE `person_id` = ? ORDER BY `created_at` DESC LIMIT 1000";
-    return query($sql, [$person_id]);
+    $sql = "SELECT * FROM `system_logs` WHERE `employee_id` = ? ORDER BY `created_at` DESC LIMIT 1000";
+    return query($sql, [$employee_id]);
 }
 
 function systemLogs($from_date, $to_date)
@@ -13,16 +13,14 @@ function systemLogs($from_date, $to_date)
     return query($sql, [$from_date, $to_date]);
 }
 
-function createSystemLog($station_id, $person_id, $action, $target_id, $ip)
+function createSystemLog($station_id, $employee_id, $action, $target_id, $ip)
 {
     $data = [
         'station_id' => $station_id,
-        'person_id' => $person_id,
+        'employee_id' => $employee_id,
         'action' => $action,
         'target_id' => $target_id,
-        'ip' => $ip,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'ip' => $ip
     ];
     return insert('system_logs', $data);
 }
