@@ -1,62 +1,61 @@
 <?php
-// persons
-function employee($person_id)
+// employees
+function employee($employee_id)
 {
-    if (empty($person_id)) {
+    if (empty($employee_id)) {
         return null;
     }
-    return find("SELECT * FROM `persons` WHERE `id` = ? LIMIT 1", [$person_id]);
+    return find("SELECT * FROM `employees` WHERE `id` = ? LIMIT 1", [$employee_id]);
 }
 
 function findEmployeeByEmail($email)
 {
-    $data = find("SELECT `id` FROM `persons` WHERE `email_address` = ? LIMIT 1", [$email]);
+    $data = find("SELECT `id` FROM `employees` WHERE `email_address` = ? LIMIT 1", [$email]);
     return $data ? $data['id'] : null;
 }
 
-// persons, station_assignments
+// employees, station_assignments
 function employees()
 {
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
                 p.`sex`, s.`position_id`, s.`station_id`, p.`profile_picture`, p.`status`
-            FROM `persons` AS p
-            INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
+            FROM `employees` AS p
+            INNER JOIN `station_assignments` AS s ON p.`id` = s.`employee_id` 
             WHERE p.`status` <> 'Duplicate' ORDER BY p.`last_name` ASC";
     $results = query($sql);
     return is_array($results) ? $results : [];
 }
 
-// persons
+// employees
 function employeeName($last_name, $first_name, $middle_name, $name_extension)
 {
-    $sql = "SELECT `id`, `last_name`, `first_name`, `middle_name`, `name_extension` FROM `persons` 
+    $sql = "SELECT `id`, `last_name`, `first_name`, `middle_name`, `name_extension` FROM `employees` 
             WHERE `last_name` = ? AND `first_name` = ? AND `middle_name` = ? AND `name_extension` = ? LIMIT 1";
     return find($sql, [$last_name, $first_name, $middle_name, $name_extension]);
 }
 
-function employeeContactDetails($person_id)
+function employeeContactDetails($employee_id)
 {
-    return find("SELECT `id`, `email_address`, `alternate_email_address`, `telephone`, `mobile_number`, `alternate_mobile_number` FROM `persons` WHERE `id` = ? LIMIT 1", [$person_id]);
+    return find("SELECT `id`, `email_address`, `alternate_email_address`, `telephone`, `mobile_number`, `alternate_mobile_number` FROM `employees` WHERE `id` = ? LIMIT 1", [$employee_id]);
 }
 
-function updateEmployeeContactDetails($alternate_mobile_number, $alternate_email_address, $person_id)
+function updateEmployeeContactDetails($alternate_mobile_number, $alternate_email_address, $employee_id)
 {
     $data = [
         'alternate_mobile_number' => $alternate_mobile_number,
-        'alternate_email_address' => $alternate_email_address,
-        'updated_at' => date('Y-m-d H:i:s')
+        'alternate_email_address' => $alternate_email_address
     ];
-    return update('persons', $data, '`id` = ?', [$person_id]);
+    return update('employees', $data, '`id` = ?', [$employee_id]);
 }
 
-// persons, station_assignments
+// employees, station_assignments
 function districtSupervisors($supervisorRoles = ['PSDS', 'SDS'])
 {
     $placeholders = implode(',', array_fill(0, count($supervisorRoles), '?'));
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, 
                 p.`name_extension`, s.`position_id` 
-            FROM `persons` AS p   
-            INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
+            FROM `employees` AS p   
+            INNER JOIN `station_assignments` AS s ON p.`id` = s.`employee_id` 
             WHERE p.`status` = 'Active' AND s.`position_id` IN ($placeholders) 
             ORDER BY p.`last_name` ASC";
     return query($sql, $supervisorRoles);
@@ -74,11 +73,25 @@ function activeEmployees($station_id = null)
                 p.`sex`, p.`birthdate`, p.`agency_id`, 
                 s.`position_id`, s.`station_id`, p.`profile_picture`, 
                 p.`email_address`, p.`mobile_number` 
-            FROM `persons` AS p
-            INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` {$whereClause} 
+            FROM `employees` AS p
+            INNER JOIN `station_assignments` AS s ON p.`id` = s.`employee_id` {$whereClause} 
             ORDER BY p.`last_name` ASC";
     $results = query($sql, $params);
     return is_array($results) ? $results : [];
+}
+
+function countActiveEmployees($station_id = null)
+{
+    $params = [];
+    $whereClause = "WHERE p.`status` = 'Active'";
+    if ($station_id !== null) {
+        $whereClause .= " AND s.`station_id` = ?";
+        $params[] = $station_id;
+    }
+    $sql = "SELECT COUNT(*) AS `count` FROM `employees` AS p
+            INNER JOIN `station_assignments` AS s ON p.`id` = s.`employee_id` {$whereClause}";
+    $result = find($sql, $params);
+    return (int) ($result['count'] ?? 0);
 }
 
 function retirableEmployees($station_id = null)
@@ -87,20 +100,38 @@ function retirableEmployees($station_id = null)
     $retirementAge = 60;
     $birthYearLimit = $currentYear - $retirementAge;
     $params = [$birthYearLimit];
-    $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
-                p.`sex`, p.`birthdate`, p.`agency_id`, 
-                ($currentYear - CAST(p.`birth_year` AS UNSIGNED)) AS `year_age`, 
-                s.`position_id`, s.`station_id`, p.`profile_picture` 
-            FROM `persons` AS p 
-            INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
-            WHERE p.`status` = 'Active' AND CAST(p.`birth_year` AS UNSIGNED) <= ?";
+    $sql = "SELECT p.id, p.last_name, p.first_name, p.middle_name, p.name_extension, 
+                   p.sex, p.birthdate, p.agency_id, 
+                   ($currentYear - YEAR(p.birthdate)) AS year_age, 
+                   s.position_id, s.station_id, p.profile_picture 
+            FROM employees AS p 
+            INNER JOIN station_assignments AS s ON p.id = s.employee_id 
+            WHERE p.status = 'Active' 
+            AND YEAR(p.birthdate) <= ?";
+    if ($station_id !== null) {
+        $sql .= " AND s.station_id = ?";
+        $params[] = $station_id;
+    }
+    $sql .= " ORDER BY p.last_name ASC";
+    $results = query($sql, $params);
+    return is_array($results) ? $results : [];
+}
+
+function countRetirableEmployees($station_id = null)
+{
+    $currentYear = (int) date('Y');
+    $retirementAge = 60;
+    $birthYearLimit = $currentYear - $retirementAge;
+    $params = [$birthYearLimit];
+    $sql = "SELECT COUNT(*) AS `count` FROM `employees` AS p
+            INNER JOIN `station_assignments` AS s ON p.`id` = s.`employee_id`
+            WHERE p.`status` = 'Active' AND YEAR(p.`birthdate`) <= ?";
     if ($station_id !== null) {
         $sql .= " AND s.`station_id` = ?";
         $params[] = $station_id;
     }
-    $sql .= " ORDER BY p.`last_name` ASC";
-    $results = query($sql, $params);
-    return is_array($results) ? $results : [];
+    $result = find($sql, $params);
+    return (int) ($result['count'] ?? 0);
 }
 
 function archivedEmployees($activeStatuses = ['Active', 'Registered'])
@@ -109,8 +140,8 @@ function archivedEmployees($activeStatuses = ['Active', 'Registered'])
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
                 p.`sex`, p.`birthdate`, p.`agency_id`, 
                 s.`position_id`, s.`station_id`, p.`profile_picture`, p.`status`
-            FROM `persons` AS p
-            INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
+            FROM `employees` AS p
+            INNER JOIN `station_assignments` AS s ON p.`id` = s.`employee_id` 
             WHERE p.`status` NOT IN ($placeholders) 
             ORDER BY p.`last_name` ASC";
     $results = query($sql, $activeStatuses);
@@ -135,8 +166,8 @@ function employeeSearch($text)
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,
                 p.`sex`, p.`birthdate`, p.`agency_id`, 
                 s.`position_id`, s.`station_id`, p.`profile_picture`, p.`status` 
-            FROM `persons` AS p 
-            INNER JOIN `station_assignments` AS s ON p.`id` = s.`person_id` 
+            FROM `employees` AS p 
+            INNER JOIN `station_assignments` AS s ON p.`id` = s.`employee_id` 
             WHERE p.`id` = ? OR p.`last_name` LIKE ? OR p.`first_name` LIKE ? 
                 OR p.`middle_name` LIKE ? OR p.`gsis_crn` = ? OR p.`pagibig` = ? 
                 OR p.`philhealth` = ? OR p.`sss` = ? OR p.`tin` = ? OR p.`agency_id` = ? 
@@ -145,32 +176,32 @@ function employeeSearch($text)
     return is_array($results) ? $results : [];
 }
 
-// persons
+// employees
 function employeeGender()
 {
-    $sql = "SELECT `sex` AS `name`, COUNT(*) AS `count` FROM `persons` 
+    $sql = "SELECT `sex` AS `name`, COUNT(*) AS `count` FROM `employees` 
             WHERE `status` = 'Active' GROUP BY `sex` ORDER BY `sex` DESC";
     return query($sql);
 }
 
-// station_assignments, schools, persons, districts
+// station_assignments, schools, employees, districts
 function employeeStation()
 {
     $sql = "SELECT s.`name`, COUNT(p.`id`) AS `count` FROM `station_assignments` AS sa 
             INNER JOIN `schools` AS s ON sa.`station_id` = s.`id` 
-            INNER JOIN `persons` AS p ON p.`id` = sa.`person_id` 
+            INNER JOIN `employees` AS p ON p.`id` = sa.`employee_id` 
             INNER JOIN `districts` AS d ON s.`district_id` = d.`id` 
             WHERE p.`status` = 'Active' GROUP BY s.`id`, s.`name`, s.`name` 
             ORDER BY s.`name` ASC, s.`name` ASC";
     return query($sql);
 }
 
-// station_assignments, positions, persons
+// station_assignments, positions, employees
 function employeePosition()
 {
     $sql = "SELECT pos.`official_title` AS `name`, COUNT(p.`id`) AS `count` FROM `station_assignments` AS sa 
             INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id` 
-            INNER JOIN `persons` AS p ON p.`id` = sa.`person_id` 
+            INNER JOIN `employees` AS p ON p.`id` = sa.`employee_id` 
             WHERE p.`status` = 'Active' GROUP BY pos.`id`, pos.`official_title`, pos.`salary_grade` 
             ORDER BY pos.`salary_grade` DESC, pos.`official_title` ASC";
     return query($sql);
@@ -181,7 +212,7 @@ function districtEmployee()
     $sql = "SELECT d.`name`, COUNT(p.`id`) AS `count` 
             FROM `station_assignments` AS sa 
             INNER JOIN `schools` AS s ON sa.`station_id` = s.`id` 
-            INNER JOIN `persons` AS p ON p.`id` = sa.`person_id` 
+            INNER JOIN `employees` AS p ON p.`id` = sa.`employee_id` 
             INNER JOIN `districts` AS d ON s.`district_id` = d.`id` 
             WHERE p.`status` = 'Active' GROUP BY d.`id`, d.`name` ORDER BY d.`name` ASC";
     return query($sql);
@@ -193,7 +224,7 @@ function employeeCategory()
                 COUNT(p.`id`) AS `count` 
             FROM `positions` AS pos
             INNER JOIN `station_assignments` AS sa ON sa.`position_id` = pos.`id` 
-            INNER JOIN `persons` AS p ON p.`id` = sa.`person_id` 
+            INNER JOIN `employees` AS p ON p.`id` = sa.`employee_id` 
             WHERE p.`status` = 'Active' GROUP BY pos.`category` ORDER BY pos.`category` ASC";
     return query($sql);
 }
@@ -206,7 +237,7 @@ function employeeGenderCategory()
                 COUNT(p.`id`) AS `total`
             FROM `positions` AS pos 
             INNER JOIN `station_assignments` AS sa ON sa.`position_id` = pos.`id` 
-            INNER JOIN `persons` AS p ON p.`id` = sa.`person_id` 
+            INNER JOIN `employees` AS p ON p.`id` = sa.`employee_id` 
             WHERE p.`status` = 'Active' GROUP BY pos.`category` ORDER BY pos.`category` ASC";
     return query($sql);
 }
@@ -221,8 +252,8 @@ function celebrantEmployees($month, $station_id = null)
                    p.`sex`, p.`birthdate`, p.`agency_id`, 
                    TIMESTAMPDIFF(YEAR, p.`birthdate`, CURDATE()) AS `current_age`, 
                    sa.`position_id`, sa.`station_id`, p.`profile_picture` 
-            FROM `persons` AS p 
-            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`person_id` 
+            FROM `employees` AS p 
+            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`employee_id` 
             WHERE p.`status` = 'Active' 
               AND MONTH(p.`birthdate`) = ?";
     if ($station_id !== null) {
@@ -234,10 +265,10 @@ function celebrantEmployees($month, $station_id = null)
     return is_array($results) ? $results : [];
 }
 
-function createEmployee($person_id, $last_name, $first_name, $middle_name, $name_extension, $sex, $birthdate, $email_address, $mobile_number, $profile_picture, $status, $gsis_crn = '', $gsis_bp = '', $pagibig = '', $philhealth = '', $tin = '', $agency_id = '')
+function createEmployee($employee_id, $last_name, $first_name, $middle_name, $name_extension, $sex, $birthdate, $email_address, $mobile_number, $profile_picture, $status, $gsis_crn = '', $gsis_bp = '', $pagibig = '', $philhealth = '', $tin = '', $agency_id = '')
 {
     $data = [
-        'id' => $person_id,
+        'id' => $employee_id,
         'last_name' => $last_name,
         'first_name' => $first_name,
         'middle_name' => $middle_name,
@@ -253,11 +284,9 @@ function createEmployee($person_id, $last_name, $first_name, $middle_name, $name
         'pagibig' => $pagibig,
         'philhealth' => $philhealth,
         'tin' => $tin,
-        'agency_id' => $agency_id,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'agency_id' => $agency_id
     ];
-    return insert('persons', $data);
+    return insert('employees', $data);
 }
 
 function updateEmployee($last_name, $first_name, $middle_name, $name_extension, $birthdate, $place_of_birth, $sex, $civil_status, $specify_other_civil_status, $religion, $citizenship_id, $dual_citizenship_type, $dual_citizenship_country_id, $residence_lot, $residence_street, $residence_subdivision, $residence_barangay, $residence_city, $residence_province, $residence_zip, $permanent_lot, $permanent_street, $permanent_subdivision, $permanent_barangay, $permanent_city, $permanent_province, $permanent_zip, $height, $weight, $blood_type, $umid, $crn, $bp, $pagibig, $philhealth, $philsys, $sss, $telephone, $mobile, $email, $tin, $agency_id, $prc, $photo, $id)
@@ -306,49 +335,45 @@ function updateEmployee($last_name, $first_name, $middle_name, $name_extension, 
         'tin' => $tin,
         'agency_id' => $agency_id,
         'prc' => $prc,
-        'profile_picture' => $photo,
-        'updated_at' => date('Y-m-d H:i:s')
+        'profile_picture' => $photo
     ];
-    return update('persons', $data, '`id` = ?', [$id]);
+    return update('employees', $data, '`id` = ?', [$id]);
 }
 
 function isDuplicateEmployee($id)
 {
-    $result = find("SELECT `id` FROM `persons` WHERE `id` = ? AND `status` = 'Duplicate' LIMIT 1", [$id]);
+    $result = find("SELECT `id` FROM `employees` WHERE `id` = ? AND `status` = 'Duplicate' LIMIT 1", [$id]);
     return !empty($result);
 }
 
 function deleteEmployee($id)
 {
-    return delete('persons', '`id` = ?', [$id]);
+    return delete('employees', '`id` = ?', [$id]);
 }
 
 function updateEmployeeStatus($status, $id)
 {
     $data = [
-        'status' => $status,
-        'updated_at' => date('Y-m-d H:i:s'),
+        'status' => $status
     ];
-    return update('persons', $data, '`id` = ?', [$id]);
+    return update('employees', $data, '`id` = ?', [$id]);
 }
 
 function updateProfessionalTitles($name_prefix, $name_suffix, $id)
 {
     $data = [
         'name_prefix' => $name_prefix,
-        'name_suffix' => $name_suffix,
-        'updated_at' => date('Y-m-d H:i:s')
+        'name_suffix' => $name_suffix
     ];
-    return update('persons', $data, '`id` = ?', [$id]);
+    return update('employees', $data, '`id` = ?', [$id]);
 }
 
 function updateProfilePhoto($photo, $id)
 {
     $data = [
-        'profile_picture' => $photo,
-        'updated_at' => date('Y-m-d H:i:s')
+        'profile_picture' => $photo
     ];
-    return update('persons', $data, '`id` = ?', [$id]);
+    return update('employees', $data, '`id` = ?', [$id]);
 }
 
 function employeePositions()
@@ -357,8 +382,8 @@ function employeePositions()
                 SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`, 
                 SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`, 
                 COUNT(p.id) AS `total` 
-            FROM `persons` AS p
-            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`person_id` 
+            FROM `employees` AS p
+            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`employee_id` 
             INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id` 
             WHERE p.`status` = 'Active' 
             GROUP BY pos.`id`, pos.`official_title`, pos.`salary_grade` 
@@ -374,15 +399,29 @@ function employeeStepIncrement()
                 p.`sex`, p.`profile_picture`, sa.`position_id`, pos.`salary_grade`, sa.`station_id`, 
                 si.`last_step_date`, si.`step`, 
                 TIMESTAMPDIFF(YEAR, si.`last_step_date`, NOW()) AS `years_since_last_step` 
-            FROM `persons` AS p 
-            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`person_id` 
+            FROM `employees` AS p 
+            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`employee_id` 
             INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id` 
-            INNER JOIN `step_increments` AS si ON p.`id` = si.`person_id` 
+            INNER JOIN `step_increments` AS si ON p.`id` = si.`employee_id` 
             WHERE p.`status` = 'Active' 
                 AND si.`last_step_date` <= ? 
                 AND si.`step` < 8 
             ORDER BY si.`last_step_date` ASC";
     return query($sql, [$three_years_ago]);
+}
+
+function countEmployeeStepIncrement()
+{
+    $three_years_ago = date('Y-m-d', strtotime('-3 years'));
+    $sql = "SELECT COUNT(*) AS `count` FROM `employees` AS p 
+            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`employee_id` 
+            INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id` 
+            INNER JOIN `step_increments` AS si ON p.`id` = si.`employee_id` 
+            WHERE p.`status` = 'Active' 
+                AND si.`last_step_date` <= ? 
+                AND si.`step` < 8";
+    $result = find($sql, [$three_years_ago]);
+    return (int) ($result['count'] ?? 0);
 }
 
 function employeeLoyaltyAward()
@@ -391,13 +430,26 @@ function employeeLoyaltyAward()
                 p.`sex`, p.`profile_picture`, sa.`position_id`, sa.`station_id`, pi.`original_appointment_date`, la.`date_last_awarded`, 
                 TIMESTAMPDIFF(YEAR, pi.`original_appointment_date`, NOW()) AS `total_years_service`, 
                 TIMESTAMPDIFF(YEAR, la.`date_last_awarded`, NOW()) AS `years_since_last_award` 
-            FROM `persons` AS p 
-            INNER JOIN `position_items` AS pi ON p.`id` = pi.`person_id` 
-            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`person_id` 
-            INNER JOIN `loyalty_awards` AS la ON p.`id` = la.`person_id` 
+            FROM `employees` AS p 
+            INNER JOIN `position_items` AS pi ON p.`id` = pi.`employee_id` 
+            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`employee_id` 
+            INNER JOIN `loyalty_awards` AS la ON p.`id` = la.`employee_id` 
             WHERE p.`status` = 'Active' 
               AND TIMESTAMPDIFF(YEAR, pi.`original_appointment_date`, NOW()) >= 10 
               AND (la.`date_last_awarded` IS NULL OR TIMESTAMPDIFF(YEAR, la.`date_last_awarded`, NOW()) >= 5) 
             ORDER BY `years_since_last_award` DESC, `total_years_service` DESC";
     return query($sql);
+}
+
+function countEmployeeLoyaltyAward()
+{
+    $sql = "SELECT COUNT(*) AS `count` FROM `employees` AS p 
+            INNER JOIN `position_items` AS pi ON p.`id` = pi.`employee_id` 
+            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`employee_id` 
+            INNER JOIN `loyalty_awards` AS la ON p.`id` = la.`employee_id` 
+            WHERE p.`status` = 'Active' 
+              AND TIMESTAMPDIFF(YEAR, pi.`original_appointment_date`, NOW()) >= 10 
+              AND (la.`date_last_awarded` IS NULL OR TIMESTAMPDIFF(YEAR, la.`date_last_awarded`, NOW()) >= 5)";
+    $result = find($sql);
+    return (int) ($result['count'] ?? 0);
 }
