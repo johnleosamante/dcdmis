@@ -6,6 +6,12 @@ if (!$isDts) {
 }
 
 messageAlert($showAlert, $message, $success);
+
+$query = outgoingDocuments($station);
+if (count($query) === 1000) {
+    $message = "Showing latest 1,000 outgoing documents.";
+    messageAlert(true, $message);
+}
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -28,8 +34,7 @@ messageAlert($showAlert, $message, $success);
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%"
-                cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="15%">Code</th>
@@ -43,18 +48,17 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = outgoingDocuments($station);
                     foreach ($query as $row) { ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
                             </td>
-                            <td class="text-left align-middle"><?= e($row['description']) ?></td>
+                            <td class="text-left align-middle"><?= toTruncate($row['description']) ?></td>
                             <td class="align-middle">
                                 <div>
-                                    <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['processed_by']), userName($row['processed_by'])) ?>
+                                    <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['processor_id']), userName($row['processor_id'])) ?>
                                 </div>
-                                <div class="small"><?= position($row['processed_by'])['official_title'] ?></div>
+                                <div class="small"><?= position($row['processor_id'])['official_title'] ?></div>
                             </td>
                             <td class="align-middle"><?= stationName($row['forwarded_to']) ?></td>
                             <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
@@ -64,11 +68,12 @@ messageAlert($showAlert, $message, $success);
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 
-                                        modalDropdownItem(uri() . '/modules/documents/save-document-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Document');
+                                        linkDropdownItem(customUri('dts', 'Edit Document', $row['id']), 'Edit', 'fa-edit', 'Edit Document');
 
                                         if ($row['created_from'] === $station) {
-                                            linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
-                                            modalDropdownItem(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($row['id']), 'Cancel', 'fa-trash-alt', 'Cancel Document');
+                                            linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true); ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php modalDropdownItem(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($row['id']), 'Cancel', 'fa-trash-alt', 'Cancel Document');
                                         }
                                         ?>
                                     </div>
