@@ -85,7 +85,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
                             </td>
-                            <td class="text-left align-middle"><?= e($row['description']) ?></td>
+                            <td class="text-left align-middle"><?= toTruncate($row['description']) ?></td>
                             <td class="align-middle"><?= toDatetime($row['posted_on']) ?></td>
                             <td class="align-middle"><?= toDatetime($row['canceled_on']) ?></td>
                             <td class="align-middle text-capitalize">
