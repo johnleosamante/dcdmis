@@ -6,7 +6,7 @@ require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/document.php');
 require_once(root() . '/includes/layout/components.php');
 
-$documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$documentId = sanitize(decipher($_GET['id'] ?? null));
 $document = document($documentId);
 $description = $type = '';
 $modalTitle = 'Document not found';
@@ -17,7 +17,8 @@ if ($document) {
     $description = $document['description'];
     $type = $document['document_type_id'];
     $documentLogs = documentLogs($documentId)[0];
-    $hasDocument = str_contains(strtolower($documentLogs['status']), 'cancel') && !str_contains(strtolower($documentLogs['status']), 'complete') && $documentLogs['received_from'] === $station;
+    $status = strtolower(documentTransactionStatus($documentLogs['status_id']));
+    $hasDocument = str_contains($status, 'cancel') && !str_contains($status, 'complete') && $documentLogs['received_from'] === $station;
     $modalTitle = $hasDocument ? 'Restore Document' : $modalTitle;
 }
 ?>
@@ -38,8 +39,7 @@ if ($document) {
 
                     <div class="form-group">
                         <label for="type" class="mb-0">Type</label>
-                        <input id="type" class="form-control text-uppercase" value="<?= documentType($type)['name'] ?>"
-                            disabled>
+                        <input id="type" class="form-control text-uppercase" value="<?= documentType($type) ?>" disabled>
                     </div>
 
                     <div class="form-group">
