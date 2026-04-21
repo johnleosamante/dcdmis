@@ -17,7 +17,8 @@ if ($document) {
     $description = $document['description'];
     $type = $document['document_type_id'];
     $documentLogs = documentLogs($documentId)[0];
-    $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['received_from'] === $station && $documentLogs['forwarded_to'] === '-';
+    $documentStatus = strtolower(documentTransactionStatus($documentLogs['status_id']));
+    $hasDocument = !str_contains($documentStatus, 'complete') && !str_contains($documentStatus, 'cancel') && $documentLogs['received_from'] === $station && $documentLogs['forwarded_to'] === null;
     $modalTitle = $hasDocument ? 'Mark Completed Document' : $modalTitle;
 }
 ?>
@@ -38,8 +39,7 @@ if ($document) {
 
                     <div class="form-group">
                         <label for="type" class="mb-0">Type</label>
-                        <input id="type" class="form-control text-uppercase" value="<?= documentType($type)['name'] ?>"
-                            disabled>
+                        <input id="type" class="form-control text-uppercase" value="<?= documentType($type) ?>" disabled>
                     </div>
 
                     <div class="form-group">
