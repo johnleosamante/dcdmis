@@ -2,85 +2,62 @@
 // vacancies
 function vacancy($vacancy_id)
 {
-    return find("SELECT * FROM `vacancies` WHERE `id` = ? LIMIT 1", [$vacancy_id]);
+    $sql = "SELECT v.`id`, pi.`item_number`, p.`official_title` FROM `vacancies` as V 
+            INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id` 
+            INNER JOIN `positions` AS p ON pi.`position_id` = p.`id` WHERE v.`id` = ?";
+    return find($sql, [$vacancy_id]);
 }
 
-function doesItemNumberExist($item_number)
-{
-    $result = query("SELECT * FROM `vacancies` WHERE `item_number` = ? LIMIT 1", [$item_number]);
-    return count($result ?: []) > 0;
-}
-
-function createVacancy($status, $position_id, $station_id, $item_number, $vacated_by, $date_vacated, $reason)
-{
-    $data = [
-        'status' => $status,
-        'position_id' => $position_id,
-        'station_id' => $station_id,
-        'item_number' => $item_number,
-        'vacated_by' => $vacated_by,
-        'date_vacated' => $date_vacated,
-        'reason' => $reason,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
-    ];
-    return insert('vacancies', $data);
-}
-
-function updateVacancy($vacancy_id, $status, $position_id, $station_id, $item_number, $date_vacated, $reason)
-{
-    $data = [
-        'status' => $status,
-        'position_id' => $position_id,
-        'station_id' => $station_id,
-        'item_number' => $item_number,
-        'date_vacated' => $date_vacated,
-        'reason' => $reason,
-        'updated_at' => date('Y-m-d H:i:s')
-    ];
-    return update('vacancies', $data, '`id` = ?', [$vacancy_id]);
-}
-
-function updateFilledVacancy($vacancy_id)
-{
-    $data = [
-        'status' => 'filled',
-        'updated_at' => date('Y-m-d H:i:s')
-    ];
-    return update('vacancies', $data, '`id` = ?', [$vacancy_id]);
-}
-
-// vacancies, positions
+// vacancies, plantilla_items, positions
 function vacancies($status = 'open')
 {
-    $sql = "SELECT v.`id`, v.`status`, p.`official_title`, v.`station_id`, 
-                v.`item_number`,  v.`vacated_by`, 
+    $sql = "SELECT v.`id`, pi.`item_number`, p.`official_title`, pi.`station_id`, v.`status`, 
+                v.`vacated_by_id`, 
                 v.`date_vacated`, v.`reason`, v.`created_at`, v.`updated_at` 
-            FROM `vacancies` AS v 
-            INNER JOIN `positions` AS p ON v.`position_id` = p.`id` 
+            FROM `vacancies` AS v
+            INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id` 
+            INNER JOIN `positions` AS p ON pi.`position_id` = p.`id` 
             WHERE v.`status` = ? ORDER BY v.`created_at` DESC";
     return query($sql, [$status]);
 }
 
-// vacancy_publications
-function publications()
+function countVacancies($status = 'open')
 {
-    return query("SELECT * FROM `vacancy_publications` ORDER BY `open_date` DESC");
+    $sql = "SELECT COUNT(*) AS `count` FROM `vacancies` WHERE `status` = ?";
+    $result = find($sql, [$status]);
+    return (int) ($result['count'] ?? 0);
+}
+
+function createVacancy($plantilla_item_id, $status, $vacated_by_id, $date_vacated, $reason)
+{
+    $data = [
+        'plantilla_item_id' => $plantilla_item_id,
+        'status' => $status,
+        'vacated_by_id' => $vacated_by_id,
+        'date_vacated' => $date_vacated,
+        'reason' => $reason
+    ];
+    return insert('vacancies', $data);
+}
+
+function vacantItem($plantilla_item_id)
+{
+    $result = find("SELECT `id` FROM `vacancies` WHERE `plantilla_item_id`=?", [$plantilla_item_id]);
+    return $result > 0;
+}
+
+function publicationCodes($vacancy_id)
+{
+    $sql = "SELECT vp.`code` FROM `vacancy_publication_items` AS vpi 
+            INNER JOIN `vacancy_publications` AS vp ON vpi.`publication_id` = vp.`id` 
+            WHERE `vpi`.`vacancy_id` = ?;";
+    return query($sql, [$vacancy_id]);
 }
 
 // vacancies
 function deleteVacancy($vacancy_id)
 {
     return delete('vacancies', '`id` = ?', [$vacancy_id]);
-}
-
-function fillVacancy($vacancy_id)
-{
-    $data = [
-        'status' => 'filled',
-        'updated_at' => date('Y-m-d H:i:s')
-    ];
-    return update('vacancies', $data, '`id` = ?', [$vacancy_id]);
 }
 
 // vacancies, positions
@@ -95,70 +72,72 @@ function vacanciesByStatus($status)
     return query($sql, [$status]);
 }
 
-// vacancy_publications, vacancy_publication_items, vacancies, positions
+// vacancies - for new publication (open and not yet published)
 function vacantItems($position_id = null)
 {
     $params = [];
     $filter = "";
     if ($position_id !== null) {
-        $filter = " AND v.`position_id` = ? ";
+        $filter = " AND pi.`position_id` = ? ";
         $params[] = $position_id;
     }
-    $sql = "SELECT v.`id`, v.`status`, v.`position_id`, p.`official_title`, p.`category`, 
-                p.`salary_grade`, v.`station_id`, v.`item_number`, v.`vacated_by`, 
+    $sql = "SELECT v.`id`, pi.`position_id`, p.`official_title`, p.`category`, 
+                p.`salary_grade`, pi.`station_id`, pi.`item_number`, v.`vacated_by_id`, 
                 v.`date_vacated`, v.`reason`, v.`created_at`
             FROM `vacancies` AS v 
-            INNER JOIN `positions` AS p ON v.`position_id` = p.`id` 
-            WHERE v.`status` = 'open' {$filter} ORDER BY p.`official_title` ASC";
+            INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id`
+            INNER JOIN `positions` AS p ON pi.`position_id` = p.`id` 
+            WHERE v.`status` = 'open' 
+            AND v.`id` NOT IN (SELECT `vacancy_id` FROM `vacancy_publication_items`)
+            {$filter} ORDER BY p.`official_title` ASC";
     return query($sql, $params);
 }
 
-// vacancies
-function countVacanciesByStatus($status)
+// vacancies - for updating publication (already added items + open and not yet published)
+function vacantItemsForUpdate($publication_id, $position_id = null)
 {
-    $result = find("SELECT COUNT(`id`) AS total` FROM `vacancies` WHERE `status` = ?", [$status]);
-    return $result ? (int) $result['total'] : 0;
-}
-
-// vacancies, positions
-function allVacancies()
-{
-    $sql = "SELECT v.`id`, v.`status`, v.`position_id`, p.`official_title`, 
-                p.`salary_grade`, v.`station_id`, `v.`item_number`, v.`vacated_by`, 
-                v.`date_vacated`, v.`reason`, v.`created_at`, v.`updated_at` 
+    $params = [$publication_id];
+    $filter = "";
+    if ($position_id !== null) {
+        $filter = " AND pi.`position_id` = ? ";
+        $params[] = $position_id;
+    }
+    $sql = "SELECT v.`id`, pi.`position_id`, p.`official_title`, p.`category`, 
+                p.`salary_grade`, pi.`station_id`, pi.`item_number`, v.`vacated_by_id`, 
+                v.`date_vacated`, v.`reason`, v.`created_at`
             FROM `vacancies` AS v 
-            INNER JOIN `positions` AS p ON v.`position_id` = p.`id` 
-            ORDER BY v.`status` ASC, p.`official_title` ASC";
-    return query($sql);
-}
-
-function vacanciesGroupedByPosition()
-{
-    $sql = "SELECT v.`position_id`, p.`official_title`, p.`category`, p.``salary_grade`, 
-                COUNT(v.`id`) AS `count` 
-            FROM `vacancies` AS v 
-            INNER JOIN `positions` AS p ON v.`position_id` = p.`id` 
+            INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id`
+            INNER JOIN `positions` AS p ON pi.`position_id` = p.`id` 
             WHERE v.`status` = 'open' 
-            GROUP BY v.`position_id`, p.`official_title`, p.`category`, p.`salary_grade` 
-            ORDER BY p.`official_title` ASC";
-    return query($sql);
+            AND (
+                v.`id` IN (SELECT `vacancy_id` FROM `vacancy_publication_items` WHERE `publication_id` = ?)
+                OR v.`id` NOT IN (SELECT `vacancy_id` FROM `vacancy_publication_items`)
+            )
+            {$filter} ORDER BY p.`official_title` ASC";
+    return query($sql, $params);
 }
 
-// vacancies
-function vacanciesByPositionId($position_id)
+function VacantPlantillaItems()
 {
-    $sql = "SELECT `id` FROM `vacancies` WHERE `status` = 'open' AND `position_id` = ?";
-    return query($sql, [$position_id]);
+    $sql = "SELECT p.`id`, p.`item_number`, p.`position_id`, p.`station_id`,
+                pos.`official_title`, pos.`salary_grade`, pos.`category`,
+                s.`name` AS `station_name`
+            FROM `plantilla_items` AS p
+            INNER JOIN `positions` AS pos ON p.`position_id` = pos.`id`
+            INNER JOIN `schools` AS s ON p.`station_id` = s.`id`
+            WHERE p.`is_vacant` = 1 AND p.`is_dissolve` = 0 AND p.`id` NOT IN (SELECT `plantilla_item_id` FROM `vacancies`)
+            ORDER BY pos.`category` ASC, pos.`official_title` ASC, p.`item_number` ASC";
+    return query($sql);
 }
 
 // vacancy_publications
 function generatePublicationCode()
 {
     $year = date('Y');
-    $sql = "SELECT COUNT(*) AS `count` FROM `vacancy_publications` WHERE YEAR(`created_on`) = ?";
+    $sql = "SELECT COUNT(*) AS `count` FROM `vacancy_publications` WHERE YEAR(`created_at`) = ?";
     $result = find($sql, [$year]);
     $count = ($result ? (int) $result['count'] : 0) + 1;
-    return 'PUB' . $year . str_pad($count, 3, '0', STR_PAD_LEFT);
+    return "PUB{$year}" . str_pad($count, 3, '0', STR_PAD_LEFT);
 }
 
 function publication($id)
@@ -174,7 +153,7 @@ function publicationByCode($code)
 function activePublications()
 {
     $sql = "SELECT * FROM `vacancy_publications` WHERE `status` = 'open' AND `close_date` >= CURDATE() 
-            ORDER BY `created_on` DESC";
+            ORDER BY `created_at` DESC";
     return query($sql);
 }
 
@@ -192,9 +171,7 @@ function createPublication($code, $title, $description, $open_date, $close_date,
         'description' => $description,
         'open_date' => $open_date,
         'close_date' => $close_date,
-        'status' => $status,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'status' => $status
     ];
     return insert('vacancy_publications', $data);
 }
@@ -206,8 +183,7 @@ function updatePublication($vacancy_publication_id, $title, $description, $open_
         'description' => $description,
         'open_date' => $open_date,
         'close_date' => $close_date,
-        'status' => $status,
-        'updated_at' => date('Y-m-d H:i:s')
+        'status' => $status
     ];
     return update('vacancy_publications', $data, '`id` = ?', [$vacancy_publication_id]);
 }
@@ -227,34 +203,30 @@ function countPublications()
 // vacancy_publication_items, vacancies, positions
 function publicationItems($publication_id)
 {
-    $sql = "SELECT vpi.`id`, vpi.`vacancy_id`, v.`position_id`, v.`item_number`, 
-                p.`official_title`, p.`salary_grade`, v.`station_id`, v.`reason` 
+    // $sql = "SELECT vpi.`id`, vpi.`vacancy_id`, v.`position_id`, v.`item_number`, 
+    //             p.`official_title`, p.`salary_grade`, v.`station_id`, v.`reason` 
+    //         FROM `vacancy_publication_items` AS vpi 
+    //         INNER JOIN `vacancies` AS v ON vpi.`vacancy_id` = v.`id` 
+    //         INNER JOIN `positions` AS p ON v.`position_id` = p.`id` 
+    //         WHERE vpi.`publication_id` = ? ORDER BY p.`official_title` ASC";
+    $sql = "SELECT vpi.`id`, vpi.`vacancy_id`, pi.`position_id`, p.`official_title`, pi.`item_number`, p.`salary_grade`,
+                pi.`station_id`, v.`date_vacated`, v.`reason` 
             FROM `vacancy_publication_items` AS vpi 
             INNER JOIN `vacancies` AS v ON vpi.`vacancy_id` = v.`id` 
-            INNER JOIN `positions` AS p ON v.`position_id` = p.`id` 
+            INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id` 
+            INNER JOIN `positions` AS p ON pi.`position_id` = p.`id` 
             WHERE vpi.`publication_id` = ? ORDER BY p.`official_title` ASC";
     return query($sql, [$publication_id]);
 }
 
 // vacancy_publication_items
-function addPublicationItem($publication_id, $vacancy_id, $position_id, $plantilla_item_id)
+function addPublicationItem($publication_id, $vacancy_id)
 {
     $data = [
         'publication_id' => $publication_id,
-        'vacancy_id' => $vacancy_id,
-        'position_id' => $position_id,
-        'plantilla_item_id' => $plantilla_item_id,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'vacancy_id' => $vacancy_id
     ];
-
     return insert('vacancy_publication_items', $data);
-}
-
-// vacancy_publication_items
-function removePublicationItem($publication_id, $vacancy_id, $position_id, $plantilla_item_id)
-{
-    return delete('vacancy_publication_items', '`publication_id` = ? AND `vacancy_id` = ? AND `position_id` = ? AND `plantilla_item_id` = ?', [$publication_id, $vacancy_id, $position_id, $plantilla_item_id]);
 }
 
 function clearPublicationItems($publication_id)
@@ -269,18 +241,6 @@ function countPublicationItems($publication_id)
     return $result ? (int) $result['total'] : 0;
 }
 
-// vacancy_applications
-function application($id)
-{
-    $sql = "SELECT va.*, p.`official_title`, v.`item_number`, v.`station_id` 
-            FROM `vacancy_applications` AS va 
-            INNER JOIN `vacancies` AS v ON va.`vacancy_id` = v.`id` 
-            INNER JOIN `positions` AS p ON v.position_id = p.`id` 
-            WHERE va.`id` = ? LIMIT 1";
-    return find($sql, [$id]);
-}
-
-// TODO
 function applicationsByPublication($publicationId)
 {
     $sql = "SELECT va.`id`, va.`created_at`, va.email, va.mobile, va.resume_path, va.status,
@@ -340,7 +300,7 @@ function findApplicantByEmail($email)
 
 function findApplicantByEmployeeId($employeeId)
 {
-    return find("SELECT * FROM `applicants` WHERE `person_id` = ? LIMIT 1", [$employeeId]);
+    return find("SELECT * FROM `applicants` WHERE `employee_id` = ? LIMIT 1", [$employeeId]);
 }
 
 function createApplicant($code, $fname, $mname, $lname, $ext, $email, $mobile, $isEmployee, $employeeId, $resumePath, $sex = null, $dob = null, $civil = null, $address = null, $religion = null, $pwd = 0, $ethnic = null, $education = null, $eligibility = null)
@@ -354,7 +314,7 @@ function createApplicant($code, $fname, $mname, $lname, $ext, $email, $mobile, $
         'email' => $email,
         'mobile' => $mobile,
         'is_employee' => $isEmployee ? 1 : 0,
-        'person_id' => $employeeId,
+        'employee_id' => $employeeId,
         'resume_path' => $resumePath,
         'sex' => $sex,
         'birth_date' => $dob,
@@ -364,9 +324,7 @@ function createApplicant($code, $fname, $mname, $lname, $ext, $email, $mobile, $
         'is_pwd' => $pwd ? 1 : 0,
         'ethnic_group' => $ethnic,
         'education' => $education,
-        'eligibility' => $eligibility,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'eligibility' => $eligibility
     ];
     return insert('applicants', $data);
 }
@@ -388,8 +346,7 @@ function updateApplicant($id, $fname, $mname, $lname, $ext, $mobile, $resumePath
         'is_pwd' => $pwd ? 1 : 0,
         'ethnic_group' => $ethnic,
         'education' => $education,
-        'eligibility' => $eligibility,
-        'updated_at' => date('Y-m-d H:i:s')
+        'eligibility' => $eligibility
     ];
     return update('applicants', $data, '`id` = ?', [$id]);
 }
@@ -415,9 +372,7 @@ function createApplicationEntry($publicationId, $vacancyId, $applicantId)
         'mobile' => $app['mobile'],
         'resume_path' => $app['resume_path'],
         'status' => 'pending',
-        'submitted_on' => date('Y-m-d H:i:s'),
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'submitted_on' => date('Y-m-d H:i:s')
     ];
     return insert('vacancy_applications', $data);
 }
@@ -427,15 +382,13 @@ function createApplication($publicationId, $vacancyId, $applicantName, $email, $
     $data = [
         'publication_id' => $publicationId,
         'vacancy_id' => $vacancyId,
-        'person_id' => $employeeId,
+        'employee_id' => $employeeId,
         'applicant_name' => $applicantName,
         'email' => $email,
         'mobile' => $mobile,
         'resume_path' => $resumePath,
         'status' => 'pending',
-        'submitted_on' => date('Y-m-d H:i:s'),
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'submitted_on' => date('Y-m-d H:i:s')
     ];
     return insert('vacancy_applications', $data);
 }
@@ -443,17 +396,19 @@ function createApplication($publicationId, $vacancyId, $applicantName, $email, $
 function updateApplicationStatus($id, $status)
 {
     $data = [
-        'status' => $status,
-        'updated_at' => date('Y-m-d H:i:s')
+        'status' => $status
     ];
     return update('vacancy_applications', $data, '`id` = ?', [$id]);
 }
 
 function countApplicationsByPublication($publicationId)
 {
-    $sql = "SELECT COUNT(`id`) AS total FROM `vacancy_applications` WHERE `publication_id` = ?";
-    $res = find($sql, [$publicationId]);
-    return $res ? (int) $res['total'] : 0;
+    $sql = "SELECT COUNT(va.`id`) AS `total` FROM `vacancy_applications` AS va 
+            INNER JOIN `vacancy_publication_items` AS vpi ON va.`publication_item_id` = vpi.`id` 
+            INNER JOIN `vacancy_publications` AS vp ON vpi.`publication_id` = vp.`id` 
+            WHERE vpi.`publication_id` = ?;";
+    $result = find($sql, [$publicationId]);
+    return $result ? (int) $result['total'] : 0;
 }
 
 function countApplicationsByStatus($publicationId, $status)
@@ -461,4 +416,11 @@ function countApplicationsByStatus($publicationId, $status)
     $sql = "SELECT COUNT(`id`) AS total FROM `vacancy_applications` WHERE `publication_id` = ? AND `status` = ?";
     $res = find($sql, [$publicationId, $status]);
     return $res ? (int) $res['total'] : 0;
+}
+
+// Check if a vacancy is already published in any publication
+function isVacancyPublished($vacancy_id)
+{
+    $result = find("SELECT COUNT(`id`) AS `count` FROM `vacancy_publication_items` WHERE `vacancy_id` = ?", [$vacancy_id]);
+    return $result && (int) $result['count'] > 0;
 }
