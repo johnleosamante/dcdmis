@@ -62,8 +62,7 @@ messageAlert($showAlert, $message, $success);
         </form>
 
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%"
-                cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">Photo</th>
