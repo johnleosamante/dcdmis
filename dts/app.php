@@ -64,8 +64,8 @@ if (isset($_POST['save-document'])) {
 
 	try {
 		createDocument($documentId, $description, $type, $station, $purpose);
-		$documentLogId = createDocumentLog($documentId, $userId, $station, $destination, $purpose, true, $details);
 
+		$documentLogId = createDocumentLog($documentId, $userId, $station, $destination, $purpose, true, $details);
 		$upload_response = '';
 
 		if (!empty($_FILES['file-upload']['name'][0])) {
@@ -107,8 +107,9 @@ if (isset($_POST['save-document'])) {
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been saved successfully.' . $upload_response;
 		$success = true;
-	} catch (Exception) {
+	} catch (Exception $e) {
 		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
@@ -121,6 +122,7 @@ if (isset($_POST['edit-document'])) {
 	$showAlert = true;
 
 	if (document($documentId) === false) {
+		$message = 'No document has been updated.';
 		return;
 	}
 
@@ -190,8 +192,9 @@ if (isset($_POST['edit-document'])) {
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been updated successfully.' . $upload_response;
 		$success = true;
-	} catch (Exception) {
+	} catch (Exception $e) {
 		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
@@ -199,7 +202,6 @@ if (isset($_POST['delete-attachment'])) {
 	$attachmentId = sanitize(decipher($_POST['verifier'] ?? null));
 
 	$showAlert = true;
-	$message = 'No changes have been made to document attachments.';
 
 	beginTransaction();
 
@@ -207,6 +209,7 @@ if (isset($_POST['delete-attachment'])) {
 		$affectedAttachment = deleteDocumentLogAttachment($attachmentId);
 
 		if ($affectedAttachment === false) {
+			$message = 'No changes have been made to document attachments.';
 			return;
 		}
 
@@ -215,17 +218,15 @@ if (isset($_POST['delete-attachment'])) {
 
 		$message = 'Document attachment has been deleted successfully.';
 		$success = true;
-	} catch (Exception) {
+	} catch (Exception $e) {
 		rollBack();
+		$message = $e->getMessage();
 	}
-
 }
 
 if (isset($_POST['receive-document'])) {
 	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
-
 	$showAlert = true;
-	$message = 'No document has been received.';
 
 	beginTransaction();
 
@@ -233,18 +234,19 @@ if (isset($_POST['receive-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
+			$message = 'No document has been received.';
 			return;
 		}
 
 		createDocumentLog($documentId, $userId, $station, null, documentStatusId('Received'), true);
-
 		createSystemLog($stationId, $userId, 'Received document', $documentId, clientIp());
 		commit();
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been received successfully.';
 		$success = true;
-	} catch (Exception) {
+	} catch (Exception $e) {
 		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
@@ -253,9 +255,7 @@ if (isset($_POST['forward-document'])) {
 	$purpose = sanitize($_POST['purpose']);
 	$details = sanitize($_POST['details']);
 	$destination = sanitize($_POST['destination']);
-
 	$showAlert = true;
-	$message = 'No document has been forwarded.';
 
 	beginTransaction();
 
@@ -263,6 +263,7 @@ if (isset($_POST['forward-document'])) {
 		$updatedDocuments = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocuments === false) {
+			$message = 'No document has been forwarded.';
 			return;
 		}
 
@@ -315,8 +316,9 @@ if (isset($_POST['forward-document'])) {
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been forwarded successfully.' . $upload_response;
 		$success = true;
-	} catch (Exception) {
+	} catch (Exception $e) {
 		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
@@ -324,9 +326,7 @@ if (isset($_POST['complete-document'])) {
 	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$remarks = sanitize($_POST['remarks']);
 	$status = documentStatusId('Completed');
-
 	$showAlert = true;
-	$message = 'No document has been marked completed.';
 
 	beginTransaction();
 
@@ -334,6 +334,7 @@ if (isset($_POST['complete-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
+			$message = 'No document has been marked completed.';
 			return;
 		}
 
@@ -343,18 +344,17 @@ if (isset($_POST['complete-document'])) {
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been mark completed successfully.';
 		$success = true;
-	} catch (Exception) {
+	} catch (Exception $e) {
 		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
 if (isset($_POST['incomplete-document'])) {
 	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$remarks = sanitize($_POST['remarks']);
-
 	$status = documentStatusId('Received');
 	$showAlert = true;
-	$message = 'No document has been marked incomplete.';
 
 	beginTransaction();
 
@@ -362,6 +362,7 @@ if (isset($_POST['incomplete-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
+			$message = 'No document has been marked incomplete.';
 			return;
 		}
 
@@ -371,19 +372,18 @@ if (isset($_POST['incomplete-document'])) {
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been marked incomplete successfully.';
 		$success = true;
-	} catch (Exception) {
+	} catch (Exception $e) {
 		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
 if (isset($_POST['restore-document'])) {
 	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$remarks = sanitize($_POST['remarks']);
-
 	$status = documentStatusId($isSchoolPortal ? 'For submission' : 'Restored');
 	$destination = $isSchoolPortal ? 'REC' : null;
 	$showAlert = true;
-	$message = 'No document has been restored.';
 
 	beginTransaction();
 
@@ -391,6 +391,7 @@ if (isset($_POST['restore-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
+			$message = 'No document has been restored.';
 			return;
 		}
 
@@ -400,18 +401,17 @@ if (isset($_POST['restore-document'])) {
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been restored successfully.';
 		$success = true;
-	} catch (Exception) {
+	} catch (Exception $e) {
 		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
 if (isset($_POST['cancel-document'])) {
 	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$remarks = sanitize($_POST['remarks']);
-
 	$status = documentStatusId('Canceled');
 	$showAlert = true;
-	$message = 'No document has been canceled.';
 
 	beginTransaction();
 
@@ -419,15 +419,19 @@ if (isset($_POST['cancel-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
-			createDocumentLog($documentId, $userId, $station, null, $status, true, $remarks);
-			createSystemLog($stationId, $userId, "$status document", $documentId, clientIp());
-			commit();
-
-			$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
-			$success = true;
+			$message = 'No document has been canceled.';
+			return;
 		}
-	} catch (Exception) {
+
+		createDocumentLog($documentId, $userId, $station, null, $status, true, $remarks);
+		createSystemLog($stationId, $userId, "$status document", $documentId, clientIp());
+		commit();
+
+		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
+		$success = true;
+	} catch (Exception $e) {
 		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
