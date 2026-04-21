@@ -6,7 +6,7 @@ require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/document.php');
 require_once(root() . '/includes/layout/components.php');
 
-$documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$documentId = sanitize(decipher($_GET['id'] ?? null));
 $document = document($documentId);
 $description = $type = '';
 $modalTitle = 'Document not found';
