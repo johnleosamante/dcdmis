@@ -11,42 +11,35 @@ function cardType($card_type_id)
 }
 
 // valid_ids
-function employeeIdentification($person_id)
+function employeeIdentification($employee_id)
 {
 	return find(
 		"SELECT `card_type_id`, `id_number`, `place_issued`, `date_issued` 
         FROM `valid_ids` 
-        WHERE `person_id` = ? LIMIT 1",
-		[$person_id]
+        WHERE `employee_id` = ? LIMIT 1",
+		[$employee_id]
 	);
 }
 
-function createIdentification($card_type_id, $id_number, $place_issued, $date_issued, $person_id)
+function createIdentification($card_type_id, $id_number, $place_issued, $date_issued, $employee_id)
 {
 	$data = [
 		'card_type_id' => $card_type_id,
 		'id_number' => $id_number,
 		'place_issued' => $place_issued,
 		'date_issued' => $date_issued,
-		'person_ID' => $person_id,
-		'created_at' => date('Y-m-d H:i:s'),
-		'updated_at' => date('Y-m-d H:i:s')
+		'employee_id' => $employee_id,
 	];
 	return insert('valid_ids', $data);
 }
 
-function updateIdentification($card_type_id, $id_number, $place_issued, $date_issued, $person_id)
+function updateIdentification($card_type_id, $id_number, $place_issued, $date_issued, $employee_id)
 {
 	$data = [
+		'card_type_id' => $card_type_id,
 		'id_number' => $id_number,
 		'place_issued' => $place_issued,
-		'date_issued' => $date_issued,
-		'updated_at' => date('Y-m-d H:i:s')
+		'date_issued' => $date_issued
 	];
-	return update(
-		'valid_ids',
-		$data,
-		"`person_id` = ? AND `card_type_id` = ?",
-		[$person_id, $card_type_id]
-	);
+	return update('valid_ids', $data, "`employee_id` = ?", [$employee_id]);
 }
