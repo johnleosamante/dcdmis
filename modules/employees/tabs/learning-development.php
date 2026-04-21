@@ -6,7 +6,7 @@
     id="learning-development">
     <div class="row my-3">
         <div class="col table-responsive">
-            <table width="100%" class="table table-striped table-bordered table-hover mb-0 text-center">
+            <table width="100%" class="table table-hover mb-0 text-center">
                 <thead>
                     <tr>
                         <th class="align-middle" width="45%">Title of Learning &amp; Development Interventions /
