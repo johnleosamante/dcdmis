@@ -1,46 +1,43 @@
 <?php
 // payslips
-function payslips($person_id)
+function payslips($employee_id)
 {
-    $results = query("SELECT * FROM `payslips` WHERE `person_id` = ? ORDER BY `updated_at` DESC", [$person_id]);
+    $results = query("SELECT * FROM `payslips` WHERE `employee_id` = ? ORDER BY `updated_at` DESC", [$employee_id]);
     return is_array($results) ? $results : [];
 }
 
-function payslip($person_id, $payslip_id)
+function payslip($employee_id, $payslip_id)
 {
-    return find("SELECT * FROM `payslips` WHERE `person_id` = ? AND `id` = ? LIMIT 1", [$person_id, $payslip_id]);
+    return find("SELECT * FROM `payslips` WHERE `employee_id` = ? AND `id` = ? LIMIT 1", [$employee_id, $payslip_id]);
 }
 
-function createPayslip($description, $file_name, $file_extension, $person_id)
+function createPayslip($description, $file_name, $file_extension, $employee_id)
 {
     $data = [
-        'person_id' => $person_id,
+        'employee_id' => $employee_id,
         'description' => $description,
         'file_name' => $file_name,
-        'file_extension' => $file_extension,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'file_extension' => $file_extension
     ];
     return insert('payslips', $data);
 }
 
-function updatePayslip($description, $file_name, $file_extension, $person_id, $payslip_id)
+function updatePayslip($description, $file_name, $file_extension, $employee_id, $payslip_id)
 {
     $data = [
         'description' => $description,
         'file_name' => $file_name,
-        'file_extension' => $file_extension,
-        'updated_at' => date('Y-m-d H:i:s')
+        'file_extension' => $file_extension
     ];
-    return update('payslips', $data, '`person_id` = ? AND `id` = ?', [$person_id, $payslip_id]);
+    return update('payslips', $data, '`employee_id` = ? AND `id` = ?', [$employee_id, $payslip_id]);
 }
 
-function deletePayslip($person_id, $payslip_id)
+function deletePayslip($employee_id, $payslip_id)
 {
-    return delete('payslips', '`person_id` = ? AND `id` = ?', [$person_id, $payslip_id]);
+    return delete('payslips', '`employee_id` = ? AND `id` = ?', [$employee_id, $payslip_id]);
 }
 
-function deletePayslips($person_id)
+function deletePayslips($employee_id)
 {
-    return delete('payslips', '`person_id` = ?', [$person_id]);
+    return delete('payslips', '`employee_id` = ?', [$employee_id]);
 }
