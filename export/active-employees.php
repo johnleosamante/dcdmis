@@ -60,7 +60,7 @@ $filter = isset($_GET['id']) ? "{$filter} AND sa.`station_id`='" . sanitize(deco
 				<td><?= strtoupper($row['middle_name']) ?></td>
 				<td><?= strtoupper($row['name_extension']) ?></td>
 				<td><?= strtoupper($row['sex'])[0] ?></td>
-				<td><?= $row['birth_year'] . '-' . $row['birth_month'] . '-' . $row['birth_day'] ?></td>
+				<td><?= e($row['birthdate']) ?></td>
 				<td><?= strtoupper($row['position']) ?></td>
 				<?php if ($isHrmis): ?>
 					<td><?= e($row['gsis_crn']) ?></td>
