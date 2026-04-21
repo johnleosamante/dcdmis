@@ -5,7 +5,7 @@ if (!$isPis && !$isHrmis) {
     return;
 }
 
-$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+$employeeId = (int) sanitize(decode($_GET['id'] ?? null));
 
 if ($isPis && $userId !== $employeeId) {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -56,12 +56,11 @@ if (!is_dir($uploadDirectory)) {
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%"
-                cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="25%">Uploaded on</th>
-                        <th class="align-middle" width="75%">Description</th>
+                        <th class="align-middle" width="75%">Description / File Type</th>
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </thead>
@@ -73,7 +72,10 @@ if (!is_dir($uploadDirectory)) {
                     foreach ($results as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
-                            <td class="align-middle text-left"><?= e($row['description']) ?></td>
+                            <td class="align-middle text-left">
+                                <div><?= e($row['description']) ?></div>
+                                <div class="small text-muted"><?= e($row['file_type']) ?></div>
+                            </td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
@@ -82,7 +84,9 @@ if (!is_dir($uploadDirectory)) {
                                         previewLinkDropdownItem(uri() . '/' . $row['file_name'], 'Preview', 'fa-eye', 'Preview ' . $row['description']);
                                         downloadLinkDropdownItem(uri() . '/' . $row['file_name'], 'Download', 'fa-download', 'Download ' . $row['description'], $row['description'] . '.' . $row['file_extension'], true);
 
-                                        if ($isHrmis) {
+                                        if ($isHrmis) { ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php
                                             modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit 201 File');
                                             modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy 201 File') ?>
                                             <div class="dropdown-divider"></div>
@@ -98,7 +102,7 @@ if (!is_dir($uploadDirectory)) {
                 <tfoot>
                     <tr>
                         <th class="align-middle" width="25%">Uploaded on</th>
-                        <th class="align-middle" width="75%">Description</th>
+                        <th class="align-middle" width="75%">Description / File Type</th>
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </tfoot>
