@@ -116,9 +116,6 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Positions':
             $file = 'positions/page';
             break;
-        case 'Position Information':
-            $file = 'positions/position-information';
-            break;
         case 'Plantilla Items':
             $file = 'positions/plantilla-items';
             break;
