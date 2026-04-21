@@ -17,7 +17,7 @@ $notFound = true;
 
 if ($district) {
     $districtName = $district['name'];
-    $districtHead = $district['psds'];
+    $districtHead = $district['supervisor_id'];
     $modalTitle = 'Edit District';
 }
 ?>
