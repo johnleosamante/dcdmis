@@ -7,18 +7,18 @@ require_once(root() . '/includes/database/document.php');
 require_once(root() . '/includes/layout/components.php');
 
 $documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$documents = document($documentId);
+$document = document($documentId);
 $description = $type = '';
 $modalTitle = 'Document not found';
 $hasDocument = false;
 
-if (numRows($documents) > 0) {
-    $document = fetchAssoc($documents);
+if ($document) {
     $documentId = $document['id'];
     $description = $document['description'];
-    $type = $document['type'];
-    $documentLogs = fetchAssoc(documentLogs($documentId));
-    $hasDocument = !str_contains(strtolower($documentLogs['status']), 'cancel') && str_contains(strtolower($documentLogs['status']), 'complete') && $documentLogs['from'] === $station && $documentLogs['to'] === '-';
+    $type = $document['document_type_id'];
+    $documentLogs = documentLogs($documentId)[0];
+    $documentStatus = strtolower(documentTransactionStatus($documentLogs['status_id']));
+    $hasDocument = !str_contains($documentStatus, 'cancel') && str_contains($documentStatus, 'complete') && $documentLogs['received_from'] === $station && $documentLogs['forwarded_to'] === null;
     $modalTitle = $hasDocument ? 'Mark Incomplete Document' : $modalTitle;
 }
 ?>
@@ -39,8 +39,7 @@ if (numRows($documents) > 0) {
 
                     <div class="form-group">
                         <label for="type" class="mb-0">Type</label>
-                        <input id="type" class="form-control text-uppercase"
-                            value="<?= fetchArray(documentType($type))['name'] ?>" disabled>
+                        <input id="type" class="form-control text-uppercase" value="<?= documentType($type) ?>" disabled>
                     </div>
 
                     <div class="form-group">
