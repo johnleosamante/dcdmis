@@ -20,10 +20,11 @@ $modalTitle = 'Add Vacancy';
             <div class="modal-body">
                 <div class="form-group">
                     <label for="item_number" class="mb-0">Item Number <?= showAsterisk() ?></label>
-                    <select id="item_number" name="item_number" class="form-control" title="Select item number...">
+                    <select id="item_number" name="item_number" class="form-control" title="Select item number..."
+                        required>
                         <option value="">Select item number...</option>
                         <?php
-                        $items = VacantPlantillaItems();
+                        $items = vacantPlantillaItems();
                         $groupedByPosition = [];
                         foreach ($items as $item) {
                             $posKey = $item['official_title'] . ' (' . $item['salary_grade'] . ')';
@@ -48,7 +49,7 @@ $modalTitle = 'Add Vacancy';
                 <div class="form-group">
                     <label for="date_posted" class="mb-0">Date Posted <?= showAsterisk() ?></label>
                     <input id="date_posted" name="date_posted" type="date" class="form-control"
-                        value="<?= e($datePosted) ?>">
+                        value="<?= e($datePosted) ?>" required>
                 </div>
 
                 <?php requiredLegend(0) ?>
