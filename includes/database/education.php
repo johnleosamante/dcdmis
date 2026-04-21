@@ -1,19 +1,19 @@
 <?php
 // educational_backgrounds
-function educationalBackgrounds($person_id)
+function educationalBackgrounds($employee_id)
 {
-    $sql = "SELECT * FROM `educational_backgrounds` WHERE `person_id` = ? ORDER BY `from_year` ASC, `to_year` ASC";
-    $results = query($sql, [$person_id]);
+    $sql = "SELECT * FROM `educational_backgrounds` WHERE `employee_id` = ? ORDER BY `from_year` ASC, `to_year` ASC";
+    $results = query($sql, [$employee_id]);
     return is_array($results) ? $results : [];
 }
 
-function educationalBackground($person_id, $educationl_background_id)
+function educationalBackground($employee_id, $educationl_background_id)
 {
-    $sql = "SELECT * FROM `educational_backgrounds` WHERE `person_id` = ? AND `id` = ? LIMIT 1";
-    return find($sql, [$person_id, $educationl_background_id]);
+    $sql = "SELECT * FROM `educational_backgrounds` WHERE `employee_id` = ? AND `id` = ? LIMIT 1";
+    return find($sql, [$employee_id, $educationl_background_id]);
 }
 
-function createEducation($level, $school, $course, $from_year, $to_year, $is_present, $highest_level, $year_graduated, $honors_received, $person_id)
+function createEducation($level, $school, $course, $from_year, $to_year, $is_present, $highest_level, $year_graduated, $honors_received, $employee_id)
 {
     $data = [
         'level' => $level,
@@ -25,15 +25,13 @@ function createEducation($level, $school, $course, $from_year, $to_year, $is_pre
         'highest_level' => $highest_level,
         'year_graduated' => $year_graduated,
         'honors_received' => $honors_received,
-        'person_id' => $person_id,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'employee_id' => $employee_id
     ];
 
     return insert('educational_backgrounds', $data);
 }
 
-function updateEducation($level, $school, $course, $from_year, $to_year, $is_present, $highest_level, $year_graduated, $honors_received, $person_id, $educational_background_id)
+function updateEducation($level, $school, $course, $from_year, $to_year, $is_present, $highest_level, $year_graduated, $honors_received, $employee_id, $educational_background_id)
 {
     $data = [
         'level' => $level,
@@ -44,18 +42,17 @@ function updateEducation($level, $school, $course, $from_year, $to_year, $is_pre
         'is_present' => $is_present,
         'highest_level' => $highest_level,
         'year_graduated' => $year_graduated,
-        'honors_received' => $honors_received,
-        'updated_at' => date('Y-m-d H:i:s')
+        'honors_received' => $honors_received
     ];
-    return update('educational_backgrounds', $data, "`person_id` = ? AND `id` = ?", [$person_id, $educational_background_id]);
+    return update('educational_backgrounds', $data, "`employee_id` = ? AND `id` = ?", [$employee_id, $educational_background_id]);
 }
 
-function deleteEducation($person_id, $educational_background_id)
+function deleteEducation($employee_id, $educational_background_id)
 {
-    return delete('educational_backgrounds', "`person_id` = ? AND `id` = ?", [$person_id, $educational_background_id]);
+    return delete('educational_backgrounds', "`employee_id` = ? AND `id` = ?", [$employee_id, $educational_background_id]);
 }
 
-function deleteEducations($person_id)
+function deleteEducations($employee_id)
 {
-    return delete('educational_backgrounds', "`person_id` = ?", [$person_id]);
+    return delete('educational_backgrounds', "`employee_id` = ?", [$employee_id]);
 }
