@@ -6,6 +6,12 @@ if (!$isDts) {
 }
 
 messageAlert($showAlert, $message, $success);
+
+$query = completedDocuments($station, $from, $to);
+if (count($query) === 1000) {
+    $message = "Showing latest 1,000 completed documents as of " . toDate($from, 'F j, Y') . ' - ' . toDate($to, 'F j, Y') . ".";
+    messageAlert(true, $message);
+}
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -79,7 +85,6 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = completedDocuments($station, $from, $to);
                     foreach ($query as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
