@@ -74,7 +74,7 @@ if ($document) {
                 $user = employee($log['processor_id']);
                 $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '/' . $user['profile_picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
-                $hasDestination = !empty($to) && $to !== '-';
+                $hasDestination = !empty($to) && $to !== null;
                 $status = documentTransactionStatus($log['status_id']);
                 $details = $log['details'];
                 $isCompleted = str_contains(strtolower($status), 'complete');
