@@ -22,7 +22,7 @@ if ($training) {
     $dateTo = $training['end_date'];
     $hours = $training['number_of_hours'];
     $trainingType = $training['training_type_id'];
-    $trainingLevel = $training['conducted_by'];
+    $trainingLevel = $training['training_level_id'];
     $sponsorName = $training['sponsored_by'];
     $functionalDivisionId = empty($training['functional_division_id']) ? null : $training['functional_division_id'];
     $venue = $training['venue'];
