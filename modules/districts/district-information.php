@@ -63,8 +63,7 @@ if ($district) {
         </div>
 
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%"
-                cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">Logo</th>
