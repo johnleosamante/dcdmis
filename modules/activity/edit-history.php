@@ -35,7 +35,7 @@ if ($isHrmis) {
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-hovered mb-0 text-center" id="data-table" width="100%"
+            <table class="table table-hover table-hovered mb-0 text-center" id="data-table" width="100%"
                 cellspacing="0">
                 <thead>
                     <tr>
@@ -57,8 +57,8 @@ if ($isHrmis) {
                             <td class="text-left align-middle"><?= e($row['action']) ?></td>
                             <td class="text-center align-middle">
                                 <?php
-                                $person_id = $row['person_id'];
-                                modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($person_id), userName($person_id));
+                                $employee_id = $row['employee_id'];
+                                modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($employee_id), userName($employee_id));
 
                                 if ($isDmis || $isHrmis): ?>
                                     <br><small><?= '(' . $row['ip'] . ')' ?></small>
