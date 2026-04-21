@@ -5,7 +5,7 @@ if (!$isPis) {
     return;
 }
 
-$employeeId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+$employeeId = (int) sanitize(decode($_GET['id'] ?? null));
 
 if ($isPis && $userId !== $employeeId) {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -46,8 +46,7 @@ if (!is_dir($uploadDirectory)) {
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%"
-                cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="25%">Uploaded on</th>
@@ -68,8 +67,7 @@ if (!is_dir($uploadDirectory)) {
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                                        <?php
-                                        previewLinkDropdownItem(uri() . '/' . $payslip['file_name'], 'Preview', 'fa-eye', 'Preview ' . $payslip['description']);
+                                        <?php previewLinkDropdownItem(uri() . '/' . $payslip['file_name'], 'Preview', 'fa-eye', 'Preview ' . $payslip['description']);
                                         downloadLinkDropdownItem(uri() . '/' . $payslip['file_name'], 'Download', 'fa-download', 'Download ' . $payslip['description'], $payslip['description'] . '.' . $payslip['file_extension'], true);
                                         modalDropdownItem(uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Edit', 'fa-edit', 'Edit Payslip');
                                         modalDropdownItem(uri() . '/modules/payslip/save-payslip-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Copy', 'fa-copy', 'Copy Payslip'); ?>
