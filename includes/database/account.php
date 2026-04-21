@@ -1,122 +1,115 @@
 <?php
-// persons
+// employees
 function account($email_address)
 {
     return find(
-        "SELECT `id`, `email_address` FROM `persons` 
+        "SELECT `id`, `email_address` FROM `employees` 
         WHERE `status`='Active' AND `email_address` = ? LIMIT 1",
         [$email_address]
     );
 }
 
 // credentials
-function accountPassword($person_id, $password)
+function accountPassword($employee_id, $password)
 {
     return find(
-        "SELECT `person_id`, `status` FROM `credentials` 
-        WHERE `person_id` = ? AND `password` = ? LIMIT 1",
-        [$person_id, $password]
+        "SELECT `employee_id`, `status` FROM `credentials` 
+        WHERE `employee_id` = ? AND `password` = ? LIMIT 1",
+        [$employee_id, $password]
     );
 }
 
-function createAccount($person_id, $password)
+function createAccount($employee_id, $password)
 {
     $data = [
-        'person_id' => $person_id,
+        'employee_id' => $employee_id,
         'password' => $password,
-        'status' => 'Default',
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'status' => 'Default'
     ];
     return insert('credentials', $data);
 }
 
-function deleteAccount($person_id)
+function deleteAccount($employee_id)
 {
-    return delete('credentials', '`person_id` = ?', [$person_id]);
+    return delete('credentials', '`employee_id` = ?', [$employee_id]);
 }
 
-function updateAccountPassword($person_id, $password, $status = null)
+function updateAccountPassword($employee_id, $password, $status = null)
 {
     $data = [
-        'password' => $password,
-        'updated_at' => date('Y-m-d H:i:s')
+        'password' => $password
     ];
 
     if (!empty($status)) {
         $data['status'] = $status;
     }
 
-    return update('credentials', $data, '`person_id` = ?', [$person_id]);
+    return update('credentials', $data, '`employee_id` = ?', [$employee_id]);
 }
 
 // user_permissions
-function userRole($person_id, $access)
+function userRole($employee_id, $access)
 {
     return find(
-        "SELECT `person_id` FROM `user_permissions` 
-        WHERE `person_id` = ? AND `access` = ? LIMIT 1",
-        [$person_id, $access]
+        "SELECT `employee_id` FROM `user_permissions` 
+        WHERE `employee_id` = ? AND `access` = ? LIMIT 1",
+        [$employee_id, $access]
     );
 }
 
-function dtsUser($person_id)
+function dtsUser($employee_id)
 {
     return find(
         "SELECT * FROM `user_permissions` 
-        WHERE `person_id` = ? AND `link` <> ''",
-        [$person_id]
+        WHERE `employee_id` = ? AND `link` <> ''",
+        [$employee_id]
     );
 }
 
-function isStationUser($person_id, $access)
+function isStationUser($employee_id, $access)
 {
     return find(
-        "SELECT `person_id` FROM `user_permissions` 
-        WHERE `person_id` = ? AND `access` = ?",
-        [$person_id, $access]
+        "SELECT `employee_id` FROM `user_permissions` 
+        WHERE `employee_id` = ? AND `access` = ?",
+        [$employee_id, $access]
     );
 }
 
-function createUserRole($person_id, $access, $link = null)
+function createUserRole($employee_id, $access, $link = null)
 {
     $data = [
-        'person_id' => $person_id,
+        'employee_id' => $employee_id,
         'access' => $access,
-        'link' => $link,
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'link' => $link
     ];
     return insert('user_permissions', $data);
 }
 
-function updateUserRole($person_id, $access, $link = null)
+function updateUserRole($employee_id, $access, $link = null)
 {
     $data = [
-        'access' => $access,
-        'updated_at' => date('Y-m-d H:i:s')
+        'access' => $access
     ];
     if (!empty($link)) {
         $data['link'] = $link;
     }
-    return update('user_permissions', $data, "`person_id` = ? AND `link` LIKE '%_portal%'", [$person_id]);
+    return update('user_permissions', $data, "`employee_id` = ? AND `link` LIKE '%_portal%'", [$employee_id]);
 }
 
-function deleteUserRole($person_id, $access)
+function deleteUserRole($employee_id, $access)
 {
-    return delete('user_permissions', '`person_id` = ? AND `access` = ?', [$person_id, $access]);
+    return delete('user_permissions', '`employee_id` = ? AND `access` = ?', [$employee_id, $access]);
 }
 
-function deleteUserRoles($person_id)
+function deleteUserRoles($employee_id)
 {
-    return delete('user_permissions', '`person_id` = ?', [$person_id]);
+    return delete('user_permissions', '`employee_id` = ?', [$employee_id]);
 }
 
 function updateUsersStation($new_access, $old_access, $link = null)
 {
     $data = [
-        'access' => $new_access,
-        'updated_at' => date('Y-m-d H:i:s')
+        'access' => $new_access
     ];
     if (!empty($link)) {
         $data['link'] = $link;
@@ -125,58 +118,76 @@ function updateUsersStation($new_access, $old_access, $link = null)
 }
 
 // user_permissions, station_assignments
-function user($person_id)
+function user($employee_id)
 {
     return find(
-        "SELECT u.`person_id`, u.`access`, s.`station_id`, u.`link` FROM `user_permissions` u 
-        INNER JOIN `station_assignments` s ON u.`person_id` = s.`person_id` 
-        WHERE u.`person_id` = ? LIMIT 1",
-        [$person_id]
+        "SELECT u.`employee_id`, u.`access`, s.`station_id`, u.`link` FROM `user_permissions` u 
+        INNER JOIN `station_assignments` s ON u.`employee_id` = s.`employee_id` 
+        WHERE u.`employee_id` = ? LIMIT 1",
+        [$employee_id]
     );
 }
 
-// persons, user_permissions, station_assignments
+// employees, user_permissions, station_assignments
 function users()
 {
     return query(
         "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
             p.`sex`, p.`email_address`, u.`access`, u.`link`, s.`station_id`, s.`position_id`, 
             p.`profile_picture`, p.`status` 
-        FROM `persons` p 
-        INNER JOIN `user_permissions` u ON p.`id` = u.`person_id` 
-        INNER JOIN `station_assignments` s ON u.`person_id` = s.`person_id` 
-        GROUP BY u.`person_id` 
+        FROM `employees` p 
+        INNER JOIN `user_permissions` u ON p.`id` = u.`employee_id` 
+        INNER JOIN `station_assignments` s ON u.`employee_id` = s.`employee_id` 
+        GROUP BY u.`employee_id` 
         ORDER BY p.`last_name` ASC"
     );
 }
 
-// persons, station_assignments, user_permissions
+function countUsers()
+{
+    $sql = "SELECT COUNT(DISTINCT u.`employee_id`) AS `count` FROM `employees` p 
+            INNER JOIN `user_permissions` u ON p.`id` = u.`employee_id` 
+            INNER JOIN `station_assignments` s ON u.`employee_id` = s.`employee_id`";
+    $result = find($sql);
+    return (int) ($result['count'] ?? 0);
+}
+
+// employees, station_assignments, user_permissions
 function sectionUsers($access)
 {
     return query(
         "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, 
             p.`name_extension`, p.`sex`, p.`birthdate`, p.`agency_id`, s.`position_id`, 
             s.`station_id`, p.`profile_picture`, p.`email_address`, p.`mobile_number` 
-        FROM `persons` p 
-        INNER JOIN `station_assignments` s ON p.`id` = s.`person_id` 
-        INNER JOIN `user_permissions` u ON p.`id` = u.`person_id` 
+        FROM `employees` p 
+        INNER JOIN `station_assignments` s ON p.`id` = s.`employee_id` 
+        INNER JOIN `user_permissions` u ON p.`id` = u.`employee_id` 
         WHERE p.`status`='Active' AND u.access = ? 
         ORDER BY p.`last_name` ASC",
         [$access]
     );
 }
 
-// persons, station_assignments, document_transaction_logs
 function portalUsers($station_id, $from_date, $to_date)
 {
-    return query(
-        "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, 
-            p.`name_extension`, p.`sex`, p.`profile_picture`, s.`position_id` 
-        FROM `persons` p 
-        INNER JOIN `station_assignments` s ON p.`id` = s.`person_id` 
-        INNER JOIN `document_transaction_logs` t ON p.`id` = t.`processed_by` 
-        WHERE t.`received_from` = ? AND t.`created_at` BETWEEN ? AND DATE_ADD(?, INTERVAL 1 DAY) 
-        GROUP BY p.`id` ORDER BY p.`last_name` ASC",
-        [$station_id, $from_date, $to_date]
-    );
+    $sql = "SELECT 
+                p.`id`, 
+                p.`last_name`, 
+                p.`first_name`, 
+                p.`middle_name`, 
+                p.`name_extension`, 
+                p.`sex`, 
+                p.`profile_picture`, 
+                s.`position_id` 
+            FROM `employees` AS `p` 
+            INNER JOIN `station_assignments` AS `s` ON p.`id` = s.`employee_id` 
+            INNER JOIN `document_transaction_logs` AS `t` ON p.`id` = t.`processor_id` 
+            WHERE t.`received_from` = ? 
+                AND t.`created_at` >= ? 
+                AND t.`created_at` < DATE_ADD(?, INTERVAL 1 DAY)
+            GROUP BY 
+                p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, 
+                p.`name_extension`, p.`sex`, p.`profile_picture`, s.`position_id` 
+            ORDER BY p.`last_name` ASC";
+    return query($sql, [$station_id, $from_date, $to_date]);
 }
