@@ -21,7 +21,6 @@ if ($document) {
     $purpose = $document['status_id'];
     $destination = $document['created_from'];
     $documentLogs = documentLogs($documentId)[0];
-    $details = $documentLogs['details'];
     $documentStatus = strtolower(documentTransactionStatus($documentLogs['status_id']));
     $hasDocument = !str_contains($documentStatus, 'complete') && !str_contains($documentStatus, 'cancel') && $documentLogs['received_from'] === $station && $documentLogs['forwarded_to'] === null;
     $modalTitle = $hasDocument ? 'Forward Document' : $modalTitle;
@@ -110,8 +109,7 @@ if ($document) {
                     <div class="form-group">
                         <label for="details" class="mb-0">Additional details</label>
                         <textarea id="details" name="details" class="form-control" rows="2"
-                            placeholder="Type additional details..."
-                            title="Type document additional details..."><?= e($details) ?></textarea>
+                            placeholder="Type additional details..." title="Type document additional details..."></textarea>
                     </div>
 
                     <div class="form-group">
