@@ -5,7 +5,7 @@ if (!$isHrmis && !$isHrtdms && !$isDmis) {
     return;
 }
 
-$sectionId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
+$sectionId = sanitize(decode($_GET['id'] ?? null));
 $section = section($sectionId);
 $functionalDivision = $sectionName = $head = null;
 
