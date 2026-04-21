@@ -15,17 +15,17 @@ require_once(root() . '/includes/string.php');
 
 $request = sanitize(decode($_GET['v']));
 $identifier = isset($_GET['id']) ? sanitize(decode($_GET['id'])) . '-' : '';
-$fileName = $request . '-' . $identifier . date('Y-m-d') . '.xls';
+$fileName = "$request-$identifier" . date('Y-m-d') . '.xls';
 $isPis = $activeApp === 'pis';
 $isDts = $activeApp === 'dts';
 $isHrmis = $activeApp === 'hrmis';
 $isHrtdms = $activeApp === 'hrtdms';
 $isDmis = $activeApp === 'dmis';
 
-if (file_exists($request . ".php")) :
+if (file_exists("$request.php")):
 	header("Content-Type: application/vnd.ms-excel");
-	header("Content-Disposition: attachment; Filename=" . $fileName);
-?>
+	header("Content-Disposition: attachment; Filename=$fileName");
+	?>
 
 	<style>
 		table,
@@ -39,8 +39,8 @@ if (file_exists($request . ".php")) :
 		}
 	</style>
 
-<?php require_once($request . '.php');
-else :
+	<?php require_once("$request.php");
+else:
 	redirect(uri() . '/login');
 endif;
 ?>
