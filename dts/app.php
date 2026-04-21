@@ -381,7 +381,7 @@ if (isset($_POST['restore-document'])) {
 	$remarks = sanitize($_POST['remarks']);
 
 	$status = documentStatusId($isSchoolPortal ? 'For submission' : 'Restored');
-	$destination = $isSchoolPortal ? 'REC' : '-';
+	$destination = $isSchoolPortal ? 'REC' : null;
 	$showAlert = true;
 	$message = 'No document has been restored.';
 
