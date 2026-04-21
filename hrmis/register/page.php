@@ -1,5 +1,5 @@
 <?php
-$code = sanitize($_GET['p'] ?? null);
+$code = sanitize($_GET['p'] ?? '');
 ?>
 
 <div class="col-12">
@@ -119,7 +119,7 @@ $code = sanitize($_GET['p'] ?? null);
                 <div class="form-group">
                     <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="is_pwd" name="is_pwd" value="1">
-                        <label class="custom-control-label text-dark font-weight-bold" for="is_pwd">I am a Person with
+                        <label class="pt-1 custom-control-label small font-weight-bold" for="is_pwd">I am a Person with
                             Disability (PWD)</label>
                     </div>
                 </div>
