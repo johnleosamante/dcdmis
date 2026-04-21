@@ -21,11 +21,22 @@ function vacancies($status = 'open')
     return query($sql, [$status]);
 }
 
-function countVacancies($status = 'open')
+function countVacantItems($position_id = null)
 {
-    $sql = "SELECT COUNT(*) AS `count` FROM `vacancies` WHERE `status` = ?";
-    $result = find($sql, [$status]);
-    return (int) ($result['count'] ?? 0);
+    $params = [];
+    $filter = "";
+    if ($position_id !== null) {
+        $filter = " AND pi.`position_id` = ? ";
+        $params[] = $position_id;
+    }
+    $sql = "SELECT COUNT(*) as total
+            FROM `vacancies` AS v 
+            INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id` 
+            WHERE v.`status` = 'open' 
+            AND v.`id` NOT IN (SELECT `vacancy_id` FROM `vacancy_publication_items`)
+            {$filter}";
+    $result = find($sql, $params);
+    return (int) ($result['total'] ?? 0);
 }
 
 function createVacancy($plantilla_item_id, $status, $vacated_by_id, $date_vacated, $reason)
