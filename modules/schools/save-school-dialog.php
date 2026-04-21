@@ -16,7 +16,7 @@ if ($school) {
     $schoolName = $school['name'];
     $address = $school['address'];
     $category = $school['category'];
-    $districtCode = $school['district'];
+    $districtCode = $school['district_id'];
     $alias = $school['alias'];
     $telephone = $school['telephone'];
     $email = $school['email'];
@@ -124,8 +124,8 @@ if ($school) {
                 <?php requiredLegend(0) ?>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
-                <input type="hidden" name="data-verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
+                <input type="hidden" name="verifier" value="<?= $_GET['id'] ?? null ?>">
+                <input type="hidden" name="data-verifier" value="<?= $_GET['e'] ?? null ?>">
                 <input type="hidden" name="image-verifier" value="<?= cipher($logo) ?>">
                 <button class="btn btn-primary" name="save-school" type="submit">Continue</button>
                 <?php cancelModalButton() ?>
