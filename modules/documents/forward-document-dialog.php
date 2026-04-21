@@ -8,27 +8,24 @@ require_once(root() . '/includes/database/section.php');
 require_once(root() . '/includes/database/school.php');
 require_once(root() . '/includes/layout/components.php');
 
-$documentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
+$documentId = sanitize(decipher($_GET['id'] ?? null));
 $document = document($documentId);
-$description = $destination = $type = $purpose = $details = '';
+$description = $destination = $type = $purpose = $details = null;
 $modalTitle = 'Document not found';
-$hasDocument = false;
-$forRelease = false;
+$hasDocument = $forRelease = false;
 
 if ($document) {
     $documentId = $document['id'];
     $description = $document['description'];
     $type = $document['document_type_id'];
+    $purpose = $document['status_id'];
+    $destination = $document['created_from'];
     $documentLogs = documentLogs($documentId)[0];
-    $hasDocument = !str_contains(strtolower($documentLogs['status']), 'complete') && !str_contains(strtolower($documentLogs['status']), 'cancel') && $documentLogs['received_from'] === $station && $documentLogs['forwarded_to'] === '-';
+    $details = $documentLogs['details'];
+    $documentStatus = strtolower(documentTransactionStatus($documentLogs['status_id']));
+    $hasDocument = !str_contains($documentStatus, 'complete') && !str_contains($documentStatus, 'cancel') && $documentLogs['received_from'] === $station && $documentLogs['forwarded_to'] === null;
     $modalTitle = $hasDocument ? 'Forward Document' : $modalTitle;
-
-    if (strtolower($document['status']) === 'for release' && $portal === 'rec_portal') {
-        $forRelease = true;
-        $destination = $document['created_from'];
-        $purpose = $document['status'];
-        $details = $document['details'];
-    }
+    $forRelease = strtolower(documentTransactionStatus($document['status_id'])) === 'for release' && $portal === 'rec_portal';
 }
 ?>
 
@@ -48,8 +45,7 @@ if ($document) {
 
                     <div class="form-group">
                         <label for="type" class="mb-0">Type</label>
-                        <input id="type" class="form-control text-uppercase" value="<?= documentType($type)['name'] ?>"
-                            disabled>
+                        <input id="type" class="form-control text-uppercase" value="<?= documentType($type) ?>" disabled>
                     </div>
 
                     <div class="form-group">
@@ -80,15 +76,15 @@ if ($document) {
                                 <?php endforeach ?>
                             </select>
                         <?php } else {
-                            $school = schoolByAlias($destination) ?? null;
+                            $stationName = section($destination)['name'] ?? null;
 
-                            if (!empty($school)) {
-                                $school = $school['name'];
+                            if ($stationName === null) {
+                                $stationName = schoolByAlias($destination)['name'] ?? null;
                             }
                             ?>
-                            <input id="destination" class="form-control" type="text" value="<?= e($school) ?>" disabled>
-                            <input name="destination" class="form-control" type="hidden" value="<?= e($destination) ?>"
-                                required>
+                            <input id="destination" class="form-control text-uppercase" type="text"
+                                value="<?= e($stationName) ?>" disabled>
+                            <input name="destination" type="hidden" value="<?= e($destination) ?>">
                         <?php } ?>
                     </div>
 
@@ -99,14 +95,15 @@ if ($document) {
                                 required>
                                 <option value="">Select purpose...</option>
                                 <?php
-                                $documentPurpose = documentPurpose();
+                                $documentPurpose = documentTransactionStatus();
                                 foreach ($documentPurpose as $purpose): ?>
-                                    <option value="<?= e($purpose['purpose']) ?>"><?= e($purpose['purpose']) ?></option>
+                                    <option value="<?= e($purpose['id']) ?>"><?= e($purpose['name']) ?></option>
                                 <?php endforeach ?>
                             </select>
                         <?php else: ?>
-                            <input id="purpose" name="purpose" class="form-control" type="text" value="<?= e($purpose) ?>"
-                                required readonly>
+                            <input id="purpose" class="form-control text-uppercase" type="text"
+                                value="<?= e(documentTransactionStatus($purpose)) ?>" required readonly>
+                            <input name="purpose" type="hidden" value="<?= e($purpose) ?>">
                         <?php endif ?>
                     </div>
 
@@ -133,7 +130,6 @@ if ($document) {
             <div class="modal-footer">
                 <?php if ($hasDocument): ?>
                     <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
-                    <input type="hidden" name="file-verifier" value="<?= cipher($filename) ?>">
                     <button class="btn btn-primary" name="forward-document" type="submit">Continue</button>
                 <?php endif ?>
                 <?php cancelModalButton() ?>
