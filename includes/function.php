@@ -122,9 +122,11 @@ function redirect($url = null)
     }
 }
 
-function getDatetimeAsId()
+function generateID()
 {
-    return date('YmdHis');
+    $timestamp = date('YmdHis');
+    $random = str_pad(rand(1000, 9999), 4, '0', STR_PAD_LEFT);
+    return "{$timestamp}{$random}";
 }
 
 function getSeconds($hours = 1)
