@@ -12,7 +12,7 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
-            <li class="breadcrumb-item active">Step</li>
+            <li class="breadcrumb-item active">Step Increment</li>
         </ol>
     </nav>
 
