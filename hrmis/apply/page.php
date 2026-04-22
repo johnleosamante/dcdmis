@@ -12,7 +12,7 @@ $code = sanitize($_GET['p'] ?? null);
         <div class="error mx-auto"><i class="fas fa-briefcase fa-fw"></i></div>
         <p class="lead text-gray-800 mt-1 mb-0">Career Opportunities</p>
         <div class="row justify-content-center">
-            <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12">
+            <div class="col-xl-9 col-lg-8 col-md-10 col-sm-12">
                 <p class="text-gray-600 px-2 mb-0">Discover career paths in education and administration. Explore
                     current professional openings, review submission guidelines and start your application process
                     today.
@@ -23,9 +23,8 @@ $code = sanitize($_GET['p'] ?? null);
     </div>
 
     <?php
-    $file = empty($code) ? 'publications.php' : 'publication-details.php';
-
-    require_once($file);
+    $file = empty($code) ? 'publications' : 'publication-details';
+    require_once("$file.php");
     ?>
 
     <?php if (isset($userId)): ?>
