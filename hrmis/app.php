@@ -1325,32 +1325,28 @@ if (isset($_POST['save-position'])) {
     beginTransaction();
 
     try {
-        if (!positions($referencePositionId)) {
+        $existingPosition = $referencePositionId ? positions($referencePositionId) : null;
+
+        if (!$existingPosition) {
             $affectedPosition = createPosition($positionId, $official_title, $salary_grade, $category);
-
-            if ($affectedPosition === false) {
-                $message = 'Position was not saved successfully.';
-                return;
-            }
-
-            createSystemLog($stationId, $userId, 'Created position', $positionId, clientIp());
-            commit();
-
-            $message = "Position [$official_title] (SG $salary_grade) has been added successfully.";
+            $status = 'saved';
+            $logMessage = 'Saved position';
         } else {
             $affectedPosition = updatePosition($positionId, $official_title, $salary_grade, $category, $referencePositionId);
-
-            if ($affectedPosition === false) {
-                $message = 'No changes have been made to the position.';
-                return;
-            }
-
-            createSystemLog($stationId, $userId, 'Updated position', $positionId, clientIp());
-            commit();
-
-            $message = "Position [$official_title] (SG $salary_grade) has been updated successfully.";
+            $status = 'updated';
+            $logMessage = 'Updated position';
         }
 
+        if ($affectedPosition === false) {
+            $message = 'No changes have been made to positions.';
+            return;
+        }
+
+        createSystemLog($stationId, $userId, 'Updated position', $positionId, clientIp());
+        commit();
+
+        $official_title = strtoupper($official_title);
+        $message = "Position [$official_title] (SG $salary_grade) has been updated successfully.";
         $success = true;
     } catch (Exception $e) {
         rollBack();
@@ -1445,7 +1441,6 @@ if (isset($_POST['save-vacancy'])) {
 if (isset($_POST['delete-vacancy'])) {
     $vacancyId = sanitize(decipher($_POST['verifier'] ?? null));
     $showAlert = true;
-    $message = 'Vacancy was not deleted successfully.';
 
     if (empty($vacancyId)) {
         $message = 'Invalid vacancy selected.';
@@ -1456,15 +1451,17 @@ if (isset($_POST['delete-vacancy'])) {
 
     try {
         $vacancy = vacancy($vacancyId);
-        $position = $vacancy['official_title'];
+        $position = strtoupper($vacancy['official_title']);
         $itemNumber = $vacancy['item_number'];
         $deletedVacancy = deleteVacancy($vacancyId);
 
         if ($deletedVacancy === false) {
+            $message = 'Vacancy was not deleted successfully.';
             return;
         }
 
         createSystemLog($stationId, $userId, 'Deleted vacancy', $itemNumber, clientIp());
+        commit();
 
         $message = "Vacancy for [$position] with item number [$itemNumber] has been deleted successfully.";
         $success = true;
