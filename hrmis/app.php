@@ -16,7 +16,7 @@ if (isset($_POST['primary-search-button'])) {
 }
 
 if (isset($_POST['add-employee'])) {
-    $employeeId = getDatetimeAsId();
+    $employeeId = generateID();
     $lname = sanitize($_POST['lname']);
     $fname = sanitize($_POST['fname']);
     $mname = sanitize($_POST['mname']);
