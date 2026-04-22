@@ -52,12 +52,11 @@ messageAlert($showAlert, $message, $success);
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                            <?php linkDropdownItem(customUri($activeApp, 'Position Information', $row['id']), 'View', 'fa-eye', 'View Position');
-
-                                            modalDropdownItem(uri() . '/modules/positions/save-position-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit School'); ?>
+                                            <?php modalDropdownItem(uri() . '/modules/positions/save-position-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Position');
+                                            modalDropdownItem(uri() . '/modules/positions/save-position-dialog.php?id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Position') ?>
                                             <div class="dropdown-divider"></div>
                                             <?php
-                                            modalDropdownItem(uri() . '/modules/positions/delete-position-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete School'); ?>
+                                            modalDropdownItem(uri() . '/modules/positions/delete-position-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete Position'); ?>
                                         </div>
                                     </div>
                                 </td>
