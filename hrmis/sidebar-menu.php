@@ -19,8 +19,8 @@ sidebarMenuItem(customUri('hrmis', 'Retirable Employees'), 'Retirable', 'fa-user
 sidebarMenuItem(customUri('hrmis', 'Celebrant Employees'), 'Celebrants', 'fa-birthday-cake', isset($url) && str_contains($url, 'Celebrant'));
 sidebarMenuItem(customUri('hrmis', 'Archived Employees'), 'Archived', 'fa-archive', isset($url) && str_contains($url, 'Archived'));
 sidebarDivider();
-sidebarMenuItem(customUri('hrmis', 'Step Increment'), 'Step', 'fa-plus', isset($url) && str_contains($url, 'Step'), $countStepIncrement);
-sidebarMenuItem(customUri('hrmis', 'Loyalty Award'), 'Loyalty', 'fa-award', isset($url) && str_contains($url, 'Loyalty'), $countLoyaltyAward);
+sidebarMenuItem(customUri('hrmis', 'Step Increment'), 'Step Increment', 'fa-plus', isset($url) && str_contains($url, 'Step Increment'), $countStepIncrement);
+sidebarMenuItem(customUri('hrmis', 'Loyalty Award'), 'Loyalty Award', 'fa-award', isset($url) && str_contains($url, 'Loyalty Award'), $countLoyaltyAward);
 sidebarDivider();
 if ($isHrmis && $isPersonnel) {
     sidebarMenuItem(customUri('hrmis', 'Positions'), 'Positions', 'fa-user-tie', isset($url) && str_contains($url, 'Positions'));
