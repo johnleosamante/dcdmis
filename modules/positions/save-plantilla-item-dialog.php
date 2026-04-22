@@ -86,7 +86,7 @@ if ($plantillaId) {
                     <select id="employment-status" name="employment-status" class="form-control" required>
                         <option value="">Select employment status...</option>
                         <?php
-                        $employmentStatuses = ['permanent', 'temporary', 'contractual', 'casual'];
+                        $employmentStatuses = ['permanent', 'temporary', 'contractual', 'casual', 'coterminus'];
                         foreach ($employmentStatuses as $status): ?>
                             <option value="<?= e($status) ?>" <?= setOptionSelected($status, $employment_status) ?>>
                                 <?= ucfirst(str_replace('_', ' ', $status)) ?>
