@@ -148,7 +148,7 @@ if ($code) {
                     </button>
 
                     <div class="small text-center mt-3">
-                        <a href=" <?= uri() . '/hrmis/register' ?>">Don't have an applicant ID yet?</a>
+                        <a href=" <?= uri() . '/hrmis/register' ?>" target="_blank">Don't have an applicant ID yet?</a>
                     </div>
                 </div>
             </form>
