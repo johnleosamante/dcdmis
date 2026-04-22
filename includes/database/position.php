@@ -17,7 +17,8 @@ function positions($position_id = null)
 {
     if ($position_id !== null) {
         $sql = "SELECT `id`, `official_title`, `salary_grade`, `category` FROM `positions` WHERE id = ? LIMIT 1";
-        return find($sql, [$position_id]);
+        $result = find($sql, [$position_id]);
+        return $result ?? null;
     }
     $sql = "SELECT * FROM `positions` ORDER BY `official_title` ASC";
     return query($sql);
