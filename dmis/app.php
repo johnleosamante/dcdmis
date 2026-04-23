@@ -421,8 +421,7 @@ if (isset($_POST['reset-user'])) {
 
 	createSystemLog($stationId, $userId, 'Reset user password', $employeeId, clientIp());
 
-	$subject = "Employee Password Reset";
-	$loginUrl = "{$baseUri}/login";
+	$loginUrl = "$baseUri/login";
 
 	$emailBody = "Good day!\n\n
                 Your request for password reset has been approved!\n\n
