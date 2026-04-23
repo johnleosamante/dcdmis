@@ -128,7 +128,7 @@ if ($code) {
                         <label for="applicant-id" class="font-weight-bold mb-1">Applicant
                             ID <?= showAsterisk() ?></label>
                         <input type="text" class="form-control" id="applicant-id" name="applicant_id"
-                            placeholder="Enter your applicant ID..." required>
+                            placeholder="Enter your 18-digit applicant ID..." required>
                     </div>
 
                     <div class="form-group">
