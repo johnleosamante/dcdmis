@@ -19,7 +19,7 @@ $email = $school['email'];
 $website = $school['website'];
 $fbPage = $school['fb_page'];
 $code = strtoupper(sanitize(decode($_GET['id'])));
-$title = $url . ' : ' . $code;
+$title = "$url : $code";
 
 require_once(root() . '/print/print-layout.php');
 
@@ -42,21 +42,22 @@ $description = toHandleEncoding($document['description']);
 $employee = toHandleEncoding(userName($document['user'], true));
 $employeePosition = toHandleEncoding(fetchAssoc(position($document['user']))['position']);
 $documentStatus = strtolower($document['status']);
+$details = toHandleEncoding($document['details']);
 $status = str_contains($documentStatus, 'complete') ? ' (Completed)' : '';
 $status = str_contains($documentStatus, 'cancel') ? ' (Canceled)' : $status;
-$pdf->SetFont('calibrib',  'B', 18);
+$pdf->SetFont('calibrib', 'B', 18);
 $pdf->Cell(0, 0, 'DOCUMENT TRACKING SLIP', 0, 0, 'C');
 $pdf->Ln(5);
-$pdf->SetFont('calibri',  '', 9);
+$pdf->SetFont('calibri', '', 9);
 $pdf->Cell(0, 0, '(Document Attachment)', 0, 0, 'C');
 $pdf->Ln(15);
-$pdf->SetFont('calibri',  '', 11);
+$pdf->SetFont('calibri', '', 11);
 $pdf->Cell(0, 0, $dateCreated, 0, 0, 'R');
 $pdf->Ln(10);
-$pdf->SetFont('calibrib',  'B', 17);
+$pdf->SetFont('calibrib', 'B', 17);
 $pdf->Cell(0, 0, $code . toHandleEncoding($status));
 $pdf->Ln(10);
-$pdf->SetFont('calibri',  '', 11);
+$pdf->SetFont('calibri', '', 11);
 $pdf->Write(5, $description);
 $pdf->Ln(20);
 $innerPage = $width - ($margin * 2);
@@ -83,4 +84,15 @@ if ($document['user'] !== $document['head']) {
     $pdf->SetFont('calibri', '', 11);
     $pdf->Cell($innerPage / 2, 0, $stationHeadPosition, 0, 0, 'C');
     $pdf->Ln();
+}
+
+if (strlen($details)) {
+    $pdf->Ln(12);
+    $pdf->SetX($margin);
+    $pdf->SetFont('calibrib', 'B', 11);
+    $pdf->Cell($margin, 0, 'NOTE:');
+    $pdf->Ln(2);
+    $pdf->SetFont('calibri', '', 9);
+    $pdf->Write(5, $details);
+    $pdf->Ln(20);
 }
