@@ -16,7 +16,8 @@ if (numRows($documents) > 0) {
     <div class="row justify-content-center">
         <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12">
             <div class="input-group">
-                <input type="text" class="form-control small" placeholder="Search document..." aria-label="Search" name="primary-search-text" value="<?= $documentId ?>" autofocus required>
+                <input type="text" class="form-control small" placeholder="Search document..." aria-label="Search"
+                    name="primary-search-text" value="<?= $documentId ?>" autofocus required>
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit" name="primary-search-button">
                         <i class="fas fa-search fa-sm"></i>
@@ -49,8 +50,7 @@ if (numRows($documents) > 0) {
             <tr>
                 <th class="align-top pr-3" scope="row">Status:</th>
                 <td class="text-uppercase">
-                    <?= strlen($document['details']) === 0 ? $document['status'] : $document['status'] . ' - ' . $document['details']
-                    ?>
+                    <?= $document['status'] ?>
                 </td>
             </tr>
         </table>
@@ -71,7 +71,6 @@ if (numRows($documents) > 0) {
                 $icon = 'flag';
                 $hasDestination = !empty($to) && $to !== '-';
                 $status = $log['status'];
-                $details = $log['details'];
                 $isCompleted = str_contains(strtolower($status), 'complete');
                 $isCanceled = str_contains(strtolower($status), 'cancel');
                 $bgColor = '';
@@ -88,7 +87,7 @@ if (numRows($documents) > 0) {
                     $icon = 'flag';
                 }
 
-                if ($logCount >= 1  && !$hasDestination) {
+                if ($logCount >= 1 && !$hasDestination) {
                     $icon = 'check';
                 }
 
@@ -100,7 +99,7 @@ if (numRows($documents) > 0) {
                     $icon = 'times';
                     $bgColor = 'bg-danger';
                 }
-            ?>
+                ?>
                 <div class="timeline-item">
                     <div class="timeline-item-marker">
                         <div class="timeline-item-marker-text text-uppercase">
@@ -120,24 +119,26 @@ if (numRows($documents) > 0) {
 
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <span class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
-                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px" width="40px">
+                                    <span
+                                        class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
+                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px"
+                                            width="40px">
                                     </span>
 
                                     <div class="ml-2 d-inline-block align-middle">
-                                        <div class="text-uppercase"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName) ?></div>
+                                        <div class="text-uppercase">
+                                            <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName) ?>
+                                        </div>
 
-                                        <div class="text-uppercase text-xs"><?= fetchAssoc(position($log['user']))['position'] ?></div>
+                                        <div class="text-uppercase text-xs">
+                                            <?= fetchAssoc(position($log['user']))['position'] ?>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <?= $hasDestination ? '<div class="mb-3">Forwarded to ' . strtoupper($to) . '</div>' : '' ?>
 
                                 <div class="font-weight-bold text-lg"><?= $status ?></div>
-
-                                <?php if (!empty($details)) : ?>
-                                    <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= $details ?></div>
-                                <?php endif ?>
                             </div>
                         </div>
                     </div>
