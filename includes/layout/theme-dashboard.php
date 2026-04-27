@@ -9,7 +9,6 @@ $isDts = $activeApp === 'dts';
 $isHrmis = $activeApp === 'hrmis';
 $isHrtdms = $activeApp === 'hrtdms';
 $isDmis = $activeApp === 'dmis';
-$isHrmpsb = $activeApp === 'hrmpsb';
 
 require_once(root() . '/includes/layout/components.php');
 ?>
