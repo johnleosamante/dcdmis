@@ -6,3 +6,8 @@ sidebarMenuItem(customUri('pis', 'Service Record', $userId), 'Service Record', '
 sidebarMenuItem(customUri('pis', '201 Files', $userId), '201 Files', 'fa-folder-open', isset($url) && str_contains($url, '201 Files'));
 sidebarMenuItem(customUri('pis', 'Trainings', $userId), 'Trainings', 'fa-chalkboard-teacher', isset($url) && str_contains($url, 'Trainings'));
 sidebarMenuItem(customUri('pis', 'Payslip', $userId), 'Payslip', 'fa-money-check', isset($url) && str_contains($url, 'Payslip'));
+
+if (dtsUser($userId) && fetchArray(station($userId))['station_id'] === '143') {
+    sidebarDivider();
+    sidebarMenuItem(customUri('pis', 'Monitoring Tools'), 'Monitoring Tools', 'fa-binoculars', isset($url) && str_contains($url, 'Monitoring Tools'));
+}
