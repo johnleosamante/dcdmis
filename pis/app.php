@@ -78,15 +78,13 @@ if (isset($_POST['save-payslip'])) {
     }
 
     $ext = pathinfo($newFilename, PATHINFO_EXTENSION);
-    $hasExistingRecord = payslip($employeeId, $payslipId);
-
-
+    $hasExistingRecord = fileAttachment($employeeId, $payslipId);
 
     if (!$hasExistingRecord) {
-        $result = createPayslip($description, $newFilename, $ext, $employeeId);
+        $result = createFileAttachment(20, $description, $newFilename, $ext, $employeeId);
         $logMessage = 'Added payslip';
     } else {
-        $result = updatePayslip($description, $newFilename, $ext, $employeeId, $payslipId);
+        $result = updateFileAttachment(20, $description, $newFilename, $ext, $employeeId, $payslipId);
         $logMessage = 'Updated payslip';
     }
 
@@ -113,12 +111,12 @@ if (isset($_POST['delete-payslip'])) {
     $payslipId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $showAlert = true;
     $filename = null;
-    $file = payslip($employeeId, $payslipId);
+    $file = fileAttachment($employeeId, $payslipId);
     $result = false;
 
     if ($file) {
         $filename = $file['file_name'];
-        $result = deletePayslip($employeeId, $payslipId);
+        $result = deleteFileAttachment($employeeId, $payslipId);
     }
 
     if ($result === false) {
