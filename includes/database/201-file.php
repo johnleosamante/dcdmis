@@ -2,7 +2,7 @@
 // file_types
 function fileTypes()
 {
-    $result = query("SELECT `id`, `name` FROM `file_types` ORDER BY `id` ASC");
+    $result = query("SELECT `id`, `name` FROM `file_types` WHERE `id` <> 20 ORDER BY `id` ASC");
     return is_array($result) ? $result : [];
 }
 
@@ -13,7 +13,7 @@ function fileAttachments($employee_id)
         "SELECT f.id, f.employee_id, t.name AS file_type, f.description, 
             f.file_name, f.file_extension, f.created_at 
         FROM `files` AS f INNER JOIN `file_types` AS t ON f.file_type_id = t.id 
-        WHERE f.employee_id = ? ORDER BY f.created_at DESC",
+        WHERE f.employee_id = ? AND f.file_type_id <> 20 ORDER BY f.created_at DESC",
         [$employee_id]
     );
     return is_array($results) ? $results : [];
@@ -63,4 +63,10 @@ function deleteFileAttachment($employee_id, $file_attachment_id)
 function deleteFileAttachments($employee_id)
 {
     return delete('files', '`employee_id` = ?', [$employee_id]);
+}
+
+function payslips($employee_id)
+{
+    $results = query("SELECT * FROM `files` WHERE `file_type_id`  = 20 AND `employee_id` = ? ORDER BY `updated_at` DESC", [$employee_id]);
+    return is_array($results) ? $results : [];
 }
