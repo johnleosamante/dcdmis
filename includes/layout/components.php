@@ -3,13 +3,14 @@
 function displayLogo($width, $height, $marginBottom = '3', $url = '', $text = '')
 { ?>
     <a href="<?= $url ?>" title="<?= $text ?>" class="d-inline-block mx-auto mb-<?= $marginBottom ?>">
-        <img src="<?= uri() ?>/uploads/division/division.png" width="<?= $width ?>" height="<?= $height ?>" alt="<?= $text ?>">
+        <img src="<?= uri() ?>/uploads/division/division.png" width="<?= $width ?>" height="<?= $height ?>"
+            alt="<?= $text ?>">
     </a>
-    <?php }
+<?php }
 
 function messageAlert($show, $message, $success = true, $align = 'left')
 {
-    if ($show) : ?>
+    if ($show): ?>
         <div class="alert alert-<?= $success ? 'success' : 'danger' ?> text-<?= $align ?> auto-hide">
             <i class="fa fas fa-<?= $success ? 'info' : 'exclamation' ?>-circle mr-1"></i> <?= $message ?>
         </div>
@@ -87,7 +88,8 @@ function card($title, $link, $icon, $color = 'primary', $counter = null, $newFea
                                 newFeatureMark();
                             } ?>
                         </div>
-                        <div class="h3 mb-0 font-weight-bold text-gray-800"><?= $counter !== null ? $counter : '&nbsp;' ?></div>
+                        <div class="h3 mb-0 font-weight-bold text-gray-800"><?= $counter !== null ? $counter : '&nbsp;' ?>
+                        </div>
                     </div>
 
                     <div class="col-auto">
@@ -103,7 +105,7 @@ function card($title, $link, $icon, $color = 'primary', $counter = null, $newFea
     </div>
 <?php }
 
-function cardMini($title, $link, $icon, $color = 'primary')
+function cardMini($title, $link, $icon, $color = 'primary', $newTab = false)
 { ?>
     <div class="col-xl-2 col-md-4 mb-4">
         <div class="card border-left-<?= $color ?> shadow h-100">
@@ -115,7 +117,7 @@ function cardMini($title, $link, $icon, $color = 'primary')
 
                     <div class="col">
                         <div class="font-weight-bold text-uppercase mb-1">
-                            <a class="text-<?= $color ?>" href="<?= $link ?>">
+                            <a class="text-<?= $color ?>" href="<?= $link ?>" target="<?= $newTab ? '_blank' : '_self' ?>">
                                 <?= $title ?>
                             </a>
                         </div>
@@ -138,7 +140,8 @@ function cardMiniModal($title, $link, $icon, $color = 'primary')
 
                     <div class="col">
                         <div class="font-weight-bold text-uppercase mb-1">
-                            <a class="text-<?= $color ?>" href="#" data-toggle="modal" data-target="#modal" onclick="loadData('<?= $link ?>')">
+                            <a class="text-<?= $color ?>" href="#" data-toggle="modal" data-target="#modal"
+                                onclick="loadData('<?= $link ?>')">
                                 <?= $title ?>
                             </a>
                         </div>
@@ -152,18 +155,19 @@ function cardMiniModal($title, $link, $icon, $color = 'primary')
 function scrollToTop()
 { ?>
     <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    <?php }
+<?php }
 
 function showAsterisk($show = true)
 {
-    if ($show) : ?>
+    if ($show): ?>
         <span class="text-danger"> *</span>
     <?php endif;
 }
 
 function modal()
 { ?>
-    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true" data-backdrop="static">
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true"
+        data-backdrop="static">
         <div class="modal-dialog d-none">
             <div class="modal-content">
                 <?php modalHeader('') ?>
@@ -216,7 +220,7 @@ function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = nu
                     } ?>
                 </span>
             </div>
-            <?php if ($counter !== null) : ?>
+            <?php if ($counter !== null): ?>
                 <span class="bg-dark px-2 rounded-pill font-weight-bold"><?= $counter ?></span>
             <?php endif ?>
         </a>
@@ -226,7 +230,8 @@ function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = nu
 function sidebarModalItem($link, $title, $icon, $counter = null, $newFeature = false)
 { ?>
     <li class="nav-item">
-        <a class="nav-link d-flex align-items-center justify-content-between" href="#" data-toggle="modal" data-target="#modal" onclick="loadData('<?= $link ?>')">
+        <a class="nav-link d-flex align-items-center justify-content-between" href="#" data-toggle="modal"
+            data-target="#modal" onclick="loadData('<?= $link ?>')">
             <div class="menu-item">
                 <i class="fas fa-fw <?= $icon ?>"></i>
                 <span>
@@ -236,7 +241,7 @@ function sidebarModalItem($link, $title, $icon, $counter = null, $newFeature = f
                     } ?>
                 </span>
             </div>
-            <?php if ($counter !== null) : ?>
+            <?php if ($counter !== null): ?>
                 <span class="bg-dark px-2 rounded-pill font-weight-bold"><?= $counter ?></span>
             <?php endif ?>
         </a>
@@ -250,12 +255,14 @@ function linkItem($link, $text, $newTab = false)
 
 function modalItem($link, $text)
 { ?>
-    <a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData('<?= $link ?>')"><?= $text ?></a>
+    <a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase"
+        onclick="loadData('<?= $link ?>')"><?= $text ?></a>
 <?php }
 
 function linkButtonSplit($link, $text, $icon, $title = '', $color = 'primary', $newTab = false)
 { ?>
-    <a href="<?= $link ?>" class="btn btn-<?= $color ?> btn-icon-split btn-sm my-1" title="<?= $title ?>" target="<?= $newTab ? '_blank' : '_self' ?>">
+    <a href="<?= $link ?>" class="btn btn-<?= $color ?> btn-icon-split btn-sm my-1" title="<?= $title ?>"
+        target="<?= $newTab ? '_blank' : '_self' ?>">
         <span class="icon text-white-50"><i class="fas <?= $icon ?> fa-fw"></i></span>
         <span class="text"><?= $text ?></span>
     </a>
@@ -263,7 +270,8 @@ function linkButtonSplit($link, $text, $icon, $title = '', $color = 'primary', $
 
 function modalButtonSplit($link, $text, $icon, $title = '', $color = 'primary')
 { ?>
-    <a href="#" data-toggle="modal" data-target="#modal" class="btn btn-<?= $color ?>  btn-icon-split btn-sm my-1" title="<?= $title ?>" onclick="loadData('<?= $link ?>')">
+    <a href="#" data-toggle="modal" data-target="#modal" class="btn btn-<?= $color ?>  btn-icon-split btn-sm my-1"
+        title="<?= $title ?>" onclick="loadData('<?= $link ?>')">
         <span class="icon text-white-50"><i class="fas <?= $icon ?> fa-fw"></i></span>
         <span class="text"><?= $text ?></span>
     </a>
@@ -282,7 +290,8 @@ function linkDropdownItem($link, $text, $icon, $title = '', $newTab = false, $ne
 
 function downloadLinkDropdownItem($link, $text, $icon, $title, $fileName, $newTab = false, $newFeature = false)
 { ?>
-    <a href="<?= $link ?>" class="dropdown-item" download="<?= $fileName ?>" title="<?= $title ?>" target="<?= $newTab ? '_blank' : '_self' ?>">
+    <a href="<?= $link ?>" class="dropdown-item" download="<?= $fileName ?>" title="<?= $title ?>"
+        target="<?= $newTab ? '_blank' : '_self' ?>">
         <i class="fas <?= $icon ?> fa-sm fa-fw mr-1"></i>
         <?= $text;
         if ($newFeature) {
@@ -304,7 +313,8 @@ function previewLinkDropdownItem($link, $text, $icon, $title, $newFeature = fals
 
 function modalDropdownItem($link, $text, $icon, $title = '', $newFeature = false)
 { ?>
-    <a href="#" data-toggle="modal" data-target="#modal" class="dropdown-item" title="<?= $title ?>" onclick="loadData('<?= $link ?>')">
+    <a href="#" data-toggle="modal" data-target="#modal" class="dropdown-item" title="<?= $title ?>"
+        onclick="loadData('<?= $link ?>')">
         <i class="fas <?= $icon ?> fa-sm fa-fw mr-1"></i>
         <?= $text;
         if ($newFeature) {
@@ -370,7 +380,8 @@ function requiredLegend($marginBottom = 2)
 function progressBar($value, $min = 50)
 { ?>
     <div class="progress mt-1" title="<?= $value ?>% Complete">
-        <div class="progress-bar bg-<?= $value > $min ? 'success' : 'danger' ?>" role="progressbar" aria-valuenow="<?= $value ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?= $value ?>%"></div>
+        <div class="progress-bar bg-<?= $value > $min ? 'success' : 'danger' ?>" role="progressbar"
+            aria-valuenow="<?= $value ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?= $value ?>%"></div>
     </div>
 <?php }
 
