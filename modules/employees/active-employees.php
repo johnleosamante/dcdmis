@@ -1,6 +1,6 @@
 <?php
 // modules/employees/active-employees.php
-if (!$isHrmis && !$isHrtdms && !$isDmis && !$isHrmpsb) {
+if (!$isHrmis && !$isHrtdms && !$isDmis) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -62,7 +62,7 @@ messageAlert($showAlert, $message, $success);
                         <?php if ($isHrmis) : ?>
                             <th class="align-middle" width="10%">Progress</th>
                         <?php endif ?>
-                        <?php if (!$isHrtdms && !$isHrmpsb) : ?>
+                        <?php if (!$isHrtdms) : ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
@@ -104,7 +104,7 @@ messageAlert($showAlert, $message, $success);
                                     <?php progressBar(pdsProgress($row['id'])) ?>
                                 </td>
                             <?php endif ?>
-                            <?php if (!$isHrtdms && !$isHrmpsb) : ?>
+                            <?php if (!$isHrtdms) : ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
@@ -145,7 +145,7 @@ messageAlert($showAlert, $message, $success);
                         <?php if ($isHrmis) : ?>
                             <th class="align-middle" width="10%">Progress</th>
                         <?php endif ?>
-                        <?php if (!$isHrtdms && !$isHrmpsb) : ?>
+                        <?php if (!$isHrtdms) : ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
