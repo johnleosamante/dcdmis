@@ -34,14 +34,14 @@ if (!is_dir($uploadDirectory)) {
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item active">Payslip</li>
+            <li class="breadcrumb-item active">Payslips</li>
         </ol>
     </nav>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithModal('Payslip : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus') ?>
+        <?php contentTitleWithModal('Payslips : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus') ?>
     </div>
 
     <div class="card-body">
