@@ -1,6 +1,6 @@
 <?php
 // modules/employees/active-employees.php
-if (!$isHrmis && !$isHrmpsb) {
+if (!$isHrmis) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -45,9 +45,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
                         <th class="align-middle" width="25%">Station</th>
-                        <?php if (!$isHrtdms && !$isHrmpsb) : ?>
-                            <th class="align-middle" width="5%">Action</th>
-                        <?php endif; ?>
+                        <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </thead>
 
@@ -67,13 +65,7 @@ messageAlert($showAlert, $message, $success);
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
                             </td>
-                            <td class="align-middle text-left">
-                                <?php if ($isHrmis) {
-                                    linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
-                                } else {
-                                    modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
-                                } ?>
-                            </td>
+                            <td class="align-middle text-left"><?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName) ?></td>
                             <td class="align-middle"><?= toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y') ?></td>
                             <td class="align-middle">
                                 <?= getDateDifference($row['year'], $row['month'], $row['day']) ?>
@@ -82,28 +74,26 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']) ?>
                             </td>
-                            <?php if (!$isHrtdms && !$isHrmpsb) : ?>
-                                <td class="align-middle text-capitalize">
-                                    <div class="dropdown no-arrow">
-                                        <?php dropdownEllipsis() ?>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                            <?php
-                                            linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
-                                            linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
-                                            linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
-                                            linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
-                                            modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel');
-                                            ?>
-                                            <div class="dropdown-divider"></div>
-                                            <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History') ?>
-                                            <div class="dropdown-divider"></div>
-                                            <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                                            modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
-                                            modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee') ?>
-                                        </div>
+                            <td class="align-middle text-capitalize">
+                                <div class="dropdown no-arrow">
+                                    <?php dropdownEllipsis() ?>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                        <?php
+                                        linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
+                                        linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
+                                        linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
+                                        linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
+                                        modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel');
+                                        ?>
+                                        <div class="dropdown-divider"></div>
+                                        <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History') ?>
+                                        <div class="dropdown-divider"></div>
+                                        <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                                        modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
+                                        modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee') ?>
                                     </div>
-                                </td>
-                            <?php endif; ?>
+                                </div>
+                            </td>
                         </tr>
                     <?php endwhile ?>
                 </tbody>
@@ -116,9 +106,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
                         <th class="align-middle" width="25%">Station</th>
-                        <?php if (!$isHrtdms && !$isHrmpsb) : ?>
-                            <th class="align-middle" width="5%">Action</th>
-                        <?php endif; ?>
+                        <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </tfoot>
             </table>
