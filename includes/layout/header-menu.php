@@ -167,10 +167,6 @@ $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $us
                     linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
                 }
 
-                if (isStationUser($userId, 'hrmpsb')) {
-                    linkDropdownItem(uri() . '/hrmpsb', 'HR Selection Board', 'fa-briefcase', 'Human Resource Management Personnel Selection Board');
-                }
-
                 if (isStationUser($userId, 'hrtdms')) {
                     linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
                 }
