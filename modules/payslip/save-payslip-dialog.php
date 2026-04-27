@@ -2,7 +2,7 @@
 // modules/payslip/save-payslip-dialog.php
 require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
-require_once(root() . '/includes/database/payslip.php');
+require_once(root() . '/includes/database/201-file.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
@@ -14,7 +14,7 @@ $modalTitle = 'Add Payslip';
 
 if (isset($payslipId)) {
     $modalTitle = $employeeId === $copiedId ? 'Copy Payslip' : 'Edit Payslip';
-    $payslip = payslip($employeeId, $payslipId);
+    $payslip = fileAttachment($employeeId, $payslipId);
 
     if ($payslip) {
         $payslipId = $payslip['id'];
