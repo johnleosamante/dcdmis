@@ -56,32 +56,10 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
         <?php endif ?>
 
         <li class="nav-item dropdown no-arrow mx-1">
-            <?php
-            $increment = 1;
-            $alertCount = 0;
-            $hasStepIncrement = $hasLoyaltyAward = false;
-            $employeeStep = stepIncrement($userId);
-            $employeeLoyalties = loyaltyAward($userId);
-
-            if ($employeeStep) {
-                $increment = (int) $employeeStep['step'];
-                $hasStepIncrement = true;
-                $alertCount++;
-                $increment++;
-            }
-
-            if ($employeeLoyalties) {
-                $hasLoyaltyAward = true;
-                $alertCount++;
-            }
-            ?>
 
             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
-                <?php if ($alertCount): ?>
-                    <span class="badge badge-danger badge-counter badge-pill"><?= e($alertCount) ?></span>
-                <?php endif ?>
             </a>
 
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -89,39 +67,9 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                 <h6 class="dropdown-header">
                     Alerts Center
                 </h6>
-                <?php if ($alertCount): ?>
-                    <?php if ($hasStepIncrement): ?>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
-                            <div class="mr-3">
-                                <div class="icon-circle bg-primary">
-                                    <i class="fas fa-file-alt text-white"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="small text-gray-500"><?= date('F d, Y') ?></div>
-                                <span class="font-weight-bold">You are qualified for Step Increment <?= e($increment) ?>!</span>
-                            </div>
-                        </a>
-                    <?php endif ?>
-
-                    <?php if ($hasLoyaltyAward): ?>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
-                            <div class="mr-3">
-                                <div class="icon-circle bg-success">
-                                    <i class="fas fa-award text-white"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="small text-gray-500"><?= date('F d, Y') ?></div>
-                                <span class="font-weight-bold">You are qualified for a Loyalty Award!</span>
-                            </div>
-                        </a>
-                    <?php endif ?>
-                <?php else: ?>
-                    <div class="dropdown-item d-flex align-items-center">
-                        <div class="font-weight-light text-center my-2">No new alerts at the moment.</div>
-                    </div>
-                <?php endif ?>
+                <div class="dropdown-item d-flex align-items-center">
+                    <div class="font-weight-light text-center my-2">No new alerts at the moment.</div>
+                </div>
             </div>
         </li>
 
