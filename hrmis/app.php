@@ -70,14 +70,6 @@ if (isset($_POST['add-employee'])) {
             throw new Exception('Failed to assign employee station.');
         }
 
-        if (createPsipop('', 'Permanent', $today, $today, '', $employeeId) === false) {
-            throw new Exception('Failed to create PSIPOP entry.');
-        }
-
-        if (createStepIncrement($today, 1, $ePositionId, $employeeId) === false) {
-            throw new Exception('Failed to create step increment record.');
-        }
-
         if (createIdentification(null, '', '', $today, $employeeId) === false) {
             throw new Exception('Failed to create identification.');
         }
@@ -838,24 +830,10 @@ if (isset($_POST['promote-employee'])) {
     }
 
     $showAlert = true;
-    $psipop = psipop($employeeId);
-    $status = $doa = $eligibility = null;
 
     beginTransaction();
 
     try {
-        if ($psipop) {
-            $status = $psipop['employment_status'];
-            $doa = $psipop['original_appointment_date'] ?? date('Y-m-d');
-            $eligibility = $psipop['eligibility'];
-            updatePsipop('', $status, $doa, $datePromoted, $eligibility, $employeeId);
-        }
-
-        if (getEmployeeStepIncrement($employeeId)) {
-            $sg = positions($positionId)['salary_grade'];
-            updateStepIncrement($datePromoted, '1', $sg, $employeeId);
-        }
-
         if (!station($employeeId)) {
             $affectedStation = createStation($datePromoted, $eStationId, $positionId, $employeeId);
         } else {
@@ -908,8 +886,6 @@ if (isset($_POST['remove-employee'])) {
 
     $positionId = position($employeeId)['position_id'];
     $eStationId = station($employeeId)['station_id'];
-    $psipopData = psipop($employeeId);
-    $psipopItem = $psipopData ? $psipopData['item_number'] : '';
     $dateVacated = date('Y-m-d');
 
     beginTransaction();
@@ -1061,59 +1037,6 @@ if (isset($_POST['delete-service-record'])) {
     }
 }
 
-if (isset($_POST['save-psipop'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $item = sanitize($_POST['item']);
-    $doa = sanitize($_POST['doa']);
-    $dlp = sanitize($_POST['dlp']);
-    $status = sanitize($_POST['status']);
-    $eligibility = sanitize($_POST['eligibility']);
-    $showAlert = true;
-    $employeePosition = position($employeeId);
-    $positionId = $employeePosition['position_id'] ?? null;
-    $changesMade = false;
-
-    $employeeStep = getEmployeeStepIncrement($employeeId);
-
-    beginTransaction();
-
-    try {
-        if (!$employeeStep) {
-            $initialStep = '1';
-            $changesMade = createStepIncrement($dlp, $initialStep, $positionId, $employeeId);
-        } elseif (empty($employeeStep['last_step_date'])) {
-            $changesMade = updateStepIncrement($dlp, $employeeStep['step'], $positionId, $employeeId);
-        }
-
-        $employeeAward = getEmployeeLoyaltyAward($employeeId);
-
-        if (!$employeeAward) {
-            $changesMade = createLoyaltyAward($doa, $employeeId);
-        } elseif (empty($employeeAward['last_awarded_on'])) {
-            $changesMade = updateLoyaltyAward($doa, $employeeId);
-        }
-
-        $changesMade = updatePsipop($item, $status, $doa, $dlp, $eligibility, $employeeId);
-
-        if (!$changesMade) {
-            $message = 'No changes have been made to employee PSIPOP information.';
-            return;
-        }
-
-        createSystemLog($stationId, $userId, 'Updated PSIPOP', $employeeId, clientIp());
-        commit();
-
-        $employeeName = userName($employeeId, true);
-        $viewLink = customUri('hrmis', 'Employee Information', $employeeId);
-        $message = "Employee [<a href='{$viewLink}' title='View {$employeeName} employee information'>{$employeeName}</a>]'s PSIPOP information has been updated successfully.";
-        $success = true;
-    } catch (Exception $e) {
-        rollBack();
-        $message = $e->getMessage();
-    }
-
-}
-
 if (isset($_POST['save-201-file'])) {
     $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
     $fileId = sanitize(decipher($_POST['data-verifier'] ?? null));
@@ -1210,88 +1133,6 @@ if (isset($_POST['delete-201-file'])) {
         commit();
 
         $message = '201 file has been deleted successfully.';
-        $success = true;
-    } catch (Exception $e) {
-        rollBack();
-        $message = $e->getMessage();
-    }
-}
-
-if (isset($_POST['approve-step-increment'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $showAlert = true;
-
-    $positions = position($employeeId);
-    $positionId = $positions['position_id'];
-    $sg = positions($positionId)['salary_grade'];
-
-    $stepIncrement = getEmployeeStepIncrement($employeeId);
-    $affectedStepIncrement = false;
-
-    beginTransaction();
-
-    try {
-        if ($stepIncrement) {
-            $esi = $stepIncrement;
-            $lastStep = $esi['last_step_date'];
-            $step = (int) $esi['step'];
-            $now = new DateTime('now');
-            $dls = new DateTime($lastStep);
-            $serviceDuration = $now->diff($dls)->y;
-
-            $count = $serviceDuration < 21 ? (int) ($serviceDuration / 3) : 7;
-            $increment = $serviceDuration < 21 ? 3 * $count : 21;
-            $step = $step < 8 ? $step + $count : 8;
-
-            $affectedStepIncrement = updateStepIncrement(date('Y-m-d', strtotime("+{$increment} years", strtotime($lastStep))), $step, $sg, $employeeId);
-        }
-
-        if ($affectedStepIncrement === false) {
-            $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] information has been made.';
-            return;
-        }
-
-        createSystemLog($stationId, $userId, 'Approved employee step increment', $employeeId, clientIp());
-        commit();
-
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>]' . "'s step increment " . 'has been approved successfully.';
-        $success = true;
-    } catch (Exception) {
-        rollBack();
-        $message = $e->getMessage();
-    }
-}
-
-if (isset($_POST['approve-loyalty-award'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $showAlert = true;
-    $affectedLoyaltyAward = false;
-    $loyaltyAward = getEmployeeLoyaltyAward($employeeId);
-
-    beginTransaction();
-
-    try {
-        if ($loyaltyAward) {
-            $ela = $loyaltyAward;
-
-            $doa = new DateTime($ela['date_last_awarded']);
-            $now = new DateTime('now');
-
-            $count = (int) ($now->diff($doa)->y / 5);
-            $increment = ($count === 2) ? 10 : 5 * $count;
-
-            $affectedLoyaltyAward = updateLoyaltyAward(date('Y-m-d', strtotime("+{$increment} years", strtotime($ela['date_last_awarded']))), $employeeId);
-        }
-
-        if ($affectedLoyaltyAward === false) {
-            $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] information has been made.';
-            return;
-        }
-
-        createSystemLog($stationId, $userId, 'Approved employee loyalty award', $employeeId, clientIp());
-        commit();
-
-        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>]' . "'s loyalty award " . 'has been approved successfully.';
         $success = true;
     } catch (Exception $e) {
         rollBack();
