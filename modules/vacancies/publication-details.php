@@ -137,24 +137,18 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $items = publicationItems($publicationId);
-                    if ($items) {
-                        foreach ($items as $item): ?>
-                            <tr class="text-uppercase">
-                                <td class="align-middle">
-                                    <?= e($item['official_title']) . ' (' . e($item['salary_grade']) . ')' ?>
-                                </td>
-                                <td class="align-middle"><?= e($item['item_number']) ?></td>
-                                <td class="align-middle">
-                                    <?php $school = schoolById($item['station_id']);
-                                    echo $school ? $school['name'] : 'N/A'; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach;
-                    } else { ?>
-                        <tr>
-                            <td colspan="3" class="align-middle">No data available.</td>
+                    foreach ($items as $item): ?>
+                        <tr class="text-uppercase">
+                            <td class="align-middle">
+                                <?= e($item['official_title']) . ' (' . e($item['salary_grade']) . ')' ?>
+                            </td>
+                            <td class="align-middle"><?= e($item['item_number']) ?></td>
+                            <td class="align-middle">
+                                <?php $school = schoolById($item['station_id']);
+                                echo $school ? $school['name'] : 'N/A'; ?>
+                            </td>
                         </tr>
-                    <?php } ?>
+                    <?php endforeach; ?>
                 </tbody>
                 <tfoot>
                     <tr>
@@ -223,7 +217,7 @@ messageAlert($showAlert, $message, $success);
                         <?php endforeach;
                     } else { ?>
                         <tr>
-                            <td colspan="4" class="align-middle">No data available.</td>
+                            <td colspan="4" class="align-middle">No data available in table</td>
                         </tr>
                     <?php } ?>
                 </tbody>
