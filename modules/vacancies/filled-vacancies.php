@@ -50,7 +50,7 @@ messageAlert($showAlert, $message, $success);
                     <?php
                     $count = 0;
                     $query = vacanciesByStatus('filled');
-                    while ($row = fetchArray($query)): ?>
+                    foreach ($query as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <?= ++$count ?>
@@ -97,7 +97,7 @@ messageAlert($showAlert, $message, $success);
                                 <?= !empty($row['date_filled']) ? toLongDate($row['date_filled']) : '<span class="text-muted">N/A</span>' ?>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
