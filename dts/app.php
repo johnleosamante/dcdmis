@@ -52,7 +52,7 @@ if (isset($_POST['save-document'])) {
 		$headId = $section['head_id'];
 	} else {
 		$school = schoolById($code);
-		$headId = $school ? $school['head_id'] : '';
+		$headId = $school ? $school['head_id'] : null;
 	}
 
 	if (empty($description)) {
@@ -63,7 +63,7 @@ if (isset($_POST['save-document'])) {
 	beginTransaction();
 
 	try {
-		createDocument($documentId, $description, $type, $station, $purpose);
+		createDocument($documentId, $description, $type, $station, $headId);
 
 		$documentLogId = createDocumentLog($documentId, $userId, $station, $destination, $purpose, true, $details);
 		$upload_response = '';
