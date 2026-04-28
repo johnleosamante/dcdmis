@@ -83,7 +83,7 @@ if ($isHrmis) {
                     $services = experiences($employeeId);
 
                     foreach ($services as $service): ?>
-                        <tr>
+                        <tr class="text-uppercase">
                             <td class="align-middle"><?= toDate($service['from_date']) ?></td>
                             <td class="align-middle"><?= $service['is_present'] ? 'PRESENT' : toDate($service['to_date']) ?>
                             </td>
