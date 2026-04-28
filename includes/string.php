@@ -1,6 +1,6 @@
 <?php
 // include/string.php
-function toString($string, $prefix = null, $suffix = null, $ischar = false): string
+function toString(?string $string, ?string $prefix = null, ?string $suffix = null, $ischar = false): string
 {
     if (empty($string))
         return '';
@@ -11,7 +11,7 @@ function toString($string, $prefix = null, $suffix = null, $ischar = false): str
     return "{$prefix}{$string}{$suffix}";
 }
 
-function toName(string $last_name, string $first_name, string|null $middle_name = null, string|null $extension = null, $fname_first = false, $middle_initial = true): string
+function toName(string $last_name, string $first_name, ?string $middle_name = null, ?string $extension = null, $fname_first = false, $middle_initial = true): string
 {
     if (strlen($middle_name) > 0 && $middle_name !== ' ' && strtoupper($middle_name) !== 'n/a') {
         $suffix = $middle_initial ? '.' : '';
@@ -32,12 +32,12 @@ function toAddress(string $lot, string $street, string $subdivision, string $bar
     return toString($lot, '', ', ') . toString($street, '', ', ') . toString($subdivision, '', ', ') . toString($barangay, '', ', ') . toString($city) . toString($province, ', ');
 }
 
-function toHandleNull(string|null $value, string $default = ''): string
+function toHandleNull(?string $value, string $default = ''): string
 {
     return !empty($value) ? $value : $default;
 }
 
-function toDate(string $date, string $format = 'm/d/Y', string $default = ''): string
+function toDate(?string $date, string $format = 'm/d/Y', string $default = ''): string
 {
     return strtotime($date) ? date($format, strtotime($date)) : $default;
 }
