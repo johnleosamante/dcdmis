@@ -30,9 +30,7 @@ if (isset($_POST['reset-password'])) {
 
     $employeeId = $account['id'];
     $temporaryPassword = generateStrongRandomPassword();
-    $hashedPassword = hashPassword($temporaryPassword);
-
-    $affectedAccountPassword = updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
+    updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
 
     $subject = "Employee Password Reset";
     $loginUrl = "{$baseUri}/login";
