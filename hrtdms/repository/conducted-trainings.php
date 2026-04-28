@@ -57,20 +57,14 @@
             <tbody>
                 <?php
                 $trainings = conductedTrainings($fromDate, $toDate);
-                if ($trainings) {
-                    foreach ($trainings as $training) { ?>
-                        <tr class="text-uppercase">
-                            <td class="align-middle text-left">
-                                <?php linkItem(customUri('hrtdms/repository', 'Training Details', $training['id']), toTruncate($training['title'])) ?>
-                            </td>
-                            <td class="align-middle">
-                                <?= empty($training['unconsecutive_date']) ? toDateRange($training['start_date'], $training['end_date']) : toHandleEncoding($training['unconsecutive_date']) ?>
-                            </td>
-                        </tr>
-                    <?php }
-                } else { ?>
-                    <tr>
-                        <td colspan="2" class="text-center text-muted">No data available in table</td>
+                foreach ($trainings as $training) { ?>
+                    <tr class="text-uppercase">
+                        <td class="align-middle text-left">
+                            <?php linkItem(customUri('hrtdms/repository', 'Training Details', $training['id']), toTruncate($training['title'])) ?>
+                        </td>
+                        <td class="align-middle">
+                            <?= empty($training['unconsecutive_date']) ? toDateRange($training['start_date'], $training['end_date']) : toHandleEncoding($training['unconsecutive_date']) ?>
+                        </td>
                     </tr>
                 <?php } ?>
             </tbody>
