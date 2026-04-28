@@ -23,20 +23,20 @@ if ($document) {
     $destination = $document['forwarded_to'];
     $purpose = $document['status_id'];
     $details = $document['details'];
-    $documentLogs = documentLogs($documentId)[0];
-    $documentStatus = strtolower(documentTransactionStatus($documentLogs['status_id']));
-    $hasDocument = !str_contains($documentStatus, 'complete') && !str_contains($documentStatus, 'cancel') && $documentLogs['received_from'] === $station;
+    $documentLogs = documentLogs($documentId);
+    $documentStatus = strtolower(documentTransactionStatus($documentLogs[0]['status_id']));
+    $hasDocument = !str_contains($documentStatus, 'complete') && !str_contains($documentStatus, 'cancel') && $documentLogs[0]['received_from'] === $station;
     $pageTitle = $hasDocument ? 'Edit Document' : 'Document not found';
 
     if (count($documentLogs) === 1 && $station === $document['created_from']) {
         $attribute = '';
-        $isDescriptionEditable = $_SESSION[alias() . '_editableDescription'] = true;
+        $isDescriptionEditable = true;
     } else {
         $attribute = ' disabled';
-        $isDescriptionEditable = $_SESSION[alias() . '_editableDescription'] = false;
+        $isDescriptionEditable = false;
     }
 
-    $forRelease = str_contains(strtolower($document['status_id']), 'release') && $documentLogs['received_from'] === 'RECORD' && $isRecordsPortal;
+    $forRelease = str_contains(strtolower($document['status_id']), 'release') && $documentLogs[0]['received_from'] === 'RECORD' && $isRecordsPortal;
     $notFound = false;
 } else {
     require_once(root() . '/modules/error/404.php');
@@ -177,7 +177,7 @@ messageAlert($showAlert, $message, $success);
                     <td class="pb-2">
                         <?php
                         if ($documentLogs) {
-                            $logId = $documentLogs['id'];
+                            $logId = $documentLogs[0]['id'];
                             $documentLogAttachments = documentLogAttachments($logId);
 
                             if ($documentLogAttachments) { ?>
