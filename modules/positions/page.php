@@ -41,30 +41,24 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = positions();
-                    if ($query) {
-                        foreach ($query as $row) { ?>
-                            <tr class="text-uppercase">
-                                <td class="align-middle">
-                                    <div><?= e($row['official_title']) . " (SG " . e($row['salary_grade']) . ")" ?></div>
-                                    <div class="small"><?= e($row['category']) ?></div>
-                                </td>
-                                <td class="align-middle text-capitalize">
-                                    <div class="dropdown no-arrow">
-                                        <?php dropdownEllipsis() ?>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                            <?php modalDropdownItem(uri() . '/modules/positions/save-position-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Position');
-                                            modalDropdownItem(uri() . '/modules/positions/save-position-dialog.php?id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Position') ?>
-                                            <div class="dropdown-divider"></div>
-                                            <?php
-                                            modalDropdownItem(uri() . '/modules/positions/delete-position-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete Position'); ?>
-                                        </div>
+                    foreach ($query as $row) { ?>
+                        <tr class="text-uppercase">
+                            <td class="align-middle">
+                                <div><?= e($row['official_title']) . " (SG " . e($row['salary_grade']) . ")" ?></div>
+                                <div class="small"><?= e($row['category']) ?></div>
+                            </td>
+                            <td class="align-middle text-capitalize">
+                                <div class="dropdown no-arrow">
+                                    <?php dropdownEllipsis() ?>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                        <?php modalDropdownItem(uri() . '/modules/positions/save-position-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Position');
+                                        modalDropdownItem(uri() . '/modules/positions/save-position-dialog.php?id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Position') ?>
+                                        <div class="dropdown-divider"></div>
+                                        <?php
+                                        modalDropdownItem(uri() . '/modules/positions/delete-position-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete Position'); ?>
                                     </div>
-                                </td>
-                            </tr>
-                        <?php }
-                    } else { ?>
-                        <tr>
-                            <td colspan="2" class="align-middle">No data available.</td>
+                                </div>
+                            </td>
                         </tr>
                     <?php } ?>
                 </tbody>
