@@ -51,7 +51,7 @@
 						<?php endforeach;
 					} else { ?>
 						<tr>
-							<td colspan="<?= $editMode ? '3' : '2' ?>" class="align-middle">No data available.</td>
+							<td colspan="<?= $editMode ? '3' : '2' ?>" class="align-middle">No data available in table</td>
 						</tr>
 					<?php } ?>
 				</tbody>
