@@ -41,7 +41,7 @@ $document = document($documentId); ?>
         </tr>
         <tr>
             <th>Status</th>
-            <td colspan="5"><?= e($document['status']) ?></td>
+            <td colspan="5"><?= documentTransactionStatus($document['status_id']) ?></td>
         </tr>
         <tr>
             <th>Datetime</th>
@@ -59,9 +59,9 @@ $document = document($documentId); ?>
             <tr>
                 <td><?= date('M d, Y h:i:s A', strtotime($log['created_at'])) ?></td>
                 <td><?= stationName($log['received_from']) ?></td>
-                <td><?= userName($log['processed_by']) ?></td>
-                <td><?= position($log['processed_by'])['official_title'] ?></td>
-                <td><?= e($log['status']) ?></td>
+                <td><?= userName($log['processor_id']) ?></td>
+                <td><?= position($log['processor_id'])['official_title'] ?></td>
+                <td><?= documentTransactionStatus($log['status_id']) ?></td>
                 <td><?= e($log['details']) ?></td>
             </tr>
         <?php endforeach ?>
