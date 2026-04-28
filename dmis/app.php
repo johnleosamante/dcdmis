@@ -298,18 +298,6 @@ if (isset($_POST['delete-employee'])) {
 			throw new Exception('Failed to delete employee voluntary works.');
 		}
 
-		if (deletePsipop($employeeId) === false) {
-			throw new Exception('Failed to delete employee position items.');
-		}
-
-		if (deleteStepIncrement($employeeId) === false) {
-			throw new Exception('Failed to delete employee step increments.');
-		}
-
-		if (deleteLoyaltyAward($employeeId) === false) {
-			throw new Exception('Failed to delete employee loyalty award.');
-		}
-
 		if (deleteStation($employeeId) === false) {
 			throw new Exception('Failed to delete employee station.');
 		}
