@@ -87,67 +87,61 @@ messageAlert($showAlert, $message, $success);
                                 <tbody>
                                     <?php
                                     $query = celebrantEmployees($bmonth);
-                                    if ($query) {
-                                        foreach ($query as $row):
-                                            $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
-                                            $photo = file_exists(root() . '/' . $row['profile_picture']) ? uri() . '/' . $row['profile_picture'] : uri() . '/assets/img/user.png';
-                                            ?>
-                                            <tr class="text-uppercase">
-                                                <td class="align-middle">
-                                                    <div class="image-container">
-                                                        <span
-                                                            class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                                            <img height="100%" src="<?php echo $photo ?>"
-                                                                alt="<?php echo $employeeName ?>">
-                                                        </span>
-                                                        <div class="sex-sign"><?php sex($row['sex']) ?></div>
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle text-left">
-                                                    <?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName) ?>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <?php echo toDate($row['birthdate'], 'F j, Y') ?>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <?php echo getDateDifference($row['birthdate']) ?>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <?php echo positions($row['position_id'])['official_title'] ?>
-                                                </td>
-                                                <td class="align-middle">
+                                    foreach ($query as $row):
+                                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? uri() . '/' . $row['profile_picture'] : uri() . '/assets/img/user.png';
+                                        ?>
+                                        <tr class="text-uppercase">
+                                            <td class="align-middle">
+                                                <div class="image-container">
+                                                    <span
+                                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                                        <img height="100%" src="<?php echo $photo ?>"
+                                                            alt="<?php echo $employeeName ?>">
+                                                    </span>
+                                                    <div class="sex-sign"><?php sex($row['sex']) ?></div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-left">
+                                                <?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName) ?>
+                                            </td>
+                                            <td class="align-middle">
+                                                <?php echo toDate($row['birthdate'], 'F j, Y') ?>
+                                            </td>
+                                            <td class="align-middle">
+                                                <?php echo getDateDifference($row['birthdate']) ?>
+                                            </td>
+                                            <td class="align-middle">
+                                                <?php echo positions($row['position_id'])['official_title'] ?>
+                                            </td>
+                                            <td class="align-middle">
 
-                                                    <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']); ?>
-                                                </td>
-                                                <td class="align-middle text-capitalize">
-                                                    <div class="dropdown no-arrow">
-                                                        <?php dropdownEllipsis() ?>
-                                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                                            <?php
-                                                            linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
-                                                            linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
-                                                            linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
-                                                            linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
-                                                            modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel');
-                                                            ?>
-                                                            <div class="dropdown-divider"></div>
-                                                            <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History'); ?>
-                                                            <div class="dropdown-divider"></div>
-                                                            <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                                                            if ($isPersonnel) {
-                                                                modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
-                                                                modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
-                                                            } ?>
-                                                        </div>
+                                                <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']); ?>
+                                            </td>
+                                            <td class="align-middle text-capitalize">
+                                                <div class="dropdown no-arrow">
+                                                    <?php dropdownEllipsis() ?>
+                                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                                        <?php
+                                                        linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
+                                                        linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
+                                                        linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
+                                                        linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
+                                                        modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel');
+                                                        ?>
+                                                        <div class="dropdown-divider"></div>
+                                                        <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History'); ?>
+                                                        <div class="dropdown-divider"></div>
+                                                        <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                                                        if ($isPersonnel) {
+                                                            modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
+                                                            modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
+                                                        } ?>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach;
-                                    } else { ?>
-                                        <tr>
-                                            <td colspan="8" class="align-middle">No data available in table</td>
+                                                </div>
+                                            </td>
                                         </tr>
-                                    <?php } ?>
+                                    <?php endforeach; ?>
                                 </tbody>
 
                                 <tfoot>
