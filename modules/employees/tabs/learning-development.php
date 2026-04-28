@@ -36,7 +36,7 @@
                         <?php endforeach;
                     } else { ?>
                         <tr>
-                            <td colspan="6" class="align-middle">No data available.</td>
+                            <td colspan="6" class="align-middle">No data available in table</td>
                         </tr>
                     <?php } ?>
                 </tbody>
