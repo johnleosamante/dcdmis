@@ -568,7 +568,7 @@ function documentByStatus($status, $employee_id, $station_id, $from_date = '', $
     return $row ? (int) $row['count'] : 0;
 }
 
-function documentSearch($string, $station_id)
+function documentSearch($string)
 {
     $likeTerm = "%{$string}%";
     $sql = "SELECT 
@@ -583,18 +583,8 @@ function documentSearch($string, $station_id)
                 FROM `document_transaction_logs` 
                 WHERE `document_transaction_id` = t.`id`
             )
-            WHERE (
-                t.`id` LIKE ? 
-                OR MATCH(t.`description`) AGAINST (? IN BOOLEAN MODE)
-                OR EXISTS (
-                    SELECT 1
-                    FROM `document_transaction_logs` AS sub_l
-                    WHERE sub_l.`document_transaction_id` = t.`id`
-                        AND MATCH(sub_l.`details`) AGAINST(? IN BOOLEAN MODE)
-                        AND (sub_l.`received_from` = ? OR sub_l.`forwarded_to` = ?)
-                )
-            ) 
+            WHERE t.`id` LIKE ? OR MATCH(t.`description`) AGAINST (? IN BOOLEAN MODE)
             ORDER BY t.`created_at` DESC 
             LIMIT 1000";
-    return query($sql, [$likeTerm, $string, $string, $station_id, $station_id]);
+    return query($sql, [$likeTerm, $string]);
 }
