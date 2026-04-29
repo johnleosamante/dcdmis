@@ -14,9 +14,11 @@ if (!isset($portal) || empty($portal)) {
 if (isset($_POST['primary-search-button'])) {
 	$search = sanitize($_POST['primary-search-text']);
 
-	$document = documentSearch($search, $station);
+	if (document($search)) {
+		redirect(customUri('dts', 'Document Information', $search));
+	}
 
-	if ($document) {
+	if (documentSearch($search)) {
 		redirect(customUri('dts', 'Document Search', $search));
 	}
 }
