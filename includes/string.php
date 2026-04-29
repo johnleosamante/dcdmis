@@ -67,7 +67,7 @@ function sanitize(?string $text): ?string
     return htmlspecialchars(stripslashes($trimmed), ENT_QUOTES);
 }
 
-function toHandleEncoding(string $text)
+function toHandleEncoding(?string $text)
 {
     return mb_convert_encoding(html_entity_decode($text, ENT_QUOTES), 'ISO-8859-1', 'UTF-8');
 }
