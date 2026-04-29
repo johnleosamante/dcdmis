@@ -67,7 +67,7 @@ if ($document) {
                                         $sections = sections($division['id']);
                                         foreach ($sections as $section) {
                                             if ($section['id'] !== $station) { ?>
-                                                <option value="<?= e($section['id']) ?>"><?= e($section['name']) ?></option>
+                                                <option value="<?= $section['id'] ?>"><?= $section['name'] ?></option>
                                                 <?php
                                             }
                                         } ?>
