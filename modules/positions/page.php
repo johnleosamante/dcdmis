@@ -33,20 +33,24 @@ messageAlert($showAlert, $message, $success);
             <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="95%">Position</th>
-                        <th class="align-middle" width="5%">Action</th>
+                        <th class="align-middle" width="70%">Position</th>
+                        <th class="align-middle" width="10%">Plantilla Items</th>
+                        <th class="align-middle" width="10%">Filled</th>
+                        <th class="align-middle" width="10%">Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php
-                    $query = positions();
+                    $query = positionItems();
                     foreach ($query as $row) { ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div><?= e($row['official_title']) . " (SG " . e($row['salary_grade']) . ")" ?></div>
                                 <div class="small"><?= e($row['category']) ?></div>
                             </td>
+                            <td class="align-middle text-capitalize"><?= $row['total_plantilla_items'] ?></td>
+                            <td class="align-middle text-capitalize"><?= $row['filled_plantilla_items'] ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
@@ -65,8 +69,10 @@ messageAlert($showAlert, $message, $success);
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="95%">Position</th>
-                        <th class="align-middle" width="5%">Action</th>
+                        <th class="align-middle" width="70%">Position</th>
+                        <th class="align-middle" width="10%">Plantilla Items</th>
+                        <th class="align-middle" width="10%">Filled</th>
+                        <th class="align-middle" width="10%">Action</th>
                     </tr>
                 </tfoot>
             </table>
