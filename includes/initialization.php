@@ -24,7 +24,6 @@ $activeTab = $_SESSION["{$prefix}activeTab"] ?? null;
 $userId = $_SESSION["{$prefix}userId"] ?? null;
 $stationId = $_SESSION["{$prefix}stationId"] ?? null;
 $station = $_SESSION["{$prefix}station"] ?? null;
-$isDescriptionEditable = $_SESSION["{$prefix}editableDescription"] ?? false;
 $code = $_SESSION["{$prefix}code"] ?? null;
 $portal = $_SESSION["{$prefix}portal"] ?? null;
 $hasPortal = !empty($portal);
