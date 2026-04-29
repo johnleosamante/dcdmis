@@ -129,7 +129,14 @@ if (isset($_POST['edit-document'])) {
 	$updateDescription = false;
 	$description = null;
 
-	if ($isDescriptionEditable) {
+	$documentLogs = documentLogs($documentId);
+
+	if ($documentLogs[0]['received_from'] !== $station || $documentLogs[0]['forwarded_to'] === null) {
+		$message = 'Document cannot be updated';
+		return;
+	}
+
+	if (count($documentLogs) === 1) {
 		$updateDescription = true;
 		$description = sanitize($_POST['description'] ?? null);
 
