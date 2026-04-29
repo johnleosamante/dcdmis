@@ -97,18 +97,20 @@ Formatting: use single qoute for string literals and array keys
     <li>Payslip (Add, Update, Delete, Preview, Download)</li>
 </ul>
 
+#### Monitoring Tools (For Division Assigned and DTS Users Only)
+
 ###### ----------------------------------------------------------------------------------------------------------------------------------
 
 ### DOCUMENT TRACKING SYSTEM
 
-#### Create New Document w/ File Attachment</li>
+#### Create New Document w/ File Attachment (Accepts Multiple File Uploads)</li>
 
 #### View Documents
 <ul>
     <li>Incoming Documents (Document to be received by station)</li>
     <li>Pending Documents (Document received by station and waiting for action)</li>
-    <li>Outgoing Documents (Document forwarded by station to another station)</li>
-    <li>Ongoing Documents (Document from station that are not yet completed or canceled)</li>
+    <li>Outgoing Documents (Document forwarded by station to another station but not yet received)</li>
+    <li>Ongoing Documents (Document from station that are not yet completed or not canceled)</li>
     <li>Completed Documents (Document marked completed by station where it was last received)</li>
     <li>Canceled Documents (Document marked canceled by station where it was created)</li>
 </ul>
@@ -158,6 +160,8 @@ Formatting: use single qoute for string literals and array keys
     <li>Canceled Documents</li>
 </ul>
 
+#### Document Tracker (Public)
+
 ##### ----------------------------------------------------------------------------------------------------------------------------------
 
 ### Human Resource Management Information System
@@ -170,31 +174,59 @@ Formatting: use single qoute for string literals and array keys
     <li>Retirable Employees</li>
     <li>Celebrant Employees</li>
     <li>Archived Employees</li>
-    <li>Employees for Step Increments</li>
-    <li>Employees for Loyalty Award</li>
 </ul>
 
-#### Reassign Employee (Personnel Section Users Only)
+#### Reassign Employee
 
 #### Promote Employee (Personnel Section Users Only)
 
 #### Remove Employee (Personnel Section Users Only)
 
-#### Approve Step Increment (Personnel Section Users Only)
+#### Positions (Personnel Section Users Only)
+<ul>
+    <li>View Vacancies</li>
+    <li>Create Positions</li>
+    <li>Edit Positions</li>
+    <li>Delete Positions</li>
+    <li>Export Positions</li>
+</ul>
 
-#### Approve Loyalty Award (Personnel Section Users Only)
+#### Plantilla Items (Personnel Section Users Only)
+<ul>
+    <li>View Plantilla Items</li>
+    <li>Create Plantilla Items</li>
+    <li>Edit Plantilla Items</li>
+    <li>Delete Plantilla Items</li>
+    <li>Export Plantilla Items</li>
+</ul>
 
 #### Vacancies (Personnel Section Users Only) 
 <ul>
+    <li>View Vacancies</li>
     <li>Create Vacancies
         <ul>
             <li>New Item</li>
+            <li>Vacated Item through Promotion of Employee</li>
             <li>Vacated Item through Removal of Employee</li>
         </ul>
     </li>
     <li>Edit Vacancies</li>
     <li>Delete Vacancy</li>
 </ul>
+
+#### Publications (Personnel Section Users Only)
+<ul>
+    <li>View Publications</li>
+    <li>Create Publications (if vacancies available)</li>
+    <li>Edit Publications</li>
+    <li>Delete Publications</li>
+</ul>
+
+#### View Districts
+
+#### View Schools
+
+#### View Sections
 
 #### Dashboard Charts
 <ul>
@@ -204,6 +236,9 @@ Formatting: use single qoute for string literals and array keys
     <li>Employees By Position</li>
     <li>Employees By District</li>
     <li>Employees By Assignment</li>
+    <li>Indigenous People</li>
+    <li>Persons with Disability</li>
+    <li>Solo Parents</li>
 </ul>
 
 #### Employee Information (Update Anyone)
@@ -222,6 +257,7 @@ Formatting: use single qoute for string literals and array keys
     <li>Other Information (Can Update)</li>
     <li>References (Can Add, Update, Delete)</li>
     <li>Government Issued ID (View Only)</li>
+    <li>Print PDS 2025</li>
 </ul>
 
 #### Service Record (Update Anyone)
@@ -238,9 +274,15 @@ Formatting: use single qoute for string literals and array keys
     <li>Download Certificate of Appearance (If Available)</li>
 </ul>
 
-#### PSIPOP (Update Anyone)
-
 #### Edit History (View Only)
+
+#### View Publications (Public)
+
+#### Applicant Registration
+<ul>
+    <li>DepEd Division Employee</li>
+    <li>Non-DepEd Division Employee</li>
+</ul>
 
 ##### ----------------------------------------------------------------------------------------------------------------------------------
 
