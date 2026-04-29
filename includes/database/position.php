@@ -20,7 +20,24 @@ function positions($position_id = null)
         $result = find($sql, [$position_id]);
         return $result ?? null;
     }
-    $sql = "SELECT * FROM `positions` ORDER BY `official_title` ASC";
+    $sql = "SELECT `id`, `official_title`, `salary_grade`, `category` FROM `positions` ORDER BY `official_title` ASC";
+    return query($sql);
+}
+
+function positionItems()
+{
+    $sql = "SELECT 
+                p.`id`, 
+                p.`official_title`, 
+                p.`salary_grade`, 
+                p.`category`,
+                COALESCE(COUNT(DISTINCT pi.`id`), 0) AS `total_plantilla_items`,
+                COALESCE(SUM(CASE WHEN sr.`plantilla_item_id` IS NOT NULL AND sr.`is_present` = 1 AND sr.`to_date` IS NULL THEN 1 ELSE 0 END), 0) AS `filled_plantilla_items`
+            FROM `positions` AS p
+            LEFT JOIN `plantilla_items` AS pi ON p.`id` = pi.`position_id` AND pi.`is_dissolve` = 0
+            LEFT JOIN `service_records` AS sr ON pi.`id` = sr.`plantilla_item_id` AND sr.`is_present` = 1 AND sr.`to_date` IS NULL
+            GROUP BY p.`id`, p.`official_title`, p.`salary_grade`, p.`category`
+            ORDER BY p.`official_title` ASC";
     return query($sql);
 }
 
