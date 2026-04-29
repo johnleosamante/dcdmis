@@ -107,6 +107,7 @@ $logs = documentLogs($documentId);
                             linkButtonSplit(customUri('dts', 'Edit Document', $documentId), 'Edit', 'fa-edit', 'Edit Document', 'info');
                         }
                         break;
+                    case 'Completed Documents':
                     case 'Received Documents':
                         if (isDocument($documentId, 'complete') && $logs[0]['received_from'] === $station) {
                             modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-times-circle', 'Mark Incomplete Document', 'danger');
