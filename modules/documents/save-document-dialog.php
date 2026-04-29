@@ -51,8 +51,8 @@ require_once(root() . '/includes/layout/components.php');
                                     <?php $sections = sections($division['id']);
                                     foreach ($sections as $section) {
                                         if ($section['id'] !== $station) { ?>
-                                            <option value="<?= e($section['id']) ?>">
-                                                <?= e($section['name']) ?>
+                                            <option value="<?= $section['id'] ?>">
+                                                <?= $section['name'] ?>
                                             </option>
                                             <?php
                                         }
