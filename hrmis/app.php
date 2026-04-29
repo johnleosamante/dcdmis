@@ -884,46 +884,41 @@ if (isset($_POST['remove-employee'])) {
         return;
     }
 
-    $positionId = position($employeeId)['position_id'];
-    $eStationId = station($employeeId)['station_id'];
     $dateVacated = date('Y-m-d');
 
     beginTransaction();
 
     try {
-        if (employee($employeeId)) {
-            $affectedEmployeeStatus = updateEmployeeStatus($reason, $employeeId);
+        if (!employee($employeeId)) {
+            throw new Exception("Employee not found.");
         }
 
+        $affectedEmployeeStatus = updateEmployeeStatus($reason, $employeeId);
+
         if ($affectedEmployeeStatus === false) {
+            rollBack();
             $message = 'No changes to employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.';
             return;
         }
 
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
         $success = true;
-
         createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
 
-        if ($skipVacancy || strtolower($reason) === 'duplicate') {
-            return;
-        }
+        if (!$skipVacancy && strtolower($reason) !== 'duplicate') {
+            $plantillaItemData = employeeItemNumber($employeeId);
+            $plantillaItemId = $plantillaItemData['id'] ?? null;
 
-        $plantillaItemId = employeeItemNumber($employeeId);
-
-        if (!$plantillaItemId) {
-            return;
-        }
-
-        $plantillaItem = $plantillaItemId['id'];
-
-        if (createVacancy($plantillaItem, 'open', $employeeId, $dateVacated, $reason)) {
-            $message .= ' A vacant item has been created for this position.';
-
-            createSystemLog($stationId, $userId, 'Created vacant item', $employeeId, clientIp());
+            if ($plantillaItemId) {
+                if (createVacancy($plantillaItemId, 'open', $employeeId, $dateVacated, $reason)) {
+                    $message .= ' A vacant item has been created for this position.';
+                    createSystemLog($stationId, $userId, 'Created vacant item', $employeeId, clientIp());
+                }
+            }
         }
 
         commit();
+        $success = true;
     } catch (Exception $e) {
         rollBack();
         $message = $e->getMessage();
