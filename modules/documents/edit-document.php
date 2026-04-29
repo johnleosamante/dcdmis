@@ -208,14 +208,15 @@ messageAlert($showAlert, $message, $success);
                 </tr>
             </table>
 
-            <?php requiredLegend(0) ?>
-
+            <?php requiredLegend(0); ?>
             <div class="d-flex align-items-center flex-row-reverse pt-3">
                 <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? e($_GET['id']) : null ?>">
-                <input type="hidden" name="file-verifier" value="<?= cipher($filename ?? '') ?>">
-                <button class="btn btn-primary ml-2" name="edit-document" type="submit">Save Changes</button>
-                <a href="<?= customUri('dts', 'Document Information', $documentId) ?>" class="btn btn-secondary">Cancel</a>
-            </div>
+                    <input type="hidden" name="file-verifier" value="<?= cipher($filename ?? '') ?>">
+                    <?php if ($documentLogs[0]['received_from'] == $station && $documentLogs[0]['forwarded_to'] !== null) { ?>
+                        <button class="btn btn-primary ml-2" name="edit-document" type="submit">Save Changes</button>
+                    <?php } ?>
+                    <a href="<?= customUri('dts', 'Document Information', $documentId) ?>" class="btn btn-secondary">Cancel</a>
+                </div>
         </div>
     </div>
 </form>
