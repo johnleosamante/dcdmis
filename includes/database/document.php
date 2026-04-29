@@ -90,7 +90,7 @@ function documentOrigin($document_transaction_id)
             FROM `document_transactions` AS t 
             INNER JOIN `document_transaction_logs` AS l ON t.id = l.document_transaction_id 
             WHERE t.id = ? 
-            ORDER BY l.created_at DESC 
+            ORDER BY l.created_at ASC 
             LIMIT 1";
     return find($sql, [$document_transaction_id]);
 }
