@@ -7,7 +7,7 @@ if (!$isDts) {
 }
 
 $search = sanitize(decode($_GET['id'] ?? null));
-$documents = documentSearch($search, $station);
+$documents = documentSearch($search);
 $isDts = $activeApp === 'dts';
 
 if (!$documents) {
