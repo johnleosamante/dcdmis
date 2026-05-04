@@ -38,7 +38,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php if ($activeApp === 'hrmis') {
+        <?php if ($isHrmis && $isPersonnel) {
             contentTitleWithLink('Publication Details', customUri('hrmis', 'Publish Vacancies', $publicationId), 'Edit', 'fa-edit');
         } else {
             contentTitle('Publication Details');
@@ -126,7 +126,7 @@ messageAlert($showAlert, $message, $success);
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover mb-0 text-center" width="100%" cellspacing="0" id="data-table">
+            <table class="table table-hover mb-0 text-center" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="35%">Position / Salary Grade</th>
@@ -168,66 +168,44 @@ messageAlert($showAlert, $message, $success);
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover text-center" width="100%" cellspacing="0">
+            <table class="table table-hover text-center" width="100%" cellspacing="0" id="data-table">
                 <thead>
                     <tr>
-                        <th>Date Submitted</th>
-                        <th>Applicant Name / Contact</th>
-                        <th>Applied For</th>
-                        <th>Status</th>
+                        <th width="20%" class="align-middle">Applied on</th>
+                        <th width="55" class="align-middle">Applicant</th>
+                        <th width="25" class="align-middle">Position</th>
+                        <?php if ($isHrmis && $isPersonnel): ?>
+                            <th width="5%" class="align-middle">Action</th>
+                        <?php endif ?>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php $apps = applicationsByPublication($publicationId);
-                    if ($apps) {
-                        foreach ($apps as $app): ?>
-                            <tr>
-                                <td><?= toLongDate($app['submitted_on']) ?></td>
-                                <td class="font-weight-bold text-uppercase">
-                                    <?= e($app['applicant_name']) ?>
-                                </td>
-                                <td>
-                                    <?= e($app['position']) ?><br>
-                                    <small><?= e($app['item_number']) ?></small>
-                                </td>
-                                <td>
-                                    <div><i class="fas fa-envelope mr-1 text-gray-400"></i>
-                                        <?= e($app['email']) ?>
-                                    </div>
-                                    <div><i class="fas fa-phone mr-1 text-gray-400"></i>
-                                        <?= e($app['mobile']) ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <?php if (!empty($app['resume_path'])): ?>
-                                        <a href="<?= uri() . '/' . $app['resume_path'] ?>" target="_blank"
-                                            class="btn btn-sm btn-info">
-                                            <i class="fas fa-file-pdf"></i> View
-                                        </a>
-                                    <?php else: ?>
-                                        <span class="text-muted">No file</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <span
-                                        class="badge badge-<?= $app['status'] == 'pending' ? 'warning' : 'success' ?> badge-pill"><?= ucfirst($app['status']) ?></span>
-                                </td>
-                            </tr>
-                        <?php endforeach;
-                    } else { ?>
-                        <tr>
-                            <td colspan="4" class="align-middle">No data available in table</td>
+                    <?php $apps = applicantsByPublication($publicationId);
+                    foreach ($apps as $app): ?>
+                        <tr class="text-uppercase">
+                            <td class="align-middle"><?= toDatetime($app['created_at']) ?></td>
+                            <td class="align-middle">
+                                <?= applicantName($app['application_code']) ?>
+                            </td>
+                            <td class="align-middle">
+                                <div><?= e($app['official_title']) ?></div>
+                            </td>
+                            <?php if ($isHrmis && $isPersonnel): ?>
+                                <td class="align-middle"></td>
+                            <?php endif ?>
                         </tr>
-                    <?php } ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
                     <tr>
-                        <th>Date Submitted</th>
-                        <th>Applicant Name / Contact</th>
-                        <th>Applied For</th>
-                        <th>Status</th>
+                        <th width="20%" class="align-middle">Applied on</th>
+                        <th width="55" class="align-middle">Applicant</th>
+                        <th width="25" class="align-middle">Position</th>
+                        <?php if ($isHrmis && $isPersonnel): ?>
+                            <th width="5%" class="align-middle">Action</th>
+                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>
