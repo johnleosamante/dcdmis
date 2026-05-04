@@ -57,8 +57,10 @@ if ($code) {
                 <input type="hidden" name="publication_id" value="<?= cipher($publication['id']) ?>">
 
                 <div>
-                    <div class="alert alert-info py-2 small">
-                        <i class="fas fa-info-circle mr-1"></i>
+                    <?= messageAlert($showAlert, $message, $success) ?>
+
+                    <div class="alert alert-info p-2 d-flex align-items-start small">
+                        <i class="fas fa-info-circle mt-1 mr-1"></i>
                         Check the box for each position you wish to apply for.
                     </div>
 
@@ -80,6 +82,7 @@ if ($code) {
 
                                         if (!isset($groups[$pid])) {
                                             $groups[$pid] = [
+                                                'id' => $row['id'],
                                                 'position' => $row['official_title'],
                                                 'salary_grade' => $row['salary_grade'],
                                                 'count' => 0
@@ -92,7 +95,7 @@ if ($code) {
                                     foreach ($groups as $pid => $group) { ?>
                                         <tr>
                                             <td class="text-center align-middle">
-                                                <input type="checkbox" name="position_ids[]" value="<?= cipher($pid) ?>"
+                                                <input type="checkbox" name="position_ids[]" value="<?= cipher($group['id']) ?>"
                                                     id="pos_<?= e($pid) ?>" style="transform: scale(1.5);">
                                             </td>
                                             <td class="align-middle">
@@ -125,8 +128,12 @@ if ($code) {
                     </div>
 
                     <div class="form-group">
-                        <label for="applicant-id" class="font-weight-bold mb-1">Applicant
-                            ID <?= showAsterisk() ?></label>
+                        <div>
+                            <label for="applicant-id" class="font-weight-bold mb-1">Applicant
+                            ID <?= showAsterisk() ?>
+                            </label>
+                            
+                        </div>
                         <input type="text" class="form-control" id="applicant-id" name="applicant_id"
                             placeholder="Enter your 18-digit applicant ID..." required>
                     </div>
