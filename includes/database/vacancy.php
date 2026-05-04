@@ -214,12 +214,6 @@ function countPublications()
 // vacancy_publication_items, vacancies, positions
 function publicationItems($publication_id)
 {
-    // $sql = "SELECT vpi.`id`, vpi.`vacancy_id`, v.`position_id`, v.`item_number`, 
-    //             p.`official_title`, p.`salary_grade`, v.`station_id`, v.`reason` 
-    //         FROM `vacancy_publication_items` AS vpi 
-    //         INNER JOIN `vacancies` AS v ON vpi.`vacancy_id` = v.`id` 
-    //         INNER JOIN `positions` AS p ON v.`position_id` = p.`id` 
-    //         WHERE vpi.`publication_id` = ? ORDER BY p.`official_title` ASC";
     $sql = "SELECT vpi.`id`, vpi.`vacancy_id`, pi.`position_id`, p.`official_title`, pi.`item_number`, p.`salary_grade`,
                 pi.`station_id`, v.`date_vacated`, v.`reason` 
             FROM `vacancy_publication_items` AS vpi 
@@ -252,17 +246,19 @@ function countPublicationItems($publication_id)
     return $result ? (int) $result['total'] : 0;
 }
 
-function applicationsByPublication($publicationId)
+function applicantsByPublication($publicationId)
 {
-    $sql = "SELECT va.`id`, va.`created_at`, va.email, va.mobile, va.resume_path, va.status,
-                COALESCE(NULLIF(va.applicant_name, ''), CONCAT(a.first_name, ' ', a.last_name)) AS applicant_name,
-                v.psipop AS item_number, 
-                j.Job_description AS position 
+    $sql = "SELECT 
+                va.`created_at`,
+                ac.`code` AS application_code, 
+                p.`official_title`
             FROM `vacancy_applications` AS va 
-            LEFT JOIN `vacancies` AS v ON va.vacancy_id = v.id 
-            LEFT JOIN `tbl_job` AS j ON v.position_id = j.Job_code 
-            LEFT JOIN `applicants` AS a ON va.applicant_id = a.id
-            WHERE va.publication_id = ? 
+            INNER JOIN `application_codes` AS ac ON va.`application_code_id` = ac.`id`
+            INNER JOIN `vacancy_publication_items` AS vpi ON va.`publication_item_id` = vpi.`id`
+            INNER JOIN `vacancies` AS v ON vpi.`vacancy_id` = v.`id`
+            INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id`
+            INNER JOIN `positions` AS p ON pi.`position_id` = p.`id`
+            WHERE vpi.`publication_id` = ? 
             ORDER BY va.`created_at` DESC";
     return query($sql, [$publicationId]);
 }
@@ -276,141 +272,141 @@ function applicationsByVacancy($vacancyId)
     return query($sql, [$vacancyId]);
 }
 
-function vacanciesByPublicationAndPosition($publicationId, $positionId)
-{
-    $sql = "SELECT vpi.vacancy_id 
-            FROM `vacancy_publication_items` AS vpi 
-            INNER JOIN `vacancies` AS v ON vpi.vacancy_id = v.id 
-            WHERE vpi.publication_id = ? 
-            AND v.position_id = ? 
-            AND v.status = 'open'";
-    return query($sql, [$publicationId, $positionId]);
-}
+// function vacanciesByPublicationAndPosition($publicationId, $positionId)
+// {
+//     $sql = "SELECT vpi.vacancy_id 
+//             FROM `vacancy_publication_items` AS vpi 
+//             INNER JOIN `vacancies` AS v ON vpi.vacancy_id = v.id 
+//             WHERE vpi.publication_id = ? 
+//             AND v.position_id = ? 
+//             AND v.status = 'open'";
+//     return query($sql, [$publicationId, $positionId]);
+// }
 
-function generateApplicantCode()
-{
-    $year = date('Y');
-    $prefix = "APP-{$year}-";
-    $sql = "SELECT `applicant_code` FROM `applicants` 
-            WHERE `applicant_code` LIKE ? 
-            ORDER BY `id` DESC LIMIT 1";
-    $last = find($sql, ["{$prefix}%"]);
-    if ($last) {
-        $lastNum = (int) str_replace($prefix, '', $last['applicant_code']);
-        $newNum = $lastNum + 1;
-    } else {
-        $newNum = 1;
-    }
-    return $prefix . str_pad($newNum, 5, '0', STR_PAD_LEFT);
-}
+// function generateApplicantCode()
+// {
+//     $year = date('Y');
+//     $prefix = "APP-{$year}-";
+//     $sql = "SELECT `applicant_code` FROM `applicants` 
+//             WHERE `applicant_code` LIKE ? 
+//             ORDER BY `id` DESC LIMIT 1";
+//     $last = find($sql, ["{$prefix}%"]);
+//     if ($last) {
+//         $lastNum = (int) str_replace($prefix, '', $last['applicant_code']);
+//         $newNum = $lastNum + 1;
+//     } else {
+//         $newNum = 1;
+//     }
+//     return $prefix . str_pad($newNum, 5, '0', STR_PAD_LEFT);
+// }
 
-function findApplicantByEmail($email)
-{
-    return find("SELECT * FROM `applicants` WHERE `email` = ? LIMIT 1", [$email]);
-}
+// function findApplicantByEmail($email)
+// {
+//     return find("SELECT * FROM `applicants` WHERE `email` = ? LIMIT 1", [$email]);
+// }
 
-function findApplicantByEmployeeId($employeeId)
-{
-    return find("SELECT * FROM `applicants` WHERE `employee_id` = ? LIMIT 1", [$employeeId]);
-}
+// function findApplicantByEmployeeId($employeeId)
+// {
+//     return find("SELECT * FROM `applicants` WHERE `employee_id` = ? LIMIT 1", [$employeeId]);
+// }
 
-function createApplicant($code, $fname, $mname, $lname, $ext, $email, $mobile, $isEmployee, $employeeId, $resumePath, $sex = null, $dob = null, $civil = null, $address = null, $religion = null, $pwd = 0, $ethnic = null, $education = null, $eligibility = null)
-{
-    $data = [
-        'applicant_code' => $code,
-        'first_name' => $fname,
-        'middle_name' => $mname,
-        'last_name' => $lname,
-        'ext_name' => $ext,
-        'email' => $email,
-        'mobile' => $mobile,
-        'is_employee' => $isEmployee ? 1 : 0,
-        'employee_id' => $employeeId,
-        'resume_path' => $resumePath,
-        'sex' => $sex,
-        'birth_date' => $dob,
-        'civil_status' => $civil,
-        'address' => $address,
-        'religion' => $religion,
-        'is_pwd' => $pwd ? 1 : 0,
-        'ethnic_group' => $ethnic,
-        'education' => $education,
-        'eligibility' => $eligibility
-    ];
-    return insert('applicants', $data);
-}
+// function createApplicant($code, $fname, $mname, $lname, $ext, $email, $mobile, $isEmployee, $employeeId, $resumePath, $sex = null, $dob = null, $civil = null, $address = null, $religion = null, $pwd = 0, $ethnic = null, $education = null, $eligibility = null)
+// {
+//     $data = [
+//         'applicant_code' => $code,
+//         'first_name' => $fname,
+//         'middle_name' => $mname,
+//         'last_name' => $lname,
+//         'ext_name' => $ext,
+//         'email' => $email,
+//         'mobile' => $mobile,
+//         'is_employee' => $isEmployee ? 1 : 0,
+//         'employee_id' => $employeeId,
+//         'resume_path' => $resumePath,
+//         'sex' => $sex,
+//         'birth_date' => $dob,
+//         'civil_status' => $civil,
+//         'address' => $address,
+//         'religion' => $religion,
+//         'is_pwd' => $pwd ? 1 : 0,
+//         'ethnic_group' => $ethnic,
+//         'education' => $education,
+//         'eligibility' => $eligibility
+//     ];
+//     return insert('applicants', $data);
+// }
 
-function updateApplicant($id, $fname, $mname, $lname, $ext, $mobile, $resumePath, $sex = null, $dob = null, $civil = null, $address = null, $religion = null, $pwd = 0, $ethnic = null, $education = null, $eligibility = null)
-{
-    $data = [
-        'first_name' => $fname,
-        'middle_name' => $mname,
-        'last_name' => $lname,
-        'ext_name' => $ext,
-        'mobile' => $mobile,
-        'resume_path' => $resumePath,
-        'sex' => $sex,
-        'birth_date' => $dob,
-        'civil_status' => $civil,
-        'address' => $address,
-        'religion' => $religion,
-        'is_pwd' => $pwd ? 1 : 0,
-        'ethnic_group' => $ethnic,
-        'education' => $education,
-        'eligibility' => $eligibility
-    ];
-    return update('applicants', $data, '`id` = ?', [$id]);
-}
+// function updateApplicant($id, $fname, $mname, $lname, $ext, $mobile, $resumePath, $sex = null, $dob = null, $civil = null, $address = null, $religion = null, $pwd = 0, $ethnic = null, $education = null, $eligibility = null)
+// {
+//     $data = [
+//         'first_name' => $fname,
+//         'middle_name' => $mname,
+//         'last_name' => $lname,
+//         'ext_name' => $ext,
+//         'mobile' => $mobile,
+//         'resume_path' => $resumePath,
+//         'sex' => $sex,
+//         'birth_date' => $dob,
+//         'civil_status' => $civil,
+//         'address' => $address,
+//         'religion' => $religion,
+//         'is_pwd' => $pwd ? 1 : 0,
+//         'ethnic_group' => $ethnic,
+//         'education' => $education,
+//         'eligibility' => $eligibility
+//     ];
+//     return update('applicants', $data, '`id` = ?', [$id]);
+// }
 
-function createApplicationEntry($publicationId, $vacancyId, $applicantId)
-{
-    $check = find("SELECT `id` FROM `vacancy_applications` WHERE `vacancy_id` = ? AND `applicant_id` = ?", [$vacancyId, $applicantId]);
-    if ($check) {
-        return true;
-    }
-    $app = find("SELECT * FROM `applicants` WHERE `id` = ?", [$applicantId]);
-    if (!$app) {
-        return false;
-    }
-    require_once root() . '/includes/string.php';
-    $fullName = toName($app['last_name'], $app['first_name'], $app['middle_name'], $app['ext_name']);
-    $data = [
-        'publication_id' => $publicationId,
-        'vacancy_id' => $vacancyId,
-        'applicant_id' => $applicantId,
-        'applicant_name' => $fullName,
-        'email' => $app['email'],
-        'mobile' => $app['mobile'],
-        'resume_path' => $app['resume_path'],
-        'status' => 'pending',
-        'submitted_on' => date('Y-m-d H:i:s')
-    ];
-    return insert('vacancy_applications', $data);
-}
+// function createApplicationEntry($publicationId, $vacancyId, $applicantId)
+// {
+//     $check = find("SELECT `id` FROM `vacancy_applications` WHERE `vacancy_id` = ? AND `applicant_id` = ?", [$vacancyId, $applicantId]);
+//     if ($check) {
+//         return true;
+//     }
+//     $app = find("SELECT * FROM `applicants` WHERE `id` = ?", [$applicantId]);
+//     if (!$app) {
+//         return false;
+//     }
+//     require_once root() . '/includes/string.php';
+//     $fullName = toName($app['last_name'], $app['first_name'], $app['middle_name'], $app['ext_name']);
+//     $data = [
+//         'publication_id' => $publicationId,
+//         'vacancy_id' => $vacancyId,
+//         'applicant_id' => $applicantId,
+//         'applicant_name' => $fullName,
+//         'email' => $app['email'],
+//         'mobile' => $app['mobile'],
+//         'resume_path' => $app['resume_path'],
+//         'status' => 'pending',
+//         'submitted_on' => date('Y-m-d H:i:s')
+//     ];
+//     return insert('vacancy_applications', $data);
+// }
 
-function createApplication($publicationId, $vacancyId, $applicantName, $email, $mobile, $resumePath, $employeeId = null)
-{
-    $data = [
-        'publication_id' => $publicationId,
-        'vacancy_id' => $vacancyId,
-        'employee_id' => $employeeId,
-        'applicant_name' => $applicantName,
-        'email' => $email,
-        'mobile' => $mobile,
-        'resume_path' => $resumePath,
-        'status' => 'pending',
-        'submitted_on' => date('Y-m-d H:i:s')
-    ];
-    return insert('vacancy_applications', $data);
-}
+// function createApplication($publicationId, $vacancyId, $applicantName, $email, $mobile, $resumePath, $employeeId = null)
+// {
+//     $data = [
+//         'publication_id' => $publicationId,
+//         'vacancy_id' => $vacancyId,
+//         'employee_id' => $employeeId,
+//         'applicant_name' => $applicantName,
+//         'email' => $email,
+//         'mobile' => $mobile,
+//         'resume_path' => $resumePath,
+//         'status' => 'pending',
+//         'submitted_on' => date('Y-m-d H:i:s')
+//     ];
+//     return insert('vacancy_applications', $data);
+// }
 
-function updateApplicationStatus($id, $status)
-{
-    $data = [
-        'status' => $status
-    ];
-    return update('vacancy_applications', $data, '`id` = ?', [$id]);
-}
+// function updateApplicationStatus($id, $status)
+// {
+//     $data = [
+//         'status' => $status
+//     ];
+//     return update('vacancy_applications', $data, '`id` = ?', [$id]);
+// }
 
 function countApplicationsByPublication($publicationId)
 {
@@ -422,12 +418,12 @@ function countApplicationsByPublication($publicationId)
     return $result ? (int) $result['total'] : 0;
 }
 
-function countApplicationsByStatus($publicationId, $status)
-{
-    $sql = "SELECT COUNT(`id`) AS total FROM `vacancy_applications` WHERE `publication_id` = ? AND `status` = ?";
-    $res = find($sql, [$publicationId, $status]);
-    return $res ? (int) $res['total'] : 0;
-}
+// function countApplicationsByStatus($publicationId, $status)
+// {
+//     $sql = "SELECT COUNT(`id`) AS total FROM `vacancy_applications` WHERE `publication_id` = ? AND `status` = ?";
+//     $res = find($sql, [$publicationId, $status]);
+//     return $res ? (int) $res['total'] : 0;
+// }
 
 // Check if a vacancy is already published in any publication
 function isVacancyPublished($vacancy_id)
