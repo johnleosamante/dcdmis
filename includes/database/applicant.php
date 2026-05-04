@@ -16,6 +16,12 @@ function applicantCode($employee_id)
     return $result ? $result['code'] : null;
 }
 
+function applicantId($applicant_code)
+{
+    $result = find("SELECT `id` FROM `application_codes` WHERE `code` = ? LIMIT 1", [$applicant_code]);
+    return $result ? $result['id'] : null;
+}
+
 function prepareApplicantData(array $post)
 {
     $applicant_code = generateID();
@@ -94,52 +100,92 @@ function createApplicantCode($applicant_id, $applicant_code)
     return insert('application_codes', $data);
 }
 
-function updateApplicant($applicant_code, array $data)
+function applicantName($application_code, $uppercase = false)
 {
-    return update('applicants', $data, '`id` = ?', [$applicant_code]);
+    $applicantId = applicantId($application_code);
+
+    if (!$applicantId) {
+        return $application_code;
+    }
+
+    $data = employee($applicantId);
+
+    if (!$data) {
+        $data = applicant($applicantId);
+    }
+
+    if ($data) {
+        $formattedName = toName(
+            $data['last_name'],
+            $data['first_name'],
+            $data['middle_name'],
+            $data['name_extension'],
+            true
+        );
+        if ($uppercase) {
+            return strtoupper($formattedName);
+        }
+        return $formattedName;
+    }
+    return $application_code;
 }
 
-function deleteApplicant($applicant_code)
+// function updateApplicant($applicant_code, array $data)
+// {
+//     return update('applicants', $data, '`id` = ?', [$applicant_code]);
+// }
+
+// function deleteApplicant($applicant_code)
+// {
+//     return delete('applicants', '`id` = ?', [$applicant_code]);
+// }
+
+function applicant($applicant_id)
 {
-    return delete('applicants', '`id` = ?', [$applicant_code]);
+    return find("SELECT * FROM `applicants` WHERE `id` = ? LIMIT 1", [$applicant_id]);
 }
 
-function applicant($applicant_code)
-{
-    return find("SELECT * FROM `applicants` WHERE `id` = ? LIMIT 1", [$applicant_code]);
-}
+// function applicants($limit = 50, $offset = 0)
+// {
+//     return query("SELECT * FROM `applicants` ORDER BY `applied_at` DESC LIMIT ? OFFSET ?", [$limit, $offset]);
+// }
 
-function applicants($limit = 50, $offset = 0)
-{
-    return query("SELECT * FROM `applicants` ORDER BY `applied_at` DESC LIMIT ? OFFSET ?", [$limit, $offset]);
-}
+// function applicantCodeExists($applicant_code)
+// {
+//     return !empty(find("SELECT `id` FROM `applicants` WHERE `id` = ?", [$applicant_code]));
+// }
 
-function applicantCodeExists($applicant_code)
-{
-    return !empty(find("SELECT `id` FROM `applicants` WHERE `id` = ?", [$applicant_code]));
-}
+// function countApplicants()
+// {
+//     $sql = "SELECT COUNT(*) as total FROM `applicants`";
+//     $result = find($sql);
+//     return (int) ($result['total'] ?? 0);
+// }
 
-function countApplicants()
-{
-    $sql = "SELECT COUNT(*) as total FROM `applicants`";
-    $result = find($sql);
-    return (int) ($result['total'] ?? 0);
-}
+// function applicantsByDateRange($start_date, $end_date)
+// {
+//     $sql = "SELECT * FROM `applicants` WHERE DATE(`applied_at`) BETWEEN ? AND ? ORDER BY `applied_at` DESC";
+//     return query($sql, [$start_date, $end_date]);
+// }
 
-function applicantsByDateRange($start_date, $end_date)
-{
-    $sql = "SELECT * FROM `applicants` WHERE DATE(`applied_at`) BETWEEN ? AND ? ORDER BY `applied_at` DESC";
-    return query($sql, [$start_date, $end_date]);
-}
+// function searchApplicants($search_term)
+// {
+//     $term = "%{$search_term}%";
+//     $sql = "SELECT * FROM `applicants` 
+//             WHERE `first_name` LIKE ? 
+//             OR `last_name` LIKE ? 
+//             OR `middle_name` LIKE ? 
+//             OR `email_address` LIKE ? 
+//             ORDER BY `applied_at` DESC";
+//     return query($sql, [$term, $term, $term, $term]);
+// }
 
-function searchApplicants($search_term)
+function createApplication($publication_item_id, $application_code_id, $district = null)
 {
-    $term = "%{$search_term}%";
-    $sql = "SELECT * FROM `applicants` 
-            WHERE `first_name` LIKE ? 
-            OR `last_name` LIKE ? 
-            OR `middle_name` LIKE ? 
-            OR `email_address` LIKE ? 
-            ORDER BY `applied_at` DESC";
-    return query($sql, [$term, $term, $term, $term]);
+    $data = [
+        'publication_item_id' => $publication_item_id,
+        'application_code_id' => $application_code_id,
+        'district' => $district,
+    ];
+    return insert('vacancy_applications', $data);
 }
