@@ -96,23 +96,25 @@ function countActiveEmployees($station_id = null)
 
 function retirableEmployees($station_id = null)
 {
-    $currentYear = (int) date('Y');
     $retirementAge = 60;
-    $birthYearLimit = $currentYear - $retirementAge;
-    $params = [$birthYearLimit];
+    $params = [$retirementAge];
+
     $sql = "SELECT p.id, p.last_name, p.first_name, p.middle_name, p.name_extension, 
-                   p.sex, p.birthdate, p.agency_id, 
-                   ($currentYear - YEAR(p.birthdate)) AS year_age, 
-                   s.position_id, s.station_id, p.profile_picture 
+                   p.sex, p.birthdate, p.agency_id, p.profile_picture,
+                   TIMESTAMPDIFF(YEAR, p.birthdate, CURDATE()) AS exact_age, 
+                   s.position_id, s.station_id 
             FROM employees AS p 
             INNER JOIN station_assignments AS s ON p.id = s.employee_id 
             WHERE p.status = 'Active' 
-            AND YEAR(p.birthdate) <= ?";
+            AND TIMESTAMPDIFF(YEAR, p.birthdate, CURDATE()) >= ?";
+
     if ($station_id !== null) {
         $sql .= " AND s.station_id = ?";
         $params[] = $station_id;
     }
-    $sql .= " ORDER BY p.last_name ASC";
+
+    $sql .= " ORDER BY p.birthdate ASC, p.last_name ASC";
+
     $results = query($sql, $params);
     return is_array($results) ? $results : [];
 }
