@@ -20,7 +20,7 @@ messageAlert($showAlert, $message, $success);
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
         <?php
-        if ($isHrmis) {
+        if ($isHrmis && $isPersonnel) {
             contentTitleWithLink('Publications', customUri('hrmis', 'Publish Vacancies'), 'Add', 'fa-plus');
         } else {
             contentTitle('Publications');
@@ -71,10 +71,13 @@ messageAlert($showAlert, $message, $success);
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php
                                         linkDropdownItem(customUri('hrmis', 'Publication Details', $row['id']), 'View', 'fa-eye', 'View Publication Details');
-                                        linkDropdownItem(customUri('hrmis', 'Publish Vacancies', $row['id']), 'Edit', 'fa-edit', 'Edit Publication'); ?>
-                                        <div class="dropdown-divider"></div>
-                                        <?php
-                                        modalDropdownItem(uri() . '/modules/vacancies/delete-publication-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Publication');
+
+                                        if ($isHrmis && $isPersonnel) {
+                                            linkDropdownItem(customUri('hrmis', 'Publish Vacancies', $row['id']), 'Edit', 'fa-edit', 'Edit Publication'); ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php
+                                            modalDropdownItem(uri() . '/modules/vacancies/delete-publication-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Publication');
+                                        }
                                         ?>
                                     </div>
                                 </div>
