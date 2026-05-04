@@ -11,7 +11,8 @@ function displayLogo($width, $height, $marginBottom = '3', $url = '', $text = ''
 function messageAlert($show, $message, $success = true, $align = 'left')
 {
     if ($show): ?>
-        <div class="alert alert-<?= $success ? 'success' : 'danger' ?> text-<?= e($align) ?> p-2 d-flex align-items-start">
+        <div
+            class="alert alert-<?= $success ? 'success' : 'danger' ?> text-<?= e($align) ?> p-2 d-flex align-items-start small">
             <i class="fa fas fa-<?= $success ? 'info' : 'exclamation' ?>-circle mt-1 mr-1"></i>
             <div>
                 <?= $message ?>
