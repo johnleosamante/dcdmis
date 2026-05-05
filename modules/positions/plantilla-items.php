@@ -37,10 +37,8 @@ messageAlert($showAlert, $message, $success);
             <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="5%">#</th>
-                        <th class="align-middle" width="30%">Item Number</th>
-                        <th class="align-middle" width="25%">Position Title</th>
-                        <th class="align-middle" width="25%">Station / School</th>
+                        <th class="align-middle" width="60%">Item Number / Position</th>
+                        <th class="align-middle" width="25%">Station</th>
                         <th class="align-middle" width="10%">Status</th>
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
@@ -48,20 +46,17 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $count = 0;
                     $query = plantillaItems();
                     foreach ($query as $row):
-                        $count++;
                         $vacantClass = $row['is_vacant'] ? 'badge-success' : 'badge-secondary';
                         $vacantText = $row['is_vacant'] ? 'Vacant' : 'Filled';
                         ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?= $count ?></td>
-                            <td class="align-middle"><?= e($row['item_number']) ?></td>
                             <td class="align-middle">
-                                <div><?= e($row['official_title']) ?></div>
-                                <div><?= e('SG: ' . $row['salary_grade']) ?></div>
-                                <div><span class="badge badge-info">
+                                <div><?= e($row['item_number']) ?></div>
+                                <div><?= e($row['official_title']) . ' (' . e($row['salary_grade']) . ')' ?></div>
+                                <div>
+                                    <span class="badge badge-info">
                                         <?= e($row['employment_status']) ?>
                                     </span>
                                 </div>
@@ -99,10 +94,8 @@ messageAlert($showAlert, $message, $success);
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="5%">#</th>
-                        <th class="align-middle" width="30%">Item Number</th>
-                        <th class="align-middle" width="25%">Position Title</th>
-                        <th class="align-middle" width="25%">Station / School</th>
+                        <th class="align-middle" width="60%">Item Number / Position</th>
+                        <th class="align-middle" width="25%">Station</th>
                         <th class="align-middle" width="10%">Status</th>
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
