@@ -82,7 +82,6 @@ if ($code) {
 
                                         if (!isset($groups[$pid])) {
                                             $groups[$pid] = [
-                                                'id' => $row['id'],
                                                 'position' => $row['official_title'],
                                                 'salary_grade' => $row['salary_grade'],
                                                 'count' => 0
@@ -95,8 +94,8 @@ if ($code) {
                                     foreach ($groups as $pid => $group) { ?>
                                         <tr>
                                             <td class="text-center align-middle">
-                                                <input type="checkbox" name="position_ids[]" value="<?= cipher($group['id']) ?>"
-                                                    id="pos_<?= e($pid) ?>" style="transform: scale(1.5);">
+                                                <input type="checkbox" name="position_ids[]" value="<?= cipher($pid) ?>"
+                                                    id="pos_<?= cipher($pid) ?>" style="transform: scale(1.5);">
                                             </td>
                                             <td class="align-middle">
                                                 <label for="pos_<?= e($pid) ?>"
@@ -130,9 +129,9 @@ if ($code) {
                     <div class="form-group">
                         <div>
                             <label for="applicant-id" class="font-weight-bold mb-1">Applicant
-                            ID <?= showAsterisk() ?>
+                                ID <?= showAsterisk() ?>
                             </label>
-                            
+
                         </div>
                         <input type="text" class="form-control" id="applicant-id" name="applicant_id"
                             placeholder="Enter your 18-digit applicant ID..." required>
