@@ -46,7 +46,7 @@ messageAlert($showAlert, $message, $success);
                     foreach ($query as $row) { ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
-                                <div><?= e($row['official_title']) . " (SG " . e($row['salary_grade']) . ")" ?></div>
+                                <div><?= e($row['official_title']) . " (" . e($row['salary_grade']) . ")" ?></div>
                                 <div class="small"><?= e($row['category']) ?></div>
                             </td>
                             <td class="align-middle text-capitalize"><?= $row['total_plantilla_items'] ?></td>
