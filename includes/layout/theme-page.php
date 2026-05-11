@@ -47,8 +47,8 @@ require_once(root() . '/includes/layout/components.php');
     <script src="<?= uri() ?>/assets/js/sb-admin-2.min.js"></script>
 
     <?php if ($enableScripts): ?>
-        <script src="<?= uri() ?>/assets/vendor/datatables/jquery.dataTables.min.js"></script>
-        <script src="<?= uri() ?>/assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js" integrity="sha384-Udt767MMeKelGRBxaCfxX88YDLbViYdQ7T/gkRoB197Jf+OviZ+lsaRAOpS/MIjf" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js" integrity="sha384-vCX+UFRnh1Gp0hr9dL82snXI1HvdBaApGHMjbewoGQ69VkYcHt9jvTy+Q4CAWwPX" crossorigin="anonymous"></script>
         <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/dataTables.responsive.min.js"></script>
         <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <?php endif ?>
