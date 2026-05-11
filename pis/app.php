@@ -54,12 +54,21 @@ if (isset($_POST['save-payslip'])) {
             return;
         }
 
-        if (mime_content_type($temp) !== 'application/pdf') {
+        // Security: Use proper MIME type validation
+        if (!validateFileMimeType($temp, ['application/pdf'])) {
             $message = 'The choosen file is not an acceptable file (pdf). No changes have been made to payslip.';
             return;
         }
 
-        $ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
+        // Security: Validate file extension against whitelist
+        if (!validateFileExtension($_FILES['file-upload']['name'], ['pdf'])) {
+            $message = 'The choosen file has an invalid extension. No changes have been made to payslip.';
+            return;
+        }
+
+        // Security: Sanitize filename to prevent directory traversal
+        $sanitizedName = sanitizeFilename($_FILES['file-upload']['name']);
+        $ext = getFileExtension($sanitizedName);
         $newFilename = "uploads/payslip/{$employeeId}/{$employeeId}-" . date('YmdHis') . ".{$ext}";
 
         if (!move_uploaded_file($temp, "../{$newFilename}")) {
