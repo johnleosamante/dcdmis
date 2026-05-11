@@ -19,6 +19,36 @@ function accountPassword($employee_id, $password)
     );
 }
 
+function verifyAccountPassword(int $employee_id, string $plainPassword): array|bool
+{
+    $credentials = find(
+        "SELECT `employee_id`, `password`, `status` FROM `credentials` 
+        WHERE `employee_id` = ? LIMIT 1",
+        [$employee_id]
+    );
+    if (!$credentials) {
+        return false;
+    }
+    $storedHash = $credentials['password'];
+    if (password_get_info($storedHash)['algo'] !== null) {
+        if (password_verify($plainPassword, $storedHash)) {
+            if (password_needs_rehash($storedHash, PASSWORD_BCRYPT, ['cost' => 12])) {
+                $newHash = password_hash($plainPassword, PASSWORD_BCRYPT, ['cost' => 12]);
+                update('credentials', ['password' => $newHash], '`employee_id` = ?', [$employee_id]);
+            }
+            return $credentials;
+        }
+    } else {
+        $md5Hash = md5($plainPassword);
+        if (hash_equals($storedHash, $md5Hash)) {
+            $newHash = password_hash($plainPassword, PASSWORD_BCRYPT, ['cost' => 12]);
+            update('credentials', ['password' => $newHash], '`employee_id` = ?', [$employee_id]);
+            return $credentials;
+        }
+    }
+    return false;
+}
+
 function createAccount($employee_id, $password)
 {
     $data = [
@@ -39,7 +69,6 @@ function updateAccountPassword($employee_id, $password, $status = null)
     $data = [
         'password' => $password
     ];
-
     if (!empty($status)) {
         $data['status'] = $status;
     }
