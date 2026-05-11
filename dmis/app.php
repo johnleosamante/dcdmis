@@ -36,15 +36,20 @@ if (isset($_POST['save-school'])) {
 			return;
 		}
 
-		$mimeType = mime_content_type($temp);
 		$allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif'];
 
-		if (!in_array($mimeType, $allowedFileTypes)) {
+		if (!validateFileMimeType($temp, $allowedFileTypes)) {
 			$message = 'The chosen file is not an image file. No changes have been made to school information.';
 			return;
 		}
 
-		$ext = pathinfo($_FILES['logo-upload']['name'], PATHINFO_EXTENSION);
+		if (!validateFileExtension($_FILES['logo-upload']['name'], ['png', 'jpg', 'jpeg', 'gif'])) {
+			$message = 'The chosen file has an invalid extension. No changes have been made to school information.';
+			return;
+		}
+
+		$sanitizedName = sanitizeFilename($_FILES['logo-upload']['name']);
+		$ext = getFileExtension($sanitizedName);
 
 		if (!empty($logo) && file_exists(root() . "/{$logo}")) {
 			unlink(root() . "/{$logo}");
@@ -53,7 +58,7 @@ if (isset($_POST['save-school'])) {
 		$uploadDirectory = root() . "/uploads/school_logo/{$schoolId}";
 
 		if (!is_dir($uploadDirectory)) {
-			mkdir($uploadDirectory, 0777, true);
+			mkdir($uploadDirectory, 0755, true);
 		}
 
 		$uploadDate = date('YmdHis');
@@ -276,10 +281,6 @@ if (isset($_POST['delete-employee'])) {
 
 		if (deleteOtherInformation($employeeId) === false) {
 			throw new Exception('Failed to delete employee other information.');
-		}
-
-		if (deletePayslips($employeeId) === false) {
-			throw new Exception('Failed to delete employee payslips.');
 		}
 
 		if (deleteRecognitions($employeeId) === false) {
