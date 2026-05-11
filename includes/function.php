@@ -1,6 +1,11 @@
 <?php
 // include/function.php
 require_once('config.php');
+require_once('security.php');
+
+if (!defined('ENCRYPTION_KEY')) {
+    define('ENCRYPTION_KEY', getenv('ENCRYPTION_KEY') ?: 'your-app-encryption-key');
+}
 
 function dd($value)
 {
@@ -13,19 +18,20 @@ function dd($value)
     die();
 }
 
-function hashPassword($string)
-{
-    return md5($string);
-}
-
 function cipher($string)
 {
-    return base64_encode($string);
+    $encrypted = encrypt($string);
+    return $encrypted !== false ? $encrypted : base64_encode($string);
 }
 
 function decipher($string)
 {
-    return base64_decode($string);
+    $decrypted = decrypt($string);
+    if ($decrypted !== false) {
+        return $decrypted;
+    }
+    $base64Decoded = @base64_decode($string, true);
+    return $base64Decoded !== false ? $base64Decoded : $string;
 }
 
 function encode($string)
