@@ -21,4 +21,5 @@ switch ($code) {
         break;
 }
 
+http_response_code($code);
 $page = $appTitle = $error;
