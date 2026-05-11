@@ -3,7 +3,6 @@
 function setUserSession($user_id, $prefix)
 {
     $user = user($user_id);
-
     if (!$user) {
         return;
     }
@@ -11,7 +10,6 @@ function setUserSession($user_id, $prefix)
     $portal = $user['link'];
     $access = $user['access'];
     $station_id = $user['station_id'];
-
     $_SESSION["{$prefix}stationId"] = $station_id;
     $_SESSION["{$prefix}code"] = $access;
     $_SESSION["{$prefix}portal"] = $portal;
@@ -33,8 +31,6 @@ $appTitle = $page = 'Login';
 if (isset($_POST['login'])) {
     $email = sanitize($_POST['email'] ?? '');
     $password = sanitize($_POST['password'] ?? '');
-    $hashedPassword = hashPassword($password);
-
     $showAlert = true;
 
     if (empty($email) || empty($password)) {
@@ -47,10 +43,24 @@ if (isset($_POST['login'])) {
         return;
     }
 
-    $account = account($email);
-    $accountPassword = $account ? accountPassword($account['id'], $hashedPassword) : null;
+    $clientIdentifier = clientIp();
 
-    if (!$account || !$accountPassword) {
+    if (!checkRateLimit($clientIdentifier, 5, 300)) {
+        $remainingTime = getRateLimitRemainingTime($clientIdentifier, 300);
+        $message = "Too many login attempts. Please try again in {$remainingTime} seconds.";
+        return;
+    }
+
+    $account = account($email);
+
+    if (!$account) {
+        $message = 'Invalid login details! Try again.';
+        return;
+    }
+
+    $accountPassword = verifyAccountPassword($account['id'], $password);
+
+    if (!$accountPassword) {
         $message = 'Invalid login details! Try again.';
         return;
     }
@@ -59,7 +69,14 @@ if (isset($_POST['login'])) {
     $_SESSION["{$prefix}email"] = $account['email_address'];
 
     if (isset($_POST['remember'])) {
-        setcookie("{$prefix}login", $account['email_address'], time() + getSeconds(8), '/', uri(), false, true);
+        setcookie("{$prefix}login", $account['email_address'], [
+            'expires' => time() + getSeconds(8),
+            'path' => '/',
+            'domain' => parse_url(uri(), PHP_URL_HOST),
+            'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
     }
 
     setUserSession($userId, $prefix);
