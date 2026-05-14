@@ -137,16 +137,48 @@ if ($code) {
                             placeholder="Enter your 18-digit applicant ID..." required>
                     </div>
 
-                    <div class="form-group">
-                        <label for="pertinent-documents" class="font-weight-bold mb-0">Pertinent Documents (PDF only)
-                            <?= showAsterisk() ?></label>
-                        <small class="form-text text-muted">Download and refer to the <a
-                                href="<?= uri() . '/hrmis/apply/checklist-of-requirements-edited-2025-8.5x13in.pdf' ?>"
-                                target="_blank">checklist</a>
-                            of requirements on what to include on your pertinent documents.</small>
-                        <input type="file" class="form-control-file ml-3 mt-2" id="pertinent-documents"
-                            name="pertinent_documents">
-                        <small class="form-text text-muted ml-3">Max file upload size: 20MB</small>
+                    <div class="mb-3">
+                        <p class="font-weight-bold mb-0">Pertinent Documents (PDF only)</p>
+                        <small class="form-text text-muted">Review the <a
+                                href="https://www.deped.gov.ph/wp-content/uploads/DO_s2023_007.pdf" target="_blank">DepEd
+                                Order
+                                No. 007, s. 2023</a>, the Guidelines on
+                            Recruitment, Selection, and Appointment in the Deparment of Education for
+                            reference. Download and accomplish the <a
+                                href="https://drive.google.com/file/d/1-t8G_AMDZAVoME4e-i47ZDqXn1gOrLHO/view"
+                                target="_blank">checklist
+                                of requirements</a> for your application.</small>
+                    </div>
+
+                    <div class="table-responsive border rounded mb-3">
+                        <table class="table text-center mb-0" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th class="align-middle" width="70%" colspan="2">Basic Documentary Requirements</th>
+                                    <th class="align-middle" width="30%">Upload PDF File (Max 20mb)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $seq = 'a';
+                                foreach (basicDocumentaryRequirements() as $document): ?>
+                                    <tr>
+                                        <td class="align-middle"><?= $seq++ . '.' ?></td>
+                                        <td class="align-middle text-left"><?= e($document['description']) ?></td>
+                                        <td class="align-middle text-left"><input type="file" class="form-control-file"
+                                                name="<?= e($document['code']) ?>"></td>
+                                    </tr>
+                                <?php endforeach ?>
+                            </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <th class=" align-middle" width="70%" colspan="2">Basic Documentary Requirements
+                                    </th>
+                                    <th class="align-middle" width="30%">Upload PDF File (Max 20mb)</th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
 
                     <button name="submit-application" type="submit" class="btn btn-primary btn-block mt-2">
