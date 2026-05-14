@@ -2,7 +2,7 @@
 // modules/documents/school-transactions.php
 ?>
 
-<div class="tab-pane fade show active" id="school-transactions">
+<div class="tab-pane fade" id="school-transactions">
     <div class="row my-3">
         <div class="col table-responsive">
             <?php if ($isDmis) { ?>
@@ -13,7 +13,7 @@
                 </div>
             <?php } ?>
 
-            <table class="table table-hover mb-0 text-center" id="data-table-previous" width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table-next" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">Logo</th>
@@ -48,10 +48,10 @@
                                 <div class="small"><?= $school['id'] . ' | ' . $district . ' | ' . $school['address'] ?>
                                 </div>
                             </td>
-                            <td class="align-middle"><?= number_format(count(incomingDocuments($school['alias']))) ?></td>
-                            <td class="align-middle"><?= number_format(count(pendingDocuments($school['alias']))) ?></td>
-                            <td class="align-middle"><?= number_format(count(outgoingDocuments($school['alias']))) ?></td>
-                            <td class="align-middle"><?= number_format(count(ongoingDocuments($school['alias']))) ?></td>
+                            <td class="align-middle"><?= number_format(countIncomingDocuments($school['alias'])) ?></td>
+                            <td class="align-middle"><?= number_format(countPendingDocuments($school['alias'])) ?></td>
+                            <td class="align-middle"><?= number_format(countOutgoingDocuments($school['alias'])) ?></td>
+                            <td class="align-middle"><?= number_format(countOngoingDocuments($school['alias'])) ?></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>

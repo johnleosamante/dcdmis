@@ -2,7 +2,7 @@
 // modules/documents/school-transactions.php
 ?>
 
-<div class="tab-pane fade" id="section-transactions">
+<div class="tab-pane fade show active" id="section-transactions">
     <div class="row my-3">
         <div class="col table-responsive">
             <?php if ($isDmis) { ?>
@@ -13,7 +13,7 @@
                 </div>
             <?php } ?>
 
-            <table class="table table-hover mb-0 text-center" id="data-table-next" width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table-previous" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="40%">Section Name / Functional Division</th>
@@ -35,10 +35,10 @@
                                 </div>
                                 <div class="small"><?= e($section['functional_division']) ?></div>
                             </td>
-                            <td class="align-middle"><?= number_format(count(incomingDocuments($section['id']))) ?></td>
-                            <td class="align-middle"><?= number_format(count(pendingDocuments($section['id']))) ?></td>
-                            <td class="align-middle"><?= number_format(count(outgoingDocuments($section['id']))) ?></td>
-                            <td class="align-middle"><?= number_format(count(ongoingDocuments($section['id']))) ?></td>
+                            <td class="align-middle"><?= number_format(countIncomingDocuments($section['id'])) ?></td>
+                            <td class="align-middle"><?= number_format(countPendingDocuments($section['id'])) ?></td>
+                            <td class="align-middle"><?= number_format(countOutgoingDocuments($section['id'])) ?></td>
+                            <td class="align-middle"><?= number_format(countOngoingDocuments($section['id'])) ?></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
