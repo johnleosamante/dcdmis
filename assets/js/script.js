@@ -1,4 +1,4 @@
-// assets/js/chart-custom.js
+// assets/js/script.js
 
 if (window.history.replaceState) {
 	window.history.replaceState(null, null, window.location.href);
