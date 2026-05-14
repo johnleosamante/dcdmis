@@ -29,3 +29,7 @@ sidebarMenuItem(customUri('dts', 'Canceled Documents'), 'Canceled', 'fa-trash-al
 sidebarDivider();
 
 sidebarMenuItem(customUri('dts', 'Transactions Summary'), 'Summary', 'fa-chart-bar', isset($url) && str_contains($url, 'Summary'));
+
+if ($isRecordsPortal) {
+	sidebarMenuItem(customUri('dts', 'Transactions'), 'Transactions', 'fa-exchange-alt', isset($url) && str_contains($url, 'Transactions'));
+}
