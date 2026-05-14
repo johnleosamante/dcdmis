@@ -304,3 +304,81 @@ function generateComparativeLineChart(data, colors, element) {
 		},
 	});
 }
+
+function generateMultiSeriesBarChart(data, element) {
+	const statusColors = {
+		incoming: '#4e73df',
+		pending: '#f6c23e',
+		outgoing: '#36b9cc',
+		ongoing: '#e74a3b'
+	};
+
+	const statusLabels = {
+		incoming: 'Incoming',
+		pending: 'Pending',
+		outgoing: 'Outgoing',
+		ongoing: 'Ongoing'
+	};
+
+	const datasets = [];
+	const statuses = ['incoming', 'pending', 'outgoing', 'ongoing'];
+
+	statuses.forEach((status) => {
+		datasets.push({
+			label: statusLabels[status],
+			backgroundColor: statusColors[status],
+			data: data.map((item) => {
+				return item[status] || 0;
+			}),
+		});
+	});
+
+	const multiSeriesBarOptions = {
+		scales: {
+			xAxes: [
+				{
+					gridLines: {
+						display: false,
+						drawBorder: false,
+					},
+				},
+			],
+			yAxes: [
+				{
+					ticks: {
+						beginAtZero: true,
+					},
+				},
+			],
+		},
+		legend: {
+			display: true,
+			position: 'top',
+		},
+		tooltips: tooltips,
+		plugins: {
+			datalabels: {
+				color: function (ctx) {
+					return '#000';
+				},
+				anchor: 'end',
+				align: 'end',
+				font: font,
+				formatter: (value, context) => {
+					return value;
+				},
+			},
+		},
+	};
+
+	return new Chart(document.getElementById(element).getContext('2d'), {
+		type: 'bar',
+		data: {
+			labels: data.map((item) => {
+				return item.label;
+			}),
+			datasets: datasets,
+		},
+		options: multiSeriesBarOptions,
+	});
+}
