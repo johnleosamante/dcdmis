@@ -17,7 +17,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 
 <script src="<?= uri() ?>/assets/vendor/chart.js/Chart.min.js"></script>
 <script src="<?= uri() ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
-<script src="<?= uri() ?>/assets/js/chart-custom.js"></script>
+<script src="<?= uri() ?>/assets/js/chart-custom.js?v=1.2"></script>
 
 <div class="row">
 	<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
