@@ -59,9 +59,20 @@ if ($code) {
                 <div>
                     <?= messageAlert($showAlert, $message, $success) ?>
 
-                    <div class="alert alert-info p-2 d-flex align-items-start small">
-                        <i class="fas fa-info-circle mt-1 mr-1"></i>
-                        Check the box for each position you wish to apply for.
+                    <div class="form-group mb-4">
+                        <div>
+                            <label for="applicant-id" class="font-weight-bold mb-1">Applicant
+                                ID <?= showAsterisk() ?>
+                            </label>
+
+                        </div>
+                        <input type="text" class="form-control" id="applicant-id" name="applicant_id"
+                            placeholder="Enter your 18-digit applicant ID..." required>
+                    </div>
+
+                    <div class="mb-2">
+                        <p class="font-weight-bold mb-0">Positions</p>
+                        <small class="form-text text-muted">Check the box for each position you wish to apply for.</small>
                     </div>
 
                     <div class="table-responsive border rounded mb-4">
@@ -87,7 +98,6 @@ if ($code) {
                                                 'count' => 0
                                             ];
                                         }
-
                                         $groups[$pid]['count']++;
                                     }
 
@@ -126,18 +136,7 @@ if ($code) {
                         </table>
                     </div>
 
-                    <div class="form-group">
-                        <div>
-                            <label for="applicant-id" class="font-weight-bold mb-1">Applicant
-                                ID <?= showAsterisk() ?>
-                            </label>
-
-                        </div>
-                        <input type="text" class="form-control" id="applicant-id" name="applicant_id"
-                            placeholder="Enter your 18-digit applicant ID..." required>
-                    </div>
-
-                    <div class="mb-3">
+                    <div class="mb-2">
                         <p class="font-weight-bold mb-0">Pertinent Documents (PDF only)</p>
                         <small class="form-text text-muted">Review the <a
                                 href="https://www.deped.gov.ph/wp-content/uploads/DO_s2023_007.pdf" target="_blank">DepEd
@@ -151,33 +150,25 @@ if ($code) {
                     </div>
 
                     <div class="table-responsive border rounded mb-3">
-                        <table class="table text-center mb-0" width="100%" cellspacing="0">
+                        <table class="table mb-0" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th class="align-middle" width="70%" colspan="2">Basic Documentary Requirements</th>
-                                    <th class="align-middle" width="30%">Upload PDF File (Max 20mb)</th>
+                                    <th width="30%"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 $seq = 'a';
                                 foreach (basicDocumentaryRequirements() as $document): ?>
-                                    <tr>
-                                        <td class="align-middle"><?= $seq++ . '.' ?></td>
+                                    <tr class="small">
+                                        <td class="align-middle text-center"><?= $seq++ . '.' ?></td>
                                         <td class="align-middle text-left"><?= e($document['description']) ?></td>
                                         <td class="align-middle text-left"><input type="file" class="form-control-file"
-                                                name="<?= e($document['code']) ?>"></td>
+                                                accept=".pdf" name="<?= e($document['code']) ?>"></td>
                                     </tr>
                                 <?php endforeach ?>
                             </tbody>
-
-                            <tfoot>
-                                <tr>
-                                    <th class=" align-middle" width="70%" colspan="2">Basic Documentary Requirements
-                                    </th>
-                                    <th class="align-middle" width="30%">Upload PDF File (Max 20mb)</th>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
 
