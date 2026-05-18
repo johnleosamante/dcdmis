@@ -78,28 +78,29 @@ if (isset($_POST['save-document'])) {
 			}
 
 			foreach ($_FILES['file-upload']['tmp_name'] as $key => $tmp_name) {
-				$fileName = basename($_FILES['file-upload']['name'][$key]);
+				$originalName = basename($_FILES['file-upload']['name'][$key]);
+				$safeFileName = sanitizeFileName($originalName);
 				$fileType = $_FILES['file-upload']['type'][$key];
 				$fileSize = $_FILES['file-upload']['size'][$key];
-				$targetFilePath = "$uploadDirectory/" . time() . "_$fileName";
-				$extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+				$targetFilePath = "$uploadDirectory/" . time() . "_$safeFileName";
+				$extension = strtolower(pathinfo($safeFileName, PATHINFO_EXTENSION));
 
 				if (!in_array($fileType, $allowedTypes)) {
-					$upload_response .= "<br>File type not allowed: $fileName";
+					$upload_response .= "<br>File type not allowed: $safeFileName";
 					continue;
 				}
 
 				if ($fileSize > FILE_UPLOAD_SIZE_LIMIT) {
-					$upload_response .= "<br>File too large (Max 20MB): $fileName";
+					$upload_response .= "<br>File too large (Max 20MB): $safeFileName";
 					continue;
 				}
 
 				if (move_uploaded_file($tmp_name, $targetFilePath)) {
 					$attachment = $targetFilePath;
-					$upload_response .= "<br>File uploaded: $fileName";
+					$upload_response .= "<br>File uploaded: $safeFileName";
 					createDocumentLogAttachment($documentLogId, $attachment, ".$extension");
 				} else {
-					$upload_response .= "<br>Error uploading: $fileName";
+					$upload_response .= "<br>Error uploading: $originalName";
 				}
 			}
 		}
