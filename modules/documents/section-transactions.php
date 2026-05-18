@@ -30,9 +30,7 @@
                     foreach ($sections as $section): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle text-left">
-                                <div>
-                                    <?php linkItem(customUri($activeApp, 'Section Information', $section['id']), $section['name']) ?>
-                                </div>
+                                <div><?= $section['name'] ?></div>
                                 <div class="small"><?= e($section['functional_division']) ?></div>
                             </td>
                             <td class="align-middle"><?= number_format(countIncomingDocuments($section['id'])) ?></td>
