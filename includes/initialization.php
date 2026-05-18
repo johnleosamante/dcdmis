@@ -26,51 +26,13 @@ if (!headers_sent()) {
 }
 
 date_default_timezone_set("Asia/Manila");
-ini_set('upload_max_filesize', '50M');
-ini_set('post_max_size', '50M');
+ini_set('upload_max_filesize', '100M');
+ini_set('post_max_size', '105M');
 ini_set('max_input_time', 300);
 ini_set('max_execution_time', 300);
 ini_set('memory_limit', '1024M');
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-ini_set('error_log', '/var/log/php-errors.log');
-
-function custom_error_handler($errno, $errstr, $errfile, $errline)
-{
-    if (!(error_reporting() & $errno)) {
-        return false;
-    }
-    $error_id = uniqid('ERR-');
-    $error_message = "[$error_id] Error: [$errno] $errstr in $errfile on line $errline";
-    error_log($error_message);
-    if (!headers_sent()) {
-        http_response_code(500);
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
-        $domain = $_SERVER['HTTP_HOST'];
-        $base = "{$protocol}{$domain}";
-        include_once($_SERVER['DOCUMENT_ROOT'] . '/oops/500.php');
-        exit;
-    }
-}
-
-set_error_handler("custom_error_handler");
-
-function custom_exception_handler($exception)
-{
-    $error_id = uniqid('EXC-');
-    $error_message = "[$error_id] Uncaught Exception: " . $exception->getMessage() . " in " . $exception->getFile() . " on line " . $exception->getLine();
-    error_log($error_message);
-    if (!headers_sent()) {
-        http_response_code(500);
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
-        $domain = $_SERVER['HTTP_HOST'];
-        $base = "{$protocol}{$domain}";
-        include_once($_SERVER['DOCUMENT_ROOT'] . '/oops/500.php');
-        exit;
-    }
-}
-
-set_exception_handler("custom_exception_handler");
 
 const FILE_UPLOAD_SIZE_LIMIT = 1024 * 1024 * 20; // 20MB
 const IMAGE_UPLOAD_SIZE_LIMIT = 1024 * 1024 * 2.5; // 2.5MB
@@ -92,6 +54,7 @@ $portal = $_SESSION["{$prefix}portal"] ?? null;
 $hasPortal = !empty($portal);
 $isSchoolPortal = $portal === 'sch_portal';
 $isRecordsPortal = $portal === 'rec_portal';
+$isAdminPortal = $portal === 'adm_portal';
 $isPersonnel = $code === 'PER';
 
 if (function_exists('verify_csrf_token')) {
