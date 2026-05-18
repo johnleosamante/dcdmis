@@ -1,6 +1,6 @@
 <?php
 // modules/documents/school-trainsactions.php
-if (!$isDmis && !($isDts && $isRecordsPortal)) {
+if (!$isDmis && !($isDts && $isRecordsPortal) && !($isDts && $isAdminPortal)) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
