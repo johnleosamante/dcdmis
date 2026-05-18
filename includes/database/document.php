@@ -588,3 +588,23 @@ function documentSearch($string)
             LIMIT 1000";
     return query($sql, [$likeTerm, $string]);
 }
+
+function getStationTransactionCounts($station_id)
+{
+    $sql = "SELECT 
+        COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 THEN l.document_transaction_id END) AS incoming,
+        COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS pending,
+        COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS outgoing,
+        COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL THEN t.id END) AS ongoing
+    FROM `document_transaction_logs` AS l
+    LEFT JOIN `document_transactions` AS t 
+        ON l.document_transaction_id = t.id
+    WHERE l.status_id NOT IN (10, 11)";
+    $result = find($sql, [$station_id, $station_id, $station_id, $station_id]);
+    return [
+        'incoming' => (int) ($result['incoming'] ?? 0),
+        'pending' => (int) ($result['pending'] ?? 0),
+        'outgoing' => (int) ($result['outgoing'] ?? 0),
+        'ongoing' => (int) ($result['ongoing'] ?? 0)
+    ];
+}
