@@ -43,7 +43,7 @@
                             </td>
                             <td class="align-middle text-left">
                                 <div>
-                                    <?php linkItem(customUri($activeApp, 'School Information', $school['id']), "$schoolName (" . $school['alias'] . ')') ?>
+                                    <?= "$schoolName (" . $school['alias'] . ')' ?>
                                 </div>
                                 <div class="small"><?= $school['id'] . ' | ' . $district . ' | ' . $school['address'] ?>
                                 </div>
