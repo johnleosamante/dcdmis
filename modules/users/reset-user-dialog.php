@@ -9,7 +9,7 @@ require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$employee = employee($employeeId);
+$employee = employee((int) $employeeId);
 $modalTitle = 'Employee not found';
 $hasEmployee = false;
 $depedEmail = $temporaryPassword = '';
