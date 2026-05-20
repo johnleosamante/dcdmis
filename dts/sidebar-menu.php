@@ -2,10 +2,11 @@
 // dts/sidebar-menu.php
 sidebarDivider();
 
-$countIncoming = number_format(countIncomingDocuments($station));
-$countPending = number_format(countPendingDocuments($station));
-$countOutgoing = number_format(countOutgoingDocuments($station));
-$countOngoing = number_format(countOngoingDocuments($station));
+$count = getStationTransactionCounts($station);
+$countIncoming = number_format($count['incoming']);
+$countPending = number_format($count['pending']);
+$countOutgoing = number_format($count['outgoing']);
+$countOngoing = number_format($count['ongoing']);
 
 sidebarModalItem(uri() . '/modules/documents/save-document-dialog.php', 'New Document', 'fa-plus');
 sidebarMenuItem(customUri('dts', 'Incoming Documents'), 'Incoming', 'fa-file-download', isset($url) && str_contains($url, 'Incoming'), $countIncoming);
@@ -30,6 +31,6 @@ sidebarDivider();
 
 sidebarMenuItem(customUri('dts', 'Section Summary'), 'Summary', 'fa-chart-bar', isset($url) && str_contains($url, 'Summary'));
 
-if ($isRecordsPortal || $isAdminPortal) {
+if ($isRecordsPortal || $isAdminPortal || $isICT) {
 	sidebarMenuItem(customUri('dts', 'Transactions'), 'Transactions', 'fa-exchange-alt', isset($url) && str_contains($url, 'Transactions'));
 }
