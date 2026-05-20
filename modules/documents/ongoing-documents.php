@@ -61,13 +61,7 @@ if (count($query) === 1000) {
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 
-                                        if ($row['created_from'] === $station) {
-                                            linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true); ?>
-                                            <div class="dropdown-divider"></div>
-                                            <?php
-                                            modalDropdownItem(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($row['id']), 'Cancel', 'fa-trash-alt', 'Cancel Document');
-                                        }
-                                        ?>
+                                        linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true); ?>
                                     </div>
                                 </div>
                             </td>
