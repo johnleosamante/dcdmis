@@ -11,7 +11,7 @@ require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
 $employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$employee = employee($employeeId);
+$employee = employee((int) $employeeId);
 $dtsUser = $hrmisUser = $dmisUser = $hrtdmsUser = $dtsDivisionUser = false;
 $stationId = $depedEmail = $dtsUserStation = '';
 $modalTitle = 'User not found';
