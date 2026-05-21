@@ -1,11 +1,6 @@
 <?php
 // include/function.php
 require_once('config.php');
-require_once('security.php');
-
-if (!defined('ENCRYPTION_KEY')) {
-    define('ENCRYPTION_KEY', getenv('ENCRYPTION_KEY') ?: 'your-app-encryption-key');
-}
 
 function dd($value)
 {
@@ -18,20 +13,19 @@ function dd($value)
     die();
 }
 
+function hashPassword(string $password): string
+{
+    return password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+}
+
 function cipher($string)
 {
-    $encrypted = encrypt($string);
-    return $encrypted !== false ? $encrypted : base64_encode($string);
+    return base64_encode($string);
 }
 
 function decipher($string)
 {
-    $decrypted = decrypt($string);
-    if ($decrypted !== false) {
-        return $decrypted;
-    }
-    $base64Decoded = @base64_decode($string, true);
-    return $base64Decoded !== false ? $base64Decoded : $string;
+    return base64_decode($string);
 }
 
 function encode($string)
@@ -54,17 +48,6 @@ function uri($domain = null)
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
     $root = $domain !== null ? $domain : $_SERVER['HTTP_HOST'];
     return "{$protocol}{$root}";
-}
-
-function isWeekend()
-{
-    $day = date('N');
-    return $day > 5;
-}
-
-function isOfficialTime($startTime = '06:30:00', $endTime = '18:30:00')
-{
-    return (time() >= strtotime($startTime) && time() <= strtotime($endTime));
 }
 
 function customUri($page, $view, $id = null, $domain = null)
@@ -176,13 +159,6 @@ function getDateDifference($date)
     return $now->diff($bdate)->y;
 }
 
-if (!function_exists('str_contains')) {
-    function str_contains($haystack, $needle)
-    {
-        return $needle !== '' && mb_strpos($haystack, $needle) !== false;
-    }
-}
-
 function e($string)
 {
     return htmlspecialchars((string) $string, ENT_QUOTES, 'UTF-8');
@@ -213,6 +189,66 @@ function verify_csrf_token()
             die('CSRF token validation failed.');
         }
     }
+}
+
+function validateFileMimeType(string $filePath, array $allowedMimes): bool
+{
+    if (!file_exists($filePath)) {
+        return false;
+    }
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $filePath);
+    finfo_close($finfo);
+    return in_array($mimeType, $allowedMimes, true);
+}
+
+function getFileExtension(string $filename): string
+{
+    return strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+}
+
+function validateFileExtension(string $filename, array $allowedExtensions): bool
+{
+    $ext = getFileExtension($filename);
+    return in_array($ext, $allowedExtensions, true);
+}
+
+function sanitizeFilename(string $filename): string
+{
+    $filename = basename($filename);
+    $filename = str_replace("\0", '', $filename);
+    $filename = preg_replace('/[^a-zA-Z0-9._-]/', '', $filename);
+    $filename = preg_replace('/\.{2,}/', '.', $filename);
+    return $filename;
+}
+
+function checkRateLimit(string $identifier, int $maxAttempts = 5, int $windowSeconds = 300): bool
+{
+    $sessionKey = "rate_limit_{$identifier}";
+    if (!isset($_SESSION[$sessionKey])) {
+        $_SESSION[$sessionKey] = [];
+    }
+    $now = time();
+    $_SESSION[$sessionKey] = array_filter($_SESSION[$sessionKey], function ($timestamp) use ($now, $windowSeconds) {
+        return $timestamp > ($now - $windowSeconds);
+    });
+    if (count($_SESSION[$sessionKey]) >= $maxAttempts) {
+        return false;
+    }
+    $_SESSION[$sessionKey][] = $now;
+    return true;
+}
+
+function getRateLimitRemainingTime(string $identifier, int $windowSeconds = 300): int
+{
+    $sessionKey = "rate_limit_{$identifier}";
+    if (!isset($_SESSION[$sessionKey]) || empty($_SESSION[$sessionKey])) {
+        return 0;
+    }
+    $oldestAttempt = min($_SESSION[$sessionKey]);
+    $resetTime = $oldestAttempt + $windowSeconds;
+    $remaining = $resetTime - time();
+    return max(0, $remaining);
 }
 
 require_once('initialization.php');
