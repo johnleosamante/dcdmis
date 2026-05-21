@@ -1,7 +1,7 @@
 <?php
 // modules/vacancies/publication-details.php
 
-if (!$isHrmpsb && !$isHrmis) {
+if (!$isHrmis) {
     require_once root() . '/modules/error/403.php';
     return;
 }

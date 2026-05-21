@@ -1,7 +1,7 @@
 <?php
 // modules/vacancies/filled-vacancies.php
 
-if (!$isHrmis && !$isHrmpsb) {
+if (!$isHrmis) {
     require_once root() . '/modules/error/403.php';
     return;
 }
@@ -24,7 +24,7 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
-        <?php if ($isHrmpsb || $isHrmis) { ?>
+        <?php if ($isHrmis) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
                 <div class="d-inline-block">
                     <?php linkButtonSplit(customUri('export', 'filled-vacancies'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success') ?>

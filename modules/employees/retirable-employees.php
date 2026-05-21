@@ -1,6 +1,6 @@
 <?php
 // modules/employees/active-employees.php
-if (!$isHrmis && !$isHrmpsb) {
+if (!$isHrmis) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -45,7 +45,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
                         <th class="align-middle" width="25%">Station</th>
-                        <?php if (!$isHrtdms && !$isHrmpsb): ?>
+                        <?php if (!$isHrtdms): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>
                     </tr>
@@ -85,7 +85,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']) ?>
                             </td>
-                            <?php if (!$isHrtdms && !$isHrmpsb): ?>
+                            <?php if (!$isHrtdms): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
@@ -122,7 +122,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
                         <th class="align-middle" width="25%">Station</th>
-                        <?php if (!$isHrtdms && !$isHrmpsb): ?>
+                        <?php if (!$isHrtdms): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>
                     </tr>
