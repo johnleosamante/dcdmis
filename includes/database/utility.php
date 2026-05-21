@@ -16,7 +16,7 @@ function stationName($station_id)
     return $station_id;
 }
 
-function userName($employee_id, $uppercase = false)
+function userName($employee_id, $uppercase = false, $fname_first = false, $middle_initial = true)
 {
     $user = employee($employee_id);
     if ($user) {
@@ -25,11 +25,14 @@ function userName($employee_id, $uppercase = false)
             $user['first_name'],
             $user['middle_name'],
             $user['name_extension'],
-            true
+            $fname_first,
+            $middle_initial
         );
-        $prefix = toString($user['name_prefix'], '', ' ');
-        $suffix = toString($user['name_suffix'], ', ');
-        $formattedName = "{$prefix}{$formattedName}{$suffix}";
+        if ($fname_first) {
+            $prefix = toString($user['name_prefix'], '', ' ');
+            $suffix = toString($user['name_suffix'], ', ');
+            $formattedName = "{$prefix}{$formattedName}{$suffix}";
+        }
         if ($uppercase) {
             return strtoupper($formattedName);
         }
