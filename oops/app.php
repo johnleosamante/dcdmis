@@ -12,12 +12,9 @@ switch ($code) {
         $error = 'Page Not Found';
         break;
     case '500':
+    default:
         $file = '500';
         $error = 'Server Error';
-        break;
-    default:
-        $file = 'error';
-        $error = 'Unexpected Error';
         break;
 }
 
