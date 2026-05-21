@@ -43,9 +43,9 @@ function documentType(int $document_type_id): string
 
 function document($document_transaction_id)
 {
-    $sql = "SELECT t.id, t.document_type_id, t.description, t.created_from, t.head_id, t.created_at, l.status_id FROM `document_transactions` AS t
-            INNER JOIN `document_transaction_logs` AS l ON l.document_transaction_id = t.id
-            WHERE t.id = ? AND l.is_new = 1 LIMIT 1";
+    $sql = "SELECT t.id, t.document_type_id, t.description, t.created_from, t.head_id, t.created_at, l.status_id FROM `document_transactions` AS t 
+            LEFT JOIN `document_transaction_logs` AS l ON l.document_transaction_id = t.id AND l.is_new = 1 
+            WHERE t.id = ? LIMIT 1";
     return find($sql, [$document_transaction_id]);
 }
 
