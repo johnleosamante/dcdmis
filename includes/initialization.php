@@ -58,6 +58,4 @@ $isAdminPortal = $portal === 'adm_portal';
 $isICT = $code === 'ICT';
 $isPersonnel = $code === 'PER';
 
-if (function_exists('verify_csrf_token')) {
-    verify_csrf_token();
-}
+verify_csrf_token();
