@@ -16,7 +16,7 @@ function stationName($station_id)
     return $station_id;
 }
 
-function userName($employee_id, $uppercase = false, $fname_first = false, $middle_initial = true)
+function userName($employee_id, $uppercase = false, $fname_first = true, $middle_initial = true)
 {
     $user = employee($employee_id);
     if ($user) {
