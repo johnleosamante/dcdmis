@@ -1,5 +1,5 @@
 <?php
-// modules/documents/incomplete-document-dialog.php
+// modules/documents/reopen-document-dialog.php
 require_once('../../includes/function.php');
 require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/database/database.php');
@@ -19,7 +19,7 @@ if ($document) {
     $documentLogs = documentLogs($documentId)[0];
     $documentStatus = strtolower(documentTransactionStatus($documentLogs['status_id']));
     $hasDocument = !str_contains($documentStatus, 'cancel') && str_contains($documentStatus, 'complete') && $documentLogs['received_from'] === $station && $documentLogs['forwarded_to'] === null;
-    $modalTitle = $hasDocument ? 'Mark Incomplete Document' : $modalTitle;
+    $modalTitle = $hasDocument ? 'Reopen Document' : $modalTitle;
 }
 ?>
 
@@ -63,7 +63,7 @@ if ($document) {
             <div class="modal-footer">
                 <?php if ($hasDocument): ?>
                     <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
-                    <button class="btn btn-danger" name="incomplete-document" type="submit">Continue</button>
+                    <button class="btn btn-danger" name="reopen-document" type="submit">Continue</button>
                 <?php endif ?>
                 <?php cancelModalButton() ?>
             </div>
