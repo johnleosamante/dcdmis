@@ -71,7 +71,7 @@ if (count($query) === 1000) {
                                             modalDropdownItem(uri() . '/modules/documents/forward-document-dialog.php?id=' . cipher($row['id']), 'Forward', 'fa-share', 'Forward Document');
                                         }
 
-                                        modalDropdownItem(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($row['id']), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document');
+                                        modalDropdownItem(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($row['id']), 'Mark Complete', 'fa-check-circle', 'Mark Complete Document');
 
                                         if ($row['created_from'] === $station) {
                                             linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true); ?>
