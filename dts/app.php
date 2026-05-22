@@ -344,7 +344,7 @@ if (isset($_POST['complete-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
-			$message = 'No document has been marked completed.';
+			$message = 'No document has been marked complete.';
 			return;
 		}
 
@@ -352,7 +352,7 @@ if (isset($_POST['complete-document'])) {
 		createSystemLog($stationId, $userId, "$status document", $documentId, clientIp());
 		commit();
 
-		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been mark completed successfully.';
+		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been successfully marked complete.';
 		$success = true;
 	} catch (Exception $e) {
 		rollBack();
@@ -360,10 +360,10 @@ if (isset($_POST['complete-document'])) {
 	}
 }
 
-if (isset($_POST['incomplete-document'])) {
+if (isset($_POST['reopen-document'])) {
 	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$remarks = sanitize($_POST['remarks']);
-	$status = documentStatusId('Received');
+	$status = documentStatusId('Reopened');
 	$showAlert = true;
 
 	beginTransaction();
@@ -372,15 +372,15 @@ if (isset($_POST['incomplete-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
-			$message = 'No document has been marked incomplete.';
+			$message = 'No document has been reopened.';
 			return;
 		}
 
 		createDocumentLog($documentId, $userId, $station, null, $status, true, $remarks);
-		createSystemLog($stationId, $userId, 'Marked incomplete document', $documentId, clientIp());
+		createSystemLog($stationId, $userId, 'Reopened document', $documentId, clientIp());
 		commit();
 
-		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been marked incomplete successfully.';
+		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been reopened successfully.';
 		$success = true;
 	} catch (Exception $e) {
 		rollBack();
