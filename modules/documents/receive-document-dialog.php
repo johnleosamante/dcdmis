@@ -43,17 +43,33 @@ if ($document) {
                         <input id="type" class="form-control text-uppercase" value="<?= documentType($type) ?>" disabled>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mb-0">
                         <label for="description" class="mb-0">Description</label>
                         <textarea id="description" class="form-control text-uppercase" rows="3"
                             disabled><?= e($description) ?></textarea>
                     </div>
 
-                    <div class="form-group mb-0">
-                        <label for="details" class="mb-0">Additional details</label>
-                        <textarea id="details" class="form-control text-uppercase" rows="2"
-                            disabled><?= e($details) ?></textarea>
-                    </div>
+                    <?php if (!empty($details)): ?>
+                        <div class="form-group mt-3 mb-0">
+                            <label for="details" class="mb-0">Additional details</label>
+                            <textarea id="details" class="form-control text-uppercase" rows="2"
+                                disabled><?= e($details) ?></textarea>
+                        </div>
+                    <?php endif;
+
+                    $documentLogAttachments = documentLogAttachments($documentLogs['id']);
+
+                    if ($documentLogAttachments): ?>
+                        <div class="form-group mt-3 mb-0">
+                            <label class="mb-0">Attachments</label>
+                            <div>
+                                <?php foreach ($documentLogAttachments as $attachment) {
+                                    $file = explode('_', $attachment['file_name'], 2);
+                                    linkButtonSplit("$baseUri/" . $attachment['file_name'], $file[1], 'fa-paperclip', "View $file[1]", 'secondary', true);
+                                } ?>
+                            </div>
+                        </div>
+                    <?php endif ?>
                 <?php } else {
                     missingAlert($modalTitle);
                 } ?>
