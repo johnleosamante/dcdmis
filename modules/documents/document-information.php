@@ -72,12 +72,14 @@ $logs = documentLogs($documentId);
                 <th class="align-top pr-3" scope="row">From:</th>
                 <td class="text-uppercase"><?= stationName($document['created_from']) ?></td>
             </tr>
-            <tr>
-                <th class="align-top pr-3" scope="row">Status:</th>
-                <td class="text-uppercase">
-                    <?= documentTransactionStatus($document['status_id']) ?>
-                </td>
-            </tr>
+            <?php if ($document['status_id'] !== null): ?>
+                <tr>
+                    <th class="align-top pr-3" scope="row">Status:</th>
+                    <td class="text-uppercase">
+                        <?= documentTransactionStatus($document['status_id']) ?>
+                    </td>
+                </tr>
+            <?php endif ?>
         </table>
 
         <div class="d-flex align-items-center flex-row-reverse mt-2 mb-3">
@@ -100,7 +102,7 @@ $logs = documentLogs($documentId);
                         }
                         if (isDocument($documentId, 'Restored'))
                             break;
-                        modalButtonSplit(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
+                        modalButtonSplit(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Complete', 'fa-check-circle', 'Mark Complete Document', 'success');
                         break;
                     case 'Outgoing Documents':
                         if (!isDocument($documentId, 'Complete') && !isDocument($documentId, 'cancel')) {
@@ -110,7 +112,7 @@ $logs = documentLogs($documentId);
                     case 'Completed Documents':
                     case 'Received Documents':
                         if (isDocument($documentId, 'complete') && $logs[0]['received_from'] === $station) {
-                            modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-times-circle', 'Mark Incomplete Document', 'danger');
+                            modalButtonSplit(uri() . '/modules/documents/reopen-document-dialog.php?id=' . cipher($documentId), 'Reopen', 'fa-envelope-open', 'Reopen Document', 'danger');
                         }
                         break;
                     case 'Canceled Documents':
@@ -158,7 +160,7 @@ $logs = documentLogs($documentId);
                 $logId = $log['id'];
                 $from = stationName($log['received_from']);
                 $to = stationName($log['forwarded_to']);
-                $displayName = userName($log['processor_id']);
+                $displayName = userName($log['processor_id'], true, true);
                 $user = employee($log['processor_id']);
                 $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '/' . $user['profile_picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
