@@ -432,7 +432,8 @@ function documentLogs($document_transaction_id)
                 forwarded_to, 
                 status_id, 
                 details, 
-                created_at 
+                created_at,
+                updated_at 
             FROM `document_transaction_logs` 
             WHERE `document_transaction_id` = ? 
             ORDER BY `created_at` DESC";
