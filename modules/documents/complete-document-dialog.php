@@ -19,7 +19,7 @@ if ($document) {
     $documentLogs = documentLogs($documentId)[0];
     $documentStatus = strtolower(documentTransactionStatus($documentLogs['status_id']));
     $hasDocument = !str_contains($documentStatus, 'complete') && !str_contains($documentStatus, 'cancel') && $documentLogs['received_from'] === $station && $documentLogs['forwarded_to'] === null;
-    $modalTitle = $hasDocument ? 'Mark Completed Document' : $modalTitle;
+    $modalTitle = $hasDocument ? 'Mark Complete Document' : $modalTitle;
 }
 ?>
 
