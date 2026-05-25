@@ -26,9 +26,14 @@ $to = "$previousYear-12-31";
             <div class="modal-body">
                 <div class="alert alert-info text-left p-2 d-flex align-items-start small">
                     <i class="fa fas fa-info-circle mt-1 mr-1"></i>
-                    <div>This action will receive all incoming documents to and complete all received/pending documents
-                        of
-                        [<?= strtoupper($stationName) ?>]. If you are sure about this action, click CONTINUE to proceed.
+                    <div>This action will :
+                        <ul class="my-0">
+                            <li>Receive all incoming documents to this station</li>
+                            <li>Complete all pending documents by this station</li>
+                            <li>Cancel all created documents by this station that are not yet received by a destination
+                            </li>
+                        </ul>
+                        If you are sure about this action, click CONTINUE to proceed.
                     </div>
                 </div>
 
@@ -39,14 +44,14 @@ $to = "$previousYear-12-31";
                 </div>
 
                 <div class="form-group">
-                    <label for="date-from" class="mb-0">Start Date</label>
-                    <input id="date-from" type="date" value="<?= e($from) ?>" name="date-from" class="form-control"
+                    <label for="from-date" class="mb-0">Start Date</label>
+                    <input id="from-date" type="date" value="<?= e($from) ?>" name="from-date" class="form-control"
                         required>
                 </div>
 
                 <div class="form-group">
-                    <label for="date-to" class="mb-0">End Date</label>
-                    <input id="date-to" type="date" value="<?= e($to) ?>" name="date-to" class="form-control" required>
+                    <label for="to-date" class="mb-0">End Date</label>
+                    <input id="to-date" type="date" value="<?= e($to) ?>" name="to-date" class="form-control" required>
                 </div>
 
                 <?= requiredLegend(0) ?>
