@@ -448,11 +448,66 @@ if (isset($_POST['remove-user'])) {
 	createSystemLog($stationId, $userId, 'Removed user privileges', $employeeId, clientIp());
 }
 
-$fromDate = isset($_GET['from']) ? sanitize($_GET['from']) : date('Y') . '-01-01';
-$toDate = isset($_GET['to']) ? sanitize($_GET['to']) : date('Y-m-d');
+$from = isset($_GET['from']) ? sanitize($_GET['from']) : date('Y') . '-01-01';
+$to = isset($_GET['to']) ? sanitize($_GET['to']) : date('Y-m-d');
 
 if (isset($_POST['transactions-summary-filter'])) {
-	$fromDate = date('Y-m-d', strtotime($_POST['date-from']));
-	$toDate = date('Y-m-d', strtotime($_POST['date-to']));
-	redirect(customUri('dmis', sanitize(decipher($_GET['v']))) . '&from=' . $fromDate . '&to=' . $toDate);
+	$from = date('Y-m-d', strtotime($_POST['date-from']));
+	$to = date('Y-m-d', strtotime($_POST['date-to']));
+	redirect(customUri('dmis', sanitize(decipher($_GET['v']))) . '&from=' . $from . '&to=' . $to);
+}
+
+if (isset($_POST['bulk-process-documents'])) {
+	$targetStationId = sanitize($_POST['station_id'] ?? null);
+	$stationName = strtoupper(stationName($targetStationId));
+	$previousYear = date('Y', strtotime('-1 year'));
+	$from = sanitize($_POST['from-date'] ?? "$previousYear-01-01");
+	$to = sanitize($_POST['to-date'] ?? "$previousYear-12-31");
+	$showAlert = true;
+	$successCount = 0;
+	$failedCount = 0;
+	$documentIds = incomingDocuments($targetStationId, $from, $to);
+
+	if (empty($documentIds)) {
+		$message = "No incoming documents found for [$stationName] from [$from] to [$to].";
+		return;
+	}
+
+	foreach ($documentIds as $documentId) {
+		beginTransaction();
+
+		try {
+			$updatedDocument = updateDocumentLogsDone($documentId);
+
+			if ($updatedDocument === false) {
+				$failedCount++;
+				rollBack();
+				continue;
+			}
+
+			$receivedStatusId = documentStatusId('Received');
+			createDocumentLog($documentId, $userId, $targetStationName, null, $receivedStatusId, true);
+			createSystemLog($stationId, $userId, 'Received document (Bulk)', $documentId, clientIp());
+			updateDocumentLogsDone($documentId);
+
+			$completedStatusId = documentStatusId('Completed');
+			$remarks = "Bulk processed: Received and Completed automatically.";
+
+			createDocumentLog($documentId, $userId, $targetStationName, null, $completedStatusId, true, $remarks);
+			createSystemLog($stationId, $userId, "$completedStatusId document (Bulk)", $documentId, clientIp());
+			commit();
+
+			$successCount++;
+		} catch (Exception $e) {
+			rollBack();
+			$failedCount++;
+		}
+	}
+
+	$success = $successCount > 0;
+	$message = "Bulk processing complete. Successfully processed {$successCount} documents.";
+
+	if ($failedCount > 0) {
+		$message .= " Failed to process {$failedCount} documents.";
+	}
 }

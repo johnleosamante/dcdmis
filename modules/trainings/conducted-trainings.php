@@ -27,7 +27,7 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
-        <?= dateFilterForm($fromDate, $toDate) ?>
+        <?= dateFilterForm($from, $to) ?>
 
         <div class="table-responsive">
             <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
@@ -46,7 +46,7 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $trainings = conductedTrainings($fromDate, $toDate);
+                    $trainings = conductedTrainings($from, $to);
                     foreach ($trainings as $training): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
