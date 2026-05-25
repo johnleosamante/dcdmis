@@ -132,7 +132,7 @@ function updateDocument($document_transaction_id, $description, $document_type_i
     return update('document_transactions', $data, "`id` = ?", [$document_transaction_id]);
 }
 
-function incomingDocuments($station_id)
+function incomingDocuments($station_id, $from_date, $to_date)
 {
     $sql = "SELECT 
                 t.id, 
@@ -147,8 +147,10 @@ function incomingDocuments($station_id)
                 AND l.forwarded_to = ?
                 AND l.status_id NOT IN (10, 11)
                 AND l.is_new = 1 
+                AND l.`created_at` >= ? 
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
             ORDER BY l.created_at DESC LIMIT 1000";
-    $results = query($sql, [$station_id]);
+    $results = query($sql, [$station_id, $from_date, $to_date]);
     return is_array($results) ? $results : [];
 }
 
@@ -178,7 +180,7 @@ function isIncomingDocument($document_transaction_id, $station_id): bool
     return (bool) $results;
 }
 
-function pendingDocuments($station_id)
+function pendingDocuments($station_id, $from_date, $to_date)
 {
     $sql = "SELECT 
                 t.id, 
@@ -192,8 +194,10 @@ function pendingDocuments($station_id)
                 AND l.forwarded_to IS NULL
                 AND l.status_id NOT IN (10, 11)
                 AND l.is_new = 1
+                AND l.`created_at` >= ? 
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
             ORDER BY l.created_at DESC LIMIT 1000";
-    $results = query($sql, [$station_id]);
+    $results = query($sql, [$station_id, $from_date, $to_date]);
     return is_array($results) ? $results : [];
 }
 
@@ -221,7 +225,7 @@ function isPendingDocument($document_transaction_id, $station_id): bool
     return (bool) $results;
 }
 
-function outgoingDocuments($station_id)
+function outgoingDocuments($station_id, $from_date, $to_date)
 {
     $sql = "SELECT 
                 t.id, 
@@ -236,8 +240,10 @@ function outgoingDocuments($station_id)
                 AND l.forwarded_to IS NOT NULL
                 AND l.status_id NOT IN (10, 11)
                 AND l.is_new = 1
+                AND l.`created_at` >= ? 
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
             ORDER BY l.created_at DESC LIMIT 1000";
-    $results = query($sql, [$station_id]);
+    $results = query($sql, [$station_id, $from_date, $to_date]);
     return is_array($results) ? $results : [];
 }
 
@@ -266,7 +272,7 @@ function isOutgoingDocument($document_transaction_id, $station_id): bool
     return (bool) $results;
 }
 
-function ongoingDocuments($station_id)
+function ongoingDocuments($station_id, $from_date, $to_date)
 {
     $sql = "SELECT 
                 t.id, 
@@ -280,9 +286,11 @@ function ongoingDocuments($station_id)
             WHERE t.created_from = ?
                 AND l.forwarded_to IS NOT NULL
                 AND l.status_id NOT IN (10, 11)
+                AND l.`created_at` >= ? 
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
             GROUP BY t.id 
             ORDER BY l.created_at DESC LIMIT 1000";
-    $results = query($sql, [$station_id]);
+    $results = query($sql, [$station_id, $from_date, $to_date]);
     return is_array($results) ? $results : [];
 }
 
