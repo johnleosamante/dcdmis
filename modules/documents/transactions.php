@@ -4,6 +4,10 @@ if (!$isDmis && !($isDts && $isRecordsPortal) && !($isDts && $isAdminPortal)) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
+
+messageAlert($showAlert, $message, $success);
+
+messageAlert(true, "Showing results as of " . toDate($from, 'F j, Y') . ' - ' . toDate($to, 'F j, Y') . ".");
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -21,6 +25,8 @@ if (!$isDmis && !($isDts && $isRecordsPortal) && !($isDts && $isAdminPortal)) {
     </div>
 
     <div class="card-body pb-2">
+        <?= dateFilterForm($from, $to) ?>
+
         <ul class="nav nav-tabs mb-3">
             <li class="nav-item">
                 <a class="nav-link text-secondary active" href="#section-transactions" data-toggle="tab">Sections</a>
