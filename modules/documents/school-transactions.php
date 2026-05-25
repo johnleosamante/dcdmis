@@ -36,7 +36,7 @@
                         $schoolName = $school['name'];
                         $district = district($school['district_id'])['name'];
                         $counts = getStationTransactionCounts($school['alias']);
-
+                        $intervals = [3, 7, 14, 30, 60];
                         $schoolsData[] = [
                             'incoming' => $counts['incoming'],
                             'pending' => $counts['pending'],
@@ -59,10 +59,90 @@
                                 <div class="small"><?= $school['id'] . ' | ' . $district . ' | ' . $school['address'] ?>
                                 </div>
                             </td>
-                            <td class="align-middle"><?= number_format($counts['incoming']) ?></td>
-                            <td class="align-middle"><?= number_format($counts['pending']) ?></td>
-                            <td class="align-middle"><?= number_format($counts['outgoing']) ?></td>
-                            <td class="align-middle"><?= number_format($counts['ongoing']) ?></td>
+                            <td class="align-middle">
+                                <div><?= number_format($counts['incoming']) ?></div>
+                                <div class="small">
+                                    <?php
+                                    $incoming = [];
+
+                                    foreach ($intervals as $days) {
+                                        $count = $counts['incoming_lapsed'][$days] ?? 0;
+
+                                        if ($count > 0) {
+                                            $incoming[] = sprintf(
+                                                '<span class="cursor-pointer" title="%d days lapsed">%s</span>',
+                                                $days,
+                                                number_format($count)
+                                            );
+                                        }
+                                    }
+                                    echo implode(' | ', $incoming);
+                                    ?>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <div><?= number_format($counts['pending']) ?></div>
+                                <div class="small">
+                                    <?php
+                                    $pending = [];
+
+                                    foreach ($intervals as $days) {
+                                        $count = $counts['pending_lapsed'][$days] ?? 0;
+
+                                        if ($count > 0) {
+                                            $pending[] = sprintf(
+                                                '<span class="cursor-pointer" title="%d days lapsed">%s</span>',
+                                                $days,
+                                                number_format($count)
+                                            );
+                                        }
+                                    }
+                                    echo implode(' | ', $pending);
+                                    ?>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <div><?= number_format($counts['outgoing']) ?></div>
+                                <div class="small">
+                                    <?php
+                                    $outgoing = [];
+
+                                    foreach ($intervals as $days) {
+                                        $count = $counts['outgoing_lapsed'][$days] ?? 0;
+
+                                        if ($count > 0) {
+                                            $outgoing[] = sprintf(
+                                                '<span class="cursor-pointer" title="%d days lapsed">%s</span>',
+                                                $days,
+                                                number_format($count)
+                                            );
+                                        }
+                                    }
+                                    echo implode(' | ', $outgoing);
+                                    ?>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <div class="text-2x"><?= number_format($counts['ongoing']) ?></div>
+                                <div class="small">
+                                    <?php
+                                    $ongoing = [];
+
+                                    foreach ($intervals as $days) {
+                                        $count = $counts['ongoing_lapsed'][$days] ?? 0;
+
+                                        if ($count > 0) {
+                                            $ongoing[] = sprintf(
+                                                '<span class="cursor-pointer" title="%d days lapsed">%s</span>',
+                                                $days,
+                                                number_format($count)
+                                            );
+                                        }
+                                    }
+                                    echo implode(' | ', $ongoing);
+                                    ?>
+                                </div>
+                            </td>
                             <?php if ($isDmis): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
