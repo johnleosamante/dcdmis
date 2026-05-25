@@ -63,6 +63,19 @@ function rollBack(): bool
     return false;
 }
 
+function execute(string $sql, array $params = [])
+{
+    $db = connection();
+
+    try {
+        $stmt = $db->prepare($sql);
+        return $stmt->execute($params);
+    } catch (PDOException $e) {
+        error_log(sprintf("Database execution error: ", $e->getMessage()));
+        return false;
+    }
+}
+
 function find(string $sql, array $params = []): array|bool
 {
     try {
