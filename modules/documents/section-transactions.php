@@ -21,22 +21,44 @@
                         <th class="align-middle" width="15%">Pending</th>
                         <th class="align-middle" width="15%">Outgoing</th>
                         <th class="align-middle" width="15%">Ongoing</th>
+                        <?php if ($isDmis): ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif ?>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php
                     $sections = sections();
-                    foreach ($sections as $section): ?>
+                    foreach ($sections as $section):
+                        $counts = getStationTransactionCounts($section['id']);
+
+                        $sectionsData[] = [
+                            'incoming' => $counts['incoming'],
+                            'pending' => $counts['pending'],
+                            'outgoing' => $counts['outgoing'],
+                            'ongoing' => $counts['ongoing']
+                        ] ?>
                         <tr class="text-uppercase">
                             <td class="align-middle text-left">
                                 <div><?= $section['name'] ?></div>
                                 <div class="small"><?= e($section['functional_division']) ?></div>
                             </td>
-                            <td class="align-middle"><?= number_format(countIncomingDocuments($section['id'])) ?></td>
-                            <td class="align-middle"><?= number_format(countPendingDocuments($section['id'])) ?></td>
-                            <td class="align-middle"><?= number_format(countOutgoingDocuments($section['id'])) ?></td>
-                            <td class="align-middle"><?= number_format(countOngoingDocuments($section['id'])) ?></td>
+                            <td class="align-middle"><?= number_format($counts['incoming']) ?></td>
+                            <td class="align-middle"><?= number_format($counts['pending']) ?></td>
+                            <td class="align-middle"><?= number_format($counts['outgoing']) ?></td>
+                            <td class="align-middle"><?= number_format($counts['ongoing']) ?></td>
+                            <?php if ($isDmis): ?>
+                                <td class="align-middle text-capitalize">
+                                    <div class="dropdown no-arrow">
+                                        <?php dropdownEllipsis() ?>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                            <?php modalDropdownItem(uri() . '/modules/documents/bulk-process-document-dialog.php?id=' . cipher($section['id']), 'Bulk Process', 'fa-list', 'Bulk Process Document') ?>
+                                        </div>
+                                    </div>
+                                </td>
+                            <?php endif;
+                            continue; ?>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
@@ -48,6 +70,9 @@
                         <th class="align-middle" width="15%">Pending</th>
                         <th class="align-middle" width="15%">Outgoing</th>
                         <th class="align-middle" width="15%">Ongoing</th>
+                        <?php if ($isDmis): ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>

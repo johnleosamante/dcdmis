@@ -22,6 +22,9 @@
                         <th class="align-middle" width="15%">Pending</th>
                         <th class="align-middle" width="15%">Outgoing</th>
                         <th class="align-middle" width="15%">Ongoing</th>
+                        <?php if ($isDmis): ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif ?>
                     </tr>
                 </thead>
 
@@ -32,6 +35,14 @@
                         $logo = !empty($school['logo']) ? uri() . '/' . $school['logo'] : uri() . '/uploads/division/division.png';
                         $schoolName = $school['name'];
                         $district = district($school['district_id'])['name'];
+                        $counts = getStationTransactionCounts($school['alias']);
+
+                        $schoolsData[] = [
+                            'incoming' => $counts['incoming'],
+                            'pending' => $counts['pending'],
+                            'outgoing' => $counts['outgoing'],
+                            'ongoing' => $counts['ongoing']
+                        ];
                         ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
@@ -48,10 +59,21 @@
                                 <div class="small"><?= $school['id'] . ' | ' . $district . ' | ' . $school['address'] ?>
                                 </div>
                             </td>
-                            <td class="align-middle"><?= number_format(countIncomingDocuments($school['alias'])) ?></td>
-                            <td class="align-middle"><?= number_format(countPendingDocuments($school['alias'])) ?></td>
-                            <td class="align-middle"><?= number_format(countOutgoingDocuments($school['alias'])) ?></td>
-                            <td class="align-middle"><?= number_format(countOngoingDocuments($school['alias'])) ?></td>
+                            <td class="align-middle"><?= number_format($counts['incoming']) ?></td>
+                            <td class="align-middle"><?= number_format($counts['pending']) ?></td>
+                            <td class="align-middle"><?= number_format($counts['outgoing']) ?></td>
+                            <td class="align-middle"><?= number_format($counts['ongoing']) ?></td>
+                            <?php if ($isDmis): ?>
+                                <td class="align-middle text-capitalize">
+                                    <div class="dropdown no-arrow">
+                                        <?php dropdownEllipsis() ?>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                            <?php modalDropdownItem(uri() . '/modules/documents/bulk-process-document-dialog.php?id=' . cipher($school['alias']), 'Bulk Process', 'fa-list', 'Bulk Process Document') ?>
+                                        </div>
+                                    </div>
+                                </td>
+                            <?php endif;
+                            continue; ?>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
@@ -64,6 +86,9 @@
                         <th class="align-middle" width="15%">Pending</th>
                         <th class="align-middle" width="15%">Outgoing</th>
                         <th class="align-middle" width="15%">Ongoing</th>
+                        <?php if ($isDmis): ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>
