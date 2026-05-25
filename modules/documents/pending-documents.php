@@ -7,9 +7,9 @@ if (!$isDts) {
 
 messageAlert($showAlert, $message, $success);
 
-$query = pendingDocuments($station);
+$query = pendingDocuments($station, $from, $to);
 if (count($query) === 1000) {
-    $message = "Showing latest 1,000 pending documents.";
+    $message = "Showing latest 1,000 pending documents as of " . toDate($from, 'F j, Y') . ' - ' . toDate($to, 'F j, Y') . ".";
     messageAlert(true, $message);
 }
 ?>
@@ -33,6 +33,8 @@ if (count($query) === 1000) {
     </div>
 
     <div class="card-body">
+        <?= dateFilterForm($from, $to) ?>
+
         <div class="table-responsive">
             <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
