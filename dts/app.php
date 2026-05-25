@@ -349,7 +349,7 @@ if (isset($_POST['complete-document'])) {
 		}
 
 		createDocumentLog($documentId, $userId, $station, null, $status, true, $remarks);
-		createSystemLog($stationId, $userId, "$status document", $documentId, clientIp());
+		createSystemLog($stationId, $userId, "Completed document", $documentId, clientIp());
 		commit();
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been successfully marked complete.';
@@ -434,7 +434,7 @@ if (isset($_POST['cancel-document'])) {
 		}
 
 		createDocumentLog($documentId, $userId, $station, null, $status, true, $remarks);
-		createSystemLog($stationId, $userId, "$status document", $documentId, clientIp());
+		createSystemLog($stationId, $userId, "Canceled document", $documentId, clientIp());
 		commit();
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
