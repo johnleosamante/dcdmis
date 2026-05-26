@@ -26,18 +26,16 @@ if (!headers_sent()) {
 }
 
 date_default_timezone_set("Asia/Manila");
-ini_set('upload_max_filesize', '100M');
-ini_set('post_max_size', '105M');
+ini_set('upload_max_filesize', '20M');
+ini_set('post_max_size', '25M');
+ini_set('memory_limit', '256M');
 ini_set('max_input_time', 300);
 ini_set('max_execution_time', 300);
-ini_set('memory_limit', '1024M');
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
+define('FILE_UPLOAD_SIZE_LIMIT', uploadMaxBytes());
 
-const FILE_UPLOAD_SIZE_LIMIT = 1024 * 1024 * 20; // 20MB
-const IMAGE_UPLOAD_SIZE_LIMIT = 1024 * 1024 * 2.5; // 2.5MB
-const HOME = 'pis'; // default home page
-
+const HOME = 'pis';
 $prefix = alias() . '_';
 $baseUri = uri();
 $enableScripts = false;
