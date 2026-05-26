@@ -5,6 +5,9 @@ require_once(root() . '/includes/string.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/section.php');
 require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/database/employee.php');
+require_once(root() . '/includes/database/account.php');
+require_once(root() . '/includes/database/position.php');
 require_once(root() . '/includes/database/utility.php');
 require_once(root() . '/includes/layout/components.php');
 
@@ -44,13 +47,26 @@ $to = "$previousYear-12-31";
                 </div>
 
                 <div class="form-group">
-                    <label for="from-date" class="mb-0">Start Date</label>
+                    <label for="user" class="mb-0">Requested by <?php showAsterisk() ?></label>
+                    <select id="user" name="user" class="form-control" required>
+                        <?php $employees = sectionUsers($stationId);
+                        foreach ($employees as $employee): ?>
+                            <option value="<?= $employee['id'] ?>"
+                                title="<?= position($employee['id'])['official_title'] ?>">
+                                <?= userName($employee['id'], true) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="from-date" class="mb-0">Start Date <?php showAsterisk() ?></label>
                     <input id="from-date" type="date" value="<?= e($from) ?>" name="from-date" class="form-control"
                         required>
                 </div>
 
                 <div class="form-group">
-                    <label for="to-date" class="mb-0">End Date</label>
+                    <label for="to-date" class="mb-0">End Date <?php showAsterisk() ?></label>
                     <input id="to-date" type="date" value="<?= e($to) ?>" name="to-date" class="form-control" required>
                 </div>
 

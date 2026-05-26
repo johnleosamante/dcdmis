@@ -458,56 +458,148 @@ if (isset($_POST['transactions-summary-filter'])) {
 }
 
 if (isset($_POST['bulk-process-documents'])) {
-	$targetStationId = sanitize($_POST['station_id'] ?? null);
-	$stationName = strtoupper(stationName($targetStationId));
+	$stationId = sanitize(decipher($_POST['verifier'] ?? null));
+	$stationName = strtoupper(stationName($stationId));
 	$previousYear = date('Y', strtotime('-1 year'));
 	$from = sanitize($_POST['from-date'] ?? "$previousYear-01-01");
 	$to = sanitize($_POST['to-date'] ?? "$previousYear-12-31");
-	$showAlert = true;
-	$successCount = 0;
+	$userId = sanitize($_POST['user']);
 	$failedCount = 0;
-	$documentIds = incomingDocuments($targetStationId, $from, $to);
+	$receivedCount = 0;
+	$successCount = 0;
+	$canceledCount = 0;
+	$showAlert = true;
+	$user = employee($userId);
 
-	if (empty($documentIds)) {
-		$message = "No incoming documents found for [$stationName] from [$from] to [$to].";
+	if ($user === false) {
+		$message = "There is currently no assigned user in this station. Please assign a user to continue.";
 		return;
 	}
 
-	foreach ($documentIds as $documentId) {
-		beginTransaction();
+	$userId = $user['id'];
+	$documents = incomingDocuments($stationId, $from, $to, 5000);
 
-		try {
-			$updatedDocument = updateDocumentLogsDone($documentId);
+	if (empty($documents)) {
+		$message = "No incoming documents found for [$stationName] from [$from] to [$to]. ";
+	} else {
+		foreach ($documents as $document) {
+			$documentId = $document['id'];
 
-			if ($updatedDocument === false) {
-				$failedCount++;
+			beginTransaction();
+
+			try {
+				$updatedDocument = updateDocumentLogsDone($documentId);
+
+				if ($updatedDocument === false) {
+					$failedCount++;
+					rollBack();
+					continue;
+				}
+
+				createDocumentLog($documentId, $userId, $stationId, null, documentStatusId('Received'), true);
+				createSystemLog($stationId, null, 'Received Document (Bulk)', $documentId, clientIp());
+
+				$receivedCount++;
+
+				$updatedDocument = updateDocumentLogsDone($documentId);
+
+				if ($updatedDocument === false) {
+					$failedCount++;
+					rollBack();
+					continue;
+				}
+
+				createDocumentLog($documentId, $userId, $stationId, null, documentStatusId('Completed'), true);
+				createSystemLog($stationId, $userId, 'Completed Document (Bulk)', $documentId, clientIp());
+
+				$successCount++;
+
+				commit();
+			} catch (Exception $e) {
 				rollBack();
-				continue;
+				$failedCount++;
 			}
-
-			$receivedStatusId = documentStatusId('Received');
-			createDocumentLog($documentId, $userId, $targetStationName, null, $receivedStatusId, true);
-			createSystemLog($stationId, $userId, 'Received document (Bulk)', $documentId, clientIp());
-			updateDocumentLogsDone($documentId);
-
-			$completedStatusId = documentStatusId('Completed');
-			$remarks = "Bulk processed: Received and Completed automatically.";
-
-			createDocumentLog($documentId, $userId, $targetStationName, null, $completedStatusId, true, $remarks);
-			createSystemLog($stationId, $userId, "$completedStatusId document (Bulk)", $documentId, clientIp());
-			commit();
-
-			$successCount++;
-		} catch (Exception $e) {
-			rollBack();
-			$failedCount++;
 		}
 	}
 
-	$success = $successCount > 0;
-	$message = "Bulk processing complete. Successfully processed {$successCount} documents.";
+	$documents = pendingDocuments($stationId, $from, $to, 5000);
+
+	if (empty($documents)) {
+		$message .= "No pending documents found for [$stationName] from [$from] to [$to]. ";
+	} else {
+		foreach ($documents as $document) {
+			$documentId = $document['id'];
+
+			beginTransaction();
+
+			try {
+				$updatedDocument = updateDocumentLogsDone($documentId);
+
+				if ($updatedDocument === false) {
+					$failedCount++;
+					rollBack();
+					continue;
+				}
+
+				createDocumentLog($documentId, $userId, $stationId, null, documentStatusId('Completed'), true);
+				createSystemLog($stationId, $userId, 'Completed Document (Bulk)', $documentId, clientIp());
+				commit();
+
+				$successCount++;
+			} catch (Exception $e) {
+				rollBack();
+				$failedCount++;
+			}
+		}
+	}
+
+	$documents = outgoingDocuments($stationId, $from, $to, 5000);
+
+	if (empty($documents)) {
+		$message .= "No outgoing documents for [$stationName] from [$from] to [$to]. ";
+	} else {
+		foreach ($documents as $document) {
+			$documentId = $document['id'];
+
+			beginTransaction();
+
+			try {
+				$updatedDocument = updateDocumentLogsDone($documentId);
+
+				if ($updatedDocument === false) {
+					$failedCount++;
+					rollBack();
+					continue;
+				}
+
+				createDocumentLog($documentId, $userId, $stationId, null, documentStatusId('Canceled'), true, 'Bulk processed: Cancelled as not received by destination.');
+				createSystemLog($stationId, $userId, 'Canceled Document (Bulk)', $documentId, clientIp());
+				commit();
+
+				$canceledCount++;
+			} catch (Exception $e) {
+				rollBack();
+				$failedCount++;
+			}
+		}
+	}
+
+	$success = $receivedCount > 0 || $successCount > 0 || $canceledCount > 0;
+	$message = $success ? "Bulk processing for [$stationName] successfully completed. " : $message;
+
+	if ($receivedCount > 0) {
+		$message .= '<br>' . number_format($receivedCount) . " document" . ($receivedCount > 1 ? 's' : '') . " received.";
+	}
+
+	if ($successCount > 0) {
+		$message .= '<br>' . number_format($successCount) . " document" . ($successCount > 1 ? 's' : '') . " completed.";
+	}
+
+	if ($canceledCount > 0) {
+		$message .= '<br>' . number_format($canceledCount) . " document" . ($canceledCount > 1 ? 's' : '') . " canceled.";
+	}
 
 	if ($failedCount > 0) {
-		$message .= " Failed to process {$failedCount} documents.";
+		$message .= "<br>Failed to process " . number_format($failedCount) . " document" . ($failedCount > 1 ? 's' : '') . ".";
 	}
 }
