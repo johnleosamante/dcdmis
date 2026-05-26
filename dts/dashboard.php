@@ -41,7 +41,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/documents/save-document-dia
 							$sections = sections();
 							foreach ($sections as $section) {
 								// Single query call per loop iteration
-								$counts = getStationTransactionCounts($section['id']);
+								$counts = stationTransactionCounts($section['id']);
 
 								$sectionsData[] = [
 									'label' => $section['name'],
@@ -74,8 +74,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/documents/save-document-dia
 							$schoolsData = [];
 							$schools = schoolsExcept(divisionID());
 							foreach ($schools as $school) {
-								// Single query call per loop iteration
-								$counts = getStationTransactionCounts($school['alias']);
+								$counts = stationTransactionCounts($school['alias']);
 
 								$schoolsData[] = [
 									'label' => $school['name'] . ' (' . $school['alias'] . ')',
