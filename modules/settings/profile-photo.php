@@ -5,11 +5,11 @@ $picture = employee($userId)['profile_picture'];
 <div class="tab-pane fade show active" id="profile-photo">
     <div class="row">
         <div class="col">
-            <div class="my-2 p-3 rounded alert-info text-left d-flex">
-                <span class="d-inline-block m-2">
-                    <i class="fas fa-info fa-2x"></i>
+            <div class="my-2 px-3 py-2 rounded alert-info text-left d-flex">
+                <span class="d-inline-block">
+                    <i class="fas fa-info-circle"></i>
                 </span>
-                <span class="ml-2 d-inline-block d-flex align-items-center">
+                <span class="ml-2 d-inline-block d-flex align-items-center small">
                     <div>The recommended picture size is 1:1 ratio and minimum of 400 pixels width and height.</div>
                 </span>
             </div>

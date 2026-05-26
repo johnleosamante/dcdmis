@@ -4,11 +4,11 @@
 <div class="tab-pane fade" id="password-change">
     <div class="row">
         <div class="col">
-            <div class="my-2 p-3 rounded alert-info text-left d-flex">
-                <span class="d-inline-block m-2">
-                    <i class="fas fa-info fa-2x"></i>
+            <div class="my-2 px-3 py-2 rounded alert-info text-left d-flex">
+                <span class="d-inline-block">
+                    <i class="fas fa-info-circle"></i>
                 </span>
-                <span class="ml-2 d-inline-block d-flex align-items-center">
+                <span class="ml-2 d-inline-block d-flex align-items-center small">
                     <div>To help secure your account, please use atleast one (1) uppercase, atleast one (1) lowercase,
                         atleast one (1) number and atleast one (1) special character to your password that should be
                         atleast ten (10) characters long. Alternatively, you can click the generate button to get a
