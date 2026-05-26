@@ -22,9 +22,6 @@
                         <th class="align-middle" width="15%">Pending</th>
                         <th class="align-middle" width="15%">Outgoing</th>
                         <th class="align-middle" width="15%">Ongoing</th>
-                        <?php if ($isDmis): ?>
-                            <th class="align-middle" width="5%">Action</th>
-                        <?php endif ?>
                     </tr>
                 </thead>
 
@@ -35,7 +32,7 @@
                         $logo = !empty($school['logo']) ? uri() . '/' . $school['logo'] : uri() . '/uploads/division/division.png';
                         $schoolName = $school['name'];
                         $district = district($school['district_id'])['name'];
-                        $counts = getStationTransactionCounts($school['alias']);
+                        $counts = detailedStationTransactionCounts($school['alias']);
                         $intervals = [3, 7, 14, 30, 60];
                         $schoolsData[] = [
                             'incoming' => $counts['incoming'],
@@ -143,17 +140,6 @@
                                     ?>
                                 </div>
                             </td>
-                            <?php if ($isDmis): ?>
-                                <td class="align-middle text-capitalize">
-                                    <div class="dropdown no-arrow">
-                                        <?php dropdownEllipsis() ?>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                            <?php modalDropdownItem(uri() . '/modules/documents/bulk-process-document-dialog.php?id=' . cipher($school['alias']), 'Bulk Process', 'fa-list', 'Bulk Process Document') ?>
-                                        </div>
-                                    </div>
-                                </td>
-                            <?php endif;
-                            continue; ?>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
@@ -166,9 +152,6 @@
                         <th class="align-middle" width="15%">Pending</th>
                         <th class="align-middle" width="15%">Outgoing</th>
                         <th class="align-middle" width="15%">Ongoing</th>
-                        <?php if ($isDmis): ?>
-                            <th class="align-middle" width="5%">Action</th>
-                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>
