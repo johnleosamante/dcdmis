@@ -9,16 +9,6 @@ function account($email_address)
     );
 }
 
-// credentials
-function accountPassword($employee_id, $password)
-{
-    return find(
-        "SELECT `employee_id`, `status` FROM `credentials` 
-        WHERE `employee_id` = ? AND `password` = ? LIMIT 1",
-        [$employee_id, $password]
-    );
-}
-
 function verifyAccountPassword(int $employee_id, string $plainPassword): array|bool
 {
     $credentials = find(
