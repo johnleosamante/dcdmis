@@ -251,4 +251,20 @@ function getRateLimitRemainingTime(string $identifier, int $windowSeconds = 300)
     return max(0, $remaining);
 }
 
+function uploadMaxBytes()
+{
+    $val = trim(ini_get('upload_max_filesize'));
+    $last = strtolower($val[strlen($val) - 1]);
+    $val = (int) $val;
+    switch ($last) {
+        case 'g':
+            $val *= 1024;
+        case 'm':
+            $val *= 1024;
+        case 'k':
+            $val *= 1024;
+    }
+    return $val;
+}
+
 require_once('initialization.php');
