@@ -225,7 +225,7 @@ function isPendingDocument($document_transaction_id, $station_id): bool
     return (bool) $results;
 }
 
-function outgoingDocuments($station_id, $from_date, $to_date, $limit)
+function outgoingDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
     $sql = "SELECT 
                 t.id, 
@@ -245,54 +245,6 @@ function outgoingDocuments($station_id, $from_date, $to_date, $limit)
             ORDER BY l.created_at DESC LIMIT ?";
     $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
     return is_array($results) ? $results : [];
-}
-
-function unreceivedOutgoingDocuments($station_id, $from_date = '', $to_date = '')
-{
-    if (empty($from_date)) {
-        $from_date = date('Y-01-01');
-    }
-    if (empty($to_date)) {
-        $to_date = date('Y-m-d');
-    }
-
-    $sql = "SELECT DISTINCT
-                t.id,
-                t.description,
-                l.forwarded_to,
-                l.processor_id,
-                t.created_from,
-                l.created_at
-            FROM `document_transaction_logs` AS l
-            INNER JOIN `document_transactions` AS t ON l.document_transaction_id = t.id
-            WHERE t.created_from = ?
-                AND l.forwarded_to IS NOT NULL
-                AND l.status_id NOT IN (10, 11)
-                AND l.is_new = 1
-                AND l.`created_at` >= ?
-                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY)
-                AND NOT EXISTS (
-                    SELECT 1 FROM `document_transaction_logs` AS l2
-                    WHERE l2.document_transaction_id = t.id
-                    AND l2.received_from = l.forwarded_to
-                    AND l2.is_new = 1
-                )
-            ORDER BY l.created_at DESC LIMIT 1000";
-
-    $results = query($sql, [$station_id, $from_date, $to_date]);
-    return is_array($results) ? $results : [];
-}
-
-function countOutgoingDocuments($station_id)
-{
-    $sql = "SELECT COUNT(DISTINCT document_transaction_id) AS `count` 
-            FROM `document_transaction_logs`
-            WHERE received_from = ?
-                AND forwarded_to IS NOT NULL 
-                AND status_id NOT IN (10, 11)
-                AND is_new = 1";
-    $result = find($sql, [$station_id]);
-    return (int) ($result['count'] ?? 0);
 }
 
 function isOutgoingDocument($document_transaction_id, $station_id): bool
@@ -326,7 +278,7 @@ function ongoingDocuments($station_id, $from_date, $to_date, $limit = 1000)
                 AND l.`created_at` >= ? 
                 AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
             GROUP BY t.id 
-            ORDER BY l.updated_at DESC LIMIT ?";
+            ORDER BY l.created_at DESC LIMIT ?";
     $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
     return is_array($results) ? $results : [];
 }
@@ -478,8 +430,7 @@ function documentLogs($document_transaction_id)
                 forwarded_to, 
                 status_id, 
                 details, 
-                created_at,
-                updated_at 
+                created_at
             FROM `document_transaction_logs` 
             WHERE `document_transaction_id` = ? 
             ORDER BY `created_at` DESC";
@@ -636,7 +587,27 @@ function documentSearch($string)
     return query($sql, [$likeTerm, $string]);
 }
 
-function getStationTransactionCounts($station_id, $from_date = null, $to_date = null)
+function stationTransactionCounts($station_id)
+{
+    $sql = "SELECT 
+        COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 THEN l.document_transaction_id END) AS incoming,
+        COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS pending,
+        COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS outgoing,
+        COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL THEN t.id END) AS ongoing
+    FROM `document_transaction_logs` AS l
+    LEFT JOIN `document_transactions` AS t 
+        ON l.document_transaction_id = t.id
+    WHERE l.status_id NOT IN (10, 11)";
+    $result = find($sql, [$station_id, $station_id, $station_id, $station_id]);
+    return [
+        'incoming' => (int) ($result['incoming'] ?? 0),
+        'pending' => (int) ($result['pending'] ?? 0),
+        'outgoing' => (int) ($result['outgoing'] ?? 0),
+        'ongoing' => (int) ($result['ongoing'] ?? 0)
+    ];
+}
+
+function detailedStationTransactionCounts($station_id, $from_date = null, $to_date = null)
 {
     $anchor_date = !empty($to_date) ? $to_date : date('Y-m-d H:i:s');
     execute("SET @anchor = ?", [$anchor_date]);
