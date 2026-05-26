@@ -2,7 +2,7 @@
 // dts/sidebar-menu.php
 sidebarDivider();
 
-$count = getStationTransactionCounts($station);
+$count = stationTransactionCounts($station);
 $countIncoming = number_format($count['incoming']);
 $countPending = number_format($count['pending']);
 $countOutgoing = number_format($count['outgoing']);
