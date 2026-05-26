@@ -132,7 +132,7 @@ function updateDocument($document_transaction_id, $description, $document_type_i
     return update('document_transactions', $data, "`id` = ?", [$document_transaction_id]);
 }
 
-function incomingDocuments($station_id, $from_date, $to_date)
+function incomingDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
     $sql = "SELECT 
                 t.id, 
@@ -149,8 +149,8 @@ function incomingDocuments($station_id, $from_date, $to_date)
                 AND l.is_new = 1 
                 AND l.`created_at` >= ? 
                 AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
-            ORDER BY l.created_at DESC LIMIT 1000";
-    $results = query($sql, [$station_id, $from_date, $to_date]);
+            ORDER BY l.created_at DESC LIMIT ?";
+    $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
     return is_array($results) ? $results : [];
 }
 
@@ -180,7 +180,7 @@ function isIncomingDocument($document_transaction_id, $station_id): bool
     return (bool) $results;
 }
 
-function pendingDocuments($station_id, $from_date, $to_date)
+function pendingDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
     $sql = "SELECT 
                 t.id, 
@@ -196,8 +196,8 @@ function pendingDocuments($station_id, $from_date, $to_date)
                 AND l.is_new = 1
                 AND l.`created_at` >= ? 
                 AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
-            ORDER BY l.created_at DESC LIMIT 1000";
-    $results = query($sql, [$station_id, $from_date, $to_date]);
+            ORDER BY l.created_at DESC LIMIT ?";
+    $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
     return is_array($results) ? $results : [];
 }
 
@@ -225,7 +225,7 @@ function isPendingDocument($document_transaction_id, $station_id): bool
     return (bool) $results;
 }
 
-function outgoingDocuments($station_id, $from_date, $to_date)
+function outgoingDocuments($station_id, $from_date, $to_date, $limit)
 {
     $sql = "SELECT 
                 t.id, 
@@ -242,7 +242,43 @@ function outgoingDocuments($station_id, $from_date, $to_date)
                 AND l.is_new = 1
                 AND l.`created_at` >= ? 
                 AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
+            ORDER BY l.created_at DESC LIMIT ?";
+    $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
+    return is_array($results) ? $results : [];
+}
+
+function unreceivedOutgoingDocuments($station_id, $from_date = '', $to_date = '')
+{
+    if (empty($from_date)) {
+        $from_date = date('Y-01-01');
+    }
+    if (empty($to_date)) {
+        $to_date = date('Y-m-d');
+    }
+
+    $sql = "SELECT DISTINCT
+                t.id,
+                t.description,
+                l.forwarded_to,
+                l.processor_id,
+                t.created_from,
+                l.created_at
+            FROM `document_transaction_logs` AS l
+            INNER JOIN `document_transactions` AS t ON l.document_transaction_id = t.id
+            WHERE t.created_from = ?
+                AND l.forwarded_to IS NOT NULL
+                AND l.status_id NOT IN (10, 11)
+                AND l.is_new = 1
+                AND l.`created_at` >= ?
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY)
+                AND NOT EXISTS (
+                    SELECT 1 FROM `document_transaction_logs` AS l2
+                    WHERE l2.document_transaction_id = t.id
+                    AND l2.received_from = l.forwarded_to
+                    AND l2.is_new = 1
+                )
             ORDER BY l.created_at DESC LIMIT 1000";
+
     $results = query($sql, [$station_id, $from_date, $to_date]);
     return is_array($results) ? $results : [];
 }
@@ -272,7 +308,7 @@ function isOutgoingDocument($document_transaction_id, $station_id): bool
     return (bool) $results;
 }
 
-function ongoingDocuments($station_id, $from_date, $to_date)
+function ongoingDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
     $sql = "SELECT 
                 t.id, 
@@ -286,11 +322,12 @@ function ongoingDocuments($station_id, $from_date, $to_date)
             WHERE t.created_from = ?
                 AND l.forwarded_to IS NOT NULL
                 AND l.status_id NOT IN (10, 11)
+                AND l.is_new = 1
                 AND l.`created_at` >= ? 
                 AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
             GROUP BY t.id 
-            ORDER BY l.created_at DESC LIMIT 1000";
-    $results = query($sql, [$station_id, $from_date, $to_date]);
+            ORDER BY l.updated_at DESC LIMIT ?";
+    $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
     return is_array($results) ? $results : [];
 }
 
@@ -301,12 +338,13 @@ function countOngoingDocuments($station_id)
             INNER JOIN `document_transaction_logs` AS l ON t.id = l.document_transaction_id 
             WHERE t.created_from = ?
                 AND l.forwarded_to IS NOT NULL
-                AND l.status_id NOT IN (10, 11)";
+                AND l.status_id NOT IN (10, 11)
+                AND l.is_new = 1";
     $result = find($sql, [$station_id]);
     return (int) ($result['count'] ?? 0);
 }
 
-function completedDocuments($station_id, $from_date, $to_date)
+function completedDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
     $sql = "SELECT 
                 t.`id`, 
@@ -323,8 +361,8 @@ function completedDocuments($station_id, $from_date, $to_date)
                 AND l.`is_new` = 1
                 AND l.`created_at` >= ? 
                 AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
-            ORDER BY l.`created_at` DESC LIMIT 1000";
-    return query($sql, [$station_id, $from_date, $to_date]);
+            ORDER BY l.`created_at` DESC LIMIT ?";
+    return query($sql, [$station_id, $from_date, $to_date, $limit]);
 }
 
 function isCompletedDocument($document_transaction_id, $station_id): bool
@@ -377,7 +415,7 @@ function isReceivedDocument($document_transaction_id, $station_id): bool
     return (bool) $results;
 }
 
-function canceledDocuments($station_id, $from_date, $to_date)
+function canceledDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
     $sql = "SELECT 
                 t.id, 
@@ -394,8 +432,8 @@ function canceledDocuments($station_id, $from_date, $to_date)
                 AND l.is_new = 1 
                 AND l.created_at >= ? 
                 AND l.created_at < DATE_ADD(?, INTERVAL 1 DAY) 
-            ORDER BY l.created_at DESC LIMIT 1000";
-    return query($sql, [$station_id, $from_date, $to_date]);
+            ORDER BY l.created_at DESC LIMIT ?";
+    return query($sql, [$station_id, $from_date, $to_date, $limit]);
 }
 
 function isCanceledDocument($document_transaction_id, $station_id): bool
@@ -608,7 +646,7 @@ function getStationTransactionCounts($station_id, $from_date = null, $to_date = 
     COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 THEN l.document_transaction_id END) AS incoming,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS pending,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS outgoing,
-    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL THEN t.id END) AS ongoing,
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN t.id END) AS ongoing,
     
     -- 2. INCOMING LAPSED BREAKDOWN (MUTUALLY EXCLUSIVE)
     COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 4 AND 6 THEN l.document_transaction_id END) AS inc_3,
@@ -632,11 +670,11 @@ function getStationTransactionCounts($station_id, $from_date = null, $to_date = 
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) >= 60 THEN l.document_transaction_id END) AS out_60,
 
     -- 5. ONGOING LAPSED BREAKDOWN (MUTUALLY EXCLUSIVE)
-    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND DATEDIFF(@anchor, t.created_at) BETWEEN 4 AND 6 THEN t.id END) AS ong_3,
-    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND DATEDIFF(@anchor, t.created_at) BETWEEN 7 AND 13 THEN t.id END) AS ong_7,
-    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND DATEDIFF(@anchor, t.created_at) BETWEEN 14 AND 29 THEN t.id END) AS ong_14,
-    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND DATEDIFF(@anchor, t.created_at) BETWEEN 30 AND 59 THEN t.id END) AS ong_30,
-    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND DATEDIFF(@anchor, t.created_at) >= 60 THEN t.id END) AS ong_60
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 4 AND 6 THEN t.id END) AS ong_3,
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 7 AND 13 THEN t.id END) AS ong_7,
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 14 AND 29 THEN t.id END) AS ong_14,
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 30 AND 59 THEN t.id END) AS ong_30,
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) >= 60 THEN t.id END) AS ong_60
     
     FROM `document_transaction_logs` AS l
     LEFT JOIN `document_transactions` AS t 
