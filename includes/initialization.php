@@ -32,6 +32,9 @@ ini_set('memory_limit', '256M');
 ini_set('max_input_time', 300);
 ini_set('max_execution_time', 300);
 ini_set('display_errors', 0);
+if (!empty(ERROR_LOG_FILE)) {
+    ini_set('error_log', ERROR_LOG_FILE);
+}
 ini_set('log_errors', 1);
 define('FILE_UPLOAD_SIZE_LIMIT', uploadMaxBytes());
 
