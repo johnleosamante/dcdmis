@@ -31,7 +31,7 @@
                     <?php
                     $sections = sections();
                     foreach ($sections as $index => $section):
-                        $counts = getStationTransactionCounts($section['id']);
+                        $counts = detailedStationTransactionCounts($section['id']);
                         $intervals = [3, 7, 14, 30, 60];
                         $sectionsData[] = [
                             'section' => $section['name'],
