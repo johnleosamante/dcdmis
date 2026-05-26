@@ -14,7 +14,7 @@ if (isset($_POST['update-password'])) {
         return;
     }
 
-    if (!accountPassword($userId, hashPassword($oldPassword))) {
+    if (!verifyAccountPassword($userId, $oldPassword)) {
         $message = 'You have entered an incorrect old password.';
         $oldPassword = $password = $passwordConfirm = $generatePassword = null;
         return;
