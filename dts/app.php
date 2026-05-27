@@ -67,7 +67,7 @@ if (isset($_POST['save-document'])) {
 	try {
 		createDocument($documentId, $description, $type, $station, $headId);
 
-		$documentLogId = createDocumentLog($documentId, $userId, $station, $destination, $purpose, true, $details);
+		$documentLogId = createDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
 		$upload_response = '';
 
 		if (!empty($_FILES['file-upload']['name'][0])) {
@@ -153,7 +153,7 @@ if (isset($_POST['edit-document'])) {
 
 	try {
 		updateDocument($documentId, $description, $type, $updateDescription);
-		$documentLog = updateDocumentLog($documentId, $userId, $station, $destination, $purpose, true, $details);
+		$documentLog = updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
 
 		$upload_response = '';
 
@@ -248,7 +248,7 @@ if (isset($_POST['receive-document'])) {
 			return;
 		}
 
-		createDocumentLog($documentId, $userId, $station, null, documentStatusId('Received'), true);
+		createDocumentLog($documentId, $userId, $station, null, documentStatusId('Received'), 1);
 		createSystemLog($stationId, $userId, 'Received document', $documentId, clientIp());
 		commit();
 
@@ -277,7 +277,7 @@ if (isset($_POST['forward-document'])) {
 			return;
 		}
 
-		createDocumentLog($documentId, $userId, $station, $destination, $purpose, true, $details);
+		createDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
 
 		$upload_response = '';
 
@@ -348,7 +348,7 @@ if (isset($_POST['complete-document'])) {
 			return;
 		}
 
-		createDocumentLog($documentId, $userId, $station, null, $status, true, $remarks);
+		createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks);
 		createSystemLog($stationId, $userId, "Completed document", $documentId, clientIp());
 		commit();
 
@@ -376,7 +376,7 @@ if (isset($_POST['reopen-document'])) {
 			return;
 		}
 
-		createDocumentLog($documentId, $userId, $station, null, $status, true, $remarks);
+		createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks);
 		createSystemLog($stationId, $userId, 'Reopened document', $documentId, clientIp());
 		commit();
 
@@ -405,7 +405,7 @@ if (isset($_POST['restore-document'])) {
 			return;
 		}
 
-		createDocumentLog($documentId, $userId, $station, $destination, $status, true, $remarks);
+		createDocumentLog($documentId, $userId, $station, $destination, $status, 1, $remarks);
 		createSystemLog($stationId, $userId, 'Restored document', $documentId, clientIp());
 		commit();
 
@@ -433,7 +433,7 @@ if (isset($_POST['cancel-document'])) {
 			return;
 		}
 
-		createDocumentLog($documentId, $userId, $station, null, $status, true, $remarks);
+		createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks);
 		createSystemLog($stationId, $userId, "Canceled document", $documentId, clientIp());
 		commit();
 

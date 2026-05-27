@@ -438,7 +438,7 @@ function documentLogs($document_transaction_id)
     return is_array($results) ? $results : [];
 }
 
-function createDocumentLog($document_transaction_id, $processor_id, $received_from, $forwarded_to, $status_id, $is_new = true, $details = '')
+function createDocumentLog($document_transaction_id, $processor_id, $received_from, $forwarded_to, $status_id, $is_new = 1, $details = '')
 {
     $data = [
         'processor_id' => $processor_id,
@@ -452,7 +452,7 @@ function createDocumentLog($document_transaction_id, $processor_id, $received_fr
     return insert('document_transaction_logs', $data);
 }
 
-function updateDocumentLog($document_transaction_id, $processor_id, $received_from, $forwarded_to, $status_id, $is_new = true, $details = '')
+function updateDocumentLog($document_transaction_id, $processor_id, $received_from, $forwarded_to, $status_id, $is_new = 1, $details = '')
 {
     $latest = find(
         "SELECT `id` FROM `document_transaction_logs` WHERE `document_transaction_id` = ? 
@@ -476,7 +476,7 @@ function updateDocumentLog($document_transaction_id, $processor_id, $received_fr
 
 function updateDocumentLogsDone($document_transaction_id)
 {
-    $data = ['is_new' => false];
+    $data = ['is_new' => 0];
     return update('document_transaction_logs', $data, "`document_transaction_id` = ? AND `is_new` = 1", [$document_transaction_id]);
 }
 
