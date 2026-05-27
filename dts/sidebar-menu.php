@@ -31,6 +31,6 @@ sidebarDivider();
 
 sidebarMenuItem(customUri('dts', 'Section Summary'), 'Summary', 'fa-chart-bar', isset($url) && str_contains($url, 'Summary'));
 
-if ($isRecordsPortal || $isAdminPortal || $isICT) {
+if ($isRecordsPortal || $isAdminPortal) {
 	sidebarMenuItem(customUri('dts', 'Transactions'), 'Transactions', 'fa-exchange-alt', isset($url) && str_contains($url, 'Transactions'));
 }
