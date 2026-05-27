@@ -326,7 +326,7 @@ if (isset($_POST['delete-district'])) {
 
 	$target = count($districts) === 1 ? $districts['name'] : $districtCode;
 
-	$affetctedDistrict = deleteDistrict($districtCode);
+	$affectedDistrict = deleteDistrict($districtCode);
 
 	if (!$affectedDistrict) {
 		$message = 'No changes have been made to district.';
@@ -463,20 +463,20 @@ if (isset($_POST['bulk-process-documents'])) {
 	$previousYear = date('Y', strtotime('-1 year'));
 	$from = sanitize($_POST['from-date'] ?? "$previousYear-01-01");
 	$to = sanitize($_POST['to-date'] ?? "$previousYear-12-31");
-	$userId = sanitize($_POST['user']);
+	$processorId = sanitize($_POST['user']);
 	$failedCount = 0;
 	$receivedCount = 0;
 	$successCount = 0;
 	$canceledCount = 0;
 	$showAlert = true;
-	$user = employee($userId);
+	$user = employee($processorId);
 
 	if ($user === false) {
 		$message = "There is currently no assigned user in this station. Please assign a user to continue.";
 		return;
 	}
 
-	$userId = $user['id'];
+	$processorId = $user['id'];
 	$documents = incomingDocuments($stationId, $from, $to, 5000);
 
 	if (empty($documents)) {
@@ -496,8 +496,8 @@ if (isset($_POST['bulk-process-documents'])) {
 					continue;
 				}
 
-				createDocumentLog($documentId, $userId, $stationId, null, documentStatusId('Received'), true);
-				createSystemLog($stationId, null, 'Received Document (Bulk)', $documentId, clientIp());
+				createDocumentLog($documentId, $processorId, $stationId, null, documentStatusId('Received'), 1);
+				createSystemLog($stationId, $processorId, 'Received Document (Bulk)', $documentId, clientIp());
 
 				$receivedCount++;
 
@@ -509,8 +509,8 @@ if (isset($_POST['bulk-process-documents'])) {
 					continue;
 				}
 
-				createDocumentLog($documentId, $userId, $stationId, null, documentStatusId('Completed'), true);
-				createSystemLog($stationId, $userId, 'Completed Document (Bulk)', $documentId, clientIp());
+				createDocumentLog($documentId, $processorId, $stationId, null, documentStatusId('Completed'), 1);
+				createSystemLog($stationId, $processorId, 'Completed Document (Bulk)', $documentId, clientIp());
 
 				$successCount++;
 
@@ -541,8 +541,8 @@ if (isset($_POST['bulk-process-documents'])) {
 					continue;
 				}
 
-				createDocumentLog($documentId, $userId, $stationId, null, documentStatusId('Completed'), true);
-				createSystemLog($stationId, $userId, 'Completed Document (Bulk)', $documentId, clientIp());
+				createDocumentLog($documentId, $processorId, $stationId, null, documentStatusId('Completed'), 1);
+				createSystemLog($stationId, $processorId, 'Completed Document (Bulk)', $documentId, clientIp());
 				commit();
 
 				$successCount++;
@@ -572,8 +572,8 @@ if (isset($_POST['bulk-process-documents'])) {
 					continue;
 				}
 
-				createDocumentLog($documentId, $userId, $stationId, null, documentStatusId('Canceled'), true, 'Bulk processed: Cancelled as not received by destination.');
-				createSystemLog($stationId, $userId, 'Canceled Document (Bulk)', $documentId, clientIp());
+				createDocumentLog($documentId, $processorId, $stationId, null, documentStatusId('Canceled'), 1, 'Bulk processed: Cancelled as not received by destination.');
+				createSystemLog($stationId, $processorId, 'Canceled Document (Bulk)', $documentId, clientIp());
 				commit();
 
 				$canceledCount++;
