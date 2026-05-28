@@ -22,7 +22,7 @@
                     <span class="small text-secondary">The recommended picture size is 1:1 ratio and minimum of 400 pixels
                         width and height.</span>
 
-                    <?php profilePhotoUpload('image-upload', 'employee-photo', 'image-upload-label', uri()) ?>
+                    <?php profilePhotoUpload('image-upload', 'employee-photo', 'image-upload-label', uri(), '/assets/img/nopreview.png') ?>
                 <?php endif ?>
             </div>
 
