@@ -1,4 +1,4 @@
-$fill$fil$fi$f$<?php
+<?php
 // print/personal-data-sheet.php
 $width = 215.9;
 $height = 330.2;
