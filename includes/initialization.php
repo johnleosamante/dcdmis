@@ -17,7 +17,7 @@ if (!headers_sent()) {
     header('X-Frame-Options: SAMEORIGIN');
     header('X-Content-Type-Options: nosniff');
     header('X-XSS-Protection: 1; mode=block');
-    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net code.jquery.com cdn.datatables.net; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net fonts.googleapis.com cdn.datatables.net; img-src 'self' data: blob:; font-src 'self' fonts.gstatic.com; frame-ancestors 'self'");
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net code.jquery.com cdn.datatables.net; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net fonts.googleapis.com cdn.datatables.net; img-src 'self' data: blob:; font-src 'self' fonts.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';");
     header_remove('X-Powered-By');
     if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
         header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
