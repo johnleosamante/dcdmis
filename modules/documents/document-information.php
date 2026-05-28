@@ -100,8 +100,6 @@ $logs = documentLogs($documentId);
                         if (!$isSchoolPortal) {
                             modalButtonSplit(uri() . '/modules/documents/forward-document-dialog.php?id=' . cipher($documentId), 'Forward', 'fa-share', 'Forward Document', 'info');
                         }
-                        if (isDocument($documentId, 'Restored'))
-                            break;
                         modalButtonSplit(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Complete', 'fa-check-circle', 'Mark Complete Document', 'success');
                         break;
                     case 'Outgoing Documents':
