@@ -53,12 +53,14 @@ if ($document) {
                 <th class="align-top pr-3" scope="row">From:</th>
                 <td class="text-uppercase"><?= stationName($document['created_from']) ?></td>
             </tr>
-            <tr>
-                <th class="align-top pr-3" scope="row">Status:</th>
-                <td class="text-uppercase">
-                    <?= documentTransactionStatus($document['status_id']) ?>
-                </td>
-            </tr>
+            <?php if (!empty($document['status_id'])): ?>
+                <tr>
+                    <th class="align-top pr-3" scope="row">Status:</th>
+                    <td class="text-uppercase">
+                        <?= documentTransactionStatus($document['status_id']) ?>
+                    </td>
+                </tr>
+            <?php endif ?>
         </table>
 
         <div class="mt-5 timeline">
