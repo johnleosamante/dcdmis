@@ -108,8 +108,8 @@ messageAlert($showAlert, $message, $success);
                                             } ?>
                                         </div>
                                     </div>
-                                </td>
-                            <?php endif; ?>
+                                </div>
+                            </td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
