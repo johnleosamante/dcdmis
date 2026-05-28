@@ -30,7 +30,7 @@ $picture = employee($userId)['profile_picture'];
                     <label id="image-upload-label" class="custom-file-label" for="image-upload">Choose file</label>
                 </div>
 
-                <?php profilePhotoUpload('image-upload', 'employee-photo', 'image-upload-label', uri()) ?>
+                <?php profilePhotoUpload('image-upload', 'employee-photo', 'image-upload-label', uri(), '/assets/img/nopreview.png') ?>
             </div>
         </div>
 
