@@ -15,3 +15,5 @@ const DIVISION_ID = '';
 const DIVISION = '';
 const REGION = '';
 const ERROR_LOG_FILE = '';
+const MAINTENANCE_MODE = false;
+const PRODUCTION_MODE = false;
