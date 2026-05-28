@@ -6,27 +6,26 @@ if (!$isHrmis && !$isHrtdms && !$isDmis) {
 }
 
 $schoolId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$schools = schoolDetailsById($schoolId);
-$school = $schoolName = $alias = $address = $district = $head = $telephone = $email = $website = $fbPage = null;
+$school = schoolById($schoolId);
+$schoolName = $alias = $address = $district = $head = $telephone = $email = $website = $fbPage = null;
 $personnel = 0;
 
 messageAlert($showAlert, $message, $success);
 
-if (numRows($schools) > 0) {
-    $school = fetchAssoc($schools);
+if ($school) {
     $schoolName = $school['name'];
     $alias = $school['alias'];
     $address = $school['address'];
-    $districts = district($school['district']);
-    $district = numRows($districts) > 0 ? fetchAssoc($districts)['name'] : '';
+    $districts = district($school['district_id']);
+    $district = $districts > 0 ? $districts['name'] : '';
     $category = $school['category'];
-    $head = $school['head'];
+    $head = $school['head_id'];
     $telephone = $school['telephone'];
     $email = $school['email'];
     $website = $school['website'];
     $fbPage = $school['fb_page'];
     $count = schoolEmployeeCount($schoolId);
-    $personnel = numRows($count) > 0 ? fetchAssoc($count)['total'] : 0;
+    $personnel = $count > 0 ? $count['total'] : 0;
     $logo = !empty($school['logo']) ? uri() . '/' . $school['logo'] : uri() . '/uploads/division/division.png';
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -39,7 +38,7 @@ if (numRows($schools) > 0) {
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Schools') ?>">Schools</a></li>
-            <li class="breadcrumb-item active"><?= $schoolName ?></li>
+            <li class="breadcrumb-item active"><?= e($schoolName) ?></li>
         </ol>
     </nav>
 </div>
@@ -59,14 +58,14 @@ if (numRows($schools) > 0) {
     <div class="card-body">
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-4 col-xl-2">
-                <img src="<?= $logo ?>" width="100%">
+                <img src="<?= e($logo) ?>" width="100%">
             </div>
             <div class="col-sm-12 col-md-12 col-lg-8 col-xl-10">
                 <div class="table-responsive">
                     <table cellspacing="0">
                         <tr>
                             <th class="pr-5 align-top" scoper="row">School ID</th>
-                            <td class="text-uppercase"><?= $schoolId ?></td>
+                            <td class="text-uppercase"><?= e($schoolId) ?></td>
                         </tr>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">Name</th>
@@ -74,17 +73,17 @@ if (numRows($schools) > 0) {
                         </tr>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">Address</th>
-                            <td class="text-uppercase"><?= $address ?></td>
+                            <td class="text-uppercase"><?= e($address) ?></td>
                         </tr>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">District</th>
-                            <td class="text-uppercase"><?= $district ?></td>
+                            <td class="text-uppercase"><?= e($district) ?></td>
                         </tr>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">Category</th>
-                            <td class="text-uppercase"><?= $category ?></td>
+                            <td class="text-uppercase"><?= e($category) ?></td>
                         </tr>
-                        <?php if (!empty($head)) : ?>
+                        <?php if (!empty($head)): ?>
                             <tr>
                                 <th class="pr-5 align-top" scoper="row">Head of Office</th>
                                 <td class="text-uppercase">
@@ -96,39 +95,39 @@ if (numRows($schools) > 0) {
                                         } ?>
                                     </div>
                                     <?php
-                                    $positions = position($head);
-                                    echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
+                                    $position = position($head);
+                                    echo $position > 0 ? '<div class="small">' . $position['official_title'] . '</div>' : '';
                                     ?>
                                 </td>
                             </tr>
                         <?php endif ?>
-                        <?php if (!empty($telephone)) : ?>
+                        <?php if (!empty($telephone)): ?>
                             <tr>
                                 <th class="pr-5 align-top" scoper="row">Telephone</th>
-                                <td class="text-uppercase"><?= $telephone ?></td>
+                                <td class="text-uppercase"><?= e($telephone) ?></td>
                             </tr>
                         <?php endif ?>
-                        <?php if (!empty($email)) : ?>
+                        <?php if (!empty($email)): ?>
                             <tr>
                                 <th class="pr-5 align-top" scoper="row">Email Address</th>
-                                <td class="text-lowercase"><?= $email ?></td>
+                                <td class="text-lowercase"><?= e($email) ?></td>
                             </tr>
                         <?php endif ?>
-                        <?php if (!empty($website)) : ?>
+                        <?php if (!empty($website)): ?>
                             <tr>
                                 <th class="pr-5 align-top" scoper="row">Website</th>
-                                <td class="text-lowercase"><?= $website ?></td>
+                                <td class="text-lowercase"><?= e($website) ?></td>
                             </tr>
                         <?php endif ?>
-                        <?php if (!empty($fbPage)) : ?>
+                        <?php if (!empty($fbPage)): ?>
                             <tr>
                                 <th class="pr-5 align-top" scoper="row">Facebook Page</th>
-                                <td class="text-lowercase"><?= $fbPage ?></td>
+                                <td class="text-lowercase"><?= e($fbPage) ?></td>
                             </tr>
                         <?php endif ?>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">Personnel</th>
-                            <td class="text-lowercase"><?= $personnel ?></td>
+                            <td class="text-lowercase"><?= e($personnel) ?></td>
                         </tr>
                     </table>
                 </div>
@@ -153,15 +152,15 @@ if (numRows($schools) > 0) {
                         <th class="align-middle" width="15%">Date of Birth</th>
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
-                        <?php if (!$isHrtdms) : ?>
+                        <?php if (!$isHrtdms): ?>
                             <th class="align-middle" width="15%">Email Address</th>
-                        <?php else : ?>
+                        <?php else: ?>
                             <th class="align-middle" width="15%">Attended Trainings</th>
                         <?php endif ?>
-                        <?php if ($isHrmis) : ?>
+                        <?php if ($isHrmis): ?>
                             <th class="align-middel" width="10%">Progress</th>
-                        <?php else : ?>
-                            <?php if (!$isHrtdms) : ?>
+                        <?php else: ?>
+                            <?php if (!$isHrtdms): ?>
                                 <th class="align-middle" width="10%">Contact #</th>
                             <?php endif ?>
                         <?php endif ?>
@@ -172,15 +171,16 @@ if (numRows($schools) > 0) {
                 <tbody>
                     <?php
                     $query = activeEmployees($schoolId);
-                    while ($row = fetchArray($query)) :
-                        $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = uri() . '/' . $row['picture'];
-                    ?>
+                    foreach ($query as $row):
+                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? "{$baseUri}/" . $row['profile_picture'] : "{$baseUri}/assets/img/user.png";
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                        <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
@@ -193,27 +193,31 @@ if (numRows($schools) > 0) {
                                     modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                                 } ?>
                             </td>
-                            <td class="align-middle"><?= toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y') ?></td>
-                            <td class="align-middle"><?= getDateDifference($row['year'], $row['month'], $row['day']) ?></td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
-                            <?php if (!$isHrtdms) : ?>
-                                <td class="align-middle text-lowercase"><?= $row['email'] ?></td>
-                            <?php else : ?>
+                            <td class="align-middle">
+                                <?= toDate($row['birthdate'], 'F j, Y') ?>
+                            </td>
+                            <td class="align-middle">
+                                <?= getDateDifference($row['birthdate']) ?>
+                            </td>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
+                            <?php if (!$isHrtdms): ?>
+                                <td class="align-middle text-lowercase"><?= e($row['email_address']) ?></td>
+                            <?php else: ?>
                                 <td class="align-middle text-lowercase">
                                     <?php
-                                    $count = numRows(attendedTrainings($row['id']));
+                                    $count = count(attendedTrainings($row['id']));
                                     if ($count > 0) {
                                         echo $count;
                                     } else { ?>
-                                        <span class="text-danger font-weight-bold"><?= $count ?></span>
+                                        <span class="text-danger font-weight-bold"><?= e($count) ?></span>
                                     <?php } ?>
                                 </td>
                             <?php endif ?>
                             <?php if ($isHrmis) { ?>
                                 <td class="align-middle"><?php progressBar(pdsProgress($row['id'])) ?></td>
                             <?php } else { ?>
-                                <?php if (!$isHrtdms) : ?>
-                                    <td class="align-middle"><?= $row['mobile'] ?></td>
+                                <?php if (!$isHrtdms): ?>
+                                    <td class="align-middle"><?= e($row['mobile']) ?></td>
                                 <?php endif ?>
                             <?php } ?>
                             <td class="align-middle text-capitalize">
@@ -221,31 +225,40 @@ if (numRows($schools) > 0) {
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php if ($isHrmis) {
+                                            if ($isDmis || $isPersonnel) { ?>
+                                                <?php modalDropdownItem(uri() . '/modules/schools/set-school-head-dialog.php?e=' . cipher($schoolId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set Head of Office') ?>
+                                                <div class="dropdown-divider"></div>
+                                            <?php }
                                             linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
                                             linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
                                             linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
                                             linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
                                             modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel') ?>
                                             <div class="dropdown-divider"></div>
-                                            <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History') ?>
+                                            <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History');
+                                            if ($isPersonnel) { ?>
+                                                <div class="dropdown-divider"></div>
+                                                <?php
+                                                modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                                                modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
+                                                modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
+                                            }
+                                        } elseif ($isDmis) { ?>
                                             <div class="dropdown-divider"></div>
-                                            <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                                            modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
-                                            modalDropdownItem(uri() . '/modules/schools/set-school-head-dialog.php?e=' . cipher($schoolId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set Head of Office') ?>
-                                            <div class="dropdown-divider"></div>
-                                        <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
-                                        } elseif ($isDmis) {
+                                            <?php
                                             modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit User');
-                                        } elseif ($isHrtdms) {
-                                            linkDropdownItem(customUri('hrtdms', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher');
-                                        } else {
-                                            modalDropdownItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), 'View', 'fa-eye', 'View Employee');
+                                        } elseif ($isHrtdms) { ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php linkDropdownItem(customUri('hrtdms', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher');
+                                        } else { ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php modalDropdownItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), 'View', 'fa-eye', 'View Employee');
                                         } ?>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
@@ -256,15 +269,15 @@ if (numRows($schools) > 0) {
                         <th class="align-middle" width="15%">Date of Birth</th>
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
-                        <?php if (!$isHrtdms) : ?>
+                        <?php if (!$isHrtdms): ?>
                             <th class="align-middle" width="15%">Email Address</th>
-                        <?php else : ?>
+                        <?php else: ?>
                             <th class="align-middle" width="15%">Attended Trainings</th>
                         <?php endif ?>
-                        <?php if ($isHrmis) : ?>
+                        <?php if ($isHrmis): ?>
                             <th class="align-middel" width="10%">Progress</th>
-                        <?php else : ?>
-                            <?php if (!$isHrtdms) : ?>
+                        <?php else: ?>
+                            <?php if (!$isHrtdms): ?>
                                 <th class="align-middle" width="10%">Contact #</th>
                             <?php endif ?>
                         <?php endif ?>

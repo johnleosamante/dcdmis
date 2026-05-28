@@ -18,7 +18,7 @@ messageAlert($showAlert, $message, $success);
         </ol>
     </nav>
 
-    <?php if ($isHrmis) : ?>
+    <?php if ($isHrmis): ?>
         <div class="d-inline-block">
             <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus') ?>
         </div>
@@ -59,10 +59,10 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="<?php $isHrmis ? '15' : '20' ?>%">Position</th>
                         <th class="align-middle" width="<?php $isHrmis ? '20' : '25' ?>%">Station</th>
-                        <?php if ($isHrmis) : ?>
+                        <?php if ($isHrmis): ?>
                             <th class="align-middle" width="10%">Progress</th>
                         <?php endif ?>
-                        <?php if (!$isHrtdms) : ?>
+                        <?php if (!$isHrtdms): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
@@ -71,15 +71,16 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = activeEmployees();
-                    while ($row = fetchArray($query)) :
-                        $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
-                    ?>
+                    foreach ($query as $row):
+                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? uri() . '/' . $row['profile_picture'] : uri() . '/assets/img/user.png';
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                        <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
@@ -93,18 +94,22 @@ messageAlert($showAlert, $message, $success);
                                     modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                                 } ?>
                             </td>
-                            <td class="align-middle"><?= toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y') ?></td>
-                            <td class="align-middle"><?= getDateDifference($row['year'], $row['month'], $row['day']) ?></td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'School Information', $row['station']), fetchAssoc(schoolById($row['station']))['name']) ?>
+                                <?= toDate($row['birthdate'], 'F j, Y') ?>
                             </td>
-                            <?php if ($isHrmis) : ?>
+                            <td class="align-middle">
+                                <?= getDateDifference($row['birthdate']) ?>
+                            </td>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
+                            <td class="align-middle">
+                                <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']) ?>
+                            </td>
+                            <?php if ($isHrmis): ?>
                                 <td class="align-middle">
                                     <?php progressBar(pdsProgress($row['id'])) ?>
                                 </td>
                             <?php endif ?>
-                            <?php if (!$isHrtdms) : ?>
+                            <?php if (!$isHrtdms): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
@@ -118,10 +123,12 @@ messageAlert($showAlert, $message, $success);
                                                 <div class="dropdown-divider"></div>
                                                 <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History') ?>
                                                 <div class="dropdown-divider"></div>
-                                            <?php
+                                                <?php
                                                 modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                                                modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
-                                                modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
+                                                if ($isPersonnel) {
+                                                    modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
+                                                    modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
+                                                }
                                             } else {
                                                 modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Set User', 'fa-user-cog', 'Set User Access');
                                                 modalDropdownItem(uri() . '/modules/users/reset-user-dialog.php?id=' . cipher($row['id']), 'Reset', 'fa-undo-alt', 'Reset User');
@@ -131,7 +138,7 @@ messageAlert($showAlert, $message, $success);
                                 </td>
                             <?php endif ?>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
@@ -142,10 +149,10 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="<?php $isHrmis ? '15' : '20' ?>%">Position</th>
                         <th class="align-middle" width="<?php $isHrmis ? '20' : '25' ?>%">Station</th>
-                        <?php if ($isHrmis) : ?>
+                        <?php if ($isHrmis): ?>
                             <th class="align-middle" width="10%">Progress</th>
                         <?php endif ?>
-                        <?php if (!$isHrtdms) : ?>
+                        <?php if (!$isHrtdms): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>

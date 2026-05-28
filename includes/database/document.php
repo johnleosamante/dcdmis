@@ -1,193 +1,692 @@
 <?php
 // includes/database/document.php
-// tbl_transactions
-// tbl_transactions_log
-// tbl_document_purpose
-function documentPurpose()
+function documentTransactionStatus(?int $status_id = null): string|array
 {
-    return query("SELECT `purpose` FROM tbl_document_purpose;");
+    $sql = "SELECT `id`, `name` FROM `document_transaction_statuses`";
+    if ($status_id) {
+        $sql .= " WHERE `id` = ? LIMIT 1";
+        $row = find($sql, [$status_id]);
+        return $row['name'] ?? '';
+    }
+    $sql .= " WHERE `for_processing` = 1 ORDER BY `name` ASC";
+    $result = query($sql);
+    return is_array($result) ? $result : [];
 }
 
-function documentTypes($for_school = false)
+function documentStatusId(string $status): int|null
 {
-    $filter = $for_school ? "`for_school`='1' AND" : '';
-    return query("SELECT `id`, `name` FROM `document_types` WHERE {$filter} `id` NOT LIKE '1' ORDER BY `name`;");
+    $sql = "SELECT `id` FROM `document_transaction_statuses` WHERE `name` = ? LIMIT 1";
+    $result = find($sql, [$status]);
+    return $result ? (int) $result['id'] : null;
 }
 
-function documentType($id)
+function documentTypes(bool $for_school = false): array
 {
-    return query("SELECT `name` FROM `document_types` WHERE `id`='{$id}';");
+    $where = ["`id` <> 1"];
+    $params = [];
+    if ($for_school) {
+        $where[] = "`for_school` = ?";
+        $params[] = 1;
+    }
+    $whereClause = implode(" AND ", $where);
+    $sql = "SELECT `id`, `name` FROM `document_types` WHERE $whereClause ORDER BY `name` ASC";
+    $result = query($sql, $params);
+    return is_array($result) ? $result : [];
 }
 
-function document($id)
+function documentType(int $document_type_id): string
 {
-    return query("SELECT TransCode AS id, Title AS `description`, `type`, `type`, Date_time AS `datetime`, Trans_from AS `from`, Trans_Stats AS `status`, details FROM tbl_transactions WHERE TransCode='{$id}' LIMIT 1;");
+    $sql = "SELECT `name` FROM `document_types` WHERE `id` = ? LIMIT 1";
+    $result = find($sql, [$document_type_id]);
+    return $result['name'] ?? '';
 }
 
-function isDocument($id, $status)
+function document($document_transaction_id)
 {
-    return numRows(query("SELECT TransCode AS id FROM tbl_transactions WHERE TransCode='{$id}' AND Trans_Stats LIKE '%{$status}%';")) > 0;
+    $sql = "SELECT t.id, t.document_type_id, t.description, t.created_from, t.head_id, t.created_at, l.status_id FROM `document_transactions` AS t 
+            LEFT JOIN `document_transaction_logs` AS l ON l.document_transaction_id = t.id AND l.is_new = 1 
+            WHERE t.id = ? LIMIT 1";
+    return find($sql, [$document_transaction_id]);
 }
 
-function countDocumentsFrom($station, $year, $code)
+function isDocument($document_transaction_id, $status): bool
 {
-    return numRows(query("SELECT TransCode AS id FROM tbl_transactions WHERE Trans_from='{$station}' AND TransCode LIKE '%{$code}-{$year}-%';"));
+    $sql = "SELECT 1 
+            FROM `document_transaction_logs` AS l 
+            INNER JOIN `document_transaction_statuses` AS s ON l.status_id = s.id 
+            WHERE l.document_transaction_id = ? 
+              AND s.name LIKE ? AND l.is_new=1
+            LIMIT 1";
+    $statusPattern = "%{$status}%";
+    $result = find($sql, [$document_transaction_id, $statusPattern]);
+    return !empty($result);
 }
 
-function documentFrom($id, $station)
+function countDocumentsFrom($station_id, $year, $code)
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, `type`, tbl_transactions.Date_time AS `datetime`, tbl_transactions.Trans_from AS `from`, tbl_transactions.Trans_Stats AS `status`, tbl_transactions.details FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE (tbl_transactions_log.From_office='{$station}' OR tbl_transactions_log.Forwarded_to='{$station}') AND tbl_transactions_log.Transaction_code='{$id}';");
+    $sql = "SELECT COUNT(`id`) AS `total` 
+            FROM `document_transactions` 
+            WHERE `created_from` = ? 
+              AND `id` LIKE ?";
+    $pattern = "{$code}-{$year}-%";
+    $result = find($sql, [$station_id, $pattern]);
+    return (int) ($result['total'] ?? 0);
 }
 
-function documentOrigin($id)
+function documentOrigin($document_transaction_id)
 {
-    return query("SELECT tbl_transactions.TransCode AS `id`, tbl_transactions.Title AS `description`, `type`, tbl_transactions.Trans_Stats AS `status`, tbl_transactions.details, tbl_transactions.Date_time AS `datetime`, tbl_transactions.SchoolID AS `head`, tbl_transactions_log.Recieved_by AS `user`, tbl_transactions_log.From_office AS `from` FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' ORDER BY tbl_transactions_log.Date_recieved ASC LIMIT 1;");
+    $sql = "SELECT 
+                t.id, 
+                t.description, 
+                t.document_type_id, 
+                l.status_id, 
+                l.details, 
+                t.head_id, 
+                t.created_from, 
+                t.created_at,
+                l.created_at AS processed_at, 
+                l.processor_id, 
+                l.received_from 
+            FROM `document_transactions` AS t 
+            INNER JOIN `document_transaction_logs` AS l ON t.id = l.document_transaction_id 
+            WHERE t.id = ? 
+            ORDER BY l.created_at ASC 
+            LIMIT 1";
+    return find($sql, [$document_transaction_id]);
 }
 
-function isDocumentFrom($id, $station, $status = 'New')
+function isDocumentFrom($document_transaction_id, $received_from): bool
 {
-    return numRows(query("SELECT Transaction_code AS id FROM tbl_transactions_log WHERE From_office='{$station}' AND `Status`='{$status}' AND Transaction_code='{$id}';"));
+    $sql = "SELECT 1 FROM `document_transaction_logs` 
+            WHERE `document_transaction_id` = ? 
+              AND `received_from` = ? 
+              AND `is_new` = 1 
+            LIMIT 1";
+    $results = query($sql, [$document_transaction_id, $received_from]);
+    return !empty($results);
 }
 
-function createDocument($id, $description, $type, $station, $purpose, $headId, $details = '')
+// document_transactions
+function createDocument($document_transaction_id, $description, $document_type_id, $created_from, $head_id)
 {
-    nonQuery("INSERT INTO tbl_transactions (TransCode, Title, `type`, Date_time, Trans_from, Trans_Stats, `Status`, `SchoolID`, details) VALUES ('{$id}', '{$description}', '{$type}', NOW(), '{$station}', '{$purpose}', 'Unread', '{$headId}', '{$details}');");
+    $data = [
+        'id' => $document_transaction_id,
+        'document_type_id' => $document_type_id,
+        'description' => $description,
+        'created_from' => $created_from,
+        'head_id' => $head_id,
+    ];
+    return insert('document_transactions', $data);
 }
 
-function updateDocument($id, $description, $type, $purpose, $details = '', $updateDescription = true)
+function updateDocument($document_transaction_id, $description, $document_type_id, $update_description = true)
 {
-    $description_column = $updateDescription ? " Title='{$description}', `type`='{$type}', " : ' ';
-    nonQuery("UPDATE tbl_transactions SET $description_column Trans_Stats='{$purpose}', details='{$details}' WHERE TransCode='{$id}' LIMIT 1;");
+    $data = [];
+    if ($update_description) {
+        $data['description'] = $description;
+        $data['document_type_id'] = $document_type_id;
+    }
+    if (empty($data)) {
+        return false;
+    }
+    return update('document_transactions', $data, "`id` = ?", [$document_transaction_id]);
 }
 
-function incomingDocuments($station)
+function incomingDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.From_office AS `from`, tbl_transactions_log.Date_recieved AS `datetime`, tbl_transactions.Trans_Stats AS purpose, tbl_transactions.Trans_from AS station FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions_log.Forwarded_to='{$station}' AND tbl_transactions_log.Status='New' ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    $sql = "SELECT 
+                t.id, 
+                t.description, 
+                l.status_id, 
+                t.created_from,
+                l.received_from, 
+                l.created_at
+            FROM `document_transaction_logs` AS l 
+            INNER JOIN `document_transactions` AS t ON l.document_transaction_id = t.id 
+            WHERE l.received_from IS NOT NULL
+                AND l.forwarded_to = ?
+                AND l.status_id NOT IN (10, 11)
+                AND l.is_new = 1 
+                AND l.`created_at` >= ? 
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
+            ORDER BY l.created_at DESC LIMIT ?";
+    $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
+    return is_array($results) ? $results : [];
 }
 
-function isIncomingDocument($id, $station)
+function countIncomingDocuments($station_id)
 {
-    return numRows(query("SELECT tbl_transactions.TransCode AS id FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' AND tbl_transactions_log.Forwarded_to='{$station}' AND  tbl_transactions_log.Status='New' ORDER BY tbl_transactions_log.Date_recieved DESC LIMIT 1;")) > 0;
+    $sql = "SELECT COUNT(DISTINCT document_transaction_id) AS `count` 
+            FROM `document_transaction_logs` 
+            WHERE received_from IS NOT NULL
+                AND forwarded_to = ?
+                AND status_id NOT IN (10, 11)
+                AND is_new = 1";
+    $result = find($sql, [$station_id]);
+    return (int) ($result['count'] ?? 0);
 }
 
-function pendingDocuments($station)
+function isIncomingDocument($document_transaction_id, $station_id): bool
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Recieved_by AS user, tbl_transactions_log.Date_recieved AS `datetime`, tbl_transactions.Trans_from AS station FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to='-' AND tbl_transactions_log.Status='New' AND tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    $sql = "SELECT 1 FROM `document_transaction_logs` 
+            WHERE `document_transaction_id` = ?
+                AND received_from IS NOT NULL 
+                AND forwarded_to = ? 
+                AND status_id NOT IN (10, 11)
+                AND is_new = 1
+            LIMIT 1";
+    $results = find($sql, [$document_transaction_id, $station_id]);
+
+    return (bool) $results;
 }
 
-function isPendingDocument($id, $station)
+function pendingDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
-    return numRows(query("SELECT tbl_transactions.TransCode AS id FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to='-' AND tbl_transactions_log.Status='New' AND tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' ORDER BY tbl_transactions_log.Date_recieved DESC LIMIT 1;")) > 0;
+    $sql = "SELECT 
+                t.id, 
+                t.description, 
+                l.processor_id, 
+                t.created_from, 
+                l.created_at
+            FROM `document_transaction_logs` AS l 
+            INNER JOIN `document_transactions` AS t ON l.document_transaction_id = t.id 
+            WHERE l.received_from = ?
+                AND l.forwarded_to IS NULL
+                AND l.status_id NOT IN (10, 11)
+                AND l.is_new = 1
+                AND l.`created_at` >= ? 
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
+            ORDER BY l.created_at DESC LIMIT ?";
+    $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
+    return is_array($results) ? $results : [];
 }
 
-function outgoingDocuments($station)
+function countPendingDocuments($station_id)
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Forwarded_to AS `to`, tbl_transactions_log.Recieved_by AS user, tbl_transactions_log.Date_recieved AS `datetime`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to <> '' AND tbl_transactions_log.Forwarded_to <> '-' AND tbl_transactions_log.Status='New' ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    $sql = "SELECT COUNT(DISTINCT document_transaction_id) AS `count` 
+            FROM `document_transaction_logs`
+            WHERE received_from = ?
+                AND forwarded_to IS NULL
+                AND status_id NOT IN (10, 11)
+                AND is_new = 1";
+    $result = find($sql, [$station_id]);
+    return (int) ($result['count'] ?? 0);
 }
 
-function isOutgoingDocument($id, $station)
+function isPendingDocument($document_transaction_id, $station_id): bool
 {
-    return numRows(query("SELECT tbl_transactions.TransCode AS id FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions.TransCode='{$id}' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to <> '' AND tbl_transactions_log.Forwarded_to <> '-' AND tbl_transactions_log.Status='New' ORDER BY tbl_transactions_log.Date_recieved DESC LIMIT 1;")) > 0;
+    $sql = "SELECT 1 FROM `document_transaction_logs`
+            WHERE document_transaction_id = ? 
+              AND received_from = ? 
+              AND forwarded_to IS NULL
+              AND status_id NOT IN (10, 11)
+              AND is_new = 1";
+    $results = find($sql, [$document_transaction_id, $station_id]);
+    return (bool) $results;
 }
 
-function ongoingDocuments($station)
+function outgoingDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, tbl_transactions_log.Forwarded_to AS `to`, tbl_transactions.Date_time AS `datetime`, tbl_transactions.Trans_Stats AS `status`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions_log.Trans_status NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions_log.Trans_status NOT LIKE '%Cancel%' GROUP BY tbl_transactions.TransCode ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    $sql = "SELECT 
+                t.id, 
+                t.description, 
+                l.forwarded_to, 
+                l.processor_id, 
+                t.created_from, 
+                l.created_at 
+            FROM `document_transaction_logs` AS l 
+            INNER JOIN `document_transactions` AS t ON l.document_transaction_id = t.id 
+            WHERE l.received_from = ?
+                AND l.forwarded_to IS NOT NULL
+                AND l.status_id NOT IN (10, 11)
+                AND l.is_new = 1
+                AND l.`created_at` >= ? 
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
+            ORDER BY l.created_at DESC LIMIT ?";
+    $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
+    return is_array($results) ? $results : [];
 }
 
-function isOngoingDocument($id, $station)
+function isOutgoingDocument($document_transaction_id, $station_id): bool
 {
-    return numRows(query("SELECT tbl_transactions.TransCode AS id FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' AND tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats NOT LIKE '%Complete%' AND tbl_transactions_log.Trans_status NOT LIKE '%Complete%' AND tbl_transactions.Trans_Stats NOT LIKE '%Cancel%' AND tbl_transactions_log.Trans_status NOT LIKE '%Cancel%' GROUP BY tbl_transactions.TransCode ORDER BY tbl_transactions_log.Date_recieved DESC LIMIT 1;")) > 0;
+    $sql = "SELECT 1 FROM `document_transaction_logs` 
+            WHERE document_transaction_id = ? 
+                AND received_from = ?
+                AND forwarded_to IS NOT NULL
+                AND status_id NOT IN (10, 11)
+                AND is_new = 1 
+            LIMIT 1";
+    $results = find($sql, [$document_transaction_id, $station_id]);
+    return (bool) $results;
 }
 
-function completedDocuments($station, $from, $to)
+function ongoingDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, `type`, tbl_transactions.Date_time AS `postedon`, tbl_transactions_log.Date_recieved AS completedon, tbl_transactions.Trans_from AS station FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats LIKE '%Complete%' AND tbl_transactions_log.Trans_status LIKE '%Complete%' AND Date_recieved BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY)) ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    $sql = "SELECT 
+                t.id, 
+                t.description, 
+                l.forwarded_to, 
+                t.created_from,
+                l.status_id, 
+                t.created_at
+            FROM `document_transactions` AS t
+            INNER JOIN `document_transaction_logs` AS l ON t.id = l.document_transaction_id 
+            WHERE t.created_from = ?
+                AND l.forwarded_to IS NOT NULL
+                AND l.status_id NOT IN (10, 11)
+                AND l.is_new = 1
+                AND l.`created_at` >= ? 
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
+            GROUP BY t.id 
+            ORDER BY l.created_at DESC LIMIT ?";
+    $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
+    return is_array($results) ? $results : [];
 }
 
-function isCompletedDocument($id, $station)
+function countOngoingDocuments($station_id)
 {
-    return numRows(query("SELECT tbl_transactions.TransCode AS id FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions.TransCode = tbl_transactions_log.Transaction_code WHERE tbl_transactions.TransCode='{$id}' AND tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats LIKE '%Complete%' AND tbl_transactions_log.Trans_status LIKE '%Complete%' ORDER BY tbl_transactions_log.Date_recieved DESC LIMIT 1;")) > 0;
+    $sql = "SELECT COUNT(DISTINCT t.id) AS `count` 
+            FROM `document_transactions` AS t
+            INNER JOIN `document_transaction_logs` AS l ON t.id = l.document_transaction_id 
+            WHERE t.created_from = ?
+                AND l.forwarded_to IS NOT NULL
+                AND l.status_id NOT IN (10, 11)
+                AND l.is_new = 1";
+    $result = find($sql, [$station_id]);
+    return (int) ($result['count'] ?? 0);
 }
 
-function wasDocumentCompleted($id, $station)
+function completedDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
-    return numRows(query("SELECT Transaction_code AS id FROM tbl_transactions_log WHERE Transaction_code='{$id}' AND From_office='{}' Trans_status='Completed'")) > 0;
+    $sql = "SELECT 
+                t.`id`, 
+                t.`description`, 
+                t.`document_type_id`, 
+                t.`created_at` AS `posted_on`, 
+                l.`created_at` AS `completed_on`, 
+                t.`created_from` 
+            FROM `document_transactions` AS `t` 
+            INNER JOIN `document_transaction_logs` AS `l` ON t.`id` = l.`document_transaction_id` 
+            WHERE t.`created_from` = ?
+                AND l.`forwarded_to` IS NULL
+                AND l.`status_id` = 10
+                AND l.`is_new` = 1
+                AND l.`created_at` >= ? 
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
+            ORDER BY l.`created_at` DESC LIMIT ?";
+    return query($sql, [$station_id, $from_date, $to_date, $limit]);
 }
 
-function receivedDocuments($station, $from, $to)
+function isCompletedDocument($document_transaction_id, $station_id): bool
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, `type`, tbl_transactions_log.Date_recieved AS `datetime`, tbl_transactions_log.Recieved_by AS `receiver`, tbl_transactions.Trans_from AS station FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from <> '{$station}' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to='-' AND (tbl_transactions_log.Trans_status LIKE '%Received%' OR tbl_transactions_log.Trans_status LIKE '%On Process%') AND tbl_transactions_log.Status='Done' AND Date_recieved BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY)) ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    $sql = "SELECT 1 FROM `document_transactions` AS t 
+            INNER JOIN `document_transaction_logs` AS l ON t.id = l.document_transaction_id 
+            WHERE t.id = ? 
+              AND t.created_from = ? 
+              AND l.forwarded_to IS NULL
+              AND l.status_id = 10
+              AND l.is_new = 1 
+            LIMIT 1";
+    $results = find($sql, [$document_transaction_id, $station_id]);
+    return (bool) $results;
 }
 
-function isReceivedDocument($id, $station)
+function receivedDocuments($station_id, $from_date, $to_date)
 {
-    return numRows(query("SELECT tbl_transactions.TransCode AS id FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.TransCode='{$id}' AND tbl_transactions.Trans_from <> '{$station}' AND tbl_transactions_log.From_office='{$station}' AND tbl_transactions_log.Forwarded_to='-' AND (tbl_transactions_log.Trans_status LIKE '%Received%' OR tbl_transactions_log.Trans_status LIKE '%On Process%') AND tbl_transactions_log.Status='Done' ORDER BY tbl_transactions_log.Date_recieved DESC LIMIT 1;")) > 0;
+    $sql = "SELECT 
+                t.`id`, 
+                t.`description`, 
+                t.`document_type_id`, 
+                t.`created_from`,
+                l.`created_at`, 
+                l.`processor_id`
+            FROM `document_transaction_logs` AS `l` 
+            INNER JOIN `document_transactions` AS `t` ON l.`document_transaction_id` = t.`id` 
+            WHERE t.`created_from` != ?
+                AND l.`received_from` = ?
+                AND l.`forwarded_to` IS NULL
+                AND l.`status_id` = 9
+                AND l.`created_at` >= ? 
+                AND l.`created_at` < DATE_ADD(?, INTERVAL 1 DAY) 
+            ORDER BY l.`created_at` DESC 
+            LIMIT 1000";
+    return query($sql, [$station_id, $station_id, $from_date, $to_date]);
 }
 
-function canceledDocuments($station, $from, $to)
+function isReceivedDocument($document_transaction_id, $station_id): bool
 {
-    return query("SELECT tbl_transactions.TransCode AS id, tbl_transactions.Title AS `description`, `type`, tbl_transactions.Date_time AS `postedon`, tbl_transactions_log.Date_recieved AS `canceledon`, tbl_transactions.Trans_from AS station FROM tbl_transactions INNER JOIN tbl_transactions_log ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats LIKE '%Cancel%' AND tbl_transactions_log.Trans_status LIKE '%Cancel%' AND Date_recieved BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY)) ORDER BY tbl_transactions_log.Date_recieved DESC;");
+    $sql = "SELECT 1 FROM `document_transactions` AS t 
+            INNER JOIN `document_transaction_logs` AS l ON t.`id` = l.`document_transaction_id` 
+            WHERE t.`id` = ? 
+                AND t.`created_from` != ?
+                AND l.`received_from` = ?
+                AND l.`forwarded_to` IS NULL
+                AND l.`status_id` = 9
+            LIMIT 1";
+    $results = find($sql, [$document_transaction_id, $station_id, $station_id]);
+    return (bool) $results;
 }
 
-function isCanceledDocument($id, $station)
+function canceledDocuments($station_id, $from_date, $to_date, $limit = 1000)
 {
-    return numRows(query("SELECT tbl_transactions.TransCode AS id FROM tbl_transactions_log INNER JOIN tbl_transactions ON tbl_transactions_log.Transaction_code = tbl_transactions.TransCode WHERE tbl_transactions.TransCode='{$id}' AND tbl_transactions.Trans_from='{$station}' AND tbl_transactions.Trans_Stats LIKE '%Cancel%' AND tbl_transactions_log.Trans_status LIKE '%Cancel%' ORDER BY tbl_transactions_log.Date_recieved DESC LIMIT 1;")) > 0;
+    $sql = "SELECT 
+                t.id, 
+                t.description, 
+                t.document_type_id, 
+                t.created_at AS posted_on, 
+                l.created_at AS canceled_on, 
+                t.created_from 
+            FROM `document_transactions` AS t 
+            INNER JOIN `document_transaction_logs` AS l ON t.id = l.document_transaction_id 
+            WHERE t.created_from = ?
+                AND l.forwarded_to IS NULL
+                AND l.status_id = 11
+                AND l.is_new = 1 
+                AND l.created_at >= ? 
+                AND l.created_at < DATE_ADD(?, INTERVAL 1 DAY) 
+            ORDER BY l.created_at DESC LIMIT ?";
+    return query($sql, [$station_id, $from_date, $to_date, $limit]);
 }
 
-function documentLog($id)
+function isCanceledDocument($document_transaction_id, $station_id): bool
 {
-    return query("SELECT `tbl_transactions`.`TransCode` AS `id`, `tbl_transactions`.`Title` AS `description`, `type`, `tbl_transactions`.`Trans_from` AS `from`, `tbl_transactions_log`.`Date_recieved` AS `datetime`, `tbl_transactions_log`.`Forwarded_To` AS `destination`, `tbl_transactions_log`.`Trans_status` AS `purpose`, tbl_transactions_log.details FROM `tbl_transactions` INNER JOIN `tbl_transactions_log` ON `tbl_transactions`.`TransCode` = `tbl_transactions_log`.`Transaction_code` WHERE `tbl_transactions`.`TransCode`='{$id}' ORDER BY `datetime` DESC LIMIT 1;");
+    $sql = "SELECT 1 FROM `document_transactions` AS t
+            INNER JOIN `document_transaction_logs` AS l ON t.`id` = l.`document_transaction_id`
+            WHERE t.`id` = ?
+                AND t.created_from = ?
+                AND l.forwarded_to IS NULL
+                AND l.status_id = 11
+                AND l.is_new = 1
+            LIMIT 1";
+    $results = find($sql, [$document_transaction_id, $station_id]);
+    return (bool) $results;
 }
 
-function documentLogs($id)
+function documentLog($document_transaction_id)
 {
-    return query("SELECT Date_recieved AS `datetime`, Recieved_by AS `user`, From_office AS `from`, Forwarded_to AS `to`, Trans_status AS `status`, `details`, `attachment` FROM tbl_transactions_log WHERE Transaction_code='{$id}' ORDER BY Date_recieved DESC;");
+    $sql = "SELECT 
+                t.id, 
+                t.description, 
+                t.document_type_id, 
+                t.created_from, 
+                l.created_at, 
+                l.forwarded_to, 
+                l.status_id, 
+                l.details 
+            FROM `document_transactions` AS t 
+            INNER JOIN `document_transaction_logs` AS l ON t.id = l.document_transaction_id 
+            WHERE t.id = ? 
+            ORDER BY l.created_at DESC 
+            LIMIT 1";
+    return find($sql, [$document_transaction_id]);
 }
 
-function createDocumentLog($id, $user, $station, $destination, $purpose, $status = 'New', $details = '', $attachment = '')
+function documentLogs($document_transaction_id)
 {
-    nonQuery("INSERT INTO tbl_transactions_log VALUES (null, NOW(), '{$user}', '{$station}', '{$destination}', '{$purpose}', '{$id}', '{$status}', '{$details}', '{$attachment}');");
+    $sql = "SELECT 
+                id, 
+                processor_id, 
+                received_from, 
+                forwarded_to, 
+                status_id, 
+                details, 
+                created_at
+            FROM `document_transaction_logs` 
+            WHERE `document_transaction_id` = ? 
+            ORDER BY `created_at` DESC";
+    $results = query($sql, [$document_transaction_id]);
+    return is_array($results) ? $results : [];
 }
 
-function updateDocumentLog($id, $user, $station, $destination, $purpose, $status = 'New', $details = '', $attachment = '', $change_date = true)
+function createDocumentLog($document_transaction_id, $processor_id, $received_from, $forwarded_to, $status_id, $is_new = 1, $details = '')
 {
-    $date = $change_date ? "Date_Recieved=NOW(), " : '';
-    nonQuery("UPDATE tbl_transactions_log SET " . $date . " Recieved_by='{$user}', From_office='{$station}', Forwarded_to='{$destination}', Trans_status='{$purpose}', `Status`='{$status}', `details`='{$details}', `attachment`='{$attachment}' WHERE Transaction_code='{$id}' ORDER BY Date_Recieved DESC LIMIT 1;");
+    $data = [
+        'processor_id' => $processor_id,
+        'received_from' => $received_from,
+        'forwarded_to' => $forwarded_to,
+        'status_id' => $status_id,
+        'document_transaction_id' => $document_transaction_id,
+        'is_new' => $is_new,
+        'details' => $details
+    ];
+    return insert('document_transaction_logs', $data);
 }
 
-function updateDocumentLogsDone($id)
+function updateDocumentLog($document_transaction_id, $processor_id, $received_from, $forwarded_to, $status_id, $is_new = 1, $details = '')
 {
-    nonQuery("UPDATE tbl_transactions_log SET `Status`='Done' WHERE Transaction_code='{$id}';");
+    $latest = find(
+        "SELECT `id` FROM `document_transaction_logs` WHERE `document_transaction_id` = ? 
+        ORDER BY `created_at` DESC LIMIT 1",
+        [$document_transaction_id]
+    );
+    if (!$latest) {
+        return 0;
+    }
+    $log_id = $latest['id'];
+    $data = [
+        'processor_id' => $processor_id,
+        'received_from' => $received_from,
+        'forwarded_to' => $forwarded_to,
+        'status_id' => $status_id,
+        'is_new' => $is_new,
+        'details' => $details
+    ];
+    return update('document_transaction_logs', $data, '`id` = ?', [$log_id]);
 }
 
-function updateDocumentStatus($id, $purpose, $status = 'Unread', $details = '')
+function updateDocumentLogsDone($document_transaction_id)
 {
-    nonQuery("UPDATE tbl_transactions SET Trans_Stats='{$purpose}', `Status`='{$status}', details='{$details}' WHERE TransCode='{$id}' LIMIT 1;");
+    $data = ['is_new' => 0];
+    return update('document_transaction_logs', $data, "`document_transaction_id` = ? AND `is_new` = 1", [$document_transaction_id]);
 }
 
-function updateTransactionLogFrom($newAlias, $oldAlias)
+function documentLogAttachments($transaction_log_id)
 {
-    nonQuery("UPDATE tbl_transactions_log SET `From_office`='{$newAlias}' WHERE `From_office`='{$oldAlias}';");
+    return query(
+        "SELECT `id`, `file_name`, `file_extension` FROM `document_transaction_log_attachments` WHERE `transaction_log_id` = ?",
+        [$transaction_log_id]
+    );
 }
 
-function updateTransactionLogTo($newAlias, $oldAlias)
+function createDocumentLogAttachment($transaction_log_id, $file_name, $file_extension)
 {
-    nonQuery("UPDATE tbl_transactions_log SET `Forwarded_To`='{$newAlias}' WHERE `Forwarded_To`='{$oldAlias}';");
+    $data = [
+        'transaction_log_id' => $transaction_log_id,
+        'file_name' => $file_name,
+        'file_extension' => $file_extension
+    ];
+    return insert('document_transaction_log_attachments', $data);
 }
 
-function updateTransactionFrom($newAlias, $oldAlias)
+function deleteDocumentLogAttachment($attachment_id)
 {
-    nonQuery("UPDATE tbl_transactions SET `Trans_from`='{$newAlias}' WHERE `Trans_from`='{$oldAlias}';");
+    $sql = "SELECT `file_name` FROM `document_transaction_log_attachments` WHERE `id` = ? LIMIT 1";
+    $attachment = find($sql, [$attachment_id]);
+    if ($attachment && file_exists(root() . '/' . $attachment['file_name'])) {
+        unlink(root() . '/' . $attachment['file_name']);
+    }
+    return delete('document_transaction_log_attachments', '`id` = ?', [$attachment_id]);
 }
 
-function documentByStatus($status, $id, $station, $from = '', $to = '')
+function updateTransactionLogFrom($new_alias, $old_alias)
 {
-    return query("SELECT * FROM `tbl_system_logs` WHERE `Status`='{$status}' AND `target_id` LIKE '{$station}%' AND Emp_ID='{$id}' AND Time_log BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY));");
+    $data = ['received_from' => $new_alias];
+    if ($new_alias === $old_alias) {
+        return 0;
+    }
+    return update(
+        'document_transaction_logs',
+        $data,
+        '`received_from` = ?',
+        [$old_alias]
+    );
 }
 
-function documentSearch($string, $station)
+function updateTransactionLogTo($new_alias, $old_alias)
 {
-    return query("SELECT `TransCode` AS `id`, `Title` AS `description`, `Date_time` AS `datetime`, `Trans_from` AS `from`, `Trans_Stats` AS `status` FROM `tbl_transactions` INNER JOIN `tbl_transactions_log` ON `tbl_transactions`.`TransCode`=`tbl_transactions_log`.`Transaction_code` WHERE (`tbl_transactions`.`TransCode` LIKE '%{$string}%' OR `tbl_transactions`.`Title` LIKE '%{$string}%' OR `tbl_transactions_log`.`details` LIKE '%{$string}%') AND (`tbl_transactions_log`.`From_office`='{$station}' OR `tbl_transactions_log`.`Forwarded_to`=
-    '{$station}') GROUP BY `tbl_transactions`.`TransCode`;");
+    $data = ['forwarded_to' => $new_alias];
+    if ($new_alias === $old_alias) {
+        return 0;
+    }
+    return update(
+        'document_transaction_logs',
+        $data,
+        '`forwarded_to` = ?',
+        [$old_alias]
+    );
+}
+
+function updateTransactionFrom($new_alias, $old_alias)
+{
+    $data = ['created_from' => $new_alias];
+    if ($new_alias === $old_alias) {
+        return 0;
+    }
+    return update(
+        'document_transactions',
+        $data,
+        '`created_from` = ?',
+        [$old_alias]
+    );
+}
+
+function documentByStatus($status, $employee_id, $station_id, $from_date = '', $to_date = '')
+{
+    $station_filter = "$station_id%";
+    if (empty($from_date)) {
+        $from_date = date('Y-m-d');
+    }
+    if (empty($to_date)) {
+        $to_date = $from_date;
+    }
+    $sql = "SELECT COUNT(*) AS `count` FROM `system_logs` 
+            WHERE `action` = ? AND `target_id` 
+            LIKE ? AND `employee_id` = ? AND `created_at` >= ? AND `created_at` < DATE_ADD(?, INTERVAL 1 DAY)";
+    $row = find($sql, [$status, $station_filter, $employee_id, $from_date, $to_date]);
+    return $row ? (int) $row['count'] : 0;
+}
+
+function documentSearch($string)
+{
+    $likeTerm = "%{$string}%";
+    $sql = "SELECT 
+                t.`id`, 
+                t.`description`, 
+                t.`created_from`, 
+                l.`status_id`, 
+                t.`created_at`  
+            FROM `document_transactions` AS t
+            INNER JOIN `document_transaction_logs` AS l ON l.`id` = (
+                SELECT MAX(`id`) 
+                FROM `document_transaction_logs` 
+                WHERE `document_transaction_id` = t.`id`
+            )
+            WHERE t.`id` LIKE ? OR MATCH(t.`description`) AGAINST (? IN BOOLEAN MODE)
+            ORDER BY t.`created_at` DESC 
+            LIMIT 1000";
+    return query($sql, [$likeTerm, $string]);
+}
+
+function stationTransactionCounts($station_id)
+{
+    $sql = "SELECT 
+        COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 THEN l.document_transaction_id END) AS incoming,
+        COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS pending,
+        COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS outgoing,
+        COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN t.id END) AS ongoing
+    FROM `document_transaction_logs` AS l
+    LEFT JOIN `document_transactions` AS t 
+        ON l.document_transaction_id = t.id
+    WHERE l.status_id NOT IN (10, 11)";
+    $result = find($sql, [$station_id, $station_id, $station_id, $station_id]);
+    return [
+        'incoming' => (int) ($result['incoming'] ?? 0),
+        'pending' => (int) ($result['pending'] ?? 0),
+        'outgoing' => (int) ($result['outgoing'] ?? 0),
+        'ongoing' => (int) ($result['ongoing'] ?? 0)
+    ];
+}
+
+function detailedStationTransactionCounts($station_id, $from_date = null, $to_date = null)
+{
+    $anchor_date = !empty($to_date) ? $to_date : date('Y-m-d H:i:s');
+    execute("SET @anchor = ?", [$anchor_date]);
+
+    $sql = "SELECT 
+    -- 1. BASE TOTAL COUNTS
+    COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 THEN l.document_transaction_id END) AS incoming,
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS pending,
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS outgoing,
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN t.id END) AS ongoing,
+    
+    -- 2. INCOMING LAPSED BREAKDOWN (MUTUALLY EXCLUSIVE)
+    COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 4 AND 6 THEN l.document_transaction_id END) AS inc_3,
+    COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 7 AND 13 THEN l.document_transaction_id END) AS inc_7,
+    COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 14 AND 29 THEN l.document_transaction_id END) AS inc_14,
+    COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 30 AND 59 THEN l.document_transaction_id END) AS inc_30,
+    COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) >= 60 THEN l.document_transaction_id END) AS inc_60,
+
+    -- 3. PENDING LAPSED BREAKDOWN (MUTUALLY EXCLUSIVE)
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 4 AND 6 THEN l.document_transaction_id END) AS pen_3,
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 7 AND 13 THEN l.document_transaction_id END) AS pen_7,
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 14 AND 29 THEN l.document_transaction_id END) AS pen_14,
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 30 AND 59 THEN l.document_transaction_id END) AS pen_30,
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) >= 60 THEN l.document_transaction_id END) AS pen_60,
+
+    -- 4. OUTGOING LAPSED BREAKDOWN (MUTUALLY EXCLUSIVE)
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 4 AND 6 THEN l.document_transaction_id END) AS out_3,
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 7 AND 13 THEN l.document_transaction_id END) AS out_7,
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 14 AND 29 THEN l.document_transaction_id END) AS out_14,
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 30 AND 59 THEN l.document_transaction_id END) AS out_30,
+    COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) >= 60 THEN l.document_transaction_id END) AS out_60,
+
+    -- 5. ONGOING LAPSED BREAKDOWN (MUTUALLY EXCLUSIVE)
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 4 AND 6 THEN t.id END) AS ong_3,
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 7 AND 13 THEN t.id END) AS ong_7,
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 14 AND 29 THEN t.id END) AS ong_14,
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 30 AND 59 THEN t.id END) AS ong_30,
+    COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) >= 60 THEN t.id END) AS ong_60
+    
+    FROM `document_transaction_logs` AS l
+    LEFT JOIN `document_transactions` AS t 
+        ON l.document_transaction_id = t.id
+    WHERE l.status_id NOT IN (10, 11)";
+
+    // FIXED: Changed array_fill counts from 6 to 5 for the breakdown sections
+    $params = array_merge(
+        array_fill(0, 4, $station_id),  // Base Totals (4 references)
+        array_fill(0, 5, $station_id),  // Incoming (5 references)
+        array_fill(0, 5, $station_id),  // Pending (5 references)
+        array_fill(0, 5, $station_id),  // Outgoing (5 references)
+        array_fill(0, 5, $station_id)   // Ongoing (5 references)
+    );
+
+    // Optional Master Date Range filters
+    if (!empty($from_date)) {
+        $sql .= " AND l.created_at >= ?";
+        $params[] = $from_date;
+    }
+    if (!empty($to_date)) {
+        $sql .= " AND l.created_at <= ?";
+        $params[] = $to_date;
+    }
+
+    $result = find($sql, $params);
+
+    // Cast properties neatly to integers
+    $output = [];
+    foreach (['incoming', 'pending', 'outgoing', 'ongoing'] as $key) {
+        $output[$key] = (int) ($result[$key] ?? 0);
+    }
+
+    // Group sub-intervals cleanly into a manageable array
+    $intervals = [3, 7, 14, 30, 60];
+    foreach (['inc' => 'incoming_lapsed', 'pen' => 'pending_lapsed', 'out' => 'outgoing_lapsed', 'ong' => 'ongoing_lapsed'] as $prefix => $group) {
+        $output[$group] = []; // Initialize array group cleanly
+        foreach ($intervals as $day) {
+            $output[$group][$day] = (int) ($result["{$prefix}_{$day}"] ?? 0);
+        }
+    }
+
+    return $output;
 }

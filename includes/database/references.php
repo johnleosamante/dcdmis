@@ -1,32 +1,44 @@
 <?php
-// includes/database/references.php
-// reference
-function references($id)
+// references
+function references($employee_id)
 {
-    return query("SELECT `No` AS `no`, `Name` AS `name`, `Address` AS `address`, Tel_No AS `telephone`, `Emp_ID` AS `id` FROM reference WHERE Emp_ID='{$id}' ORDER BY `Name`;");
+    $results = query("SELECT * FROM `reference_contacts` WHERE `employee_id` = ? ORDER BY `name` ASC", [$employee_id]);
+    return is_array($results) ? $results : [];
 }
 
-function reference($id, $no)
+function reference($employee_id, $reference_id)
 {
-    return query("SELECT `No` AS `no`, `Name` AS `name`, `Address` AS `address`, Tel_No AS `telephone`, `Emp_ID` AS `id` FROM reference WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return find("SELECT * FROM `reference_contacts` WHERE `employee_id` = ? AND `id` = ? LIMIT 1", [$employee_id, $reference_id]);
 }
 
-function createReference($name, $address, $telephone, $id)
+function createReference($name, $address, $contact, $employee_id)
 {
-    nonQuery("INSERT INTO reference (`Name`, `Address`, Tel_No, Emp_ID) VALUES ('{$name}', '{$address}', '{$telephone}', '{$id}');");
+    $data = [
+        'name' => $name,
+        'address' => $address,
+        'contact' => $contact,
+        'employee_id' => $employee_id
+    ];
+    return insert('reference_contacts', $data);
 }
 
-function updateReference($name, $address, $telephone, $id, $no)
+function updateReference($name, $address, $contact, $employee_id, $reference_id)
 {
-    nonQuery("UPDATE reference SET `Name`='{$name}', `Address`='{$address}', Tel_No='{$telephone}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'name' => $name,
+        'address' => $address,
+        'contact' => $contact
+    ];
+
+    return update('reference_contacts', $data, '`employee_id` = ? AND `id` = ?', [$employee_id, $reference_id]);
 }
 
-function deleteReference($id, $no)
+function deleteReference($employee_id, $reference_id)
 {
-    nonQuery("DELETE FROM reference WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('reference_contacts', '`employee_id` = ? AND `id` = ?', [$employee_id, $reference_id]);
 }
 
-function deleteReferences($id)
+function deleteReferences($employee_id)
 {
-    nonQuery("DELETE FROM reference WHERE Emp_ID='{$id}';");
+    return delete('reference_contacts', '`employee_id` = ?', [$employee_id]);
 }

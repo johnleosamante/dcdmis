@@ -1,5 +1,6 @@
 # Data Management Information System
 
+## Tech Stack
 HTML, CSS, JavaScript, PHP, MySQL
 
 Start Bootstrap - SB Admin 2 v4.1.3  
@@ -13,20 +14,330 @@ jQuery JavaScript Library v3.6.0
 jQuery Easing v1.4.1  
 (http://gsgd.co.uk/sandbox/jquery/easing/)  
 DataTables 1.10.24  
-(https:/datatables.net)  
+(https://datatables.net)  
 Chart.js v2.9.4  
 (https://www.chartjs.org)  
   
-Naming Conventions  
+## Naming Conventions  
 HTML - lowercase with hyphen in double qoutes properties  
-ex: id="site-header", name="update-changes"  
+ex: <code>id="site-header"</code>, <code>name="update-changes"</code>  
 CSS - lowercase with hyphen  
-ex: #site-header, .active-link  
+ex: <code>#site-header</code>, <code>.active-link</code>  
 JavaScript - camelcase variable and function names  
-ex: var eyeToggle, function generateRandomColor(num) {}  
-PHP - camelcase variable and function names  
-ex: $success = '', function toLongDateString($date) {}  
+ex: <code>var eyeToggle</code>, <code>function generateRandomColor(num) {}</code>  
+PHP - snakecase for variables and camelcase for function names  
+ex: <code>&dollar;success = ''</code>, <code>function toLongDateString($date) {}</code>  
 Database Column Names - snake case  
-ex: last_name, first_name, middle_name  
+ex: <code>last_name</code>, <code>first_name</code>, <code>middle_name</code>  
   
 Formatting: use single qoute for string literals and array keys
+
+###### ----------------------------------------------------------------------------------------------------------------------------------
+
+## Features
+
+#### Authentication
+<ul>
+    <li>Login</li>
+    <li>Forgot Password</li>
+    <li>Change Password</li>
+    <li>Logout</li>
+</ul>
+
+#### Activity Log (View Only)
+
+#### Edit History (View Only)
+
+#### Settings
+<ul>
+    <li>Profile Photo (Can Update)</li>
+    <li>Contact Details (Can Update)</li>
+    <li>Professional Title (Can Update)</li>
+    <li>Password Change (Can Update)</li>
+</ul>
+
+#### Notifications
+
+#### Employee Information Status Percentage
+
+###### ----------------------------------------------------------------------------------------------------------------------------------
+
+### PERSONNEL INFORMATION SYSTEM
+
+#### Employee Information (Own Only)
+<ul>
+    <li>Personal Information (View Only)</li>
+    <li>Family Background (View Only)</li>
+    <li>Children (View Only)</li>
+    <li>Educational Background (View Only)</li>
+    <li>Civil Service Eligibility (View Only)</li>
+    <li>Work Experience (View Only)</li>
+    <li>Voluntary Work (View Only)</li>
+    <li>Learning &amp; Development (View Only)</li>
+    <li>Special Skills &amp; Hobbies (View Only)</li>
+    <li>Non-Academic Distinctions / Recognition (View Only)</li>
+    <li>Membership in Association / Organization (View Only)</li>
+    <li>Other Information (View Only)</li>
+    <li>References (View Only)</li>
+    <li>Government Issued ID (Can Update)</li>
+</ul>
+
+#### Service Record (View Own Only)
+
+#### 201 Files (View & Download Own Only)
+
+#### Trainings (Own Only)
+<ul>
+    <li>View &amp; Download Certificate of Participation (If Available)</li>
+    <li>View &amp; Download Certificate of Appearance (If Available)</li>
+</ul>
+
+#### Payslip (Own Only)
+<ul>
+    <li>Payslip (Add, Update, Delete, Preview, Download)</li>
+</ul>
+
+#### Monitoring Tools (For Division Assigned and DTS Users Only)
+
+###### ----------------------------------------------------------------------------------------------------------------------------------
+
+### DOCUMENT TRACKING SYSTEM
+
+#### Create New Document w/ File Attachment (Accepts Multiple File Uploads)</li>
+
+#### View Documents
+<ul>
+    <li>Incoming Documents (Document to be received by station)</li>
+    <li>Pending Documents (Document received by station and waiting for action)</li>
+    <li>Outgoing Documents (Document forwarded by station to another station but not yet received)</li>
+    <li>Ongoing Documents (Document from station that are not yet completed or not canceled)</li>
+    <li>Completed Documents (Document marked completed by station where it was last received)</li>
+    <li>Canceled Documents (Document marked canceled by station where it was created)</li>
+</ul>
+
+#### View Document Information
+
+#### Print Document Tracking Slip (Document station origin)
+
+#### Receive Document (Incoming Document)
+
+#### Forward Document (Pending Document) w/ File Attachment
+
+#### Mark Completed Document (Pending Documents)
+
+#### Edit Document
+<ul>
+    <li>Outgoing Document (For Creator station/starting point) 
+        <ul>
+            <li>Edit Document Type</li>
+            <li>Edit Description</li>
+            <li>Edit Destination</li>
+            <li>Edit Purpose</li>
+            <li>Edit Additional details</li>
+            <li>Edit Attachment</li>
+        </ul>
+    </li>
+    <li>Outgoing Document (Non-creator and forwarding station for ongoing document)
+        <ul>
+            <li>Edit Destination</li>
+            <li>Edit Purpose</li>
+            <li>Edit Additional details</li>
+            <li>Edit Attachment</li>
+        </ul>
+    </li>
+</ul>
+
+#### Cancel Document (Outgoing document of creator station)
+
+#### Export Document Transaction Logs
+
+#### View Section/School Users Summary
+<ul>
+    <li>Created Documents</li>
+    <li>Received Documents</li>
+    <li>Forwarded Documents (Sections only)</li>
+    <li>Completed Documents</li>
+    <li>Canceled Documents</li>
+</ul>
+
+#### Document Tracker (Public)
+
+##### ----------------------------------------------------------------------------------------------------------------------------------
+
+### Human Resource Management Information System
+
+#### Add Employee
+
+#### View Employees
+<ul>
+    <li>Active Employees</li>
+    <li>Retirable Employees</li>
+    <li>Celebrant Employees</li>
+    <li>Archived Employees</li>
+</ul>
+
+#### Reassign Employee
+
+#### Promote Employee (Personnel Section Users Only)
+
+#### Remove Employee (Personnel Section Users Only)
+
+#### Positions (Personnel Section Users Only)
+<ul>
+    <li>View Vacancies</li>
+    <li>Create Positions</li>
+    <li>Edit Positions</li>
+    <li>Delete Positions</li>
+    <li>Export Positions</li>
+</ul>
+
+#### Plantilla Items (Personnel Section Users Only)
+<ul>
+    <li>View Plantilla Items</li>
+    <li>Create Plantilla Items</li>
+    <li>Edit Plantilla Items</li>
+    <li>Delete Plantilla Items</li>
+    <li>Export Plantilla Items</li>
+</ul>
+
+#### Vacancies (Personnel Section Users Only) 
+<ul>
+    <li>View Vacancies</li>
+    <li>Create Vacancies
+        <ul>
+            <li>New Item</li>
+            <li>Vacated Item through Promotion of Employee</li>
+            <li>Vacated Item through Removal of Employee</li>
+        </ul>
+    </li>
+    <li>Edit Vacancies</li>
+    <li>Delete Vacancy</li>
+</ul>
+
+#### Publications (Personnel Section Users Only)
+<ul>
+    <li>View Publications</li>
+    <li>Create Publications (if vacancies available)</li>
+    <li>Edit Publications</li>
+    <li>Delete Publications</li>
+</ul>
+
+#### View Districts
+
+#### View Schools
+
+#### View Sections
+
+#### Dashboard Charts
+<ul>
+    <li>Employees By Gender</li>
+    <li>Employee Categories By Gender</li>
+    <li>Employees By Category</li>
+    <li>Employees By Position</li>
+    <li>Employees By District</li>
+    <li>Employees By Assignment</li>
+    <li>Indigenous People</li>
+    <li>Persons with Disability</li>
+    <li>Solo Parents</li>
+</ul>
+
+#### Employee Information (Update Anyone)
+<ul>
+    <li>Personal Information (Can Update)</li>
+    <li>Family Background (Can Update)</li>
+    <li>Children (Can Add, Update, Delete)</li>
+    <li>Educational Background (Can Add, Update, Delete)</li>
+    <li>Civil Service Eligibility (Can Add, Update, Delete)</li>
+    <li>Work Experience (Can Add, Update, Delete)</li>
+    <li>Voluntary Work (Can Add, Update, Delete)</li>
+    <li>Learning &amp; Development (View Only)</li>
+    <li>Special Skills &amp; Hobbies (Can Add, Update, Delete)</li>
+    <li>Non-Academic Distinctions / Recognition (Can Add, Update, Delete)</li>
+    <li>Membership in Association / Organization (Can Add, Update, Delete)</li>
+    <li>Other Information (Can Update)</li>
+    <li>References (Can Add, Update, Delete)</li>
+    <li>Government Issued ID (View Only)</li>
+    <li>Print PDS 2025</li>
+</ul>
+
+#### Service Record (Update Anyone)
+<ul>
+    <li>Service Record (Can Add, Update, Delete)</li>
+    <li>Print Service Record</li>
+</ul>
+
+#### 201 Files (Update &amp; Download Anyone)
+
+#### Trainings (View Anyone Only)
+<ul>
+    <li>Download Certificate of Participation (If Available)</li>
+    <li>Download Certificate of Appearance (If Available)</li>
+</ul>
+
+#### Edit History (View Only)
+
+#### View Publications (Public)
+
+#### Applicant Registration
+<ul>
+    <li>DepEd Division Employee</li>
+    <li>Non-DepEd Division Employee</li>
+</ul>
+
+##### ----------------------------------------------------------------------------------------------------------------------------------
+
+### HUMAN RESOURCE TRAINING &amp; DEVELOPMENT MANAGEMENT SYSTEM
+
+#### Division Training Certificate Finder
+<ul>
+    <li>View Training Details</li>
+    <li>Download Certificates (If Available)</li>
+</ul>
+
+#### Dashboard Charts
+<ul>
+    <li>Conducted Trainings</li>
+    <li>Trained Employees</li>
+</ul>
+
+#### Add Training
+
+#### View Trainings
+<ul>
+    <li>Scheduled Trainings</li>
+    <li>Conducted Trainings</li>
+</ul>
+
+#### Edit Trainings
+
+#### Add Training Participants (Conducted Trainings)
+
+#### View Employees
+
+#### View Districts
+
+#### View Schools
+
+#### View Sections
+
+##### ----------------------------------------------------------------------------------------------------------------------------------
+
+### DIVISION MANAGEMENT INFORMATION SYSTEM
+
+#### View Employees
+
+#### Districts (View, Add, Delete, Update, Export)
+
+#### Schools (View, Add, Delete, Update, Export)
+
+#### Sections (View, Add, Delete, Update, Export)
+
+#### Users (View, Assign, Update, Reset Password, Remove, Export)
+
+#### Transactions  (View Only)
+<ul>
+    <li>Schools</li>
+    <li>Sections</li>
+</ul>
+
+#### System Log (View Only)

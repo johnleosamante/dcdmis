@@ -4,8 +4,13 @@ if (!$isDts) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
-
 messageAlert($showAlert, $message, $success);
+
+$query = incomingDocuments($station, $from, $to);
+if (count($query) === 1000) {
+    $message = "Showing latest 1,000 incoming documents as of " . toDate($from, 'F j, Y') . ' - ' . toDate($to, 'F j, Y') . ".";
+    messageAlert(true, $message);
+}
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -27,8 +32,10 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
+        <?= dateFilterForm($from, $to) ?>
+
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="15%">Code</th>
@@ -42,17 +49,18 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = incomingDocuments($station);
-                    while ($row = fetchArray($query)) {
-                    ?>
+                    foreach ($query as $row) {
+                        ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?></td>
-                            <td class="text-left align-middle"><?= $row['description'] ?></td>
-                            <td class="align-middle text-uppercase">
-                                <?= stationName($row['from']) ?>
+                            <td class="align-middle">
+                                <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
                             </td>
-                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
-                            <td class="align-middle"><?= $row['purpose'] ?></td>
+                            <td class="text-left align-middle"><?= toTruncate($row['description']) ?></td>
+                            <td class="align-middle text-uppercase">
+                                <?= stationName($row['received_from']) ?>
+                            </td>
+                            <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
+                            <td class="align-middle"><?= e(documentTransactionStatus($row['status_id'])) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
@@ -61,7 +69,7 @@ messageAlert($showAlert, $message, $success);
 
                                         modalDropdownItem(uri() . '/modules/documents/receive-document-dialog.php?id=' . cipher($row['id']), 'Receive', 'fa-hand-holding-medical', 'Receive Document');
 
-                                        if ($row['station'] === $station) {
+                                        if ($row['created_from'] === $station) {
                                             linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
                                         }
                                         ?>

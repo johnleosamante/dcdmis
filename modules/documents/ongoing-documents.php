@@ -6,6 +6,12 @@ if (!$isDts) {
 }
 
 messageAlert($showAlert, $message, $success);
+
+$query = ongoingDocuments($station, $from, $to);
+if (count($query) === 1000) {
+    $message = "Showing latest 1,000 ongoing documents as of " . toDate($from, 'F j, Y') . ' - ' . toDate($to, 'F j, Y') . ".";
+    messageAlert(true, $message);
+}
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -27,8 +33,10 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
+        <?= dateFilterForm($from, $to) ?>
+
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="15%">Code</th>
@@ -41,24 +49,21 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = ongoingDocuments($station);
-                    while ($row = fetchArray($query)) {
-                    ?>
+                    foreach ($query as $row) { ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?></td>
-                            <td class="text-left align-middle"><?= $row['description'] ?></td>
-                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
-                            <td class="align-middle"><?= $row['status'] ?></td>
+                            <td class="align-middle">
+                                <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
+                            </td>
+                            <td class="text-left align-middle"><?= toTruncate($row['description']) ?></td>
+                            <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
+                            <td class="align-middle"><?= e(documentTransactionStatus($row['status_id'])) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php linkDropdownItem(customUri('dts', 'Document Information', $row['id']), 'View', 'fa-eye', 'View Document Information');
 
-                                        if ($row['station'] === $station) {
-                                            linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
-                                        }
-                                        ?>
+                                        linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true); ?>
                                     </div>
                                 </div>
                             </td>

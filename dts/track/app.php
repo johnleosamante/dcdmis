@@ -1,8 +1,7 @@
 <?php
 // dts/track/app.php
-$page = $appTitle = 'Document Tracking System';
+$appTitle = $page = !MAINTENANCE_MODE ? 'Document Tracking System' : 'System Maintenance';
 $searchText = '';
-$enableScripts = true;
 
 if (isset($_POST['primary-search-button'])) {
     redirect(customUri('dts/track', 'Document Information', sanitize($_POST['primary-search-text'])));

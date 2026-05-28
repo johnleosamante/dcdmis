@@ -1,32 +1,40 @@
 <?php
-// includes/database/recognition.php
-// tbl_recognition
-function recognitions($id)
+// recognitions
+function recognitions($employee_id)
 {
-    return query("SELECT `No` AS `no`, Recognition AS `recognition`, Emp_ID AS id FROM tbl_recognition WHERE Emp_ID='{$id}' ORDER BY Recognition;");
+    $results = query("SELECT * FROM `recognitions` WHERE `employee_id` = ? ORDER BY `title` ASC", [$employee_id]);
+    return is_array($results) ? $results : [];
 }
 
-function recognition($id, $no)
+function recognition($employee_id, $recognition_id)
 {
-    return query("SELECT `No` AS `no`, Recognition AS `recognition`, Emp_ID AS id FROM tbl_recognition WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return find("SELECT * FROM `recognitions` WHERE `employee_id` = ? AND `id` = ? LIMIT 1", [$employee_id, $recognition_id]);
 }
 
-function createRecognition($recognition, $id)
+function createRecognition($title, $employee_id)
 {
-    nonQuery("INSERT INTO tbl_recognition (`Recognition`, Emp_ID) VALUES ('{$recognition}', '{$id}');");
+    $data = [
+        'title' => $title,
+        'employee_id' => $employee_id
+    ];
+
+    return insert('recognitions', $data);
 }
 
-function updateRecognition($recognition, $id, $no)
+function updateRecognition($title, $employee_id, $recognition_id)
 {
-    nonQuery("UPDATE tbl_recognition SET Recognition='{$recognition}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'title' => $title
+    ];
+    return update('recognitions', $data, '`employee_id` = ? AND `id` = ?', [$employee_id, $recognition_id]);
 }
 
-function deleteRecognition($id, $no)
+function deleteRecognition($employee_id, $recognition_id)
 {
-    nonQuery("DELETE FROM tbl_recognition WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('recognitions', '`employee_id` = ? AND `id` = ?', [$employee_id, $recognition_id]);
 }
 
-function deleteRecognitions($id)
+function deleteRecognitions($employee_id)
 {
-    nonQuery("DELETE FROM tbl_recognition WHERE Emp_ID='{$id}';");
+    return delete('recognitions', '`employee_id` = ?', [$employee_id]);
 }

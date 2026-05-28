@@ -13,6 +13,7 @@ require_once(root() . '/includes/layout/components.php');
         <?php modalHeader('Add Employee') ?>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="lname" class="mb-0">Last Name <?php showAsterisk() ?></label>
@@ -85,14 +86,15 @@ require_once(root() . '/includes/layout/components.php');
                         <option value="">Select position...</option>
                         <?php
                         $categories = positionCategories();
-                        while ($category = fetchAssoc($categories)): ?>
-                            <optgroup label="<?= $category['category'] ?>">
+                        foreach ($categories as $category): ?>
+                            <optgroup label="<?= e($category['category']) ?>">
                                 <?php $jobPositions = positionsByCategory($category['category']);
-                                while ($jobPosition = fetchArray($jobPositions)): ?>
-                                    <option value="<?= $jobPosition['id'] ?>"><?= $jobPosition['position'] ?></option>
-                                <?php endwhile ?>
+                                foreach ($jobPositions as $jobPosition): ?>
+                                    <option value="<?= e($jobPosition['id']) ?>"><?= e($jobPosition['official_title']) ?>
+                                    </option>
+                                <?php endforeach ?>
                             </optgroup>
-                        <?php endwhile ?>
+                        <?php endforeach ?>
                     </select>
                 </div>
 
@@ -103,16 +105,16 @@ require_once(root() . '/includes/layout/components.php');
                         <option value="">Select station...</option>
                         <?php
                         $districts = districts();
-                        while ($district = fetchAssoc($districts)): ?>
-                            <optgroup label="<?= $district['name'] ?>">
+                        foreach ($districts as $district): ?>
+                            <optgroup label="<?= e($district['name']) ?>">
                                 <?php
                                 $currentStation = isset($_GET['s']) ? sanitize(decode($_GET['s'])) : '';
                                 $schools = schoolsByDistrict($district['id']);
-                                while ($school = fetchAssoc($schools)): ?>
-                                    <option value="<?= $school['id'] ?>" <?= setOptionSelected($school['id'], $currentStation) ?>><?= $school['name'] ?></option>
-                                <?php endwhile ?>
+                                foreach ($schools as $school): ?>
+                                    <option value="<?= e($school['id']) ?>" <?= setOptionSelected($school['id'], $currentStation) ?>><?= e($school['name']) ?></option>
+                                <?php endforeach ?>
                             </optgroup>
-                        <?php endwhile ?>
+                        <?php endforeach ?>
                     </select>
                 </div>
 

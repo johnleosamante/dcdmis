@@ -1,12 +1,10 @@
-// assets/js/chart-custom.js
+// assets/js/script.js
 
 if (window.history.replaceState) {
 	window.history.replaceState(null, null, window.location.href);
 }
 
 $(document).ready(function () {
-	$("div.auto-hide").fadeIn(300).delay(60000).fadeOut(300);
-
 	let dtProps = {
 		responsive: true,
 		pagingType: "simple",
@@ -232,15 +230,15 @@ if (
 	checkFieldValidity(
 		"password-group",
 		validPasswordLength &&
-			hasUppercasePassword &&
-			hasLowercasePassword &&
-			hasNumberPassword &&
-			hasSpecialPassword
+		hasUppercasePassword &&
+		hasLowercasePassword &&
+		hasNumberPassword &&
+		hasSpecialPassword
 	);
 	checkFieldValidity(
 		"password-confirm-group",
 		confirmPasswordValue.length > 0 &&
-			passwordValue === confirmPasswordValue
+		passwordValue === confirmPasswordValue
 	);
 
 	password.addEventListener("input", () => {
@@ -261,15 +259,15 @@ if (
 		checkFieldValidity(
 			"password-group",
 			validPasswordLength &&
-				hasUppercasePassword &&
-				hasLowercasePassword &&
-				hasNumberPassword &&
-				hasSpecialPassword
+			hasUppercasePassword &&
+			hasLowercasePassword &&
+			hasNumberPassword &&
+			hasSpecialPassword
 		);
 		checkFieldValidity(
 			"password-confirm-group",
 			confirmPasswordValue.length > 0 &&
-				passwordValue === confirmPasswordValue
+			passwordValue === confirmPasswordValue
 		);
 	});
 
@@ -280,7 +278,7 @@ if (
 		checkFieldValidity(
 			"password-confirm-group",
 			confirmPasswordValue.length > 0 &&
-				passwordValue === confirmPasswordValue
+			passwordValue === confirmPasswordValue
 		);
 	});
 }
@@ -298,7 +296,6 @@ if (
 ) {
 	let beforeTitleValue = beforeTitle.value;
 	let afterTitleValue = afterTitle.value;
-	let userNameValue = userName.value;
 
 	beforeTitle.addEventListener("input", () => {
 		beforeTitleValue =

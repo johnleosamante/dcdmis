@@ -1,44 +1,87 @@
 <?php
-// includes/database/section.php
-// tbl_div_section
-// tbl_functional_division
+// functional_divisions
 function functionalDivisions()
 {
-    return query("SELECT Div_Code AS id, Division_Name AS `name` FROM tbl_division ORDER BY `name` ASC;");
+    return query("SELECT * FROM `functional_divisions` ORDER BY `name` ASC");
 }
 
-function functionalDivision($id)
+function functionalDivision($functional_division_id)
 {
-    return query("SELECT Div_Code AS id, Division_Name AS `name` FROM tbl_division WHERE Div_Code='{$id}' LIMIT 1;");
+    return find("SELECT * FROM `functional_divisions` WHERE `id` = ? LIMIT 1", [$functional_division_id]);
 }
 
-function sectionsExcept($id)
+// functional_divisions, sections
+function sections($functional_division_id = null)
 {
-    return query("SELECT Section_Code AS id, Section_Incharge AS `head`, Section_Office AS `name`, functional_division AS division FROM tbl_div_section WHERE Section_Code <> '{$id}' ORDER BY Section_Office ASC;");
+    $params = [];
+    $where = "";
+    if (!empty($functional_division_id)) {
+        $where = " WHERE s.`functional_division_id` = ? ";
+        $params[] = $functional_division_id;
+    }
+    $sql = "SELECT s.`id`, s.`head_id`, s.`name`, f.`name` AS `functional_division` FROM `sections` AS s 
+            INNER JOIN `functional_divisions` AS f ON s.functional_division_id = f.`id` 
+            {$where} ORDER BY s.`name` ASC";
+    return query($sql, $params);
 }
 
-function sections($division = null)
+function countSections($functional_division_id = null)
 {
-    $filter = empty($division) ? '' : "WHERE tbl_div_section.functional_division='{$division}'";
-    return query("SELECT tbl_div_section.Section_Code AS id, tbl_div_section.Section_Incharge AS `head`, tbl_div_section.Section_Office AS `name`, tbl_division.Division_Name AS `division` FROM tbl_div_section INNER JOIN tbl_division ON tbl_div_section.functional_division=tbl_division.Div_Code {$filter} ORDER BY Section_Office ASC;");
+    $params = [];
+    $where = "";
+    if (!empty($functional_division_id)) {
+        $where = " WHERE s.`functional_division_id` = ? ";
+        $params[] = $functional_division_id;
+    }
+    $sql = "SELECT COUNT(*) AS `count` FROM `sections` AS s {$where}";
+    $result = find($sql, $params);
+    return (int) ($result['count'] ?? 0);
 }
 
-function section($id)
+// sections
+function section($section_id)
 {
-    return query("SELECT Section_Code AS id, Section_Incharge AS `head`, Section_Office AS `name`, functional_division AS division FROM tbl_div_section WHERE Section_Code='{$id}' LIMIT 1;");
+    return find("SELECT * FROM `sections` WHERE `id` = ? LIMIT 1", [$section_id]);
 }
 
+function sectionsExcept($section_id)
+{
+    return query("SELECT * FROM `sections` WHERE `id` <> ? ORDER BY `name` ASC", [$section_id]);
+}
+
+// employees, user_permissions, sections
 function sectionEmployeeCount($id)
 {
-    return query("SELECT SUM(CASE WHEN tbl_employee.Emp_Sex = 'Male' THEN 1 ELSE 0 END) AS male, SUM(CASE WHEN tbl_employee.Emp_Sex='Female' THEN 1 ELSE 0 END) AS female, COUNT(*) AS `total` FROM tbl_employee INNER JOIN tbl_user ON tbl_employee.Emp_ID=tbl_user.usercode INNER JOIN tbl_div_section ON tbl_user.Station=tbl_div_section.Section_Code WHERE tbl_employee.Emp_Status='Active' AND tbl_user.Station='{$id}' GROUP BY tbl_div_section.Section_Office;");
+    $sql = "SELECT 
+                SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS male, 
+                SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS female, 
+                COUNT(p.`id`) AS total 
+            FROM `employees` AS p 
+            INNER JOIN `user_permissions` AS u ON p.`id` = u.`employee_id` 
+            INNER JOIN `sections` AS s ON u.`access` = s.`id` 
+            WHERE p.`status` = 'Active' AND u.`access` = ? GROUP BY s.`name` LIMIT 1";
+    return find($sql, [$id]);
 }
 
-function createSection($alias, $head, $name, $division)
+// sections
+function createSection($section_id, $head_id, $name, $functional_division_id)
 {
-    nonQuery("INSERT INTO tbl_div_section (`Section_Code`, `Section_Incharge`, `Section_Office`, `functional_division`) VALUES ('{$alias}', '{$head}', '{$name}', '{$division}');");
+    $data = [
+        'id' => $section_id,
+        'head_id' => $head_id,
+        'name' => $name,
+        'functional_division_id' => $functional_division_id
+    ];
+    return insert('sections', $data);
 }
 
-function updateSection($newAlias, $head, $name, $division, $oldAlias)
+function updateSection($new_section_id, $head_id, $name, $functional_division_id, $old_section_id)
 {
-    nonQuery("UPDATE tbl_div_section SET `Section_Code`='{$newAlias}', `Section_Incharge`='{$head}', `Section_office`='{$name}', `functional_division`='{$division}' WHERE `Section_Code`='{$oldAlias}' LIMIT 1;");
+    $data = [
+        'id' => $new_section_id,
+        'head_id' => $head_id,
+        'name' => $name,
+        'functional_division_id' => $functional_division_id
+    ];
+    return update('sections', $data, '`id` = ?', [$old_section_id]);
 }

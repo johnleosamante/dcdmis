@@ -1,53 +1,103 @@
 <?php
-// includes/database/family-background.php
-// tbl_family_background
-// family_background
-function family($id)
+// family_backgrounds
+function family($employee_id)
 {
-    return query("SELECT Emp_ID AS id, SpouseLast AS slast, SpouseFirst AS sfirst, SpouseMiddle AS smiddle, SpouseExtension AS sext, SpouseOccupation AS swork, SpouseBusiness AS soffice, SpouseBusinessAddress AS soffice_address, SpouseTelephone AS stelephone, FatherLast AS flast, FatherFirst AS ffirst, FatherExtension AS fext, FatherMiddle AS fmiddle, MotherLast AS mlast, MotherFirst AS mfirst, MotherMiddle AS mmiddle FROM tbl_family_background WHERE Emp_id='{$id}' LIMIT 1;");
+    return find("SELECT * FROM `family_backgrounds` WHERE `employee_id` = ? LIMIT 1", [$employee_id]);
 }
 
-function createFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $id)
+function createFamily($spouse_last_name, $spouse_first_name, $spouse_name_extension, $spouse_middle_name, $spouse_occupation, $spouse_employer, $spouse_employer_address, $spouse_telephone, $father_last_name, $father_first_name, $father_name_extension, $father_middle_name, $mother_last_name, $mother_first_name, $mother_middle_name, $employee_id)
 {
-    nonQuery("INSERT INTO tbl_family_background (Emp_ID, SpouseLast, SpouseFirst, SpouseMiddle, SpouseExtension, SpouseOccupation, SpouseBusiness, SpouseBusinessAddress, SpouseTelephone, FatherLast, FatherFirst, FatherExtension, FatherMiddle, MotherLast, MotherFirst, MotherMiddle) VALUES ('{$id}', '{$slast}', '{$sfirst}', '{$smiddle}', '{$sext}', '{$swork}', '{$sbusiness}', '{$sbusinessAddress}', '{$stelephone}', '{$flast}', '{$ffirst}', '{$fext}', '{$fmiddle}', '{$mlast}', '{$mfirst}', '{$mmiddle}');");
+    $data = [
+        'employee_id' => $employee_id,
+        'spouse_last_name' => $spouse_last_name,
+        'spouse_first_name' => $spouse_first_name,
+        'spouse_middle_name' => $spouse_middle_name,
+        'spouse_name_extension' => $spouse_name_extension,
+        'spouse_occupation' => $spouse_occupation,
+        'spouse_employer' => $spouse_employer,
+        'spouse_employer_address' => $spouse_employer_address,
+        'spouse_telephone' => $spouse_telephone,
+        'father_last_name' => $father_last_name,
+        'father_first_name' => $father_first_name,
+        'father_name_extension' => $father_name_extension,
+        'father_middle_name' => $father_middle_name,
+        'mother_last_name' => $mother_last_name,
+        'mother_first_name' => $mother_first_name,
+        'mother_middle_name' => $mother_middle_name
+    ];
+    return insert('family_backgrounds', $data);
 }
 
-function updateFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $id)
+function updateFamily($spouse_last_name, $spouse_first_name, $spouse_name_extension, $spouse_middle_name, $spouse_occupation, $spouse_employer, $spouse_employer_address, $spouse_telephone, $father_last_name, $father_first_name, $father_name_extension, $father_middle_name, $mother_last_name, $mother_first_name, $mother_middle_name, $employee_id)
 {
-    nonQuery("UPDATE tbl_family_background SET SpouseLast='{$slast}', SpouseFirst='{$sfirst}', SpouseExtension='{$sext}', SpouseMiddle='{$smiddle}', SpouseOccupation='{$swork}', SpouseBusiness='{$sbusiness}', SpouseBusinessAddress='{$sbusinessAddress}', SpouseTelephone='{$stelephone}', FatherLast='{$flast}', FatherFirst='{$ffirst}', FatherExtension='{$fext}', FatherMiddle='{$fmiddle}', MotherLast='{$mlast}', MotherFirst='{$mfirst}', MotherMiddle='{$mmiddle}' WHERE Emp_ID='{$id}' LIMIT 1;");
+    $data = [
+        'spouse_last_name' => $spouse_last_name,
+        'spouse_first_name' => $spouse_first_name,
+        'spouse_middle_name' => $spouse_middle_name,
+        'spouse_name_extension' => $spouse_name_extension,
+        'spouse_occupation' => $spouse_occupation,
+        'spouse_employer' => $spouse_employer,
+        'spouse_employer_address' => $spouse_employer_address,
+        'spouse_telephone' => $spouse_telephone,
+        'father_last_name' => $father_last_name,
+        'father_first_name' => $father_first_name,
+        'father_name_extension' => $father_name_extension,
+        'father_middle_name' => $father_middle_name,
+        'mother_last_name' => $mother_last_name,
+        'mother_first_name' => $mother_first_name,
+        'mother_middle_name' => $mother_middle_name
+    ];
+    return update('family_backgrounds', $data, '`employee_id` = ?', [$employee_id]);
 }
 
-function deleteFamily($id)
+function deleteFamily($employee_id)
 {
-    nonQuery("DELETE FROM tbl_family_background WHERE Emp_ID='{$id}';");
+    return delete('family_backgrounds', '`employee_id` = ?', [$employee_id]);
 }
 
-function children($id)
+// children
+function children($employee_id)
 {
-    return query("SELECT `No` AS `no`, Family_Name AS `last`, First_Name AS `first`, Name_Extension AS ext, Middle_Name AS middle, Birthdate AS dob, Emp_ID AS id FROM family_background WHERE Emp_ID='{$id}' ORDER BY Birthdate ASC;");
+    $results = query("SELECT * FROM `children` WHERE employee_id = ? ORDER BY birthdate ASC", [$employee_id]);
+    return is_array($results) ? $results : [];
 }
 
-function child($id, $no)
+function child($employee_id, $child_id)
 {
-    return query("SELECT `No` AS `no`, Family_Name AS `last`, First_Name AS `first`, Name_Extension AS ext, Middle_Name AS middle, Birthdate AS dob, Emp_ID AS id FROM family_background WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return find("SELECT * FROM `children` WHERE employee_id = ? AND `id` = ? LIMIT 1", [$employee_id, $child_id]);
 }
 
-function createChild($lname, $fname, $ext, $mname, $dob, $id)
+function createChild($last_name, $first_name, $name_extension, $middle_name, $birthdate, $employee_id)
 {
-    nonQuery("INSERT INTO family_background (Family_Name, First_Name, Name_Extension, Middle_Name, Birthdate, Emp_ID) VALUES ('{$lname}', '{$fname}', '{$ext}', '{$mname}', '{$dob}', '{$id}');");
+    $data = [
+        'last_name' => $last_name,
+        'first_name' => $first_name,
+        'name_extension' => $name_extension,
+        'middle_name' => $middle_name,
+        'birthdate' => $birthdate,
+        'employee_id' => $employee_id
+    ];
+    return insert('children', $data);
 }
 
-function updateChild($lname, $fname, $ext, $mname, $dob, $id, $no)
+function updateChild($last_name, $first_name, $name_extension, $middle_name, $birthdate, $employee_id, $child_id)
 {
-    nonQuery("UPDATE family_background SET Family_Name='{$lname}', First_Name='{$fname}', Name_Extension='{$ext}', Middle_Name='{$mname}', Birthdate='{$dob}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'last_name' => $last_name,
+        'first_name' => $first_name,
+        'name_extension' => $name_extension,
+        'middle_name' => $middle_name,
+        'birthdate' => $birthdate
+    ];
+    return update('children', $data, '`employee_id` = ? AND `id` = ?', [$employee_id, $child_id]);
 }
 
-function deleteChild($id, $no)
+function deleteChild($employee_id, $child_id)
 {
-    nonQuery("DELETE FROM family_background WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('children', '`employee_id` = ? AND `id` = ?', [$employee_id, $child_id]);
 }
 
-function deleteChildren($id)
+function deleteChildren($employee_id)
 {
-    nonQuery("DELETE FROM family_background WHERE Emp_ID='{$id}';");
+    return delete('children', '`employee_id` = ?', [$employee_id]);
 }

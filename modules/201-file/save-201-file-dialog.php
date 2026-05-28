@@ -9,18 +9,18 @@ require_once(root() . '/includes/string.php');
 $employeeId = isset($_GET['e']) ? sanitize(decipher($_GET['e'])) : null;
 $attachmentId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $copiedId = isset($_GET['c']) ? sanitize(decipher($_GET['c'])) : null;
-$description = $filename = null;
+$description = $filename = $document_type = null;
 $modalTitle = 'Add 201 File';
 
 if (isset($attachmentId)) {
     $modalTitle = $employeeId === $copiedId ? 'Copy 201 File' : 'Edit 201 File';
-    $attachments = fileAttachment($employeeId, $attachmentId);
+    $attachment = fileAttachment($employeeId, $attachmentId);
 
-    if (numRows($attachments) > 0) {
-        $attachment = fetchAssoc($attachments);
-        $attachmentId = $attachment['no'];
+    if ($attachment) {
+        $attachmentId = $attachment['id'];
+        $document_type = $attachment['file_type_id'];
         $description = $attachment['description'];
-        $filename = $attachment['filename'];
+        $filename = $attachment['file_name'];
     }
 }
 ?>
@@ -30,27 +30,46 @@ if (isset($attachmentId)) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="" enctype="multipart/form-data">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group">
-                    <input id="file-upload" name="file-upload" type="file" title="Upload 201 file (pdf, jpeg or png format)..." class="w-100">
+                    <label for="type" class="mb-0">Document Type <?php showAsterisk() ?>
+                    </label>
+                    <select id="type" name="type" class="form-control" title="Select document type..." required>
+                        <option value="">Select document type...</option>
+                        <?php
+                        $types = fileTypes();
+                        foreach ($types as $type): ?>
+                            <option value="<?= e($type['id']) ?>" <?= setOptionSelected($type['id'], $document_type) ?>>
+                                <?= e($type['name']) ?>
+                            </option>
+                        <?php endforeach ?>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="description" class="mb-0">Description <?php showAsterisk() ?></label>
-                    <textarea id="description" name="description" class="form-control" placeholder="Type description..." title="Type 201 file description..." rows="3" required><?= $description ?></textarea>
+                    <label for="description" class="mb-0">Description <?php showAsterisk() ?>
+                    </label>
+                    <textarea id="description" name="description" class="form-control" placeholder="Type description..."
+                        title="Type 201 file description..." rows="3" required><?= e($description) ?></textarea>
+                </div>
+
+                <div class="form-group">
+                    <input id="file-upload" name="file-upload" type="file" title="Upload 201 file (pdf)..."
+                        class="w-100" accept="application/pdf">
                 </div>
 
                 <?php requiredLegend(0) ?>
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
+                <input type="hidden" name="verifier" value="<?= $_GET['e'] ?? null ?>">
                 <?php
-                $verifier = isset($_GET['id']) ? $_GET['id'] : null;
+                $verifier = $_GET['id'] ?? null;
                 $verifier = $employeeId === $copiedId ? null : $verifier;
                 $filename = !isset($_GET['c']) ? $filename : null;
                 ?>
-                <input type="hidden" name="data-verifier" value="<?= $verifier ?>">
+                <input type="hidden" name="data-verifier" value="<?= e($verifier) ?>">
                 <input type="hidden" name="file-verifier" value="<?= cipher($filename) ?>">
                 <button type="submit" class="btn btn-primary" name="save-201-file">Continue</button>
                 <?php cancelModalButton() ?>

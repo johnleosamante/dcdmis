@@ -33,29 +33,28 @@ require_once(root() . '/includes/database/utility.php');
         <?php
         $i = 1;
         $query = sections();
-        while ($row = fetchAssoc($query)) : ?>
+        foreach ($query as $row): ?>
             <tr>
                 <td><?= $i++ ?></td>
                 <td><?= strtoupper($row['name']) ?></td>
-                <td><?= strtoupper($row['division']) ?></td>
-                <td><?= userName($row['head'], true) ?></td>
-                <td><?= strtoupper(fetchAssoc(position($row['head']))['position']) ?></td>
+                <td><?= strtoupper($row['functional_division']) ?></td>
+                <td><?= userName($row['head_id'], true) ?></td>
+                <td><?= strtoupper(position($row['head_id'])['official_title']) ?></td>
                 <?php
-                $sectionCount = sectionEmployeeCount($row['id']);
+                $count = sectionEmployeeCount($row['id']);
                 $male = $female = $total = 0;
 
-                if (numRows($sectionCount) > 0) {
-                    $count = fetchAssoc($sectionCount);
+                if ($count) {
                     $male = $count['male'];
                     $female = $count['female'];
                     $total = $count['total'];
                 }
                 ?>
-                <td><?= $male ?></td>
-                <td><?= $female ?></td>
-                <td><?= $total ?></td>
+                <td><?= e($male) ?></td>
+                <td><?= e($female) ?></td>
+                <td><?= e($total) ?></td>
             </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
         <tr>
             <td colspan="8"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>

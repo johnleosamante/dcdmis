@@ -12,14 +12,14 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <?php if ($isDmis) : ?>
+            <?php if ($isDmis): ?>
                 <li class="breadcrumb-item active"><a href="<?= customUri($activeApp, 'Employees') ?>">Employees</a></li>
             <?php endif ?>
             <li class="breadcrumb-item active">Archived</li>
         </ol>
     </nav>
 
-    <?php if ($isHrmis) : ?>
+    <?php if ($isHrmis): ?>
         <div class="d-inline-block">
             <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus') ?>
         </div>
@@ -50,37 +50,42 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = archivedEmployees();
-                    while ($row = fetchArray($query)) :
-                        $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
-                    ?>
+                    foreach ($query as $row):
+                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? "{$baseUri}/" . $row['profile_picture'] : "{$baseUri}/assets/img/user.png";
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                        <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
                             </td>
-                            <td class="align-middle text-left"><?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName) ?></td>
+                            <td class="align-middle text-left">
+                                <?php linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName) ?>
+                            </td>
                             <td class="align-middle">
                                 <?php
                                 $status = strtolower($row['status']);
                                 roundPill($status);
                                 ?>
                             </td>
-                            <td class="align-middle"><?= toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y') ?></td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
+                            <td class="align-middle">
+                                <?= toDate($row['birthdate'], 'F j, Y') ?>
+                            </td>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
                             <td class="align-middle">
                                 <?php
-                                $stationName = stationName($row['station']);
+                                $stationName = stationName($row['station_id']);
 
-                                linkItem(customUri($activeApp, 'School Information', $row['station']), $stationName) ?>
+                                linkItem(customUri($activeApp, 'School Information', $row['station_id']), $stationName) ?>
                             </td>
                             <td class="align-middle"><?php progressBar(pdsProgress($row['id'])) ?></td>
                             <td class="align-middle text-capitalize">
-                                <?php if ($isHrmis && $status !== 'duplicate') : ?>
+                                <?php if ($isHrmis && $status !== 'duplicate'): ?>
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
@@ -93,24 +98,26 @@ messageAlert($showAlert, $message, $success);
                                             <?php
                                             linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History');
 
-                                            switch ($status) {
-                                                case 'resigned':
-                                                case 'transferred':
-                                                case 'dismissed':
-                                                case 'suspended': ?>
-                                                    <div class="dropdown-divider"></div>
-                                            <?php
-                                                    modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                                                    break;
-                                                default:
-                                                    break;
+                                            if ($isPersonnel) {
+                                                switch ($status) {
+                                                    case 'resigned':
+                                                    case 'transferred':
+                                                    case 'dismissed':
+                                                    case 'suspended': ?>
+                                                        <div class="dropdown-divider"></div>
+                                                        <?php
+                                                        modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
                                             }
                                             ?>
                                         </div>
                                     </div>
                                 <?php endif;
 
-                                if ($isDmis && $status === 'duplicate') : ?>
+                                if ($isDmis && $status === 'duplicate'): ?>
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
@@ -119,7 +126,7 @@ messageAlert($showAlert, $message, $success);
                                     <?php endif ?>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>

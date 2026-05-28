@@ -1,10 +1,10 @@
 <?php
 // pis/app.php
-$activeApp = $_SESSION[alias() . '_activeApp'] = 'pis';
+$activeApp = $_SESSION["{$prefix}activeApp"] = HOME;
 $page = $appTitle = 'Personnel Information System';
 
 if (!isset($userId)) {
-    redirect(uri() . '/login');
+    redirect("$baseUri/login");
 }
 
 if (isset($_POST['primary-search-button'])) {
@@ -17,86 +17,101 @@ if (isset($_POST['update-identification'])) {
     $place = sanitize($_POST['card-place']);
     $date = sanitize($_POST['card-date']);
     $showAlert = true;
-
-    if (numRows(employeeIdentification($userId)) === 0) {
-        createIdentification($card, $number, $place, $date, $userId);
-    } else {
+    $result = !employeeIdentification($userId) ?
+        createIdentification($card, $number, $place, $date, $userId) :
         updateIdentification($card, $number, $place, $date, $userId);
+
+    if ($result === false) {
+        $message = 'We encountered an error on our end. Please try again later.';
+        return;
     }
 
-    if (affectedRows()) {
-        $message = 'Government issued ID has been updated successfully.';
-        createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
-    } else {
+    $success = true;
+
+    if ($result === 0) {
         $message = 'No changes have been made to government issued ID.';
-        $success = false;
+        return;
     }
+
+    $message = 'Government issued ID has been updated successfully.';
+
+    createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
 }
 
 if (isset($_POST['save-payslip'])) {
     $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $payslipId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $description = sanitize($_POST['description']);
-    $filename = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
-    $ext = $logMessage = '';
-    $message = 'No changes have been made to payslip.';
+    $oldFilename = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
+    $newFilename = $oldFilename;
     $showAlert = true;
-    $success = false;
 
     if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
         $temp = $_FILES['file-upload']['tmp_name'];
 
-        if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
+        if ($_FILES['file-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
             $message = 'The choosen file exceeds the upload file limit (20 MB). No changes have been made to payslip.';
             return;
         }
 
-        $mimeType = mime_content_type($temp);
-        $allowedFileTypes = ['application/pdf', 'image/png', 'image/jpeg'];
-
-        if (!in_array($mimeType, $allowedFileTypes)) {
-            $message = 'The choosen file is not an acceptable file (pdf, png, jpeg). No changes have been made to payslip.';
+        // Security: Use proper MIME type validation
+        if (!validateFileMimeType($temp, ['application/pdf'])) {
+            $message = 'The choosen file is not an acceptable file (pdf). No changes have been made to payslip.';
             return;
         }
 
-        $ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
-
-        if (!empty($filename) && file_exists(root() . '/' . $filename)) {
-            unlink(root() . '/' . $filename);
+        // Security: Validate file extension against whitelist
+        if (!validateFileExtension($_FILES['file-upload']['name'], ['pdf'])) {
+            $message = 'The choosen file has an invalid extension. No changes have been made to payslip.';
+            return;
         }
 
-        $filename = 'uploads/payslip/' . $employeeId . '/' . $employeeId . '-' . date('YmdHis') . '.' . $ext;
+        // Security: Sanitize filename to prevent directory traversal
+        $sanitizedName = sanitizeFilename($_FILES['file-upload']['name']);
+        $ext = getFileExtension($sanitizedName);
+        $newFilename = "uploads/payslip/{$employeeId}/{$employeeId}-" . date('YmdHis') . ".{$ext}";
 
-        move_uploaded_file($temp, '../' . $filename);
+        if (!move_uploaded_file($temp, "../{$newFilename}")) {
+            $message = 'Failed to upload payslip.';
+            return;
+        }
+
+        if (!empty($oldFilename) && file_exists(root() . "/{$oldFilename}")) {
+            unlink(root() . "/{$oldFilename}");
+        }
     }
 
-    if (empty($filename)) {
+    if (empty($newFilename)) {
         $message = 'No changes have been made to payslip.';
-        $success = false;
         return;
-    } else {
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    if (numRows(payslip($employeeId, $payslipId)) === 0) {
-        createPayslip($description, $filename, $ext, $employeeId);
+    $ext = pathinfo($newFilename, PATHINFO_EXTENSION);
+    $hasExistingRecord = fileAttachment($employeeId, $payslipId);
 
+    if (!$hasExistingRecord) {
+        $result = createFileAttachment(20, $description, $newFilename, $ext, $employeeId);
         $logMessage = 'Added payslip';
-        $message = 'Payslip has been added successfully.';
     } else {
-        updatePayslip($description, $filename, $ext, $employeeId, $payslipId);
-
+        $result = updateFileAttachment(20, $description, $newFilename, $ext, $employeeId, $payslipId);
         $logMessage = 'Updated payslip';
-        $message = 'Payslip has been updated successfully.';
     }
 
-    if (!affectedRows()) {
+    if ($result === false) {
+        $message = 'We encountered an error on our end. Please try again later.';
+        return;
+    }
+
+    $success = true;
+
+    if ($result === 0 && $hasExistingRecord) {
         $message = 'No changes have been made to payslip.';
         return;
     }
+
+    $message = "Payslip has been " . ($hasExistingRecord ? "updated" : "added") . " successfully.";
 
     createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    $success = true;
 }
 
 
@@ -105,20 +120,28 @@ if (isset($_POST['delete-payslip'])) {
     $payslipId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
     $showAlert = true;
     $filename = null;
-    $files = payslip($employeeId, $payslipId);
+    $file = fileAttachment($employeeId, $payslipId);
+    $result = false;
 
-    if (numRows($files) > 0) {
-        $file = fetchAssoc($files);
-        $filename = $file['filename'];
-        deletePayslip($employeeId, $payslipId);
+    if ($file) {
+        $filename = $file['file_name'];
+        $result = deleteFileAttachment($employeeId, $payslipId);
     }
 
-    if (affectedRows()) {
-        createSystemLog($stationId, $userId, 'Deleted employee payslip', $employeeId, clientIp());
-        unlink(root() . '/' . $filename);
-        $message = 'Payslip has been deleted successfully.';
-    } else {
+    if ($result === false) {
+        $message = 'We encountered an error on our end. Please try again later.';
+        return;
+    }
+
+    $success = true;
+
+    if ($result === 0) {
         $message = 'No changes have been made to payslip.';
-        $success = false;
+        return;
     }
+
+    $message = 'Payslip has been deleted successfully.';
+
+    unlink(root() . '/' . $filename);
+    createSystemLog($stationId, $userId, 'Deleted employee payslip', $employeeId, clientIp());
 }

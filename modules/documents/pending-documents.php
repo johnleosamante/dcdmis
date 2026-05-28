@@ -6,6 +6,12 @@ if (!$isDts) {
 }
 
 messageAlert($showAlert, $message, $success);
+
+$query = pendingDocuments($station, $from, $to);
+if (count($query) === 1000) {
+    $message = "Showing latest 1,000 pending documents as of " . toDate($from, 'F j, Y') . ' - ' . toDate($to, 'F j, Y') . ".";
+    messageAlert(true, $message);
+}
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -27,8 +33,10 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
+        <?= dateFilterForm($from, $to) ?>
+
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="15%">Code</th>
@@ -41,19 +49,20 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = pendingDocuments($station);
-                    while ($row = fetchArray($query)) {
-                    ?>
+                    foreach ($query as $row) {
+                        ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?></td>
-                            <td class="text-left align-middle"><?= $row['description'] ?></td>
+                            <td class="align-middle">
+                                <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
+                            </td>
+                            <td class="text-left align-middle"><?= toTruncate($row['description']) ?></td>
                             <td class="align-middle">
                                 <div>
-                                    <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['user']), userName($row['user'])) ?>
+                                    <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['processor_id']), userName($row['processor_id'])) ?>
                                 </div>
-                                <div class="small"><?= fetchAssoc(position($row['user']))['position'] ?></div>
+                                <div class="small"><?= position($row['processor_id'])['official_title'] ?></div>
                             </td>
-                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
+                            <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
@@ -64,11 +73,12 @@ messageAlert($showAlert, $message, $success);
                                             modalDropdownItem(uri() . '/modules/documents/forward-document-dialog.php?id=' . cipher($row['id']), 'Forward', 'fa-share', 'Forward Document');
                                         }
 
-                                        modalDropdownItem(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($row['id']), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document');
+                                        modalDropdownItem(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($row['id']), 'Mark Complete', 'fa-check-circle', 'Mark Complete Document');
 
-                                        if ($row['station'] === $station) {
-                                            linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true);
-
+                                        if ($row['created_from'] === $station) {
+                                            linkDropdownItem(customUri('print', 'Document Tracking Slip', $row['id']), 'Print', 'fa-print', 'Print Document Tracking Slip', true); ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php
                                             if (!$isSchoolPortal) {
                                                 modalDropdownItem(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($row['id']), 'Cancel', 'fa-trash-alt', 'Cancel Document');
                                             }

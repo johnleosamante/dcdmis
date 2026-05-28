@@ -2,7 +2,7 @@
 // modules/documents/school-transactions.php
 ?>
 
-<div class="tab-pane fade show active" id="school-transactions">
+<div class="tab-pane fade" id="school-transactions">
     <div class="row my-3">
         <div class="col table-responsive">
             <?php if ($isDmis) { ?>
@@ -13,7 +13,7 @@
                 </div>
             <?php } ?>
 
-            <table class="table table-hover table-striped table-bordered mb-0 text-center" id="data-table-previous" width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table-next" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">Logo</th>
@@ -28,29 +28,120 @@
                 <tbody>
                     <?php
                     $schools = schoolsExcept(divisionID());
-                    while ($school = fetchAssoc($schools)) :
+                    foreach ($schools as $school):
                         $logo = !empty($school['logo']) ? uri() . '/' . $school['logo'] : uri() . '/uploads/division/division.png';
                         $schoolName = $school['name'];
-                        $district = fetchAssoc(district($school['district']))['name'];
-                    ?>
+                        $district = district($school['district_id'])['name'];
+                        $counts = detailedStationTransactionCounts($school['alias']);
+                        $intervals = [3, 7, 14, 30, 60];
+                        $schoolsData[] = [
+                            'incoming' => $counts['incoming'],
+                            'pending' => $counts['pending'],
+                            'outgoing' => $counts['outgoing'],
+                            'ongoing' => $counts['ongoing']
+                        ];
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
                                     <span class="d-flex justify-content-center align-middle school-logo overflow-hidden">
-                                        <img height="100%" src="<?= $logo ?>" alt="<?= $schoolName ?>">
+                                        <img height="100%" src="<?= e($logo) ?>" alt="<?= e($schoolName) ?>">
                                     </span>
                                 </div>
                             </td>
                             <td class="align-middle text-left">
-                                <div><?php linkItem(customUri($activeApp, 'School Information', $school['id']), $schoolName . ' (' . $school['alias'] . ')') ?></div>
-                                <div class="small"><?= $school['id'] . ' | ' . $district . ' | ' . $school['address'] ?></div>
+                                <div>
+                                    <?= "$schoolName (" . $school['alias'] . ')' ?>
+                                </div>
+                                <div class="small"><?= $school['id'] . ' | ' . $district . ' | ' . $school['address'] ?>
+                                </div>
                             </td>
-                            <td class="align-middle"><?= number_format(numRows(incomingDocuments($school['alias']))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(pendingDocuments($school['alias']))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(outgoingDocuments($school['alias']))) ?></td>
-                            <td class="align-middle"><?= number_format(numRows(ongoingDocuments($school['alias']))) ?></td>
+                            <td class="align-middle">
+                                <div><?= number_format($counts['incoming']) ?></div>
+                                <div class="small">
+                                    <?php
+                                    $incoming = [];
+
+                                    foreach ($intervals as $days) {
+                                        $count = $counts['incoming_lapsed'][$days] ?? 0;
+
+                                        if ($count > 0) {
+                                            $incoming[] = sprintf(
+                                                '<span class="cursor-pointer" title="%d days lapsed">%s</span>',
+                                                $days,
+                                                number_format($count)
+                                            );
+                                        }
+                                    }
+                                    echo implode(' | ', $incoming);
+                                    ?>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <div><?= number_format($counts['pending']) ?></div>
+                                <div class="small">
+                                    <?php
+                                    $pending = [];
+
+                                    foreach ($intervals as $days) {
+                                        $count = $counts['pending_lapsed'][$days] ?? 0;
+
+                                        if ($count > 0) {
+                                            $pending[] = sprintf(
+                                                '<span class="cursor-pointer" title="%d days lapsed">%s</span>',
+                                                $days,
+                                                number_format($count)
+                                            );
+                                        }
+                                    }
+                                    echo implode(' | ', $pending);
+                                    ?>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <div><?= number_format($counts['outgoing']) ?></div>
+                                <div class="small">
+                                    <?php
+                                    $outgoing = [];
+
+                                    foreach ($intervals as $days) {
+                                        $count = $counts['outgoing_lapsed'][$days] ?? 0;
+
+                                        if ($count > 0) {
+                                            $outgoing[] = sprintf(
+                                                '<span class="cursor-pointer" title="%d days lapsed">%s</span>',
+                                                $days,
+                                                number_format($count)
+                                            );
+                                        }
+                                    }
+                                    echo implode(' | ', $outgoing);
+                                    ?>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <div class="text-2x"><?= number_format($counts['ongoing']) ?></div>
+                                <div class="small">
+                                    <?php
+                                    $ongoing = [];
+
+                                    foreach ($intervals as $days) {
+                                        $count = $counts['ongoing_lapsed'][$days] ?? 0;
+
+                                        if ($count > 0) {
+                                            $ongoing[] = sprintf(
+                                                '<span class="cursor-pointer" title="%d days lapsed">%s</span>',
+                                                $days,
+                                                number_format($count)
+                                            );
+                                        }
+                                    }
+                                    echo implode(' | ', $ongoing);
+                                    ?>
+                                </div>
+                            </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>

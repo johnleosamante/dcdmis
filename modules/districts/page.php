@@ -1,6 +1,7 @@
 <?php
 // modules/districts/page.php
 if (!$isHrmis && !$isHrtdms && !$isDmis) {
+    http_response_code(403);
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -27,7 +28,7 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
-        <?php if ($isDmis) { ?>
+        <?php if ($isHrmis || $isDmis) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
                 <div class="d-inline-block">
                     <?php linkButtonSplit(customUri('export', 'districts'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success') ?>
@@ -36,7 +37,7 @@ messageAlert($showAlert, $message, $success);
         <?php } ?>
 
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="30%">District</th>
@@ -52,35 +53,36 @@ messageAlert($showAlert, $message, $success);
                 <tbody>
                     <?php
                     $query = districts();
-                    while ($row = fetchAssoc(($query))) : ?>
+                    foreach ($query as $row): ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle text-center"><?php linkItem(customUri($activeApp, 'District Information', $row['id']), $row['name']) ?></td>
+                            <td class="align-middle text-center">
+                                <?php linkItem(customUri($activeApp, 'District Information', $row['id']), $row['name']) ?>
+                            </td>
                             <td class="align-middle">
                                 <div>
                                     <?php if ($isHrmis) {
-                                        linkItem(customUri('hrmis', 'Employee Information', $row['psds']), userName($row['psds']));
+                                        linkItem(customUri('hrmis', 'Employee Information', $row['supervisor_id']), userName($row['supervisor_id']));
                                     } else {
-                                        modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['psds']), userName($row['psds']));
+                                        modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['supervisor_id']), userName($row['supervisor_id']));
                                     } ?>
                                 </div>
-                                <div class="small"><?= fetchAssoc(position($row['psds']))['position'] ?></div>
+                                <div class="small"><?= position($row['supervisor_id'])['official_title'] ?></div>
                             </td>
                             <?php
                             $schoolCount = districtSchoolCount($row['id']);
                             $es = $hs = $is = $total = 0;
 
-                            if (numRows($schoolCount) > 0) {
-                                $count = fetchAssoc($schoolCount);
-                                $es = $count['es'];
-                                $hs = $count['hs'];
-                                $is = $count['is'];
-                                $total = $count['total'];
+                            if ($schoolCount) {
+                                $es = $schoolCount['es'];
+                                $hs = $schoolCount['hs'];
+                                $is = $schoolCount['is'];
+                                $total = $schoolCount['total'];
                             }
                             ?>
                             <td class="align-middle"><?= toHandleNull($es, '0') ?></td>
                             <td class="align-middle"><?= toHandleNull($hs, '0') ?></td>
                             <td class="align-middle"><?= toHandleNull($is, '0') ?></td>
-                            <td class="align-middle"><?= $total ?></td>
+                            <td class="align-middle"><?= e($total) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
@@ -89,9 +91,9 @@ messageAlert($showAlert, $message, $success);
                                         linkDropdownItem(customUri($activeApp, 'District Information', $row['id']), 'View', 'fa-eye', 'View District');
                                         if ($isDmis) {
                                             modalDropdownItem(uri() . '/modules/districts/save-district-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit District');
-                                            if ((int)$total === 0) { ?>
+                                            if ((int) $total === 0) { ?>
                                                 <div class="dropdown-divider"></div>
-                                        <?php
+                                                <?php
                                                 modalDropdownItem(uri() . '/modules/districts/delete-district-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete District');
                                             }
                                         }
@@ -100,7 +102,7 @@ messageAlert($showAlert, $message, $success);
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>

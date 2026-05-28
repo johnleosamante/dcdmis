@@ -6,15 +6,14 @@ if (!$isHrmis && !$isHrtdms && !$isDmis) {
 }
 
 $districtId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$districts = district($districtId);
-$district = $districtName = $psds = null;
+$district = district($districtId);
+$districtName = $psds = null;
 
 messageAlert($showAlert, $message, $success);
 
-if (numRows($districts) > 0) {
-    $district = fetchAssoc($districts);
+if ($district) {
     $districtName = $district['name'];
-    $psds = $district['psds'];
+    $psds = $district['supervisor_id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
@@ -24,9 +23,9 @@ if (numRows($districts) > 0) {
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
             <li class="breadcrumb-item active"><a href="<?= customUri($activeApp, 'Districts') ?>">Districts</a></li>
-            <li class="breadcrumb-item active"><?= $districtName ?></li>
+            <li class="breadcrumb-item active"><?= e($districtName) ?></li>
         </ol>
     </nav>
 </div>
@@ -45,7 +44,7 @@ if (numRows($districts) > 0) {
             <table cellspacing="0">
                 <tr>
                     <th class="pr-5 align-top" scope="row">District</th>
-                    <td class="text-uppercase"><?= $districtName ?></td>
+                    <td class="text-uppercase"><?= e($districtName) ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5 align-top" scope="row">Supervisor</th>
@@ -57,14 +56,14 @@ if (numRows($districts) > 0) {
                                 echo userName($psds);
                             } ?>
                         </div>
-                        <div class="small"><?= fetchAssoc(position($psds))['position'] ?></div>
+                        <div class="small"><?= position($psds)['official_title'] ?></div>
                     </td>
                 </tr>
             </table>
         </div>
 
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="align-middle" width="5%">Logo</th>
@@ -82,60 +81,61 @@ if (numRows($districts) > 0) {
                 <tbody>
                     <?php
                     $query = districtSchools($districtId);
-                    while ($row = fetchArray($query)) :
-                        $logo = uri() . '/' . $row['logo'];
+                    foreach ($query as $row):
+                        $logo = "{$baseUri}/" . $row['logo'];
                         $schoolName = $row['name'];
-                    ?>
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $logo ?>" alt="<?= $schoolName ?>">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                        <img height="100%" src="<?= e($logo) ?>" alt="<?= e($schoolName) ?>">
                                     </span>
                                 </div>
                             </td>
                             <td class="align-middle text-left">
-                                <div><?php linkItem(customUri($activeApp, 'School Information', $row['id']), $schoolName . ' (' . $row['alias'] . ')') ?></div>
+                                <div>
+                                    <?php linkItem(customUri($activeApp, 'School Information', $row['id']), $schoolName . ' (' . $row['alias'] . ')') ?>
+                                </div>
                                 <div class="small"><?= $row['id'] . ' | ' . $row['address'] ?></div>
                             </td>
                             <td class="align-middle">
                                 <?php
-                                $districts = district($row['district']);
-                                if (numRows($districts) > 0) {
-                                    $district = fetchAssoc($districts);
+                                $district = district($row['district_id']);
+                                if ($district) {
                                     linkItem(customUri($activeApp, 'District Information', $district['id']), $district['name']);
                                 } ?>
                             </td>
-                            <td class="align-middle"><?= $row['category'] ?></td>
+                            <td class="align-middle"><?= e($row['category']) ?></td>
                             <td class="align-middle">
                                 <div>
                                     <?php if ($isHrmis) {
-                                        linkItem(customUri('hrmis', 'Employee Information', $row['head']), userName($row['head']));
+                                        linkItem(customUri('hrmis', 'Employee Information', $row['head_id']), userName($row['head_id']));
                                     } else {
-                                        modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['head']), userName($row['head']));
+                                        modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['head_id']), userName($row['head_id']));
                                     } ?>
                                 </div>
                                 <?php
-                                $positions = position($row['head']);
-                                echo numRows($positions) > 0 ? '<div class="small">' . fetchAssoc($positions)['position'] . '</div>' : '';
+                                $position = position($row['head_id']);
+                                echo $position ? '<div class="small">' . $position['official_title'] . '</div>' : '';
                                 ?>
                             </td>
 
                             <?php
-                            $employeeCount = schoolEmployeeCount($row['id']);
+                            $count = schoolEmployeeCount($row['id']);
                             $male = $female = $total = 0;
 
-                            if (numRows($employeeCount) > 0) {
-                                $count = fetchAssoc($employeeCount);
+                            if ($count) {
                                 $male = $count['male'];
                                 $female = $count['female'];
                                 $total = $count['total'];
                             }
                             ?>
 
-                            <td class="align-middle"><?= $male ?></td>
-                            <td class="align-middle"><?= $female ?></td>
-                            <td class="align-middle"><?= $total ?></td>
+                            <td class="align-middle"><?= e($male) ?></td>
+                            <td class="align-middle"><?= e($female) ?></td>
+                            <td class="align-middle"><?= e($total) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
@@ -145,7 +145,7 @@ if (numRows($districts) > 0) {
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>

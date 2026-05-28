@@ -17,7 +17,7 @@ messageAlert($showAlert, $message, $success);
         </ol>
     </nav>
 
-    <?php if ($isHrmis) : ?>
+    <?php if ($isHrmis): ?>
         <div class="d-inline-block">
             <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus') ?>
         </div>
@@ -34,11 +34,7 @@ messageAlert($showAlert, $message, $success);
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
                 <div class="d-inline-block">
                     <?php
-                    linkButtonSplit(customUri('export', 'active-employees'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success');
-
-                    if ($isDmis) {
-                        linkButtonSplit(customUri('dmis', 'Archived Employees'), 'Archived', 'fa-archive', 'View archived employees', 'danger');
-                    }
+                    linkButtonSplit(customUri('export', 'employees-position'), 'Export', 'fa-file-excel', 'Export as Excel file', 'success');
                     ?>
                 </div>
             </div>
@@ -61,13 +57,13 @@ messageAlert($showAlert, $message, $success);
                     $i = 1;
                     $rows = employeePositions();
 
-                    foreach ($rows as $row) : ?>
+                    foreach ($rows as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= $i++ ?></td>
-                            <td class="align-middle text-left"><?= $row['position'] ?></td>
-                            <td class="align-middle"><?= $row['male'] ?></td>
-                            <td class="align-middle"><?= $row['female'] ?></td>
-                            <td class="align-middle"><?= $row['total'] ?></td>
+                            <td class="align-middle text-left"><?= e($row['official_title']) ?></td>
+                            <td class="align-middle"><?= e($row['male']) ?></td>
+                            <td class="align-middle"><?= e($row['female']) ?></td>
+                            <td class="align-middle"><?= e($row['total']) ?></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>

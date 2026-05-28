@@ -1,45 +1,51 @@
 <?php
 // login/reset/app.php
+$appTitle = $page = 'Forgot Password';
 $userEmail = null;
 
 if (isset($_POST['reset-password'])) {
     $showAlert = true;
     $success = false;
-    $userEmail = sanitize($_POST['email']);
+    $message = "If an account is associated with this email, you will receive instructions shortly.";
 
-    if (empty($userEmail)) {
-        $message = 'Email address is required.';
+    $userEmail = PRODUCTION_MODE ? sanitize($_POST['email']) : DEVELOPER_EMAIL;
+
+    if (empty($userEmail) || !filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+        $message = 'Please enter a valid email address.';
         return;
     }
 
     if (!isValidEmail($userEmail, 'deped.gov.ph')) {
-        $message = 'Please use your DepEd Email Address.';
+        $message = 'Please use an authorized @deped.gov.ph email address.';
         return;
     }
 
-    $accounts = account($userEmail);
+    $account = account($userEmail);
 
-    if (numRows($accounts) === 0) {
-        $message = 'Sorry, we do not recognize the email address that you have given. Check for misspelled words and try again.';
+    if (!$account) {
+        $success = true;
+        error_log("Reset attempted for non-existent email: {$userEmail}");
         return;
     }
 
-    $employeeId = fetchAssoc($accounts)['id'];
-
-    $temporaryPassword = sanitize(generateStrongRandomPassword());
-
+    $employeeId = $account['id'];
+    $temporaryPassword = generateStrongRandomPassword();
     updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
 
-    if (affectedRows()) {
-        $emailMessage = 'Good day! You request for password reset has been approved!' . PHP_EOL . PHP_EOL . 'Your temporary password is: ' . $temporaryPassword . PHP_EOL . PHP_EOL . 'Please login to: ' . uri() . '/login to confirm.' . PHP_EOL . PHP_EOL . 'If you did not request this change please contact us for assistance. Thank you.';
+    $subject = "Employee Password Reset";
+    $loginUrl = "{$baseUri}/login";
 
-        if (sendMail($userEmail, 'Employee Password Reset', $emailMessage)) {
-            $message = 'An email has been sent successfully to [' . $userEmail . '].';
-            $userEmail = null;
-            $success = true;
-            return;
-        }
+    $emailBody = "Good day!\n\n
+                Your request for password reset has been approved!\n\n
+                Your temporary password is: {$temporaryPassword}\n\n
+                Please login to: {$loginUrl} to confirm.\n\n
+                If you did not request this change please contact us for assistance. Thank you.";
+
+    if (!sendMail($userEmail, $subject, $emailBody)) {
+        $message = "We encountered an error sending the email. Please try again later.";
+        error_log("Failed to send reset email to: {$userEmail}");
+        return;
     }
 
-    $message = 'An email to [' . $userEmail . '] was not sent successfully. Please contact the administrator instead.';
+    $success = true;
 }

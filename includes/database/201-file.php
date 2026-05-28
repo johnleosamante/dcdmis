@@ -1,31 +1,72 @@
 <?php
-// tbl_201_file
-function fileAttachments($id)
+// file_types
+function fileTypes()
 {
-    return query("SELECT `No` AS `no`, `DateUpload` AS `datetime`, `description`, `filename`, `ext` FROM tbl_201_file WHERE `Emp_ID`='{$id}' ORDER BY `datetime` DESC;");
+    $result = query("SELECT `id`, `name` FROM `file_types` WHERE `id` <> 20 ORDER BY `id` ASC");
+    return is_array($result) ? $result : [];
 }
 
-function fileAttachment($id, $no)
+// files, file_types
+function fileAttachments($employee_id)
 {
-    return query("SELECT `No` AS `no`, `DateUpload` AS `datetime`, `description`, `filename`, `ext` FROM tbl_201_file WHERE `Emp_ID`='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $results = query(
+        "SELECT f.id, f.employee_id, t.name AS file_type, f.description, 
+            f.file_name, f.file_extension, f.created_at 
+        FROM `files` AS f INNER JOIN `file_types` AS t ON f.file_type_id = t.id 
+        WHERE f.employee_id = ? AND f.file_type_id <> 20 ORDER BY f.created_at DESC",
+        [$employee_id]
+    );
+    return is_array($results) ? $results : [];
 }
 
-function createFileAttachment($description, $filename, $ext, $id)
+// files
+function fileAttachment($employee_id, $file_attachment_id)
 {
-    nonQuery("INSERT INTO tbl_201_file (`DateUpload`, `description`, `filename`, `ext`, `Emp_ID`) VALUES (NOW(), '{$description}', '{$filename}', '{$ext}', '{$id}');");
+    return find(
+        "SELECT `id`, `employee_id`, `file_type_id`, `description`, `file_name`, `file_extension` FROM `files` WHERE `employee_id` = ? AND `id` = ? LIMIT 1",
+        [$employee_id, $file_attachment_id]
+    );
 }
 
-function updateFileAttachment($description, $filename, $ext, $id, $no)
+// files
+function createFileAttachment($file_type_id, $description, $file_name, $file_extension, $employee_id)
 {
-    nonQuery("UPDATE tbl_201_file SET `DateUpload`=NOW(), `description`='{$description}', `filename`='{$filename}', `ext`='{$ext}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'employee_id' => $employee_id,
+        'file_type_id' => $file_type_id,
+        'description' => $description,
+        'file_name' => $file_name,
+        'file_extension' => $file_extension
+    ];
+    return insert('files', $data);
 }
 
-function deleteFileAttachment($id, $no)
+// files
+function updateFileAttachment($file_type_id, $description, $file_name, $file_extension, $employee_id, $file_attachment_id)
 {
-    nonQuery("DELETE FROM tbl_201_file WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'file_type_id' => $file_type_id,
+        'description' => $description,
+        'file_name' => $file_name,
+        'file_extension' => $file_extension
+    ];
+    return update('files', $data, '`employee_id` = ? AND `id` = ?', [$employee_id, $file_attachment_id]);
 }
 
-function deleteFileAttachments($id)
+// files
+function deleteFileAttachment($employee_id, $file_attachment_id)
 {
-    nonQuery("DELETE FROM tbl_201_file WHERE Emp_ID='{$id}';");
+    return delete('files', '`employee_id` = ? AND `id` = ?', [$employee_id, $file_attachment_id]);
+}
+
+// files
+function deleteFileAttachments($employee_id)
+{
+    return delete('files', '`employee_id` = ?', [$employee_id]);
+}
+
+function payslips($employee_id)
+{
+    $results = query("SELECT * FROM `files` WHERE `file_type_id`  = 20 AND `employee_id` = ? ORDER BY `updated_at` DESC", [$employee_id]);
+    return is_array($results) ? $results : [];
 }

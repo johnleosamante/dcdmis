@@ -4,30 +4,36 @@ require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/employee.php');
 require_once(root() . '/includes/database/position.php');
+require_once(root() . '/includes/database/plantilla.php');
 require_once(root() . '/includes/database/school.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
-$employeeId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$employees = employee($employeeId);
+$employeeId = sanitize(decipher($_GET['id'] ?? null));
+$employee = employee((int) $employeeId);
 $modalTitle = 'Employee not found';
 $hasEmployee = false;
+$itemNumber = null;
 
-if (numRows($employees) > 0) {
-    $employee = fetchAssoc($employees);
+if ($employee) {
     $employeeId = $employee['id'];
-    $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
+    $employeeName = toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true);
     $sex = $employee['sex'];
     $status = $employee['status'];
-    $positions = fetchAssoc(position($employeeId));
+    $positions = position($employeeId);
     $stationId = $positions['station_id'];
     $station = $positions['station'];
     $positionId = $positions['position_id'];
-    $position = $positions['position'];
-    $depedEmail = $employee['email'];
-    $picture = file_exists(root() . '/' . $employee['picture']) ? uri() . '/' . $employee['picture'] : uri() . '/assets/img/user.png';
+    $position = $positions['official_title'];
+    $depedEmail = $employee['email_address'];
+    $picture = file_exists(root() . '/' . $employee['profile_picture']) ? "{$baseUri}/" . $employee['profile_picture'] : "{$baseUri}/assets/img/user.png";
     $modalTitle = 'Remove Employee';
     $hasEmployee = true;
+    $employeeItem = employeeItemNumber($employeeId);
+
+    if ($employeeItem) {
+        $itemNumber = $employeeItem['item_number'] ?? null;
+    }
 }
 ?>
 
@@ -35,10 +41,11 @@ if (numRows($employees) > 0) {
     <div class="modal-content">
         <?php modalHeader($modalTitle) ?>
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <?php if ($hasEmployee) {
                     employeeProfile($picture, $employeeName, $sex, $depedEmail, $position, $station, $status);
-                ?>
+                    ?>
                     <hr>
                     <div class="form-group">
                         <label for="reason" class="mb-0">Reason <?php showAsterisk() ?></label>
@@ -54,6 +61,30 @@ if (numRows($employees) > 0) {
                         </select>
                     </div>
 
+                    <div class="form-group mb-2" id="vacancy-option">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="skip-vacancy" name="skip_vacancy"
+                                value="1">
+                            <label class="custom-control-label" for="skip-vacancy">
+                                <strong>Do not create vacancy</strong>
+                                <small class="d-block text-muted">Check this if the position does not require creation of a
+                                    vacant
+                                    item</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <?php if ($itemNumber): ?>
+                        <div class="alert alert-info p-2 my-2 small d-flex align-items-start">
+                            <i class="fas fa-info-circle mt-1 mr-1"></i>
+                            <div>
+                                Item Number: <strong><?= e($itemNumber) ?>
+                                </strong> will be marked as vacant unless you check the
+                                option above or is duplicate employee.
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
                     <?php requiredLegend(0) ?>
                 <?php } else {
                     missingAlert($modalTitle);
@@ -61,8 +92,8 @@ if (numRows($employees) > 0) {
             </div>
 
             <div class="modal-footer">
-                <?php if ($hasEmployee) : ?>
-                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?>">
+                <?php if ($hasEmployee): ?>
+                    <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
                     <button class="btn btn-danger" name="remove-employee" type="submit">Continue</button>
                 <?php endif;
 

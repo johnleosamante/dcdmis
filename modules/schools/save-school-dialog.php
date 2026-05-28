@@ -7,17 +7,16 @@ require_once(root() . '/includes/database/school.php');
 require_once(root() . '/includes/layout/components.php');
 
 $schoolId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$schools = schoolDetailsById($schoolId);
-$school = $schoolName = $address = $category = $districtCode = $alias = $telephone = $email = $website = $facebook = $logo = null;
+$school = schoolById($schoolId);
+$schoolName = $address = $category = $districtCode = $alias = $telephone = $email = $website = $facebook = $logo = null;
 $modalTitle = 'Add School';
 $notFound = true;
 
-if (numRows($schools) > 0) {
-    $school = fetchAssoc($schools);
+if ($school) {
     $schoolName = $school['name'];
     $address = $school['address'];
     $category = $school['category'];
-    $districtCode = $school['district'];
+    $districtCode = $school['district_id'];
     $alias = $school['alias'];
     $telephone = $school['telephone'];
     $email = $school['email'];
@@ -33,31 +32,36 @@ if (numRows($schools) > 0) {
         <?php modalHeader($modalTitle) ?>
 
         <form method="POST" action="" enctype="multipart/form-data">
+            <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
                             <label for="school-id" class="mb-0">School ID <?php showAsterisk() ?></label>
-                            <input type="text" id="school-id" name="school-id" class="form-control" value="<?= $schoolId ?>" required>
+                            <input type="text" id="school-id" name="school-id" class="form-control"
+                                value="<?= e($schoolId) ?>" required>
                         </div>
                     </div>
 
                     <div class="col-6">
                         <div class="form-group">
                             <label for="alias" class="mb-0">Alias <?php showAsterisk() ?></label>
-                            <input type="text" id="alias" name="alias" class="form-control" value="<?= $alias ?>" required>
+                            <input type="text" id="alias" name="alias" class="form-control" value="<?= e($alias) ?>"
+                                required>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="school-name" class="mb-0">Name <?php showAsterisk() ?></label>
-                    <input type="text" id="school-name" name="school-name" class="form-control" value="<?= $schoolName ?>" required>
+                    <input type="text" id="school-name" name="school-name" class="form-control"
+                        value="<?= e($schoolName) ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="address" class="mb-0">Address <?php showAsterisk() ?></label>
-                    <input type="text" id="address" name="address" class="form-control" value="<?= $address ?>" required>
+                    <input type="text" id="address" name="address" class="form-control" value="<?= e($address) ?>"
+                        required>
                 </div>
 
                 <div class="row">
@@ -67,9 +71,9 @@ if (numRows($schools) > 0) {
                             <select id="district" name="district" class="form-control" required>
                                 <option value="">Select district...</option>
                                 <?php $districts = districts();
-                                while ($district = fetchAssoc($districts)) : ?>
-                                    <option value="<?= $district['id'] ?>" <?= setOptionSelected($district['id'], $districtCode) ?>><?= $district['name'] ?></option>
-                                <?php endwhile ?>
+                                foreach ($districts as $district): ?>
+                                    <option value="<?= e($district['id']) ?>" <?= setOptionSelected($district['id'], $districtCode) ?>><?= e($district['name']) ?></option>
+                                <?php endforeach ?>
                             </select>
                         </div>
                     </div>
@@ -79,9 +83,12 @@ if (numRows($schools) > 0) {
                             <label for="category" class="mb-0">Category <?php showAsterisk() ?></label>
                             <select id="category" name="category" class="form-control" required>
                                 <option value="">Select category...</option>
-                                <option value="Elementary" <?= setOptionSelected('Elementary', $category) ?>>Elementary</option>
-                                <option value="Secondary" <?= setOptionSelected('Secondary', $category) ?>>Secondary</option>
-                                <option value="Integrated" <?= setOptionSelected('Integrated', $category) ?>>Integrated</option>
+                                <option value="Elementary" <?= setOptionSelected('Elementary', $category) ?>>Elementary
+                                </option>
+                                <option value="Secondary" <?= setOptionSelected('Secondary', $category) ?>>Secondary
+                                </option>
+                                <option value="Integrated" <?= setOptionSelected('Integrated', $category) ?>>Integrated
+                                </option>
                                 <option value="Office" <?= setOptionSelected('Office', $category) ?>>Office</option>
                             </select>
                         </div>
@@ -90,22 +97,23 @@ if (numRows($schools) > 0) {
 
                 <div class="form-group">
                     <label for="telephone" class="mb-0">Telephone</label>
-                    <input type="text" id="telephone" name="telephone" class="form-control" value="<?= $telephone ?>">
+                    <input type="text" id="telephone" name="telephone" class="form-control"
+                        value="<?= e($telephone) ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="email" class="mb-0">Email <?php showAsterisk() ?></label>
-                    <input type="text" id="email" name="email" class="form-control" value="<?= $email ?>" required>
+                    <input type="text" id="email" name="email" class="form-control" value="<?= e($email) ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="website" class="mb-0">Website</label>
-                    <input type="text" id="website" name="website" class="form-control" value="<?= $website ?>">
+                    <input type="text" id="website" name="website" class="form-control" value="<?= e($website) ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="facebook" class="mb-0">Facebook</label>
-                    <input type="text" id="facebook" name="facebook" class="form-control" value="<?= $facebook ?>">
+                    <input type="text" id="facebook" name="facebook" class="form-control" value="<?= e($facebook) ?>">
                 </div>
 
                 <div class="form-group">
@@ -116,8 +124,8 @@ if (numRows($schools) > 0) {
                 <?php requiredLegend(0) ?>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?= isset($_GET['id']) ? $_GET['id'] : null ?>">
-                <input type="hidden" name="data-verifier" value="<?= isset($_GET['e']) ? $_GET['e'] : null ?>">
+                <input type="hidden" name="verifier" value="<?= $_GET['id'] ?? null ?>">
+                <input type="hidden" name="data-verifier" value="<?= $_GET['e'] ?? null ?>">
                 <input type="hidden" name="image-verifier" value="<?= cipher($logo) ?>">
                 <button class="btn btn-primary" name="save-school" type="submit">Continue</button>
                 <?php cancelModalButton() ?>

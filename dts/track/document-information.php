@@ -1,10 +1,9 @@
 <?php
 // dts/track/document-information.php
 $documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$documents = document($documentId);
+$document = document($documentId);
 
-if (numRows($documents) > 0) {
-    $document = fetchAssoc($documents);
+if ($document) {
     $documentId = $document['id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
@@ -13,11 +12,12 @@ if (numRows($documents) > 0) {
 ?>
 
 <form class="mx-auto mb-4" method="POST" action="">
+    <?= csrf_field(); ?>
     <div class="row justify-content-center">
         <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12">
             <div class="input-group">
                 <input type="text" class="form-control small" placeholder="Search document..." aria-label="Search"
-                    name="primary-search-text" value="<?= $documentId ?>" autofocus required>
+                    name="primary-search-text" value="<?= e($documentId) ?>" autofocus required>
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit" name="primary-search-button">
                         <i class="fas fa-search fa-sm"></i>
@@ -36,41 +36,49 @@ if (numRows($documents) > 0) {
     <div class="card-body">
         <table cellspacing="0">
             <tr>
+                <th class="align-top pr-3" scope="row">Type:</th>
+                <td class="text-uppercase">
+                    <?= documentType($document['document_type_id']) ?>
+                </td>
+            </tr>
+            <tr>
                 <th class="align-top pr-3" scope="row">Description:</th>
-                <td class="text-uppercase"><?= $document['description'] ?></td>
+                <td class="text-uppercase"><?= e($document['description']) ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Created on:</th>
-                <td class="text-uppercase"><?= toDate($document['datetime'], 'F d, Y h:i:s A') ?></td>
+                <td class="text-uppercase"><?= toDate($document['created_at'], 'F d, Y h:i:s A') ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">From:</th>
-                <td class="text-uppercase"><?= stationName($document['from']) ?></td>
+                <td class="text-uppercase"><?= stationName($document['created_from']) ?></td>
             </tr>
-            <tr>
-                <th class="align-top pr-3" scope="row">Status:</th>
-                <td class="text-uppercase">
-                    <?= $document['status'] ?>
-                </td>
-            </tr>
+            <?php if (!empty($document['status_id'])): ?>
+                <tr>
+                    <th class="align-top pr-3" scope="row">Status:</th>
+                    <td class="text-uppercase">
+                        <?= documentTransactionStatus($document['status_id']) ?>
+                    </td>
+                </tr>
+            <?php endif ?>
         </table>
 
         <div class="mt-5 timeline">
             <?php
             $logs = documentLogs($documentId);
-            $totalLogs = numRows($logs);
             $logCount = 0;
 
-            while ($log = fetchAssoc($logs)) {
+            foreach ($logs as $log) {
                 $logCount++;
-                $from = stationName($log['from']);
-                $to = stationName($log['to']);
-                $displayName = userName($log['user']);
-                $user = fetchAssoc(employee($log['user']));
-                $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $user['picture'] : uri() . '/assets/img/user.png';
+                $from = stationName($log['received_from']);
+                $to = stationName($log['forwarded_to']);
+                $displayName = userName($log['processor_id']);
+                $user = employee($log['processor_id']);
+                $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '/' . $user['profile_picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
-                $hasDestination = !empty($to) && $to !== '-';
-                $status = $log['status'];
+                $hasDestination = !empty($to) && $to !== null;
+                $status = documentTransactionStatus($log['status_id']);
+                $details = $log['details'];
                 $isCompleted = str_contains(strtolower($status), 'complete');
                 $isCanceled = str_contains(strtolower($status), 'cancel');
                 $bgColor = '';
@@ -103,17 +111,17 @@ if (numRows($documents) > 0) {
                 <div class="timeline-item">
                     <div class="timeline-item-marker">
                         <div class="timeline-item-marker-text text-uppercase">
-                            <?= date('M d, Y', strtotime($log['datetime'])) . '<br>' . date('h:i:s A', strtotime($log['datetime'])) ?>
+                            <?= date('M d, Y', strtotime($log['created_at'])) . '<br>' . date('h:i:s A', strtotime($log['created_at'])) ?>
                         </div>
-                        <div class="timeline-item-marker-indicator <?= $bgColor ?>">
-                            <i class="fas fa-<?= $icon ?>"></i>
+                        <div class="timeline-item-marker-indicator <?= e($bgColor) ?>">
+                            <i class="fas fa-<?= e($icon) ?>"></i>
                         </div>
                     </div>
                     <div class="timeline-item-content pt-0">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase mb-0">
-                                    <?= $from ?>
+                                    <?= e($from) ?>
                                 </h5>
                             </div>
 
@@ -121,24 +129,24 @@ if (numRows($documents) > 0) {
                                 <div class="mb-3">
                                     <span
                                         class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
-                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px"
+                                        <img src="<?= e($displayPhoto) ?>" alt="<?= e($displayName) ?>" height="40px"
                                             width="40px">
                                     </span>
 
                                     <div class="ml-2 d-inline-block align-middle">
                                         <div class="text-uppercase">
-                                            <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName) ?>
+                                            <?= e($displayName) ?>
                                         </div>
 
                                         <div class="text-uppercase text-xs">
-                                            <?= fetchAssoc(position($log['user']))['position'] ?>
+                                            <?= position($log['processor_id'])['official_title'] ?>
                                         </div>
                                     </div>
                                 </div>
 
                                 <?= $hasDestination ? '<div class="mb-3">Forwarded to ' . strtoupper($to) . '</div>' : '' ?>
 
-                                <div class="font-weight-bold text-lg"><?= $status ?></div>
+                                <div class="font-weight-bold text-lg"><?= e($status) ?></div>
                             </div>
                         </div>
                     </div>

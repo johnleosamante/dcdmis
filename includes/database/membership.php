@@ -1,32 +1,41 @@
 <?php
-// includes/database/membership.php
-// tbl_membership
-function memberships($id)
+// memberships
+function memberships($employee_id)
 {
-    return query("SELECT `No` AS `no`, Organization AS `organization`, Emp_ID AS id FROM tbl_membership WHERE Emp_ID='{$id}' ORDER BY Organization;");
+    $results = query("SELECT * FROM `memberships` WHERE `employee_id` = ? ORDER BY `organization` ASC", [$employee_id]);
+    return is_array($results) ? $results : [];
 }
 
-function membership($id, $no)
+function membership($employee_id, $membership_id)
 {
-    return query("SELECT `No` AS `no`, Organization AS `organization`, Emp_ID AS id FROM tbl_membership WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return find("SELECT * FROM `memberships` WHERE `employee_id` = ? AND `id` = ? LIMIT 1", [$employee_id, $membership_id]);
 }
 
-function createMembership($membership, $id)
+function createMembership($organization, $employee_id)
 {
-    nonQuery("INSERT INTO tbl_membership (`Organization`, `Emp_ID`) VALUES ('{$membership}', '{$id}');");
+    $data = [
+        'organization' => $organization,
+        'employee_id' => $employee_id
+    ];
+
+    return insert('memberships', $data);
 }
 
-function updateMembership($membership, $id, $no)
+function updateMembership($organization, $employee_id, $membership_id)
 {
-    nonQuery("UPDATE tbl_membership SET Organization='{$membership}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'organization' => $organization
+    ];
+
+    return update('memberships', $data, '`employee_id` = ? AND `id` = ?', [$employee_id, $membership_id]);
 }
 
-function deleteMembership($id, $no)
+function deleteMembership($employee_id, $membership_id)
 {
-    nonQuery("DELETE FROM tbl_membership WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('memberships', '`employee_id` = ? AND `id` = ?', [$employee_id, $membership_id]);
 }
 
-function deleteMemberships($id)
+function deleteMemberships($employee_id)
 {
-    nonQuery("DELETE FROM tbl_membership WHERE Emp_ID='{$id}';");
+    return delete('memberships', '`employee_id` = ?', [$employee_id]);
 }

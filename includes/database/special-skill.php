@@ -1,32 +1,39 @@
 <?php
-// includes/database/special-skill.php
-// tbl_special_skills
-function specialSkills($id)
+// skills
+function specialSkills($employee_id)
 {
-    return query("SELECT `No` AS `no`, Special_Skills AS skill, Emp_ID AS id FROM tbl_special_skills WHERE Emp_ID='{$id}' ORDER BY Special_Skills;");
+    $results = query("SELECT * FROM `skills` WHERE `employee_id` = ? ORDER BY `name` ASC", [$employee_id]);
+    return is_array($results) ? $results : [];
 }
 
-function specialSkill($id, $no)
+function specialSkill($employee_id, $skill_id)
 {
-    return query("SELECT `No` AS `no`, Special_Skills AS skill, Emp_ID AS id FROM tbl_special_skills WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return find("SELECT * FROM `skills` WHERE `employee_id` = ? AND `id` = ? LIMIT 1", [$employee_id, $skill_id]);
 }
 
-function createSpecialSkill($skill, $id)
+function createSpecialSkill($name, $employee_id)
 {
-    nonQuery("INSERT INTO tbl_special_skills (`Special_Skills`, Emp_ID) VALUES ('{$skill}', '{$id}');");
+    $data = [
+        'name' => $name,
+        'employee_id' => $employee_id
+    ];
+    return insert('skills', $data);
 }
 
-function updateSpecialSkill($skill, $id, $no)
+function updateSpecialSkill($name, $employee_id, $no)
 {
-    nonQuery("UPDATE tbl_special_skills SET Special_Skills='{$skill}' WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    $data = [
+        'name' => $name
+    ];
+    return update('skills', $data, '`employee_id` = ? AND `id` = ?', [$employee_id, $no]);
 }
 
-function deleteSpecialSkill($id, $no)
+function deleteSpecialSkill($employee_id, $skill_id)
 {
-    nonQuery("DELETE FROM tbl_special_skills WHERE Emp_ID='{$id}' AND `No`='{$no}' LIMIT 1;");
+    return delete('skills', '`employee_id` = ? AND `id` = ?', [$employee_id, $skill_id]);
 }
 
-function deleteSpecialSkills($id)
+function deleteSpecialSkills($employee_id)
 {
-    nonQuery("DELETE FROM tbl_special_skills WHERE Emp_ID='{$id}';");
+    return delete('skills', '`employee_id` = ?', [$employee_id]);
 }

@@ -2,7 +2,7 @@
 // export/training-details.php
 if (!isset($_GET['v']) || empty($_GET['v'])) {
     require_once('../includes/function.php');
-    redirect(uri() . '/login');
+    redirect("$baseUri/login");
 }
 
 require_once(root() . '/includes/database/school.php');
@@ -12,12 +12,11 @@ require_once(root() . '/includes/database/learning-development.php');
 require_once(root() . '/includes/database/utility.php');
 
 $trainingId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$trainings = training($trainingId);
+$training = training($trainingId);
 $participants = trainingParticipants($trainingId);
 
-if (numRows($trainings) > 0) {
-    $training = fetchAssoc($trainings);
-    $trainingId = $training['no'];
+if ($training) {
+    $trainingId = $training['id'];
 } else {
     return;
 }
@@ -27,7 +26,7 @@ if (numRows($trainings) > 0) {
     <thead>
         <tr>
             <th>Code</th>
-            <td colspan="3"><?= $training['no'] ?></td>
+            <td colspan="3"><?= e($training['id']) ?></td>
         </tr>
         <tr>
             <th>Title</th>
@@ -35,29 +34,31 @@ if (numRows($trainings) > 0) {
         </tr>
         <tr>
             <th>Date</th>
-            <td colspan="3"><?= strtoupper(empty($training['unconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['unconsecutive_date']) ?></td>
+            <td colspan="3">
+                <?= strtoupper(empty($training['unconsecutive_dates']) ? toLongDate($training['start_date']) . ' - ' . toLongDate($training['end_date']) : $training['unconsecutive_date']) ?>
+            </td>
         </tr>
-        <?php if (!empty($training['hours'])) : ?>
+        <?php if (!empty($training['number_of_hours'])): ?>
             <tr>
                 <th>Hours</th>
-                <td colspan="3"><?= $training['hours'] ?></td>
+                <td colspan="3"><?= e($training['number_of_hours']) ?></td>
             </tr>
         <?php endif ?>
         <tr>
             <th>Type</th>
-            <td colspan="3"><?= strtoupper(trainingType($training['type'])) ?></td>
+            <td colspan="3"><?= strtoupper(trainingType($training['training_type_id'])) ?></td>
         </tr>
         <tr>
             <th>Level</th>
-            <td colspan="3"><?= strtoupper(trainingSponsor($training['level'])) ?></td>
+            <td colspan="3"><?= strtoupper(trainingSponsor($training['conducted_by'])) ?></td>
         </tr>
-        <?php if (!empty($training['sponsor'])) : ?>
+        <?php if (!empty($training['sponsored_by'])): ?>
             <tr>
                 <th>Sponsor</th>
-                <td colspan="3"><?= strtoupper($training['sponsor']) ?></td>
+                <td colspan="3"><?= strtoupper($training['sponsored_by']) ?></td>
             </tr>
         <?php endif ?>
-        <?php if (!empty($training['venue'])) : ?>
+        <?php if (!empty($training['venue'])): ?>
             <tr>
                 <th>Venue</th>
                 <td colspan="3"><?= strtoupper($training['venue']) ?></td>
@@ -65,7 +66,7 @@ if (numRows($trainings) > 0) {
         <?php endif ?>
         <tr>
             <th>Participants</th>
-            <td colspan="3"><?= strtoupper(numRows($participants)) ?></td>
+            <td colspan="3"><?= strtoupper(count($participants)) ?></td>
         </tr>
         <tr>
             <th>#</th>
@@ -79,16 +80,16 @@ if (numRows($trainings) > 0) {
         <?php
         $i = 1;
 
-        while ($row = fetchArray($participants)) :
-            $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-        ?>
+        foreach ($participants as $row):
+            $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+            ?>
             <tr>
                 <td><?= $i++ ?></td>
                 <td><?= strtoupper($employeeName) ?></td>
-                <td><?= strtoupper(fetchAssoc(positions($row['position']))['position']) ?></td>
-                <td><?= strtoupper(fetchAssoc(schoolById($row['station']))['name']) ?></td>
+                <td><?= strtoupper(positions($row['position_id'])['official_title']) ?></td>
+                <td><?= strtoupper(schoolById($row['station_id'])['name']) ?></td>
             </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
         <tr>
             <td colspan="4"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>

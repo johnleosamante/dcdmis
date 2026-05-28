@@ -20,3 +20,76 @@ contentTitleWithModal('Dashboard', uri() . '/modules/documents/save-document-dia
 	card('Transactions Summary', customUri('dts', 'Transactions Summary'), 'fa-chart-bar', 'primary');
 	?>
 </div>
+
+<?php if ($isRecordsPortal || $isAdminPortal): ?>
+	<script src="<?= uri() ?>/assets/vendor/chart.js/Chart.min.js"></script>
+	<script src="<?= uri() ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
+	<script src="<?= uri() ?>/assets/js/chart-custom.js?v=1.2"></script>
+
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 mb-4">
+			<div class="card shadow">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary text-uppercase">Section Transactions</h6>
+				</div>
+				<div class="card-body">
+					<div class="chart-bar h-auto">
+						<canvas id="section-transactions-chart"></canvas>
+						<script>
+							<?php
+							$sectionsData = [];
+							$sections = sections();
+							foreach ($sections as $section) {
+								// Single query call per loop iteration
+								$counts = stationTransactionCounts($section['id']);
+
+								$sectionsData[] = [
+									'label' => $section['name'],
+									'incoming' => $counts['incoming'],
+									'pending' => $counts['pending'],
+									'outgoing' => $counts['outgoing'],
+									'ongoing' => $counts['ongoing']
+								];
+							}
+							?>
+							generateMultiSeriesBarChart(<?= json_encode($sectionsData) ?>, 'section-transactions-chart');
+						</script>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 mb-4">
+			<div class="card shadow">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary text-uppercase">School Transactions</h6>
+				</div>
+				<div class="card-body">
+					<div class="chart-bar h-auto">
+						<canvas id="school-transactions-chart"></canvas>
+						<script>
+							<?php
+							$schoolsData = [];
+							$schools = schoolsExcept(divisionID());
+							foreach ($schools as $school) {
+								$counts = stationTransactionCounts($school['alias']);
+
+								$schoolsData[] = [
+									'label' => $school['name'] . ' (' . $school['alias'] . ')',
+									'incoming' => $counts['incoming'],
+									'pending' => $counts['pending'],
+									'outgoing' => $counts['outgoing'],
+									'ongoing' => $counts['ongoing']
+								];
+							}
+							?>
+							generateMultiSeriesBarChart(<?= json_encode($schoolsData) ?>, 'school-transactions-chart');
+						</script>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php endif ?>

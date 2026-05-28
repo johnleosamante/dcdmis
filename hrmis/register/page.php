@@ -1,0 +1,33 @@
+<?php
+// hrmis/register/page.php
+?>
+
+<div class="col-12">
+    <div class="mt-5 mb-4 text-center">
+        <?php displayLogo(120, 120, '0', uri(), title()) ?>
+        <h1 class="my-2">
+            <?= e($appTitle) ?>
+        </h1>
+    </div>
+
+    <?php
+    $file = $successfulRegistration ? 'confirmation' : 'form';
+    require_once("$file.php");
+    ?>
+
+    <?php if (isset($userId)): ?>
+        <a class="d-block text-center mx-2 mb-5" href="<?= uri() . '/' . $activeApp ?>" title="Go to dashboard">Go to
+            Dashboard</a>
+    <?php else: ?>
+        <a class="d-block text-center mx-2 mb-5" href="<?= uri() . '/login' ?>" title="Go to login page">Already have an
+            account? Login instead</a>
+    <?php endif ?>
+</div>
+
+<script>
+    // Prevent going back to registration form via browser back button
+    history.pushState(null, null, window.location.href);
+    window.addEventListener('popstate', function () {
+        history.pushState(null, null, window.location.href);
+    });
+</script>

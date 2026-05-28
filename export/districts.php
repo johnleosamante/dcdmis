@@ -31,17 +31,16 @@ require_once(root() . '/includes/database/utility.php');
         $i = 1;
         $query = districts();
 
-        while ($row = fetchArray($query)) : ?>
+        foreach ($query as $row): ?>
             <tr>
                 <td><?= $i++ ?></td>
                 <td><?= strtoupper($row['name']) ?></td>
-                <td><?= userName($row['psds'], true) ?></td>
+                <td><?= userName($row['supervisor_id'], true) ?></td>
                 <?php
-                $schoolCount = districtSchoolCount($row['id']);
+                $count = districtSchoolCount($row['id']);
                 $es = $hs = $is = $total = 0;
 
-                if (numRows($schoolCount) > 0) {
-                    $count = fetchAssoc($schoolCount);
+                if ($count) {
                     $es = $count['es'];
                     $hs = $count['hs'];
                     $is = $count['is'];
@@ -51,9 +50,9 @@ require_once(root() . '/includes/database/utility.php');
                 <td><?= toHandleNull($es, '0') ?></td>
                 <td><?= toHandleNull($hs, '0') ?></td>
                 <td><?= toHandleNull($is, '0') ?></td>
-                <td><?= $total ?></td>
+                <td><?= e($total) ?></td>
             </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
         <tr>
             <td colspan="7"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>

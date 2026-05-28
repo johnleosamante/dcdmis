@@ -3,11 +3,11 @@
 sidebarDivider();
 sidebarHeading('Trainings');
 
-$countScheduled = number_format(numRows(scheduledTrainings()));
-$countActive = number_format(numRows(activeEmployees()));
-$districtCount = number_format(numRows(districts()));
-$schoolCount = number_format(numRows(schools()));
-$sectionCount = number_format(numRows(sections()));
+$countScheduled = number_format(count(scheduledTrainings()));
+$countActive = number_format(count(activeEmployees()));
+$districtCount = number_format(count(districts()));
+$schoolCount = number_format(count(schools()));
+$sectionCount = number_format(count(sections()));
 
 sidebarModalItem(uri() . '/modules/trainings/save-training-dialog.php', 'Add Training', 'fa-plus');
 sidebarMenuItem(customUri('hrtdms', 'Scheduled Trainings'), 'Scheduled', 'fa-calendar-alt', isset($url) && str_contains($url, 'Scheduled'), $countScheduled);

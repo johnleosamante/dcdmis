@@ -6,12 +6,11 @@ if (!$isHrtdms) {
 }
 
 $trainingId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$trainings = training($trainingId);
+$training = training($trainingId);
 $employees = employees();
 
-if (numRows($trainings) > 0) {
-    $training = fetchAssoc($trainings);
-    $trainingId = $training['no'];
+if ($training) {
+    $trainingId = $training['id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
@@ -30,59 +29,64 @@ messageAlert($showAlert, $message, $success);
             <table cellspacing="0">
                 <tr>
                     <th class="align-top pr-5" scope="row">Code</th>
-                    <td class="text-uppercase"><?= $training['no'] ?></td>
+                    <td class="text-uppercase"><?= e($training['id']) ?></td>
                 </tr>
                 <tr>
                     <th class="align-top pr-5" scope="row">Title</th>
-                    <td class="text-uppercase"><?= $training['title'] ?></td>
+                    <td class="text-uppercase"><?= e($training['title']) ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5" scope="row">Date</th>
-                    <td class="text-uppercase"><?= empty($training['nonconsecutive_date']) ? toLongDate($training['from']) . ' - ' . toLongDate($training['to']) : $training['nonconsecutive_date'] ?></td>
+                    <td class="text-uppercase">
+                        <?= empty($training['unconsecutive_dates']) ? toLongDate($training['start_date']) . ' - ' . toLongDate($training['end_date']) : $training['unconsecutive_dates'] ?>
+                    </td>
                 </tr>
-                <?php if (!empty($training['hours'])) : ?>
+                <?php if (!empty($training['hours'])): ?>
                     <tr>
                         <th class="pr-5" scope="row">Hours</th>
-                        <td class="text-uppercase"><?= $training['hours'] ?></td>
+                        <td class="text-uppercase"><?= e($training['hours']) ?></td>
                     </tr>
                 <?php endif ?>
                 <tr>
                     <th class="pr-5" scope="row">Type</th>
-                    <td class="text-uppercase"><?= trainingType($training['type']) ?></td>
+                    <td class="text-uppercase"><?= trainingType($training['training_type_id']) ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5" scope="row">Level</th>
                     <?php
-                    $functional_division = $training['functional_division'];
+                    $functional_division = $training['functional_division_id'];
                     $functional_divisions = functionalDivision($functional_division);
                     $training_functional_division = '';
-                    if (numRows($functional_divisions) > 0) {
-                        $training_functional_division = fetchAssoc($functional_divisions)['name'];
+                    if ($functional_divisions) {
+                        $training_functional_division = $functional_divisions['name'];
                     }
-                    $functional_division = (!empty($functional_division) && strtolower($functional_division) !== 'n/a') ? ' (' . $training_functional_division . ')' : '';
+                    $functional_division = (!empty($functional_division) && strtolower($functional_division) !== 'n/a') ? " ($training_functional_division)" : '';
                     ?>
-                    <td class="text-uppercase"><?= trainingSponsor($training['level']) . $functional_division ?></td>
+                    <td class="text-uppercase">
+                        <?= trainingSponsor($training['training_level_id']) . $functional_division ?>
+                    </td>
                 </tr>
-                <?php if (!empty($training['sponsor'])) : ?>
+                <?php if (!empty($training['sponsor'])): ?>
                     <tr>
                         <th class="align-top pr-5" scope="row">Sponsor</th>
-                        <td class="text-uppercase"><?= $training['sponsor'] ?></td>
+                        <td class="text-uppercase"><?= e($training['sponsor']) ?></td>
                     </tr>
                 <?php endif ?>
-                <?php if (!empty($training['venue'])) : ?>
+                <?php if (!empty($training['venue'])): ?>
                     <tr>
                         <th class="align-top pr-5" scope="row">Venue</th>
-                        <td class="text-uppercase"><?= $training['venue'] ?></td>
+                        <td class="text-uppercase"><?= e($training['venue']) ?></td>
                     </tr>
                 <?php endif ?>
                 <tr>
                     <th class="align-top pr-5" scope="row">Participants</th>
-                    <td class="text-uppercase"><?= numRows(trainingParticipants($trainingId)) ?></td>
+                    <td class="text-uppercase"><?= count(trainingParticipants($trainingId)) ?></td>
                 </tr>
             </table>
         </div>
 
         <form action="" method="POST">
+            <?= csrf_field(); ?>
             <div class="table-responsive my-3">
                 <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                     <thead>
@@ -98,19 +102,21 @@ messageAlert($showAlert, $message, $success);
 
                     <tbody>
                         <?php
-                        while ($row = fetchArray($employees)) {
+                        foreach ($employees as $row) {
                             if (!isTrainingParticipant($trainingId, $row['id'])) {
-                                $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                                $photo = file_exists(root() . '/' . $row['picture']) ? uri() . '/' . $row['picture'] : uri() . '/assets/img/user.png';
-                        ?>
+                                $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                                $photo = file_exists(root() . '/' . $row['profile_picture']) ? "$baseUri/" . $row['profile_picture'] : "$baseUri/assets/img/user.png";
+                                ?>
                                 <tr class="text-uppercase">
                                     <td class="align-middle">
-                                        <input type="checkbox" class="form-control" name="participants[]" value="<?= cipher($row['id']) ?>">
+                                        <input type="checkbox" class="form-control" name="participants[]"
+                                            value="<?= cipher($row['id']) ?>">
                                     </td>
                                     <td class="align-middle">
                                         <div class="image-container">
-                                            <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                                <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                            <span
+                                                class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                                <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                             </span>
                                             <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                         </div>
@@ -124,10 +130,10 @@ messageAlert($showAlert, $message, $success);
                                         roundPill($status);
                                         ?>
                                     </td>
-                                    <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
-                                    <td class="align-middle"><?= fetchAssoc(schoolById($row['station']))['name'] ?></td>
+                                    <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
+                                    <td class="align-middle"><?= schoolById($row['station_id'])['name'] ?></td>
                                 </tr>
-                        <?php }
+                            <?php }
                         } ?>
                     </tbody>
 

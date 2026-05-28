@@ -6,14 +6,18 @@ if (!$isDts) {
     return;
 }
 
-$search = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$documents = documentSearch($search, $station);
-$results = numRows($documents);
+$search = sanitize(decode($_GET['id'] ?? null));
+$documents = documentSearch($search);
 $isDts = $activeApp === 'dts';
 
-if ($results === 0) {
+if (!$documents) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
+}
+
+if (count($documents) === 1000) {
+    $message = "Showing top 1,000 search results for [$search].";
+    messageAlert(true, $message);
 }
 ?>
 
@@ -36,15 +40,17 @@ if ($results === 0) {
                 </thead>
 
                 <tbody>
-                    <?php while ($row = fetchArray($documents)) : ?>
+                    <?php foreach ($documents as $row): ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?></td>
-                            <td class="text-left align-middle"><?= $row['description'] ?></td>
-                            <td class="align-middle text-uppercase">
-                                <?= stationName($row['from']) ?>
+                            <td class="align-middle">
+                                <?php linkItem(customUri('dts', 'Document Information', $row['id']), $row['id']) ?>
                             </td>
-                            <td class="align-middle"><?= toDatetime($row['datetime']) ?></td>
-                            <td class="align-middle"><?= $row['status'] ?></td>
+                            <td class="text-left align-middle"><?= toTruncate($row['description']) ?></td>
+                            <td class="align-middle text-uppercase">
+                                <?= stationName($row['created_from']) ?>
+                            </td>
+                            <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
+                            <td class="align-middle"><?= documentTransactionStatus($row['status_id']) ?></td>
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
@@ -57,7 +63,7 @@ if ($results === 0) {
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>

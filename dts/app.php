@@ -1,280 +1,447 @@
 <?php
 // dts/app.php
-$activeApp = $_SESSION[alias() . '_activeApp'] = 'dts';
+$activeApp = $_SESSION["{$prefix}activeApp"] = 'dts';
 $page = $appTitle = 'Document Tracking System';
 
 if (!isset($userId)) {
-	redirect(uri() . '/login');
+	redirect("$baseUri/login");
 }
 
 if (!isset($portal) || empty($portal)) {
-	redirect(uri() . '/pis');
+	redirect("$baseUri/pis");
 }
 
 if (isset($_POST['primary-search-button'])) {
 	$search = sanitize($_POST['primary-search-text']);
 
-	$documents = documentSearch($search, $station);
-
-	if (numRows($documents) === 1) {
+	if (document($search)) {
 		redirect(customUri('dts', 'Document Information', $search));
 	}
 
-	redirect(customUri('dts', 'Document Search', $search));
+	if (documentSearch($search)) {
+		redirect(customUri('dts', 'Document Search', $search));
+	}
 }
 
+$allowedTypes = [
+	'image/jpeg',
+	'image/jpeg',
+	'image/png',
+	'image/gif',
+	'application/pdf',
+	'application/msword',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	'application/vnd.ms-powerpoint',
+	'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+	'application/vnd.ms-excel',
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+];
+
 if (isset($_POST['save-document'])) {
-	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
 	$purpose = sanitize($_POST['purpose']);
-	$type = sanitize($_POST['document-type']);
 	$details = sanitize($_POST['details']);
-	$destination = $isSchoolPortal ? 'REC' :  sanitize($_POST['destination']);
-	$attachment = isset($_POST['file-verifier']) ? decipher($_POST['file-verifier']) : null;
-	$logMessage = '';
+	$type = sanitize($_POST['document-type']);
+	$destination = $isSchoolPortal ? 'REC' : sanitize($_POST['destination']);
+	$description = sanitize($_POST['description']);
+	$section = section($code);
+
+	$showAlert = true;
+	$year = date('y');
+	$documentId = !empty($documentId) ? $documentId : "{$code}-{$year}-" . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
+	$message = 'No new document has been created.';
+
+	if ($section) {
+		$headId = $section['head_id'];
+	} else {
+		$school = schoolById($code);
+		$headId = $school ? $school['head_id'] : null;
+	}
+
+	if (empty($description)) {
+		$message .= ' Please provide a description for the document.';
+		return;
+	}
+
+	beginTransaction();
+
+	try {
+		createDocument($documentId, $description, $type, $station, $headId);
+
+		$documentLogId = createDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
+		$upload_response = '';
+
+		if (!empty($_FILES['file-upload']['name'][0])) {
+			$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
+
+			if (!is_dir($uploadDirectory)) {
+				mkdir($uploadDirectory, 0777, true);
+			}
+
+			foreach ($_FILES['file-upload']['tmp_name'] as $key => $tmp_name) {
+				$originalName = basename($_FILES['file-upload']['name'][$key]);
+				$safeFileName = sanitizeFileName($originalName);
+				$fileType = $_FILES['file-upload']['type'][$key];
+				$fileSize = $_FILES['file-upload']['size'][$key];
+				$targetFilePath = "$uploadDirectory/" . time() . "_$safeFileName";
+				$extension = strtolower(pathinfo($safeFileName, PATHINFO_EXTENSION));
+
+				if (!in_array($fileType, $allowedTypes)) {
+					$upload_response .= "<br>File type not allowed: $safeFileName";
+					continue;
+				}
+
+				if ($fileSize > FILE_UPLOAD_SIZE_LIMIT) {
+					$upload_response .= "<br>File too large (Max 20MB): $safeFileName";
+					continue;
+				}
+
+				if (move_uploaded_file($tmp_name, $targetFilePath)) {
+					$attachment = $targetFilePath;
+					$upload_response .= "<br>File uploaded: $safeFileName";
+					createDocumentLogAttachment($documentLogId, $attachment, ".$extension");
+				} else {
+					$upload_response .= "<br>Error uploading: $originalName";
+				}
+			}
+		}
+
+		createSystemLog($stationId, $userId, 'Created document', $documentId, clientIp());
+		commit();
+
+		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been saved successfully.' . $upload_response;
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
+	}
+}
+
+if (isset($_POST['edit-document'])) {
+	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
+	$purpose = sanitize($_POST['purpose']);
+	$details = sanitize($_POST['details']);
+	$type = sanitize($_POST['document-type']);
+	$destination = $isSchoolPortal ? 'REC' : sanitize($_POST['destination']);
 	$showAlert = true;
 
-	$year = date('y');
-	$documentId = strlen($documentId) > 0 ? $documentId : $code . '-' . $year . '-' . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
-	$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
-
-	if (!is_dir($uploadDirectory)) {
-		mkdir($uploadDirectory, 0777, true);
+	if (document($documentId) === false) {
+		$message = 'No document has been updated.';
+		return;
 	}
 
-	if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
-		$temp = $_FILES['file-upload']['tmp_name'];
+	$updateDescription = false;
+	$description = null;
 
-		if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
-			$message = 'The chosen file exceeds the upload file limit (20 MB).';
-			$success = false;
-			return;
-		}
+	$documentLogs = documentLogs($documentId);
 
-		$mimeType = mime_content_type($temp);
-		$allowedFileTypes = ['application/pdf'];
-
-		if (!in_array($mimeType, $allowedFileTypes)) {
-			$message = 'The chosen file is not an acceptable .pdf file.';
-			$success = false;
-			return;
-		}
-
-		$ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
-
-		if (!empty($attachment) && file_exists(root() . '/' . $attachment)) {
-			unlink(root() . '/' . $attachment);
-		}
-
-		$attachment = 'uploads/attachments/' . cipher($documentId) . '/' . cipher($documentId) . '-' . date('YmdHis') . '.' . $ext;
-
-		move_uploaded_file($temp, '../' . $attachment);
+	if ($documentLogs[0]['received_from'] !== $station || $documentLogs[0]['forwarded_to'] === null) {
+		$message = 'Document cannot be updated';
+		return;
 	}
 
-	if (numRows(document($documentId)) === 0) {
-		$status = 'saved';
-		$description = sanitize($_POST['description']);
-		$section = section($code);
-
-		if (numRows($section) > 0) {
-			$headId = fetchAssoc($section)['head'];
-		} else {
-			$school = schoolById($code);
-			$headId = numRows($school) > 0 ? fetchAssoc($school)['head'] : '';
-		}
+	if (count($documentLogs) === 1) {
+		$updateDescription = true;
+		$description = sanitize($_POST['description'] ?? null);
 
 		if (empty($description)) {
-			$message = 'No new document has been created. Please provide a description for the document.';
-			$success = false;
+			$message = 'Please provide a description for the document.';
+			return;
+		}
+	}
+
+	beginTransaction();
+
+	try {
+		updateDocument($documentId, $description, $type, $updateDescription);
+		$documentLog = updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
+
+		$upload_response = '';
+
+		if (!empty($_FILES['file-upload']['name'][0])) {
+			$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
+
+			if (!is_dir($uploadDirectory)) {
+				mkdir($uploadDirectory, 0777, true);
+			}
+
+			$latestLog = documentLogs($documentId)[0] ?? null;
+			$documentLogId = $latestLog ? $latestLog['id'] : null;
+
+			foreach ($_FILES['file-upload']['tmp_name'] as $key => $tmp_name) {
+				$fileName = basename($_FILES['file-upload']['name'][$key]);
+				$fileType = $_FILES['file-upload']['type'][$key];
+				$fileSize = $_FILES['file-upload']['size'][$key];
+				$targetFilePath = "$uploadDirectory/" . time() . "_$fileName";
+				$extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+				if (!in_array($fileType, $allowedTypes)) {
+					$upload_response .= "<br>File type not allowed: $fileName";
+					continue;
+				}
+
+				if ($fileSize > FILE_UPLOAD_SIZE_LIMIT) {
+					$upload_response .= "<br>File too large (Max 20MB): $fileName";
+					continue;
+				}
+
+				if (move_uploaded_file($tmp_name, $targetFilePath)) {
+					$attachment = $targetFilePath;
+					$upload_response .= "<br>File uploaded: $fileName";
+
+					if ($documentLogId) {
+						createDocumentLogAttachment($documentLogId, $attachment, ".$extension");
+					}
+				} else {
+					$upload_response .= "<br>Error uploading: $fileName";
+				}
+			}
+		}
+
+		createSystemLog($stationId, $userId, 'Updated document', $documentId, clientIp());
+		commit();
+
+		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been updated successfully.' . $upload_response;
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
+	}
+}
+
+if (isset($_POST['delete-attachment'])) {
+	$attachmentId = sanitize(decipher($_POST['verifier'] ?? null));
+
+	$showAlert = true;
+
+	beginTransaction();
+
+	try {
+		$affectedAttachment = deleteDocumentLogAttachment($attachmentId);
+
+		if ($affectedAttachment === false) {
+			$message = 'No changes have been made to document attachments.';
 			return;
 		}
 
-		createDocument($documentId, $description, $type, $station, $purpose, $headId, $details);
-		createDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details, $attachment);
+		createSystemLog($stationId, $userId, 'Deleted document attachment', '', clientIp());
+		commit();
 
-		$logMessage = 'Created document';
-	} else {
-		$status = 'updated';
-		$updateDescription = false;
-		$description = '';
-
-		if ($isDescriptionEditable) {
-			$updateDescription = true;
-			$description = isset($_POST['description']) ? sanitize($_POST['description']) : null;
-		}
-
-		updateDocument($documentId, $description, $type, $purpose, $details, $updateDescription);
-		updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 'New', $details, $attachment);
-
-		$logMessage = 'Updated document';
-	}
-
-	if (affectedRows()) {
-		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been ' . $status . ' successfully.';
-
-		createSystemLog($stationId, $userId, $logMessage, $documentId, clientIp());
-	} else {
-		$message = $status === 'saved' ? 'No new document has been created.' : 'No document has been updated';
-		$success = false;
+		$message = 'Document attachment has been deleted successfully.';
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
 if (isset($_POST['receive-document'])) {
-	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$showAlert = true;
 
-	updateDocumentLogsDone($documentId);
+	beginTransaction();
 
-	if (affectedRows()) {
-		createDocumentLog($documentId, $userId, $station, '-', 'Received', 'New');
+	try {
+		$updatedDocument = updateDocumentLogsDone($documentId);
+
+		if ($updatedDocument === false) {
+			$message = 'No document has been received.';
+			return;
+		}
+
+		createDocumentLog($documentId, $userId, $station, null, documentStatusId('Received'), 1);
+		createSystemLog($stationId, $userId, 'Received document', $documentId, clientIp());
+		commit();
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been received successfully.';
-
-		createSystemLog($stationId, $userId, 'Received document', $documentId, clientIp());
-	} else {
-		$message = 'No document has been received.';
-		$success = false;
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
 if (isset($_POST['forward-document'])) {
-	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$purpose = sanitize($_POST['purpose']);
 	$details = sanitize($_POST['details']);
-	$attachment = isset($_POST['file-verifier']) ? decipher($_POST['file-verifier']) : null;
+	$destination = sanitize($_POST['destination']);
 	$showAlert = true;
 
-	$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
+	beginTransaction();
 
-	if (!is_dir($uploadDirectory)) {
-		mkdir($uploadDirectory, 0777, true);
-	}
+	try {
+		$updatedDocuments = updateDocumentLogsDone($documentId);
 
-	if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
-		$temp = $_FILES['file-upload']['tmp_name'];
-
-		if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
-			$message = 'The chosen file exceeds the upload file limit (20 MB).';
-			$success = false;
+		if ($updatedDocuments === false) {
+			$message = 'No document has been forwarded.';
 			return;
 		}
 
-		$mimeType = mime_content_type($temp);
-		$allowedFileTypes = ['application/pdf'];
+		createDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
 
-		if (!in_array($mimeType, $allowedFileTypes)) {
-			$message = 'The chosen file is not an acceptable .pdf file.';
-			$success = false;
-			return;
+		$upload_response = '';
+
+		if (!empty($_FILES['file-upload']['name'][0])) {
+			$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
+
+			if (!is_dir($uploadDirectory)) {
+				mkdir($uploadDirectory, 0777, true);
+			}
+
+			$latestLog = documentLogs($documentId)[0] ?? null;
+			$documentLogId = $latestLog ? $latestLog['id'] : null;
+
+			foreach ($_FILES['file-upload']['tmp_name'] as $key => $tmp_name) {
+				$fileName = basename($_FILES['file-upload']['name'][$key]);
+				$fileType = $_FILES['file-upload']['type'][$key];
+				$fileSize = $_FILES['file-upload']['size'][$key];
+				$targetFilePath = "$uploadDirectory/" . time() . "_$fileName";
+				$extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+				if (!in_array($fileType, $allowedTypes)) {
+					$upload_response .= "<br>File type not allowed: $fileName";
+					continue;
+				}
+
+				if ($fileSize > FILE_UPLOAD_SIZE_LIMIT) {
+					$upload_response .= "<br>File too large (Max 20MB): $fileName";
+					continue;
+				}
+
+				if (move_uploaded_file($tmp_name, $targetFilePath)) {
+					$attachment = $targetFilePath;
+					$upload_response .= "<br>File uploaded: $fileName";
+
+					if ($documentLogId) {
+						createDocumentLogAttachment($documentLogId, $attachment, ".$extension");
+					}
+				} else {
+					$upload_response .= "<br>Error uploading: $fileName";
+				}
+			}
 		}
-
-		$ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
-
-		if (!empty($attachment) && file_exists(root() . '/' . $attachment)) {
-			unlink(root() . '/' . $attachment);
-		}
-
-		$attachment = 'uploads/attachments/' . cipher($documentId) . '/' . cipher($documentId) . '-' . date('YmdHis') . '.' . $ext;
-
-		move_uploaded_file($temp, '../' . $attachment);
-	}
-
-	updateDocumentLogsDone($documentId);
-
-	if (affectedRows()) {
-		createDocumentLog($documentId, $userId, $station, sanitize($_POST['destination']), $purpose, 'New', $details, $attachment);
-		updateDocumentStatus($documentId, $purpose, 'Unread', $details);
-
-		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been forwarded successfully!';
 
 		createSystemLog($stationId, $userId, 'Forwarded document', $documentId, clientIp());
-	} else {
-		$message = 'No document has been forwarded.';
-		$success = false;
+		commit();
+
+		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been forwarded successfully.' . $upload_response;
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
 if (isset($_POST['complete-document'])) {
-	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$remarks = sanitize($_POST['remarks']);
-	$status = 'Completed';
+	$status = documentStatusId('Completed');
 	$showAlert = true;
 
-	updateDocumentLogsDone($documentId);
+	beginTransaction();
 
-	if (affectedRows()) {
-		createDocumentLog($documentId, $userId, $station, '-', $status, 'New', $remarks);
-		updateDocumentStatus($documentId, $status, 'Unread', $remarks);
+	try {
+		$updatedDocument = updateDocumentLogsDone($documentId);
 
-		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been mark completed successfully.';
+		if ($updatedDocument === false) {
+			$message = 'No document has been marked complete.';
+			return;
+		}
 
-		createSystemLog($stationId, $userId, $status . ' document', $documentId, clientIp());
-	} else {
-		$message = 'No document has been marked completed.';
-		$success = false;
+		createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks);
+		createSystemLog($stationId, $userId, "Completed document", $documentId, clientIp());
+		commit();
+
+		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been successfully marked complete.';
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
-if (isset($_POST['incomplete-document'])) {
-	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+if (isset($_POST['reopen-document'])) {
+	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$remarks = sanitize($_POST['remarks']);
-	$status = 'Received';
+	$status = documentStatusId('Reopened');
 	$showAlert = true;
 
-	updateDocumentLogsDone($documentId);
+	beginTransaction();
 
-	if (affectedRows()) {
-		createDocumentLog($documentId, $userId, $station, '-', $status, 'New', $remarks);
-		updateDocumentStatus($documentId, $status, 'Unread', $remarks);
+	try {
+		$updatedDocument = updateDocumentLogsDone($documentId);
 
-		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been marked incomplete successfully.';
+		if ($updatedDocument === false) {
+			$message = 'No document has been reopened.';
+			return;
+		}
 
-		createSystemLog($stationId, $userId, 'Marked incomplete document', $documentId, clientIp());
-	} else {
-		$message = 'No document has been marked incomplete.';
-		$success = false;
+		createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks);
+		createSystemLog($stationId, $userId, 'Reopened document', $documentId, clientIp());
+		commit();
+
+		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been reopened successfully.';
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
 if (isset($_POST['restore-document'])) {
-	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$remarks = sanitize($_POST['remarks']);
-	$status = $isSchoolPortal ? 'For submission' : 'Restored';
-	$destination = $isSchoolPortal ? 'REC' : '-';
+	$status = documentStatusId($isSchoolPortal ? 'For submission' : 'Restored');
+	$destination = $isSchoolPortal ? 'REC' : null;
 	$showAlert = true;
 
-	updateDocumentLogsDone($documentId);
+	beginTransaction();
 
-	if (affectedRows()) {
-		createDocumentLog($documentId, $userId, $station, $destination, $status, 'New', $remarks);
-		updateDocumentStatus($documentId, $status, 'Unread', $remarks);
+	try {
+		$updatedDocument = updateDocumentLogsDone($documentId);
+
+		if ($updatedDocument === false) {
+			$message = 'No document has been restored.';
+			return;
+		}
+
+		createDocumentLog($documentId, $userId, $station, $destination, $status, 1, $remarks);
+		createSystemLog($stationId, $userId, 'Restored document', $documentId, clientIp());
+		commit();
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been restored successfully.';
-
-		createSystemLog($stationId, $userId, 'Restored document', $documentId, clientIp());
-	} else {
-		$message = 'No document has been restored.';
-		$success = false;
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
 	}
 }
 
 if (isset($_POST['cancel-document'])) {
-	$documentId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
+	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
 	$remarks = sanitize($_POST['remarks']);
-	$status = 'Canceled';
+	$status = documentStatusId('Canceled');
 	$showAlert = true;
 
-	updateDocumentLogsDone($documentId);
+	beginTransaction();
 
-	if (affectedRows()) {
-		createDocumentLog($documentId, $userId, $station, '-', $status, 'New', $remarks);
-		updateDocumentStatus($documentId, $status, 'Unread', $remarks);
+	try {
+		$updatedDocument = updateDocumentLogsDone($documentId);
+
+		if ($updatedDocument === false) {
+			$message = 'No document has been canceled.';
+			return;
+		}
+
+		createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks);
+		createSystemLog($stationId, $userId, "Canceled document", $documentId, clientIp());
+		commit();
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been canceled successfully.';
-
-		createSystemLog($stationId, $userId, $status . ' document', $documentId, clientIp());
-	} else {
-		$message = 'No document has been canceled.';
-		$success = false;
+		$success = true;
+	} catch (Exception $e) {
+		rollBack();
+		$message = $e->getMessage();
 	}
 }
 

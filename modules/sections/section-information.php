@@ -5,31 +5,31 @@ if (!$isHrmis && !$isHrtdms && !$isDmis) {
     return;
 }
 
-$sectionId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$sections = section($sectionId);
-$section = $sectionName = $head = null;
+$sectionId = sanitize(decode($_GET['id'] ?? null));
+$section = section($sectionId);
+$functionalDivision = $sectionName = $head = null;
 
 messageAlert($showAlert, $message, $success);
 
-if (numRows($sections) > 0) {
-    $section = fetchAssoc($sections);
+if ($section) {
     $sectionName = $section['name'];
-    $head = $section['head'];
+    $functionalDivision = functionalDivision($section['functional_division_id'])['name'];
+    $head = $section['head_id'];
 } else {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
 
 $query = sectionUsers($sectionId);
-$personnel = numRows($query);
+$personnel = count($query);
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Sections') ?>">Sections</a></li>
-            <li class="breadcrumb-item active"><?= $sectionName ?></li>
+            <li class="breadcrumb-item active"><?= e($sectionName) ?></li>
         </ol>
     </nav>
 </div>
@@ -48,7 +48,11 @@ $personnel = numRows($query);
             <table cellspacing="0">
                 <tr>
                     <th class="pr-5 align-top" scope="row">Section</th>
-                    <td class="text-uppercase"><?= $sectionName ?></td>
+                    <td class="text-uppercase"><?= e($sectionName) ?></td>
+                </tr>
+                <tr>
+                    <th class="pr-5 align-top" scope="row">Functional Division</th>
+                    <td class="text-uppercase"><?= e($functionalDivision) ?></td>
                 </tr>
                 <tr>
                     <th class="pr-5 align-top" scope="row">Section Head</th>
@@ -60,12 +64,12 @@ $personnel = numRows($query);
                                 modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($head), userName($head));
                             } ?>
                         </div>
-                        <div class="small"><?= fetchAssoc(position($head))['position'] ?></div>
+                        <div class="small"><?= position($head)['official_title'] ?></div>
                     </td>
                 </tr>
                 <tr>
                     <th class="pr-5 align-top" scoper="row">Personnel</th>
-                    <td class="text-lowercase"><?= $personnel ?></td>
+                    <td class="text-lowercase"><?= e($personnel) ?></td>
                 </tr>
             </table>
         </div>
@@ -80,15 +84,15 @@ $personnel = numRows($query);
                         <th class="align-middle" width="15%">Date of Birth</th>
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
-                        <?php if (!$isHrtdms) : ?>
+                        <?php if (!$isHrtdms): ?>
                             <th class="align-middle" width="15%">Email Address</th>
-                        <?php else : ?>
+                        <?php else: ?>
                             <th class="align-middle" width="15%">Attended Trainings</th>
                         <?php endif ?>
-                        <?php if ($isHrmis) : ?>
+                        <?php if ($isHrmis): ?>
                             <th class="align-middel" width="10%">Progress</th>
-                        <?php else : ?>
-                            <?php if (!$isHrtdms) : ?>
+                        <?php else: ?>
+                            <?php if (!$isHrtdms): ?>
                                 <th class="align-middle" width="10%">Contact #</th>
                             <?php endif ?>
                         <?php endif ?>
@@ -98,15 +102,16 @@ $personnel = numRows($query);
 
                 <tbody>
                     <?php
-                    while ($row = fetchArray($query)) :
-                        $employeeName =  toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-                        $photo = uri() . '/' . $row['picture'];
-                    ?>
+                    foreach ($query as $row):
+                        $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+                        $photo = file_exists(root() . '/' . $row['profile_picture']) ? "{$baseUri}/" . $row['profile_picture'] : "{$baseUri}/assets/img/user.png";
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
                                 <div class="image-container">
-                                    <span class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
-                                        <img height="100%" src="<?= $photo ?>" alt="<?= $employeeName ?>">
+                                    <span
+                                        class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                        <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
                                     </span>
                                     <div class="sex-sign"><?php sex($row['sex']) ?></div>
                                 </div>
@@ -121,27 +126,31 @@ $personnel = numRows($query);
                                     modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                                 } ?>
                             </td>
-                            <td class="align-middle"><?= toDate($row['month'] . '/' . $row['day'] . '/' . $row['year'], 'F j, Y') ?></td>
-                            <td class="align-middle"><?= getDateDifference($row['year'], $row['month'], $row['day']) ?></td>
-                            <td class="align-middle"><?= fetchAssoc(positions($row['position']))['position'] ?></td>
-                            <?php if (!$isHrtdms) : ?>
-                                <td class="align-middle text-lowercase"><?= $row['email'] ?></td>
-                            <?php else : ?>
+                            <td class="align-middle">
+                                <?= toDate($row['birthdate'], 'F j, Y') ?>
+                            </td>
+                            <td class="align-middle">
+                                <?= getDateDifference($row['birthdate']) ?>
+                            </td>
+                            <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
+                            <?php if (!$isHrtdms): ?>
+                                <td class="align-middle text-lowercase"><?= e($row['email_address']) ?></td>
+                            <?php else: ?>
                                 <td class="align-middle text-lowercase">
                                     <?php
-                                    $count = numRows(attendedTrainings($row['id']));
+                                    $count = count(attendedTrainings($row['id']));
                                     if ($count > 0) {
                                         echo $count;
                                     } else { ?>
-                                        <span class="text-danger font-weight-bold"><?= $count ?></span>
+                                        <span class="text-danger font-weight-bold"><?= e($count) ?></span>
                                     <?php } ?>
                                 </td>
                             <?php endif ?>
                             <?php if ($isHrmis) { ?>
                                 <td class="align-middle"><?php progressBar(pdsProgress($row['id'])) ?></td>
                             <?php } else { ?>
-                                <?php if (!$isHrtdms) : ?>
-                                    <td class="align-middle"><?= $row['mobile'] ?></td>
+                                <?php if (!$isHrtdms): ?>
+                                    <td class="align-middle"><?= e($row['mobile_number']) ?></td>
                                 <?php endif ?>
                             <?php } ?>
                             <td class="align-middle text-capitalize">
@@ -149,24 +158,36 @@ $personnel = numRows($query);
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php if ($isHrmis) {
-                                            linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-eye', 'View Employee', true);
-                                            modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                                            modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
-                                        ?>
+                                            linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
+                                            linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
+                                            linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
+                                            linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
+                                            modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel') ?>
                                             <div class="dropdown-divider"></div>
-                                        <?php modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
-                                        } elseif ($isDmis) {
+                                            <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History');
+                                            if ($isPersonnel) { ?>
+                                                <div class="dropdown-divider"></div>
+                                                <?php
+                                                modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                                                modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
+                                                modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
+                                            }
+                                        } elseif ($isDmis) { ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php
                                             modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit User');
-                                        } elseif ($isHrtdms) {
-                                            linkDropdownItem(customUri('hrtdms', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher');
-                                        } else {
-                                            modalDropdownItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), 'View', 'fa-eye', 'View Employee');
+                                        } elseif ($isHrtdms) { ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php linkDropdownItem(customUri('hrtdms', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher');
+                                        } else { ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php modalDropdownItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), 'View', 'fa-eye', 'View Employee');
                                         } ?>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
@@ -177,15 +198,15 @@ $personnel = numRows($query);
                         <th class="align-middle" width="15%">Date of Birth</th>
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
-                        <?php if (!$isHrtdms) : ?>
+                        <?php if (!$isHrtdms): ?>
                             <th class="align-middle" width="15%">Email Address</th>
-                        <?php else : ?>
+                        <?php else: ?>
                             <th class="align-middle" width="15%">Attended Trainings</th>
                         <?php endif ?>
-                        <?php if ($isHrmis) : ?>
+                        <?php if ($isHrmis): ?>
                             <th class="align-middel" width="10%">Progress</th>
-                        <?php else : ?>
-                            <?php if (!$isHrtdms) : ?>
+                        <?php else: ?>
+                            <?php if (!$isHrtdms): ?>
                                 <th class="align-middle" width="10%">Contact #</th>
                             <?php endif ?>
                         <?php endif ?>

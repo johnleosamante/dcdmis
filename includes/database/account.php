@@ -1,92 +1,212 @@
 <?php
-// includes/database/account.php
-// tbl_employee
-// tbl_teacher_account
-// tbl_user
-function account($email)
+// employees
+function account($email_address)
 {
-    return query("SELECT `Emp_ID` AS `id`, `Emp_Email` AS `email` FROM `tbl_employee` WHERE `Emp_Status`='Active' AND `Emp_Email`='{$email}' LIMIT 1;");
+    return find(
+        "SELECT `id`, `email_address` FROM `employees` 
+        WHERE `status`='Active' AND `email_address` = ? LIMIT 1",
+        [$email_address]
+    );
 }
 
-function accountPassword($id, $password)
+function verifyAccountPassword(int $employee_id, string $plainPassword): array|bool
 {
-    return query("SELECT `Teacher_TIN` AS `id`, `Pass_status` AS `status` FROM tbl_teacher_account WHERE `Teacher_TIN`='{$id}' AND Teacher_Password='{$password}';");
+    $credentials = find(
+        "SELECT `employee_id`, `password`, `status` FROM `credentials` 
+        WHERE `employee_id` = ? LIMIT 1",
+        [$employee_id]
+    );
+    if (!$credentials) {
+        return false;
+    }
+    $storedHash = $credentials['password'];
+    if (password_get_info($storedHash)['algo'] !== null) {
+        if (password_verify($plainPassword, $storedHash)) {
+            if (password_needs_rehash($storedHash, PASSWORD_BCRYPT, ['cost' => 12])) {
+                $newHash = password_hash($plainPassword, PASSWORD_BCRYPT, ['cost' => 12]);
+                update('credentials', ['password' => $newHash], '`employee_id` = ?', [$employee_id]);
+            }
+            return $credentials;
+        }
+    } else {
+        $md5Hash = md5($plainPassword);
+        if (hash_equals($storedHash, $md5Hash)) {
+            $newHash = password_hash($plainPassword, PASSWORD_BCRYPT, ['cost' => 12]);
+            update('credentials', ['password' => $newHash], '`employee_id` = ?', [$employee_id]);
+            return $credentials;
+        }
+    }
+    return false;
 }
 
-function createAccount($id, $password)
+function createAccount($employee_id, $password)
 {
-    nonQuery("INSERT INTO tbl_teacher_account (`Teacher_TIN`, `Teacher_Password`, `Pass_status`) VALUES ('{$id}', '{$password}', 'Default');");
+    $data = [
+        'employee_id' => $employee_id,
+        'password' => $password,
+        'status' => 'Default'
+    ];
+    return insert('credentials', $data);
 }
 
-function deleteAccount($id)
+function deleteAccount($employee_id)
 {
-    nonQuery("DELETE FROM tbl_teacher_account WHERE `Teacher_TIN`='{$id}';");
+    return delete('credentials', '`employee_id` = ?', [$employee_id]);
 }
 
-function updateAccountPassword($id, $password, $status = null)
+function updateAccountPassword($employee_id, $password, $status = null)
 {
-    $filter = !empty($status) ? ", Pass_status='{$status}'" : '';
-    nonQuery("UPDATE tbl_teacher_account SET Teacher_Password='{$password}'{$filter} WHERE Teacher_TIN='{$id}' LIMIT 1;");
+    $data = [
+        'password' => $password
+    ];
+    if (!empty($status)) {
+        $data['status'] = $status;
+    }
+
+    return update('credentials', $data, '`employee_id` = ?', [$employee_id]);
 }
 
-function user($id)
+// user_permissions
+function userRole($employee_id, $access)
 {
-    return query("SELECT tbl_user.usercode AS id, tbl_user.Station AS code, tbl_station.Emp_Station AS station_id, tbl_user.Link AS portal FROM tbl_user INNER JOIN tbl_station ON tbl_user.usercode=tbl_station.Emp_ID WHERE usercode='{$id}' LIMIT 1;");
+    return find(
+        "SELECT `employee_id` FROM `user_permissions` 
+        WHERE `employee_id` = ? AND `access` = ? LIMIT 1",
+        [$employee_id, $access]
+    );
 }
 
-function userRole($id, $station)
+function dtsUser($employee_id)
 {
-    return query("SELECT usercode AS id FROM tbl_user WHERE usercode='{$id}' AND Station='{$station}' LIMIT 1;");
+    return find(
+        "SELECT * FROM `user_permissions` 
+        WHERE `employee_id` = ? AND `link` <> ''",
+        [$employee_id]
+    );
 }
 
+function isStationUser($employee_id, $access)
+{
+    return find(
+        "SELECT `employee_id` FROM `user_permissions` 
+        WHERE `employee_id` = ? AND `access` = ?",
+        [$employee_id, $access]
+    );
+}
+
+function createUserRole($employee_id, $access, $link = null)
+{
+    $data = [
+        'employee_id' => $employee_id,
+        'access' => $access,
+        'link' => $link
+    ];
+    return insert('user_permissions', $data);
+}
+
+function updateUserRole($employee_id, $access, $link = null)
+{
+    $data = [
+        'access' => $access
+    ];
+    if (!empty($link)) {
+        $data['link'] = $link;
+    }
+    return update('user_permissions', $data, "`employee_id` = ? AND `link` LIKE '%_portal%'", [$employee_id]);
+}
+
+function deleteUserRole($employee_id, $access)
+{
+    return delete('user_permissions', '`employee_id` = ? AND `access` = ?', [$employee_id, $access]);
+}
+
+function deleteUserRoles($employee_id)
+{
+    return delete('user_permissions', '`employee_id` = ?', [$employee_id]);
+}
+
+function updateUsersStation($new_access, $old_access, $link = null)
+{
+    $data = [
+        'access' => $new_access
+    ];
+    if (!empty($link)) {
+        $data['link'] = $link;
+    }
+    return update('user_permissions', $data, '`access` = ?', [$old_access]);
+}
+
+// user_permissions, station_assignments
+function user($employee_id)
+{
+    return find(
+        "SELECT u.`employee_id`, u.`access`, s.`station_id`, u.`link` FROM `user_permissions` u 
+        INNER JOIN `station_assignments` s ON u.`employee_id` = s.`employee_id` 
+        WHERE u.`employee_id` = ? LIMIT 1",
+        [$employee_id]
+    );
+}
+
+// employees, user_permissions, station_assignments
 function users()
 {
-    return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Email AS email, tbl_user.Station AS code, tbl_user.Link AS portal, tbl_user.Station AS `station`, tbl_station.Emp_Station AS `assignment`, tbl_station.Emp_Position AS position, tbl_employee.Picture AS picture, tbl_employee.Emp_Status AS `status` FROM tbl_employee INNER JOIN tbl_user ON tbl_employee.Emp_ID=tbl_user.usercode INNER JOIN tbl_station ON tbl_user.usercode=tbl_station.Emp_ID GROUP BY tbl_user.usercode ORDER BY tbl_employee.Emp_LName ASC;");
+    return query(
+        "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
+            p.`sex`, p.`email_address`, u.`access`, u.`link`, s.`station_id`, s.`position_id`, 
+            p.`profile_picture`, p.`status` 
+        FROM `employees` p 
+        INNER JOIN `user_permissions` u ON p.`id` = u.`employee_id` 
+        INNER JOIN `station_assignments` s ON u.`employee_id` = s.`employee_id` 
+        GROUP BY u.`employee_id` 
+        ORDER BY p.`last_name` ASC"
+    );
 }
 
-function dtsUser($id)
+function countUsers()
 {
-    return query("SELECT `id`, `Station` AS `station`, `Link` AS `portal` FROM tbl_user WHERE usercode='{$id}' AND Link <> '';");
+    $sql = "SELECT COUNT(DISTINCT u.`employee_id`) AS `count` FROM `employees` p 
+            INNER JOIN `user_permissions` u ON p.`id` = u.`employee_id` 
+            INNER JOIN `station_assignments` s ON u.`employee_id` = s.`employee_id`";
+    $result = find($sql);
+    return (int) ($result['count'] ?? 0);
 }
 
-function isStationUser($id, $station)
+// employees, station_assignments, user_permissions
+function sectionUsers($access)
 {
-    return numRows(query("SELECT `id` FROM tbl_user WHERE usercode='$id' AND Station='$station';")) > 0;
+    return query(
+        "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, 
+            p.`name_extension`, p.`sex`, p.`birthdate`, p.`agency_id`, s.`position_id`, 
+            s.`station_id`, p.`profile_picture`, p.`email_address`, p.`mobile_number` 
+        FROM `employees` p 
+        INNER JOIN `station_assignments` s ON p.`id` = s.`employee_id` 
+        INNER JOIN `user_permissions` u ON p.`id` = u.`employee_id` 
+        WHERE p.`status`='Active' AND u.access = ? 
+        ORDER BY p.`last_name` ASC",
+        [$access]
+    );
 }
 
-function createUserRole($id, $role, $station, $portal = null)
+function portalUsers($station_id, $from_date, $to_date)
 {
-    nonQuery("INSERT INTO tbl_user (`usercode`, `position`, `Station`, `Link`) VALUES ('$id', '$role', '$station', '$portal');");
-}
-
-function updateUserRole($id, $station, $portal = null)
-{
-    $filter = !empty($portal) ? ", Link='{$portal}'" : '';
-    nonQuery("UPDATE tbl_user SET Station='{$station}'{$filter} WHERE usercode='$id' AND Link LIKE '%_portal%';");
-}
-
-function deleteUserRole($id, $station)
-{
-    nonQuery("DELETE FROM tbl_user WHERE usercode='$id' AND Station='$station' LIMIT 1;");
-}
-
-function deleteUserRoles($id)
-{
-    nonQuery("DELETE FROM tbl_user WHERE usercode='$id';");
-}
-
-function sectionUsers($id)
-{
-    return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Emp_Month AS `month`, tbl_employee.Emp_Day AS `day`, tbl_employee.Emp_Year AS `year`, tbl_employee.EmpNo AS agency_id, tbl_station.Emp_Position AS position, tbl_station.Emp_Station AS station, tbl_employee.Picture AS picture, tbl_employee.Emp_Email AS email, tbl_employee.Emp_Cell_No AS mobile FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID INNER JOIN tbl_user ON tbl_employee.Emp_ID=tbl_user.usercode WHERE tbl_employee.Emp_Status='Active' AND tbl_user.Station='{$id}' ORDER BY tbl_employee.Emp_LName ASC;");
-}
-
-function portalUsers($id, $from, $to)
-{
-    return query("SELECT tbl_employee.Emp_ID AS id, tbl_employee.Emp_LName AS lname, tbl_employee.Emp_FName AS fname, tbl_employee.Emp_MName AS mname, tbl_employee.Emp_Extension AS ext, tbl_employee.Emp_Sex AS sex, tbl_employee.Picture AS picture, tbl_station.Emp_Position AS position FROM tbl_employee INNER JOIN tbl_station ON tbl_employee.Emp_ID = tbl_station.Emp_ID INNER JOIN tbl_transactions_log ON tbl_employee.Emp_ID = tbl_transactions_log.Recieved_by WHERE tbl_transactions_log.From_office='{$id}' AND tbl_transactions_log.Date_recieved BETWEEN '{$from}' AND DATE(DATE_ADD('{$to}', INTERVAL 1 DAY)) GROUP BY tbl_employee.Emp_ID ORDER BY tbl_employee.Emp_LName ASC;");
-}
-
-function updateUsersStation($newStation, $oldStation, $link = null)
-{
-    $filter = !empty($link) ? ", Link='{$link}'" : '';
-    nonQuery("UPDATE tbl_user SET Station='{$newStation}'{$filter} WHERE Station='{$oldStation}';");
+    $sql = "SELECT 
+                p.`id`, 
+                p.`last_name`, 
+                p.`first_name`, 
+                p.`middle_name`, 
+                p.`name_extension`, 
+                p.`sex`, 
+                p.`profile_picture`, 
+                s.`position_id` 
+            FROM `employees` AS `p` 
+            INNER JOIN `station_assignments` AS `s` ON p.`id` = s.`employee_id` 
+            INNER JOIN `document_transaction_logs` AS `t` ON p.`id` = t.`processor_id` 
+            WHERE t.`received_from` = ? 
+                AND t.`created_at` >= ? 
+                AND t.`created_at` < DATE_ADD(?, INTERVAL 1 DAY)
+            GROUP BY 
+                p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, 
+                p.`name_extension`, p.`sex`, p.`profile_picture`, s.`position_id` 
+            ORDER BY p.`last_name` ASC";
+    return query($sql, [$station_id, $from_date, $to_date]);
 }

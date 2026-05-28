@@ -1,65 +1,65 @@
 <?php
-// includes/database/utility.php
-function stationName($id)
+function stationName($station_id)
 {
-    $station = section($id, true);
-
-    if (numRows($station) > 0) {
-        return fetchAssoc($station)['name'];
+    $station = section($station_id);
+    if ($station) {
+        return $station['name'];
     }
-
-    $station = schoolByAlias($id);
-
-    if (numRows($station) > 0) {
-        return fetchAssoc($station)['name'];
+    $station = schoolByAlias($station_id);
+    if ($station) {
+        return $station['name'];
     }
-
-    $station = schoolById($id);
-
-    if (numRows($station) > 0) {
-        return fetchAssoc($station)['name'];
+    $station = schoolById($station_id);
+    if ($station) {
+        return $station['name'];
     }
-
-    return $id;
+    return $station_id;
 }
 
-function userName($id, $uppercase = false)
+function userName($employee_id, $uppercase = false, $fname_first = true, $middle_initial = true)
 {
-    $users = employee($id);
-
-    if (numRows($users) > 0) {
-        $user = fetchAssoc($users);
-        $name = $uppercase ? strtoupper(toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true)) : toName($user['lname'], $user['fname'], $user['mname'], $user['ext'], true);
-        return toString($user['btitle'], '', ' ') . $name . toString($user['atitle'], ', ');
+    $user = employee($employee_id);
+    if ($user) {
+        $formattedName = toName(
+            $user['last_name'],
+            $user['first_name'],
+            $user['middle_name'],
+            $user['name_extension'],
+            $fname_first,
+            $middle_initial
+        );
+        if ($fname_first) {
+            $prefix = toString($user['name_prefix'], '', ' ');
+            $suffix = toString($user['name_suffix'], ', ');
+            $formattedName = "{$prefix}{$formattedName}{$suffix}";
+        }
+        if ($uppercase) {
+            return strtoupper($formattedName);
+        }
+        return $formattedName;
     }
-
-    return $id;
+    return $employee_id;
 }
 
-function pdsProgress($id)
+function pdsProgress($employee_id)
 {
     $progress = 15;
-    $education = numRows(educationalBackgrounds($id));
-
-    if ($education === 1) {
+    $educationCount = count(educationalBackgrounds($employee_id) ?: []);
+    if ($educationCount === 1) {
         $progress += 5;
-    } elseif ($education === 2) {
+    } elseif ($educationCount === 2) {
         $progress += 15;
-    } elseif ($education >= 3) {
+    } elseif ($educationCount >= 3) {
         $progress += 25;
     }
-
-    if (numRows(eligibilities($id)) > 0) {
+    if (!empty(eligibilities($employee_id))) {
         $progress += 25;
     }
-
-    if (numRows(experiences($id)) > 0) {
+    if (!empty(experiences($employee_id))) {
         $progress += 20;
     }
-
-    if (numRows(attendedTrainings($id)) > 0) {
+    if (!empty(attendedTrainings($employee_id))) {
         $progress += 15;
     }
-
-    return $progress;
+    return min($progress, 100);
 }

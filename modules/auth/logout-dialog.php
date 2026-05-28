@@ -1,6 +1,6 @@
 <?php
 // logout/logout-dialog.php
-require_once('../includes/function.php');
+require_once('../../includes/function.php');
 require_once(root() . '/includes/layout/components.php');
 
 $modalTitle = 'Logout';
@@ -15,7 +15,10 @@ $modalTitle = 'Logout';
         </div>
 
         <div class="modal-footer">
-            <a class="btn btn-danger" href="<?= uri() . '/logout' ?>">Continue</a>
+            <form action="<?= "{$baseUri}/modules/auth" ?>">
+                <?= csrf_field(); ?>
+                <button type="submit" class="btn btn-danger">Continue</button>
+            </form>
             <?php cancelModalButton() ?>
         </div>
     </div>

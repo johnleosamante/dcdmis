@@ -1,6 +1,6 @@
 <?php
-// modules/vacancies/page.php
-if (!$isHrmis && !$isHrmpsb) {
+// modules/vacancies/publications.php
+if (!$isHrmis) {
     require_once root() . '/modules/error/403.php';
     return;
 }
@@ -19,111 +19,81 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php //if (!$isHrmpsb) {
-        contentTitle('Publications');
-        //} else {
-        //contentTitleWithModal('Publications', uri() . '/modules/vacancies/save-vacancy-dialog.php', 'Add Publications', 'fa-plus');
-        //} 
+        <?php
+        if ($isHrmis && $isPersonnel) {
+            contentTitleWithLink('Publications', customUri('hrmis', 'Publish Vacancies'), 'Add', 'fa-plus');
+        } else {
+            contentTitle('Publications');
+        }
         ?>
     </div>
 
     <div class="card-body">
-        <?php if ($isDmis || $isHrmpsb || $isHrmis) { ?>
-            <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
-                <?php if ($isHrmpsb) : ?>
-                    <div class="d-inline-block ml-2">
-                        <?php linkButtonSplit(customUri('hrmpsb', 'Publish Vacancies'), 'Publish', 'fa-newspaper', 'Publish Vacancies', 'success') ?>
-                    </div>
-                <?php endif; ?>
-
-                <div class="d-inline-block">
-                    <?php linkButtonSplit(customUri('export', 'vacancies'), 'Export', 'fa-file-excel', 'Export as Excel file', $isHrmis ? 'success' :  'warning') ?>
-                </div>
-            </div>
-        <?php } ?>
-
         <div class="table-responsive">
             <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="5%">#</th>
-                        <th class="align-middle" width="20%">Position</th>
-                        <th class="align-middle" width="10%">Item Number</th>
-                        <th class="align-middle" width="20%">Station</th>
-                        <th class="align-middle" width="20%">Remarks</th>
-                        <th class="align-middle" width="15%">Posted On</th>
-                        <?php if ($isHrmpsb) : ?>
-                            <th class="align-middle" width="5%">Action</th>
-                        <?php endif; ?>
+                        <th class="align-middle" width="35%">Title</th>
+                        <th class="align-middle" width="10%">Vacancies</th>
+                        <th class="align-middle" width="15%">Open Date</th>
+                        <th class="align-middle" width="15%">Close Date</th>
+                        <th class="align-middle" width="10%">Status</th>
+                        <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php
-                    $count = 0;
-                    $query = vacancies();
-                    while ($row = fetchArray($query)) : ?>
+                    $query = allPublications();
+                    foreach ($query as $row):
+                        $vacancyCount = countPublicationItems($row['id']);
+                        ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?= ++$count ?></td>
-                            <td class="align-middle"><?= $row['position'] ?></td>
+                            <td class="align-middle text-left"><a
+                                    href="<?= customUri('hrmis', 'Publication Details', $row['id']) ?>">
+                                    <?= e($row['title']) ?>
+                                </a></td>
                             <td class="align-middle">
-                                <?= toHandleNull($row['psipop'], 'N/A') ?>
+                                <span class="badge badge-secondary badge-pill"><?= e($vacancyCount) ?> Items</span>
                             </td>
+                            <td class="align-middle"><?= toLongDate($row['open_date']) ?></td>
+                            <td class="align-middle"><?= toLongDate($row['close_date']) ?></td>
                             <td class="align-middle">
-                                <?php if (empty($row['station_id'])) {
-                                    echo 'TO BE DETERMINED';
-                                } else {
-                                    linkItem(customUri($activeApp, 'School Information', $row['station_id']), fetchAssoc(schoolById($row['station_id']))['name']);
-                                } ?>
+                                <?php if ($row['status'] === 'open'): ?>
+                                    <span class="badge badge-success badge-pill">Open</span>
+                                <?php else: ?>
+                                    <span class="badge badge-secondary badge-pill"><?= $row['status'] ?></span>
+                                <?php endif; ?>
                             </td>
-                            <td class="align-middle">
-                                <?php if (!empty($row['employee_id'])) : ?>
-                                    <?php $vice = fetchAssoc(employee($row['employee_id'])); ?>
-                                    <div>VICE: <?php
-                                                $employeeName = toName($vice['lname'], $vice['fname'], $vice['mname'], $vice['ext'], true);
-                                                if (!$isHrmis) {
-                                                    modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['employee_id']), $employeeName);
-                                                } else {
-                                                    linkItem(customUri('hrmis', 'Employee Information', $row['employee_id']), $employeeName);
-                                                }
-                                                ?>
-                                    </div>
-                                <?php endif;
+                            <td class="align-middle text-capitalize">
+                                <div class="dropdown no-arrow">
+                                    <?php dropdownEllipsis() ?>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                        <?php
+                                        linkDropdownItem(customUri('hrmis', 'Publication Details', $row['id']), 'View', 'fa-eye', 'View Publication Details');
 
-                                $isNewItem = strtolower($row['reason']) === 'new'; ?>
-
-                                <?= $isNewItem ? roundPill($row['reason'], 'success') : $row['reason'] ?>
-                            </td>
-                            <td class="align-middle">
-                                <?= toLongDate($row['date_vacated']) ?>
-                            </td>
-                            <?php if ($isHrmpsb) : ?>
-                                <td class="align-middle text-capitalize">
-                                    <div class="dropdown no-arrow">
-                                        <?php dropdownEllipsis() ?>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                        if ($isHrmis && $isPersonnel) {
+                                            linkDropdownItem(customUri('hrmis', 'Publish Vacancies', $row['id']), 'Edit', 'fa-edit', 'Edit Publication'); ?>
+                                            <div class="dropdown-divider"></div>
                                             <?php
-                                            modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Vacancy');
-                                            modalDropdownItem(uri() . '/modules/vacancies/save-vacancy-dialog.php?c=' . cipher($row['id']) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Vacancy') ?>
-                                        </div>
+                                            modalDropdownItem(uri() . '/modules/vacancies/delete-publication-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Publication');
+                                        }
+                                        ?>
                                     </div>
-                                </td>
-                            <?php endif; ?>
+                                </div>
+                            </td>
                         </tr>
-                    <?php endwhile ?>
+                    <?php endforeach ?>
                 </tbody>
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="5%">#</th>
-                        <th class="align-middle" width="20%">Position</th>
-                        <th class="align-middle" width="10%">Item Number</th>
-                        <th class="align-middle" width="20%">Station</th>
-                        <th class="align-middle" width="20%">Remarks</th>
-                        <th class="align-middle" width="15%">Posted On</th>
-                        <?php if ($isHrmpsb) : ?>
-                            <th class="align-middle" width="5%">Action</th>
-                        <?php endif; ?>
+                        <th class="align-middle" width="35%">Title</th>
+                        <th class="align-middle" width="10%">Vacancies</th>
+                        <th class="align-middle" width="15%">Open Date</th>
+                        <th class="align-middle" width="15%">Close Date</th>
+                        <th class="align-middle" width="10%">Status</th>
+                        <th class="align-middle" width="5%">Action</th>
                     </tr>
                 </tfoot>
             </table>

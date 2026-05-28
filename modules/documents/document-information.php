@@ -5,33 +5,34 @@ if (!$isDts) {
     return;
 }
 
-$documentId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-$documents = document($documentId);
-$documentType = 'Ongoing Documents';
+$documentId = sanitize(decode($_GET['id'] ?? null));
+$document = document($documentId);
 
-messageAlert($showAlert, $message, $success);
-
-if (numRows($documents) > 0) {
-    $document = fetchAssoc($documents);
-    $documentId = $document['id'];
-
-    if (isIncomingDocument($documentId, $station)) {
-        $documentType = 'Incoming Documents';
-    } elseif (isPendingDocument($documentId, $station)) {
-        $documentType = 'Pending Documents';
-    } elseif (isOutgoingDocument($documentId, $station)) {
-        $documentType = 'Outgoing Documents';
-    } elseif (isCompletedDocument($documentId, $station)) {
-        $documentType = 'Completed Documents';
-    } elseif (isReceivedDocument($documentId, $station)) {
-        $documentType = 'Received Documents';
-    } elseif (isCanceledDocument($documentId, $station)) {
-        $documentType = 'Canceled Documents';
-    }
-} else {
+if ($document === false) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
+
+messageAlert($showAlert, $message, $success);
+
+$documentId = $document['id'];
+$documentType = 'Ongoing Documents';
+
+if (isCompletedDocument($documentId, $station)) {
+    $documentType = 'Completed Documents';
+} elseif (isCanceledDocument($documentId, $station)) {
+    $documentType = 'Canceled Documents';
+} elseif (isIncomingDocument($documentId, $station)) {
+    $documentType = 'Incoming Documents';
+} elseif (isPendingDocument($documentId, $station)) {
+    $documentType = 'Pending Documents';
+} elseif (isOutgoingDocument($documentId, $station)) {
+    $documentType = 'Outgoing Documents';
+} elseif (isReceivedDocument($documentId, $station)) {
+    $documentType = 'Received Documents';
+}
+
+$logs = documentLogs($documentId);
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -41,7 +42,7 @@ if (numRows($documents) > 0) {
             <li class="breadcrumb-item">
                 <a href="<?= customUri('dts', $documentType) ?>"><?= trim($documentType, ' Documents') ?></a>
             </li>
-            <li class="breadcrumb-item active"><?= $documentId ?></li>
+            <li class="breadcrumb-item active"><?= e($documentId) ?></li>
         </ol>
     </nav>
 </div>
@@ -55,26 +56,30 @@ if (numRows($documents) > 0) {
         <table cellspacing="0">
             <tr>
                 <th class="align-top pr-3" scope="row">Type:</th>
-                <td class="text-uppercase"><?= fetchArray(documentType($document['type']))['name'] ?></td>
+                <td class="text-uppercase">
+                    <?= documentType($document['document_type_id']) ?>
+                </td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Description:</th>
-                <td class="text-uppercase"><?= $document['description'] ?></td>
+                <td class="text-uppercase"><?= e($document['description']) ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">Created on:</th>
-                <td class="text-uppercase"><?= toDate($document['datetime'], 'F d, Y h:i:s A') ?></td>
+                <td class="text-uppercase"><?= toDate($document['created_at'], 'F d, Y h:i:s A') ?></td>
             </tr>
             <tr>
                 <th class="align-top pr-3" scope="row">From:</th>
-                <td class="text-uppercase"><?= stationName($document['from']) ?></td>
+                <td class="text-uppercase"><?= stationName($document['created_from']) ?></td>
             </tr>
-            <tr>
-                <th class="align-top pr-3" scope="row">Status:</th>
-                <td class="text-uppercase">
-                    <?= $document['status'] ?>
-                </td>
-            </tr>
+            <?php if ($document['status_id'] !== null): ?>
+                <tr>
+                    <th class="align-top pr-3" scope="row">Status:</th>
+                    <td class="text-uppercase">
+                        <?= documentTransactionStatus($document['status_id']) ?>
+                    </td>
+                </tr>
+            <?php endif ?>
         </table>
 
         <div class="d-flex align-items-center flex-row-reverse mt-2 mb-3">
@@ -82,9 +87,7 @@ if (numRows($documents) > 0) {
                 <?php
                 $hasSuccess = false;
 
-                if ($station === $document['from'] || $isRecordsPortal) {
-                    linkButtonSplit(customUri('print', 'Document Tracking Slip', $documentId), 'Print', 'fa-print', 'Print Document Tracking Slip', 'primary', true);
-                }
+                linkButtonSplit(customUri('print', 'Document Tracking Slip', $documentId), 'Print', 'fa-print', 'Print Document Tracking Slip', 'primary', true);
 
                 switch ($documentType) {
                     case 'Incoming Documents':
@@ -97,21 +100,21 @@ if (numRows($documents) > 0) {
                         if (!$isSchoolPortal) {
                             modalButtonSplit(uri() . '/modules/documents/forward-document-dialog.php?id=' . cipher($documentId), 'Forward', 'fa-share', 'Forward Document', 'info');
                         }
-                        if (isDocument($documentId, 'Restored')) break;
-                        modalButtonSplit(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Completed', 'fa-check-circle', 'Mark Complete Document', 'success');
+                        modalButtonSplit(uri() . '/modules/documents/complete-document-dialog.php?id=' . cipher($documentId), 'Mark Complete', 'fa-check-circle', 'Mark Complete Document', 'success');
                         break;
                     case 'Outgoing Documents':
-                        if (!isDocument($documentId, 'Complete') && !isDocument($documentId, 'Cancel')) {
-                            modalButtonSplit(uri() . '/modules/documents/save-document-dialog.php?id=' . cipher($documentId), 'Edit', 'fa-edit', 'Edit Document', 'info');
+                        if (!isDocument($documentId, 'Complete') && !isDocument($documentId, 'cancel')) {
+                            linkButtonSplit(customUri('dts', 'Edit Document', $documentId), 'Edit', 'fa-edit', 'Edit Document', 'info');
                         }
                         break;
                     case 'Completed Documents':
-                        if (isDocumentFrom($documentId, $station) && $document['from'] === $station && isDocument($documentId, 'Completed')) {
-                            modalButtonSplit(uri() . '/modules/documents/incomplete-document-dialog.php?id=' . cipher($documentId), 'Mark Incomplete', 'fa-minus-square', 'Mark Incomplete Document', 'danger');
+                    case 'Received Documents':
+                        if (isDocument($documentId, 'complete') && $logs[0]['received_from'] === $station) {
+                            modalButtonSplit(uri() . '/modules/documents/reopen-document-dialog.php?id=' . cipher($documentId), 'Reopen', 'fa-envelope-open', 'Reopen Document', 'danger');
                         }
                         break;
                     case 'Canceled Documents':
-                        if (isDocumentFrom($documentId, $station) && $document['from'] === $station && isDocument($documentId, 'Canceled')) {
+                        if (isDocumentFrom($documentId, $station) && $document['created_from'] === $station && isDocument($documentId, 'cancel')) {
                             modalButtonSplit(uri() . '/modules/documents/restore-document-dialog.php?id=' . cipher($documentId), 'Restore', 'fa-undo', 'Restore Document', 'success');
                             $hasSuccess = true;
                         }
@@ -128,12 +131,12 @@ if (numRows($documents) > 0) {
 
                         $hasSuccess = true;
 
-                        if (isDocumentFrom($documentId, $station) && $document['from'] === $station && !isDocument($documentId, 'Cancel')) {
+                        if (isDocumentFrom($documentId, $station) && $document['created_from'] === $station && !isDocument($documentId, 'Cancel')) {
                             modalButtonSplit(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($documentId), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
                         }
                         break;
                     case 'Outgoing Documents':
-                        if (isDocumentFrom($documentId, $station) && $document['from'] === $station && !isDocument($documentId, 'Cancel')) {
+                        if (isDocumentFrom($documentId, $station) && $document['created_from'] === $station && !isDocument($documentId, 'Cancel')) {
                             modalButtonSplit(uri() . '/modules/documents/cancel-document-dialog.php?id=' . cipher($documentId), 'Cancel', 'fa-trash-alt', 'Cancel Document', 'danger');
                         }
                         break;
@@ -141,31 +144,27 @@ if (numRows($documents) > 0) {
                         break;
                 }
 
-                if ($station === $document['from']) {
-                    linkButtonSplit(customUri('export', 'document-log', $documentId), 'Export', 'fa-file-excel', 'Export as Excel file', $hasSuccess ? 'warning' : 'success');
-                }
+                linkButtonSplit(customUri('export', 'document-log', $documentId), 'Export', 'fa-file-excel', 'Export as Excel file', 'warning');
                 ?>
             </div>
         </div>
 
         <div class="timeline">
             <?php
-            $logs = documentLogs($documentId);
-            $totalLogs = numRows($logs);
             $logCount = 0;
 
-            while ($log = fetchAssoc($logs)) {
+            foreach ($logs as $log) {
                 $logCount++;
-                $from = stationName($log['from']);
-                $to = stationName($log['to']);
-                $displayName = userName($log['user']);
-                $user = fetchAssoc(employee($log['user']));
-                $displayPhoto = file_exists(root() . '/' . $user['picture']) ? uri() . '/' . $user['picture'] : uri() . '/assets/img/user.png';
+                $logId = $log['id'];
+                $from = stationName($log['received_from']);
+                $to = stationName($log['forwarded_to']);
+                $displayName = userName($log['processor_id'], true, true);
+                $user = employee($log['processor_id']);
+                $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '/' . $user['profile_picture'] : uri() . '/assets/img/user.png';
                 $icon = 'flag';
-                $hasDestination = !empty($to) && $to !== '-';
-                $status = $log['status'];
+                $hasDestination = !empty($to) && $to !== null;
+                $status = documentTransactionStatus($log['status_id']);
                 $details = $log['details'];
-                $attachment = $log['attachment'];
                 $isCompleted = str_contains(strtolower($status), 'complete');
                 $isCanceled = str_contains(strtolower($status), 'cancel');
                 $bgColor = '';
@@ -182,7 +181,7 @@ if (numRows($documents) > 0) {
                     $icon = 'flag';
                 }
 
-                if ($logCount >= 1  && !$hasDestination) {
+                if ($logCount >= 1 && !$hasDestination) {
                     $icon = 'check';
                 }
 
@@ -194,49 +193,60 @@ if (numRows($documents) > 0) {
                     $icon = 'times';
                     $bgColor = 'bg-danger';
                 }
-            ?>
+                ?>
                 <div class="timeline-item">
                     <div class="timeline-item-marker">
                         <div class="timeline-item-marker-text text-uppercase">
-                            <?= date('M d, Y', strtotime($log['datetime'])) . '<br>' . date('h:i:s A', strtotime($log['datetime'])) ?>
+                            <?= date('M d, Y', strtotime($log['created_at'])) . '<br>' . date('h:i:s A', strtotime($log['created_at'])) ?>
                         </div>
-                        <div class="timeline-item-marker-indicator <?= $bgColor ?>">
-                            <i class="fas fa-<?= $icon ?>"></i>
+                        <div class="timeline-item-marker-indicator <?= e($bgColor) ?>">
+                            <i class="fas fa-<?= e($icon) ?>"></i>
                         </div>
                     </div>
                     <div class="timeline-item-content pt-0">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="timeline-item-content-header-text font-weight-bold text-uppercase mb-0">
-                                    <?= $from ?>
+                                    <?= e($from) ?>
                                 </h5>
                             </div>
 
                             <div class="card-body">
                                 <div>
-                                    <span class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
-                                        <img src="<?= $displayPhoto ?>" alt="<?= $displayName ?>" height="40px" width="40px">
+                                    <span
+                                        class="d-inline-block img-profile rounded-circle justify-content-center align-middle overflow-hidden">
+                                        <img src="<?= e($displayPhoto) ?>" alt="<?= e($displayName) ?>" height="40px"
+                                            width="40px">
                                     </span>
 
                                     <div class="ml-2 d-inline-block align-middle">
-                                        <div class="text-uppercase"><?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['user']), $displayName) ?></div>
+                                        <div class="text-uppercase">
+                                            <?php modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($log['processor_id']), $displayName) ?>
+                                        </div>
 
-                                        <div class="text-uppercase text-xs"><?= fetchAssoc(position($log['user']))['position'] ?></div>
+                                        <div class="text-uppercase text-xs">
+                                            <?= position($log['processor_id'])['official_title'] ?>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <?= $hasDestination ? '<div class="mb-3">Forwarded to ' . strtoupper($to) . '</div>' : '' ?>
 
-                                <div class="font-weight-bold text-lg"><?= $status ?></div>
+                                <div class="font-weight-bold text-lg"><?= e($status) ?></div>
 
-                                <?php if (!empty($details)) : ?>
-                                    <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= $details ?></div>
+                                <?php if (!empty($details)): ?>
+                                    <div class="alert alert-warning d-inline-block px-2 py-1 mt-3 mb-0"><?= e($details) ?></div>
                                 <?php endif ?>
                             </div>
 
-                            <?php if (!empty($attachment) && file_exists(root() . '/' . $attachment)) : ?>
+                            <?php $documentLogAttachments = documentLogAttachments($logId);
+
+                            if ($documentLogAttachments): ?>
                                 <div class="card-footer">
-                                    <?php linkButtonSplit(uri() . '/' . $attachment, 'View Attachment', 'fa-eye', 'View Attachment', 'info', true) ?>
+                                    <?php foreach ($documentLogAttachments as $attachment) {
+                                        $file = explode('_', $attachment['file_name'], 2);
+                                        linkButtonSplit("$baseUri/" . $attachment['file_name'], $file[1], 'fa-paperclip', "View $file[1]", 'secondary', true);
+                                    } ?>
                                 </div>
                             <?php endif ?>
                         </div>

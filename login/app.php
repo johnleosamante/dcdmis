@@ -1,33 +1,37 @@
 <?php
 // login/app.php
-function setUserSession($userId)
+function setUserSession($user_id, $prefix)
 {
-    $users = user($userId);
-
-    if (numRows($users) === 1) {
-        $user = fetchAssoc($users);
-        $stationId = $_SESSION[alias() . '_stationId'] = $user['station_id'];
-        $_SESSION[alias() . '_code'] = $user['code'];
-        $_SESSION[alias() . '_portal'] = $user['portal'];
-
-        if ($user['portal'] !== 'sch_portal') {
-            $_SESSION[alias() . '_station'] = $user['code'];
-        } else {
-            $school = schoolById($user['code']);
-            $_SESSION[alias() . '_station'] = numRows($school) ? fetchAssoc($school)['alias'] : '';
-        }
-
-        createSystemLog($stationId, $userId, 'Logged in', $userId, clientIp());
+    $user = user($user_id);
+    if (!$user) {
+        return;
     }
+
+    $portal = $user['link'];
+    $access = $user['access'];
+    $station_id = $user['station_id'];
+    $_SESSION["{$prefix}stationId"] = $station_id;
+    $_SESSION["{$prefix}code"] = $access;
+    $_SESSION["{$prefix}portal"] = $portal;
+
+    if ($portal === 'sch_portal') {
+        $school = schoolById($access);
+        $stationName = $school['alias'] ?? '';
+    } else {
+        $stationName = $access;
+    }
+
+    $_SESSION["{$prefix}station"] = $stationName;
+
+    createSystemLog($station_id, $user_id, 'Logged in', $user_id, clientIp());
 }
 
-$appTitle = $page = 'Login';
+$appTitle = $page = !MAINTENANCE_MODE ? 'Login' : 'System Maintenance';
 
 if (isset($_POST['login'])) {
-    $email = sanitize($_POST['email']);
-    $password = hashPassword(sanitize($_POST['password']));
+    $email = sanitize($_POST['email'] ?? '');
+    $password = sanitize($_POST['password'] ?? '');
     $showAlert = true;
-    $success = false;
 
     if (empty($email) || empty($password)) {
         $message = 'All fields are required.';
@@ -39,39 +43,53 @@ if (isset($_POST['login'])) {
         return;
     }
 
-    $accounts = account($email);
+    $clientIdentifier = clientIp();
 
-    if (numRows($accounts) === 0) {
+    if (!checkRateLimit($clientIdentifier, 5, 300)) {
+        $remainingTime = getRateLimitRemainingTime($clientIdentifier, 300);
+        $message = "Too many login attempts. Please try again in {$remainingTime} seconds.";
+        return;
+    }
+
+    $account = account($email);
+
+    if (!$account) {
         $message = 'Invalid login details! Try again.';
         return;
     }
 
-    $account = fetchAssoc($accounts);
-    $passwords = accountPassword($account['id'], $password);
+    $accountPassword = verifyAccountPassword($account['id'], $password);
 
-    if (numRows($passwords) === 0) {
+    if (!$accountPassword) {
         $message = 'Invalid login details! Try again.';
         return;
     }
 
-    $userId = $_SESSION[alias() . '_userId'] = $account['id'];
-    $email = $_SESSION[alias() . '_email'] = $account['email'];
+    $_SESSION["{$prefix}userId"] = $userId = $account['id'];
+    $_SESSION["{$prefix}email"] = $account['email_address'];
 
-    if (isset($_POST['remember']) && $_POST['remember'] === true) {
-        setcookie(alias() . '_login', $account['email'], time() + getSeconds(8), '/', uri(), false, true);
+    if (isset($_POST['remember'])) {
+        setcookie("{$prefix}login", $account['email_address'], [
+            'expires' => time() + getSeconds(8),
+            'path' => '/',
+            'domain' => parse_url(uri(), PHP_URL_HOST),
+            'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
     }
 
-    setUserSession($userId);
+    setUserSession($userId, $prefix);
 
-    if (fetchAssoc($passwords)['status'] === 'Default') {
-        $_SESSION[alias() . '_change_password'] = true;
-        redirect(uri() . '/login/change');
+    if ($accountPassword['status'] === 'Default') {
+        $_SESSION["{$prefix}change_password"] = true;
+        redirect("{$baseUri}/login/change");
         return;
     }
 
-    redirect(uri() . '/' . $activeApp);
+    redirect("{$baseUri}/{$activeApp}");
 }
 
 if (isset($userId)) {
-    redirect(uri() . '/' . $activeApp);
+    redirect("{$baseUri}/{$activeApp}");
 }

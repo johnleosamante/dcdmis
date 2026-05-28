@@ -33,6 +33,9 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Document Search':
             $file = 'documents/document-search';
             break;
+        case 'Edit Document':
+            $file = 'documents/edit-document';
+            break;
         case 'Receive Document':
             $file = 'documents/receive-document';
             break;
@@ -65,7 +68,7 @@ if (!isset($url) || $url === 'dashboard') {
         case '201 Files':
             $file = '201-file/page';
             break;
-        case 'Payslip':
+        case 'Payslips':
             $file = 'payslip/page';
             break;
         case 'Step Increment':
@@ -110,6 +113,12 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Schools':
             $file = 'schools/page';
             break;
+        case 'Positions':
+            $file = 'positions/page';
+            break;
+        case 'Plantilla Items':
+            $file = 'positions/plantilla-items';
+            break;
         case 'School Information':
             $file = 'schools/school-information';
             break;
@@ -129,6 +138,7 @@ if (!isset($url) || $url === 'dashboard') {
             $file = 'activity/system-log';
             break;
         case 'Transactions Summary':
+        case 'Section Summary':
             $file = 'documents/transactions-summary';
             break;
         case 'Settings':
@@ -139,6 +149,9 @@ if (!isset($url) || $url === 'dashboard') {
             break;
         case 'Publish Vacancies':
             $file = 'vacancies/publish-vacancies';
+            break;
+        case 'Publication Details':
+            $file = 'vacancies/publication-details';
             break;
         case 'Publications':
             $file = 'vacancies/publications';

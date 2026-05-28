@@ -27,17 +27,17 @@ require_once(root() . '/includes/database/document.php');
         $i = 1;
 
         $sections = sections();
-        while ($section = fetchAssoc($sections)) : ?>
+        foreach ($sections as $section): ?>
             <tr>
                 <td><?= $i++ ?></td>
                 <td><?= strtoupper($section['name']) ?></td>
                 <td><?= strtoupper($section['division']) ?></td>
-                <td><?= number_format(numRows(incomingDocuments($section['id']))) ?></td>
-                <td><?= number_format(numRows(pendingDocuments($section['id']))) ?></td>
-                <td><?= number_format(numRows(outgoingDocuments($section['id']))) ?></td>
-                <td><?= number_format(numRows(ongoingDocuments($section['id']))) ?></td>
+                <td><?= number_format(count(incomingDocuments($section['id']))) ?></td>
+                <td><?= number_format(count(pendingDocuments($section['id']))) ?></td>
+                <td><?= number_format(count(outgoingDocuments($section['id']))) ?></td>
+                <td><?= number_format(count(ongoingDocuments($section['id']))) ?></td>
             </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
         <tr>
             <td colspan="7"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>
         </tr>

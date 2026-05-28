@@ -5,7 +5,7 @@ $margin = 8;
 $width = 210;
 $height = 148.5;
 
-$school = fetchArray(schoolDetailsById(divisionId()));
+$school = schoolById(divisionId());
 $address = $school['address'];
 $telephone = $school['telephone'];
 $email = $school['email'];
@@ -19,26 +19,25 @@ require_once(root() . '/includes/database/learning-development.php');
 require_once(root() . '/includes/database/position.php');
 
 $employeeId = isset($_GET['p']) ? sanitize(decode($_GET['p'])) : null;
-$trainings = attendedTraining($code, $employeeId);
+$training = attendedTraining($code, $employeeId);
 
-if (numRows($trainings) === 0) {
+if (!$training) {
     redirect(customUri($activeApp, '404'));
 }
 
-$employee = fetchAssoc(employee($employeeId));
-$employeeName = strtoupper(toHandleEncoding(toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true)));
-$title = $url . ' | ' . $code . ' | ' . $employeeName;
+$employee = employee($employeeId);
+$employeeName = strtoupper(toHandleEncoding(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true)));
+$title = "{$url} | {$code} | {$employeeName}";
 $pronoun = $employee['sex'] === 'Male' ? 'his' : 'her';
-$training = fetchAssoc($trainings);
-$trainingId = $training['no'];
+$trainingId = $training['id'];
 $trainingTitle = toHandleEncoding($training['title']);
-$trainingDate = empty($training['unconsecutive_date']) ? toDateRange($training['from'], $training['to']) : toHandleEncoding($training['unconsecutive_date']);
+$trainingDate = empty($training['unconsecutive_date']) ? toDateRange($training['start_date'], $training['end_date']) : toHandleEncoding($training['unconsecutive_date']);
 $trainingVenue = toHandleEncoding($training['venue']);
-$lastDate = strtotime($training['to']);
+$lastDate = strtotime($training['end_date']);
 $lastDay = toOrdinal(date('j', $lastDate));
-$givenDate = $lastDay . ' day of ' . date('F, Y', $lastDate);
-$signatory = $training['signatory'];
-$employeeTraining = fetchAssoc(attendedTraining($trainingId, $employeeId));
+$givenDate = "{$lastDay} day of " . date('F, Y', $lastDate);
+$signatory = $training['signatory_id'];
+$employeeTraining = attendedTraining($trainingId, $employeeId);
 $controlNo = !empty($employeeTraining['control_no']) ? 'Control Number: ' . $employeeTraining['control_no'] : '';
 
 if (empty($signatory)) {
@@ -47,7 +46,7 @@ if (empty($signatory)) {
 
 $signatoryName = toHandleEncoding(userName($signatory, true));
 $signatureWidth = 35;
-$position = toHandleEncoding(fetchAssoc(position($signatory))['position']);
+$position = toHandleEncoding(position($signatory)['official_title']);
 
 $pdf = new FPDF('L', 'mm', array($width, $height));
 $pdf->SetTitle($title);
@@ -131,31 +130,33 @@ $pdf->SetFont('calibri', '', 8);
 
 $pdf->SetY(-18.5);
 
+$footerSpace = 135;
+
 if (strlen($address) > 0) {
-    $pdf->SetX(145);
+    $pdf->SetX($footerSpace);
     $pdf->Cell(0, 0, "Address: {$address}");
     $pdf->Ln(3);
 }
 
 if (strlen($telephone) > 0) {
-    $pdf->SetX(145);
+    $pdf->SetX($footerSpace);
     $pdf->Cell(0, 0, "Telephone No: {$telephone}");
     $pdf->Ln(3);
 }
 
 if (strlen($email) > 0) {
-    $pdf->SetX(145);
+    $pdf->SetX($footerSpace);
     $pdf->Cell(0, 0, "Email Address: {$email}");
     $pdf->Ln(3);
 }
 
 if (strlen($website) > 0) {
-    $pdf->SetX(145);
+    $pdf->SetX($footerSpace);
     $pdf->Cell(0, 0, "Website: {$website}");
     $pdf->Ln(3);
 }
 
 if (strlen($fbPage) > 0) {
-    $pdf->SetX(145);
+    $pdf->SetX($footerSpace);
     $pdf->Cell(0, 0, "FB Page: {$fbPage}");
 }
