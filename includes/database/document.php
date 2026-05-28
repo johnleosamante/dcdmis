@@ -593,7 +593,7 @@ function stationTransactionCounts($station_id)
         COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 THEN l.document_transaction_id END) AS incoming,
         COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS pending,
         COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS outgoing,
-        COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL THEN t.id END) AS ongoing
+        COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN t.id END) AS ongoing
     FROM `document_transaction_logs` AS l
     LEFT JOIN `document_transactions` AS t 
         ON l.document_transaction_id = t.id
