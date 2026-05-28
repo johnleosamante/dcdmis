@@ -26,7 +26,7 @@ function setUserSession($user_id, $prefix)
     createSystemLog($station_id, $user_id, 'Logged in', $user_id, clientIp());
 }
 
-$appTitle = $page = 'Login';
+$appTitle = $page = !MAINTENANCE_MODE ? 'Login' : 'System Maintenance';
 
 if (isset($_POST['login'])) {
     $email = sanitize($_POST['email'] ?? '');

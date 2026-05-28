@@ -1,6 +1,6 @@
 <?php
 // hrtdms/repository/app.php
-$page = $appTitle = 'Division Training Certificate Finder';
+$appTitle = $page = !MAINTENANCE_MODE ? 'Division Training Certificate Finder' : 'System Maintenance';
 $enableScripts = true;
 
 $from = isset($_GET['from']) ? sanitize($_GET['from']) : date('Y') . '-01-01';

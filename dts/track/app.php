@@ -1,6 +1,6 @@
 <?php
 // dts/track/app.php
-$page = $appTitle = 'Document Tracking System';
+$appTitle = $page = !MAINTENANCE_MODE ? 'Document Tracking System' : 'System Maintenance';
 $searchText = '';
 
 if (isset($_POST['primary-search-button'])) {
