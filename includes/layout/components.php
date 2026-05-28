@@ -409,27 +409,38 @@ function employeeProfile($picture, $name, $sex, $email, $position, $station, $st
     <div class="text-center text-uppercase h6 my-1"><?= e($station) ?></div>
 <?php }
 
-function profilePhotoUpload($file, $photo, $label, $uri)
+function profilePhotoUpload($file, $photo, $label, $uri, $preview)
 { ?>
     <script>
+        let currentPreviewUrl = null;
+
         document.getElementById('<?= e($file) ?>').addEventListener('change', (event) => {
-            var preview = document.getElementById('<?= e($photo) ?>');
+            let preview = document.getElementById('<?= e($photo) ?>');
             const file = event.target.files[0];
+
+            if (!file) return;
+
             const name = file.name;
             const lastDot = name.lastIndexOf('.');
-            const ext = name.substring(lastDot + 1);
-            var label = document.getElementById('<?= e($label) ?>');
+            const ext = name.substring(lastDot + 1).toLowerCase();
+            let label = document.getElementById('<?= e($label) ?>');
             label.innerText = name;
+
+            if (currentPreviewUrl) {
+                URL.revokeObjectURL(currentPreviewUrl);
+            }
 
             switch (ext) {
                 case 'jpg':
                 case 'jpeg':
                 case 'png':
                 case 'gif':
-                    preview.src = URL.createObjectURL(event.target.files[0]);
+                    currentPreviewUrl = URL.createObjectURL(file);
+                    preview.src = currentPreviewUrl;
                     break;
                 default:
-                    preview.src = '<?= e($uri) ?>/assets/img/nopreview.png';
+                    preview.src = '<?= e($uri) . $preview ?>';
+                    currentPreviewUrl = null;
                     break;
             }
         });
