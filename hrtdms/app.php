@@ -87,7 +87,7 @@ if (isset($_POST['add-participants'])) {
 
             if ($affectedParticipants) {
                 $employee = trainingParticipants($trainingId, $id)[0];
-                $employeeEmail = PRODUCTION_MODE ? $employee['email_address'] : SITE_AUTHOR_EMAIL;
+                $employeeEmail = PRODUCTION_MODE ? $employee['email_address'] : DEVELOPER_EMAIL;
                 $employeeName = strtoupper(toHandleEncoding(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true)));
                 $certificate = customUri('print', 'Certificate of Participation', $trainingId, DOMAIN) . '&p=' . encode($id);
                 $appearance = customUri('print', 'Certificate of Appearance', $trainingId, DOMAIN) . '&p=' . encode($id);
@@ -156,7 +156,7 @@ if (isset($_POST['email-participants'])) {
     $participants = 0;
 
     foreach ($trainingParticipants as $participant) {
-        $userEmail = PRODUCTION_MODE ? $participant['email_address'] : SITE_AUTHOR_EMAIL;
+        $userEmail = PRODUCTION_MODE ? $participant['email_address'] : DEVELOPER_EMAIL;
         $certificate = customUri('print', 'Certificate of Participation', $trainingId, DOMAIN) . '&p=' . encode($participant['id']);
         $appearance = customUri('print', 'Certificate of Appearance', $trainingId, DOMAIN) . '&p=' . encode($participant['id']);
         $name = strtoupper(toHandleEncoding(toName($participant['last_name'], $participant['first_name'], $participant['middle_name'], $participant['name_extension'], true)));

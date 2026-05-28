@@ -8,7 +8,7 @@ if (isset($_POST['reset-password'])) {
     $success = false;
     $message = "If an account is associated with this email, you will receive instructions shortly.";
 
-    $userEmail = PRODUCTION_MODE ? sanitize($_POST['email']) : SITE_AUTHOR_EMAIL;
+    $userEmail = PRODUCTION_MODE ? sanitize($_POST['email']) : DEVELOPER_EMAIL;
 
     if (empty($userEmail) || !filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
         $message = 'Please enter a valid email address.';
