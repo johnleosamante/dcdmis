@@ -58,4 +58,6 @@ $isRecordsPortal = $portal === 'rec_portal';
 $isAdminPortal = $portal === 'adm_portal';
 $isPersonnel = $code === 'PER';
 
-verify_csrf_token();
+if (function_exists('verify_csrf_token')) {
+    verify_csrf_token();
+}
