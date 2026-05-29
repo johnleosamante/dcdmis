@@ -17,7 +17,7 @@ sidebarMenuItem(customUri('hrmis', 'Retirable Employees'), 'Retirable', 'fa-user
 sidebarMenuItem(customUri('hrmis', 'Celebrant Employees'), 'Celebrants', 'fa-birthday-cake', isset($url) && str_contains($url, 'Celebrant'));
 sidebarMenuItem(customUri('hrmis', 'Archived Employees'), 'Archived', 'fa-archive', isset($url) && str_contains($url, 'Archived'));
 sidebarDivider();
-if ($isHrmis && $isPersonnel) {
+if (($isHrmis && $isPersonnel) || ($isHrmis && $isICT)) {
     sidebarMenuItem(customUri('hrmis', 'Positions'), 'Positions', 'fa-user-tie', isset($url) && str_contains($url, 'Positions'));
     sidebarMenuItem(customUri('hrmis', 'Plantilla Items'), 'Plantilla Items', 'fa-list', isset($url) && str_contains($url, 'Plantilla Items'));
     sidebarDivider();
