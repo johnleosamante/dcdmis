@@ -458,8 +458,8 @@ if (isset($_POST['transactions-summary-filter'])) {
 }
 
 if (isset($_POST['bulk-process-documents'])) {
-	$stationId = sanitize(decipher($_POST['verifier'] ?? null));
-	$stationName = strtoupper(stationName($stationId));
+	$documentStationId = sanitize(decipher($_POST['verifier'] ?? null));
+	$stationName = strtoupper(stationName($documentStationId));
 	$previousYear = date('Y', strtotime('-1 year'));
 	$from = sanitize($_POST['from-date'] ?? "$previousYear-01-01");
 	$to = sanitize($_POST['to-date'] ?? "$previousYear-12-31");
@@ -477,7 +477,7 @@ if (isset($_POST['bulk-process-documents'])) {
 	}
 
 	$processorId = $user['id'];
-	$documents = incomingDocuments($stationId, $from, $to, 5000);
+	$documents = incomingDocuments($documentStationId, $from, $to, 5000);
 
 	if (empty($documents)) {
 		$message = "No incoming documents found for [$stationName] from [$from] to [$to]. ";
@@ -496,8 +496,8 @@ if (isset($_POST['bulk-process-documents'])) {
 					continue;
 				}
 
-				createDocumentLog($documentId, $processorId, $stationId, null, documentStatusId('Received'), 1);
-				createSystemLog($stationId, $processorId, 'Received Document (Bulk)', $documentId, clientIp());
+				createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Received'), 1);
+				createSystemLog($documentStationId, $processorId, 'Received Document (Bulk)', $documentId, clientIp());
 
 				$receivedCount++;
 
@@ -509,8 +509,8 @@ if (isset($_POST['bulk-process-documents'])) {
 					continue;
 				}
 
-				createDocumentLog($documentId, $processorId, $stationId, null, documentStatusId('Completed'), 1);
-				createSystemLog($stationId, $processorId, 'Completed Document (Bulk)', $documentId, clientIp());
+				createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Completed'), 1);
+				createSystemLog($documentStationId, $processorId, 'Completed Document (Bulk)', $documentId, clientIp());
 
 				$successCount++;
 
@@ -522,7 +522,7 @@ if (isset($_POST['bulk-process-documents'])) {
 		}
 	}
 
-	$documents = pendingDocuments($stationId, $from, $to, 5000);
+	$documents = pendingDocuments($documentStationId, $from, $to, 5000);
 
 	if (empty($documents)) {
 		$message .= "No pending documents found for [$stationName] from [$from] to [$to]. ";
@@ -541,8 +541,8 @@ if (isset($_POST['bulk-process-documents'])) {
 					continue;
 				}
 
-				createDocumentLog($documentId, $processorId, $stationId, null, documentStatusId('Completed'), 1);
-				createSystemLog($stationId, $processorId, 'Completed Document (Bulk)', $documentId, clientIp());
+				createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Completed'), 1);
+				createSystemLog($documentStationId, $processorId, 'Completed Document (Bulk)', $documentId, clientIp());
 				commit();
 
 				$successCount++;
@@ -553,7 +553,7 @@ if (isset($_POST['bulk-process-documents'])) {
 		}
 	}
 
-	$documents = outgoingDocuments($stationId, $from, $to, 5000);
+	$documents = outgoingDocuments($documentStationId, $from, $to, 5000);
 
 	if (empty($documents)) {
 		$message .= "No outgoing documents for [$stationName] from [$from] to [$to]. ";
@@ -572,8 +572,8 @@ if (isset($_POST['bulk-process-documents'])) {
 					continue;
 				}
 
-				createDocumentLog($documentId, $processorId, $stationId, null, documentStatusId('Canceled'), 1, 'Bulk processed: Cancelled as not received by destination.');
-				createSystemLog($stationId, $processorId, 'Canceled Document (Bulk)', $documentId, clientIp());
+				createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Canceled'), 1, 'Bulk processed: Cancelled as not received by destination.');
+				createSystemLog($documentStationId, $processorId, 'Canceled Document (Bulk)', $documentId, clientIp());
 				commit();
 
 				$canceledCount++;
