@@ -1,6 +1,6 @@
 <?php
 // modules/plantilla/page.php
-if (!$isHrmis || !$isPersonnel) {
+if (!($isHrmis && $isPersonnel) && !($isHrmis && $isICT)) {
     require_once(root() . '/modules/error/403.php');
     return;
 }

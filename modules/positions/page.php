@@ -1,6 +1,6 @@
 <?php
 
-if (!$isHrmis) {
+if (!($isHrmis && $isPersonnel) && !($isHrmis && $isICT)) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
