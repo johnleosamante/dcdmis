@@ -1,7 +1,6 @@
 <?php
 // modules/districts/page.php
 if (!$isHrmis && !$isHrtdms && !$isDmis) {
-    http_response_code(403);
     require_once(root() . '/modules/error/403.php');
     return;
 }
