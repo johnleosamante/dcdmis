@@ -109,8 +109,8 @@ if (isset($_POST['update-personal-information'])) {
         if (is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
             $temp = $_FILES['image-upload']['tmp_name'];
 
-            if ($_FILES['image-upload']['size'] > $imageUploadSizeLimit) {
-                $message = 'The chosen file exceeds the upload file limit (2.5 MB). No changes have been made to personal information.';
+            if ($_FILES['image-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
+                $message = 'The chosen file exceeds the upload file limit. No changes have been made to personal information.';
                 return;
             }
 

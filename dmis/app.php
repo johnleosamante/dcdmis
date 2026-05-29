@@ -31,8 +31,8 @@ if (isset($_POST['save-school'])) {
 	if (is_uploaded_file($_FILES['logo-upload']['tmp_name'])) {
 		$temp = $_FILES['logo-upload']['tmp_name'];
 
-		if ($_FILES['logo-upload']['size'] > $imageUploadSizeLimit) {
-			$message = 'The chosen file exceeds the upload file limit (2.5 MB). No changes have been made to school information.';
+		if ($_FILES['logo-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
+			$message = 'The chosen file exceeds the upload file limit. No changes have been made to school information.';
 			return;
 		}
 
