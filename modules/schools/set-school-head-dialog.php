@@ -19,14 +19,14 @@ if ($employee) {
     $sex = $employee['sex'];
     $status = $employee['status'];
     $position = position($employeeId);
-    $doa = $positions['date'];
-    $stationId = $positions['station_id'];
-    $station = $positions['station'];
-    $positionId = $positions['position_id'];
-    $position = $positions['position'];
-    $depedEmail = $employee['email'];
-    $picture = "$baseUri/" . $employee['picture'];
-    $modalTitle = 'Set Head of Office';
+    $doa = $position['assignment_date'];
+    $stationId = $position['station_id'];
+    $station = $position['station'];
+    $positionId = $position['position_id'];
+    $position = $position['official_title'];
+    $depedEmail = $employee['email_address'];
+    $picture = file_exists(root() . '/' . $employee['profile_picture']) ? uri() . '/' . $employee['profile_picture'] : uri() . '/assets/img/user.png';
+    $modalTitle = 'Set School Head';
     $hasEmployee = true;
 }
 ?>
