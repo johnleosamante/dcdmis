@@ -224,29 +224,30 @@ if ($school) {
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                        <?php if ($isHrmis) {
-                                            if ($isDmis || $isPersonnel) { ?>
-                                                <?php modalDropdownItem(uri() . '/modules/schools/set-school-head-dialog.php?e=' . cipher($schoolId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set Head of Office') ?>
-                                                <div class="dropdown-divider"></div>
-                                            <?php }
+                                        <?php if (($isHrmis && $isPersonnel) || ($isHrmis && $isICT) || $isDmis) { ?>
+                                            <?php modalDropdownItem(uri() . '/modules/schools/set-school-head-dialog.php?e=' . cipher($schoolId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set School Head') ?>
+                                            <div class="dropdown-divider"></div>
+                                        <?php }
+                                        if ($isHrmis) {
                                             linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
                                             linkDropdownItem(customUri('hrmis', 'Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
                                             linkDropdownItem(customUri('hrmis', '201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
                                             linkDropdownItem(customUri('hrmis', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
                                             modalDropdownItem(uri() . '/modules/psipop/save-psipop-dialog.php?id=' . cipher($row['id']), 'PSIPOP', 'fa-file-contract', 'Personal Services Itemization &amp; Plantilla of Personnel') ?>
                                             <div class="dropdown-divider"></div>
-                                            <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History');
-                                            if ($isPersonnel) { ?>
-                                                <div class="dropdown-divider"></div>
-                                                <?php
-                                                modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                                            <?php linkDropdownItem(customUri('hrmis', 'Edit History', $row['id']), 'Edit History', 'fa-history', 'Edit History'); ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
+                                            if ($isPersonnel || $isICT) {
                                                 modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
                                                 modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
                                             }
-                                        } elseif ($isDmis) { ?>
+                                        } elseif ($isDmis) {
+                                            linkDropdownItem(customUri('dmis', 'Activity Log', $row['id']), 'Activity', 'fa-list', 'User Activity Log'); ?>
                                             <div class="dropdown-divider"></div>
                                             <?php
                                             modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit User');
+                                            modalDropdownItem(uri() . '/modules/users/reset-user-dialog.php?id=' . cipher($row['id']), 'Reset', 'fa-undo-alt', 'Reset User');
                                         } elseif ($isHrtdms) { ?>
                                             <div class="dropdown-divider"></div>
                                             <?php linkDropdownItem(customUri('hrtdms', 'Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher');
