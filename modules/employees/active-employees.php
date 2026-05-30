@@ -125,7 +125,7 @@ messageAlert($showAlert, $message, $success);
                                                 <div class="dropdown-divider"></div>
                                                 <?php
                                                 modalDropdownItem(uri() . '/modules/employees/reassign-employee-dialog.php?id=' . cipher($row['id']), 'Reassign', 'fa-share', 'Reassign Employee');
-                                                if ($isPersonnel) {
+                                                if ($isPersonnel || $isICT) {
                                                     modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
                                                     modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
                                                 }
