@@ -2,7 +2,7 @@
 // station_assignments, positions, schools
 function position($employee_id)
 {
-    $sql = "SELECT sa.`employee_id`, sa.`assignment_date`, sa.`position_id`, 
+    $sql = "SELECT sa.`employee_id`, sa.`position_id`, 
                 p.`official_title`, p.`salary_grade`, sa.`station_id`, s.`name` AS `station`, sa.`assignment_date`
             FROM `station_assignments` AS sa 
             INNER JOIN `positions` AS p ON p.`id` = sa.`position_id` 
