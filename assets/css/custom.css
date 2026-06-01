@@ -85,6 +85,14 @@ input::-ms-reveal {
     overflow-y: scroll;
 }
 
+.text-orange {
+    color: orange !important;
+}
+
+.border-left-orange {
+    border-left: 0.25rem solid orange !important;
+}
+
 @media only screen and (max-width: 991px) {
     #calendar-panel.card {
         margin-top: 1.5rem;
