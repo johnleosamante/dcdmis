@@ -50,7 +50,7 @@ if ($training) {
         </tr>
         <tr>
             <th>Level</th>
-            <td colspan="3"><?= strtoupper(trainingSponsor($training['conducted_by'])) ?></td>
+            <td colspan="3"><?= strtoupper(trainingSponsor($training['training_level_id'])) ?></td>
         </tr>
         <?php if (!empty($training['sponsored_by'])): ?>
             <tr>
