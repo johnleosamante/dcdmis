@@ -851,7 +851,7 @@ if (isset($_POST['promote-employee'])) {
             $plantillaItemId = employeeItemNumber($employeeId);
 
             if ($plantillaItemId) {
-                if (createVacancy($plantillaItemId, 'open', $employeeId, $dateVacated, 'promoted')) {
+                if (createVacancy($plantillaItemId, 'open', $employeeId, $datePromoted, 'promoted')) {
                     $message .= ' A vacant item has been created for this position.';
 
                     createSystemLog($stationId, $userId, 'Created vacant item', $employeeId, clientIp());
