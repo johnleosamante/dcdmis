@@ -136,40 +136,26 @@ if ($code) {
                         </table>
                     </div>
 
-                    <div class="mb-2">
-                        <p class="font-weight-bold mb-0">Pertinent Documents (PDF only)</p>
-                        <small class="form-text text-muted">Review the <a
+                    <div class="form-group">
+                        <label for="pertinent-documents" class="font-weight-bold mb-0">Pertinent Documents (PDF only)
+                            <?= showAsterisk() ?></label>
+                        <p class="form-text text-muted small mb-2">Review the <a
                                 href="https://www.deped.gov.ph/wp-content/uploads/DO_s2023_007.pdf" target="_blank">DepEd
                                 Order
                                 No. 007, s. 2023</a>, the Guidelines on
                             Recruitment, Selection, and Appointment in the Deparment of Education for
-                            reference. Download and accomplish the <a
+                            reference.
+                        </p>
+                        <p class="form-text text-muted small mb-2">Download and accomplish the <a
                                 href="https://drive.google.com/file/d/1-t8G_AMDZAVoME4e-i47ZDqXn1gOrLHO/view"
                                 target="_blank">checklist
-                                of requirements</a> for your application.</small>
-                    </div>
-
-                    <div class="table-responsive border rounded mb-3">
-                        <table class="table mb-0" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th class="align-middle" width="70%" colspan="2">Basic Documentary Requirements</th>
-                                    <th width="30%"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $seq = 'a';
-                                foreach (basicDocumentaryRequirements() as $document): ?>
-                                    <tr class="small">
-                                        <td class="align-middle text-center"><?= $seq++ . '.' ?></td>
-                                        <td class="align-middle text-left"><?= e($document['description']) ?></td>
-                                        <td class="align-middle text-left"><input type="file" class="form-control-file"
-                                                accept=".pdf" name="<?= e($document['code']) ?>"></td>
-                                    </tr>
-                                <?php endforeach ?>
-                            </tbody>
-                        </table>
+                                of requirements</a> for your application.</p>
+                        <p class="form-text text-muted small">Here is a <a href="#">sample</a> with recommended tabbing and
+                            arrangement of
+                            compiled documents to be
+                            uploaded in single PDF file format.</p>
+                        <input class="form-control-file" type="file" name="application_file" accept=".pdf" required>
+                        <small class="form-text text-muted ml-3">Max file upload size: 25 MB</small>
                     </div>
 
                     <button name="submit-application" type="submit" class="btn btn-primary btn-block mt-2">
