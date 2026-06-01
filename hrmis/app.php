@@ -816,14 +816,9 @@ if (isset($_POST['promote-employee'])) {
     $positionId = sanitize($_POST['position']);
     $position = strtoupper(positions($positionId)['official_title']);
     $station = station($employeeId);
-    $skipVacancy = isset($_POST['skip_vacancy']);
-    $eStationId = '';
-
-    if ($station) {
-        $eStationId = $station['station_id'];
-    }
-
+    $eStationId = $station ? $station['station_id'] : '';
     $datePromoted = sanitize($_POST['effectivity-date']);
+    $skipVacancy = isset($_POST['skip_vacancy']);
 
     if (empty($employeeId) || empty($positionId) || empty($eStationId) || empty($datePromoted)) {
         return;
@@ -834,7 +829,7 @@ if (isset($_POST['promote-employee'])) {
     beginTransaction();
 
     try {
-        if (!station($employeeId)) {
+        if (!$station) {
             $affectedStation = createStation($datePromoted, $eStationId, $positionId, $employeeId);
         } else {
             updateEmployeeStatus('Active', $employeeId);
@@ -842,6 +837,7 @@ if (isset($_POST['promote-employee'])) {
         }
 
         if ($affectedStation === false) {
+            rollBack();
             $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] information has been made.';
             return;
         }
@@ -851,20 +847,16 @@ if (isset($_POST['promote-employee'])) {
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been promoted successfully to [' . $position . '].';
         $success = true;
 
-        if ($skipVacancy) {
-            return;
-        }
+        if (!$skipVacancy) {
+            $plantillaItemId = employeeItemNumber($employeeId);
 
-        $plantillaItemId = employeeItemNumber($employeeId);
+            if ($plantillaItemId) {
+                if (createVacancy($plantillaItemId, 'open', $employeeId, $dateVacated, 'promoted')) {
+                    $message .= ' A vacant item has been created for this position.';
 
-        if ($plantillaItemId) {
-            return;
-        }
-
-        if (createVacancy($plantillaItem, 'open', $employeeId, $dateVacated, 'promoted')) {
-            $message .= ' A vacant item has been created for this position.';
-
-            createSystemLog($stationId, $userId, 'Created vacant item', $employeeId, clientIp());
+                    createSystemLog($stationId, $userId, 'Created vacant item', $employeeId, clientIp());
+                }
+            }
         }
 
         commit();
