@@ -217,7 +217,7 @@ if ($school) {
                                 <td class="align-middle"><?php progressBar(pdsProgress($row['id'])) ?></td>
                             <?php } else { ?>
                                 <?php if (!$isHrtdms): ?>
-                                    <td class="align-middle"><?= e($row['mobile']) ?></td>
+                                    <td class="align-middle"><?= e($row['mobile_number']) ?></td>
                                 <?php endif ?>
                             <?php } ?>
                             <td class="align-middle text-capitalize">
