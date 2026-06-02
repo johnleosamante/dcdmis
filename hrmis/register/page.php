@@ -25,7 +25,6 @@
 </div>
 
 <script>
-    // Prevent going back to registration form via browser back button
     history.pushState(null, null, window.location.href);
     window.addEventListener('popstate', function () {
         history.pushState(null, null, window.location.href);
