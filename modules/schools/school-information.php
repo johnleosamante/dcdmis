@@ -69,7 +69,7 @@ if ($school) {
                         </tr>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">Name</th>
-                            <td class="text-uppercase"><?= $schoolName . ' (' . $alias . ')' ?></td>
+                            <td class="text-uppercase"><?= "{$schoolName} ({$alias})" ?></td>
                         </tr>
                         <tr>
                             <th class="pr-5 align-top" scoper="row">Address</th>
@@ -224,7 +224,7 @@ if ($school) {
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                        <?php if (($isHrmis && $isPersonnel) || ($isHrmis && $isICT) || $isDmis) { ?>
+                                        <?php if (($isHrmis && $isPersonnel) || ($isHrmis && $isICT)) { ?>
                                             <?php modalDropdownItem(uri() . '/modules/schools/set-school-head-dialog.php?e=' . cipher($schoolId) . '&id=' . cipher($row['id']), 'Set Head', 'fa-user-tie', 'Set School Head') ?>
                                             <div class="dropdown-divider"></div>
                                         <?php }
