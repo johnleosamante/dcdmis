@@ -155,7 +155,8 @@ if ($code) {
                             compiled documents to be
                             uploaded in single PDF file format.</p>
                         <input class="form-control-file" type="file" name="application_file" accept=".pdf" required>
-                        <small class="form-text text-muted ml-3">Max file upload size: 25 MB</small>
+                        <small class="form-text text-muted">Max file upload size:
+                            <?= ini_get('upload_max_filesize') ?></small>
                     </div>
 
                     <button name="submit-application" type="submit" class="btn btn-primary btn-block mt-2">
