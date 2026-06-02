@@ -3,11 +3,15 @@
 $appTitle = $page = 'Online Application Form';
 $enableScripts = true;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST) && isset($_SERVER['CONTENT_LENGTH'])) {
-    $max_size = ini_get('post_max_size');
-    $message = "The total upload size exceeds the server limit of {$max_size}. Please reduce file sizes.";
-    $showAlert = true;
-    return;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SERVER['CONTENT_LENGTH'])) {
+    $max_size_str = ini_get('post_max_size');
+    $max_size_bytes = parseSizeToBytes($max_size_str);
+
+    if ($_SERVER['CONTENT_LENGTH'] > $max_size_bytes) {
+        $message = "The total upload size exceeds the limit of {$max_size_str}. Please reduce file sizes.";
+        $showAlert = true;
+        return;
+    }
 }
 
 if (isset($_POST['submit-application'])) {
@@ -17,7 +21,7 @@ if (isset($_POST['submit-application'])) {
     $showAlert = true;
 
     if (!$publicationId) {
-        $message = 'Invalid publication link';
+        $message = 'Invalid publication link.';
         return;
     }
 
@@ -43,12 +47,12 @@ if (isset($_POST['submit-application'])) {
     }
 
     if (empty($selectedPositionIds)) {
-        $message = 'You have already applied for all selected positions or selection is invalid.';
+        $message = 'You have already applied for all selected positions of this publication.';
         return;
     }
 
     $uploadErrors = [];
-    $uploadedFiles = [];
+    $savedFileName = null;
     $allowedMimeTypes = ['application/pdf'];
     $allowedExtensions = ['pdf'];
     $folder = sanitize($applicationCode);
@@ -58,44 +62,42 @@ if (isset($_POST['submit-application'])) {
         mkdir($uploadDir, 0755, true);
     }
 
-    foreach ($_FILES as $fieldName => $file) {
-        if (empty($file['name']) || $file['error'] === UPLOAD_ERR_NO_FILE)
-            continue;
+    $inputName = 'application_file';
+    if (isset($_FILES[$inputName]) && !empty($_FILES[$inputName]['name'])) {
+        $file = $_FILES[$inputName];
 
         if ($file['error'] !== UPLOAD_ERR_OK) {
-            $uploadErrors[] = "Error uploading {$fieldName}.";
-            continue;
-        }
-        if ($file['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-            $uploadErrors[] = "File {$file['name']} exceeds 20MB limit.";
-            continue;
-        }
-
-        $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        if (!in_array($fileExtension, $allowedExtensions)) {
-            $uploadErrors[] = "File {$file['name']} must be a PDF.";
-            continue;
-        }
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $fileMimeType = finfo_file($finfo, $file['tmp_name']);
-        finfo_close($finfo);
-
-        if (!in_array($fileMimeType, $allowedMimeTypes)) {
-            $uploadErrors[] = "File {$file['name']} has an invalid MIME type.";
-            continue;
-        }
-
-        $timestamp = time();
-        $randomString = bin2hex(random_bytes(4));
-        $newFileName = strtoupper("{$fieldName}_{$timestamp}") . '.pdf';
-        $filePath = "{$uploadDir}/{$newFileName}";
-
-        if (move_uploaded_file($file['tmp_name'], $filePath)) {
-            $uploadedFiles[$fieldName] = $newFileName;
+            $uploadErrors[] = 'Error uploading file.';
+        } elseif ($file['size'] > FILE_UPLOAD_SIZE_LIMIT) {
+            $uploadErrors[] = "File {$file['name']} exceeds the 25MB upload limit.";
         } else {
-            $uploadErrors[] = "Failed to save {$file['name']}.";
+            $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            if (!in_array($fileExtension, $allowedExtensions)) {
+                $uploadErrors[] = "File {$file['name']} must be a PDF.";
+            } else {
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $fileMimeType = finfo_file($finfo, $file['tmp_name']);
+                finfo_close($finfo);
+
+                if (!in_array($fileMimeType, $allowedMimeTypes)) {
+                    $uploadErrors[] = "File {$file['name']} has an invalid MIME type.";
+                }
+            }
         }
+
+        if (empty($uploadErrors)) {
+            $timestamp = time();
+            $newFilename = strtoupper("APPLICATION_{$timestamp}") . '.pdf';
+            $filePath = "{$uploadDir}/{$newFilename}";
+
+            if (move_uploaded_file($file['tmp_name'], $filePath)) {
+                $savedFileName = $newFilename;
+            } else {
+                $uploadErrors[] = "Failed to save {$file['name']}";
+            }
+        }
+    } else {
+        $uploadErrors[] = "Please upload your application document.";
     }
 
     if (!empty($uploadErrors)) {
@@ -103,25 +105,41 @@ if (isset($_POST['submit-application'])) {
         return;
     }
 
-    $appliedCount = 0;
-    foreach ($selectedPositionIds as $posId) {
-        if (createApplication($publicationId, $applicationId, $posId)) {
-            $appliedCount++;
-        }
-    }
+    try {
+        beginTransaction();
 
-    if ($appliedCount > 0) {
-        foreach ($uploadedFiles as $fieldName => $savedName) {
-            saveVacancyApplicationRequirement(
-                $publicationId,
-                $applicationId,
-                "{$folder}/{$savedName}",
-                basicDocumentRequirementId($fieldName)
-            );
+        $appliedCount = 0;
+        foreach ($selectedPositionIds as $posId) {
+            if (createApplication($publicationId, $applicationId, $posId)) {
+                $appliedCount++;
+            } else {
+                throw new Exception('Failed to create application record.');
+            }
         }
-        $message = "Your application for $appliedCount position(s) has been processed successfully. Check your registered email for your application details.";
-        $success = true;
-    } else {
-        $message = 'An error occurred while creating your application.';
+
+        if ($appliedCount > 0) {
+            if ($savedFileName) {
+                $savedRequirement = saveVacancyApplicationRequirement($publicationId, $applicationId, "{$folder}/{$savedFileName}");
+
+                if (!$savedRequirement) {
+                    throw new Exception('Failed to save vacancy application requirement.');
+                }
+            }
+
+            commit();
+
+            $message = "Your application for {$appliedCount} position" . ($appliedCount > 1 ? 's ' : ' ') . "has been processed successfully. Check your registered email for your application details.";
+            $success = true;
+        } else {
+            throw new Exception('No application record was registered.');
+        }
+    } catch (Exception $e) {
+        rollBack();
+
+        if ($savedFileName && file_exists("{uploadDir}/{$savedFileName}")) {
+            unlink("{$uploadDir}/{$savedFileName}");
+        }
+
+        $message = 'An error occured while creating your application: ' . $e->getMessage();
     }
 }
