@@ -71,10 +71,10 @@ if (isset($_POST['save-document'])) {
 		$upload_response = '';
 
 		if (!empty($_FILES['file-upload']['name'][0])) {
-			$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
+			$uploadDirectory = '/uploads/attachments/' . cipher($documentId);
 
-			if (!is_dir($uploadDirectory)) {
-				mkdir($uploadDirectory, 0777, true);
+			if (!is_dir(root() . $uploadDirectory)) {
+				mkdir(root() . $uploadDirectory, 0777, true);
 			}
 
 			foreach ($_FILES['file-upload']['tmp_name'] as $key => $tmp_name) {
@@ -95,7 +95,7 @@ if (isset($_POST['save-document'])) {
 					continue;
 				}
 
-				if (move_uploaded_file($tmp_name, $targetFilePath)) {
+				if (move_uploaded_file($tmp_name, root() . $targetFilePath)) {
 					$attachment = $targetFilePath;
 					$upload_response .= "<br>File uploaded: $safeFileName";
 					createDocumentLogAttachment($documentLogId, $attachment, ".$extension");
