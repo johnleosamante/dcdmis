@@ -12,10 +12,27 @@ contentTitle('Monitoring Tools');
     $userPositionId = position($userId)['position_id'];
     $allowedPositions = ['SDS', 'ASDS', 'CES', 'ATY3', 'ITO1', 'A3', 'ADOF5', 'PSDS', 'EPS'];
     $showFilledUnfilledItems = in_array($userPositionId, $allowedPositions, true) || ($userPositionId === 'ADOF4' && $isPersonnel);
+
     if ($showFilledUnfilledItems) {
+        cardMini(
+            'School Heads and Administrative Officer II Deployment',
+            'https://depedph-my.sharepoint.com/:x:/g/personal/love_ricafort_deped_gov_ph/IQDHDuxIqpoIRYPcTDHRnjdFAUp6F2tLvC_pU-doGvVkBKU?e=Mraf6I&fbclid=IwY2xjawSKKS5leHRuA2FlbQIxMABicmlkETFIalZjVmNMOUZLanp0M3BHc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHsCgj_m_N359LUp1YfVGc0pNimXwtPQ1ZWhPXrykVM1uE1WuCqCjoozvhdVV_aem_-1IDu7yofb23YBiYwwcbpQ',
+            'fa-file-excel',
+            'primary',
+            true
+        );
+
         cardMini(
             'Filled and Unfilled Items',
             'https://depedph-my.sharepoint.com/:x:/g/personal/love_ricafort_deped_gov_ph/IQALaDK4t-BhRI-wKJCb6qvAAR45KtJb8sRJwflKUZ1XJDU?e=gi7Njk&fbclid=IwY2xjawSKAEVleHRuA2FlbQIxMABicmlkETFIalZjVmNMOUZLanp0M3BHc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHoPs_8vDS_7XrlUXvaWJ1II2sYCXvTirrxXi6Jy_tLjL0vBmkPhgF2AOpdX8_aem_Sqcv-SPKcNW10XD3TZeXrg',
+            'fa-file-excel',
+            'primary',
+            true
+        );
+
+        cardMini(
+            'Filled and Unfilled Items Per Authorized Positions',
+            'https://depedph-my.sharepoint.com/personal/love_ricafort_deped_gov_ph/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Flove%5Fricafort%5Fdeped%5Fgov%5Fph%2FDocuments%2FPLOTTING%20AND%20MONITORING%20OF%20PERSONNEL%20%281%29%2FDBM%2DGMIS%2F2026&ga=1',
             'fa-file-excel',
             'primary',
             true
