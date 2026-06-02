@@ -268,11 +268,18 @@ function applicationsByVacancy($vacancyId)
 
 function countApplicationsByPublication($publicationId)
 {
-    // We stop at vacancy_publication_items because it already has the publication_id
     $sql = "SELECT COUNT(id) AS total 
             FROM vacancy_applications
             WHERE publication_id = ?;";
+    $result = find($sql, [$publicationId]);
+    return $result ? (int) $result['total'] : 0;
+}
 
+function countApplicantsByPublication($publicationId)
+{
+    $sql = "SELECT COUNT(DISTINCT `application_code_id`) AS total 
+            FROM vacancy_applications
+            WHERE publication_id = ?";
     $result = find($sql, [$publicationId]);
     return $result ? (int) $result['total'] : 0;
 }
