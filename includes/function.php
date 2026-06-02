@@ -267,4 +267,20 @@ function uploadMaxBytes()
     return $val;
 }
 
+function parseSizeToBytes($size_string)
+{
+    $size_string = trim($size_string);
+    $last = strtolower($size_string[strlen($size_string) - 1]);
+    $val = (int) $size_string;
+    switch ($last) {
+        case 'g':
+            $val *= 1024;
+        case 'm':
+            $val *= 1024;
+        case 'k':
+            $val *= 1024;
+    }
+    return $val;
+}
+
 require_once('initialization.php');
