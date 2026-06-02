@@ -42,5 +42,7 @@ contentTitle('Monitoring Tools');
     cardMini('Project CHIEF', 'https://depedph-my.sharepoint.com/:x:/g/personal/nur_hussien_deped_gov_ph/IQDsNFGvmEPFT79ZSoyQHxdpAYwuC5CAVxKo_4Ua4vajSvo?e=3BrEAi&fbclid=IwY2xjawQR5SxleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAEwAAEe6G2zEsEnEhevADQniaiyEoa6Hge2INXw1rWOpvUIBWmtOIv0T0_Yid5G8z4_aem_bNHrnmNi8Pq5N8yl4-yXSQ', 'fa-file-excel', 'orange', true);
     cardMini('Project One Drive, One Data Management', 'https://depedph-my.sharepoint.com/:x:/g/personal/smme_dipolog_deped_gov_ph/Eccc1Z9Bi8hJiQgXX_WbQhsBxHgNljGwKUHOZMhixltFpw?e=j54Pne&fbclid=IwY2xjawQR521leHRuA2FlbQIxMQBzcnRjBmFwcF9pZAEwAAEebYJqACyofMKxXSMvziJnaBiQkryQZrBQW6JKHiQlDnvzc5LzNGCboR0MVYc_aem_nUwz_RBdjJRubvz6UIYALQ', 'fa-file-excel', 'orange', true);
     cardMini('SGOD Sub-AROs Monitoring', 'https://docs.google.com/spreadsheets/d/1HhxfiUdDbzZFddKwi48TfrqEscGPaZtC/edit?gid=609413157#gid=609413157', 'fa-file-excel', 'orange', true);
+    cardMini('Project TRACE', 'Project TRACE Version 4
+https://depedph-my.sharepoint.com/:x:/g/personal/smme_dipolog_deped_gov_ph/IQB5qVXMavCeS7lnrnKRJ-nuAQuFN0dcgiossurYPr9bfHc?e=TOxaIe', 'fa-file-excel', 'orange', true);
     ?>
 </div>
