@@ -441,24 +441,12 @@ function prepareApplicantData(array $post)
     return $data;
 }
 
-function basicDocumentaryRequirements()
-{
-    return query('SELECT `id`, `code`, `description` FROM `basic_documentary_requirements`');
-}
-
-function basicDocumentRequirementId($requirement_code)
-{
-    $result = find("SELECT `id` FROM `basic_documentary_requirements` WHERE `code` = ?", [$requirement_code]);
-    return $result ? $result['id'] : null;
-}
-
-function saveVacancyApplicationRequirement($publication_id, $application_code_id, $file_name, $requirement_id)
+function saveVacancyApplicationRequirement($publication_id, $application_code_id, $file_name)
 {
     $data = [
         'publication_id' => $publication_id,
         'application_code_id' => $application_code_id,
-        'file_name' => $file_name,
-        'requirement_id' => $requirement_id,
+        'file_name' => $file_name
     ];
     return insert('vacancy_application_attachments', $data);
 }
