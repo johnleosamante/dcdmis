@@ -3,14 +3,16 @@
 $appTitle = $page = 'Online Application Form';
 $enableScripts = true;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SERVER['CONTENT_LENGTH'])) {
-    $max_size_str = ini_get('post_max_size');
-    $max_size_bytes = parseSizeToBytes($max_size_str);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && empty($_FILES)) {
+    if (isset($_SERVER['CONTENT_LENGTH'])) {
+        $max_size_str = ini_get('post_max_size');
+        $max_size_bytes = parseSizeToBytes($max_size_str);
 
-    if ($_SERVER['CONTENT_LENGTH'] > $max_size_bytes) {
-        $message = "The total upload size exceeds the limit of {$max_size_str}. Please reduce file sizes.";
-        $showAlert = true;
-        return;
+        if ((int) $_SERVER['CONTENT_LENGTH'] > $max_size_bytes) {
+            $showAlert = true;
+            $message = "The total upload payload size exceeds the server limit of {$max_size_str}. Please optimize or compress your files.";
+            return;
+        }
     }
 }
 
@@ -19,93 +21,51 @@ if (isset($_POST['submit-application'])) {
     $applicationCode = sanitize($_POST['applicant_id'] ?? '');
     $positions = $_POST['position_ids'] ?? null;
     $showAlert = true;
+    $stagedFile = null;
 
-    if (!$publicationId) {
-        $message = 'Invalid publication link.';
-        return;
-    }
+    try {
+        if (!$publicationId) {
+            throw new Exception('Invalid publication reference verification layer link.');
+        }
 
-    $applicationId = applicantId($applicationCode);
-    if (!$applicationId) {
-        $message = 'Invalid applicant ID. Please provide a valid 18-digit applicant ID.';
-        return;
-    }
+        $applicationId = applicantId($applicationCode);
+        if (!$applicationId) {
+            throw new Exception('Invalid applicant ID structural assignment format values.');
+        }
 
-    if (!$positions || !is_array($positions)) {
-        $message = 'Please select at least one position you wish to apply for.';
-        return;
-    }
+        if (!$positions || !is_array($positions)) {
+            throw new Exception('Please select at least one position you wish to apply for.');
+        }
 
-    $selectedPositionIds = [];
-    foreach ($positions as $position) {
-        $pId = sanitize(decipher($position));
-        if ($pId) {
-            if (!hasAlreadyApplied($publicationId, $applicationId, $pId)) {
+        $selectedPositionIds = [];
+        foreach ($positions as $position) {
+            $pId = sanitize(decipher($position));
+            if ($pId && !hasAlreadyApplied($publicationId, $applicationId, $pId)) {
                 $selectedPositionIds[] = $pId;
             }
         }
-    }
 
-    if (empty($selectedPositionIds)) {
-        $message = 'You have already applied for all selected positions of this publication.';
-        return;
-    }
+        if (empty($selectedPositionIds)) {
+            throw new Exception('You have already registered operational records targeting these vacancies.');
+        }
 
-    $uploadErrors = [];
-    $savedFileName = null;
-    $allowedMimeTypes = ['application/pdf'];
-    $allowedExtensions = ['pdf'];
-    $folder = sanitize($applicationCode);
-    $uploadDir = root() . '/uploads/applications/' . $folder;
+        $safeFolder = preg_replace('/[^a-zA-Z0-9_\-]/', '', $applicationCode);
 
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
-    }
-
-    $inputName = 'application_file';
-    if (isset($_FILES[$inputName]) && !empty($_FILES[$inputName]['name'])) {
-        $file = $_FILES[$inputName];
-
-        if ($file['error'] !== UPLOAD_ERR_OK) {
-            $uploadErrors[] = 'Error uploading file.';
-        } elseif ($file['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-            $uploadErrors[] = "File {$file['name']} exceeds the 25MB upload limit.";
+        if (!empty($_FILES['application-file']['tmp_name']) && is_uploaded_file($_FILES['application-file']['tmp_name'])) {
+            $stagedFile = stageUploadedFile(
+                $_FILES['application-file'],
+                ['application/pdf' => 'pdf'],
+                root() . "/uploads/applications/{$safeFolder}",
+                "APPLICATION"
+            );
         } else {
-            $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-            if (!in_array($fileExtension, $allowedExtensions)) {
-                $uploadErrors[] = "File {$file['name']} must be a PDF.";
-            } else {
-                $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                $fileMimeType = finfo_file($finfo, $file['tmp_name']);
-                finfo_close($finfo);
-
-                if (!in_array($fileMimeType, $allowedMimeTypes)) {
-                    $uploadErrors[] = "File {$file['name']} has an invalid MIME type.";
-                }
-            }
+            throw new Exception("Please upload your mandatory application documents.");
         }
 
-        if (empty($uploadErrors)) {
-            $timestamp = time();
-            $newFilename = strtoupper("APPLICATION_{$timestamp}") . '.pdf';
-            $filePath = "{$uploadDir}/{$newFilename}";
-
-            if (move_uploaded_file($file['tmp_name'], $filePath)) {
-                $savedFileName = $newFilename;
-            } else {
-                $uploadErrors[] = "Failed to save {$file['name']}";
-            }
+        if (!$stagedFile || !isset($stagedFile['secure_name']) || !isset($stagedFile['full_path'])) {
+            throw new Exception("The application document could not be staged safely. Please try again.");
         }
-    } else {
-        $uploadErrors[] = "Please upload your application document.";
-    }
 
-    if (!empty($uploadErrors)) {
-        $message = 'Upload errors: ' . implode(' ', $uploadErrors);
-        return;
-    }
-
-    try {
         beginTransaction();
 
         $appliedCount = 0;
@@ -113,33 +73,36 @@ if (isset($_POST['submit-application'])) {
             if (createApplication($publicationId, $applicationId, $posId)) {
                 $appliedCount++;
             } else {
-                throw new Exception('Failed to create application record.');
+                throw new Exception('Failed to record vacancy target tracking indexes.');
             }
         }
 
         if ($appliedCount > 0) {
-            if ($savedFileName) {
-                $savedRequirement = saveVacancyApplicationRequirement($publicationId, $applicationId, "{$folder}/{$savedFileName}");
+            $dbPath = "uploads/applications/{$safeFolder}/{$stagedFile['secure_name']}";
 
-                if (!$savedRequirement) {
-                    throw new Exception('Failed to save vacancy application requirement.');
-                }
+            if (!saveVacancyApplicationRequirement($publicationId, $applicationId, $dbPath)) {
+                throw new Exception('Failed to save foundational system validation requirements.');
             }
 
+            commitStagedFile($stagedFile);
             commit();
 
-            $message = "Your application for {$appliedCount} position" . ($appliedCount > 1 ? 's ' : ' ') . "has been processed successfully. Check your registered email for your application details.";
+            $pluralSuffix = $appliedCount > 1 ? 's' : '';
+            $verbConjugation = $appliedCount > 1 ? 'have' : 'has';
+
+            $message = "Your application for {$appliedCount} position{$pluralSuffix} {$verbConjugation} been processed successfully.";
             $success = true;
+            createSystemLog($stationId, $applicationId, "Submitted application for {$appliedCount} position(s)", $applicationId, clientIp());
+
         } else {
-            throw new Exception('No application record was registered.');
+            throw new Exception('Zero relational applications processed across loop contexts.');
         }
+
     } catch (Exception $e) {
         rollBack();
-
-        if ($savedFileName && file_exists("{uploadDir}/{$savedFileName}")) {
-            unlink("{$uploadDir}/{$savedFileName}");
+        if ($stagedFile && file_exists($stagedFile['full_path'])) {
+            unlink($stagedFile['full_path']);
         }
-
-        $message = 'An error occured while creating your application: ' . $e->getMessage();
+        $message = $e->getMessage();
     }
 }
