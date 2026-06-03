@@ -47,18 +47,19 @@ if (isset($_POST['save-payslip'])) {
             throw new Exception('Invalid or expired transaction verifier token context.');
         }
 
-        if (!empty($_FILES['file_upload']['tmp_name']) && is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
+        if (!empty($_FILES['file-upload']['tmp_name']) && is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
             $stagedFile = stageUploadedFile(
                 $_FILES['file-upload'],
                 ['application/pdf' => 'pdf'],
-                root() . "/uploads/payslip/{$employeeId}",
+                root() . "/uploads/201_files/{$employeeId}",
                 "PAYSLIP_{$employeeId}"
             );
         }
 
         beginTransaction();
 
-        $newFilename = $stagedFile ? "uploads/payslip/{$employeeId}/{$stagedFile['secure_name']}" : $oldFileName;
+        $newFilename = $stagedFile ? "uploads/201_files/{$employeeId}/{$stagedFile['secure_name']}" : $oldFilename;
+
         if (empty($newFilename)) {
             throw new Exception('No target asset references specified for creation parameters.');
         }
@@ -84,15 +85,18 @@ if (isset($_POST['save-payslip'])) {
 
         commit();
         $success = true;
-        $message = "Payslip has been {($hasExistingRecord ? 'updated' : 'added')} successfully.";
+
+        $actionText = $hasExistingRecord ? 'updated' : 'added';
+        $message = "Payslip has been {$actionText} successfully.";
+
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
 
-        if ($stagedFile && !empty($oldFilename) && file_exists(root() . "/{oldFilename}")) {
+        if ($stagedFile && !empty($oldFilename) && file_exists(root() . "/{$oldFilename}")) {
             unlink(root() . "/{$oldFilename}");
         }
     } catch (Exception $e) {
         rollBack();
-        if ($stagedFile && $file_exists($stagedFile['full_path'])) {
+        if ($stagedFile && file_exists($stagedFile['full_path'])) {
             unlink($stagedFile['full_path']);
         }
         $message = $e->getMessage();
