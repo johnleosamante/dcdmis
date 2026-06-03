@@ -57,6 +57,9 @@ if (isset($attachmentId)) {
                 <div class="form-group">
                     <input id="file-upload" name="file-upload" type="file" title="Upload 201 file (pdf)..."
                         class="w-100" accept="application/pdf">
+                    <small class="form-text text-muted">Max PDF file upload size:
+                        <?= ini_get('upload_max_filesize') ?>B
+                    </small>
                 </div>
 
                 <?php requiredLegend(0) ?>
