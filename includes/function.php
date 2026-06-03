@@ -283,4 +283,49 @@ function parseSizeToBytes($size_string)
     return $val;
 }
 
+function stageUploadedFile(array $file_data, array $allowed_MIME_map, string $target_folder, string $prefix = 'FILE'): array
+{
+    if ($file_data['error'] !== UPLOAD_ERR_OK) {
+        throw new Exception("File upload failed with error system code: " . $file_data['error']);
+    }
+
+    if ($file_data['size'] > FILE_UPLOAD_SIZE_LIMIT) {
+        throw new Exception("The chosen file size exceeds the strict system limit configuration.");
+    }
+
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $real_MIME_type = finfo_file($finfo, $file_data['tmp_name']);
+    finfo_close($finfo);
+
+    if (!array_key_exists($real_MIME_type, $allowed_MIME_map)) {
+        throw new Exception("Invalid file content structure detected. Format transformation rejected.");
+    }
+
+    $ext = $allowed_MIME_map[$real_MIME_type];
+    $timestamp = date('YmdHis');
+    $secure_name = strtoupper("{$prefix}_{$timestamp}_" . bin2hex(random_bytes(4))) . ".{$ext}";
+    $sanitized_target_folder = rtrim($target_folder, '/\\');
+
+    return [
+        'tmp_name' => $file_data['tmp_name'],
+        'secure_name' => $secure_name,
+        'full_path' => "{$sanitized_target_folder}/{$secure_name}",
+        'extension' => $ext
+    ];
+}
+
+function commitStagedFile(array $staged_file): void
+{
+    $directory = dirname($staged_file['full_path']);
+    if (!is_dir($directory)) {
+        if (!mkdir($directory, 0755, true) && !is_dir($directory)) {
+            throw new Exception("Failed to establish isolated system directory tracks.");
+        }
+    }
+
+    if (!move_uploaded_file($staged_file['tmp_name'], $staged_file['full_path'])) {
+        throw new Exception("Failed to execute storage target disk migrations safely.");
+    }
+}
+
 require_once('initialization.php');
