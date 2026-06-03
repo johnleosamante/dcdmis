@@ -16,12 +16,11 @@ if (isset($_POST['update-password'])) {
 
     if (!verifyAccountPassword($userId, $oldPassword)) {
         $message = 'You have entered an incorrect old password.';
-        $oldPassword = $password = $passwordConfirm = $generatePassword = null;
         return;
     }
 
     if ($password !== $passwordConfirm) {
-        $message = 'The new password you entered do not match.';
+        $message = 'The new password you entered does not match.';
         return;
     }
 
@@ -42,14 +41,8 @@ if (isset($_POST['update-password'])) {
         return;
     }
 
-    if ($result === 0) {
-        $message = 'No changes have been made to your password.';
-        return;
-    }
-
-    $message = 'Your password has been updated successfully.';
     $success = true;
-    $oldPassword = $password = $passwordConfirm = $generatePassword = null;
+    $message = $result === 0 ? 'No changes have been made to your password.' : 'Your password has been updated successfully.';
 
     createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
 }
@@ -65,13 +58,8 @@ if (isset($_POST['update-contact-details'])) {
         return;
     }
 
-    if ($result === 0) {
-        $message = 'No changes have been made to your contact details.';
-        return;
-    }
-
-    $message = 'Your contact details have been updated successfully.';
     $success = true;
+    $message = $result === 0 ? 'No changes have been made to your contact details.' : 'Your contact details have been updated successfully.';
 
     createSystemLog($stationId, $userId, 'Updated contact details', $userId, clientIp());
 }
@@ -87,60 +75,58 @@ if (isset($_POST['update-professional-titles'])) {
         return;
     }
 
-    if ($result === 0) {
-        $message = 'No changes have been made to your professional title.';
-        return;
-    }
-
-    $message = 'Your professional title have been updated successfully.';
     $success = true;
+    $message = $result === 0 ? 'No changes have been made to your professional title.' : 'Your professional title has been updated successfully.';
 
     createSystemLog($stationId, $userId, 'Updated professional titles', $userId, clientIp());
 }
 
 if (isset($_POST['update-profile-photo'])) {
-    $employeePhoto = isset($_POST['image-verifier']) ? sanitize(decipher($_POST['image-verifier'])) : '';
+    $employeePhoto = sanitize(decipher($_POST['image-verifier'] ?? null));
     $employeeId = $userId;
     $showAlert = true;
+    $stagedFile = null;
 
-    if (is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
-        $temp = $_FILES['image-upload']['tmp_name'];
-
-        if ($_FILES['image-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-            $message = 'The chosen file exceeds the upload file limit (2.5 MB). No changes have been made to personal information.';
-            return;
+    try {
+        if (!empty($_FILES['image-upload']['tmp_name']) && is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
+            $stagedFile = stageUploadedFile(
+                $_FILES['image-upload'],
+                ['image/png' => 'png', 'image/jpeg' => 'jpg'],
+                root() . "/uploads/images/{$employeeId}",
+                "USER"
+            );
+        } else {
+            throw new Exception("Please select a valid profile image file before submitting.");
         }
 
-        $mimeType = mime_content_type($temp);
-        $allowedFileTypes = ['image/png', 'image/jpeg'];
+        beginTransaction();
 
-        if (!in_array($mimeType, $allowedFileTypes)) {
-            $message = 'The chosen file is not an image file. No changes have been made to personal information.';
-            return;
+        $dbPhotoPath = "uploads/images/{$employeeId}/" . $stagedFile['secure_name'];
+        $affectedProfilePhoto = updateProfilePhoto($dbPhotoPath, $employeeId);
+
+        if ($affectedProfilePhoto === false) {
+            throw new Exception("Database transaction subsystem mutation failure.");
         }
 
-        $ext = pathinfo($_FILES['image-upload']['name'], PATHINFO_EXTENSION);
+        commitStagedFile($stagedFile);
+        commit();
 
-        if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto) && basename(root() . '/' . $employeePhoto) !== 'user.png') {
-            unlink(root() . '/' . $employeePhoto);
+        $success = true;
+        $message = 'Profile photo has been updated successfully.';
+        createSystemLog($stationId, $userId, 'Updated your profile photo', $userId, clientIp());
+
+        if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto)) {
+            if (basename(root() . '/' . $employeePhoto) !== 'user.png') {
+                unlink(root() . '/' . $employeePhoto);
+            }
         }
 
-        $uploadDate = date('YmdHis');
-
-        $employeePhoto = "uploads/images/{$employeeId}/{$employeeId}{$uploadDate}.{$ext}";
-
-        move_uploaded_file($temp, '../' . $employeePhoto);
+    } catch (Exception $e) {
+        rollBack();
+        if ($stagedFile && file_exists($stagedFile['full_path'])) {
+            unlink($stagedFile['full_path']);
+        }
+        $success = false;
+        $message = $e->getMessage();
     }
-
-    $affectedProfilePhoto = updateProfilePhoto($employeePhoto, $employeeId);
-
-    if (!$affectedProfilePhoto) {
-        $message = 'No changes have been made to profile photo.';
-        return;
-    }
-
-    $message = 'Profile photo has been updated successfully.';
-    $success = true;
-
-    createSystemLog($stationId, $userId, 'Updated your profile photo', $userId, clientIp());
 }
