@@ -457,3 +457,12 @@ function saveVacancyApplicationRequirement($publication_id, $application_code_id
     ];
     return insert('vacancy_application_attachments', $data);
 }
+
+function applicantDocument(int $publication_id, int $application_code_id): ?string
+{
+    $sql = "SELECT `file_name` FROM `vacancy_application_attachments` 
+            WHERE `publication_id` = ? AND `application_code_id` = ?
+            ORDER BY `created_at` DESC LIMIT 1";
+    $result = find($sql, [$publication_id, $application_code_id]);
+    return $result['file_name'] ?? null;
+}
