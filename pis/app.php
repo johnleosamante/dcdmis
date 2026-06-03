@@ -22,6 +22,7 @@ if (isset($_POST['update-identification'])) {
         updateIdentification($card, $number, $place, $date, $userId);
 
     if ($result === false) {
+        $success = false;
         $message = 'We encountered an error on our end. Please try again later.';
         return;
     }
@@ -85,7 +86,6 @@ if (isset($_POST['save-payslip'])) {
 
         commit();
         $success = true;
-
         $actionText = $hasExistingRecord ? 'updated' : 'added';
         $message = "Payslip has been {$actionText} successfully.";
 
@@ -99,19 +99,20 @@ if (isset($_POST['save-payslip'])) {
         if ($stagedFile && file_exists($stagedFile['full_path'])) {
             unlink($stagedFile['full_path']);
         }
+        $success = false;
         $message = $e->getMessage();
     }
 }
-
 
 if (isset($_POST['delete-payslip'])) {
     $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
     $payslipId = sanitize(decipher($_POST['data-verifier'] ?? null));
     $showAlert = true;
+    $success = false;
     $file = fileAttachment($employeeId, $payslipId);
 
     if (!$file) {
-        $message = 'The requested payslip could not be found.';
+        $message = 'The requested payslip or file could not be found.';
         return;
     }
 
