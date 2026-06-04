@@ -10,15 +10,16 @@ function setUserSession($user_id, $prefix)
     $portal = $user['link'];
     $access = $user['access'];
     $station_id = $user['station_id'];
+    $_SESSION["{$prefix}userId"] = $user_id;
     $_SESSION["{$prefix}stationId"] = $station_id;
     $_SESSION["{$prefix}code"] = $access;
     $_SESSION["{$prefix}portal"] = $portal;
 
     if ($portal === 'sch_portal') {
         $school = schoolById($access);
-        $stationName = $school['alias'] ?? '';
+        $stationName = (!empty($school['alias'])) ? $school['alias'] : "School Code: {$access}";
     } else {
-        $stationName = $access;
+        $stationName = !empty($access) ? $access : 'Division Office';
     }
 
     $_SESSION["{$prefix}station"] = $stationName;
@@ -29,8 +30,8 @@ function setUserSession($user_id, $prefix)
 $appTitle = $page = !MAINTENANCE_MODE ? 'Login' : 'System Maintenance';
 
 if (isset($_POST['login'])) {
-    $email = sanitize($_POST['email'] ?? '');
-    $password = sanitize($_POST['password'] ?? '');
+    $email = sanitize($_POST['email']);
+    $password = sanitize($_POST['password']);
     $showAlert = true;
 
     if (empty($email) || empty($password)) {
@@ -55,22 +56,23 @@ if (isset($_POST['login'])) {
 
     if (!$account) {
         $message = 'Invalid login details! Try again.';
+        recordFailedAttempt($clientIdentifier);
         return;
     }
 
-    $accountPassword = verifyAccountPassword($account['id'], $password);
+    $passwordMatches = verifyAccountPassword($account['id'], $password);
 
-    if (!$accountPassword) {
+    if (!$passwordMatches) {
         $message = 'Invalid login details! Try again.';
+        recordFailedAttempt($clientIdentifier);
         return;
     }
 
-    $_SESSION["{$prefix}userId"] = $userId = $account['id'];
-    $_SESSION["{$prefix}email"] = $account['email_address'];
+    clearRateLimit($clientIdentifier);
 
     if (isset($_POST['remember'])) {
-        setcookie("{$prefix}login", $account['email_address'], [
-            'expires' => time() + getSeconds(8),
+        setcookie("{$prefix}remember_email", $account['email_address'], [
+            'expires' => time() + (86400 * 30),
             'path' => '/',
             'domain' => parse_url(uri(), PHP_URL_HOST),
             'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
@@ -79,9 +81,10 @@ if (isset($_POST['login'])) {
         ]);
     }
 
-    setUserSession($userId, $prefix);
+    setUserSession($account['id'], $prefix);
+    $_SESSION["{$prefix}email"] = $account['email_address'];
 
-    if ($accountPassword['status'] === 'Default') {
+    if ($account['status'] === 'Default') {
         $_SESSION["{$prefix}change_password"] = true;
         redirect("{$baseUri}/login/change");
         return;
