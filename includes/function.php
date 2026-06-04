@@ -222,35 +222,6 @@ function sanitizeFilename(string $filename): string
     return $filename;
 }
 
-function checkRateLimit(string $identifier, int $maxAttempts = 5, int $windowSeconds = 300): bool
-{
-    $sessionKey = "rate_limit_{$identifier}";
-    if (!isset($_SESSION[$sessionKey])) {
-        $_SESSION[$sessionKey] = [];
-    }
-    $now = time();
-    $_SESSION[$sessionKey] = array_filter($_SESSION[$sessionKey], function ($timestamp) use ($now, $windowSeconds) {
-        return $timestamp > ($now - $windowSeconds);
-    });
-    if (count($_SESSION[$sessionKey]) >= $maxAttempts) {
-        return false;
-    }
-    $_SESSION[$sessionKey][] = $now;
-    return true;
-}
-
-function getRateLimitRemainingTime(string $identifier, int $windowSeconds = 300): int
-{
-    $sessionKey = "rate_limit_{$identifier}";
-    if (!isset($_SESSION[$sessionKey]) || empty($_SESSION[$sessionKey])) {
-        return 0;
-    }
-    $oldestAttempt = min($_SESSION[$sessionKey]);
-    $resetTime = $oldestAttempt + $windowSeconds;
-    $remaining = $resetTime - time();
-    return max(0, $remaining);
-}
-
 function uploadMaxBytes()
 {
     $val = trim(ini_get('upload_max_filesize'));
