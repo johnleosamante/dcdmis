@@ -154,7 +154,7 @@ if ($code) {
                             arrangement of
                             compiled documents to be
                             uploaded in single PDF file format.</p>
-                        <input class="form-control-file" type="file" name="application_file" accept=".pdf" required>
+                        <input class="form-control-file" type="file" name="application-file" accept=".pdf" required>
                         <small class="form-text text-muted">Max file upload size:
                             <?= ini_get('upload_max_filesize') ?>B</small>
                     </div>
