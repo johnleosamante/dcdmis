@@ -35,6 +35,13 @@ if (!MAINTENANCE_MODE) {
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox small">
+                            <input type="checkbox" class="custom-control-input" id="remember" name="remember">
+                            <label class="custom-control-label pt-1" for="remember">Remember me</label>
+                        </div>
+                    </div>
+
                     <button type="submit" class="btn btn-primary btn-block" name="login">Login</button>
                 </form>
             </div>
