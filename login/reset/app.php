@@ -40,11 +40,18 @@ if (isset($_POST['reset-password'])) {
     $subject = "Employee Password Reset Request";
     $loginUrl = "{$baseUri}/login";
 
-    $emailBody = "Good day!\n\n
-        Your request for a password reset has been approved!\n\n
-        Your temporary password is: {$temporaryPassword}\n\n
-        Please login to: {$loginUrl} to update your credentials.\n\n
-        If you did not request this change, please contact system administration immediately. Thank you.";
+    $emailBody = <<<EOT
+        A password reset request for your account ({$userEmail}) has been processed.
+
+        Temporary Password: {$temporaryPassword}
+
+        Please log in here to update your credentials: {$loginUrl}
+
+        Security Note: If you did not request this change, please contact system administration immediately.
+
+        Best regards,
+        ICT Support Team
+        EOT;
 
     if (!sendMail($targetDeliveryEmail, $subject, $emailBody)) {
         $success = false;
