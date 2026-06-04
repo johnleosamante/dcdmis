@@ -7,12 +7,13 @@ if (!isset($_SESSION["{$prefix}change_password"]) || $_SESSION["{$prefix}change_
 
 $appTitle = $page = 'Change Password';
 $email = $_SESSION["{$prefix}email"] ?? '';
-$oldPassword = $password = $passwordConfirm = $generatePassword = null;
+$password = $passwordConfirm = null;
 
 if (isset($_POST['change-password'])) {
     $showAlert = true;
-    $password = sanitize($_POST['password']);
-    $passwordConfirm = sanitize($_POST['password-confirm']);
+    $success = false;
+    $password = sanitize($_POST['password'] ?? '');
+    $passwordConfirm = sanitize($_POST['password-confirm'] ?? '');
 
     if (empty($password) || empty($passwordConfirm)) {
         $message = 'All fields in asterisk (*) are required.';
@@ -20,27 +21,31 @@ if (isset($_POST['change-password'])) {
     }
 
     if ($password !== $passwordConfirm) {
-        $message = 'The new password you entered do not match.';
+        $message = 'The new password you entered does not match.';
         return;
     }
 
     if (!checkPasswordStrength($passwordConfirm)) {
-        $message = 'The new password you entered does not meet the requirements specified above.';
+        $message = 'The new password you entered does not meet the requirements specified below.';
         return;
     }
 
+    // 2. Database Execution Layer
     $affectedAccountPassword = updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
 
-    if (!$affectedAccountPassword) {
-        $message = 'No changes have been made to your password.';
+    if ($affectedAccountPassword === false) {
+        $message = 'We encountered an error on our end. Please try again later.';
+        $password = $passwordConfirm = null;
         return;
     }
 
-    $message = 'Your password has been updated successfully.';
     $success = true;
-    $oldPassword = $password = $passwordConfirm = $generatePassword = null;
+    $message = $affectedAccountPassword === 0 ?
+        'No changes have been made to your password.' :
+        'Your password has been updated successfully.';
+    $password = $passwordConfirm = null;
 
-    createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
+    createSystemLog($stationId, $userId, 'Updated password via forced rotation context', $userId, clientIp());
     unset($_SESSION["{$prefix}change_password"]);
     redirect("{$baseUri}/login");
 }
