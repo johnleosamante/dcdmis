@@ -118,7 +118,8 @@ if ($school) {
 
                 <div class="form-group">
                     <label for="logo-upload" class="mb-0">School Logo</label>
-                    <input id="logo-upload" name="logo-upload" type="file" class="w-100">
+                    <input id="logo-upload" name="logo-upload" type="file" class="w-100"
+                        accept="image/jpeg, image/png, image/jpg">
                 </div>
 
                 <?php requiredLegend(0) ?>
