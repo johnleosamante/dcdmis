@@ -3,8 +3,9 @@
 function account($email_address)
 {
     return find(
-        "SELECT `id`, `email_address` FROM `employees` 
-        WHERE `status`='Active' AND `email_address` = ? LIMIT 1",
+        "SELECT e.`id`, e.`email_address`, c.`status` FROM `employees` AS e
+        INNER JOIN `credentials` AS c ON c.`employee_id` = e.`id`
+        WHERE e.`status`='Active' AND e.`email_address` = ? LIMIT 1",
         [$email_address]
     );
 }
