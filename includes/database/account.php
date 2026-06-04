@@ -143,7 +143,7 @@ function user($employee_id)
     return find(
         "SELECT u.`employee_id`, u.`access`, s.`station_id`, u.`link` FROM `user_permissions` u 
         INNER JOIN `station_assignments` s ON u.`employee_id` = s.`employee_id` 
-        WHERE u.`employee_id` = ? LIMIT 1",
+        WHERE u.`employee_id` = ? AND u.link NOT IN ('') LIMIT 1",
         [$employee_id]
     );
 }
