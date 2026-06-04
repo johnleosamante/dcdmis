@@ -43,3 +43,8 @@ function updateIdentification($card_type_id, $id_number, $place_issued, $date_is
 	];
 	return update('valid_ids', $data, "`employee_id` = ?", [$employee_id]);
 }
+
+function deleteIdentification($employee_id)
+{
+	return delete('valid_ids', '`employee_id` = ?', [$employee_id]);
+}
