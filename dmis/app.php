@@ -672,3 +672,166 @@ if (isset($_POST['remove-user'])) {
 		$message = "Failed to remove user privileges due to a system error.";
 	}
 }
+
+if (isset($_POST['bulk-process-documents'])) {
+	$documentStationId = sanitize(decipher($_POST['verifier'] ?? null));
+	$stationName = strtoupper(stationName($documentStationId));
+	$previousYear = date('Y', strtotime('-1 year'));
+	$from = sanitize($_POST['from-date'] ?? "{$previousYear}-01-01");
+	$to = sanitize($_POST['to-date'] ?? "{$previousYear}-12-31");
+	$processorId = sanitize($_POST['user'] ?? '');
+	$failedCount = 0;
+	$receivedCount = 0;
+	$successCount = 0;
+	$canceledCount = 0;
+	$showAlert = true;
+	$user = employee($processorId);
+
+	if ($user === false) {
+		$message = 'There is currently no assigned user in this station. Please assign a user to continue.';
+
+		return;
+	}
+
+	$processorId = $user['id'];
+	$message = '';
+
+	@set_time_limit(300);
+
+	$incomingDocs = incomingDocuments($documentStationId, $from, $to, 1000);
+
+	if (!empty($incomingDocs)) {
+		foreach ($incomingDocs as $document) {
+			$documentId = $document['id'];
+			beginTransaction();
+
+			try {
+				$updatedDocument = updateDocumentLogsDone($documentId);
+
+				if ($updatedDocument === false) {
+					throw new Exception('Database execution failure updating incoming log status.');
+				}
+
+				if ($updatedDocument > 0) {
+					createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Received'), 1);
+
+					createSystemLog($documentStationId, $processorId, 'Received Document (Bulk)', $documentId, clientIp());
+
+					createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Completed'), 1);
+
+					createSystemLog($documentStationId, $processorId, 'Completed Document (Bulk)', $documentId, clientIp());
+
+					$receivedCount++;
+				}
+
+				commit();
+			} catch (Exception $e) {
+				rollBack();
+
+				$failedCount++;
+			}
+		}
+	} else {
+		$message .= "No incoming documents found. ";
+	}
+
+	$pendingDocs = pendingDocuments($documentStationId, $from, $to, 1000);
+
+	if (!empty($pendingDocs)) {
+		foreach ($pendingDocs as $document) {
+			$documentId = $document['id'];
+
+			beginTransaction();
+
+			try {
+				$updatedDocument = updateDocumentLogsDone($documentId);
+
+				if ($updatedDocument === false) {
+					throw new Exception('Database execution failure updating pending log status.');
+				}
+
+				if ($updatedDocument > 0) {
+					createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Completed'), 1);
+
+					createSystemLog($documentStationId, $processorId, 'Completed Document (Bulk)', $documentId, clientIp());
+
+					$successCount++;
+				}
+
+				commit();
+			} catch (Exception $e) {
+				rollBack();
+
+				$failedCount++;
+			}
+		}
+	} else {
+		$message .= "No pending documents found. ";
+	}
+
+	$outgoingDocs = outgoingDocuments($documentStationId, $from, $to, 1000);
+
+	if (!empty($outgoingDocs)) {
+		foreach ($outgoingDocs as $document) {
+			$documentId = $document['id'];
+			beginTransaction();
+
+			try {
+				$updatedDocument = updateDocumentLogsDone($documentId);
+
+				if ($updatedDocument === false) {
+					throw new Exception('Database execution failure updating outgoing log status.');
+				}
+
+				if ($updatedDocument > 0) {
+					createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Canceled'), 1, 'Bulk processed: Cancelled as not received by destination.');
+
+					createSystemLog($documentStationId, $processorId, 'Canceled Document (Bulk)', $documentId, clientIp());
+
+					$canceledCount++;
+				}
+
+				commit();
+			} catch (Exception $e) {
+				rollBack();
+
+				$failedCount++;
+			}
+		}
+	} else {
+		$message .= "No outgoing documents found. ";
+	}
+
+	$success = ($receivedCount > 0 || $successCount > 0 || $canceledCount > 0);
+
+	if ($success) {
+		$message = "Bulk processing sequence for [{$stationName}] has successfully completed.<br>";
+
+		if ($receivedCount > 0) {
+			$message .= "<br>" . number_format($receivedCount) . " incoming document" . ($receivedCount > 1 ? 's' : '') . " processed (Received & Completed).";
+		}
+
+		if ($successCount > 0) {
+			$message .= "<br>" . number_format($successCount) . " pending document" . ($successCount > 1 ? 's' : '') . " advanced to Completed.";
+		}
+
+		if ($canceledCount > 0) {
+			$message .= "<br>" . number_format($canceledCount) . " outgoing document" . ($canceledCount > 1 ? 's' : '') . " canceled.";
+		}
+	} else {
+		$message = "Bulk processing sequence for [{$stationName}] has completed. " . $message;
+	}
+
+	if ($failedCount > 0) {
+		$message .= "<br><span class=\"text-danger\">Failed to process " . number_format($failedCount) . " document" . ($failedCount > 1 ? 's' : '') . " due to internal conflicts.</span>";
+	}
+}
+
+$from = isset($_GET['from']) ? sanitize($_GET['from']) : date('Y') . '-01-01';
+$to = isset($_GET['to']) ? sanitize($_GET['to']) : date('Y-m-d');
+
+if (isset($_POST['transactions-summary-filter'])) {
+	$from = date('Y-m-d', strtotime($_POST['date-from']));
+	$to = date('Y-m-d', strtotime($_POST['date-to']));
+	redirect(customUri('dmis', sanitize(decipher($_GET['v']))) . '&from=' . $from . '&to=' . $to);
+}
