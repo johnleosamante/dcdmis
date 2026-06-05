@@ -23,7 +23,7 @@ if (isset($_POST['reset-password'])) {
 
     if (!$account) {
         $success = true;
-        error_log("Reset attempted for non-existent email context profile: {$userEmail}");
+        error_log("Reset attempted for non-existent email: {$userEmail}");
         return;
     }
 
@@ -55,8 +55,10 @@ if (isset($_POST['reset-password'])) {
 
     if (!sendMail($targetDeliveryEmail, $subject, $emailBody)) {
         $success = false;
-        $message = "We encountered an error sending the system modification email. Please try again later.";
-        error_log("Failed to execute sendMail tracking sequence targeting: {$userEmail} (Routed to: {$targetDeliveryEmail})");
+        $message = 'We encountered an error sending the password reset request email. Please try again later.';
+
+        error_log("Failed to send reset request email to: {$userEmail} (Routed to: {targetDeliveryEmail}");
+
         return;
     }
 
