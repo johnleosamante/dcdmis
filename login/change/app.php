@@ -12,8 +12,8 @@ $password = $passwordConfirm = null;
 if (isset($_POST['change-password'])) {
     $showAlert = true;
     $success = false;
-    $password = sanitize($_POST['password'] ?? '');
-    $passwordConfirm = sanitize($_POST['password-confirm'] ?? '');
+    $password = sanitize($_POST['password']);
+    $passwordConfirm = sanitize($_POST['password-confirm']);
 
     if (empty($password) || empty($passwordConfirm)) {
         $message = 'All fields in asterisk (*) are required.';
@@ -26,11 +26,10 @@ if (isset($_POST['change-password'])) {
     }
 
     if (!checkPasswordStrength($passwordConfirm)) {
-        $message = 'The new password you entered does not meet the requirements specified below.';
+        $message = 'The new password you entered does not meet the requirements specified above.';
         return;
     }
 
-    // 2. Database Execution Layer
     $affectedAccountPassword = updateAccountPassword($userId, hashPassword($passwordConfirm), 'Changed');
 
     if ($affectedAccountPassword === false) {
@@ -39,13 +38,15 @@ if (isset($_POST['change-password'])) {
         return;
     }
 
-    $success = true;
-    $message = $affectedAccountPassword === 0 ?
-        'No changes have been made to your password.' :
-        'Your password has been updated successfully.';
-    $password = $passwordConfirm = null;
+    if ($affectedAccountPassword === 0) {
+        $message = 'No changes have been made to your password';
+    } else {
+        $success = true;
+        $oldPassword = $password = $passwordConfirm = $generatePassword = null;
 
-    createSystemLog($stationId, $userId, 'Updated password via forced rotation context', $userId, clientIp());
-    unset($_SESSION["{$prefix}change_password"]);
+        createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
+        unset($_SESSION["{$prefix}change_password"]);
+    }
+
     redirect("{$baseUri}/login");
 }
