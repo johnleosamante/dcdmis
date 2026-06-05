@@ -3,6 +3,7 @@
 function setUserSession($user_id, $prefix)
 {
     $user = user($user_id);
+
     if (!$user) {
         return;
     }
@@ -17,9 +18,9 @@ function setUserSession($user_id, $prefix)
 
     if ($portal === 'sch_portal') {
         $school = schoolById($access);
-        $stationName = (!empty($school['alias'])) ? $school['alias'] : "School Code: {$access}";
+        $stationName = $school['alias'] ?? '';
     } else {
-        $stationName = !empty($access) ? $access : 'Division Office';
+        $stationName = $access ?? '';
     }
 
     $_SESSION["{$prefix}station"] = $stationName;
@@ -72,7 +73,7 @@ if (isset($_POST['login'])) {
 
     if (isset($_POST['remember'])) {
         setcookie("{$prefix}remember_email", $account['email_address'], [
-            'expires' => time() + (86400 * 30),
+            'expires' => time() + getSeconds(120),
             'path' => '/',
             'domain' => parse_url(uri(), PHP_URL_HOST),
             'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
@@ -82,6 +83,7 @@ if (isset($_POST['login'])) {
     }
 
     setUserSession($account['id'], $prefix);
+
     $_SESSION["{$prefix}email"] = $account['email_address'];
 
     if ($account['status'] === 'Default') {
