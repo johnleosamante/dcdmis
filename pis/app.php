@@ -27,12 +27,15 @@ if (isset($_POST['update-identification'])) {
         return;
     }
 
-    $success = true;
-    $message = $result === 0 ?
-        'No changes have been made to government issued ID.' :
-        'Government issued ID has been updated successfully.';
 
-    createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
+    if ($result === 0) {
+        $message = 'No changes have been made to government issued ID.';
+    } else {
+        $message = 'Government issued ID has been updated successfully.';
+        $success = true;
+
+        createSystemLog($stationId, $userId, 'Updated identification details', $userId, clientIp());
+    }
 }
 
 if (isset($_POST['save-payslip'])) {
@@ -45,7 +48,7 @@ if (isset($_POST['save-payslip'])) {
 
     try {
         if (empty($employeeId)) {
-            throw new Exception('Invalid or expired transaction verifier token context.');
+            throw new Exception('Invalid or expired transaction.');
         }
 
         if (!empty($_FILES['file-upload']['tmp_name']) && is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
@@ -53,7 +56,7 @@ if (isset($_POST['save-payslip'])) {
                 $_FILES['file-upload'],
                 ['application/pdf' => 'pdf'],
                 root() . "/uploads/201_files/{$employeeId}",
-                "PAYSLIP_{$employeeId}"
+                "PAYSLIP"
             );
         }
 
@@ -62,7 +65,7 @@ if (isset($_POST['save-payslip'])) {
         $newFilename = $stagedFile ? "uploads/201_files/{$employeeId}/{$stagedFile['secure_name']}" : $oldFilename;
 
         if (empty($newFilename)) {
-            throw new Exception('No target asset references specified for creation parameters.');
+            throw new Exception('No changes have been made to payslips.');
         }
 
         $ext = pathinfo($newFilename, PATHINFO_EXTENSION);
@@ -77,7 +80,7 @@ if (isset($_POST['save-payslip'])) {
         }
 
         if ($result === false) {
-            throw new Exception('Database transaction subsystem mutation failure.');
+            throw new Exception('We encountered an error on our end. Please try again later.');
         }
 
         if ($stagedFile) {
@@ -85,6 +88,7 @@ if (isset($_POST['save-payslip'])) {
         }
 
         commit();
+
         $success = true;
         $actionText = $hasExistingRecord ? 'updated' : 'added';
         $message = "Payslip has been {$actionText} successfully.";
@@ -96,9 +100,11 @@ if (isset($_POST['save-payslip'])) {
         }
     } catch (Exception $e) {
         rollBack();
+
         if ($stagedFile && file_exists($stagedFile['full_path'])) {
             unlink($stagedFile['full_path']);
         }
+
         $success = false;
         $message = $e->getMessage();
     }
@@ -112,7 +118,7 @@ if (isset($_POST['delete-payslip'])) {
     $file = fileAttachment($employeeId, $payslipId);
 
     if (!$file) {
-        $message = 'The requested payslip or file could not be found.';
+        $message = 'The requested payslip file does not exist.';
         return;
     }
 
