@@ -16,6 +16,7 @@ if (isset($_POST['update-password'])) {
 
     if (!verifyAccountPassword($userId, $oldPassword)) {
         $message = 'You have entered an incorrect old password.';
+        $oldPassword = $password = $passwordConfirm = $generatePassword = null;
         return;
     }
 
@@ -41,10 +42,14 @@ if (isset($_POST['update-password'])) {
         return;
     }
 
-    $success = true;
-    $message = $result === 0 ? 'No changes have been made to your password.' : 'Your password has been updated successfully.';
-
-    createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
+    if ($result === 0) {
+        $message = 'No changes have been made to your password.';
+    } else {
+        $message = 'Your password has been updated successfully.';
+        $success = true;
+        $oldPassword = $password = $passwordConfirm = $generatePassword = null;
+        createSystemLog($stationId, $userId, 'Updated password', $userId, clientIp());
+    }
 }
 
 if (isset($_POST['update-contact-details'])) {
@@ -58,10 +63,14 @@ if (isset($_POST['update-contact-details'])) {
         return;
     }
 
-    $success = true;
-    $message = $result === 0 ? 'No changes have been made to your contact details.' : 'Your contact details have been updated successfully.';
+    if ($result === 0) {
+        $message = 'No changes have been made to your contact details.';
+    } else {
+        $message = 'Your contact details have been updated successfully.';
+        $success = true;
 
-    createSystemLog($stationId, $userId, 'Updated contact details', $userId, clientIp());
+        createSystemLog($stationId, $userId, 'Updated contact details', $userId, clientIp());
+    }
 }
 
 if (isset($_POST['update-professional-titles'])) {
@@ -75,10 +84,14 @@ if (isset($_POST['update-professional-titles'])) {
         return;
     }
 
-    $success = true;
-    $message = $result === 0 ? 'No changes have been made to your professional title.' : 'Your professional title has been updated successfully.';
+    if ($result === 0) {
+        $message = 'No changes have been made to your professional title.';
+    } else {
+        $message = 'Your professional title have been updated successfully.';
+        $success = true;
 
-    createSystemLog($stationId, $userId, 'Updated professional titles', $userId, clientIp());
+        createSystemLog($stationId, $userId, 'Updated professional titles', $userId, clientIp());
+    }
 }
 
 if (isset($_POST['update-profile-photo'])) {
@@ -93,10 +106,10 @@ if (isset($_POST['update-profile-photo'])) {
                 $_FILES['image-upload'],
                 ['image/png' => 'png', 'image/jpeg' => 'jpg'],
                 root() . "/uploads/images/{$employeeId}",
-                "USER"
+                'USER'
             );
         } else {
-            throw new Exception("Please select a valid profile image file before submitting.");
+            throw new Exception('Please select a valid image file before submitting.');
         }
 
         beginTransaction();
@@ -105,7 +118,7 @@ if (isset($_POST['update-profile-photo'])) {
         $affectedProfilePhoto = updateProfilePhoto($dbPhotoPath, $employeeId);
 
         if ($affectedProfilePhoto === false) {
-            throw new Exception("Database transaction subsystem mutation failure.");
+            throw new Exception('No changes have been made to profile photo.');
         }
 
         commitStagedFile($stagedFile);
@@ -113,19 +126,21 @@ if (isset($_POST['update-profile-photo'])) {
 
         $success = true;
         $message = 'Profile photo has been updated successfully.';
+
         createSystemLog($stationId, $userId, 'Updated your profile photo', $userId, clientIp());
 
-        if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto)) {
-            if (basename(root() . '/' . $employeePhoto) !== 'user.png') {
-                unlink(root() . '/' . $employeePhoto);
+        if (!empty($employeePhoto) && file_exists(root() . "/{$employeePhoto}")) {
+            if (basename(root() . "/{$employeePhoto}") !== 'user.png') {
+                unlink(root() . "/{$employeePhoto}");
             }
         }
-
     } catch (Exception $e) {
         rollBack();
+
         if ($stagedFile && file_exists($stagedFile['full_path'])) {
             unlink($stagedFile['full_path']);
         }
+
         $success = false;
         $message = $e->getMessage();
     }
