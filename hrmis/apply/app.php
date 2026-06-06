@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && empty($_FILES)) {
 
         if ((int) $_SERVER['CONTENT_LENGTH'] > $max_size_bytes) {
             $showAlert = true;
-            $message = "The total upload payload size exceeds the server limit of {$max_size_str}. Please optimize or compress your files.";
+            $message = "The total upload size exceeds the limit of {$max_size_str}B. Please optimize or compress your file.";
             return;
         }
     }
@@ -25,12 +25,13 @@ if (isset($_POST['submit-application'])) {
 
     try {
         if (!$publicationId) {
-            throw new Exception('Invalid publication reference verification layer link.');
+            throw new Exception('Invalid publication link.');
         }
 
         $applicationId = applicantId($applicationCode);
+
         if (!$applicationId) {
-            throw new Exception('Invalid applicant ID structural assignment format values.');
+            throw new Exception('Invalid applicant ID. Please provide a valid 18-digit applicant ID.');
         }
 
         if (!$positions || !is_array($positions)) {
@@ -38,15 +39,17 @@ if (isset($_POST['submit-application'])) {
         }
 
         $selectedPositionIds = [];
+
         foreach ($positions as $position) {
             $pId = sanitize(decipher($position));
+
             if ($pId && !hasAlreadyApplied($publicationId, $applicationId, $pId)) {
                 $selectedPositionIds[] = $pId;
             }
         }
 
         if (empty($selectedPositionIds)) {
-            throw new Exception('You have already registered operational records targeting these vacancies.');
+            throw new Exception('You have already applied for all selected positions of this publication.');
         }
 
         $safeFolder = preg_replace('/[^a-zA-Z0-9_\-]/', '', $applicationCode);
@@ -56,24 +59,25 @@ if (isset($_POST['submit-application'])) {
                 $_FILES['application-file'],
                 ['application/pdf' => 'pdf'],
                 root() . "/uploads/applications/{$safeFolder}",
-                "APPLICATION"
+                'APPLICATION'
             );
         } else {
-            throw new Exception("Please upload your mandatory application documents.");
+            throw new Exception('Please upload your application documents.');
         }
 
         if (!$stagedFile || !isset($stagedFile['secure_name']) || !isset($stagedFile['full_path'])) {
-            throw new Exception("The application document could not be staged safely. Please try again.");
+            throw new Exception('The application document could not be uploaded. Please try again.');
         }
 
         beginTransaction();
 
         $appliedCount = 0;
+
         foreach ($selectedPositionIds as $posId) {
             if (createApplication($publicationId, $applicationId, $posId)) {
                 $appliedCount++;
             } else {
-                throw new Exception('Failed to record vacancy target tracking indexes.');
+                throw new Exception('Failed to create application record.');
             }
         }
 
@@ -81,28 +85,29 @@ if (isset($_POST['submit-application'])) {
             $dbPath = "uploads/applications/{$safeFolder}/{$stagedFile['secure_name']}";
 
             if (!saveVacancyApplicationRequirement($publicationId, $applicationId, $dbPath)) {
-                throw new Exception('Failed to save foundational system validation requirements.');
+                throw new Exception('Failed to saved application requirement.');
             }
 
             commitStagedFile($stagedFile);
+
             commit();
 
             $pluralSuffix = $appliedCount > 1 ? 's' : '';
             $verbConjugation = $appliedCount > 1 ? 'have' : 'has';
-
             $message = "Your application for {$appliedCount} position{$pluralSuffix} {$verbConjugation} been processed successfully.";
             $success = true;
-            createSystemLog($stationId, $applicationId, "Submitted application for {$appliedCount} position(s)", $applicationId, clientIp());
 
+            createSystemLog($stationId, $applicationId, "Submitted application for {$appliedCount} position{pluralSuffix}", $applicationCode, clientIp());
         } else {
-            throw new Exception('Zero relational applications processed across loop contexts.');
+            throw new Exception('No application record was registered.');
         }
-
     } catch (Exception $e) {
         rollBack();
+
         if ($stagedFile && file_exists($stagedFile['full_path'])) {
             unlink($stagedFile['full_path']);
         }
+
         $message = $e->getMessage();
     }
 }
