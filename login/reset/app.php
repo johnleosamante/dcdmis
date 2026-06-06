@@ -3,6 +3,14 @@
 $appTitle = $page = 'Forgot Password';
 $userEmail = null;
 
+if (isset($userId)) {
+    redirect("{$baseUri}/{$activeApp}");
+}
+
+if (isset($_SESSION["{$prefix}change_password"])) {
+    redirect("{$baseUri}/login/change");
+}
+
 if (isset($_POST['reset-password'])) {
     $showAlert = true;
     $success = false;

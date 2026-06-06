@@ -4,11 +4,15 @@ $activeApp = $_SESSION["{$prefix}activeApp"] = 'dts';
 $page = $appTitle = 'Document Tracking System';
 
 if (!isset($userId)) {
-	redirect("$baseUri/login");
+	redirect("{$baseUri}/login");
 }
 
 if (!isset($portal) || empty($portal)) {
-	redirect("$baseUri/pis");
+	redirect("{$baseUri}/" . HOME);
+}
+
+if (isset($_SESSION["{$prefix}change_password"])) {
+	redirect("{$baseUri}/login/change");
 }
 
 if (isset($_POST['primary-search-button'])) {

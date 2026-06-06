@@ -4,7 +4,11 @@ $activeApp = $_SESSION["{$prefix}activeApp"] = HOME;
 $page = $appTitle = 'Personnel Information System';
 
 if (!isset($userId)) {
-    redirect("$baseUri/login");
+    redirect("{$baseUri}/login");
+}
+
+if (isset($_SESSION["{$prefix}change_password"])) {
+    redirect("{$baseUri}/login/change");
 }
 
 if (isset($_POST['primary-search-button'])) {

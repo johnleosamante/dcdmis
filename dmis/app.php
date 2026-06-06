@@ -4,11 +4,19 @@ $activeApp = $_SESSION["{$prefix}activeApp"] = 'dmis';
 $page = $appTitle = 'Division Management Information System';
 
 if (!isset($userId)) {
-	redirect("$baseUri/login");
+	redirect("{$baseUri}/login");
 }
 
 if (!userRole($userId, 'dmis')) {
-	redirect("$baseUri/pis");
+	redirect("{$baseUri}/" . HOME);
+}
+
+if (isset($_SESSION["{$prefix}change_password"])) {
+	redirect("{$baseUri}/login/change");
+}
+
+if (isset($_SESSION["{$prefix}change_password"])) {
+	redirect("{$baseUri}/login/change");
 }
 
 if (isset($_POST['save-school'])) {
@@ -322,11 +330,18 @@ if (isset($_POST['reset-user'])) {
 
 	$loginUrl = "$baseUri/login";
 
-	$emailBody = "Good day!\n\n
-                Your request for password reset has been approved!\n\n
-                Your temporary password is: {$temporaryPassword}\n\n
-                Please login to: {$loginUrl} to confirm.\n\n
-                If you did not request this change please contact us for assistance. Thank you.";
+	$emailBody = <<<EOT
+        A password reset request for your account ({$userEmail}) has been processed.
+
+        Temporary Password: {$temporaryPassword}
+
+        Please log in here to update your credentials: {$loginUrl}
+
+        Security Note: If you did not request this change, please contact system administration immediately.
+
+        Best regards,
+        ICT Support Team
+        EOT;
 
 	if (!sendMail($userEmail, 'Employee Password Reset', $emailBody)) {
 		$message .= " Unfortunately, we encountered an error sending the email. Please try again later.";

@@ -4,11 +4,15 @@ $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrtdms';
 $page = $appTitle = 'Human Resource Training &amp; Development Management System';
 
 if (!isset($userId)) {
-    redirect(uri() . '/login');
+    redirect("{$baseUri}/login");
 }
 
 if (!userRole($userId, $activeApp)) {
-    redirect(uri() . '/pis');
+    redirect("{$baseUri}/" . HOME);
+}
+
+if (isset($_SESSION["{$prefix}change_password"])) {
+    redirect("{$baseUri}/login/change");
 }
 
 if (isset($_POST['primary-search-button'])) {

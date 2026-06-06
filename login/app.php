@@ -1,5 +1,15 @@
 <?php
 // login/app.php
+if (isset($_SESSION["{$prefix}change_password"])) {
+    redirect("{$baseUri}/login/change");
+}
+
+if (isset($userId)) {
+    redirect("{$baseUri}/{$activeApp}");
+}
+
+$appTitle = $page = !MAINTENANCE_MODE ? 'Login' : 'System Maintenance';
+
 function setUserSession($user_id, $prefix)
 {
     $user = user($user_id);
@@ -27,8 +37,6 @@ function setUserSession($user_id, $prefix)
 
     createSystemLog($station_id, $user_id, 'Logged in', $user_id, clientIp());
 }
-
-$appTitle = $page = !MAINTENANCE_MODE ? 'Login' : 'System Maintenance';
 
 if (isset($_POST['login'])) {
     $email = sanitize($_POST['email']);
@@ -92,9 +100,5 @@ if (isset($_POST['login'])) {
         return;
     }
 
-    redirect("{$baseUri}/{$activeApp}");
-}
-
-if (isset($userId)) {
     redirect("{$baseUri}/{$activeApp}");
 }

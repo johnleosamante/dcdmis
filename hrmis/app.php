@@ -11,6 +11,10 @@ if (!userRole($userId, $activeApp)) {
     redirect("{$baseUri}/" . HOME);
 }
 
+if (isset($_SESSION["{$prefix}change_password"])) {
+    redirect("{$baseUri}/login/change");
+}
+
 if (isset($_POST['primary-search-button'])) {
     redirect(customUri('hrmis', 'Employee Search', sanitize($_POST['primary-search-text'])));
 }
