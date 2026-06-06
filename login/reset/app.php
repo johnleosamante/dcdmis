@@ -14,7 +14,7 @@ if (isset($_POST['reset-password'])) {
     }
 
     if (!isValidEmail($userEmail, 'deped.gov.ph')) {
-        $message = 'Please use an authorized @deped.gov.ph email address.';
+        $message = "Sorry, the email [{$userEmail}] is not an authorized email address.";
         return;
     }
 
