@@ -149,11 +149,20 @@ if (isset($_POST['register-applicant'])) {
             $_SESSION['applicant_code'] = $applicant_code;
             $_SESSION['applicant_email'] = $email;
 
-            $emailBody = "Good day, $title $applicant_name!\n\n
-                        Your applicant registration was successful!\n\n
-                        Applicant ID: $applicant_code \n\n
-                        Please take note of your 18-digit applicant ID for reference and use for applications of available vacancies.\n\n\n
-                        If you did not perform this action please contact us for assistance. Thank you.";
+            $emailBody = <<<EOT
+                Hello, {$title} {$applicant_name}!
+
+                Your applicant registration was successful.
+
+                Applicant ID: {$applicant_code}
+
+                Please retain your 18-digit applicant ID for reference and use for applications of available vacancies.
+
+                Security Note: If you did not request this action, please contact system administration immediately.
+
+                Best regards,
+                ICT Support Team
+                EOT;
 
             redirect($_SERVER['REQUEST_URI']);
         } catch (Exception $e) {
