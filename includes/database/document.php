@@ -488,6 +488,11 @@ function documentLogAttachments($transaction_log_id)
     );
 }
 
+function documentLogAttachment($attachment_id)
+{
+    return find("SELECT `id`, `file_name`, `file_extension` FROM `document_transaction_log_attachments` WHERE `id` = ?", [$attachment_id]);
+}
+
 function createDocumentLogAttachment($transaction_log_id, $file_name, $file_extension)
 {
     $data = [
