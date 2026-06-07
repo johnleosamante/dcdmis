@@ -90,7 +90,7 @@ messageAlert($showAlert, $message, $success);
                         </div>
                         <div class="small text-muted mt-0">
                             <?php $applicantsCount = countApplicantsByPublication($publicationId);
-                            echo "{$applicantsCount} applicants" . ($applicantsCount > 1 ? 's' : '') ?>
+                            echo "{$applicantsCount} applicant" . ($applicantsCount > 1 ? 's' : '') ?>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -175,8 +175,9 @@ messageAlert($showAlert, $message, $success);
                 <thead>
                     <tr>
                         <th width="20%" class="align-middle">Applied on</th>
-                        <th width="55" class="align-middle">Applicant</th>
-                        <th width="25" class="align-middle">Position</th>
+                        <th width="40%" class="align-middle">Applicant</th>
+                        <th width="30%" class="align-middle">Position</th>
+                        <th width="20%" class="align-middle">Document</th>
                         <?php if ($isHrmis && $isPersonnel): ?>
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
@@ -194,6 +195,16 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <div><?= e($app['official_title']) ?></div>
                             </td>
+                            <td class="align-middle text-capitalize">
+                                <?php
+                                $applicantDocument = applicantDocument($publicationId, applicantId($app['application_code']));
+                                $documentUri = root() . "/{$applicantDocument}";
+                                if (!empty($applicantDocument) && file_exists($documentUri)) {
+                                    linkButtonSplit("{$baseUri}/{$applicantDocument}", 'Attachment', 'fa-paperclip', "View Applicant Document", 'secondary', true);
+                                } else { ?>
+                                    <div class="small">No document attachment</div>
+                                <?php } ?>
+                            </td>
                             <?php if ($isHrmis && $isPersonnel): ?>
                                 <td class="align-middle"></td>
                             <?php endif ?>
@@ -204,11 +215,13 @@ messageAlert($showAlert, $message, $success);
                 <tfoot>
                     <tr>
                         <th width="20%" class="align-middle">Applied on</th>
-                        <th width="55" class="align-middle">Applicant</th>
-                        <th width="25" class="align-middle">Position</th>
+                        <th width="40%" class="align-middle">Applicant</th>
+                        <th width="30%" class="align-middle">Position</th>
+                        <th width="20%" class="align-middle">Document</th>
                         <?php if ($isHrmis && $isPersonnel): ?>
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
+                    </tr>
                     </tr>
                 </tfoot>
             </table>
