@@ -43,13 +43,19 @@ messageAlert($showAlert, $message, $success);
 
     <div class="card-body">
         <h5 class="my-0"><?= e($title) ?></h5>
+        <?php if (!empty($publication['description'])): ?>
+            <p class="mt-1 mb-1">
+                <?= e($publication['description']) ?>
+            </p>
+        <?php endif ?>
         <small class="text-muted">Publication Code: <?= e($code) ?></small>
     </div>
 </div>
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold">Qualified Applicants</h6>
+        <?php linkButtonSplit(uri() . '/export?v=' . encode('qualified-applicants') . '&id=' . encode($publicationId), 'Export', 'fa-download', 'Export Qualified Applicants', 'success'); ?>
     </div>
     <div class="card-body">
         <div class="table-responsive">
