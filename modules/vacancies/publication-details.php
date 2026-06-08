@@ -167,7 +167,13 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold">Applications Received</h6>
+        <div class="d-sm-flex align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold">Applications Received</h6>
+            <div>
+                <?php linkButtonSplit(customUri('hrmis', 'Qualified Applicants', $publicationId), 'Qualified', 'fa-thumbs-up', 'View Qualified Applicants', 'success') ?>
+                <?php linkButtonSplit(customUri('hrmis', 'Disqualified Applicants', $publicationId), 'Disqualified', 'fa-thumbs-down', 'View Disqualified Applicants', 'danger') ?>
+            </div>
+        </div>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -179,7 +185,7 @@ messageAlert($showAlert, $message, $success);
                         <th width="25%" class="align-middle">Position Applied</th>
                         <th width="10%" class="align-middle">Status</th>
                         <th width="15%" class="align-middle">Document</th>
-                        <?php if ($isHrmis && $isPersonnel): ?>
+                        <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
                     </tr>
@@ -217,19 +223,24 @@ messageAlert($showAlert, $message, $success);
                                     <div class="small">No document attachment</div>
                                 <?php } ?>
                             </td>
-                            <?php if ($isHrmis && $isPersonnel): ?>
+                            <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                                 <td class="align-middle text-capitalize">
-                                    <?php if ($app['status'] === 'For Review'): ?>
-                                        <div class="dropdown no-arrow">
-                                            <?php dropdownEllipsis() ?>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                                <?php
+                                    <div class="dropdown no-arrow">
+                                        <?php dropdownEllipsis() ?>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                            <?php if ($app['status'] === 'For Review') {
                                                 modalDropdownItem(uri() . '/modules/vacancies/qualify-application-dialog.php?id=' . cipher($app['id']), 'Qualify', 'fa-thumbs-up', 'Qualify Application');
                                                 modalDropdownItem(uri() . '/modules/vacancies/disqualify-application-dialog.php?id=' . cipher($app['id']), 'Disqualify', 'fa-thumbs-down', 'Disqualify Application');
-                                                ?>
-                                            </div>
+                                            } else {
+                                                modalDropdownItem(uri() . '/modules/vacancies/for-review-application-dialog.php?id=' . cipher($app['id']), 'For Review', 'fa-redo', 'Mark Application For Review');
+                                                if ($app['status'] === 'Qualified') {
+                                                    modalDropdownItem(uri() . '/modules/vacancies/disqualify-application-dialog.php?id=' . cipher($app['id']), 'Disqualify', 'fa-thumbs-down', 'Disqualify Application');
+                                                } else {
+                                                    modalDropdownItem(uri() . '/modules/vacancies/qualify-application-dialog.php?id=' . cipher($app['id']), 'Qualify', 'fa-thumbs-up', 'Qualify Application');
+                                                }
+                                            } ?>
                                         </div>
-                                    <?php endif; ?>
+                                    </div>
                                 </td>
                             <?php endif ?>
                         </tr>
@@ -243,7 +254,7 @@ messageAlert($showAlert, $message, $success);
                         <th width="25%" class="align-middle">Position Applied</th>
                         <th width="10%" class="align-middle">Status</th>
                         <th width="15%" class="align-middle">Document</th>
-                        <?php if ($isHrmis && $isPersonnel): ?>
+                        <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
                     </tr>
