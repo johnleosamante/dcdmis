@@ -170,8 +170,8 @@ messageAlert($showAlert, $message, $success);
         <div class="d-sm-flex align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold">Applications Received</h6>
             <div>
-                <?php linkButtonSplit(customUri('hrmis', 'Qualified Applicants', $publicationId), 'Qualified', 'fa-thumbs-up', 'View Qualified Applicants', 'success') ?>
-                <?php linkButtonSplit(customUri('hrmis', 'Disqualified Applicants', $publicationId), 'Disqualified', 'fa-thumbs-down', 'View Disqualified Applicants', 'danger') ?>
+                <?php linkButtonSplit(customUri('hrmis', 'Qualified Applicants', $publicationId), 'Qualified', 'fa-thumbs-up', 'View Qualified Applicants', 'success');
+                linkButtonSplit(customUri('hrmis', 'Disqualified Applicants', $publicationId), 'Disqualified', 'fa-thumbs-down', 'View Disqualified Applicants', 'danger'); ?>
             </div>
         </div>
     </div>
