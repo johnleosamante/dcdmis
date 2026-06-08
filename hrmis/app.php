@@ -1548,3 +1548,87 @@ if (isset($_POST['save-publication'])) {
 //         }
 //     }
 // }
+
+if (isset($_POST['qualify-application'])) {
+    $applicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $showAlert = true;
+
+    if (empty($applicationId)) {
+        $message = 'Invalid application selected.';
+        return;
+    }
+
+    beginTransaction();
+
+    try {
+        $application = applicationRecord($applicationId);
+
+        if (empty($application)) {
+            $message = 'Application record not found.';
+            return;
+        }
+
+        $applicationCode = applicantCode($application['application_code_id']);
+        $applicantName = applicantName($applicationCode);
+        $positionData = find("SELECT `official_title` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
+        $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
+
+        $result = qualifyApplication($applicationId);
+
+        if ($result === false) {
+            $message = 'Application was not qualified successfully.';
+            return;
+        }
+
+        createSystemLog($stationId, $userId, 'Qualified application', "$applicantName - $position", clientIp());
+        commit();
+
+        $message = "Application of {$applicantName} for {$position} has been marked as qualified.";
+        $success = true;
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
+
+if (isset($_POST['disqualify-application'])) {
+    $applicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $showAlert = true;
+
+    if (empty($applicationId)) {
+        $message = 'Invalid application selected.';
+        return;
+    }
+
+    beginTransaction();
+
+    try {
+        $application = applicationRecord($applicationId);
+
+        if (empty($application)) {
+            $message = 'Application record not found.';
+            return;
+        }
+
+        $applicationCode = applicantCode($application['application_code_id']);
+        $applicantName = applicantName($applicationCode);
+        $positionData = find("SELECT `official_title` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
+        $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
+
+        $result = disqualifyApplication($applicationId);
+
+        if ($result === false) {
+            $message = 'Application was not disqualified successfully.';
+            return;
+        }
+
+        createSystemLog($stationId, $userId, 'Disqualified application', "$applicantName - $position", clientIp());
+        commit();
+
+        $message = "Application of {$applicantName} for {$position} has been marked as disqualified.";
+        $success = true;
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
