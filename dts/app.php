@@ -75,10 +75,11 @@ if (isset($_POST['save-document'])) {
 		$upload_response = '';
 
 		if (!empty($_FILES['file-upload']['name'][0])) {
-			$uploadDirectory = '/uploads/attachments/' . cipher($documentId);
+			$uploadDirectoryPath = '/uploads/attachments/' . cipher($documentId);
+			$uploadDirectoryFull = root() . $uploadDirectoryPath;
 
-			if (!is_dir(root() . $uploadDirectory)) {
-				mkdir(root() . $uploadDirectory, 0777, true);
+			if (!is_dir($uploadDirectoryFull)) {
+				mkdir($uploadDirectoryFull, 0777, true);
 			}
 
 			foreach ($_FILES['file-upload']['tmp_name'] as $key => $tmp_name) {
@@ -86,7 +87,9 @@ if (isset($_POST['save-document'])) {
 				$safeFileName = sanitizeFileName($originalName);
 				$fileType = $_FILES['file-upload']['type'][$key];
 				$fileSize = $_FILES['file-upload']['size'][$key];
-				$targetFilePath = "$uploadDirectory/" . time() . "_$safeFileName";
+				$timestamp = time();
+				$targetFilePathRelative = "{$uploadDirectoryPath}/{$timestamp}_$safeFileName";
+				$targetFilePathFull = "{$uploadDirectoryFull}/{$timestamp}_$safeFileName";
 				$extension = strtolower(pathinfo($safeFileName, PATHINFO_EXTENSION));
 
 				if (!in_array($fileType, $allowedTypes)) {
@@ -99,10 +102,9 @@ if (isset($_POST['save-document'])) {
 					continue;
 				}
 
-				if (move_uploaded_file($tmp_name, root() . $targetFilePath)) {
-					$attachment = $targetFilePath;
+				if (move_uploaded_file($tmp_name, $targetFilePathFull)) {
 					$upload_response .= "<br>File uploaded: $safeFileName";
-					createDocumentLogAttachment($documentLogId, $attachment, ".$extension");
+					createDocumentLogAttachment($documentLogId, $targetFilePathRelative, ".$extension");
 				} else {
 					$upload_response .= "<br>Error uploading: $originalName";
 				}
@@ -162,10 +164,11 @@ if (isset($_POST['edit-document'])) {
 		$upload_response = '';
 
 		if (!empty($_FILES['file-upload']['name'][0])) {
-			$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
+			$uploadDirectoryPath = '/uploads/attachments/' . cipher($documentId);
+			$uploadDirectoryFull = root() . $uploadDirectoryPath;
 
-			if (!is_dir($uploadDirectory)) {
-				mkdir($uploadDirectory, 0777, true);
+			if (!is_dir($uploadDirectoryFull)) {
+				mkdir($uploadDirectoryFull, 0777, true);
 			}
 
 			$latestLog = documentLogs($documentId)[0] ?? null;
@@ -175,7 +178,9 @@ if (isset($_POST['edit-document'])) {
 				$fileName = basename($_FILES['file-upload']['name'][$key]);
 				$fileType = $_FILES['file-upload']['type'][$key];
 				$fileSize = $_FILES['file-upload']['size'][$key];
-				$targetFilePath = "$uploadDirectory/" . time() . "_$fileName";
+				$timestamp = time();
+				$targetFilePathRelative = "{$uploadDirectoryPath}/{$timestamp}_$fileName";
+				$targetFilePathFull = "{$uploadDirectoryFull}/{$timestamp}_$fileName";
 				$extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
 				if (!in_array($fileType, $allowedTypes)) {
@@ -188,12 +193,11 @@ if (isset($_POST['edit-document'])) {
 					continue;
 				}
 
-				if (move_uploaded_file($tmp_name, $targetFilePath)) {
-					$attachment = $targetFilePath;
+				if (move_uploaded_file($tmp_name, $targetFilePathFull)) {
 					$upload_response .= "<br>File uploaded: $fileName";
 
 					if ($documentLogId) {
-						createDocumentLogAttachment($documentLogId, $attachment, ".$extension");
+						createDocumentLogAttachment($documentLogId, $targetFilePathRelative, ".$extension");
 					}
 				} else {
 					$upload_response .= "<br>Error uploading: $fileName";
@@ -286,10 +290,11 @@ if (isset($_POST['forward-document'])) {
 		$upload_response = '';
 
 		if (!empty($_FILES['file-upload']['name'][0])) {
-			$uploadDirectory = root() . '/uploads/attachments/' . cipher($documentId);
+			$uploadDirectoryPath = '/uploads/attachments/' . cipher($documentId);
+			$uploadDirectoryFull = root() . $uploadDirectoryPath;
 
-			if (!is_dir($uploadDirectory)) {
-				mkdir($uploadDirectory, 0777, true);
+			if (!is_dir($uploadDirectoryFull)) {
+				mkdir($uploadDirectoryFull, 0777, true);
 			}
 
 			$latestLog = documentLogs($documentId)[0] ?? null;
@@ -299,7 +304,9 @@ if (isset($_POST['forward-document'])) {
 				$fileName = basename($_FILES['file-upload']['name'][$key]);
 				$fileType = $_FILES['file-upload']['type'][$key];
 				$fileSize = $_FILES['file-upload']['size'][$key];
-				$targetFilePath = "$uploadDirectory/" . time() . "_$fileName";
+				$timestamp = time();
+				$targetFilePathRelative = "{$uploadDirectoryPath}/{$timestamp}_$fileName";
+				$targetFilePathFull = "{$uploadDirectoryFull}/{$timestamp}_$fileName";
 				$extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
 				if (!in_array($fileType, $allowedTypes)) {
@@ -312,12 +319,11 @@ if (isset($_POST['forward-document'])) {
 					continue;
 				}
 
-				if (move_uploaded_file($tmp_name, $targetFilePath)) {
-					$attachment = $targetFilePath;
+				if (move_uploaded_file($tmp_name, $targetFilePathFull)) {
 					$upload_response .= "<br>File uploaded: $fileName";
 
 					if ($documentLogId) {
-						createDocumentLogAttachment($documentLogId, $attachment, ".$extension");
+						createDocumentLogAttachment($documentLogId, $targetFilePathRelative, ".$extension");
 					}
 				} else {
 					$upload_response .= "<br>Error uploading: $fileName";
