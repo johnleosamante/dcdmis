@@ -1632,3 +1632,45 @@ if (isset($_POST['disqualify-application'])) {
         $message = $e->getMessage();
     }
 }
+
+if (isset($_POST['for-review-application'])) {
+    $applicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $showAlert = true;
+
+    if (empty($applicationId)) {
+        $message = 'Invalid application selected.';
+        return;
+    }
+
+    beginTransaction();
+
+    try {
+        $application = applicationRecord($applicationId);
+
+        if (empty($application)) {
+            $message = 'Application record not found.';
+            return;
+        }
+
+        $applicationCode = applicantCode($application['application_code_id']);
+        $applicantName = applicantName($applicationCode);
+        $positionData = find("SELECT `official_title` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
+        $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
+
+        $result = forReviewApplication($applicationId);
+
+        if ($result === false) {
+            $message = 'Application was not marked for review successfully.';
+            return;
+        }
+
+        createSystemLog($stationId, $userId, 'Marked application for review', "$applicantName - $position", clientIp());
+        commit();
+
+        $message = "Application of {$applicantName} for {$position} has been marked for review.";
+        $success = true;
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
