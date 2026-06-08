@@ -28,11 +28,11 @@
                                         </span>
                                     </div>
                                     <?php if ($row['description']): ?>
-                                        <di>
+                                        <div>
                                             <span class="small">
                                                 <?= e($row['description']) ?>
                                             </span>
-                                        </di v>
+                                        </div>
                                     <?php endif ?>
                                     <div>
                                         <span class="badge badge-danger badge-pill">
@@ -48,13 +48,7 @@
                                             class="text-white">Apply</a></span></td>
                             </tr>
                         <?php }
-                    } else { ?>
-                        <tr>
-                            <td colspan="3" class="text-center text-muted">Currently no publication of vacancies available
-                            </td>
-                        </tr>
-                    <?php }
-                    ?>
+                    } ?>
                 </tbody>
 
                 <tfoot>
