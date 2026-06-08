@@ -156,6 +156,9 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Qualified Applicants':
             $file = 'vacancies/qualified-applicants';
             break;
+        case 'Assess Applicant':
+            $file = 'vacancies/assess-applicant';
+            break;
         case 'Disqualified Applicants':
             $file = 'vacancies/disqualified-applicants';
             break;
