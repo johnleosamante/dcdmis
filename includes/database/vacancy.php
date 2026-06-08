@@ -164,13 +164,13 @@ function publicationByCode($code)
 function activePublications()
 {
     $sql = "SELECT * FROM `vacancy_publications` WHERE `status` = 'open' AND `close_date` >= CURDATE() 
-            ORDER BY `created_at` DESC";
+            ORDER BY `close_date` DESC";
     return query($sql);
 }
 
 function allPublications()
 {
-    $sql = "SELECT * FROM `vacancy_publications` ORDER BY `created_at` DESC";
+    $sql = "SELECT * FROM `vacancy_publications` ORDER BY `close_date` DESC, `created_at` DESC";
     return query($sql);
 }
 
