@@ -248,7 +248,7 @@ function countPublicationItems($publication_id)
 
 function applicantsByPublication($publicationId)
 {
-    $sql = "SELECT va.created_at, ac.code AS application_code, p.official_title
+    $sql = "SELECT va.id, va.created_at, ac.code AS application_code, p.official_title, va.status
             FROM vacancy_applications AS va
             INNER JOIN application_codes AS ac ON va.application_code_id = ac.id
             INNER JOIN positions AS p ON va.position_id = p.id
@@ -465,4 +465,21 @@ function applicantDocument(int $publication_id, int $application_code_id): ?stri
             ORDER BY `created_at` DESC LIMIT 1";
     $result = find($sql, [$publication_id, $application_code_id]);
     return $result['file_name'] ?? null;
+}
+
+function applicationRecord($applicationId)
+{
+    return find("SELECT * FROM `vacancy_applications` WHERE `id` = ?", [$applicationId]);
+}
+
+function qualifyApplication($applicationId)
+{
+    $data = ['status' => 'Qualified'];
+    return update('vacancy_applications', $data, '`id` = ?', [$applicationId]);
+}
+
+function disqualifyApplication($applicationId)
+{
+    $data = ['status' => 'Disqualified'];
+    return update('vacancy_applications', $data, '`id` = ?', [$applicationId]);
 }
