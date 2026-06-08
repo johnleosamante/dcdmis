@@ -174,10 +174,11 @@ messageAlert($showAlert, $message, $success);
             <table class="table table-hover text-center" width="100%" cellspacing="0" id="data-table">
                 <thead>
                     <tr>
-                        <th width="20%" class="align-middle">Applied on</th>
-                        <th width="40%" class="align-middle">Applicant</th>
-                        <th width="30%" class="align-middle">Position</th>
-                        <th width="20%" class="align-middle">Document</th>
+                        <th width="15%" class="align-middle">Applied on</th>
+                        <th width="35%" class="align-middle">Applicant</th>
+                        <th width="25%" class="align-middle">Position Applied</th>
+                        <th width="10%" class="align-middle">Status</th>
+                        <th width="15%" class="align-middle">Document</th>
                         <?php if ($isHrmis && $isPersonnel): ?>
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
@@ -195,6 +196,17 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <div><?= e($app['official_title']) ?></div>
                             </td>
+                            <td class="align-middle text-center">
+                                <?php
+                                $statusBadgeClass = 'badge-secondary';
+                                if ($app['status'] === 'Qualified') {
+                                    $statusBadgeClass = 'badge-success';
+                                } elseif ($app['status'] === 'Disqualified') {
+                                    $statusBadgeClass = 'badge-danger';
+                                }
+                                ?>
+                                <span class="badge <?= $statusBadgeClass ?>"><?= e($app['status']) ?></span>
+                            </td>
                             <td class="align-middle text-capitalize">
                                 <?php
                                 $applicantDocument = applicantDocument($publicationId, applicantId($app['application_code']));
@@ -206,7 +218,19 @@ messageAlert($showAlert, $message, $success);
                                 <?php } ?>
                             </td>
                             <?php if ($isHrmis && $isPersonnel): ?>
-                                <td class="align-middle"></td>
+                                <td class="align-middle text-capitalize">
+                                    <?php if ($app['status'] === 'For Review'): ?>
+                                        <div class="dropdown no-arrow">
+                                            <?php dropdownEllipsis() ?>
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                                <?php
+                                                modalDropdownItem(uri() . '/modules/vacancies/qualify-application-dialog.php?id=' . cipher($app['id']), 'Qualify', 'fa-thumbs-up', 'Qualify Application');
+                                                modalDropdownItem(uri() . '/modules/vacancies/disqualify-application-dialog.php?id=' . cipher($app['id']), 'Disqualify', 'fa-thumbs-down', 'Disqualify Application');
+                                                ?>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
                             <?php endif ?>
                         </tr>
                     <?php endforeach ?>
@@ -214,10 +238,11 @@ messageAlert($showAlert, $message, $success);
 
                 <tfoot>
                     <tr>
-                        <th width="20%" class="align-middle">Applied on</th>
-                        <th width="40%" class="align-middle">Applicant</th>
-                        <th width="30%" class="align-middle">Position</th>
-                        <th width="20%" class="align-middle">Document</th>
+                        <th width="15%" class="align-middle">Applied on</th>
+                        <th width="35%" class="align-middle">Applicant</th>
+                        <th width="25%" class="align-middle">Position Applied</th>
+                        <th width="10%" class="align-middle">Status</th>
+                        <th width="15%" class="align-middle">Document</th>
                         <?php if ($isHrmis && $isPersonnel): ?>
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
