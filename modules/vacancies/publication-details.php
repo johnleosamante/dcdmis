@@ -184,7 +184,7 @@ messageAlert($showAlert, $message, $success);
                         <th width="35%" class="align-middle">Applicant</th>
                         <th width="25%" class="align-middle">Position Applied</th>
                         <th width="10%" class="align-middle">Status</th>
-                        <th width="15%" class="align-middle">Document</th>
+                        <th width="15%" class="align-middle">Attachment</th>
                         <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
@@ -218,7 +218,7 @@ messageAlert($showAlert, $message, $success);
                                 $applicantDocument = applicantDocument($publicationId, applicantId($app['application_code']));
                                 $documentUri = root() . "/{$applicantDocument}";
                                 if (!empty($applicantDocument) && file_exists($documentUri)) {
-                                    linkButtonSplit("{$baseUri}/{$applicantDocument}", 'Attachment', 'fa-paperclip', "View Applicant Document", 'secondary', true);
+                                    linkButtonSplit("{$baseUri}/{$applicantDocument}", 'Document', 'fa-paperclip', "View Document Attachment", 'secondary', true);
                                 } else { ?>
                                     <div class="small">No document attachment</div>
                                 <?php } ?>
@@ -253,7 +253,7 @@ messageAlert($showAlert, $message, $success);
                         <th width="35%" class="align-middle">Applicant</th>
                         <th width="25%" class="align-middle">Position Applied</th>
                         <th width="10%" class="align-middle">Status</th>
-                        <th width="15%" class="align-middle">Document</th>
+                        <th width="15%" class="align-middle">Attachment</th>
                         <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
