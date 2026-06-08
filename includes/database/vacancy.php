@@ -483,3 +483,9 @@ function disqualifyApplication($applicationId)
     $data = ['status' => 'Disqualified'];
     return update('vacancy_applications', $data, '`id` = ?', [$applicationId]);
 }
+
+function forReviewApplication($applicationId)
+{
+    $data = ['status' => 'For Review'];
+    return update('vacancy_applications', $data, '`id` = ?', [$applicationId]);
+}
