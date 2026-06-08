@@ -1674,3 +1674,62 @@ if (isset($_POST['for-review-application'])) {
         $message = $e->getMessage();
     }
 }
+
+if (isset($_POST['save-assessment-score'])) {
+    $applicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $showAlert = true;
+
+    if (empty($applicationId)) {
+        $message = 'Invalid application selected.';
+        return;
+    }
+
+    beginTransaction();
+
+    try {
+        $application = applicationRecord($applicationId);
+
+        if (empty($application)) {
+            $message = 'Application record not found.';
+            return;
+        }
+
+        $applicationCodeId = $application['application_code_id'];
+        $applicationCode = applicantCode($applicationCodeId);
+        $applicantName = applicantName($applicationCode);
+        $positionData = find("SELECT `official_title` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
+        $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
+
+        $data = [
+            'education_score' => (float) $_POST['education_score'],
+            'training_score' => (float) $_POST['training_score'],
+            'experience_score' => (float) $_POST['experience_score'],
+            'performance_score' => (float) $_POST['performance_score'],
+            'outstanding_accomplishments_score' => (float) $_POST['outstanding_accomplishments_score'],
+            'application_of_education_score' => (float) $_POST['application_of_education_score'],
+            'application_of_ld_score' => (float) $_POST['application_of_ld_score'],
+            'potential_written_exam_raw' => (float) $_POST['potential_written_exam_raw'],
+            'potential_bei_raw' => (float) $_POST['potential_bei_raw'],
+            'potential_wst_raw' => (float) $_POST['potential_wst_raw'],
+            'potential_final_score' => (float) $_POST['potential_final_score'],
+            'total_accumulated_score' => (float) $_POST['total_accumulated_score'],
+            'hrmspb_remarks' => sanitize($_POST['hrmspb_remarks'] ?? '')
+        ];
+
+        $result = saveAssessmentScore($applicationId, $data);
+
+        if ($result === false) {
+            $message = 'Assessment score was not saved successfully.';
+            return;
+        }
+
+        createSystemLog($stationId, $userId, 'Saved applicant assessment score', "$applicantName - $position - Score: {$data['total_accumulated_score']}", clientIp());
+        commit();
+
+        $message = "Assessment score for {$applicantName} has been saved successfully.";
+        $success = true;
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
