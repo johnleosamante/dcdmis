@@ -63,9 +63,10 @@ messageAlert($showAlert, $message, $success);
                 <thead>
                     <tr>
                         <th width="15%" class="align-middle">Applied on</th>
-                        <th width="35%" class="align-middle">Applicant</th>
+                        <th width="30%" class="align-middle">Applicant</th>
                         <th width="25%" class="align-middle">Position Applied</th>
-                        <th width="15%" class="align-middle">Document</th>
+                        <th width="10%" class="align-middle">Score</th>
+                        <th width="10%" class="align-middle">Document</th>
                         <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                             <th width="10%" class="align-middle">Action</th>
                         <?php endif ?>
@@ -89,6 +90,15 @@ messageAlert($showAlert, $message, $success);
                                 <td class="align-middle">
                                     <div><?= e($app['official_title']) ?></div>
                                 </td>
+                                <td class="align-middle">
+                                    <?php if (isset($app['total_accumulated_score']) && $app['total_accumulated_score'] !== null): ?>
+                                        <div class="font-weight-bold text-success">
+                                            <?= number_format($app['total_accumulated_score'], 2) ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="text-muted font-italic small">Not Assessed</div>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="align-middle text-capitalize">
                                     <?php
                                     $applicantDocument = applicantDocument($publicationId, applicantId($app['application_code']));
@@ -105,6 +115,9 @@ messageAlert($showAlert, $message, $success);
                                             <?php dropdownEllipsis() ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                                 <?php
+                                                linkDropdownItem(customUri('hrmis', 'Assess Applicant', $app['id']), 'Assess', 'fa-poll', 'Assess Applicant'); ?>
+                                                <div class="dropdown-divider"></div>
+                                                <?php
                                                 modalDropdownItem(uri() . '/modules/vacancies/for-review-application-dialog.php?id=' . cipher($app['id']), 'For Review', 'fa-redo', 'Mark Application For Review');
                                                 modalDropdownItem(uri() . '/modules/vacancies/disqualify-application-dialog.php?id=' . cipher($app['id']), 'Disqualify', 'fa-thumbs-down', 'Disqualify Application');
                                                 ?>
@@ -120,9 +133,10 @@ messageAlert($showAlert, $message, $success);
                 <tfoot>
                     <tr>
                         <th width="15%" class="align-middle">Applied on</th>
-                        <th width="35%" class="align-middle">Applicant</th>
+                        <th width="30%" class="align-middle">Applicant</th>
                         <th width="25%" class="align-middle">Position Applied</th>
-                        <th width="15%" class="align-middle">Document</th>
+                        <th width="10%" class="align-middle">Score</th>
+                        <th width="10%" class="align-middle">Document</th>
                         <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                             <th width="10%" class="align-middle">Action</th>
                         <?php endif ?>
