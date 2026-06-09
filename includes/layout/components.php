@@ -111,7 +111,7 @@ function card($title, $link, $icon, $color = 'primary', $counter = null, $newFea
 
 function cardMini($title, $link, $icon, $color = 'primary', $newTab = false)
 { ?>
-    <div class="col-xl-2 col-md-4 mb-4">
+    <div class="col-xl-2 col-lg-3 col-md-4 mb-4">
         <div class="card border-left-<?= $color ?> shadow h-100">
             <div class="card-body">
                 <div class="row">
