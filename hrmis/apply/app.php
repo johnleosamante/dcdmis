@@ -97,7 +97,7 @@ if (isset($_POST['submit-application'])) {
             $message = "Your application for {$appliedCount} position{$pluralSuffix} {$verbConjugation} been processed successfully. Please check your email for confirmation.";
             $success = true;
 
-            createSystemLog($stationId, null, "Submitted application for {$appliedCount} position{pluralSuffix}", $applicationCode, clientIp());
+            createSystemLog($stationId, null, "Submitted application for {$appliedCount} position{$pluralSuffix}", $applicationCode, clientIp());
 
             $applicantData = employee($applicationId);
             if (!$applicantData) {
