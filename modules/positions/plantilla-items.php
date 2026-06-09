@@ -82,11 +82,11 @@ messageAlert($showAlert, $message, $success);
                                             <div class="dropdown-divider"></div>
                                             <?php
                                         }
-                                        if (!$isVacantItem) {
+                                        if (!$isVacantItem && $row['is_vacant']) {
                                             modalDropdownItem(uri() . '/modules/positions/save-plantilla-item-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Plantilla Item');
                                         }
                                         modalDropdownItem(uri() . '/modules/positions/save-plantilla-item-dialog.php?c=' . cipher($row['id']) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Plantilla Item');
-                                        if (!$isVacantItem) { ?>
+                                        if (!$isVacantItem && $row['is_vacant']) { ?>
                                             <div class="dropdown-divider"></div>
                                             <?php modalDropdownItem(uri() . '/modules/positions/delete-plantilla-item-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Plantilla Item');
                                         } ?>
