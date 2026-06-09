@@ -71,48 +71,69 @@ if (isset($_POST['save-document'])) {
 	try {
 		createDocument($documentId, $description, $type, $station, $headId);
 
-		$documentLogId = createDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
+		$stagedFiles = [];
 		$upload_response = '';
 
 		if (!empty($_FILES['file-upload']['name'][0])) {
-			$uploadDirectoryPath = '/uploads/attachments/' . cipher($documentId);
-			$uploadDirectoryFull = root() . $uploadDirectoryPath;
-
-			if (!is_dir($uploadDirectoryFull)) {
-				mkdir($uploadDirectoryFull, 0777, true);
-			}
+			$uploadDirectoryPath = 'uploads/attachments/' . cipher($documentId);
+			$uploadDirectoryFull = root() . '/' . $uploadDirectoryPath;
 
 			foreach ($_FILES['file-upload']['tmp_name'] as $key => $tmp_name) {
-				$originalName = basename($_FILES['file-upload']['name'][$key]);
-				$safeFileName = sanitizeFileName($originalName);
-				$fileType = $_FILES['file-upload']['type'][$key];
-				$fileSize = $_FILES['file-upload']['size'][$key];
-				$timestamp = time();
-				$targetFilePathRelative = "{$uploadDirectoryPath}/{$timestamp}_$safeFileName";
-				$targetFilePathFull = "{$uploadDirectoryFull}/{$timestamp}_$safeFileName";
-				$extension = strtolower(pathinfo($safeFileName, PATHINFO_EXTENSION));
-
-				if (!in_array($fileType, $allowedTypes)) {
-					$upload_response .= "<br>File type not allowed: $safeFileName";
+				if (empty($tmp_name)) {
 					continue;
 				}
+				$fileData = [
+					'name' => $_FILES['file-upload']['name'][$key],
+					'type' => $_FILES['file-upload']['type'][$key],
+					'tmp_name' => $_FILES['file-upload']['tmp_name'][$key],
+					'error' => $_FILES['file-upload']['error'][$key],
+					'size' => $_FILES['file-upload']['size'][$key]
+				];
 
-				if ($fileSize > FILE_UPLOAD_SIZE_LIMIT) {
-					$upload_response .= "<br>File too large (Max 20MB): $safeFileName";
-					continue;
-				}
+				try {
+					$stagedFile = stageUploadedFile(
+						$fileData,
+						[
+							'image/jpeg' => 'jpg',
+							'image/jpg' => 'jpg',
+							'image/png' => 'png',
+							'image/gif' => 'gif',
+							'application/pdf' => 'pdf',
+							'application/msword' => 'doc',
+							'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+							'application/vnd.ms-powerpoint' => 'ppt',
+							'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
+							'application/vnd.ms-excel' => 'xls',
+							'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx'
+						],
+						$uploadDirectoryFull,
+						"ATTACH"
+					);
 
-				if (move_uploaded_file($tmp_name, $targetFilePathFull)) {
-					$upload_response .= "<br>File uploaded: $safeFileName";
-					createDocumentLogAttachment($documentLogId, $targetFilePathRelative, ".$extension");
-				} else {
-					$upload_response .= "<br>Error uploading: $originalName";
+					$targetFilePathRelative = "{$uploadDirectoryPath}/" . $stagedFile['secure_name'];
+					$stagedFiles[] = [
+						'staged' => $stagedFile,
+						'relative_path' => $targetFilePathRelative,
+						'name' => $fileData['name'],
+						'extension' => '.' . $stagedFile['extension']
+					];
+				} catch (Exception $e) {
+					$upload_response .= "<br>Error staging file " . $fileData['name'] . ": " . $e->getMessage();
 				}
 			}
 		}
 
+		foreach ($stagedFiles as $stagedFileItem) {
+			createDocumentLogAttachment($documentLogId, $stagedFileItem['relative_path'], $stagedFileItem['extension']);
+			$upload_response .= "<br>File uploaded: " . $stagedFileItem['name'];
+		}
+
 		createSystemLog($stationId, $userId, 'Created document', $documentId, clientIp());
 		commit();
+
+		foreach ($stagedFiles as $stagedFileItem) {
+			commitStagedFile($stagedFileItem['staged']);
+		}
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been saved successfully.' . $upload_response;
 		$success = true;
@@ -161,52 +182,74 @@ if (isset($_POST['edit-document'])) {
 		updateDocument($documentId, $description, $type, $updateDescription);
 		$documentLog = updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
 
+		$stagedFiles = [];
 		$upload_response = '';
 
 		if (!empty($_FILES['file-upload']['name'][0])) {
-			$uploadDirectoryPath = '/uploads/attachments/' . cipher($documentId);
-			$uploadDirectoryFull = root() . $uploadDirectoryPath;
-
-			if (!is_dir($uploadDirectoryFull)) {
-				mkdir($uploadDirectoryFull, 0777, true);
-			}
+			$uploadDirectoryPath = 'uploads/attachments/' . cipher($documentId);
+			$uploadDirectoryFull = root() . '/' . $uploadDirectoryPath;
 
 			$latestLog = documentLogs($documentId)[0] ?? null;
 			$documentLogId = $latestLog ? $latestLog['id'] : null;
 
 			foreach ($_FILES['file-upload']['tmp_name'] as $key => $tmp_name) {
-				$fileName = basename($_FILES['file-upload']['name'][$key]);
-				$fileType = $_FILES['file-upload']['type'][$key];
-				$fileSize = $_FILES['file-upload']['size'][$key];
-				$timestamp = time();
-				$targetFilePathRelative = "{$uploadDirectoryPath}/{$timestamp}_$fileName";
-				$targetFilePathFull = "{$uploadDirectoryFull}/{$timestamp}_$fileName";
-				$extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-				if (!in_array($fileType, $allowedTypes)) {
-					$upload_response .= "<br>File type not allowed: $fileName";
+				if (empty($tmp_name)) {
 					continue;
 				}
+				$fileData = [
+					'name' => $_FILES['file-upload']['name'][$key],
+					'type' => $_FILES['file-upload']['type'][$key],
+					'tmp_name' => $_FILES['file-upload']['tmp_name'][$key],
+					'error' => $_FILES['file-upload']['error'][$key],
+					'size' => $_FILES['file-upload']['size'][$key]
+				];
 
-				if ($fileSize > FILE_UPLOAD_SIZE_LIMIT) {
-					$upload_response .= "<br>File too large (Max 20MB): $fileName";
-					continue;
+				try {
+					$stagedFile = stageUploadedFile(
+						$fileData,
+						[
+							'image/jpeg' => 'jpg',
+							'image/jpg' => 'jpg',
+							'image/png' => 'png',
+							'image/gif' => 'gif',
+							'application/pdf' => 'pdf',
+							'application/msword' => 'doc',
+							'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+							'application/vnd.ms-powerpoint' => 'ppt',
+							'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
+							'application/vnd.ms-excel' => 'xls',
+							'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx'
+						],
+						$uploadDirectoryFull,
+						"ATTACH"
+					);
+
+					$targetFilePathRelative = "{$uploadDirectoryPath}/" . $stagedFile['secure_name'];
+					$stagedFiles[] = [
+						'staged' => $stagedFile,
+						'relative_path' => $targetFilePathRelative,
+						'name' => $fileData['name'],
+						'extension' => '.' . $stagedFile['extension']
+					];
+				} catch (Exception $e) {
+					$upload_response .= "<br>Error staging file " . $fileData['name'] . ": " . $e->getMessage();
 				}
+			}
 
-				if (move_uploaded_file($tmp_name, $targetFilePathFull)) {
-					$upload_response .= "<br>File uploaded: $fileName";
-
-					if ($documentLogId) {
-						createDocumentLogAttachment($documentLogId, $targetFilePathRelative, ".$extension");
-					}
-				} else {
-					$upload_response .= "<br>Error uploading: $fileName";
+			if ($documentLogId) {
+				foreach ($stagedFiles as $stagedFileItem) {
+					createDocumentLogAttachment($documentLogId, $stagedFileItem['relative_path'], $stagedFileItem['extension']);
+					$upload_response .= "<br>File uploaded: " . $stagedFileItem['name'];
 				}
 			}
 		}
 
 		createSystemLog($stationId, $userId, 'Updated document', $documentId, clientIp());
 		commit();
+
+		foreach ($stagedFiles as $stagedFileItem) {
+			commitStagedFile($stagedFileItem['staged']);
+		}
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been updated successfully.' . $upload_response;
 		$success = true;
@@ -287,52 +330,74 @@ if (isset($_POST['forward-document'])) {
 
 		createDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
 
+		$stagedFiles = [];
 		$upload_response = '';
 
 		if (!empty($_FILES['file-upload']['name'][0])) {
-			$uploadDirectoryPath = '/uploads/attachments/' . cipher($documentId);
-			$uploadDirectoryFull = root() . $uploadDirectoryPath;
-
-			if (!is_dir($uploadDirectoryFull)) {
-				mkdir($uploadDirectoryFull, 0777, true);
-			}
+			$uploadDirectoryPath = 'uploads/attachments/' . cipher($documentId);
+			$uploadDirectoryFull = root() . '/' . $uploadDirectoryPath;
 
 			$latestLog = documentLogs($documentId)[0] ?? null;
 			$documentLogId = $latestLog ? $latestLog['id'] : null;
 
 			foreach ($_FILES['file-upload']['tmp_name'] as $key => $tmp_name) {
-				$fileName = basename($_FILES['file-upload']['name'][$key]);
-				$fileType = $_FILES['file-upload']['type'][$key];
-				$fileSize = $_FILES['file-upload']['size'][$key];
-				$timestamp = time();
-				$targetFilePathRelative = "{$uploadDirectoryPath}/{$timestamp}_$fileName";
-				$targetFilePathFull = "{$uploadDirectoryFull}/{$timestamp}_$fileName";
-				$extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-				if (!in_array($fileType, $allowedTypes)) {
-					$upload_response .= "<br>File type not allowed: $fileName";
+				if (empty($tmp_name)) {
 					continue;
 				}
+				$fileData = [
+					'name' => $_FILES['file-upload']['name'][$key],
+					'type' => $_FILES['file-upload']['type'][$key],
+					'tmp_name' => $_FILES['file-upload']['tmp_name'][$key],
+					'error' => $_FILES['file-upload']['error'][$key],
+					'size' => $_FILES['file-upload']['size'][$key]
+				];
 
-				if ($fileSize > FILE_UPLOAD_SIZE_LIMIT) {
-					$upload_response .= "<br>File too large (Max 20MB): $fileName";
-					continue;
+				try {
+					$stagedFile = stageUploadedFile(
+						$fileData,
+						[
+							'image/jpeg' => 'jpg',
+							'image/jpg' => 'jpg',
+							'image/png' => 'png',
+							'image/gif' => 'gif',
+							'application/pdf' => 'pdf',
+							'application/msword' => 'doc',
+							'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+							'application/vnd.ms-powerpoint' => 'ppt',
+							'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
+							'application/vnd.ms-excel' => 'xls',
+							'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx'
+						],
+						$uploadDirectoryFull,
+						"ATTACH"
+					);
+
+					$targetFilePathRelative = "{$uploadDirectoryPath}/" . $stagedFile['secure_name'];
+					$stagedFiles[] = [
+						'staged' => $stagedFile,
+						'relative_path' => $targetFilePathRelative,
+						'name' => $fileData['name'],
+						'extension' => '.' . $stagedFile['extension']
+					];
+				} catch (Exception $e) {
+					$upload_response .= "<br>Error staging file " . $fileData['name'] . ": " . $e->getMessage();
 				}
+			}
 
-				if (move_uploaded_file($tmp_name, $targetFilePathFull)) {
-					$upload_response .= "<br>File uploaded: $fileName";
-
-					if ($documentLogId) {
-						createDocumentLogAttachment($documentLogId, $targetFilePathRelative, ".$extension");
-					}
-				} else {
-					$upload_response .= "<br>Error uploading: $fileName";
+			if ($documentLogId) {
+				foreach ($stagedFiles as $stagedFileItem) {
+					createDocumentLogAttachment($documentLogId, $stagedFileItem['relative_path'], $stagedFileItem['extension']);
+					$upload_response .= "<br>File uploaded: " . $stagedFileItem['name'];
 				}
 			}
 		}
 
 		createSystemLog($stationId, $userId, 'Forwarded document', $documentId, clientIp());
 		commit();
+
+		foreach ($stagedFiles as $stagedFileItem) {
+			commitStagedFile($stagedFileItem['staged']);
+		}
 
 		$message = 'Document code [<a href="' . customUri('dts', 'Document Information', $documentId) . '" title="View ' . $documentId . ' document information">' . strtoupper($documentId) . '</a>] has been forwarded successfully.' . $upload_response;
 		$success = true;
