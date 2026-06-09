@@ -20,6 +20,7 @@ if (isset($_POST['primary-search-button'])) {
 }
 
 if (isset($_POST['add-employee'])) {
+    $success = false;
     $employeeId = generateID();
     $lname = sanitize($_POST['lname']);
     $fname = sanitize($_POST['fname']);
@@ -94,11 +95,13 @@ if (isset($_POST['add-employee'])) {
 }
 
 if (isset($_POST['update-personal-information'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $employeePhoto = sanitize(decipher($_POST['image-verifier'] ?? $defaultImage));
+    $success = false;
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $employeePhoto = sanitize(decipher($_POST['image-verifier']));
+    $oldPhoto = $employeePhoto;
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'personal-information';
-    $dualCitizenshipCountry = country(sanitize($_POST['dual-citizenship-country']))['id'] ?? null;
+    $dualCitizenshipCountry = country(sanitize($_POST['dual-citizenship-country']))['id'];
 
     beginTransaction();
 
@@ -114,28 +117,25 @@ if (isset($_POST['update-personal-information'])) {
                     "USER"
                 );
 
-                if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto) && basename(root() . '/' . $employeePhoto) !== 'user.png') {
-                    unlink(root() . '/' . $employeePhoto);
-                }
-
                 $employeePhoto = "uploads/images/{$employeeId}/" . $stagedFile['secure_name'];
             } catch (Exception $e) {
-                $message = $e->getMessage();
-                return;
+                throw new Exception($e->getMessage());
             }
         }
 
         $affectedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), sanitize($_POST['dob']), sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), sanitize($_POST['religion']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), $dualCitizenshipCountry, sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
 
         if ($affectedEmployee == false && !$stagedFile) {
-            $message = 'No changes have been made to personal information.';
-            return;
+            throw new Exception('No changes have been made to personal information.');
         }
 
         createSystemLog($stationId, $userId, 'Updated employee personal information', $employeeId, clientIp());
         commit();
         if ($stagedFile) {
             commitStagedFile($stagedFile);
+            if (!empty($oldPhoto) && file_exists(root() . '/' . $oldPhoto) && basename(root() . '/' . $oldPhoto) !== 'user.png') {
+                unlink(root() . '/' . $oldPhoto);
+            }
         }
 
         $message = 'Personal information has been updated successfully.';
@@ -147,6 +147,7 @@ if (isset($_POST['update-personal-information'])) {
 }
 
 if (isset($_POST['update-family-background'])) {
+    $success = false;
     $employeeId = sanitize(decipher($_POST['verifier']));
     $slast = sanitize($_POST['slast']);
     $sfirst = sanitize($_POST['sfirst']);
@@ -174,8 +175,7 @@ if (isset($_POST['update-family-background'])) {
             updateFamily($slast, $sfirst, $sext, $smiddle, $swork, $sbusiness, $sbusinessAddress, $stelephone, $flast, $ffirst, $fext, $fmiddle, $mlast, $mfirst, $mmiddle, $employeeId);
 
         if ($affectedFamily === false) {
-            $message = 'No changes have been made to family background.';
-            return;
+            throw new Exception('No changes have been made to family background.');
         }
 
         createSystemLog($stationId, $userId, 'Updated employee family background', $employeeId, clientIp());
@@ -190,8 +190,9 @@ if (isset($_POST['update-family-background'])) {
 }
 
 if (isset($_POST['save-child'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $childId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $success = false;
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $childId = sanitize(decipher($_POST['data-verifier']));
     $clast = sanitize($_POST['clast']);
     $cfirst = sanitize($_POST['cfirst']);
     $cext = sanitize($_POST['cext']);
@@ -215,8 +216,7 @@ if (isset($_POST['save-child'])) {
         }
 
         if ($affectedChild === false) {
-            $message = 'No changes have been made to children.';
-            return;
+            throw new Exception('No changes have been made to children.');
         }
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
@@ -230,8 +230,9 @@ if (isset($_POST['save-child'])) {
 }
 
 if (isset($_POST['delete-child'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $childId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $success = false;
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $childId = sanitize(decipher($_POST['data-verifier']));
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'children';
 
@@ -241,8 +242,7 @@ if (isset($_POST['delete-child'])) {
         $deletedChild = deleteChild($employeeId, $childId);
 
         if ($deletedChild === false) {
-            $message = 'No changes have been made to children.';
-            return;
+            throw new Exception('No changes have been made to children.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted employee child', $employeeId, clientIp());
@@ -257,8 +257,9 @@ if (isset($_POST['delete-child'])) {
 }
 
 if (isset($_POST['save-education'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $educationId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $success = false;
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $educationId = sanitize(decipher($_POST['data-verifier']));
     $level = sanitize($_POST['level']);
     $school = sanitize($_POST['school']);
     $course = sanitize($_POST['course']);
@@ -286,8 +287,7 @@ if (isset($_POST['save-education'])) {
         }
 
         if ($affectedEducation === false) {
-            $message = 'No changes have been made to educational background.';
-            return;
+            throw new Exception('No changes have been made to educational background.');
         }
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
@@ -301,8 +301,9 @@ if (isset($_POST['save-education'])) {
 }
 
 if (isset($_POST['delete-education'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $educationId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $success = false;
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $educationId = sanitize(decipher($_POST['data-verifier']));
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'educational-background';
 
@@ -312,8 +313,7 @@ if (isset($_POST['delete-education'])) {
         $affectedEducation = deleteEducation($employeeId, $educationId);
 
         if ($affectedEducation === false) {
-            $message = 'No changes have been made to educational background.';
-            return;
+            throw new Exception('No changes have been made to educational background.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted employee education', $employeeId, clientIp());
@@ -329,8 +329,8 @@ if (isset($_POST['delete-education'])) {
 }
 
 if (isset($_POST['save-eligibility'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $eligibilityId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $eligibilityId = sanitize(decipher($_POST['data-verifier']));
     $career = sanitize($_POST['career']);
     $rating = sanitize($_POST['rating']);
     $examDate = sanitize($_POST['exam-date']);
@@ -340,6 +340,7 @@ if (isset($_POST['save-eligibility'])) {
     $validity = sanitize($_POST['validity']);
     $logMessage = '';
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
 
     beginTransaction();
@@ -356,8 +357,7 @@ if (isset($_POST['save-eligibility'])) {
         }
 
         if ($affectedEligibility === false) {
-            $message = 'No changes have been made to civil service eligibility.';
-            return;
+            throw new Exception('No changes have been made to civil service eligibility.');
         }
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
@@ -371,9 +371,10 @@ if (isset($_POST['save-eligibility'])) {
 }
 
 if (isset($_POST['delete-eligibility'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $eligibilityId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $eligibilityId = sanitize(decipher($_POST['data-verifier']));
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'civil-service-eligibility';
 
     beginTransaction();
@@ -382,8 +383,7 @@ if (isset($_POST['delete-eligibility'])) {
         $affectedEligibility = deleteEligibility($employeeId, $eligibilityId);
 
         if ($affectedEligibility === false) {
-            $message = 'No changes have been made to civil service eligibility.';
-            return;
+            throw new Exception('No changes have been made to civil service eligibility.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted employee eligibility', $employeeId, clientIp());
@@ -398,8 +398,8 @@ if (isset($_POST['delete-eligibility'])) {
 }
 
 if (isset($_POST['save-voluntary-work'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $voluntaryId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $voluntaryId = sanitize(decipher($_POST['data-verifier']));
     $organization = sanitize($_POST['organization']);
     $from = sanitize($_POST['from']);
     $isPresent = isset($_POST['is-present']) ? '1' : '0';
@@ -408,6 +408,7 @@ if (isset($_POST['save-voluntary-work'])) {
     $position = sanitize($_POST['position']);
     $logMessage = '';
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
 
     beginTransaction();
@@ -424,8 +425,7 @@ if (isset($_POST['save-voluntary-work'])) {
         }
 
         if ($affectedVoluntaryWork === false) {
-            $message = 'No changes have been made to voluntary work.';
-            return;
+            throw new Exception('No changes have been made to voluntary work.');
         }
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
@@ -439,9 +439,10 @@ if (isset($_POST['save-voluntary-work'])) {
 }
 
 if (isset($_POST['delete-voluntary-work'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $voluntaryId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $voluntaryId = sanitize(decipher($_POST['data-verifier']));
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'voluntary-work';
 
     beginTransaction();
@@ -450,8 +451,7 @@ if (isset($_POST['delete-voluntary-work'])) {
         $affectedVoluntaryWork = deleteVoluntaryWork($employeeId, $voluntaryId);
 
         if ($affectedVoluntaryWork === false) {
-            $message = 'No changes have been made to voluntary work.';
-            return;
+            throw new Exception('No changes have been made to voluntary work.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted employee voluntary work', $employeeId, clientIp());
@@ -466,11 +466,12 @@ if (isset($_POST['delete-voluntary-work'])) {
 }
 
 if (isset($_POST['save-special-skill'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $skillId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $skillId = sanitize(decipher($_POST['data-verifier']));
     $skill = sanitize($_POST['skill']);
     $logMessage = '';
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
 
     beginTransaction();
@@ -487,8 +488,7 @@ if (isset($_POST['save-special-skill'])) {
         }
 
         if ($affectedSkill === false) {
-            $message = 'No changes have been made to special skill / hobby.';
-            return;
+            throw new Exception('No changes have been made to special skill / hobby.');
         }
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
@@ -502,9 +502,10 @@ if (isset($_POST['save-special-skill'])) {
 }
 
 if (isset($_POST['delete-special-skill'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $skillId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $skillId = sanitize(decipher($_POST['data-verifier']));
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'special-skills';
 
     beginTransaction();
@@ -513,8 +514,7 @@ if (isset($_POST['delete-special-skill'])) {
         $affectedSkill = deleteSpecialSkill($employeeId, $skillId);
 
         if ($affectedSkill === false) {
-            $message = 'No changes have been made to special skill / hobby.';
-            return;
+            throw new Exception('No changes have been made to special skill / hobby.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted employee special skill', $employeeId, clientIp());
@@ -529,11 +529,12 @@ if (isset($_POST['delete-special-skill'])) {
 }
 
 if (isset($_POST['save-recognition'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $recognitionId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $recognitionId = sanitize(decipher($_POST['data-verifier']));
     $recognition = sanitize($_POST['recognition']);
     $logMessage = '';
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
 
     beginTransaction();
@@ -550,8 +551,7 @@ if (isset($_POST['save-recognition'])) {
         }
 
         if ($affectedRecognition === false) {
-            $message = 'No changes have been made to non-academic distinction / recognition.';
-            return;
+            throw new Exception('No changes have been made to non-academic distinction / recognition.');
         }
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
@@ -565,9 +565,10 @@ if (isset($_POST['save-recognition'])) {
 }
 
 if (isset($_POST['delete-recognition'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $recognitionId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $recognitionId = sanitize(decipher($_POST['data-verifier']));
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'recognition';
 
     beginTransaction();
@@ -576,8 +577,7 @@ if (isset($_POST['delete-recognition'])) {
         $affectedRecognition = deleteRecognition($employeeId, $recognitionId);
 
         if ($affectedRecognition === false) {
-            $message = 'No changes have been made to non-academic distinction / recognition.';
-            return;
+            throw new Exception('No changes have been made to non-academic distinction / recognition.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted employee recognition', $employeeId, clientIp());
@@ -593,11 +593,12 @@ if (isset($_POST['delete-recognition'])) {
 }
 
 if (isset($_POST['save-membership'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $membershipId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $membershipId = sanitize(decipher($_POST['data-verifier']));
     $membership = sanitize($_POST['membership']);
     $logMessage = '';
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
 
     beginTransaction();
@@ -614,8 +615,7 @@ if (isset($_POST['save-membership'])) {
         }
 
         if ($affectedMembership === false) {
-            $message = 'No changes have been made to membership in association / organization.';
-            return;
+            throw new Exception('No changes have been made to membership in association / organization.');
         }
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
@@ -629,9 +629,10 @@ if (isset($_POST['save-membership'])) {
 }
 
 if (isset($_POST['delete-membership'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $membershipId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $membershipId = sanitize(decipher($_POST['data-verifier']));
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'membership';
 
     beginTransaction();
@@ -640,8 +641,7 @@ if (isset($_POST['delete-membership'])) {
         $affectedMembership = deleteMembership($employeeId, $membershipId);
 
         if ($affectedMembership === false) {
-            $message = 'No changes have been made to membership in association / organization.';
-            return;
+            throw new Exception('No changes have been made to membership in association / organization.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted employee membership', $employeeId, clientIp());
@@ -656,7 +656,7 @@ if (isset($_POST['delete-membership'])) {
 }
 
 if (isset($_POST['update-other-information'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
     $hasThirdDegree = sanitize($_POST['has-third-degree']);
     $hasFourthDegree = sanitize($_POST['has-fourth-degree']);
     $relatedDetails = $hasFourthDegree ? sanitize($_POST['related-details']) : 'N/A';
@@ -682,6 +682,7 @@ if (isset($_POST['update-other-information'])) {
     $isSoloParent = sanitize($_POST['is-solo-parent']);
     $soloParentSpecify = $isSoloParent ? sanitize($_POST['solo-parent-specify']) : 'N/A';
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'other-information';
 
     beginTransaction();
@@ -692,8 +693,7 @@ if (isset($_POST['update-other-information'])) {
             updateOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
 
         if ($affectedOtherInformation === false) {
-            $message = 'No changes have been made to other information.';
-            return;
+            throw new Exception('No changes have been made to other information.');
         }
 
         createSystemLog($stationId, $userId, 'Updated employee other information', $employeeId, clientIp());
@@ -708,13 +708,14 @@ if (isset($_POST['update-other-information'])) {
 }
 
 if (isset($_POST['save-reference'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $referenceId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $referenceId = sanitize(decipher($_POST['data-verifier']));
     $name = sanitize($_POST['name']);
     $address = sanitize($_POST['address']);
     $contact = sanitize($_POST['telephone']);
     $logMessage = '';
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
 
     beginTransaction();
@@ -731,8 +732,7 @@ if (isset($_POST['save-reference'])) {
         }
 
         if ($affectedReference === false) {
-            $message = 'No changes have been made to reference.';
-            return;
+            throw new Exception('No changes have been made to reference.');
         }
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
@@ -746,9 +746,10 @@ if (isset($_POST['save-reference'])) {
 }
 
 if (isset($_POST['delete-reference'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $referenceId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $referenceId = sanitize(decipher($_POST['data-verifier']));
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'reference';
+    $success = false;
 
     beginTransaction();
 
@@ -756,8 +757,7 @@ if (isset($_POST['delete-reference'])) {
         $affectedReference = deleteReference($employeeId, $referenceId);
 
         if ($affectedReference === false) {
-            $message = 'No changes have been made to reference.';
-            return;
+            throw new Exception('No changes have been made to reference.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted employee reference', $employeeId, clientIp());
@@ -772,12 +772,13 @@ if (isset($_POST['delete-reference'])) {
 }
 
 if (isset($_POST['reassign-employee'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
     $positions = position($employeeId);
     $positionId = $positions ? $positions['position_id'] : '';
     $eStationId = sanitize($_POST['assignment']);
     $date = sanitize($_POST['assignment-date']);
     $showAlert = true;
+    $success = false;
 
     if (empty($employeeId) || empty($positionId) || empty($eStationId) || empty($date)) {
         return;
@@ -798,8 +799,7 @@ if (isset($_POST['reassign-employee'])) {
         }
 
         if ($affectedStation === false) {
-            $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] assignment has been made.';
-            return;
+            throw new Exception('No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] assignment has been made.');
         }
 
         createSystemLog($stationId, $userId, 'Reassigned employee', $employeeId, clientIp());
@@ -814,7 +814,7 @@ if (isset($_POST['reassign-employee'])) {
 }
 
 if (isset($_POST['promote-employee'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
     $positionId = sanitize($_POST['position']);
     $position = strtoupper(positions($positionId)['official_title']);
     $station = station($employeeId);
@@ -827,6 +827,7 @@ if (isset($_POST['promote-employee'])) {
     }
 
     $showAlert = true;
+    $success = false;
 
     beginTransaction();
 
@@ -839,9 +840,7 @@ if (isset($_POST['promote-employee'])) {
         }
 
         if ($affectedStation === false) {
-            rollBack();
-            $message = 'No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] information has been made.';
-            return;
+            throw new Exception('No changes to employee [<a href="#" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] information has been made.');
         }
 
         createSystemLog($stationId, $userId, 'Promoted employee', $employeeId, clientIp());
@@ -869,10 +868,11 @@ if (isset($_POST['promote-employee'])) {
 }
 
 if (isset($_POST['remove-employee'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
     $reason = sanitize($_POST['reason']);
     $skipVacancy = isset($_POST['skip_vacancy']);
     $showAlert = true;
+    $success = false;
 
     if (empty($employeeId) || empty($reason)) {
         return;
@@ -890,9 +890,7 @@ if (isset($_POST['remove-employee'])) {
         $affectedEmployeeStatus = updateEmployeeStatus($reason, $employeeId);
 
         if ($affectedEmployeeStatus === false) {
-            rollBack();
-            $message = 'No changes to employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.';
-            return;
+            throw new Exception('No changes to employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.');
         }
 
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
@@ -920,9 +918,10 @@ if (isset($_POST['remove-employee'])) {
 }
 
 if (isset($_POST['set-school-head'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $schoolId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $schoolId = sanitize(decipher($_POST['data-verifier']));
     $showAlert = true;
+    $success = false;
 
     beginTransaction();
 
@@ -932,8 +931,7 @@ if (isset($_POST['set-school-head'])) {
         }
 
         if ($affectedSchoolHead === false) {
-            $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] was not set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . strtoupper(stationName($schoolId)) . '</a>].';
-            return;
+            throw new Exception('Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] was not set as school head of [<a href="#" title="View ' . stationName($schoolId) . ' school information">' . strtoupper(stationName($schoolId)) . '</a>].');
         }
 
         createSystemLog($stationId, $userId, 'Set School Head', $employeeId, clientIp());
@@ -948,8 +946,8 @@ if (isset($_POST['set-school-head'])) {
 }
 
 if (isset($_POST['save-service-record'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $serviceId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $serviceId = sanitize(decipher($_POST['data-verifier']));
     $from = sanitize($_POST['from']);
     $isPresent = isset($_POST['is-present']) ? '1' : '0';
     $to = sanitize($_POST['to']);
@@ -964,6 +962,7 @@ if (isset($_POST['save-service-record'])) {
     $separationDate = $separationCause = null;
     $logMessage = '';
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
 
     if ($isSeparation === '1') {
@@ -985,8 +984,7 @@ if (isset($_POST['save-service-record'])) {
         }
 
         if ($affectedExperience === false) {
-            $message = 'No changes have been made to service record.';
-            return;
+            throw new Exception('No changes have been made to service record.');
         }
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
@@ -1000,9 +998,10 @@ if (isset($_POST['save-service-record'])) {
 }
 
 if (isset($_POST['delete-service-record'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $serviceId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $serviceId = sanitize(decipher($_POST['data-verifier']));
     $showAlert = true;
+    $success = false;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'work-experience';
 
     beginTransaction();
@@ -1011,8 +1010,7 @@ if (isset($_POST['delete-service-record'])) {
         $affectedExperience = deleteExperience($employeeId, $serviceId);
 
         if ($affectedExperience === false) {
-            $message = 'No changes have been made to service record.';
-            return;
+            throw new Exception('No changes have been made to service record.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted employee service record', $employeeId, clientIp());
@@ -1027,13 +1025,14 @@ if (isset($_POST['delete-service-record'])) {
 }
 
 if (isset($_POST['save-201-file'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $fileId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $fileId = sanitize(decipher($_POST['data-verifier']));
     $fileTypeId = sanitize($_POST['type']);
     $description = sanitize($_POST['description']);
-    $oldFilename = sanitize(decipher($_POST['file-verifier'] ?? null));
+    $oldFilename = sanitize(decipher($_POST['file-verifier']));
     $newFilename = $oldFilename;
     $showAlert = true;
+    $success = false;
 
     beginTransaction();
 
@@ -1050,19 +1049,13 @@ if (isset($_POST['save-201-file'])) {
                 );
 
                 $newFilename = "uploads/201_files/{$employeeId}/" . $stagedFile['secure_name'];
-
-                if (!empty($oldFilename) && file_exists(root() . "/{$oldFilename}")) {
-                    unlink(root() . "/{$oldFilename}");
-                }
             } catch (Exception $e) {
-                $message = $e->getMessage();
-                return;
+                throw new Exception($e->getMessage());
             }
         }
 
         if (empty($newFilename)) {
-            $message = 'No changes have been made to 201 file.';
-            return;
+            throw new Exception('No changes have been made to 201 file.');
         }
 
         $ext = pathinfo($newFilename, PATHINFO_EXTENSION);
@@ -1076,15 +1069,17 @@ if (isset($_POST['save-201-file'])) {
             $logMessage = 'Updated 201 file';
         }
 
-        if ($affectedFileAttachment === false) {
-            $message = 'No changes have been made to 201 file.';
-            return;
+        if ($affectedFileAttachment === false && !$stagedFile) {
+            throw new Exception('No changes have been made to 201 file.');
         }
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
         commit();
         if ($stagedFile) {
             commitStagedFile($stagedFile);
+            if (!empty($oldFilename) && file_exists(root() . "/{$oldFilename}")) {
+                unlink(root() . "/{$oldFilename}");
+            }
         }
 
         $message = "201 file has been " . ($hasExistingRecord ? "updated" : "added") . " successfully.";
@@ -1096,9 +1091,10 @@ if (isset($_POST['save-201-file'])) {
 }
 
 if (isset($_POST['delete-201-file'])) {
-    $employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-    $fileId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $employeeId = sanitize(decipher($_POST['verifier']));
+    $fileId = sanitize(decipher($_POST['data-verifier']));
     $showAlert = true;
+    $success = false;
     $filename = null;
     $file = fileAttachment($employeeId, $fileId);
     $affectedFile = false;
@@ -1112,13 +1108,14 @@ if (isset($_POST['delete-201-file'])) {
         }
 
         if ($affectedFile === false) {
-            $message = 'No changes have been made to 201 file.';
-            return;
+            throw new Exception('No changes have been made to 201 file.');
         }
 
-        unlink(root() . '/' . $filename);
         createSystemLog($stationId, $userId, 'Deleted employee 201 file', $employeeId, clientIp());
         commit();
+        if (!empty($filename) && file_exists(root() . '/' . $filename)) {
+            unlink(root() . '/' . $filename);
+        }
 
         $message = '201 file has been deleted successfully.';
         $success = true;
@@ -1129,12 +1126,13 @@ if (isset($_POST['delete-201-file'])) {
 }
 
 if (isset($_POST['save-position'])) {
-    $referencePositionId = sanitize(decipher($_POST['verifier'] ?? null));
+    $referencePositionId = sanitize(decipher($_POST['verifier']));
     $positionId = sanitize($_POST['position-id']);
     $official_title = sanitize($_POST['official-title']);
     $salary_grade = sanitize($_POST['salary-grade']);
     $category = sanitize($_POST['category']);
     $showAlert = true;
+    $success = false;
 
     if (empty($official_title)) {
         $message = 'Please enter the official title.';
@@ -1167,8 +1165,7 @@ if (isset($_POST['save-position'])) {
         }
 
         if ($affectedPosition === false) {
-            $message = 'No changes have been made to positions.';
-            return;
+            throw new Exception('No changes have been made to positions.');
         }
 
         createSystemLog($stationId, $userId, 'Updated position', $positionId, clientIp());
@@ -1184,8 +1181,9 @@ if (isset($_POST['save-position'])) {
 }
 
 if (isset($_POST['delete-position'])) {
-    $positionId = sanitize(decipher($_POST['verifier'] ?? null));
+    $positionId = sanitize(decipher($_POST['verifier']));
     $showAlert = true;
+    $success = false;
     $message = 'Position was not deleted successfully.';
 
     if (empty($positionId)) {
@@ -1207,8 +1205,7 @@ if (isset($_POST['delete-position'])) {
         $affectedPosition = deletePosition($positionId);
 
         if ($affectedPosition === false) {
-            $message = 'Position was not deleted successfully.';
-            return;
+            throw new Exception('Position was not deleted successfully.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted position', $positionId, clientIp());
@@ -1223,9 +1220,10 @@ if (isset($_POST['delete-position'])) {
 }
 
 if (isset($_POST['save-vacancy'])) {
-    $plantillaItemId = sanitize($_POST['item_number'] ?? null);
+    $plantillaItemId = sanitize($_POST['item_number']);
     $datePosted = $_POST['date_posted'] ?? date('Y-m-d');
     $showAlert = true;
+    $success = false;
 
     if (empty($plantillaItemId)) {
         $message = 'Please select a plantilla item number.';
@@ -1258,8 +1256,9 @@ if (isset($_POST['save-vacancy'])) {
 }
 
 if (isset($_POST['delete-vacancy'])) {
-    $vacancyId = sanitize(decipher($_POST['verifier'] ?? null));
+    $vacancyId = sanitize(decipher($_POST['verifier']));
     $showAlert = true;
+    $success = false;
 
     if (empty($vacancyId)) {
         $message = 'Invalid vacancy selected.';
@@ -1275,8 +1274,7 @@ if (isset($_POST['delete-vacancy'])) {
         $deletedVacancy = deleteVacancy($vacancyId);
 
         if ($deletedVacancy === false) {
-            $message = 'Vacancy was not deleted successfully.';
-            return;
+            throw new Exception('Vacancy was not deleted successfully.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted vacancy', $itemNumber, clientIp());
@@ -1291,13 +1289,14 @@ if (isset($_POST['delete-vacancy'])) {
 }
 
 if (isset($_POST['save-plantilla-item'])) {
-    $plantillaItemId = sanitize(decipher($_POST['verifier'] ?? null));
-    $item_number = sanitize($_POST['item-number'] ?? null);
-    $position_id = sanitize($_POST['position'] ?? null);
-    $station_id = sanitize($_POST['station'] ?? null);
-    $employment_status = sanitize($_POST['employment-status'] ?? null);
+    $plantillaItemId = sanitize(decipher($_POST['verifier']));
+    $item_number = sanitize($_POST['item-number']);
+    $position_id = sanitize($_POST['position']);
+    $station_id = sanitize($_POST['station']);
+    $employment_status = sanitize($_POST['employment-status']);
     $is_dissolve = isset($_POST['is-dissolve']) ? 1 : 0;
     $showAlert = true;
+    $success = false;
 
     beginTransaction();
 
@@ -1311,8 +1310,7 @@ if (isset($_POST['save-plantilla-item'])) {
         }
 
         if ($affectedPlantillaItem === false) {
-            $message = doesItemNumberExist($item_number) ? 'Item number already exists.' : 'No changes have been made to plantilla items.';
-            return;
+            throw new Exception(doesItemNumberExist($item_number) ? 'Item number already exists.' : 'No changes have been made to plantilla items.');
         }
 
         createSystemLog($stationId, $userId, 'Added Plantilla Item', $item_number, clientIp());
@@ -1326,8 +1324,9 @@ if (isset($_POST['save-plantilla-item'])) {
 }
 
 if (isset($_POST['delete-plantilla-item'])) {
-    $plantillaItemId = sanitize(decipher($_POST['verifier'] ?? null));
+    $plantillaItemId = sanitize(decipher($_POST['verifier']));
     $showAlert = true;
+    $success = false;
     $message = 'No changes have been made to plantilla items.';
 
     beginTransaction();
@@ -1337,7 +1336,7 @@ if (isset($_POST['delete-plantilla-item'])) {
         $affectedPlantillaItem = deletePlantillaItem($plantillaItemId);
 
         if ($affectedPlantillaItem === false) {
-            return;
+            throw new Exception('No changes have been made to plantilla items.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted plantilla items', $plantillaItemNumber, clientIp());
@@ -1353,8 +1352,9 @@ if (isset($_POST['delete-plantilla-item'])) {
 
 if (isset($_POST['publish-vacancies'])) {
     $showAlert = true;
-    $title = sanitize($_POST['pub_title'] ?? null);
-    $description = sanitize($_POST['pub_description'] ?? null);
+    $success = false;
+    $title = sanitize($_POST['pub_title']);
+    $description = sanitize($_POST['pub_description']);
     $openDate = sanitize($_POST['open_date'] ?? date('Y-m-d'));
     $closeDate = sanitize($_POST['close_date'] ?? date('Y-m-d', strtotime('+30 days')));
     $pubStatus = sanitize($_POST['pub_status'] ?? 'open');
@@ -1383,34 +1383,37 @@ if (isset($_POST['publish-vacancies'])) {
     try {
         $publicationId = createPublication($code, $title, $description, $openDate, $closeDate, $pubStatus);
 
-        if ($publicationId) {
-            $totalVacanciesLinked = 0;
+        if (!$publicationId) {
+            throw new Exception('Failed to create publication.');
+        }
 
-            foreach ($vacancyIds as $vacancyId) {
-                addPublicationItem($publicationId, $vacancyId);
-                $totalVacanciesLinked++;
-            }
+        $totalVacanciesLinked = 0;
 
-            createSystemLog($stationId, $userId, 'Published vacancies', "$code - $totalVacanciesLinked items linked", clientIp());
-            commit();
+        foreach ($vacancyIds as $vacancyId) {
+            addPublicationItem($publicationId, $vacancyId);
+            $totalVacanciesLinked++;
+        }
 
-            $applicationUrl = uri() . '/hrmis/apply?p=' . $code;
-            $success = true;
-            $message = "Publication created successfully!<br><br>
+        createSystemLog($stationId, $userId, 'Published vacancies', "$code - $totalVacanciesLinked items linked", clientIp());
+        commit();
+
+        $applicationUrl = uri() . '/hrmis/apply?p=' . $code;
+        $success = true;
+        $message = "Publication created successfully!<br><br>
                 <strong>Application URL:</strong><br>
                 <a href=\"{$applicationUrl}\" target=\"_blank\" class=\"text-primary\">{$applicationUrl}</a><br><br>
                 <small class=\"text-muted\">Share this link to accept applications.</small>";
-        }
+
     } catch (Exception $e) {
         rollBack();
         $message = $e->getMessage();
     }
-
 }
 
 if (isset($_POST['delete-publication'])) {
-    $publicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $publicationId = sanitize(decipher($_POST['verifier']));
     $showAlert = true;
+    $success = false;
 
     if (empty($publicationId)) {
         $message = 'Invalid publication selected.';
@@ -1443,14 +1446,15 @@ if (isset($_POST['delete-publication'])) {
 }
 
 if (isset($_POST['save-publication'])) {
-    $publicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $publicationId = sanitize(decipher($_POST['verifier']));
     $code = $statusMessage = null;
     $showAlert = true;
-    $title = sanitize($_POST['pub_title'] ?? null);
-    $description = sanitize($_POST['pub_description'] ?? null);
+    $success = false;
+    $title = sanitize($_POST['pub_title']);
+    $description = sanitize($_POST['pub_description']);
     $openDate = sanitize($_POST['open_date'] ?? date('Y-m-d'));
     $closeDate = sanitize($_POST['close_date'] ?? date('Y-m-d', strtotime('+30 days')));
-    $pubStatus = sanitize($_POST['pub_status'] ?? 'open');
+    $pubStatus = sanitize($_POST['pub_status']);
     $vacancyIds = $_POST['vacancy_ids'] ?? [];
 
     if (empty($title)) {
@@ -1472,12 +1476,17 @@ if (isset($_POST['save-publication'])) {
 
     try {
         if (!empty($publicationId)) {
-            clearPublicationItems($publicationId);
+            if (clearPublicationItems($publicationId) === false) {
+                throw new Exception('Failed to clear publication items.');
+            }
         }
 
         if (empty($publicationId)) {
             $code = generatePublicationCode();
             $publicationId = createPublication($code, $title, $description, $openDate, $closeDate, $pubStatus);
+            if (!$publicationId) {
+                throw new Exception('Failed to create publication.');
+            }
             $statusMessage = 'create';
         } else {
             $code = publication($publicationId)['code'];
@@ -1537,8 +1546,9 @@ if (isset($_POST['save-publication'])) {
 // }
 
 if (isset($_POST['qualify-application'])) {
-    $applicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $applicationId = sanitize(decipher($_POST['verifier']));
     $showAlert = true;
+    $success = false;
 
     if (empty($applicationId)) {
         $message = 'Invalid application selected.';
@@ -1551,8 +1561,7 @@ if (isset($_POST['qualify-application'])) {
         $application = applicationRecord($applicationId);
 
         if (empty($application)) {
-            $message = 'Application record not found.';
-            return;
+            throw new Exception('Application record not found.');
         }
 
         $applicationCode = applicantCode($application['application_code_id']);
@@ -1563,8 +1572,7 @@ if (isset($_POST['qualify-application'])) {
         $result = qualifyApplication($applicationId);
 
         if ($result === false) {
-            $message = 'Application was not qualified successfully.';
-            return;
+            throw new Exception('Application was not qualified successfully.');
         }
 
         createSystemLog($stationId, $userId, 'Qualified application', "$applicantName - $position", clientIp());
@@ -1579,9 +1587,10 @@ if (isset($_POST['qualify-application'])) {
 }
 
 if (isset($_POST['disqualify-application'])) {
-    $applicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $applicationId = sanitize(decipher($_POST['verifier']));
     $remarks = sanitize($_POST['remarks']);
     $showAlert = true;
+    $success = false;
 
     if (empty($applicationId)) {
         $message = 'Invalid application selected.';
@@ -1599,8 +1608,7 @@ if (isset($_POST['disqualify-application'])) {
         $application = applicationRecord($applicationId);
 
         if (empty($application)) {
-            $message = 'Application record not found.';
-            return;
+            throw new Exception('Application record not found.');
         }
 
         $applicationCode = applicantCode($application['application_code_id']);
@@ -1611,8 +1619,7 @@ if (isset($_POST['disqualify-application'])) {
         $result = disqualifyApplication($applicationId, $remarks);
 
         if ($result === false) {
-            $message = 'Application was not disqualified successfully.';
-            return;
+            throw new Exception('Application was not disqualified successfully.');
         }
 
         createSystemLog($stationId, $userId, 'Disqualified application', "$applicantName - $position - Reason: $remarks", clientIp());
@@ -1627,8 +1634,9 @@ if (isset($_POST['disqualify-application'])) {
 }
 
 if (isset($_POST['for-review-application'])) {
-    $applicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $applicationId = sanitize(decipher($_POST['verifier']));
     $showAlert = true;
+    $success = false;
 
     if (empty($applicationId)) {
         $message = 'Invalid application selected.';
@@ -1641,8 +1649,7 @@ if (isset($_POST['for-review-application'])) {
         $application = applicationRecord($applicationId);
 
         if (empty($application)) {
-            $message = 'Application record not found.';
-            return;
+            throw new Exception('Application record not found.');
         }
 
         $applicationCode = applicantCode($application['application_code_id']);
@@ -1653,8 +1660,7 @@ if (isset($_POST['for-review-application'])) {
         $result = forReviewApplication($applicationId);
 
         if ($result === false) {
-            $message = 'Application was not marked for review successfully.';
-            return;
+            throw new Exception('Application was not marked for review successfully.');
         }
 
         createSystemLog($stationId, $userId, 'Marked application for review', "$applicantName - $position", clientIp());
@@ -1669,8 +1675,9 @@ if (isset($_POST['for-review-application'])) {
 }
 
 if (isset($_POST['save-assessment-score'])) {
-    $applicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $applicationId = sanitize(decipher($_POST['verifier']));
     $showAlert = true;
+    $success = false;
 
     if (empty($applicationId)) {
         $message = 'Invalid application selected.';
@@ -1683,8 +1690,7 @@ if (isset($_POST['save-assessment-score'])) {
         $application = applicationRecord($applicationId);
 
         if (empty($application)) {
-            $message = 'Application record not found.';
-            return;
+            throw new Exception('Application record not found.');
         }
 
         $applicationCodeId = $application['application_code_id'];
@@ -1712,8 +1718,7 @@ if (isset($_POST['save-assessment-score'])) {
         $result = saveAssessmentScore($applicationId, $data);
 
         if ($result === false) {
-            $message = 'Assessment score was not saved successfully.';
-            return;
+            throw new Exception('Assessment score was not saved successfully.');
         }
 
         createSystemLog($stationId, $userId, 'Saved applicant assessment score', "$applicantName - $position - Score: {$data['total_accumulated_score']}", clientIp());
