@@ -44,6 +44,16 @@ function section($section_id)
     return find("SELECT * FROM `sections` WHERE `id` = ? LIMIT 1", [$section_id]);
 }
 
+// user_permissions, sections
+function employeeSection($employee_id)
+{
+    $sql = "SELECT s.`id`, s.`name`, s.`head_id`, s.`functional_division_id`
+            FROM `user_permissions` AS u
+            INNER JOIN `sections` AS s ON u.`access` = s.`id`
+            WHERE u.`employee_id` = ? LIMIT 1";
+    return find($sql, [$employee_id]);
+}
+
 function sectionsExcept($section_id)
 {
     return query("SELECT * FROM `sections` WHERE `id` <> ? ORDER BY `name` ASC", [$section_id]);
