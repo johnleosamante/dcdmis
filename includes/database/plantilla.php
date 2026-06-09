@@ -79,3 +79,36 @@ function deletePlantillaItem($id)
 {
     return delete('plantilla_items', '`id` = ?', [$id]);
 }
+
+function employeesByStation($station_id, $position_id = null)
+{
+    $params = [$station_id];
+    $positionFilter = '';
+    if ($position_id !== null) {
+        $positionFilter = ' AND sa.`position_id` = ?';
+        $params[] = $position_id;
+    }
+
+    // Exclude employees who already occupy any plantilla item with the same position
+    // (i.e. they have a present service record linked to a plantilla item of that position)
+    $excludeFilter = '';
+    if ($position_id !== null) {
+        $excludeFilter = " AND e.`id` NOT IN (
+                SELECT sr.`employee_id`
+                FROM `service_records` AS sr
+                INNER JOIN `plantilla_items` AS pi ON sr.`plantilla_item_id` = pi.`id`
+                WHERE pi.`position_id` = ? AND sr.`is_present` = 1 AND sr.`to_date` IS NULL
+            )";
+        $params[] = $position_id;
+    }
+
+    $sql = "SELECT e.`id`, e.`last_name`, e.`first_name`, e.`middle_name`, e.`name_extension`,
+                sa.`assignment_date`, sa.`position_id`, p.`official_title` AS `position_title`
+            FROM `employees` AS e
+            INNER JOIN `station_assignments` AS sa ON e.`id` = sa.`employee_id`
+            INNER JOIN `positions` AS p ON sa.`position_id` = p.`id`
+            WHERE e.`status` = 'Active' AND sa.`station_id` = ?{$positionFilter}{$excludeFilter}
+            ORDER BY e.`last_name` ASC, e.`first_name` ASC";
+    $results = query($sql, $params);
+    return is_array($results) ? $results : [];
+}
