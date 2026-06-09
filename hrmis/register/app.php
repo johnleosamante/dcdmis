@@ -1,12 +1,5 @@
 <?php
 // hrmis/register/app.php
-require_once '../../includes/function.php';
-require_once root() . '/includes/database/database.php';
-require_once root() . '/includes/database/employee.php';
-require_once root() . '/includes/database/vacancy.php';
-require_once root() . '/includes/email.php';
-require_once root() . '/includes/string.php';
-
 $errors = $_SESSION['errors'] ?? [];
 $form_data = $_SESSION['form_data'] ?? [];
 $success = $_SESSION['success'] ?? false;
@@ -142,7 +135,7 @@ if (isset($_POST['register-applicant'])) {
             commit();
 
             $applicant_code = $data['code'];
-            $applicant_name = toName($data['last_name'], $data['first_name'], $data['middle_name'], $data['name_extension']);
+            $applicant_name = toName($data['last_name'], $data['first_name'], $data['middle_name'], $data['name_extension'], true);
             $title = strtolower($data['sex']) === 'male' ? 'Mr. ' : 'Ms. ';
 
             $_SESSION['success'] = true;
@@ -158,11 +151,14 @@ if (isset($_POST['register-applicant'])) {
 
                 Please retain your 18-digit applicant ID for reference and use for applications of available vacancies.
 
-                Security Note: If you did not request this action, please contact system administration immediately.
-
-                Best regards,
-                ICT Support Team
+                ***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****
                 EOT;
+
+            $targetDeliveryEmail = PRODUCTION_MODE ? $email : DEVELOPER_EMAIL;
+            $subject = "Applicant Registration Success";
+            if (!sendMail($targetDeliveryEmail, $subject, $emailBody)) {
+                error_log("Failed to send registration success email to: {$email} (Routed to: {$targetDeliveryEmail})");
+            }
 
             redirect($_SERVER['REQUEST_URI']);
         } catch (Exception $e) {
