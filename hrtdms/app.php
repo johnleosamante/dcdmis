@@ -36,7 +36,8 @@ if (isset($_POST['save-training'])) {
         'dates' => sanitize($_POST['unconsecutive-dates']),
         'hasCert' => isset($_POST['has-certificate']) ? '1' : '0',
     ];
-    $signatory = ($data['hasCert'] === '1') ? section('SDS')['head_id'] : null;
+    $sdsSection = section('SDS');
+    $signatory = ($data['hasCert'] === '1' && $sdsSection) ? $sdsSection['head_id'] : null;
 
     if (!training($trainingId)) {
         $logMessage = 'Added training';
@@ -90,21 +91,24 @@ if (isset($_POST['add-participants'])) {
             $affectedParticipants = createTrainingParticipant($trainingId, $id, $ctrlNo);
 
             if ($affectedParticipants) {
-                $employee = trainingParticipants($trainingId, $id)[0];
-                $employeeEmail = PRODUCTION_MODE ? $employee['email_address'] : DEVELOPER_EMAIL;
-                $employeeName = strtoupper(toHandleEncoding(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true)));
-                $certificate = customUri('print', 'Certificate of Participation', $trainingId, DOMAIN) . '&p=' . encode($id);
-                $appearance = customUri('print', 'Certificate of Appearance', $trainingId, DOMAIN) . '&p=' . encode($id);
-                $repositoryUrl = uri(DOMAIN) . '/hrtdms/repository';
-                $emailMessage = "Good day $employeeName!\n\n
-                        Congratulations you have successfully completed $title\n
-                        Get your certificates by clicking the links below.\n\n
-                        Certificate of Appearance: $appearance\n\n
-                        Certificate of Participation: $certificate\n\n
-                        If nothing happens when you click the link, copy the links above and paste to your web browser instead.\n\n
-                        You can also go to the DepEd Dipolog City Division Training Repository ($repositoryUrl) to view your trainings. Thank you.\n\n\n
-                        ***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****";
-                sendMail($employeeEmail, $title, $emailMessage);
+                $employeeList = trainingParticipants($trainingId, $id);
+                $employee = !empty($employeeList) ? $employeeList[0] : null;
+                if ($employee) {
+                    $employeeEmail = PRODUCTION_MODE ? $employee['email_address'] : DEVELOPER_EMAIL;
+                    $employeeName = strtoupper(toHandleEncoding(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true)));
+                    $certificate = customUri('print', 'Certificate of Participation', $trainingId, DOMAIN) . '&p=' . encode($id);
+                    $appearance = customUri('print', 'Certificate of Appearance', $trainingId, DOMAIN) . '&p=' . encode($id);
+                    $repositoryUrl = uri(DOMAIN) . '/hrtdms/repository';
+                    $emailMessage = "Good day $employeeName!\n\n
+                            Congratulations you have successfully completed $title\n
+                            Get your certificates by clicking the links below.\n\n
+                            Certificate of Appearance: $appearance\n\n
+                            Certificate of Participation: $certificate\n\n
+                            If nothing happens when you click the link, copy the links above and paste to your web browser instead.\n\n
+                            You can also go to the DepEd Dipolog City Division Training Repository ($repositoryUrl) to view your trainings. Thank you.\n\n\n
+                            ***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****";
+                    sendMail($employeeEmail, $title, $emailMessage);
+                }
             }
         }
     }
