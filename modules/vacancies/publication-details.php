@@ -125,48 +125,6 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold">Included Vacancies</h6>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0 text-center" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th class="align-middle" width="35%">Position / Salary Grade</th>
-                        <th class="align-middle" width="25%">Item Number</th>
-                        <th class="align-middle" width="40%">Station</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $items = publicationItems($publicationId);
-                    foreach ($items as $item): ?>
-                        <tr class="text-uppercase">
-                            <td class="align-middle">
-                                <?= e($item['official_title']) . ' (' . e($item['salary_grade']) . ')' ?>
-                            </td>
-                            <td class="align-middle"><?= e($item['item_number']) ?></td>
-                            <td class="align-middle">
-                                <?php $school = schoolById($item['station_id']);
-                                echo $school ? $school['name'] : 'N/A'; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th class="align-middle" width="35%">Position / Salary Grade</th>
-                        <th class="align-middle" width="25%">Item Number</th>
-                        <th class="align-middle" width="40%">Station</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-</div>
-
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
         <div class="d-sm-flex align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold">Applications Received</h6>
             <div>
@@ -192,15 +150,19 @@ messageAlert($showAlert, $message, $success);
                 </thead>
 
                 <tbody>
-                    <?php $apps = applicantsByPublication($publicationId);
+                    <?php $apps = applicantsForReviewByPublication($publicationId);
                     foreach ($apps as $app): ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle"><?= toDatetime($app['created_at']) ?></td>
+                            <td class="align-middle">
+                                <?= toDatetime($app['created_at']) ?>
+                            </td>
                             <td class="align-middle">
                                 <?= applicantName($app['application_code']) ?>
                             </td>
                             <td class="align-middle">
-                                <div><?= e($app['official_title']) ?></div>
+                                <div>
+                                    <?= e($app['official_title']) ?>
+                                </div>
                             </td>
                             <td class="align-middle text-center">
                                 <?php
@@ -211,7 +173,9 @@ messageAlert($showAlert, $message, $success);
                                     $statusBadgeClass = 'badge-danger';
                                 }
                                 ?>
-                                <span class="badge <?= $statusBadgeClass ?>"><?= e($app['status']) ?></span>
+                                <span class="badge <?= $statusBadgeClass ?>">
+                                    <?= e($app['status']) ?>
+                                </span>
                             </td>
                             <td class="align-middle text-capitalize">
                                 <?php
@@ -258,6 +222,48 @@ messageAlert($showAlert, $message, $success);
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
                     </tr>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold">Included Vacancies</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 text-center" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="align-middle" width="35%">Position / Salary Grade</th>
+                        <th class="align-middle" width="25%">Item Number</th>
+                        <th class="align-middle" width="40%">Station</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $items = publicationItems($publicationId);
+                    foreach ($items as $item): ?>
+                        <tr class="text-uppercase">
+                            <td class="align-middle">
+                                <?= e($item['official_title']) . ' (' . e($item['salary_grade']) . ')' ?>
+                            </td>
+                            <td class="align-middle"><?= e($item['item_number']) ?></td>
+                            <td class="align-middle">
+                                <?php $school = schoolById($item['station_id']);
+                                echo $school ? $school['name'] : 'N/A'; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="align-middle" width="35%">Position / Salary Grade</th>
+                        <th class="align-middle" width="25%">Item Number</th>
+                        <th class="align-middle" width="40%">Station</th>
                     </tr>
                 </tfoot>
             </table>
