@@ -32,44 +32,26 @@ if (isset($_POST['save-school'])) {
 	$showAlert = true;
 	$link = '[<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . strtoupper($schoolName) . '</a>]';
 
-	if (is_uploaded_file($_FILES['logo-upload']['tmp_name'])) {
-		$temp = $_FILES['logo-upload']['tmp_name'];
+	$stagedFile = null;
 
-		if ($_FILES['logo-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-			$message = 'The chosen file exceeds the upload file limit. No changes have been made to school information.';
+	if (!empty($_FILES['logo-upload']['tmp_name']) && is_uploaded_file($_FILES['logo-upload']['tmp_name'])) {
+		try {
+			$stagedFile = stageUploadedFile(
+				$_FILES['logo-upload'],
+				['image/png' => 'png', 'image/jpeg' => 'jpg', 'image/gif' => 'gif'],
+				root() . "/uploads/school_logo/{$schoolId}",
+				"LOGO"
+			);
+
+			if (!empty($logo) && file_exists(root() . "/{$logo}")) {
+				unlink(root() . "/{$logo}");
+			}
+
+			$logo = "uploads/school_logo/{$schoolId}/" . $stagedFile['secure_name'];
+		} catch (Exception $e) {
+			$message = $e->getMessage();
 			return;
 		}
-
-		$allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif'];
-
-		if (!validateFileMimeType($temp, $allowedFileTypes)) {
-			$message = 'The chosen file is not an image file. No changes have been made to school information.';
-			return;
-		}
-
-		if (!validateFileExtension($_FILES['logo-upload']['name'], ['png', 'jpg', 'jpeg', 'gif'])) {
-			$message = 'The chosen file has an invalid extension. No changes have been made to school information.';
-			return;
-		}
-
-		$sanitizedName = sanitizeFilename($_FILES['logo-upload']['name']);
-		$ext = getFileExtension($sanitizedName);
-
-		if (!empty($logo) && file_exists(root() . "/{$logo}")) {
-			unlink(root() . "/{$logo}");
-		}
-
-		$uploadDirectory = root() . "/uploads/school_logo/{$schoolId}";
-
-		if (!is_dir($uploadDirectory)) {
-			mkdir($uploadDirectory, 0755, true);
-		}
-
-		$uploadDate = date('YmdHis');
-
-		$logo = "uploads/school_logo/{$schoolId}/{$schoolId}{$uploadDate}.{$ext}";
-
-		move_uploaded_file($temp, "../{$logo}");
 	}
 
 	beginTransaction();
@@ -111,6 +93,9 @@ if (isset($_POST['save-school'])) {
 		}
 
 		commit();
+		if ($stagedFile) {
+			commitStagedFile($stagedFile);
+		}
 		$success = true;
 	} catch (Exception $e) {
 		rollBack();
@@ -128,7 +113,7 @@ if (isset($_POST['delete-school'])) {
 	$schoolId = sanitize(decipher($_POST['verifier'] ?? null));
 	$showAlert = true;
 	$schools = schoolById($schoolId);
-	$target = count($schools) === 1 ? $schools['name'] : $schoolId;
+	$target = $schools ? $schools['name'] : $schoolId;
 	$affectedSchool = deleteSchool($schoolId);
 
 	if (!$affectedSchool) {
@@ -238,7 +223,7 @@ if (isset($_POST['delete-district'])) {
 
 	$districts = district($districtCode);
 
-	$target = count($districts) === 1 ? $districts['name'] : $districtCode;
+	$target = $districts ? $districts['name'] : $districtCode;
 
 	$affectedDistrict = deleteDistrict($districtCode);
 
@@ -373,7 +358,7 @@ if (isset($_POST['delete-employee'])) {
 	$employeeId = sanitize(decipher($_POST['verifier'] ?? null));
 	$showAlert = true;
 	$employee = employee($employeeId);
-	$target = count($employee) === 1 ? userName($employeeId) : $employeeId;
+	$target = $employee ? userName($employeeId) : $employeeId;
 
 	if (!$employeeId || !isDuplicateEmployee($employeeId)) {
 		$message = "Employee record not found of already deleted.";
