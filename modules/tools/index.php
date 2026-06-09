@@ -10,8 +10,12 @@ contentTitle('Monitoring Tools');
     cardMini('Agency Action Plan and Status of Implementation', 'https://docs.google.com/spreadsheets/d/15UW4kGOiJvMIViW-muOG7KTCX3Io5HcX9ZyRgj8rXAc/edit?usp=sharing', 'fa-file-excel', 'primary', true);
 
     $userPositionId = position($userId)['position_id'];
-    $allowedPositions = ['SDS', 'ASDS', 'CES', 'ATY3', 'ITO1', 'A3', 'ADOF5', 'PSDS', 'EPS'];
-    $showFilledUnfilledItems = in_array($userPositionId, $allowedPositions, true) || ($userPositionId === 'ADOF4' && $isPersonnel);
+    $sectionCode = employeeSection($userId)['id'];
+    $allowedPositions = ['SDS', 'ASDS', 'CES', 'ATY3', 'ITO1', 'A3', 'ADOF5', 'PSDS', 'EPS', 'PLO3'];
+    $showFilledUnfilledItems = in_array($userPositionId, $allowedPositions, true) ||
+        ($userPositionId === 'ADOF4' && $sectionCode === 'PER') ||
+        ($userPositionId === 'SREPS' || $userPositionId === 'EPS2') && ($sectionCode === 'SME') ||
+        ($userPositionId === 'SREPS' && $sectionCode === 'HRD');
 
     if ($showFilledUnfilledItems) {
         cardMini(
