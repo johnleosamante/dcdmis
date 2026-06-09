@@ -130,7 +130,9 @@ if (isset($_POST['register-applicant'])) {
                 ];
             }
 
-            createApplicantCode($data['id'], $data['code']);
+            if (createApplicantCode($data['id'], $data['code']) === false) {
+                throw new Exception('Failed to create applicant code.');
+            }
             createSystemLog('143', null, 'Applicant registration', $data['id'], clientIp());
             commit();
 
