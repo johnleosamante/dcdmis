@@ -15,10 +15,6 @@ if (isset($_SESSION["{$prefix}change_password"])) {
 	redirect("{$baseUri}/login/change");
 }
 
-if (isset($_SESSION["{$prefix}change_password"])) {
-	redirect("{$baseUri}/login/change");
-}
-
 if (isset($_POST['save-school'])) {
 	$referenceSchoolId = sanitize(decipher($_POST['verifier'] ?? null));
 	$referenceAlias = sanitize(decipher($_POST['data-verifier'] ?? null));
