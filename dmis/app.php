@@ -16,8 +16,8 @@ if (isset($_SESSION["{$prefix}change_password"])) {
 }
 
 if (isset($_POST['save-school'])) {
-	$referenceSchoolId = sanitize(decipher($_POST['verifier'] ?? null));
-	$referenceAlias = sanitize(decipher($_POST['data-verifier'] ?? null));
+	$referenceSchoolId = sanitize(decipher($_POST['verifier']));
+	$referenceAlias = sanitize(decipher($_POST['data-verifier']));
 	$schoolId = sanitize($_POST['school-id']);
 	$schoolName = sanitize($_POST['school-name']);
 	$alias = sanitize($_POST['alias']);
@@ -28,11 +28,13 @@ if (isset($_POST['save-school'])) {
 	$email = sanitize($_POST['email']);
 	$website = sanitize($_POST['website']);
 	$facebook = sanitize($_POST['facebook']);
-	$logo = sanitize(decipher($_POST['image-verifier'] ?? null));
+	$logo = sanitize(decipher($_POST['image-verifier']));
 	$showAlert = true;
+	$success = false;
 	$link = '[<a href="' . customUri('dmis', 'School Information', $schoolId) . '" title="View ' . $schoolName . ' information">' . strtoupper($schoolName) . '</a>]';
 
 	$stagedFile = null;
+	$oldLogo = $logo;
 
 	if (!empty($_FILES['logo-upload']['tmp_name']) && is_uploaded_file($_FILES['logo-upload']['tmp_name'])) {
 		try {
@@ -42,10 +44,6 @@ if (isset($_POST['save-school'])) {
 				root() . "/uploads/school_logo/{$schoolId}",
 				"LOGO"
 			);
-
-			if (!empty($logo) && file_exists(root() . "/{$logo}")) {
-				unlink(root() . "/{$logo}");
-			}
 
 			$logo = "uploads/school_logo/{$schoolId}/" . $stagedFile['secure_name'];
 		} catch (Exception $e) {
@@ -95,6 +93,9 @@ if (isset($_POST['save-school'])) {
 		commit();
 		if ($stagedFile) {
 			commitStagedFile($stagedFile);
+			if (!empty($oldLogo) && file_exists(root() . "/{$oldLogo}")) {
+				unlink(root() . "/{$oldLogo}");
+			}
 		}
 		$success = true;
 	} catch (Exception $e) {
@@ -110,8 +111,9 @@ if (isset($_POST['save-school'])) {
 }
 
 if (isset($_POST['delete-school'])) {
-	$schoolId = sanitize(decipher($_POST['verifier'] ?? null));
+	$schoolId = sanitize(decipher($_POST['verifier']));
 	$showAlert = true;
+	$success = false;
 	$schools = schoolById($schoolId);
 	$target = $schools ? $schools['name'] : $schoolId;
 	$affectedSchool = deleteSchool($schoolId);
@@ -128,12 +130,13 @@ if (isset($_POST['delete-school'])) {
 }
 
 if (isset($_POST['save-section'])) {
-	$referenceSectionId = sanitize(decipher($_POST['verifier'] ?? null));
+	$referenceSectionId = sanitize(decipher($_POST['verifier']));
 	$alias = sanitize($_POST['alias']);
 	$section = sanitize($_POST['section']);
 	$division = sanitize($_POST['division']);
 	$head = sanitize($_POST['head']);
 	$showAlert = true;
+	$success = false;
 	$link = '[<a href="' . customUri('dmis', 'Section Information', $alias) . '" title="View ' . $section . ' information">' . strtoupper($section) . '</a>]';
 
 	beginTransaction();
@@ -188,11 +191,12 @@ if (isset($_POST['save-section'])) {
 /** Add delete-section and UI for implementation */
 
 if (isset($_POST['save-district'])) {
-	$referenceDistrictId = sanitize(decipher($_POST['verifier'] ?? null));
+	$referenceDistrictId = sanitize(decipher($_POST['verifier']));
 	$districtCode = sanitize($_POST['code']);
 	$districtName = sanitize($_POST['district']);
 	$districtHead = sanitize($_POST['head']);
 	$showAlert = true;
+	$success = false;
 	$link = '[<a href="' . customUri('dmis', 'District Information', $districtCode) . '" title="View ' . $districtName . ' information">' . strtoupper($districtName) . '</a>]';
 
 	if (!district($referenceDistrictId)) {
@@ -218,8 +222,9 @@ if (isset($_POST['save-district'])) {
 
 /** TODO: Add UI for implementation */
 if (isset($_POST['delete-district'])) {
-	$districtCode = sanitize(decipher($_POST['verifier'] ?? null));
+	$districtCode = sanitize(decipher($_POST['verifier']));
 	$showAlert = true;
+	$success = false;
 
 	$districts = district($districtCode);
 
@@ -239,7 +244,7 @@ if (isset($_POST['delete-district'])) {
 }
 
 if (isset($_POST['edit-user'])) {
-	$employeeId = sanitize(decipher($_POST['verifier'] ?? null));
+	$employeeId = sanitize(decipher($_POST['verifier']));
 
 	if (!$employeeId)
 		return;
@@ -254,25 +259,35 @@ if (isset($_POST['edit-user'])) {
 	];
 
 	$showAlert = true;
+	$success = false;
 
 	beginTransaction();
 
 	try {
 		if (isset($_POST['dts'])) {
-			dtsUser($employeeId)
+			$res = dtsUser($employeeId)
 				? updateUserRole($employeeId, $dtsStation, $dtsPortal)
 				: createUserRole($employeeId, $dtsStation, $dtsPortal);
+			if ($res === false) {
+				throw new Exception('Failed to update DTS user role.');
+			}
 		} else {
-			deleteUserRole($employeeId, $dtsStation);
+			if (deleteUserRole($employeeId, $dtsStation) === false) {
+				throw new Exception('Failed to delete DTS user role.');
+			}
 		}
 
 		foreach ($systems as $systemCode => $isEnabled) {
 			if ($isEnabled) {
 				if (!isStationUser($employeeId, $systemCode)) {
-					createUserRole($employeeId, $systemCode);
+					if (createUserRole($employeeId, $systemCode) === false) {
+						throw new Exception("Failed to enable system role {$systemCode}.");
+					}
 				}
 			} else {
-				deleteUserRole($employeeId, $systemCode);
+				if (deleteUserRole($employeeId, $systemCode) === false) {
+					throw new Exception("Failed to disable system role {$systemCode}.");
+				}
 			}
 		}
 
@@ -291,12 +306,18 @@ if (isset($_POST['edit-user'])) {
 }
 
 if (isset($_POST['reset-user'])) {
-	$employeeId = sanitize(decipher($_POST['verifier'] ?? null));
-	$temporaryPassword = sanitize(decipher($_POST['data-verifier'] ?? null));
+	$employeeId = sanitize(decipher($_POST['verifier']));
+	$temporaryPassword = sanitize(decipher($_POST['data-verifier']));
 	$emails = employee($employeeId);
 	$userEmail = $emails ? $emails['email_address'] : '';
 	$showAlert = true;
+	$success = false;
 	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . "{$baseUri}/modules/users/user-info-dialog.php?id=" . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
+
+	if (empty($userEmail)) {
+		$message = "Employee email address is empty. Cannot reset password.";
+		return;
+	}
 
 	$affectedAccountPassword = updateAccountPassword($employeeId, hashPassword($temporaryPassword), 'Default');
 
@@ -337,8 +358,9 @@ if (isset($_POST['reset-user'])) {
 }
 
 if (isset($_POST['remove-user'])) {
-	$employeeId = sanitize(decipher($_POST['verifier'] ?? null));
+	$employeeId = sanitize(decipher($_POST['verifier']));
 	$showAlert = true;
+	$success = false;
 	$employee = '<a href="#" data-toggle="modal" data-target="#modal" class="text-uppercase" onclick="loadData(\'' . "{$baseUri}/modules/users/user-info-dialog.php?id=" . cipher($employeeId) . '\')" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>';
 
 	$affectedUserRoles = deleteUserRoles($employeeId);
@@ -355,13 +377,14 @@ if (isset($_POST['remove-user'])) {
 }
 
 if (isset($_POST['delete-employee'])) {
-	$employeeId = sanitize(decipher($_POST['verifier'] ?? null));
+	$employeeId = sanitize(decipher($_POST['verifier']));
 	$showAlert = true;
+	$success = false;
 	$employee = employee($employeeId);
 	$target = $employee ? userName($employeeId) : $employeeId;
 
 	if (!$employeeId || !isDuplicateEmployee($employeeId)) {
-		$message = "Employee record not found of already deleted.";
+		$message = "Employee record not found or already deleted.";
 		return;
 	}
 
@@ -441,6 +464,22 @@ if (isset($_POST['delete-employee'])) {
 		return;
 	}
 
+	$profileDir = root() . "/uploads/images/{$employeeId}";
+	$filesDir = root() . "/uploads/201_files/{$employeeId}";
+
+	foreach ([$profileDir, $filesDir] as $dir) {
+		if (is_dir($dir)) {
+			$files = array_diff(scandir($dir), ['.', '..']);
+			foreach ($files as $file) {
+				$filePath = "{$dir}/{$file}";
+				if (file_exists($filePath)) {
+					unlink($filePath);
+				}
+			}
+			rmdir($dir);
+		}
+	}
+
 	$message = 'Employee has been deleted successfully.';
 	$success = true;
 
@@ -448,7 +487,8 @@ if (isset($_POST['delete-employee'])) {
 }
 
 if (isset($_POST['bulk-process-documents'])) {
-	$documentStationId = sanitize(decipher($_POST['verifier'] ?? null));
+	$message = '';
+	$documentStationId = sanitize(decipher($_POST['verifier']));
 	$stationName = strtoupper(stationName($documentStationId));
 	$previousYear = date('Y', strtotime('-1 year'));
 	$from = sanitize($_POST['from-date'] ?? "$previousYear-01-01");
@@ -478,28 +518,24 @@ if (isset($_POST['bulk-process-documents'])) {
 			beginTransaction();
 
 			try {
-				$updatedDocument = updateDocumentLogsDone($documentId);
-
-				if ($updatedDocument === false) {
-					$failedCount++;
-					rollBack();
-					continue;
+				if (updateDocumentLogsDone($documentId) === false) {
+					throw new Exception('Failed to update document logs done.');
 				}
 
-				createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Received'), 1);
+				if (createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Received'), 1) === false) {
+					throw new Exception('Failed to create document log (Received).');
+				}
 				createSystemLog($documentStationId, $processorId, 'Received Document (Bulk)', $documentId, clientIp());
 
 				$receivedCount++;
 
-				$updatedDocument = updateDocumentLogsDone($documentId);
-
-				if ($updatedDocument === false) {
-					$failedCount++;
-					rollBack();
-					continue;
+				if (updateDocumentLogsDone($documentId) === false) {
+					throw new Exception('Failed to update document logs done.');
 				}
 
-				createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Completed'), 1);
+				if (createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Completed'), 1) === false) {
+					throw new Exception('Failed to create document log (Completed).');
+				}
 				createSystemLog($documentStationId, $processorId, 'Completed Document (Bulk)', $documentId, clientIp());
 
 				$successCount++;
@@ -523,15 +559,13 @@ if (isset($_POST['bulk-process-documents'])) {
 			beginTransaction();
 
 			try {
-				$updatedDocument = updateDocumentLogsDone($documentId);
-
-				if ($updatedDocument === false) {
-					$failedCount++;
-					rollBack();
-					continue;
+				if (updateDocumentLogsDone($documentId) === false) {
+					throw new Exception('Failed to update document logs done.');
 				}
 
-				createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Completed'), 1);
+				if (createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Completed'), 1) === false) {
+					throw new Exception('Failed to create document log (Completed).');
+				}
 				createSystemLog($documentStationId, $processorId, 'Completed Document (Bulk)', $documentId, clientIp());
 				commit();
 
@@ -554,15 +588,13 @@ if (isset($_POST['bulk-process-documents'])) {
 			beginTransaction();
 
 			try {
-				$updatedDocument = updateDocumentLogsDone($documentId);
-
-				if ($updatedDocument === false) {
-					$failedCount++;
-					rollBack();
-					continue;
+				if (updateDocumentLogsDone($documentId) === false) {
+					throw new Exception('Failed to update document logs done.');
 				}
 
-				createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Canceled'), 1, 'Bulk processed: Cancelled as not received by destination.');
+				if (createDocumentLog($documentId, $processorId, $documentStationId, null, documentStatusId('Canceled'), 1, 'Bulk processed: Cancelled as not received by destination.') === false) {
+					throw new Exception('Failed to create document log (Canceled).');
+				}
 				createSystemLog($documentStationId, $processorId, 'Canceled Document (Bulk)', $documentId, clientIp());
 				commit();
 
