@@ -1569,7 +1569,7 @@ if (isset($_POST['qualify-application'])) {
         }
 
         $applicationCode = applicantCode($application['application_code_id']);
-        $applicantName = applicantName($applicationCode);
+        $applicantName = strtoupper(applicantName($applicationCode));
         $positionData = find("SELECT `official_title` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
         $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
 
@@ -1593,10 +1593,16 @@ if (isset($_POST['qualify-application'])) {
 
 if (isset($_POST['disqualify-application'])) {
     $applicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $remarks = sanitize($_POST['remarks']);
     $showAlert = true;
 
     if (empty($applicationId)) {
         $message = 'Invalid application selected.';
+        return;
+    }
+
+    if (empty($remarks)) {
+        $message = 'Remarks is required.';
         return;
     }
 
@@ -1615,14 +1621,14 @@ if (isset($_POST['disqualify-application'])) {
         $positionData = find("SELECT `official_title` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
         $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
 
-        $result = disqualifyApplication($applicationId);
+        $result = disqualifyApplication($applicationId, $remarks);
 
         if ($result === false) {
             $message = 'Application was not disqualified successfully.';
             return;
         }
 
-        createSystemLog($stationId, $userId, 'Disqualified application', "$applicantName - $position", clientIp());
+        createSystemLog($stationId, $userId, 'Disqualified application', "$applicantName - $position - Reason: $remarks", clientIp());
         commit();
 
         $message = "Application of {$applicantName} for {$position} has been marked as disqualified.";
