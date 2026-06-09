@@ -974,11 +974,11 @@ if (isset($_POST['save-service-record'])) {
 
     try {
         if (empty($serviceId)) {
-            $affectedExperience = createExperience($from, $to, $isPresent, $position, $status, $isGovernment, $sg, $salary, $station, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId);
+            $affectedExperience = createExperience($from, $to, $isPresent, $position, null, $status, $isGovernment, $sg, $salary, $station, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId);
             $logMessage = 'Added service record';
             $message = 'Service record has been added successfully.';
         } else {
-            $affectedExperience = updateExperience($from, $to, $isPresent, $position, $status, $isGovernment, $sg, $salary, $station, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId, $serviceId);
+            $affectedExperience = updateExperience($from, $to, $isPresent, $position, null, $status, $isGovernment, $sg, $salary, $station, $leaveDates, $isSeparation, $separationDate, $separationCause, $employeeId, $serviceId);
             $logMessage = 'Updated service record';
             $message = 'Service record has been updated successfully.';
         }
@@ -1350,6 +1350,107 @@ if (isset($_POST['delete-plantilla-item'])) {
     }
 }
 
+if (isset($_POST['fill-plantilla-employee'])) {
+    $plantillaItemId = sanitize(decipher($_POST['verifier']));
+    $employeeId = sanitize($_POST['employee_id'] ?? null);
+    $startDate = sanitize($_POST['start_date'] ?? date('Y-m-d'));
+    $showAlert = true;
+    $success = false;
+
+    if (empty($plantillaItemId)) {
+        $message = 'Invalid plantilla item.';
+        return;
+    }
+
+    if (empty($employeeId)) {
+        $message = 'Please select an employee to fill this position.';
+        return;
+    }
+
+    beginTransaction();
+
+    try {
+        $plantilla = plantillaItem($plantillaItemId);
+
+        if (!$plantilla) {
+            throw new Exception('Plantilla item not found.');
+        }
+
+        // Check if already filled (has a current service record linked)
+        $existingRecord = find(
+            "SELECT `id` FROM `service_records` WHERE `plantilla_item_id` = ? AND `is_present` = 1 AND `to_date` IS NULL LIMIT 1",
+            [$plantillaItemId]
+        );
+
+        if ($existingRecord) {
+            throw new Exception('This plantilla item is already filled by another employee.');
+        }
+
+        // Get position and station details
+        $positionDetail = itemPosition($plantillaItemId);
+        $positionTitle = $positionDetail['official_title'] ?? '';
+        $itemNumber = $positionDetail['item_number'] ?? 'N/A';
+        $stationId = $plantilla['station_id'];
+        $stationInfo = schoolById($stationId);
+        $stationName = $stationInfo['name'] ?? '';
+        $employmentStatus = ucfirst($plantilla['employment_status']);
+
+        if (empty($positionTitle)) {
+            throw new Exception('Position details not found for this plantilla item.');
+        }
+
+        // Close all existing present service records for this employee before adding the new one
+        update(
+            'service_records',
+            ['is_present' => '0', 'to_date' => $startDate],
+            '`employee_id` = ? AND `is_present` = 1 AND `to_date` IS NULL',
+            [$employeeId]
+        );
+
+        // Create service record
+        $affectedRecord = createExperience(
+            $startDate,        // from_date
+            null,              // to_date (present)
+            '1',               // is_present
+            $positionTitle,    // designation
+            $plantillaItemId,  // plantilla_item_id
+            $employmentStatus, // appointment_status
+            '1',               // is_government_service (DepEd is government)
+            null,              // salary_grade_step_increment
+            null,              // monthly_salary
+            $stationName,      // agency_company (station name)
+            null,              // leave_wo_pay
+            '0',               // for_separation
+            null,              // separation_date
+            null,              // separation_cause
+            $employeeId
+        );
+
+        if ($affectedRecord === false) {
+            throw new Exception('Service record could not be created.');
+        }
+
+        // $affectedRecord is the new service record ID (returned by insert())
+        $newServiceRecordId = is_numeric($affectedRecord) ? (int) $affectedRecord : null;
+
+        if (!$newServiceRecordId) {
+            throw new Exception('Could not retrieve the new service record ID.');
+        }
+
+        $employeeName = userName($employeeId, true);
+
+        createSystemLog($stationId, $userId, 'Filled plantilla item', "$itemNumber - $employeeName", clientIp());
+        commit();
+
+        $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . strtoupper(userName($employeeId, true)) . '</a>] has been successfully assigned to plantilla item [' . e($itemNumber) . '] as ' . strtoupper(e($positionTitle)) . ' at ' . strtoupper(e($stationName)) . '.';
+        $success = true;
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
+
+
 if (isset($_POST['publish-vacancies'])) {
     $showAlert = true;
     $success = false;
@@ -1514,36 +1615,6 @@ if (isset($_POST['save-publication'])) {
         $message = $e->getMessage();
     }
 }
-
-// if (isset($_POST['fill-vacancy'])) {
-//     $vacancyId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-//     $employeeId = $_POST['employee_id'] ?? null;
-//     $dateFilled = $_POST['date_filled'] ?? date('Y-m-d');
-//     $showAlert = true;
-
-//     if (empty($vacancyId)) {
-//         $message = 'Invalid vacancy selected.';
-//         $success = false;
-//     } elseif (empty($employeeId)) {
-//         $message = 'Please select an employee to fill the vacancy.';
-//         $success = false;
-//     } else {
-//         $vacancy = fetchAssoc(vacancy($vacancyId));
-//         $itemNumber = $vacancy['item_number'] ?? 'N/A';
-
-//         $filledVacancy = fillVacancy($vacancyId);
-
-//         if ($filledVacancy) {
-//             $employee = employee($employeeId);
-//             $employeeName = toName($employee['lname'], $employee['fname'], $employee['mname'], $employee['ext'], true);
-//             $message = "Vacancy [$itemNumber] has been filled by $employeeName.";
-//             createSystemLog('HRMPSB', $userId, 'Filled vacancy', "$itemNumber - $employeeName", clientIp());
-//         } else {
-//             $message = 'Vacancy was not filled successfully.';
-//             $success = false;
-//         }
-//     }
-// }
 
 if (isset($_POST['qualify-application'])) {
     $applicationId = sanitize(decipher($_POST['verifier']));
