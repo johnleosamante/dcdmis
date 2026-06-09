@@ -103,42 +103,40 @@ if (isset($_POST['update-personal-information'])) {
     beginTransaction();
 
     try {
+        $stagedFile = null;
+
+        if (!empty($_FILES['image-upload']['tmp_name']) && is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
+            try {
+                $stagedFile = stageUploadedFile(
+                    $_FILES['image-upload'],
+                    ['image/png' => 'png', 'image/jpeg' => 'jpg'],
+                    root() . "/uploads/images/{$employeeId}",
+                    "USER"
+                );
+
+                if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto) && basename(root() . '/' . $employeePhoto) !== 'user.png') {
+                    unlink(root() . '/' . $employeePhoto);
+                }
+
+                $employeePhoto = "uploads/images/{$employeeId}/" . $stagedFile['secure_name'];
+            } catch (Exception $e) {
+                $message = $e->getMessage();
+                return;
+            }
+        }
+
         $affectedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), sanitize($_POST['dob']), sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), sanitize($_POST['religion']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), $dualCitizenshipCountry, sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
 
-        if ($affectedEmployee == false) {
+        if ($affectedEmployee == false && !$stagedFile) {
             $message = 'No changes have been made to personal information.';
             return;
         }
 
-        if (is_uploaded_file($_FILES['image-upload']['tmp_name'])) {
-            $temp = $_FILES['image-upload']['tmp_name'];
-
-            if ($_FILES['image-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-                $message = 'The chosen file exceeds the upload file limit. No changes have been made to personal information.';
-                return;
-            }
-
-            $mimeType = mime_content_type($temp);
-            $allowedFileTypes = ['image/png', 'image/jpeg'];
-
-            if (!in_array($mimeType, $allowedFileTypes)) {
-                $message = 'The chosen file is not an image file. No changes have been made to personal information.';
-                return;
-            }
-
-            $ext = pathinfo($_FILES['image-upload']['name'], PATHINFO_EXTENSION);
-
-            if (!empty($employeePhoto) && file_exists(root() . '/' . $employeePhoto) && basename(root() . '/' . $employeePhoto) !== 'user.png') {
-                unlink(root() . '/' . $employeePhoto);
-            }
-
-            $uploadDate = date('YmdHis');
-            $employeePhoto = "uploads/images/{$employeeId}/{$employeeId}{$uploadDate}.{$ext}";
-            move_uploaded_file($temp, "../{$employeePhoto}");
-        }
-
         createSystemLog($stationId, $userId, 'Updated employee personal information', $employeeId, clientIp());
         commit();
+        if ($stagedFile) {
+            commitStagedFile($stagedFile);
+        }
 
         $message = 'Personal information has been updated successfully.';
         $success = true;
@@ -1040,29 +1038,25 @@ if (isset($_POST['save-201-file'])) {
     beginTransaction();
 
     try {
-        if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
-            $temp = $_FILES['file-upload']['tmp_name'];
+        $stagedFile = null;
 
-            if ($_FILES['file-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-                $message = 'The choosen file exceeds the upload file limit (20 MB). No changes have been made to 201 file.';
+        if (!empty($_FILES['file-upload']['tmp_name']) && is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
+            try {
+                $stagedFile = stageUploadedFile(
+                    $_FILES['file-upload'],
+                    ['application/pdf' => 'pdf'],
+                    root() . "/uploads/201_files/{$employeeId}",
+                    "201"
+                );
+
+                $newFilename = "uploads/201_files/{$employeeId}/" . $stagedFile['secure_name'];
+
+                if (!empty($oldFilename) && file_exists(root() . "/{$oldFilename}")) {
+                    unlink(root() . "/{$oldFilename}");
+                }
+            } catch (Exception $e) {
+                $message = $e->getMessage();
                 return;
-            }
-
-            if (mime_content_type($temp) !== 'application/pdf') {
-                $message = 'The choosen file is not an acceptable file (pdf). No changes have been made to 201 file.';
-                return;
-            }
-
-            $ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
-            $newFilename = "uploads/201_files/{$employeeId}/{$employeeId}-" . date('YmdHis') . ".{$ext}";
-
-            if (!move_uploaded_file($temp, "../{$newFilename}")) {
-                $message = 'Failed to upload 201 file.';
-                return;
-            }
-
-            if (!empty($oldFilename) && file_exists(root() . "/{$oldFilename}")) {
-                unlink(root() . "/{$oldFilename}");
             }
         }
 
@@ -1089,6 +1083,9 @@ if (isset($_POST['save-201-file'])) {
 
         createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
         commit();
+        if ($stagedFile) {
+            commitStagedFile($stagedFile);
+        }
 
         $message = "201 file has been " . ($hasExistingRecord ? "updated" : "added") . " successfully.";
         $success = true;
