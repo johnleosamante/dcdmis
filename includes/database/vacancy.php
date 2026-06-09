@@ -260,6 +260,20 @@ function applicantsByPublication($publicationId)
     return query($sql, [$publicationId]);
 }
 
+function applicantsForReviewByPublication($publicationId)
+{
+    $sql = "SELECT va.id, va.created_at, ac.code AS application_code, p.official_title, va.status, va.application_code_id,
+                   s.total_accumulated_score
+            FROM vacancy_applications AS va
+            INNER JOIN application_codes AS ac ON va.application_code_id = ac.id
+            INNER JOIN positions AS p ON va.position_id = p.id
+            LEFT JOIN assessment_scores AS s ON va.id = s.application_id
+            WHERE va.publication_id = ? AND va.status = 'For Review' 
+            ORDER BY va.created_at DESC";
+
+    return query($sql, [$publicationId]);
+}
+
 function applicationsByVacancy($vacancyId)
 {
     $sql = "SELECT * FROM `vacancy_applications` 
