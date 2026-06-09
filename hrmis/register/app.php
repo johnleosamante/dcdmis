@@ -75,7 +75,7 @@ if (isset($_POST['register-applicant'])) {
 
             $mobile = sanitize($_POST['mobile'] ?? null);
 
-            if (strlen($mobile) < 10) {
+            if (strlen($mobile ?? '') < 10) {
                 $errors[] = "Please provide a valid mobile number.";
             }
 
@@ -97,10 +97,16 @@ if (isset($_POST['register-applicant'])) {
 
     if (empty($errors)) {
         beginTransaction();
+        $isRegistered = false;
 
         try {
             if ($is_current_employee) {
                 $employee = employee($employee_id);
+
+                if (!$employee) {
+                    throw new Exception('Employee record not found.');
+                }
+
                 $applicant_code = generateID();
 
                 $data = [
@@ -115,18 +121,18 @@ if (isset($_POST['register-applicant'])) {
             } else {
                 $applicant_data = prepareApplicantData($_POST);
 
-                if (!createApplicant($applicant_data)) {
+                if (createApplicant($applicant_data) === false) {
                     throw new Exception('Insert failed');
                 }
 
                 $data = [
                     'id' => $applicant_data['id'],
                     'code' => $applicant_data['id'],
-                    'last_name' => $_POST['last_name'],
-                    'first_name' => $_POST['first_name'],
-                    'middle_name' => $_POST['middle_name'],
-                    'name_extension' => $_POST['name_extension'],
-                    'sex' => $_POST['sex'],
+                    'last_name' => $applicant_data['last_name'] ?? '',
+                    'first_name' => $applicant_data['first_name'] ?? '',
+                    'middle_name' => $applicant_data['middle_name'] ?? null,
+                    'name_extension' => $applicant_data['name_extension'] ?? null,
+                    'sex' => $applicant_data['sex'] ?? '',
                 ];
             }
 
@@ -135,26 +141,33 @@ if (isset($_POST['register-applicant'])) {
             }
             createSystemLog('143', null, 'Applicant registration', $data['id'], clientIp());
             commit();
+            $isRegistered = true;
+        } catch (Exception $e) {
+            rollBack();
+            error_log('Registration error: ' . $e->getMessage());
+            $errors[] = 'An unexpected error occurred. Please try again later.';
+        }
 
+        if ($isRegistered) {
             $applicant_code = $data['code'];
             $applicant_name = toName($data['last_name'], $data['first_name'], $data['middle_name'], $data['name_extension'], true);
-            $title = strtolower($data['sex']) === 'male' ? 'Mr. ' : 'Ms. ';
+            $title = strtolower($data['sex'] ?? '') === 'male' ? 'Mr. ' : 'Ms. ';
 
             $_SESSION['success'] = true;
             $_SESSION['applicant_code'] = $applicant_code;
             $_SESSION['applicant_email'] = $email;
 
             $emailBody = <<<EOT
-                Hello, {$title} {$applicant_name}!
+Hello, {$title} {$applicant_name}!
 
-                Your applicant registration was successful.
+Your applicant registration was successful.
 
-                Applicant ID: {$applicant_code}
+Applicant ID: {$applicant_code}
 
-                Please retain your 18-digit applicant ID for reference and use for applications of available vacancies.
+Please retain your 18-digit applicant ID for reference and use for applications for available vacancies.
 
-                ***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****
-                EOT;
+***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****
+EOT;
 
             $targetDeliveryEmail = PRODUCTION_MODE ? $email : DEVELOPER_EMAIL;
             $subject = "Applicant Registration Success";
@@ -163,10 +176,6 @@ if (isset($_POST['register-applicant'])) {
             }
 
             redirect($_SERVER['REQUEST_URI']);
-        } catch (Exception $e) {
-            rollBack();
-            error_log('Registration error: ' . $e->getMessage());
-            $errors[] = 'An unexpected error occurred. Please try again later.';
         }
     }
 
