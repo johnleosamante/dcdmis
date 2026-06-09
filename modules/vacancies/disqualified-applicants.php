@@ -60,10 +60,11 @@ messageAlert($showAlert, $message, $success);
             <table class="table table-hover text-center" width="100%" cellspacing="0" id="data-table">
                 <thead>
                     <tr>
-                        <th width="15%" class="align-middle">Applied on</th>
-                        <th width="35%" class="align-middle">Applicant</th>
-                        <th width="25%" class="align-middle">Position Applied</th>
-                        <th width="15%" class="align-middle">Document</th>
+                        <th width="12%" class="align-middle">Applied on</th>
+                        <th width="25%" class="align-middle">Applicant</th>
+                        <th width="23%" class="align-middle">Position Applied</th>
+                        <th width="20%" class="align-middle">Remarks</th>
+                        <th width="10%" class="align-middle">Document</th>
                         <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                             <th width="10%" class="align-middle">Action</th>
                         <?php endif ?>
@@ -86,6 +87,10 @@ messageAlert($showAlert, $message, $success);
                                 </td>
                                 <td class="align-middle">
                                     <div><?= e($app['official_title']) ?></div>
+                                </td>
+                                <td class="align-middle text-capitalize">
+                                    <div class="text-muted font-italic small text-uppercase"><?= e($app['remarks'] ?? '') ?>
+                                    </div>
                                 </td>
                                 <td class="align-middle text-capitalize">
                                     <?php
@@ -117,10 +122,11 @@ messageAlert($showAlert, $message, $success);
 
                 <tfoot>
                     <tr>
-                        <th width="15%" class="align-middle">Applied on</th>
-                        <th width="35%" class="align-middle">Applicant</th>
-                        <th width="25%" class="align-middle">Position Applied</th>
-                        <th width="15%" class="align-middle">Document</th>
+                        <th width="12%" class="align-middle">Applied on</th>
+                        <th width="25%" class="align-middle">Applicant</th>
+                        <th width="23%" class="align-middle">Position Applied</th>
+                        <th width="20%" class="align-middle">Remarks</th>
+                        <th width="10%" class="align-middle">Document</th>
                         <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                             <th width="10%" class="align-middle">Action</th>
                         <?php endif ?>
