@@ -65,7 +65,7 @@ if (isset($_POST['reset-password'])) {
         $success = false;
         $message = 'We encountered an error sending the password reset request email. Please try again later.';
 
-        error_log("Failed to send reset request email to: {$userEmail} (Routed to: {targetDeliveryEmail}");
+        error_log("Failed to send reset request email to: {$userEmail} (Routed to: {$targetDeliveryEmail})");
 
         return;
     }
