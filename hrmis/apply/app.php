@@ -17,8 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && empty($_FILES)) {
 }
 
 if (isset($_POST['submit-application'])) {
-    $publicationId = sanitize(decipher($_POST['publication_id'] ?? null));
-    $applicationCode = sanitize($_POST['applicant_id'] ?? '');
+    $publicationId = sanitize(decipher($_POST['publication_id']));
+    $applicationCode = sanitize($_POST['applicant_id']);
     $positions = $_POST['position_ids'] ?? null;
     $showAlert = true;
     $stagedFile = null;
@@ -74,73 +74,24 @@ if (isset($_POST['submit-application'])) {
         $appliedCount = 0;
 
         foreach ($selectedPositionIds as $posId) {
-            if (createApplication($publicationId, $applicationId, $posId)) {
-                $appliedCount++;
-            } else {
+            if (createApplication($publicationId, $applicationId, $posId) === false) {
                 throw new Exception('Failed to create application record.');
             }
+            $appliedCount++;
         }
 
         if ($appliedCount > 0) {
             $dbPath = "uploads/applications/{$safeFolder}/{$stagedFile['secure_name']}";
 
-            if (!saveVacancyApplicationRequirement($publicationId, $applicationId, $dbPath)) {
-                throw new Exception('Failed to saved application requirement.');
+            if (saveVacancyApplicationRequirement($publicationId, $applicationId, $dbPath) === false) {
+                throw new Exception('Failed to save application requirement.');
             }
-
-            commitStagedFile($stagedFile);
 
             commit();
 
-            $pluralSuffix = $appliedCount > 1 ? 's' : '';
-            $verbConjugation = $appliedCount > 1 ? 'have' : 'has';
-            $message = "Your application for {$appliedCount} position{$pluralSuffix} {$verbConjugation} been processed successfully. Please check your email for confirmation.";
+            commitStagedFile($stagedFile);
+
             $success = true;
-
-            createSystemLog($stationId, null, "Submitted application for {$appliedCount} position{$pluralSuffix}", $applicationCode, clientIp());
-
-            $applicantData = employee($applicationId);
-            if (!$applicantData) {
-                $applicantData = applicant($applicationId);
-            }
-
-            if ($applicantData && !empty($applicantData['email_address'])) {
-                $email = $applicantData['email_address'];
-                $applicantName = toName($applicantData['last_name'], $applicantData['first_name'], $applicantData['middle_name'], $applicantData['name_extension'], true);
-                $title = strtolower($applicantData['sex'] ?? '') === 'male' ? 'Mr. ' : 'Ms. ';
-
-                $pub = publication($publicationId);
-                $pubTitle = $pub ? $pub['title'] : 'Vacancy Publication';
-                $pubCode = $pub ? $pub['code'] : '';
-
-                $appliedPositionsList = [];
-                foreach ($selectedPositionIds as $posId) {
-                    $pos = positions($posId);
-                    if ($pos) {
-                        $appliedPositionsList[] = "- " . $pos['official_title'] . " (SG " . $pos['salary_grade'] . ")";
-                    }
-                }
-                $positionsText = implode("\n", $appliedPositionsList);
-
-                $emailBody = <<<EOT
-                    Hello, {$title} {$applicantName}!
-
-                    Your application for the following position(s) under publication {$pubCode} ({$pubTitle}) has been received successfully:
-
-                    {$positionsText}
-
-                    Please retain your Applicant ID ({$applicationCode}) for reference.
-
-                    ***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****
-                    EOT;
-
-                $targetDeliveryEmail = PRODUCTION_MODE ? $email : DEVELOPER_EMAIL;
-                $subject = "Application Submission Confirmation";
-
-                if (!sendMail($targetDeliveryEmail, $subject, $emailBody)) {
-                    error_log("Failed to send application confirmation email to: {$email} (Routed to: {$targetDeliveryEmail})");
-                }
-            }
         } else {
             throw new Exception('No application record was registered.');
         }
@@ -152,5 +103,56 @@ if (isset($_POST['submit-application'])) {
         }
 
         $message = $e->getMessage();
+    }
+
+    if ($success) {
+        $pluralSuffix = $appliedCount > 1 ? 's' : '';
+        $verbConjugation = $appliedCount > 1 ? 'have' : 'has';
+        $message = "Your application for {$appliedCount} position{$pluralSuffix} {$verbConjugation} been processed successfully. Please check your email for confirmation.";
+
+        createSystemLog('143', null, "Submitted application for {$appliedCount} position{$pluralSuffix}", $applicationCode, clientIp());
+
+        $applicantData = employee($applicationId);
+        if (!$applicantData) {
+            $applicantData = applicant($applicationId);
+        }
+
+        if ($applicantData && !empty($applicantData['email_address'])) {
+            $email = $applicantData['email_address'];
+            $applicantName = toName($applicantData['last_name'], $applicantData['first_name'], $applicantData['middle_name'], $applicantData['name_extension'], true);
+            $title = strtolower($applicantData['sex'] ?? '') === 'male' ? 'Mr. ' : 'Ms. ';
+
+            $pub = publication($publicationId);
+            $pubTitle = $pub ? $pub['title'] : 'Vacancy Publication';
+            $pubCode = $pub ? $pub['code'] : '';
+
+            $appliedPositionsList = [];
+            foreach ($selectedPositionIds as $posId) {
+                $pos = positions($posId);
+                if ($pos) {
+                    $appliedPositionsList[] = "- " . $pos['official_title'] . " (SG " . $pos['salary_grade'] . ")";
+                }
+            }
+            $positionsText = implode("\n", $appliedPositionsList);
+
+            $emailBody = <<<EOT
+Hello, {$title} {$applicantName}!
+
+Your application for the following position(s) under publication {$pubCode} ({$pubTitle}) has been received successfully:
+
+{$positionsText}
+
+Please retain your Applicant ID ({$applicationCode}) for reference.
+
+***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****
+EOT;
+
+            $targetDeliveryEmail = PRODUCTION_MODE ? $email : DEVELOPER_EMAIL;
+            $subject = "Application Submission Confirmation";
+
+            if (!sendMail($targetDeliveryEmail, $subject, $emailBody)) {
+                error_log("Failed to send application confirmation email to: {$email} (Routed to: {$targetDeliveryEmail})");
+            }
+        }
     }
 }
