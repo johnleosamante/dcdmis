@@ -1226,12 +1226,9 @@ if (isset($_POST['delete-position'])) {
 }
 
 if (isset($_POST['save-vacancy'])) {
-    $vacancyId = sanitize(decipher($_POST['verifier'] ?? null));
     $plantillaItemId = sanitize($_POST['item_number'] ?? null);
     $datePosted = $_POST['date_posted'] ?? date('Y-m-d');
-    $positionTitle = $item_number = null;
     $showAlert = true;
-    $status = 'Added vacancy';
 
     if (empty($plantillaItemId)) {
         $message = 'Please select a plantilla item number.';
@@ -1241,26 +1238,19 @@ if (isset($_POST['save-vacancy'])) {
     beginTransaction();
 
     try {
-        if (vacancy($vacancyId)) {
-            $result = createVacancy($plantillaItemId, 'open', null, $datePosted, $reason);
-        }
-
-        if (empty($vacancyId)) {
-            $affectedVacancy = createVacancy($plantillaItemId, 'open', null, $datePosted, 'new');
-
-            $position = itemPosition($plantillaItemId);
-            $positionTitle = strtoupper($position['official_title']);
-            $itemNumber = $position['item_number'];
-
-            $message = "Vacancy for [$positionTitle] with item number [$itemNumber] has been added successfully.";
-        }
+        $affectedVacancy = createVacancy($plantillaItemId, 'open', null, $datePosted, 'new');
 
         if ($affectedVacancy === false) {
-            $message = 'Vacancy was not saved successfully.';
-            return;
+            throw new Exception('Vacancy was not saved successfully.');
         }
 
-        createSystemLog($stationId, $userId, $status, $itemNumber, clientIp());
+        $position = itemPosition($plantillaItemId);
+        $positionTitle = strtoupper($position['official_title'] ?? 'Unknown');
+        $itemNumber = $position['item_number'] ?? 'N/A';
+
+        $message = "Vacancy for [{$positionTitle}] with item number [{$itemNumber}] has been added successfully.";
+
+        createSystemLog($stationId, $userId, 'Added vacancy', $itemNumber, clientIp());
         commit();
 
         $success = true;
@@ -1433,15 +1423,15 @@ if (isset($_POST['delete-publication'])) {
     $publication = publication($publicationId);
     $code = $publication['code'] ?? 'N/A';
 
+    beginTransaction();
+
     try {
         if (clearPublicationItems($publicationId) === false) {
-            $message = 'Failed to delete vacancy publication items.';
-            return;
+            throw new Exception('Failed to delete vacancy publication items.');
         }
 
         if (deletePublication($publicationId) === false) {
-            $message = 'Failed to delete vacancy publication.';
-            return;
+            throw new Exception('Failed to delete vacancy publication.');
         }
 
         createSystemLog($stationId, $userId, 'Deleted publication', $code, clientIp());
