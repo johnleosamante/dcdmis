@@ -77,6 +77,11 @@ messageAlert($showAlert, $message, $success);
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php
                                         $isVacantItem = vacantItem($row['id']);
+                                        if (!$isVacantItem && $row['is_vacant']) {
+                                            modalDropdownItem(uri() . '/modules/positions/fill-employee-dialog.php?id=' . cipher($row['id']), 'Fill', 'fa-user-plus', 'Fill Employee Position'); ?>
+                                            <div class="dropdown-divider"></div>
+                                            <?php
+                                        }
                                         if (!$isVacantItem) {
                                             modalDropdownItem(uri() . '/modules/positions/save-plantilla-item-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Plantilla Item');
                                         }
