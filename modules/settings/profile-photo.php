@@ -5,7 +5,7 @@ $picture = employee($userId)['profile_picture'];
 <div class="tab-pane fade show active" id="profile-photo">
     <div class="row">
         <div class="col">
-            <div class="my-2 px-3 py-2 rounded alert-info text-left d-flex">
+            <div class="my-2 p-2 rounded alert-info text-left d-flex">
                 <span class="d-inline-block">
                     <i class="fas fa-info-circle"></i>
                 </span>
