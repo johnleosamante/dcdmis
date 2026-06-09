@@ -25,7 +25,10 @@ function cipher($string)
 
 function decipher($string)
 {
-    return base64_decode($string);
+    if ($string === null) {
+        return '';
+    }
+    return base64_decode((string) $string);
 }
 
 function encode($string)
