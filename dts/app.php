@@ -50,8 +50,9 @@ if (isset($_POST['save-document'])) {
 	$section = section($code);
 
 	$showAlert = true;
+	$success = false;
 	$year = date('y');
-	$documentId = !empty($documentId) ? $documentId : "{$code}-{$year}-" . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
+	$documentId = "{$code}-{$year}-" . sprintf("%05d", countDocumentsFrom($station, $year, $code) + 1);
 	$message = 'No new document has been created.';
 
 	if ($section) {
@@ -69,7 +70,13 @@ if (isset($_POST['save-document'])) {
 	beginTransaction();
 
 	try {
-		createDocument($documentId, $description, $type, $station, $headId);
+		if (createDocument($documentId, $description, $type, $station, $headId) === false) {
+			throw new Exception('Failed to create document.');
+		}
+		$documentLogId = createDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
+		if (!$documentLogId) {
+			throw new Exception('Failed to create document log.');
+		}
 
 		$stagedFiles = [];
 		$upload_response = '';
@@ -124,7 +131,9 @@ if (isset($_POST['save-document'])) {
 		}
 
 		foreach ($stagedFiles as $stagedFileItem) {
-			createDocumentLogAttachment($documentLogId, $stagedFileItem['relative_path'], $stagedFileItem['extension']);
+			if (createDocumentLogAttachment($documentLogId, $stagedFileItem['relative_path'], $stagedFileItem['extension']) === false) {
+				throw new Exception("Failed to attach file: " . $stagedFileItem['name']);
+			}
 			$upload_response .= "<br>File uploaded: " . $stagedFileItem['name'];
 		}
 
@@ -144,12 +153,13 @@ if (isset($_POST['save-document'])) {
 }
 
 if (isset($_POST['edit-document'])) {
-	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
+	$documentId = sanitize(decipher($_POST['verifier']));
 	$purpose = sanitize($_POST['purpose']);
 	$details = sanitize($_POST['details']);
 	$type = sanitize($_POST['document-type']);
 	$destination = $isSchoolPortal ? 'REC' : sanitize($_POST['destination']);
 	$showAlert = true;
+	$success = false;
 
 	if (document($documentId) === false) {
 		$message = 'No document has been updated.';
@@ -179,8 +189,12 @@ if (isset($_POST['edit-document'])) {
 	beginTransaction();
 
 	try {
-		updateDocument($documentId, $description, $type, $updateDescription);
-		$documentLog = updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
+		if (updateDocument($documentId, $description, $type, $updateDescription) === false) {
+			throw new Exception('Failed to update document.');
+		}
+		if (updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details) === false) {
+			throw new Exception('Failed to update document log.');
+		}
 
 		$stagedFiles = [];
 		$upload_response = '';
@@ -238,7 +252,9 @@ if (isset($_POST['edit-document'])) {
 
 			if ($documentLogId) {
 				foreach ($stagedFiles as $stagedFileItem) {
-					createDocumentLogAttachment($documentLogId, $stagedFileItem['relative_path'], $stagedFileItem['extension']);
+					if (createDocumentLogAttachment($documentLogId, $stagedFileItem['relative_path'], $stagedFileItem['extension']) === false) {
+						throw new Exception("Failed to attach file: " . $stagedFileItem['name']);
+					}
 					$upload_response .= "<br>File uploaded: " . $stagedFileItem['name'];
 				}
 			}
@@ -260,9 +276,10 @@ if (isset($_POST['edit-document'])) {
 }
 
 if (isset($_POST['delete-attachment'])) {
-	$attachmentId = sanitize(decipher($_POST['verifier'] ?? null));
+	$attachmentId = sanitize(decipher($_POST['verifier']));
 
 	$showAlert = true;
+	$success = false;
 
 	beginTransaction();
 
@@ -270,8 +287,7 @@ if (isset($_POST['delete-attachment'])) {
 		$affectedAttachment = deleteDocumentLogAttachment($attachmentId);
 
 		if ($affectedAttachment === false) {
-			$message = 'No changes have been made to document attachments.';
-			return;
+			throw new Exception('No changes have been made to document attachments.');
 		}
 
 		createSystemLog($stationId, $userId, 'Deleted document attachment', '', clientIp());
@@ -286,8 +302,9 @@ if (isset($_POST['delete-attachment'])) {
 }
 
 if (isset($_POST['receive-document'])) {
-	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
+	$documentId = sanitize(decipher($_POST['verifier']));
 	$showAlert = true;
+	$success = false;
 
 	beginTransaction();
 
@@ -295,11 +312,12 @@ if (isset($_POST['receive-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
-			$message = 'No document has been received.';
-			return;
+			throw new Exception('No document has been received.');
 		}
 
-		createDocumentLog($documentId, $userId, $station, null, documentStatusId('Received'), 1);
+		if (createDocumentLog($documentId, $userId, $station, null, documentStatusId('Received'), 1) === false) {
+			throw new Exception('Failed to create document log.');
+		}
 		createSystemLog($stationId, $userId, 'Received document', $documentId, clientIp());
 		commit();
 
@@ -312,11 +330,12 @@ if (isset($_POST['receive-document'])) {
 }
 
 if (isset($_POST['forward-document'])) {
-	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
+	$documentId = sanitize(decipher($_POST['verifier']));
 	$purpose = sanitize($_POST['purpose']);
 	$details = sanitize($_POST['details']);
 	$destination = sanitize($_POST['destination']);
 	$showAlert = true;
+	$success = false;
 
 	beginTransaction();
 
@@ -324,11 +343,12 @@ if (isset($_POST['forward-document'])) {
 		$updatedDocuments = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocuments === false) {
-			$message = 'No document has been forwarded.';
-			return;
+			throw new Exception('No document has been forwarded.');
 		}
 
-		createDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
+		if (createDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details) === false) {
+			throw new Exception('Failed to create document log.');
+		}
 
 		$stagedFiles = [];
 		$upload_response = '';
@@ -386,7 +406,9 @@ if (isset($_POST['forward-document'])) {
 
 			if ($documentLogId) {
 				foreach ($stagedFiles as $stagedFileItem) {
-					createDocumentLogAttachment($documentLogId, $stagedFileItem['relative_path'], $stagedFileItem['extension']);
+					if (createDocumentLogAttachment($documentLogId, $stagedFileItem['relative_path'], $stagedFileItem['extension']) === false) {
+						throw new Exception("Failed to attach file: " . $stagedFileItem['name']);
+					}
 					$upload_response .= "<br>File uploaded: " . $stagedFileItem['name'];
 				}
 			}
@@ -408,10 +430,11 @@ if (isset($_POST['forward-document'])) {
 }
 
 if (isset($_POST['complete-document'])) {
-	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
+	$documentId = sanitize(decipher($_POST['verifier']));
 	$remarks = sanitize($_POST['remarks']);
 	$status = documentStatusId('Completed');
 	$showAlert = true;
+	$success = false;
 
 	beginTransaction();
 
@@ -419,11 +442,12 @@ if (isset($_POST['complete-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
-			$message = 'No document has been marked complete.';
-			return;
+			throw new Exception('No document has been marked complete.');
 		}
 
-		createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks);
+		if (createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks) === false) {
+			throw new Exception('Failed to create document log.');
+		}
 		createSystemLog($stationId, $userId, "Completed document", $documentId, clientIp());
 		commit();
 
@@ -436,10 +460,11 @@ if (isset($_POST['complete-document'])) {
 }
 
 if (isset($_POST['reopen-document'])) {
-	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
+	$documentId = sanitize(decipher($_POST['verifier']));
 	$remarks = sanitize($_POST['remarks']);
 	$status = documentStatusId('Reopened');
 	$showAlert = true;
+	$success = false;
 
 	beginTransaction();
 
@@ -447,11 +472,12 @@ if (isset($_POST['reopen-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
-			$message = 'No document has been reopened.';
-			return;
+			throw new Exception('No document has been reopened.');
 		}
 
-		createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks);
+		if (createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks) === false) {
+			throw new Exception('Failed to create document log.');
+		}
 		createSystemLog($stationId, $userId, 'Reopened document', $documentId, clientIp());
 		commit();
 
@@ -464,11 +490,12 @@ if (isset($_POST['reopen-document'])) {
 }
 
 if (isset($_POST['restore-document'])) {
-	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
+	$documentId = sanitize(decipher($_POST['verifier']));
 	$remarks = sanitize($_POST['remarks']);
 	$status = documentStatusId($isSchoolPortal ? 'For submission' : 'Restored');
 	$destination = $isSchoolPortal ? 'REC' : null;
 	$showAlert = true;
+	$success = false;
 
 	beginTransaction();
 
@@ -476,11 +503,12 @@ if (isset($_POST['restore-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
-			$message = 'No document has been restored.';
-			return;
+			throw new Exception('No document has been restored.');
 		}
 
-		createDocumentLog($documentId, $userId, $station, $destination, $status, 1, $remarks);
+		if (createDocumentLog($documentId, $userId, $station, $destination, $status, 1, $remarks) === false) {
+			throw new Exception('Failed to create document log.');
+		}
 		createSystemLog($stationId, $userId, 'Restored document', $documentId, clientIp());
 		commit();
 
@@ -493,10 +521,11 @@ if (isset($_POST['restore-document'])) {
 }
 
 if (isset($_POST['cancel-document'])) {
-	$documentId = sanitize(decipher($_POST['verifier'] ?? null));
+	$documentId = sanitize(decipher($_POST['verifier']));
 	$remarks = sanitize($_POST['remarks']);
 	$status = documentStatusId('Canceled');
 	$showAlert = true;
+	$success = false;
 
 	beginTransaction();
 
@@ -504,11 +533,12 @@ if (isset($_POST['cancel-document'])) {
 		$updatedDocument = updateDocumentLogsDone($documentId);
 
 		if ($updatedDocument === false) {
-			$message = 'No document has been canceled.';
-			return;
+			throw new Exception('No document has been canceled.');
 		}
 
-		createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks);
+		if (createDocumentLog($documentId, $userId, $station, null, $status, 1, $remarks) === false) {
+			throw new Exception('Failed to create document log.');
+		}
 		createSystemLog($stationId, $userId, "Canceled document", $documentId, clientIp());
 		commit();
 
