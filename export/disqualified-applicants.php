@@ -60,6 +60,7 @@ $publication = publication($publicationId);
             <th>Applicant Name</th>
             <th>Position Applied</th>
             <th>Applied On</th>
+            <th>Remarks</th>
         </tr>
     </thead>
 
@@ -94,8 +95,11 @@ $publication = publication($publicationId);
                     <?php endif ?>
                     <td><?= e($app['official_title']) ?></td>
                     <td><?= toDatetime($app['created_at']) ?></td>
+                    <td>
+                        <?= e($app['remarks'] ?? '') ?>
+                    </td>
                 </tr>
-            <?php endforeach;
+                <?php endforeach;
         }
         ?>
     </tbody>
