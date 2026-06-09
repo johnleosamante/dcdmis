@@ -248,14 +248,15 @@ function countPublicationItems($publication_id)
 
 function applicantsByPublication($publicationId)
 {
-    $sql = "SELECT va.id, va.created_at, ac.code AS application_code, p.official_title, va.status, va.application_code_id,
+    $sql = "SELECT va.id, va.created_at, ac.code AS application_code, p.official_title, p.category AS position_group,
+                   va.status, va.application_code_id,
                    va.remarks, s.total_accumulated_score
             FROM vacancy_applications AS va
             INNER JOIN application_codes AS ac ON va.application_code_id = ac.id
             INNER JOIN positions AS p ON va.position_id = p.id
             LEFT JOIN assessment_scores AS s ON va.id = s.application_id
             WHERE va.publication_id = ?
-            ORDER BY va.created_at DESC";
+            ORDER BY p.category ASC, p.official_title ASC, va.created_at DESC";
 
     return query($sql, [$publicationId]);
 }
