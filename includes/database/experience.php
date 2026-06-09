@@ -14,13 +14,14 @@ function experience($employee_id, $service_record_id)
     return find($sql, [$employee_id, $service_record_id]);
 }
 
-function createExperience($from_date, $to_date, $is_present, $designation, $appointment_status, $is_government_service, $salary_grade_step_increment, $monthly_salary, $agency_company, $leave_wo_pay, $for_separation, $separation_date, $separation_cause, $employee_id)
+function createExperience($from_date, $to_date, $is_present, $designation, $plantilla_item_id, $appointment_status, $is_government_service, $salary_grade_step_increment, $monthly_salary, $agency_company, $leave_wo_pay, $for_separation, $separation_date, $separation_cause, $employee_id)
 {
     $data = [
         'from_date' => $from_date,
         'to_date' => $to_date,
         'is_present' => $is_present,
         'designation' => $designation,
+        'plantilla_item_id' => $plantilla_item_id,
         'appointment_status' => $appointment_status,
         'is_government_service' => $is_government_service,
         'salary_grade_step_increment' => $salary_grade_step_increment,
@@ -35,13 +36,14 @@ function createExperience($from_date, $to_date, $is_present, $designation, $appo
     return insert('service_records', $data);
 }
 
-function updateExperience($from_date, $to_date, $is_present, $designation, $appointment_status, $is_government_service, $salary_grade_step_increment, $monthly_salary, $agency_company, $leave_wo_pay, $for_separation, $separation_date, $separation_cause, $employee_id, $service_record_id)
+function updateExperience($from_date, $to_date, $is_present, $designation, $plantilla_item_id, $appointment_status, $is_government_service, $salary_grade_step_increment, $monthly_salary, $agency_company, $leave_wo_pay, $for_separation, $separation_date, $separation_cause, $employee_id, $service_record_id)
 {
     $data = [
         'from_date' => $from_date,
         'to_date' => $to_date,
         'is_present' => $is_present,
         'designation' => $designation,
+        'plantilla_item_id' => $plantilla_item_id,
         'appointment_status' => $appointment_status,
         'is_government_service' => $is_government_service,
         'salary_grade_step_increment' => $salary_grade_step_increment,
