@@ -92,11 +92,11 @@ messageAlert($showAlert, $message, $success);
                                 </td>
                                 <td class="align-middle">
                                     <?php if (isset($app['total_accumulated_score']) && $app['total_accumulated_score'] !== null): ?>
-                                        <div class="font-weight-bold text-success">
+                                        <div>
                                             <?= number_format($app['total_accumulated_score'], 2) ?>
                                         </div>
                                     <?php else: ?>
-                                        <div class="text-muted font-italic small">Not Assessed</div>
+                                        <div class="text-muted font-italic small text-uppercase">Not assessed</div>
                                     <?php endif; ?>
                                 </td>
                                 <td class="align-middle text-capitalize">
@@ -106,7 +106,7 @@ messageAlert($showAlert, $message, $success);
                                     if (!empty($applicantDocument) && file_exists($documentUri)) {
                                         linkButtonSplit("{$baseUri}/{$applicantDocument}", 'Attachment', 'fa-paperclip', "View Applicant Document", 'secondary', true);
                                     } else { ?>
-                                        <div class="small">No document attachment</div>
+                                        <div class="text-muted font-italic small text-uppercase">No document attachment</div>
                                     <?php } ?>
                                 </td>
                                 <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
