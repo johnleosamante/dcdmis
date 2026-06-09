@@ -28,7 +28,7 @@ if (isset($_POST['primary-search-button'])) {
 }
 
 $allowedTypes = [
-	'image/jpeg',
+	'image/jpg',
 	'image/jpeg',
 	'image/png',
 	'image/gif',
