@@ -20,36 +20,36 @@ $publication = publication($publicationId);
 <table>
     <tbody>
         <tr>
-            <td colspan="3" style="font-weight: bold; font-size: 14px;">QUALIFIED APPLICANTS REPORT</td>
+            <td colspan="4" style="font-weight: bold; font-size: 14px;">QUALIFIED APPLICANTS REPORT</td>
         </tr>
         <tr>
             <td style="font-weight: bold;">Publication Code:</td>
-            <td colspan="2">
+            <td colspan="3">
                 <?= e($publication['code'] ?? 'N/A') ?>
             </td>
         </tr>
         <tr>
             <td style="font-weight: bold;">Publication Title:</td>
-            <td colspan="2">
+            <td colspan="3">
                 <?= e($publication['title'] ?? 'N/A') ?>
             </td>
         </tr>
         <?php if (!empty($publication['description'])): ?>
             <tr>
                 <td style="font-weight: bold;">Description:</td>
-                <td colspan="2">
+                <td colspan="3">
                     <?= e($publication['description']) ?>
                 </td>
             </tr>
         <?php endif ?>
         <tr>
             <td style="font-weight: bold;">Export Date:</td>
-            <td colspan="2">
+            <td colspan="3">
                 <?= date('F d, Y g:i A') ?>
             </td>
         </tr>
         <tr>
-            <td colspan="3"></td>
+            <td colspan="4"></td>
         </tr>
     </tbody>
 </table>
@@ -57,8 +57,8 @@ $publication = publication($publicationId);
 <table>
     <thead>
         <tr>
-            <th>Applicant Name</th>
-            <th>Position Applied</th>
+            <th>No.</th>
+            <th colspan="2">Applicant Name</th>
             <th>Applied On</th>
         </tr>
     </thead>
@@ -70,33 +70,48 @@ $publication = publication($publicationId);
             return $app['status'] === 'Qualified';
         });
 
-        // Group applicants by name
-        $groupedByApplicant = [];
+        // Group applicants by position group (category), then by position title
+        $groupedByCategory = [];
         foreach ($qualifiedApps as $app) {
+            $group = $app['position_group'] ?? 'Uncategorized';
+            $position = $app['official_title'] ?? 'Unknown Position';
             $applicantName = applicantName($app['application_code']);
-            if (!isset($groupedByApplicant[$applicantName])) {
-                $groupedByApplicant[$applicantName] = [];
-            }
-            $groupedByApplicant[$applicantName][] = $app;
+            $groupedByCategory[$group][$position][] = [
+                'name' => $applicantName,
+                'app' => $app,
+            ];
         }
 
         // Output grouped data
-        foreach ($groupedByApplicant as $applicantName => $positions) {
-            $isFirstRow = true;
-            foreach ($positions as $app):
+        foreach ($groupedByCategory as $group => $positions):
+            $groupTotal = array_sum(array_map('count', $positions));
+            ?>
+            <tr>
+                <td colspan="4" style="font-weight: bold; background-color: #d0d0d0; font-size: 13px;">
+                    <?= e($group) ?> &mdash; <?= $groupTotal ?> qualified applicant<?= $groupTotal !== 1 ? 's' : '' ?>
+                </td>
+            </tr>
+            <?php foreach ($positions as $positionTitle => $entries):
+                $posCount = count($entries);
                 ?>
                 <tr>
-                    <?php if ($isFirstRow): ?>
-                        <td><?= e($applicantName) ?></td>
-                        <?php $isFirstRow = false; ?>
-                    <?php else: ?>
-                        <td></td>
-                    <?php endif ?>
-                    <td><?= e($app['official_title']) ?></td>
-                    <td><?= toDatetime($app['created_at']) ?></td>
+                    <td colspan="4" style="font-weight: bold; background-color: #f0f0f0; padding-left: 16px;">
+                        <?= e($positionTitle) ?> &mdash; <?= $posCount ?> applicant<?= $posCount !== 1 ? 's' : '' ?>
+                    </td>
                 </tr>
-            <?php endforeach;
-        }
-        ?>
+                <?php
+                $counter = 1;
+                foreach ($entries as $entry):
+                    $applicantName = $entry['name'];
+                    $app = $entry['app'];
+                    ?>
+                    <tr>
+                        <td><?= $counter++ ?></td>
+                        <td colspan="2"><?= strtoupper(e($applicantName)) ?></td>
+                        <td><?= toDatetime($app['created_at']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        <?php endforeach; ?>
     </tbody>
 </table>
