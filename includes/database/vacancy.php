@@ -249,7 +249,7 @@ function countPublicationItems($publication_id)
 function applicantsByPublication($publicationId)
 {
     $sql = "SELECT va.id, va.created_at, ac.code AS application_code, p.official_title, va.status, va.application_code_id,
-                   s.total_accumulated_score
+                   va.remarks, s.total_accumulated_score
             FROM vacancy_applications AS va
             INNER JOIN application_codes AS ac ON va.application_code_id = ac.id
             INNER JOIN positions AS p ON va.position_id = p.id
@@ -490,19 +490,28 @@ function applicationRecord($applicationId)
 
 function qualifyApplication($applicationId)
 {
-    $data = ['status' => 'Qualified'];
+    $data = [
+        'status' => 'Qualified',
+        'remarks' => null
+    ];
     return update('vacancy_applications', $data, '`id` = ?', [$applicationId]);
 }
 
-function disqualifyApplication($applicationId)
+function disqualifyApplication($applicationId, $remarks = null)
 {
-    $data = ['status' => 'Disqualified'];
+    $data = [
+        'status' => 'Disqualified',
+        'remarks' => $remarks
+    ];
     return update('vacancy_applications', $data, '`id` = ?', [$applicationId]);
 }
 
 function forReviewApplication($applicationId)
 {
-    $data = ['status' => 'For Review'];
+    $data = [
+        'status' => 'For Review',
+        'remarks' => null
+    ];
     return update('vacancy_applications', $data, '`id` = ?', [$applicationId]);
 }
 
