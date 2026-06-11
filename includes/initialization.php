@@ -52,6 +52,86 @@ $stationId = $_SESSION["{$prefix}stationId"] ?? null;
 $station = $_SESSION["{$prefix}station"] ?? null;
 $code = $_SESSION["{$prefix}code"] ?? null;
 $portal = $_SESSION["{$prefix}portal"] ?? null;
+
+if (empty($userId) && isset($_COOKIE["{$prefix}remember_token"])) {
+    require_once(root() . '/includes/database/database.php');
+    $cookieParts = explode('|', $_COOKIE["{$prefix}remember_token"], 2);
+    if (count($cookieParts) === 2) {
+        $cookieEmployeeId = (int) $cookieParts[0];
+        $cookieToken = $cookieParts[1];
+        $tokenHash = hash('sha256', $cookieToken);
+
+        $rememberRecord = find(
+            "SELECT `employee_id`, `expires_at` FROM `remember_tokens` 
+            WHERE `employee_id` = ? AND `token_hash` = ? LIMIT 1",
+            [$cookieEmployeeId, $tokenHash]
+        );
+
+        if ($rememberRecord && strtotime($rememberRecord['expires_at']) > time()) {
+            $rememberUser = find(
+                "SELECT u.`employee_id`, u.`access`, s.`station_id`, u.`link` 
+                FROM `user_permissions` u 
+                INNER JOIN `station_assignments` s ON u.`employee_id` = s.`employee_id` 
+                WHERE u.`employee_id` = ? AND u.link NOT IN ('') LIMIT 1",
+                [$cookieEmployeeId]
+            );
+
+            $rememberAccount = find(
+                "SELECT e.`id`, e.`email_address` FROM `employees` e 
+                WHERE e.`id` = ? AND e.`status` = 'Active' LIMIT 1",
+                [$cookieEmployeeId]
+            );
+
+            if ($rememberUser && $rememberAccount) {
+                $portal = $rememberUser['link'];
+                $access = $rememberUser['access'];
+                $stationIdVal = $rememberUser['station_id'];
+
+                $_SESSION["{$prefix}userId"] = $cookieEmployeeId;
+                $_SESSION["{$prefix}stationId"] = $stationIdVal;
+                $_SESSION["{$prefix}code"] = $access;
+                $_SESSION["{$prefix}portal"] = $portal;
+                $_SESSION["{$prefix}email"] = $rememberAccount['email_address'];
+
+                $stationName = $portal === 'sch_portal' ? '' : $access ?? '';
+                $_SESSION["{$prefix}station"] = $stationName;
+
+                $userId = $cookieEmployeeId;
+                $stationId = $stationIdVal;
+                $station = $stationName;
+                $code = $access;
+                $newToken = bin2hex(random_bytes(32));
+                $newTokenHash = hash('sha256', $newToken);
+                $newExpiry = date('Y-m-d H:i:s', time() + getSeconds(120));
+
+                update('remember_tokens', [
+                    'token_hash' => $newTokenHash,
+                    'expires_at' => $newExpiry
+                ], '`employee_id` = ? AND `token_hash` = ?', [$cookieEmployeeId, $tokenHash]);
+
+                setcookie("{$prefix}remember_token", $cookieEmployeeId . '|' . $newToken, [
+                    'expires' => time() + getSeconds(120),
+                    'path' => '/',
+                    'domain' => parse_url(uri(), PHP_URL_HOST),
+                    'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
+                    'httponly' => true,
+                    'samesite' => 'Lax'
+                ]);
+            }
+        } else {
+            delete('remember_tokens', '`employee_id` = ?', [$cookieEmployeeId ?? 0]);
+            setcookie("{$prefix}remember_token", '', [
+                'expires' => time() - 3600,
+                'path' => '/',
+                'domain' => parse_url(uri(), PHP_URL_HOST),
+                'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
+        }
+    }
+}
+
 $hasPortal = !empty($portal);
 $isSchoolPortal = $portal === 'sch_portal';
 $isRecordsPortal = $portal === 'rec_portal';
