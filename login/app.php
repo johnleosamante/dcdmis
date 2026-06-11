@@ -80,7 +80,17 @@ if (isset($_POST['login'])) {
     clearRateLimit($clientIdentifier);
 
     if (isset($_POST['remember'])) {
-        setcookie("{$prefix}remember_email", $account['email_address'], [
+        $rememberToken = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $rememberToken);
+        $expiresAt = date('Y-m-d H:i:s', time() + getSeconds(120));
+
+        delete('remember_tokens', '`employee_id` = ?', [$account['id']]);
+        insert('remember_tokens', [
+            'employee_id' => $account['id'],
+            'token_hash' => $tokenHash,
+            'expires_at' => $expiresAt
+        ]);
+        setcookie("{$prefix}remember_token", $account['id'] . '|' . $rememberToken, [
             'expires' => time() + getSeconds(120),
             'path' => '/',
             'domain' => parse_url(uri(), PHP_URL_HOST),
