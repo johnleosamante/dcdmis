@@ -23,7 +23,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 	<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
 		<div class="card shadow">
 			<div class="card-header py-3">
-				<h6 class="m-0 font-weight-bold text-primary text-uppercase">Conducted Trainings</h6>
+				<h6 class="m-0 font-weight-bold text-primary text-uppercase">Conducted Trainings Per Year</h6>
 			</div>
 			<div class="card-body">
 				<div class="chart-bar h-auto">
@@ -40,7 +40,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 	<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
 		<div class="card shadow">
 			<div class="card-header py-3">
-				<h6 class="m-0 font-weight-bold text-primary text-uppercase">Trained Employees</h6>
+				<h6 class="m-0 font-weight-bold text-primary text-uppercase">Trained Employees Per Year</h6>
 			</div>
 			<div class="card-body">
 				<div class="chart-bar h-auto">
