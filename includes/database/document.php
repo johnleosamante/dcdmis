@@ -574,6 +574,7 @@ function documentByStatus($status, $employee_id, $station_id, $from_date = '', $
 function documentSearch($string)
 {
     $likeTerm = "%{$string}%";
+    $booleanSearchTerm = preg_replace('/-{2,}/', ' ', $string);
     $sql = "SELECT 
                 t.`id`, 
                 t.`description`, 
@@ -589,7 +590,7 @@ function documentSearch($string)
             WHERE t.`id` LIKE ? OR MATCH(t.`description`) AGAINST (? IN BOOLEAN MODE)
             ORDER BY t.`created_at` DESC 
             LIMIT 1000";
-    return query($sql, [$likeTerm, $string]);
+    return query($sql, [$likeTerm, $booleanSearchTerm]);
 }
 
 function stationTransactionCounts($station_id)
