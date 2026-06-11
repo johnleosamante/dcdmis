@@ -198,6 +198,8 @@ function trainedEmployeesByYear()
     $sql = "SELECT YEAR(t.`end_date`) AS `name`, COUNT(DISTINCT tp.`employee_id`) AS `count` 
             FROM `trainings` AS t 
             INNER JOIN `training_attendees` AS tp ON t.`id` = tp.`training_id` 
-            GROUP BY YEAR(t.`end_date`) ORDER BY `name` DESC";
+            WHERE t.`end_date` IS NOT NULL
+            GROUP BY YEAR(t.`end_date`) 
+            ORDER BY `name` DESC";
     return query($sql);
 }
