@@ -46,10 +46,9 @@ messageAlert($showAlert, $message, $success);
                 <thead>
                     <tr>
                         <th class="align-middle" width="30%">Position / Salary Grade / Item Number</th>
-                        <th class="align-middle" width="10%">Category</th>
-                        <th class="align-middle" width="35%">Station</th>
+                        <th class="align-middle" width="15%">Category</th>
+                        <th class="align-middle" width="40%">Station</th>
                         <th class="align-middle" width="15%">Date Vacated / Posted</th>
-                        <th class="align-middle" width="10%">Publication Code</th>
                         <?php if ($isPersonnel): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
@@ -75,22 +74,6 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?= toLongDate($row['date_vacated']) ?>
                             </td>
-                            <td class="align-middle">
-                                <?php
-                                $publication = publicationCodes($row['id']);
-                                if ($publication) {
-                                    foreach ($publication as $pub) { ?>
-                                        <span class="badge badge-success badge-pill">
-                                            <a class="text-white" href="<?= uri() . '/hrmis/apply?p=' . e($pub['code']) ?>"
-                                                target="_blank">
-                                                <?= e($pub['code']) ?>
-                                            </a>
-                                        </span>
-                                    <?php }
-                                } else { ?>
-                                    <span class="badge badge-secondary badge-pill">Not Published</span>
-                                <?php } ?>
-                            </td>
                             <?php if ($isPersonnel): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
@@ -108,10 +91,9 @@ messageAlert($showAlert, $message, $success);
                 <tfoot>
                     <tr>
                         <th class="align-middle" width="30%">Position / Salary Grade / Item Number</th>
-                        <th class="align-middle" width="10%">Category</th>
-                        <th class="align-middle" width="35%">Station</th>
+                        <th class="align-middle" width="15%">Category</th>
+                        <th class="align-middle" width="40%">Station</th>
                         <th class="align-middle" width="15%">Date Vacated / Posted</th>
-                        <th class="align-middle" width="10%">Publication Code</th>
                         <?php if ($isPersonnel): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
