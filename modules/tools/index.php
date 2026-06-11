@@ -50,5 +50,6 @@ contentTitle('Monitoring Tools');
     cardMini('Project One Drive, One Data Management', 'https://depedph-my.sharepoint.com/:x:/g/personal/smme_dipolog_deped_gov_ph/Eccc1Z9Bi8hJiQgXX_WbQhsBxHgNljGwKUHOZMhixltFpw?e=j54Pne&fbclid=IwY2xjawQR521leHRuA2FlbQIxMQBzcnRjBmFwcF9pZAEwAAEebYJqACyofMKxXSMvziJnaBiQkryQZrBQW6JKHiQlDnvzc5LzNGCboR0MVYc_aem_nUwz_RBdjJRubvz6UIYALQ', 'fa-file-excel', 'orange', true);
     cardMini('SGOD Sub-AROs Monitoring', 'https://docs.google.com/spreadsheets/d/1HhxfiUdDbzZFddKwi48TfrqEscGPaZtC/edit?gid=609413157#gid=609413157', 'fa-file-excel', 'orange', true);
     cardMini('Project TRACE', 'https://depedph-my.sharepoint.com/:x:/g/personal/smme_dipolog_deped_gov_ph/IQB5qVXMavCeS7lnrnKRJ-nuAQuFN0dcgiossurYPr9bfHc?e=TOxaIe', 'fa-file-excel', 'orange', true);
+    cardMini('Monitoring Tool for PRIME-HRM Level III', 'https://depedph-my.sharepoint.com/:x:/g/personal/smme_dipolog_deped_gov_ph/IQD3HpsFq2nsSqDIV9ugNY9DAbCjeWIST5zuiRk3W3c6SE0?rtime=GPLFmc7G3kg', 'fa-file-excel', 'orange', true);
     ?>
 </div>
