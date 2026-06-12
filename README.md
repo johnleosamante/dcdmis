@@ -32,13 +32,14 @@ ex: <code>last_name</code>, <code>first_name</code>, <code>middle_name</code>
   
 Formatting: use single qoute for string literals and array keys
 
-###### ----------------------------------------------------------------------------------------------------------------------------------
+###### -----------------------------------------------
 
 ## Features
 
 #### Authentication
 <ul>
     <li>Login</li>
+    <li>Remember Me</li>
     <li>Forgot Password</li>
     <li>Change Password</li>
     <li>Logout</li>
@@ -60,7 +61,7 @@ Formatting: use single qoute for string literals and array keys
 
 #### Employee Information Status Percentage
 
-###### ----------------------------------------------------------------------------------------------------------------------------------
+###### -----------------------------------------------
 
 ### PERSONNEL INFORMATION SYSTEM
 
@@ -73,8 +74,8 @@ Formatting: use single qoute for string literals and array keys
     <li>Civil Service Eligibility (View Only)</li>
     <li>Work Experience (View Only)</li>
     <li>Voluntary Work (View Only)</li>
-    <li>Learning &amp; Development (View Only)</li>
-    <li>Special Skills &amp; Hobbies (View Only)</li>
+    <li>Learning and Development (View Only)</li>
+    <li>Special Skills and Hobbies (View Only)</li>
     <li>Non-Academic Distinctions / Recognition (View Only)</li>
     <li>Membership in Association / Organization (View Only)</li>
     <li>Other Information (View Only)</li>
@@ -99,7 +100,7 @@ Formatting: use single qoute for string literals and array keys
 
 #### Monitoring Tools (For Division Assigned and DTS Users Only)
 
-###### ----------------------------------------------------------------------------------------------------------------------------------
+###### -----------------------------------------------
 
 ### DOCUMENT TRACKING SYSTEM
 
@@ -117,13 +118,13 @@ Formatting: use single qoute for string literals and array keys
 
 #### View Document Information
 
-#### Print Document Tracking Slip (Document station origin)
+#### Print Document Tracking Slip
+
+#### Export Excel Document Transaction Log
 
 #### Receive Document (Incoming Document)
 
-#### Forward Document (Pending Document) w/ File Attachment
-
-#### Mark Completed Document (Pending Documents)
+#### Forward Document w/ File Attachment (Pending Document)
 
 #### Edit Document
 <ul>
@@ -147,9 +148,9 @@ Formatting: use single qoute for string literals and array keys
     </li>
 </ul>
 
-#### Cancel Document (Outgoing document of creator station)
+#### Mark Completed Document (Pending Documents)
 
-#### Export Document Transaction Logs
+#### Cancel Document (Outgoing document of creator station)
 
 #### View Section/School Users Summary
 <ul>
@@ -162,7 +163,7 @@ Formatting: use single qoute for string literals and array keys
 
 #### Document Tracker (Public)
 
-##### ----------------------------------------------------------------------------------------------------------------------------------
+##### -----------------------------------------------
 
 ### Human Resource Management Information System
 
