@@ -32,8 +32,6 @@ ex: <code>last_name</code>, <code>first_name</code>, <code>middle_name</code>
   
 Formatting: use single qoute for string literals and array keys
 
-###### -----------------------------------------------
-
 ## Features
 
 #### Authentication
@@ -60,8 +58,6 @@ Formatting: use single qoute for string literals and array keys
 #### Notifications
 
 #### Employee Information Status Percentage
-
-###### -----------------------------------------------
 
 ### PERSONNEL INFORMATION SYSTEM
 
@@ -99,8 +95,6 @@ Formatting: use single qoute for string literals and array keys
 </ul>
 
 #### Monitoring Tools (For Division Assigned and DTS Users Only)
-
-###### -----------------------------------------------
 
 ### DOCUMENT TRACKING SYSTEM
 
@@ -162,8 +156,6 @@ Formatting: use single qoute for string literals and array keys
 </ul>
 
 #### Document Tracker (Public)
-
-##### -----------------------------------------------
 
 ### Human Resource Management Information System
 
@@ -285,8 +277,6 @@ Formatting: use single qoute for string literals and array keys
     <li>Non-DepEd Division Employee</li>
 </ul>
 
-##### ----------------------------------------------------------------------------------------------------------------------------------
-
 ### HUMAN RESOURCE TRAINING &amp; DEVELOPMENT MANAGEMENT SYSTEM
 
 #### Division Training Certificate Finder
@@ -320,8 +310,6 @@ Formatting: use single qoute for string literals and array keys
 #### View Schools
 
 #### View Sections
-
-##### ----------------------------------------------------------------------------------------------------------------------------------
 
 ### DIVISION MANAGEMENT INFORMATION SYSTEM
 
