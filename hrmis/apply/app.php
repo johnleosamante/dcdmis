@@ -25,7 +25,7 @@ if (isset($_POST['submit-application'])) {
 
     try {
         if (!$publicationId) {
-            throw new Exception('Invalid publication link.');
+            throw new Exception('Invalid call for application link.');
         }
 
         $applicationId = applicantId($applicationCode);
@@ -49,24 +49,22 @@ if (isset($_POST['submit-application'])) {
         }
 
         if (empty($selectedPositionIds)) {
-            throw new Exception('You have already applied for all selected positions of this publication.');
+            throw new Exception('You have already applied for all selected positions of this call for application.');
         }
 
         $safeFolder = preg_replace('/[^a-zA-Z0-9_\-]/', '', $applicationCode);
 
-        if (!empty($_FILES['application-file']['tmp_name']) && is_uploaded_file($_FILES['application-file']['tmp_name'])) {
+        if (isset($_FILES['application-file']) && $_FILES['application-file']['error'] !== UPLOAD_ERR_NO_FILE) {
             $stagedFile = stageUploadedFile(
                 $_FILES['application-file'],
                 ['application/pdf' => 'pdf'],
                 root() . "/uploads/applications/{$safeFolder}",
                 'APPLICATION'
             );
-        } else {
-            throw new Exception('Please upload your application documents.');
-        }
 
-        if (!$stagedFile || !isset($stagedFile['secure_name']) || !isset($stagedFile['full_path'])) {
-            throw new Exception('The application document could not be uploaded. Please try again.');
+            if (!$stagedFile || !isset($stagedFile['secure_name']) || !isset($stagedFile['full_path'])) {
+                throw new Exception('The application document could not be uploaded. Please try again.');
+            }
         }
 
         beginTransaction();
@@ -81,15 +79,19 @@ if (isset($_POST['submit-application'])) {
         }
 
         if ($appliedCount > 0) {
-            $dbPath = "uploads/applications/{$safeFolder}/{$stagedFile['secure_name']}";
+            if ($stagedFile) {
+                $dbPath = "uploads/applications/{$safeFolder}/{$stagedFile['secure_name']}";
 
-            if (saveVacancyApplicationRequirement($publicationId, $applicationId, $dbPath) === false) {
-                throw new Exception('Failed to save application requirement.');
+                if (saveVacancyApplicationRequirement($publicationId, $applicationId, $dbPath) === false) {
+                    throw new Exception('Failed to save application requirement.');
+                }
             }
 
             commit();
 
-            commitStagedFile($stagedFile);
+            if ($stagedFile) {
+                commitStagedFile($stagedFile);
+            }
 
             $success = true;
         } else {
@@ -123,7 +125,7 @@ if (isset($_POST['submit-application'])) {
             $title = strtolower($applicantData['sex'] ?? '') === 'male' ? 'Mr. ' : 'Ms. ';
 
             $pub = publication($publicationId);
-            $pubTitle = $pub ? $pub['title'] : 'Vacancy Publication';
+            $pubTitle = $pub ? $pub['title'] : 'Vacancy Call for Application';
             $pubCode = $pub ? $pub['code'] : '';
 
             $appliedPositionsList = [];
@@ -138,7 +140,7 @@ if (isset($_POST['submit-application'])) {
             $emailBody = <<<EOT
 Hello, {$title} {$applicantName}!
 
-Your application for the following position(s) under publication {$pubCode} ({$pubTitle}) has been received successfully:
+Your application for the following position(s) under call for application {$pubCode} ({$pubTitle}) has been received successfully:
 
 {$positionsText}
 
