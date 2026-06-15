@@ -1460,10 +1460,10 @@ if (isset($_POST['publish-vacancies'])) {
     $closeDate = sanitize($_POST['close_date'] ?? date('Y-m-d', strtotime('+30 days')));
     $pubStatus = sanitize($_POST['pub_status'] ?? 'open');
     $vacancyIds = $_POST['vacancy_ids'] ?? [];
-    $message = 'Failed to create publication.';
+    $message = 'Failed to create call for application.';
 
     if (empty($title)) {
-        $message = 'Please enter a publication title.';
+        $message = 'Please enter a call for application title.';
         return;
     }
 
@@ -1485,7 +1485,7 @@ if (isset($_POST['publish-vacancies'])) {
         $publicationId = createPublication($code, $title, $description, $openDate, $closeDate, $pubStatus);
 
         if (!$publicationId) {
-            throw new Exception('Failed to create publication.');
+            throw new Exception('Failed to create call for application.');
         }
 
         $totalVacanciesLinked = 0;
@@ -1495,12 +1495,12 @@ if (isset($_POST['publish-vacancies'])) {
             $totalVacanciesLinked++;
         }
 
-        createSystemLog($stationId, $userId, 'Published vacancies', "$code - $totalVacanciesLinked items linked", clientIp());
+        createSystemLog($stationId, $userId, 'Created call for application', "$code - $totalVacanciesLinked items linked", clientIp());
         commit();
 
         $applicationUrl = uri() . '/hrmis/apply?p=' . $code;
         $success = true;
-        $message = "Publication created successfully!<br><br>
+        $message = "Call for application created successfully!<br><br>
                 <strong>Application URL:</strong><br>
                 <a href=\"{$applicationUrl}\" target=\"_blank\" class=\"text-primary\">{$applicationUrl}</a><br><br>
                 <small class=\"text-muted\">Share this link to accept applications.</small>";
@@ -1517,7 +1517,7 @@ if (isset($_POST['delete-publication'])) {
     $success = false;
 
     if (empty($publicationId)) {
-        $message = 'Invalid publication selected.';
+        $message = 'Invalid call for application selected.';
         return;
     }
 
@@ -1528,17 +1528,17 @@ if (isset($_POST['delete-publication'])) {
 
     try {
         if (clearPublicationItems($publicationId) === false) {
-            throw new Exception('Failed to delete vacancy publication items.');
+            throw new Exception('Failed to delete vacancy call for application items.');
         }
 
         if (deletePublication($publicationId) === false) {
-            throw new Exception('Failed to delete vacancy publication.');
+            throw new Exception('Failed to delete vacancy call for application.');
         }
 
-        createSystemLog($stationId, $userId, 'Deleted publication', $code, clientIp());
+        createSystemLog($stationId, $userId, 'Deleted call for application', $code, clientIp());
         commit();
 
-        $message = "Publication [$code] has been deleted successfully.";
+        $message = "Call for application [$code] has been deleted successfully.";
         $success = true;
     } catch (Exception $e) {
         rollBack();
@@ -1559,12 +1559,12 @@ if (isset($_POST['save-publication'])) {
     $vacancyIds = $_POST['vacancy_ids'] ?? [];
 
     if (empty($title)) {
-        $message = 'Please enter a publication title.';
+        $message = 'Please enter a call for application title.';
         return;
     }
 
     if (empty($vacancyIds)) {
-        $message = 'Please select at least one vacancy to publish.';
+        $message = 'Please select at least one vacancy to call for application.';
         return;
     }
 
@@ -1578,7 +1578,7 @@ if (isset($_POST['save-publication'])) {
     try {
         if (!empty($publicationId)) {
             if (clearPublicationItems($publicationId) === false) {
-                throw new Exception('Failed to clear publication items.');
+                throw new Exception('Failed to clear call for application vacancy items.');
             }
         }
 
@@ -1586,7 +1586,7 @@ if (isset($_POST['save-publication'])) {
             $code = generatePublicationCode();
             $publicationId = createPublication($code, $title, $description, $openDate, $closeDate, $pubStatus);
             if (!$publicationId) {
-                throw new Exception('Failed to create publication.');
+                throw new Exception('Failed to create call for application.');
             }
             $statusMessage = 'create';
         } else {
@@ -1601,12 +1601,12 @@ if (isset($_POST['save-publication'])) {
             $totalVacanciesLinked++;
         }
 
-        createSystemLog($stationId, $userId, "{$statusMessage}d vacancy publication", "$code - $totalVacanciesLinked items linked", clientIp());
+        createSystemLog($stationId, $userId, "{$statusMessage}d vacancy call for application", "$code - $totalVacanciesLinked items linked", clientIp());
         commit();
 
         $applicationUrl = uri() . '/hrmis/apply?p=' . $code;
         $success = true;
-        $message = "Publication has been successfully {$statusMessage}d!<br><br>
+        $message = "Call for application has been successfully {$statusMessage}d!<br><br>
                 <strong>Application URL:</strong><br>
                 <a href=\"{$applicationUrl}\" target=\"_blank\" class=\"text-primary\">{$applicationUrl}</a><br><br>
                 <small class=\"text-muted\">Share this link to accept applications.</small>";
@@ -1636,7 +1636,7 @@ if (isset($_POST['qualify-application'])) {
         }
 
         $applicationCode = applicantCode($application['application_code_id']);
-        $applicantName = strtoupper(applicantName($applicationCode));
+        $applicantName = applicantName($applicationCode, true);
         $positionData = find("SELECT `official_title` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
         $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
 
@@ -1683,7 +1683,7 @@ if (isset($_POST['disqualify-application'])) {
         }
 
         $applicationCode = applicantCode($application['application_code_id']);
-        $applicantName = applicantName($applicationCode);
+        $applicantName = applicantName($applicationCode, true);
         $positionData = find("SELECT `official_title` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
         $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
 
@@ -1724,20 +1724,20 @@ if (isset($_POST['for-review-application'])) {
         }
 
         $applicationCode = applicantCode($application['application_code_id']);
-        $applicantName = applicantName($applicationCode);
+        $applicantName = applicantName($applicationCode, true);
         $positionData = find("SELECT `official_title` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
         $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
 
         $result = forReviewApplication($applicationId);
 
         if ($result === false) {
-            throw new Exception('Application was not marked for review successfully.');
+            throw new Exception('Application was not successfully marked for initial screening.');
         }
 
-        createSystemLog($stationId, $userId, 'Marked application for review', "$applicantName - $position", clientIp());
+        createSystemLog($stationId, $userId, 'Marked application for initial screening', "$applicantName - $position", clientIp());
         commit();
 
-        $message = "Application of {$applicantName} for {$position} has been marked for review.";
+        $message = "Application of {$applicantName} for {$position} has been marked for initial screening.";
         $success = true;
     } catch (Exception $e) {
         rollBack();
@@ -1855,7 +1855,7 @@ if (isset($_POST['save-assessment-score'])) {
 
         $applicationCodeId = $application['application_code_id'];
         $applicationCode = applicantCode($applicationCodeId);
-        $applicantName = applicantName($applicationCode);
+        $applicantName = applicantName($applicationCode, true);
 
         $data = [
             'education_score' => $educationScore,
@@ -1880,6 +1880,54 @@ if (isset($_POST['save-assessment-score'])) {
         }
 
         createSystemLog($stationId, $userId, 'Saved applicant assessment score', "$applicantName - $position - Score: {$data['total_accumulated_score']}", clientIp());
+
+        $applyToOtherApps = $_POST['apply_to_other_apps'] ?? [];
+        if (!is_array($applyToOtherApps)) {
+            $applyToOtherApps = [];
+        }
+
+        foreach ($applyToOtherApps as $cipheredOtherAppId) {
+            $otherAppId = sanitize(decipher($cipheredOtherAppId));
+            if (empty($otherAppId)) {
+                continue;
+            }
+
+            // Safety check
+            $otherApp = applicationRecord($otherAppId);
+            if (empty($otherApp) || $otherApp['publication_id'] != $application['publication_id'] || $otherApp['application_code_id'] != $application['application_code_id']) {
+                throw new Exception('Invalid application specified for score copying.');
+            }
+
+            // Verify weights match
+            $otherPositionData = find("SELECT `official_title`, `salary_grade`, `category` FROM `positions` WHERE `id` = ?", [$otherApp['position_id']]);
+            $otherPosition = strtoupper($otherPositionData ? $otherPositionData['official_title'] : 'Unknown Position');
+            $otherSG = $otherPositionData ? (int) $otherPositionData['salary_grade'] : 0;
+            $otherCat = $otherPositionData ? $otherPositionData['category'] : '';
+
+            if ($otherSG >= 1 && $otherSG <= 9) {
+                $otherSgLabel = stripos($otherCat, 'general service') !== false
+                    ? 'SG 1-9 (General Services)'
+                    : 'SG 1-9 (Non-General Services)';
+            } elseif (($otherSG >= 10 && $otherSG <= 22) || $otherSG == 27) {
+                $otherSgLabel = 'SG 10-22 && SG 27';
+            } elseif ($otherSG == 24) {
+                $otherSgLabel = 'SG 24 (Chief Positions)';
+            } else {
+                $otherSgLabel = 'SG 10-22 && SG 27';
+            }
+
+            if ($otherSgLabel !== $sgLabel) {
+                throw new Exception("Position '{$otherPosition}' does not have the same scoring criteria weights.");
+            }
+
+            $otherResult = saveAssessmentScore($otherAppId, $data);
+            if ($otherResult === false) {
+                throw new Exception("Assessment score for other position '{$otherPosition}' was not saved successfully.");
+            }
+
+            createSystemLog($stationId, $userId, 'Saved applicant assessment score', "$applicantName - $otherPosition - Score: {$data['total_accumulated_score']} (Copied)", clientIp());
+        }
+
         commit();
 
         $message = "Assessment score for {$applicantName} has been saved successfully.";
