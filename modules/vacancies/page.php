@@ -35,7 +35,7 @@ messageAlert($showAlert, $message, $success);
 
                 <?php if ($isPersonnel): ?>
                     <div class="d-inline-block">
-                        <?php linkButtonSplit(customUri('hrmis', 'Publish Vacancies'), 'Publish', 'fa-newspaper', 'Publish Vacancies', 'info') ?>
+                        <?php linkButtonSplit(customUri('hrmis', 'Create Call for Application'), 'Create Call for Application', 'fa-bullhorn', 'Create Call for Application', 'info') ?>
                     </div>
                 <?php endif ?>
             </div>
