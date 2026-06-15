@@ -531,3 +531,36 @@ function saveAssessmentScore($applicationId, array $data)
         return insert('assessment_scores', $data);
     }
 }
+
+function qualifiedApplicantsAssessmentResults($publicationId)
+{
+    $sql = "SELECT 
+                va.id AS application_id,
+                va.created_at,
+                ac.code AS application_code,
+                va.application_code_id,
+                p.id AS position_id,
+                p.official_title,
+                p.category AS position_group,
+                p.salary_grade,
+                s.education_score,
+                s.training_score,
+                s.experience_score,
+                s.performance_score,
+                s.outstanding_accomplishments_score,
+                s.application_of_education_score,
+                s.application_of_ld_score,
+                s.potential_written_exam_raw,
+                s.potential_bei_raw,
+                s.potential_wst_raw,
+                s.potential_final_score,
+                s.total_accumulated_score,
+                s.hrmspb_remarks
+            FROM vacancy_applications AS va
+            INNER JOIN application_codes AS ac ON va.application_code_id = ac.id
+            INNER JOIN positions AS p ON va.position_id = p.id
+            LEFT JOIN assessment_scores AS s ON va.id = s.application_id
+            WHERE va.publication_id = ? AND va.status = 'Qualified'
+            ORDER BY s.total_accumulated_score DESC, ac.code ASC";
+    return query($sql, [$publicationId]);
+}
