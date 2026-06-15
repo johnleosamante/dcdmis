@@ -125,119 +125,153 @@ messageAlert($showAlert, $message, $success);
 </div>
 
 <div class="row">
-    <div class="col-xl-5 col-md-12">
-        <div class="card shadow mb-4 border-left-info">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-info">Applicant Info</h6>
-            </div>
-            <div class="card-body">
-                <h5 class="text-uppercase font-weight-bold text-gray-800 mb-1">
-                    <?= e($applicantName) ?>
-                </h5>
-                <p class="text-muted mb-0 small">Code:
-                    <?= e($appCode) ?>
-                </p>
+    <div class="col-xl-4 col-lg-5 col-md-12">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow mb-4 border-left-info">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-info">Applicant Info</h6>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="text-uppercase font-weight-bold text-gray-800 mb-1">
+                            <?= e($applicantName) ?>
+                        </h5>
+                        <p class="text-muted mb-0 small">Code:
+                            <?= e($appCode) ?>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-xl-7 col-md-12">
-        <div class="card shadow mb-4 border-left-success">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-success">Position Applied
-                </h6>
-            </div>
-            <div class="card-body">
-                <h5 class="text-uppercase font-weight-bold text-gray-800 mb-1">
-                    <?= e($positionTitle) ?>
-                </h5>
-                <div class="small text-muted mb-2">Salary Grade:
-                    <?= e($positionSG) ?> | Category:
-                    <?= e($positionCategory) ?>
-                </div>
 
-                <?php
-                $vacancyData = find("SELECT vpi.vacancy_id, pi.item_number, pi.station_id 
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow mb-4 border-left-success">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-success">Position Applied
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="text-uppercase font-weight-bold text-gray-800 mb-1">
+                            <?= e($positionTitle) ?>
+                        </h5>
+                        <div class="small text-muted mb-2">Salary Grade:
+                            <?= e($positionSG) ?> | Category:
+                            <?= e($positionCategory) ?>
+                        </div>
+
+                        <?php
+                        $vacancyData = find("SELECT vpi.vacancy_id, pi.item_number, pi.station_id 
                                      FROM vacancy_publication_items AS vpi
                                      INNER JOIN vacancies AS v ON vpi.vacancy_id = v.id
                                      INNER JOIN plantilla_items AS pi ON v.plantilla_item_id = pi.id
                                      WHERE vpi.publication_id = ? AND pi.position_id = ? LIMIT 1",
-                    [$publicationId, $appRecord['position_id']]
-                );
+                            [$publicationId, $appRecord['position_id']]
+                        );
 
-                $itemNumber = $vacancyData ? $vacancyData['item_number'] : 'N/A';
-                $stationName = 'N/A';
-                if ($vacancyData && !empty($vacancyData['station_id'])) {
-                    $school = schoolById($vacancyData['station_id']);
-                    $stationName = $school ? $school['name'] : 'Unknown';
-                }
-                ?>
-                <p class="mb-1 text-gray-800"><strong>Item Number:</strong>
-                    <?= e($itemNumber) ?>
-                </p>
-                <p class="mb-0 text-gray-800"><strong>Station:</strong>
-                    <?= e($stationName) ?>
-                </p>
+                        $itemNumber = $vacancyData ? $vacancyData['item_number'] : 'N/A';
+                        $stationName = 'N/A';
+                        if ($vacancyData && !empty($vacancyData['station_id'])) {
+                            $school = schoolById($vacancyData['station_id']);
+                            $stationName = $school ? $school['name'] : 'Unknown';
+                        }
+                        ?>
+                        <p class="mb-1 text-gray-800"><strong>Item Number:</strong>
+                            <?= e($itemNumber) ?>
+                        </p>
+                        <p class="mb-0 text-gray-800"><strong>Station:</strong>
+                            <?= e($stationName) ?>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-xl-4 col-lg-5 col-md-12">
-        <div class="card shadow mb-4 border-left-warning">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-warning">Scoring Criteria Weights</h6>
-            </div>
-            <div class="card-body p-0">
-                <div class="px-3 pt-2 pb-1">
-                    <p class="small text-muted mb-2">Category: <strong><?= e($weights['category_label']) ?></strong></p>
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow mb-4 border-left-warning">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-warning">Scoring Criteria Weights</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="px-3 pt-2 pb-1">
+                            <p class="small text-muted mb-2">Category:
+                                <strong>
+                                    <?= e($weights['category_label']) ?>
+                                </strong>
+                            </p>
+                        </div>
+                        <table class="table table-sm table-bordered mb-0" style="font-size:0.78rem;">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="px-2">Criterion</th>
+                                    <th class="text-center px-2">Max</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="px-2">Education</t d>
+                                    <td class="text-center px-2">
+                                        <?= $weights['education'] ?>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td class="px-2">Training</td>
+                                    <td class="text-center px-2">
+                                        <?= $weights['training'] ?>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="px-2">Experience</td>
+                                    <td class="text-center px-2">
+                                        <?= $weights['experience'] ?>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="px-2">Performance</td>
+                                    <td class="text-center px-2">
+                                        <?= $weights['performance'] ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2">Accomplishments</td>
+                                    <td class="text-center px-2">
+
+                                        <?= $weights['accomplishments'] ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2">Application
+                                        of Education</td>
+                                    <td class="text-center px-2">
+                                        <?= $weights['application_edu'] ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2">Application of L&D</td>
+                                    <td class="text-center px-2">
+                                        <?= $weights['application_ld'] ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2">Potential</td>
+                                    <td class="text-center px-2">
+                                        <?= $weights['potential'] ?>
+                                    </td>
+                                </tr>
+                                <tr class="font-weight-bold table-warning">
+                                    <td class="px-2">Total</td>
+                                    <td class="text-center px-2">
+                                        <?= $weights['total'] ?>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <table class="table table-sm table-bordered mb-0" style="font-size:0.78rem;">
-                    <thead class="thead-light">
-                        <tr>
-                            <th class="px-2">Criterion</th>
-                            <th class="text-center px-2">Max</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="px-2">Education</td>
-                            <td class="text-center px-2"><?= $weights['education'] ?></td>
-                        </tr>
-                        <tr>
-                            <td class="px-2">Training</td>
-                            <td class="text-center px-2"><?= $weights['training'] ?></td>
-                        </tr>
-                        <tr>
-                            <td class="px-2">Experience</td>
-                            <td class="text-center px-2"><?= $weights['experience'] ?></td>
-                        </tr>
-                        <tr>
-                            <td class="px-2">Performance</td>
-                            <td class="text-center px-2"><?= $weights['performance'] ?></td>
-                        </tr>
-                        <tr>
-                            <td class="px-2">Accomplishments</td>
-                            <td class="text-center px-2"><?= $weights['accomplishments'] ?></td>
-                        </tr>
-                        <tr>
-                            <td class="px-2">Application of Education</td>
-                            <td class="text-center px-2"><?= $weights['application_edu'] ?></td>
-                        </tr>
-                        <tr>
-                            <td class="px-2">Application of L&D</td>
-                            <td class="text-center px-2"><?= $weights['application_ld'] ?></td>
-                        </tr>
-                        <tr>
-                            <td class="px-2">Potential</td>
-                            <td class="text-center px-2"><?= $weights['potential'] ?></td>
-                        </tr>
-                        <tr class="font-weight-bold table-warning">
-                            <td class="px-2">Total</td>
-                            <td class="text-center px-2"><?= $weights['total'] ?></td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
 
