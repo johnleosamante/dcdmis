@@ -28,7 +28,8 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Publications') ?>">Publications</a></li>
+            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Call for Applications') ?>">Call for
+                    Applications</a></li>
             <li class="breadcrumb-item active">
                 <?= e($code) ?>
             </li>
@@ -39,9 +40,9 @@ messageAlert($showAlert, $message, $success);
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
         <?php if ($isHrmis && $isPersonnel) {
-            contentTitleWithLink('Publication Details', customUri('hrmis', 'Publish Vacancies', $publicationId), 'Edit', 'fa-edit');
+            contentTitleWithLink('Details', customUri('hrmis', 'Edit Call for Application', $publicationId), 'Edit', 'fa-edit');
         } else {
-            contentTitle('Publication Details');
+            contentTitle('Details');
         } ?>
     </div>
 
@@ -61,7 +62,7 @@ messageAlert($showAlert, $message, $success);
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Publication Status</div>
+                            Status</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                             <?= ucfirst($publication['status']) ?>
                         </div>
@@ -107,7 +108,7 @@ messageAlert($showAlert, $message, $success);
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                            Public Application Link</div>
+                            Public Link</div>
                         <div class="font-weight-bold text-gray-800 text-truncate">
                             <a href="<?= uri() . '/hrmis/apply?p=' . $code ?>" target="_blank">
                                 <?= uri() . '/hrmis/apply?p=' . $code ?>
@@ -126,7 +127,7 @@ messageAlert($showAlert, $message, $success);
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <div class="d-sm-flex align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold">Applications Received</h6>
+            <h6 class="m-0 font-weight-bold">Applications for Initial Screening</h6>
             <div>
                 <?php linkButtonSplit(customUri('hrmis', 'Qualified Applicants', $publicationId), 'Qualified', 'fa-thumbs-up', 'View Qualified Applicants', 'success');
                 linkButtonSplit(customUri('hrmis', 'Disqualified Applicants', $publicationId), 'Disqualified', 'fa-thumbs-down', 'View Disqualified Applicants', 'danger'); ?>
@@ -139,9 +140,8 @@ messageAlert($showAlert, $message, $success);
                 <thead>
                     <tr>
                         <th width="15%" class="align-middle">Applied on</th>
-                        <th width="35%" class="align-middle">Applicant</th>
-                        <th width="25%" class="align-middle">Position Applied</th>
-                        <th width="10%" class="align-middle">Status</th>
+                        <th width="40%" class="align-middle">Applicant</th>
+                        <th width="30%" class="align-middle">Position Applied</th>
                         <th width="15%" class="align-middle">Attachment</th>
                         <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                             <th width="5%" class="align-middle">Action</th>
@@ -164,19 +164,6 @@ messageAlert($showAlert, $message, $success);
                                     <?= e($app['official_title']) ?>
                                 </div>
                             </td>
-                            <td class="align-middle text-center">
-                                <?php
-                                $statusBadgeClass = 'badge-secondary';
-                                if ($app['status'] === 'Qualified') {
-                                    $statusBadgeClass = 'badge-success';
-                                } elseif ($app['status'] === 'Disqualified') {
-                                    $statusBadgeClass = 'badge-danger';
-                                }
-                                ?>
-                                <span class="badge <?= $statusBadgeClass ?>">
-                                    <?= e($app['status']) ?>
-                                </span>
-                            </td>
                             <td class="align-middle text-capitalize">
                                 <?php
                                 $applicantDocument = applicantDocument($publicationId, applicantId($app['application_code']));
@@ -196,7 +183,7 @@ messageAlert($showAlert, $message, $success);
                                                 modalDropdownItem(uri() . '/modules/vacancies/qualify-application-dialog.php?id=' . cipher($app['id']), 'Qualify', 'fa-thumbs-up', 'Qualify Application');
                                                 modalDropdownItem(uri() . '/modules/vacancies/disqualify-application-dialog.php?id=' . cipher($app['id']), 'Disqualify', 'fa-thumbs-down', 'Disqualify Application');
                                             } else {
-                                                modalDropdownItem(uri() . '/modules/vacancies/for-review-application-dialog.php?id=' . cipher($app['id']), 'For Review', 'fa-redo', 'Mark Application For Review');
+                                                modalDropdownItem(uri() . '/modules/vacancies/for-review-application-dialog.php?id=' . cipher($app['id']), 'For Initial Screening', 'fa-redo', 'Mark Application For Initial Screening');
                                                 if ($app['status'] === 'Qualified') {
                                                     modalDropdownItem(uri() . '/modules/vacancies/disqualify-application-dialog.php?id=' . cipher($app['id']), 'Disqualify', 'fa-thumbs-down', 'Disqualify Application');
                                                 } else {
@@ -214,9 +201,8 @@ messageAlert($showAlert, $message, $success);
                 <tfoot>
                     <tr>
                         <th width="15%" class="align-middle">Applied on</th>
-                        <th width="35%" class="align-middle">Applicant</th>
-                        <th width="25%" class="align-middle">Position Applied</th>
-                        <th width="10%" class="align-middle">Status</th>
+                        <th width="40%" class="align-middle">Applicant</th>
+                        <th width="30%" class="align-middle">Position Applied</th>
                         <th width="15%" class="align-middle">Attachment</th>
                         <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
                             <th width="5%" class="align-middle">Action</th>
