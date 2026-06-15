@@ -107,7 +107,7 @@ function generateColorPallete(items) {
 	return colors;
 }
 
-function generatePieChart(data, colors, element) {
+function generatePieChart(data, colors, element, enableLinks = true) {
 	const pieChart = new Chart(
 		document.getElementById(element).getContext("2d"),
 		{
@@ -125,7 +125,22 @@ function generatePieChart(data, colors, element) {
 					},
 				],
 			},
-			options: pieOptions,
+			options: {
+				...pieOptions,
+				onClick: function (evt, activeElements) {
+					if (enableLinks && activeElements && activeElements.length > 0) {
+						const index = activeElements[0]._index;
+						const item = data[index];
+						if (item && item.link) {
+							window.location.href = item.link;
+						}
+					}
+				},
+				onHover: function (evt, activeElements) {
+					const hasLink = enableLinks && activeElements && activeElements.length > 0 && data[activeElements[0]._index] && data[activeElements[0]._index].link;
+					evt.target.style.cursor = hasLink ? "pointer" : "default";
+				}
+			},
 		}
 	);
 
@@ -134,7 +149,7 @@ function generatePieChart(data, colors, element) {
 	return pieChart;
 }
 
-function generateDoughnutChart(data, colors, element) {
+function generateDoughnutChart(data, colors, element, enableLinks = true) {
 	const doughnutChart = new Chart(
 		document.getElementById(element).getContext("2d"),
 		{
@@ -152,7 +167,22 @@ function generateDoughnutChart(data, colors, element) {
 					},
 				],
 			},
-			options: pieOptions,
+			options: {
+				...pieOptions,
+				onClick: function (evt, activeElements) {
+					if (enableLinks && activeElements && activeElements.length > 0) {
+						const index = activeElements[0]._index;
+						const item = data[index];
+						if (item && item.link) {
+							window.location.href = item.link;
+						}
+					}
+				},
+				onHover: function (evt, activeElements) {
+					const hasLink = enableLinks && activeElements && activeElements.length > 0 && data[activeElements[0]._index] && data[activeElements[0]._index].link;
+					evt.target.style.cursor = hasLink ? "pointer" : "default";
+				}
+			},
 		}
 	);
 
@@ -161,8 +191,8 @@ function generateDoughnutChart(data, colors, element) {
 	return doughnutChart;
 }
 
-function generatePolarAreaChart(data, colors, element) {
-	return new Chart(document.getElementById(element).getContext("2d"), {
+function generatePolarAreaChart(data, colors, element, enableLinks = true) {
+	const polarAreaChart = new Chart(document.getElementById(element).getContext("2d"), {
 		type: "polarArea",
 		data: {
 			labels: data.map((item) => {
@@ -177,14 +207,31 @@ function generatePolarAreaChart(data, colors, element) {
 				},
 			],
 		},
-		options: pieOptions,
+		options: {
+			...pieOptions,
+			onClick: function (evt, activeElements) {
+				if (enableLinks && activeElements && activeElements.length > 0) {
+					const index = activeElements[0]._index;
+					const item = data[index];
+					if (item && item.link) {
+						window.location.href = item.link;
+					}
+				}
+			},
+			onHover: function (evt, activeElements) {
+				const hasLink = enableLinks && activeElements && activeElements.length > 0 && data[activeElements[0]._index] && data[activeElements[0]._index].link;
+				evt.target.style.cursor = hasLink ? "pointer" : "default";
+			}
+		},
 	});
 
 	polarAreaChart.canvas.parentNode.style.minHeight = "400px";
+
+	return polarAreaChart;
 }
 
-function generateBarChart(data, colors, element) {
-	return new Chart(document.getElementById(element).getContext("2d"), {
+function generateBarChart(data, colors, element, enableLinks = true) {
+	const barChart = new Chart(document.getElementById(element).getContext("2d"), {
 		type: "bar",
 		data: {
 			labels: data.map((item) => {
@@ -199,12 +246,29 @@ function generateBarChart(data, colors, element) {
 				},
 			],
 		},
-		options: barOptions,
+		options: {
+			...barOptions,
+			onClick: function (evt, activeElements) {
+				if (enableLinks && activeElements && activeElements.length > 0) {
+					const index = activeElements[0]._index;
+					const item = data[index];
+					if (item && item.link) {
+						window.location.href = item.link;
+					}
+				}
+			},
+			onHover: function (evt, activeElements) {
+				const hasLink = enableLinks && activeElements && activeElements.length > 0 && data[activeElements[0]._index] && data[activeElements[0]._index].link;
+				evt.target.style.cursor = hasLink ? "pointer" : "default";
+			}
+		},
 	});
+
+	return barChart;
 }
 
-function generateComparativeBarChart(data, colors, element) {
-	return new Chart(document.getElementById(element).getContext("2d"), {
+function generateComparativeBarChart(data, colors, element, enableLinks = true) {
+	const barChart = new Chart(document.getElementById(element).getContext("2d"), {
 		type: "bar",
 		data: {
 			labels: data.map((item) => {
@@ -225,12 +289,29 @@ function generateComparativeBarChart(data, colors, element) {
 				},
 			],
 		},
-		options: barOptions,
+		options: {
+			...barOptions,
+			onClick: function (evt, activeElements) {
+				if (enableLinks && activeElements && activeElements.length > 0) {
+					const index = activeElements[0]._index;
+					const item = data[index];
+					if (item && item.link) {
+						window.location.href = item.link;
+					}
+				}
+			},
+			onHover: function (evt, activeElements) {
+				const hasLink = enableLinks && activeElements && activeElements.length > 0 && data[activeElements[0]._index] && data[activeElements[0]._index].link;
+				evt.target.style.cursor = hasLink ? "pointer" : "default";
+			}
+		},
 	});
+
+	return barChart;
 }
 
-function generateComparativeLineChart(data, colors, element) {
-	return new Chart(document.getElementById(element).getContext("2d"), {
+function generateComparativeLineChart(data, colors, element, enableLinks = true) {
+	const lineChart = new Chart(document.getElementById(element).getContext("2d"), {
 		data: {
 			labels: data.map((item) => {
 				return item.name;
@@ -273,6 +354,19 @@ function generateComparativeLineChart(data, colors, element) {
 			legend: {
 				display: false,
 			},
+			onClick: function (evt, activeElements) {
+				if (enableLinks && activeElements && activeElements.length > 0) {
+					const index = activeElements[0]._index;
+					const item = data[index];
+					if (item && item.link) {
+						window.location.href = item.link;
+					}
+				}
+			},
+			onHover: function (evt, activeElements) {
+				const hasLink = enableLinks && activeElements && activeElements.length > 0 && data[activeElements[0]._index] && data[activeElements[0]._index].link;
+				evt.target.style.cursor = hasLink ? "pointer" : "default";
+			},
 			scales: {
 				yAxes: [
 					{
@@ -303,9 +397,11 @@ function generateComparativeLineChart(data, colors, element) {
 			},
 		},
 	});
+
+	return lineChart;
 }
 
-function generateMultiSeriesBarChart(data, element) {
+function generateMultiSeriesBarChart(data, element, enableLinks = true) {
 	const statusColors = {
 		incoming: '#4e73df',
 		pending: '#f6c23e',
@@ -356,6 +452,19 @@ function generateMultiSeriesBarChart(data, element) {
 			position: 'top',
 		},
 		tooltips: tooltips,
+		onClick: function (evt, activeElements) {
+			if (enableLinks && activeElements && activeElements.length > 0) {
+				const index = activeElements[0]._index;
+				const item = data[index];
+				if (item && item.link) {
+					window.location.href = item.link;
+				}
+			}
+		},
+		onHover: function (evt, activeElements) {
+			const hasLink = enableLinks && activeElements && activeElements.length > 0 && data[activeElements[0]._index] && data[activeElements[0]._index].link;
+			evt.target.style.cursor = hasLink ? "pointer" : "default";
+		},
 		plugins: {
 			datalabels: {
 				color: function (ctx) {
