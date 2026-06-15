@@ -185,15 +185,18 @@ function attendedTraining($training_id, $employee_id)
 }
 
 // trainings
-function conductedTrainingsByYear()
+function conductedTrainingsByYear($limit = null)
 {
     $sql = "SELECT YEAR(`end_date`) AS `name`, COUNT(*) AS `count` FROM `trainings` 
             WHERE `end_date` IS NOT NULL GROUP BY YEAR(`end_date`) ORDER BY `name` DESC";
+    if ($limit !== null) {
+        $sql .= " LIMIT " . (int) $limit;
+    }
     return query($sql);
 }
 
 // trainings, training_attendees
-function trainedEmployeesByYear()
+function trainedEmployeesByYear($limit = null)
 {
     $sql = "SELECT YEAR(t.`end_date`) AS `name`, COUNT(DISTINCT tp.`employee_id`) AS `count` 
             FROM `trainings` AS t 
@@ -201,5 +204,8 @@ function trainedEmployeesByYear()
             WHERE t.`end_date` IS NOT NULL
             GROUP BY YEAR(t.`end_date`) 
             ORDER BY `name` DESC";
+    if ($limit !== null) {
+        $sql .= " LIMIT " . (int) $limit;
+    }
     return query($sql);
 }
