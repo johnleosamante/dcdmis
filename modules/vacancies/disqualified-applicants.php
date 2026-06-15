@@ -21,14 +21,22 @@ if ($publicationId) {
 }
 
 messageAlert($showAlert, $message, $success);
+
+$apps = applicantsByPublication($publicationId);
+$disqualifiedApps = array_filter($apps, function ($app) {
+    return $app['status'] === 'Disqualified';
+});
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Publications') ?>">Publications</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Publication Details', $publicationId) ?>">
+            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Call for Applications') ?>">Call for
+                    Application</a>
+            </li>
+            <li class="breadcrumb-item"><a
+                    href="<?= customUri('hrmis', 'Call for Application Details', $publicationId) ?>">
                     <?= e($code) ?>
                 </a></li>
             <li class="breadcrumb-item active">Disqualified Applicants</li>
@@ -38,7 +46,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-danger shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithLink('Disqualified Applicants', customUri('hrmis', 'Publication Details', $publicationId), 'Back', 'fa-arrow-circle-left') ?>
+        <?php contentTitleWithLink('Disqualified Applicants', customUri('hrmis', 'Call for Application Details', $publicationId), 'Back', 'fa-arrow-circle-left') ?>
     </div>
 
     <div class="card-body">
@@ -53,7 +61,9 @@ messageAlert($showAlert, $message, $success);
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold">Disqualified Applicants</h6>
-        <?php linkButtonSplit(uri() . '/export?v=' . encode('disqualified-applicants') . '&id=' . encode($publicationId), 'Export', 'fa-download', 'Export Disqualified Applicants', 'success'); ?>
+        <?php if (count($disqualifiedApps) > 0) {
+            linkButtonSplit(uri() . '/export?v=' . encode('disqualified-applicants') . '&id=' . encode($publicationId), 'Export', 'fa-download', 'Export Disqualified Applicants', 'success');
+        } ?>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -73,11 +83,6 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $apps = applicantsByPublication($publicationId);
-                    $disqualifiedApps = array_filter($apps, function ($app) {
-                        return $app['status'] === 'Disqualified';
-                    });
-
                     if (count($disqualifiedApps) > 0) {
                         foreach ($disqualifiedApps as $app): ?>
                             <tr class="text-uppercase">
@@ -108,7 +113,7 @@ messageAlert($showAlert, $message, $success);
                                             <?php dropdownEllipsis() ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                                 <?php
-                                                modalDropdownItem(uri() . '/modules/vacancies/for-review-application-dialog.php?id=' . cipher($app['id']), 'For Review', 'fa-redo', 'Mark Application For Review');
+                                                modalDropdownItem(uri() . '/modules/vacancies/for-review-application-dialog.php?id=' . cipher($app['id']), 'For Initial Screening', 'fa-redo', 'Mark Application For Initial Screening');
                                                 modalDropdownItem(uri() . '/modules/vacancies/qualify-application-dialog.php?id=' . cipher($app['id']), 'Qualify', 'fa-thumbs-up', 'Qualify Application');
                                                 ?>
                                             </div>
