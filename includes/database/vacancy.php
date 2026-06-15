@@ -148,7 +148,7 @@ function generatePublicationCode()
     $sql = "SELECT COUNT(*) AS `count` FROM `vacancy_publications` WHERE YEAR(`created_at`) = ?";
     $result = find($sql, [$year]);
     $count = ($result ? (int) $result['count'] : 0) + 1;
-    return "PUB{$year}" . str_pad($count, 3, '0', STR_PAD_LEFT);
+    return "CFA{$year}" . str_pad($count, 3, '0', STR_PAD_LEFT);
 }
 
 function publication($id)
