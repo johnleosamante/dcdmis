@@ -17,10 +17,10 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 
 <script src="<?= uri() ?>/assets/vendor/chart.js/Chart.min.js"></script>
 <script src="<?= uri() ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
-<script src="<?= uri() ?>/assets/js/chart-custom.js?v=1.2"></script>
+<script src="<?= uri() ?>/assets/js/chart-custom.js?v=1.3"></script>
 
 <div class="row">
-	<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+	<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
 		<div class="card shadow">
 			<div class="card-header py-3">
 				<h6 class="m-0 font-weight-bold text-primary text-uppercase">Conducted Trainings Per Year</h6>
@@ -29,7 +29,12 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 				<div class="chart-bar h-auto">
 					<canvas id="conducted-trainings-bar-chart"></canvas>
 					<script>
-						<?php $conductedTrainingByYear = conductedTrainingsByYear() ?>
+						<?php
+						$conductedTrainingByYear = array_map(function ($item) {
+							$item['link'] = customUri('hrtdms', 'Conducted Trainings') . '&from=' . $item['name'] . '-01-01&to=' . $item['name'] . '-12-31';
+							return $item;
+						}, conductedTrainingsByYear(10));
+						?>
 						generateBarChart(<?= json_encode($conductedTrainingByYear) ?>, generateColorPallete(<?= count($conductedTrainingByYear) ?>), 'conducted-trainings-bar-chart');
 					</script>
 				</div>
@@ -46,8 +51,8 @@ contentTitleWithModal('Dashboard', uri() . '/modules/trainings/save-training-dia
 				<div class="chart-bar h-auto">
 					<canvas id="trained-employees-bar-chart"></canvas>
 					<script>
-						<?php $trainedEmployeesByYear = trainedEmployeesByYear() ?>
-						generateBarChart(<?= json_encode($trainedEmployeesByYear) ?>, generateColorPallete(<?= count($trainedEmployeesByYear) ?>), 'trained-employees-bar-chart');
+						<?php $trainedEmployeesByYear = trainedEmployeesByYear(); ?>
+						generateBarChart(<?= json_encode($trainedEmployeesByYear) ?>, generateColorPallete(<?= count($trainedEmployeesByYear) ?>), 'trained-employees-bar-chart', false);
 					</script>
 				</div>
 			</div>
