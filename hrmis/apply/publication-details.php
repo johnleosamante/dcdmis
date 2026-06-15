@@ -6,19 +6,19 @@ if ($code) {
 
     if ($publication) {
         if ($publication['status'] !== 'open') {
-            $error = 'This publication is currently closed.';
+            $error = 'This call for application is currently closed.';
         } elseif (strtotime($publication['close_date']) < strtotime(date('Y-m-d'))) {
-            $error = 'The application period for this publication has ended.';
+            $error = 'The application period for this call for application has ended.';
         } elseif (strtotime($publication['open_date']) > strtotime(date('Y-m-d'))) {
-            $error = 'The application period for this publication has not started yet.';
+            $error = 'The application period for this call for application has not started yet.';
         } else {
             $vacancies = publicationItems($publication['id']);
         }
     } else {
-        $error = 'Publication not found.';
+        $error = 'Call for application not found.';
     }
 } else {
-    $error = 'Invalid publication link.';
+    $error = 'Invalid call for application link.';
 }
 ?>
 
@@ -49,7 +49,7 @@ if ($code) {
             </div>
 
             <div class="text-center mt-4">
-                <a href="<?= uri() . '/hrmis/apply' ?>" class="btn btn-secondary">Go to Publications</a>
+                <a href="<?= uri() . '/hrmis/apply' ?>" class="btn btn-secondary">Go to Call for Applications</a>
             </div>
         <?php else: ?>
             <form class="user" action="" method="POST" enctype="multipart/form-data">
@@ -121,7 +121,8 @@ if ($code) {
                                     <?php }
                                 } else { ?>
                                     <tr>
-                                        <td colspan="3" class="text-center">No vacancies found for this publication.</td>
+                                        <td colspan="3" class="text-center">No vacancies found for this call for application.
+                                        </td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -137,8 +138,7 @@ if ($code) {
                     </div>
 
                     <div class="form-group">
-                        <label for="pertinent-documents" class="font-weight-bold mb-0">Pertinent Documents (PDF only)
-                            <?= showAsterisk() ?></label>
+                        <label for="pertinent-documents" class="font-weight-bold mb-0">Pertinent Documents (PDF only)</label>
                         <p class="form-text text-muted small mb-2">Review the <a
                                 href="https://www.deped.gov.ph/wp-content/uploads/DO_s2023_007.pdf" target="_blank">DepEd
                                 Order
@@ -154,7 +154,7 @@ if ($code) {
                             arrangement of
                             compiled documents to be
                             uploaded in single PDF file format.</p>
-                        <input class="form-control-file" type="file" name="application-file" accept=".pdf" required>
+                        <input class="form-control-file" type="file" name="application-file" accept=".pdf">
                         <small class="form-text text-muted">Max file upload size:
                             <?= ini_get('upload_max_filesize') ?>B</small>
                     </div>
