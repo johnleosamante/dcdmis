@@ -1764,25 +1764,112 @@ if (isset($_POST['save-assessment-score'])) {
             throw new Exception('Application record not found.');
         }
 
+        $positionData = find("SELECT `official_title`, `salary_grade`, `category` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
+        $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
+        $positionSG = $positionData ? (int) $positionData['salary_grade'] : 0;
+        $positionCat = $positionData ? $positionData['category'] : '';
+
+        if ($positionSG >= 1 && $positionSG <= 9) {
+            $sgLabel = stripos($positionCat, 'general service') !== false
+                ? 'SG 1-9 (General Services)'
+                : 'SG 1-9 (Non-General Services)';
+        } elseif (($positionSG >= 10 && $positionSG <= 22) || $positionSG == 27) {
+            $sgLabel = 'SG 10-22 && SG 27';
+        } elseif ($positionSG == 24) {
+            $sgLabel = 'SG 24 (Chief Positions)';
+        } else {
+            $sgLabel = 'SG 10-22 && SG 27';
+        }
+
+        $scoringWeights = find(
+            "SELECT * FROM `scoring_criteria_weights` WHERE `scoring_category` = ? LIMIT 1",
+            [$sgLabel]
+        );
+
+        $w = [
+            'education' => $scoringWeights ? (float) $scoringWeights['education_max_points'] : 5,
+            'training' => $scoringWeights ? (float) $scoringWeights['training_max_points'] : 10,
+            'experience' => $scoringWeights ? (float) $scoringWeights['experience_max_points'] : 15,
+            'performance' => $scoringWeights ? (float) $scoringWeights['performance_max_points'] : 20,
+            'accomplishments' => $scoringWeights ? (float) $scoringWeights['accomplishments_max_points'] : 10,
+            'app_edu' => $scoringWeights ? (float) $scoringWeights['application_education_max_points'] : 10,
+            'app_ld' => $scoringWeights ? (float) $scoringWeights['application_ld_max_points'] : 10,
+            'potential' => $scoringWeights ? (float) $scoringWeights['potential_max_points'] : 20,
+            'total' => $scoringWeights ? (float) $scoringWeights['total_max_points'] : 100,
+        ];
+
+        $educationScore = (float) ($_POST['education_score'] ?? 0);
+        $trainingScore = (float) ($_POST['training_score'] ?? 0);
+        $experienceScore = (float) ($_POST['experience_score'] ?? 0);
+        $performanceScore = (float) ($_POST['performance_score'] ?? 0);
+        $accomplishmentsScore = (float) ($_POST['outstanding_accomplishments_score'] ?? 0);
+        $appEduScore = (float) ($_POST['application_of_education_score'] ?? 0);
+        $appLdScore = (float) ($_POST['application_of_ld_score'] ?? 0);
+        $examRaw = (float) ($_POST['potential_written_exam_raw'] ?? 0);
+        $beiRaw = (float) ($_POST['potential_bei_raw'] ?? 0);
+        $wstRaw = (float) ($_POST['potential_wst_raw'] ?? 0);
+
+        if ($educationScore < 0 || $educationScore > $w['education']) {
+            throw new Exception("Education score must be between 0 and {$w['education']}.");
+        }
+        if ($trainingScore < 0 || $trainingScore > $w['training']) {
+            throw new Exception("Training score must be between 0 and {$w['training']}.");
+        }
+        if ($experienceScore < 0 || $experienceScore > $w['experience']) {
+            throw new Exception("Experience score must be between 0 and {$w['experience']}.");
+        }
+        if ($performanceScore < 0 || $performanceScore > $w['performance']) {
+            throw new Exception("Performance score must be between 0 and {$w['performance']}.");
+        }
+        if ($accomplishmentsScore < 0 || $accomplishmentsScore > $w['accomplishments']) {
+            throw new Exception("Accomplishments score must be between 0 and {$w['accomplishments']}.");
+        }
+        if ($appEduScore < 0 || $appEduScore > $w['app_edu']) {
+            throw new Exception("Application of Education score must be between 0 and {$w['app_edu']}.");
+        }
+        if ($appLdScore < 0 || $appLdScore > $w['app_ld']) {
+            throw new Exception("Application of L&D score must be between 0 and {$w['app_ld']}.");
+        }
+
+        // Individual raw score caps
+        if ($examRaw < 0 || $examRaw > $w['potential']) {
+            throw new Exception("Written Exam raw score must be between 0 and {$w['potential']}.");
+        }
+        if ($beiRaw < 0 || $beiRaw > $w['potential']) {
+            throw new Exception("BEI raw score must be between 0 and {$w['potential']}.");
+        }
+        if ($wstRaw < 0 || $wstRaw > $w['potential']) {
+            throw new Exception("WST raw score must be between 0 and {$w['potential']}.");
+        }
+
+        $potentialFinal = $examRaw + $beiRaw + $wstRaw;
+        if ($potentialFinal > $w['potential']) {
+            throw new Exception("Combined Potential score ({$potentialFinal}) exceeds the maximum allowed ({$w['potential']}).");
+        }
+
+        $totalAccumulated = $educationScore + $trainingScore + $experienceScore
+            + $performanceScore + $accomplishmentsScore + $appEduScore + $appLdScore
+            + $potentialFinal;
+
+        $totalAccumulated = min($totalAccumulated, $w['total']);
+
         $applicationCodeId = $application['application_code_id'];
         $applicationCode = applicantCode($applicationCodeId);
         $applicantName = applicantName($applicationCode);
-        $positionData = find("SELECT `official_title` FROM `positions` WHERE `id` = ?", [$application['position_id']]);
-        $position = strtoupper($positionData ? $positionData['official_title'] : 'Unknown Position');
 
         $data = [
-            'education_score' => (float) $_POST['education_score'],
-            'training_score' => (float) $_POST['training_score'],
-            'experience_score' => (float) $_POST['experience_score'],
-            'performance_score' => (float) $_POST['performance_score'],
-            'outstanding_accomplishments_score' => (float) $_POST['outstanding_accomplishments_score'],
-            'application_of_education_score' => (float) $_POST['application_of_education_score'],
-            'application_of_ld_score' => (float) $_POST['application_of_ld_score'],
-            'potential_written_exam_raw' => (float) $_POST['potential_written_exam_raw'],
-            'potential_bei_raw' => (float) $_POST['potential_bei_raw'],
-            'potential_wst_raw' => (float) $_POST['potential_wst_raw'],
-            'potential_final_score' => (float) $_POST['potential_final_score'],
-            'total_accumulated_score' => (float) $_POST['total_accumulated_score'],
+            'education_score' => $educationScore,
+            'training_score' => $trainingScore,
+            'experience_score' => $experienceScore,
+            'performance_score' => $performanceScore,
+            'outstanding_accomplishments_score' => $accomplishmentsScore,
+            'application_of_education_score' => $appEduScore,
+            'application_of_ld_score' => $appLdScore,
+            'potential_written_exam_raw' => $examRaw,
+            'potential_bei_raw' => $beiRaw,
+            'potential_wst_raw' => $wstRaw,
+            'potential_final_score' => $potentialFinal,
+            'total_accumulated_score' => $totalAccumulated,
             'hrmspb_remarks' => sanitize($_POST['hrmspb_remarks'] ?? '')
         ];
 
