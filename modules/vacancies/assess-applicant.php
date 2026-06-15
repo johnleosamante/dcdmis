@@ -77,14 +77,16 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "$baseUri/$activeApp" ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Publications') ?>">Publications</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Publication Details', $publicationId) ?>">
+            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Call for Applications') ?>">Call for
+                    Applications</a></li>
+            <li class="breadcrumb-item"><a
+                    href="<?= customUri('hrmis', 'Call for Application Details', $publicationId) ?>">
                     <?= e($publication['code']) ?>
                 </a></li>
             <li class="breadcrumb-item"><a
                     href="<?= customUri('hrmis', 'Qualified Applicants', $publicationId) ?>">Qualified Applicants</a>
             </li>
-            <li class="breadcrumb-item active">Assess Applicant</li>
+            <li class="breadcrumb-item active">Assess</li>
         </ol>
     </nav>
 </div>
@@ -93,14 +95,14 @@ messageAlert($showAlert, $message, $success);
     <div class="col-12">
         <div class="card shadow mb-4 border-left-primary">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Publication Details
+                <h6 class="m-0 font-weight-bold text-primary">Call for Application Details
                 </h6>
             </div>
             <div class="card-body">
                 <h5 class="font-weight-bold text-gray-800 mb-1">
                     <?= e($publication['title']) ?>
                 </h5>
-                <p class="text-muted small mb-2">Code:
+                <p class="text-muted small mb-2">
                     <?= e($publication['code']) ?>
                 </p>
                 <?php if (!empty($publication['description'])): ?>
@@ -136,7 +138,7 @@ messageAlert($showAlert, $message, $success);
                         <h5 class="text-uppercase font-weight-bold text-gray-800 mb-1">
                             <?= e($applicantName) ?>
                         </h5>
-                        <p class="text-muted mb-0 small">Code:
+                        <p class="text-muted mb-0 small">
                             <?= e($appCode) ?>
                         </p>
                     </div>
@@ -452,6 +454,73 @@ messageAlert($showAlert, $message, $success);
                                 placeholder="Enter remarks..."><?= e($score['hrmspb_remarks'] ?? '') ?></textarea>
                         </div>
                     </div>
+
+                    <?php
+                    // Fetch other applications of the applicant in the current publication
+                    $otherApplications = query(
+                        "SELECT va.id, va.position_id, p.official_title, p.salary_grade, p.category 
+                         FROM vacancy_applications AS va
+                         INNER JOIN positions AS p ON va.position_id = p.id
+                         WHERE va.publication_id = ? AND va.application_code_id = ? AND va.id != ?",
+                        [$publicationId, $appRecord['application_code_id'], $applicationId]
+                    );
+
+                    $applicableOtherApps = [];
+                    foreach ($otherApplications as $otherApp) {
+                        $otherSG = (int) $otherApp['salary_grade'];
+                        $otherCategory = $otherApp['category'];
+
+                        if ($otherSG >= 1 && $otherSG <= 9) {
+                            $otherSgLabel = stripos($otherCategory, 'general service') !== false
+                                ? 'SG 1-9 (General Services)'
+                                : 'SG 1-9 (Non-General Services)';
+                        } elseif (($otherSG >= 10 && $otherSG <= 22) || $otherSG == 27) {
+                            $otherSgLabel = 'SG 10-22 && SG 27';
+                        } elseif ($otherSG == 24) {
+                            $otherSgLabel = 'SG 24 (Chief Positions)';
+                        } else {
+                            $otherSgLabel = 'SG 10-22 && SG 27';
+                        }
+
+                        if ($otherSgLabel === $sgLabel) {
+                            // Check for existing score
+                            $existingScore = find("SELECT `total_accumulated_score` FROM `assessment_scores` WHERE `application_id` = ?", [$otherApp['id']]);
+                            $otherApp['current_score'] = $existingScore ? $existingScore['total_accumulated_score'] : null;
+                            $applicableOtherApps[] = $otherApp;
+                        }
+                    }
+                    ?>
+
+                    <?php if (!empty($applicableOtherApps)): ?>
+                        <div class="card bg-light border-left-info mb-4 text-left">
+                            <div class="card-body py-3">
+                                <h6 class="font-weight-bold text-info mb-2">
+                                    <i class="fas fa-copy mr-1"></i> Apply Scores to Other Applications
+                                </h6>
+                                <p class="small text-muted mb-3">
+                                    This applicant has also applied for other positions with the same scoring criteria weights.
+                                    Select the positions below to also save the same scores for them:
+                                </p>
+                                <?php foreach ($applicableOtherApps as $otherApp): ?>
+                                    <div class="custom-control custom-checkbox mb-2">
+                                        <input type="checkbox" class="custom-control-input" 
+                                               id="apply_to_<?= $otherApp['id'] ?>" 
+                                               name="apply_to_other_apps[]" 
+                                               value="<?= cipher($otherApp['id']) ?>">
+                                        <label class="custom-control-label font-weight-bold text-gray-800" for="apply_to_<?= $otherApp['id'] ?>">
+                                            <?= e($otherApp['official_title']) ?> 
+                                            <span class="font-weight-normal text-muted small">(SG <?= e($otherApp['salary_grade']) ?>)</span>
+                                            <?php if ($otherApp['current_score'] !== null): ?>
+                                                <span class="badge badge-secondary ml-1">Current Score: <?= number_format($otherApp['current_score'], 2) ?></span>
+                                            <?php else: ?>
+                                                <span class="badge badge-light ml-1 text-secondary">No Score</span>
+                                            <?php endif; ?>
+                                        </label>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
                     <div class="text-right">
                         <input type="hidden" name="verifier" value="<?= cipher($applicationId) ?>">
