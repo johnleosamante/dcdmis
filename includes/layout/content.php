@@ -147,14 +147,18 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Vacancies':
             $file = 'vacancies/page';
             break;
-        case 'Publish Vacancies':
+        case 'Create Call for Application':
+        case 'Edit Call for Application':
             $file = 'vacancies/publish-vacancies';
             break;
-        case 'Publication Details':
+        case 'Call for Application Details':
             $file = 'vacancies/publication-details';
             break;
         case 'Qualified Applicants':
             $file = 'vacancies/qualified-applicants';
+            break;
+        case 'Comparative Assessment Results':
+            $file = 'vacancies/comparative-assessment-results';
             break;
         case 'Assess Applicant':
             $file = 'vacancies/assess-applicant';
@@ -162,7 +166,7 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Disqualified Applicants':
             $file = 'vacancies/disqualified-applicants';
             break;
-        case 'Publications':
+        case 'Call for Applications':
             $file = 'vacancies/publications';
             break;
         case 'Monitoring Tools':
