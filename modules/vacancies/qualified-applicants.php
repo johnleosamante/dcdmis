@@ -21,14 +21,22 @@ if ($publicationId) {
 }
 
 messageAlert($showAlert, $message, $success);
+
+$apps = applicantsByPublication($publicationId);
+$qualifiedApps = array_filter($apps, function ($app) {
+    return $app['status'] === 'Qualified';
+});
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Publications') ?>">Publications</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Publication Details', $publicationId) ?>">
+            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Call for Applications') ?>">Call for
+                    Applications</a>
+            </li>
+            <li class="breadcrumb-item"><a
+                    href="<?= customUri('hrmis', 'Call for Application Details', $publicationId) ?>">
                     <?= e($code) ?>
                 </a></li>
             <li class="breadcrumb-item active">Qualified Applicants</li>
@@ -38,7 +46,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-success shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithLink('Qualified Applicants', customUri('hrmis', 'Publication Details', $publicationId), 'Back', 'fa-arrow-circle-left') ?>
+        <?php contentTitleWithLink('Qualified Applicants', customUri('hrmis', 'Call for Application Details', $publicationId), 'Back', 'fa-arrow-circle-left') ?>
     </div>
 
     <div class="card-body">
@@ -48,14 +56,19 @@ messageAlert($showAlert, $message, $success);
                 <?= e($publication['description']) ?>
             </p>
         <?php endif ?>
-        <small class="text-muted">Publication Code: <?= e($code) ?></small>
+        <small class="text-muted"><?= e($code) ?></small>
     </div>
 </div>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold">Qualified Applicants</h6>
-        <?php linkButtonSplit(uri() . '/export?v=' . encode('qualified-applicants') . '&id=' . encode($publicationId), 'Export', 'fa-download', 'Export Qualified Applicants', 'success'); ?>
+        <?php if (count($qualifiedApps) > 0): ?>
+            <div>
+                <?php linkButtonSplit(customUri('hrmis', 'Comparative Assessment Results', $publicationId), 'Comparative Assessment Results', 'fa-list-ol', 'View Comparative Assessment Results', 'primary', true); ?>
+                <?php linkButtonSplit(uri() . '/export?v=' . encode('qualified-applicants') . '&id=' . encode($publicationId), 'Export', 'fa-download', 'Export Qualified Applicants', 'success'); ?>
+            </div>
+        <?php endif ?>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -75,11 +88,6 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $apps = applicantsByPublication($publicationId);
-                    $qualifiedApps = array_filter($apps, function ($app) {
-                        return $app['status'] === 'Qualified';
-                    });
-
                     if (count($qualifiedApps) > 0) {
                         foreach ($qualifiedApps as $app): ?>
                             <tr class="text-uppercase">
@@ -92,7 +100,7 @@ messageAlert($showAlert, $message, $success);
                                 </td>
                                 <td class="align-middle">
                                     <?php if (isset($app['total_accumulated_score']) && $app['total_accumulated_score'] !== null): ?>
-                                        <div>
+                                        <div class="font-weight-bold text-primary">
                                             <?= number_format($app['total_accumulated_score'], 2) ?>
                                         </div>
                                     <?php else: ?>
@@ -115,10 +123,10 @@ messageAlert($showAlert, $message, $success);
                                             <?php dropdownEllipsis() ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                                 <?php
-                                                linkDropdownItem(customUri('hrmis', 'Assess Applicant', $app['id']), 'Assess', 'fa-poll', 'Assess Applicant'); ?>
+                                                linkDropdownItem(customUri('hrmis', 'Assess Applicant', $app['id']), 'Assess', 'fa-poll', 'Assess Applicant', true); ?>
                                                 <div class="dropdown-divider"></div>
                                                 <?php
-                                                modalDropdownItem(uri() . '/modules/vacancies/for-review-application-dialog.php?id=' . cipher($app['id']), 'For Review', 'fa-redo', 'Mark Application For Review');
+                                                modalDropdownItem(uri() . '/modules/vacancies/for-review-application-dialog.php?id=' . cipher($app['id']), 'For Initial Screening', 'fa-redo', 'Mark Application For Initial Screening');
                                                 modalDropdownItem(uri() . '/modules/vacancies/disqualify-application-dialog.php?id=' . cipher($app['id']), 'Disqualify', 'fa-thumbs-down', 'Disqualify Application');
                                                 ?>
                                             </div>
