@@ -26,23 +26,25 @@ if (isset($_GET['id'])) {
     }
 }
 
-$pageTitle = $isEdit ? 'Edit Publication' : 'Create Publication';
-$btnText = $isEdit ? 'Update Publication' : 'Publish Vacancies';
+$currentBreadCrumb = ($isEdit ? 'Edit' : 'Create');
+$pageTitle = "{$currentBreadCrumb} Call for Application";
+$btnText = ($isEdit ? 'Update' : 'Save') . ' Call for Application';
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "$baseUri/$activeApp" ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Vacancies') ?>">Vacancies</a></li>
-            <li class="breadcrumb-item active"><?= e($pageTitle) ?></li>
+            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Call for Applications') ?>">Call for
+                    Applications</a></li>
+            <li class="breadcrumb-item active"><?= e($currentBreadCrumb) ?></li>
         </ol>
     </nav>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithLink($pageTitle, customUri('hrmis', 'Publications')) ?>
+        <?php contentTitleWithLink($pageTitle, customUri('hrmis', 'Call for Applications')) ?>
     </div>
 
     <div class="card-body">
