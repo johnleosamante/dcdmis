@@ -23,20 +23,20 @@ $publication = publication($publicationId);
             <td colspan="4" style="font-weight: bold; font-size: 14px;">QUALIFIED APPLICANTS REPORT</td>
         </tr>
         <tr>
-            <td style="font-weight: bold;">Publication Code:</td>
+            <td style="font-weight: bold;">Call for Application Code:</td>
             <td colspan="3">
                 <?= e($publication['code'] ?? 'N/A') ?>
             </td>
         </tr>
         <tr>
-            <td style="font-weight: bold;">Publication Title:</td>
+            <td style="font-weight: bold;">Call for Application Title:</td>
             <td colspan="3">
                 <?= e($publication['title'] ?? 'N/A') ?>
             </td>
         </tr>
         <?php if (!empty($publication['description'])): ?>
             <tr>
-                <td style="font-weight: bold;">Description:</td>
+                <td style="font-weight: bold;">Call for Application Description:</td>
                 <td colspan="3">
                     <?= e($publication['description']) ?>
                 </td>
