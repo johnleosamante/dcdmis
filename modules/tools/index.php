@@ -16,7 +16,6 @@ contentTitle('Monitoring Tools');
         ($userPositionId === 'ADOF4' && $sectionCode === 'PER') ||
         ($userPositionId === 'SREPS' || $userPositionId === 'EPS2') && ($sectionCode === 'SME') ||
         ($userPositionId === 'SREPS' && $sectionCode === 'HRD');
-
     if ($showFilledUnfilledItems) {
         cardMini(
             'School Heads and Administrative Officer II Deployment',
@@ -42,6 +41,7 @@ contentTitle('Monitoring Tools');
             true
         );
     }
+    cardMini('Admin and GS Monitoring', 'https://depedph-my.sharepoint.com/:x:/g/personal/leslie_egason_deped_gov_ph/IQDHLrtJKnXoRIrx0td58-JvAfOse_FBmd8hm40CGl27Vo4?rtime=ZZSda7LK3kg', 'fa-file-excel', 'primary', true);
 
     cardMini('CID Sub-AROs Monitoring', 'https://docs.google.com/spreadsheets/d/1_6VWyaPAIn0I212ig4j2Ek7CLQKqz5iT/edit?gid=609413157#gid=609413157', 'fa-file-excel', 'success', true);
     cardMini('Master Class Program Submission Monitoring', 'https://docs.google.com/spreadsheets/d/12Yc_OKO6Ry8U1npJMxYZKFu61cHl7SMq/edit?gid=1793410442#gid=1793410442', 'fa-file-excel', 'success', true);
