@@ -1,6 +1,6 @@
 <div class="card mt-3 mb-4 mx-auto">
     <div class="card-header">
-        <?= contentTitle('Publications') ?>
+        <?= contentTitle('Call for Applications') ?>
     </div>
 
     <div class="card-body">
