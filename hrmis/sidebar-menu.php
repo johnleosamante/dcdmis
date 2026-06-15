@@ -23,7 +23,7 @@ if (($isHrmis && $isPersonnel) || ($isHrmis && $isICT)) {
     sidebarDivider();
 }
 sidebarMenuItem(customUri('hrmis', 'Vacancies'), 'Vacancies', 'fa-user-times', isset($url) && str_contains($url, 'Vacancies'), $countVacancy);
-sidebarMenuItem(customUri('hrmis', 'Publications'), 'Publications', 'fa-newspaper', isset($url) && str_contains($url, 'Publications'), $countPublications);
+sidebarMenuItem(customUri('hrmis', 'Call for Applications'), 'Call for Applications', 'fa-bullhorn', isset($url) && str_contains($url, 'Call for Applications'), $countPublications);
 sidebarDivider();
 sidebarMenuItem(customUri('hrmis', 'Districts'), 'Districts', 'fa-map-marked-alt', isset($url) && str_contains($url, 'District'), $districtCount);
 sidebarMenuItem(customUri('hrmis', 'Schools'), 'Schools', 'fa-school', isset($url) && str_contains($url, 'School'), $schoolCount);
