@@ -8,7 +8,7 @@
             <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="50%">Title</th>
+                        <th class="align-middle" width="50%">Title / Description / Application Deadline</th>
                         <th class="align-middle" width="30%">Vacancies</th>
                         <th class="align-middle" width="20%">Action</th>
                     </tr>
@@ -53,7 +53,7 @@
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="50%">Title</th>
+                        <th class="align-middle" width="50%">Title / Description / Application Deadline</th>
                         <th class="align-middle" width="30%">Vacancies</th>
                         <th class="align-middle" width="20%">Action</th>
                     </tr>
