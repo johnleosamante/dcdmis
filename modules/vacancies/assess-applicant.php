@@ -32,13 +32,13 @@ if ($applicationId) {
             $sgLabel = stripos($positionCategory, 'general service') !== false
                 ? 'SG 1-9 (General Services)'
                 : 'SG 1-9 (Non-General Services)';
-        } elseif (($positionSG >= 10 && $positionSG <= 22) || $positionSG == 27) {
-            $sgLabel = 'SG 10-22 && SG 27';
+        } elseif ($positionSG >= 10 && $positionSG <= 22) {
+            $sgLabel = 'SG 10-22';
         } elseif ($positionSG == 24) {
             $sgLabel = 'SG 24 (Chief Positions)';
         } else {
             // Fallback: use SG 10-22 category for unspecified grades
-            $sgLabel = 'SG 10-22 && SG 27';
+            $sgLabel = 'SG 10-22';
         }
 
         $scoringWeights = find(
@@ -163,27 +163,37 @@ messageAlert($showAlert, $message, $success);
                         </div>
 
                         <?php
-                        $vacancyData = find("SELECT vpi.vacancy_id, pi.item_number, pi.station_id 
+                        $vacanciesData = query("SELECT vpi.vacancy_id, pi.item_number, pi.station_id 
                                      FROM vacancy_publication_items AS vpi
                                      INNER JOIN vacancies AS v ON vpi.vacancy_id = v.id
                                      INNER JOIN plantilla_items AS pi ON v.plantilla_item_id = pi.id
-                                     WHERE vpi.publication_id = ? AND pi.position_id = ? LIMIT 1",
+                                     WHERE vpi.publication_id = ? AND pi.position_id = ?",
                             [$publicationId, $appRecord['position_id']]
                         );
 
-                        $itemNumber = $vacancyData ? $vacancyData['item_number'] : 'N/A';
-                        $stationName = 'N/A';
-                        if ($vacancyData && !empty($vacancyData['station_id'])) {
-                            $school = schoolById($vacancyData['station_id']);
-                            $stationName = $school ? $school['name'] : 'Unknown';
-                        }
+                        $vacanciesCount = is_array($vacanciesData) ? count($vacanciesData) : 0;
                         ?>
-                        <p class="mb-1 text-gray-800"><strong>Item Number:</strong>
-                            <?= e($itemNumber) ?>
-                        </p>
-                        <p class="mb-0 text-gray-800"><strong>Station:</strong>
-                            <?= e($stationName) ?>
-                        </p>
+
+                        <?php if ($vacanciesCount > 1): ?>
+                            <p class="mb-0 text-gray-800"><strong>Available Items:</strong>
+                                <?= $vacanciesCount ?> Item<?= $vacanciesCount > 1 ? 's' : '' ?>
+                            </p>
+                        <?php else:
+                            $vacancyData = ($vacanciesCount === 1) ? $vacanciesData[0] : null;
+                            $itemNumber = $vacancyData ? $vacancyData['item_number'] : 'N/A';
+                            $stationName = 'N/A';
+                            if ($vacancyData && !empty($vacancyData['station_id'])) {
+                                $school = schoolById($vacancyData['station_id']);
+                                $stationName = $school ? $school['name'] : 'Unknown';
+                            }
+                            ?>
+                            <p class="mb-1 text-gray-800"><strong>Item Number:</strong>
+                                <?= e($itemNumber) ?>
+                            </p>
+                            <p class="mb-0 text-gray-800"><strong>Station:</strong>
+                                <?= e($stationName) ?>
+                            </p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -474,12 +484,12 @@ messageAlert($showAlert, $message, $success);
                             $otherSgLabel = stripos($otherCategory, 'general service') !== false
                                 ? 'SG 1-9 (General Services)'
                                 : 'SG 1-9 (Non-General Services)';
-                        } elseif (($otherSG >= 10 && $otherSG <= 22) || $otherSG == 27) {
-                            $otherSgLabel = 'SG 10-22 && SG 27';
+                        } elseif ($otherSG >= 10 && $otherSG <= 22) {
+                            $otherSgLabel = 'SG 10-22';
                         } elseif ($otherSG == 24) {
                             $otherSgLabel = 'SG 24 (Chief Positions)';
                         } else {
-                            $otherSgLabel = 'SG 10-22 && SG 27';
+                            $otherSgLabel = 'SG 10-22';
                         }
 
                         if ($otherSgLabel === $sgLabel) {
@@ -498,20 +508,22 @@ messageAlert($showAlert, $message, $success);
                                     <i class="fas fa-copy mr-1"></i> Apply Scores to Other Applications
                                 </h6>
                                 <p class="small text-muted mb-3">
-                                    This applicant has also applied for other positions with the same scoring criteria weights.
+                                    This applicant has also applied for other positions with the same scoring criteria
+                                    weights.
                                     Select the positions below to also save the same scores for them:
                                 </p>
                                 <?php foreach ($applicableOtherApps as $otherApp): ?>
                                     <div class="custom-control custom-checkbox mb-2">
-                                        <input type="checkbox" class="custom-control-input" 
-                                               id="apply_to_<?= $otherApp['id'] ?>" 
-                                               name="apply_to_other_apps[]" 
-                                               value="<?= cipher($otherApp['id']) ?>">
-                                        <label class="custom-control-label font-weight-bold text-gray-800" for="apply_to_<?= $otherApp['id'] ?>">
-                                            <?= e($otherApp['official_title']) ?> 
-                                            <span class="font-weight-normal text-muted small">(SG <?= e($otherApp['salary_grade']) ?>)</span>
+                                        <input type="checkbox" class="custom-control-input" id="apply_to_<?= $otherApp['id'] ?>"
+                                            name="apply_to_other_apps[]" value="<?= cipher($otherApp['id']) ?>">
+                                        <label class="custom-control-label font-weight-bold text-gray-800"
+                                            for="apply_to_<?= $otherApp['id'] ?>">
+                                            <?= e($otherApp['official_title']) ?>
+                                            <span class="font-weight-normal text-muted small">(SG
+                                                <?= e($otherApp['salary_grade']) ?>)</span>
                                             <?php if ($otherApp['current_score'] !== null): ?>
-                                                <span class="badge badge-secondary ml-1">Current Score: <?= number_format($otherApp['current_score'], 2) ?></span>
+                                                <span class="badge badge-secondary ml-1">Current Score:
+                                                    <?= number_format($otherApp['current_score'], 2) ?></span>
                                             <?php else: ?>
                                                 <span class="badge badge-light ml-1 text-secondary">No Score</span>
                                             <?php endif; ?>
