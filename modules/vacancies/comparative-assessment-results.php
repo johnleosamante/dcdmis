@@ -74,12 +74,12 @@ function getScoringCategoryLabelForResults($salaryGrade, $category)
         return stripos($category, 'general service') !== false
             ? 'SG 1-9 (General Services)'
             : 'SG 1-9 (Non-General Services)';
-    } elseif (($salaryGrade >= 10 && $salaryGrade <= 22) || $salaryGrade == 27) {
-        return 'SG 10-22 && SG 27';
+    } elseif ($salaryGrade >= 10 && $salaryGrade <= 22) {
+        return 'SG 10-22';
     } elseif ($salaryGrade == 24) {
         return 'SG 24 (Chief Positions)';
     } else {
-        return 'SG 10-22 && SG 27';
+        return 'SG 10-22';
     }
 }
 
