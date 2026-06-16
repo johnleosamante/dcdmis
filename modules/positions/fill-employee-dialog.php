@@ -69,12 +69,8 @@ $employees = employeesByStation($stationId, $positionId);
                                     <div>Filling position <strong class="text-uppercase">
                                             <?= e($positionTitle) ?>
                                         </strong>
-                                        <br>Item No. <strong>
-                                            <?= e($itemNumber) ?>
-                                        </strong>
-                                        at <strong class="text-uppercase">
-                                            <?= e($stationName) ?>
-                                        </strong>.
+                                        <br>Item No. <strong><?= e($itemNumber) ?></strong> at <strong
+                                            class="text-uppercase"><?= e($stationName) ?></strong>.
                                     </div>
                                 </span>
                             </div>
