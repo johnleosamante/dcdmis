@@ -1773,12 +1773,12 @@ if (isset($_POST['save-assessment-score'])) {
             $sgLabel = stripos($positionCat, 'general service') !== false
                 ? 'SG 1-9 (General Services)'
                 : 'SG 1-9 (Non-General Services)';
-        } elseif (($positionSG >= 10 && $positionSG <= 22) || $positionSG == 27) {
-            $sgLabel = 'SG 10-22 && SG 27';
+        } elseif ($positionSG >= 10 && $positionSG <= 22) {
+            $sgLabel = 'SG 10-22';
         } elseif ($positionSG == 24) {
             $sgLabel = 'SG 24 (Chief Positions)';
         } else {
-            $sgLabel = 'SG 10-22 && SG 27';
+            $sgLabel = 'SG 10-22';
         }
 
         $scoringWeights = find(
@@ -1908,12 +1908,12 @@ if (isset($_POST['save-assessment-score'])) {
                 $otherSgLabel = stripos($otherCat, 'general service') !== false
                     ? 'SG 1-9 (General Services)'
                     : 'SG 1-9 (Non-General Services)';
-            } elseif (($otherSG >= 10 && $otherSG <= 22) || $otherSG == 27) {
-                $otherSgLabel = 'SG 10-22 && SG 27';
+            } elseif ($otherSG >= 10 && $otherSG <= 22) {
+                $otherSgLabel = 'SG 10-22';
             } elseif ($otherSG == 24) {
                 $otherSgLabel = 'SG 24 (Chief Positions)';
             } else {
-                $otherSgLabel = 'SG 10-22 && SG 27';
+                $otherSgLabel = 'SG 10-22';
             }
 
             if ($otherSgLabel !== $sgLabel) {
