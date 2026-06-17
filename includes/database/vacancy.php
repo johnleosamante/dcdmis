@@ -71,15 +71,27 @@ function deleteVacancy($vacancy_id)
     return delete('vacancies', '`id` = ?', [$vacancy_id]);
 }
 
-// vacancies, positions
+// vacancies, positions, plantilla_items, vacancy_history
 function vacanciesByStatus($status)
 {
-    $sql = "SELECT v.`id`, v.`status`, v.`position_id`, p.`official_title`, p.`salary_grade`, 
-                v.`station_id`, v.`item_number`, v.`vacated_by`, v.`date_vacated`, v.`reason`, 
-                v.`created_at`, v.`updated_at` 
-            FROM `vacancies` AS v 
-            INNER JOIN `positions` AS p ON v.`position_id` = p.`official_title` 
-            WHERE v.`status` = ? ORDER BY p.`official_title` ASC";
+    if ($status === 'filled') {
+        $sql = "SELECT vh.`id`, vh.`date_filled`, vh.`filled_by_id` AS `filled_by`,
+                       pi.`item_number`, pi.`station_id`,
+                       pos.`official_title` AS `position`, pos.`salary_grade`
+                FROM `vacancy_history` AS vh
+                INNER JOIN `plantilla_items` AS pi ON vh.`plantilla_item_id` = pi.`id`
+                INNER JOIN `positions` AS pos ON pi.`position_id` = pos.`id`
+                ORDER BY vh.`date_filled` DESC, pos.`official_title` ASC";
+        return query($sql);
+    }
+
+    $sql = "SELECT v.`id`, v.`status`, pi.`item_number`, pi.`station_id`,
+                   pos.`official_title` AS `position`, pos.`salary_grade`
+            FROM `vacancies` AS v
+            INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id`
+            INNER JOIN `positions` AS pos ON pi.`position_id` = pos.`id`
+            WHERE v.`status` = ?
+            ORDER BY pos.`official_title` ASC";
     return query($sql, [$status]);
 }
 
@@ -215,7 +227,7 @@ function countPublications()
 function publicationItems($publication_id)
 {
     $sql = "SELECT vpi.`id`, vpi.`vacancy_id`, pi.`position_id`, p.`official_title`, pi.`item_number`, p.`salary_grade`,
-                pi.`station_id`, v.`date_vacated`, v.`reason` 
+                pi.`station_id`, v.`date_vacated`, v.`reason`, v.`status` 
             FROM `vacancy_publication_items` AS vpi 
             INNER JOIN `vacancies` AS v ON vpi.`vacancy_id` = v.`id` 
             INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id` 
@@ -563,4 +575,13 @@ function qualifiedApplicantsAssessmentResults($publicationId)
             WHERE va.publication_id = ? AND va.status = 'Qualified'
             ORDER BY s.total_accumulated_score DESC, ac.code ASC";
     return query($sql, [$publicationId]);
+}
+
+function countQualifiedApplicants($publicationId, $positionId)
+{
+    $sql = "SELECT COUNT(id) AS total 
+            FROM vacancy_applications 
+            WHERE publication_id = ? AND position_id = ? AND status = 'Qualified'";
+    $result = find($sql, [$publicationId, $positionId]);
+    return $result ? (int) $result['total'] : 0;
 }
