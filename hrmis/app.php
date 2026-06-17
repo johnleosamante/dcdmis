@@ -1450,6 +1450,187 @@ if (isset($_POST['fill-plantilla-employee'])) {
     }
 }
 
+if (isset($_POST['fill-vacancy'])) {
+    $vacancyId = sanitize(decipher($_POST['verifier']));
+    $applicantId = sanitize($_POST['employee_id'] ?? null);
+    $effectivityDate = sanitize($_POST['effectivity_date'] ?? date('Y-m-d'));
+    $showAlert = true;
+    $success = false;
+
+    if (empty($vacancyId)) {
+        $message = 'Invalid vacancy selected.';
+        return;
+    }
+
+    if (empty($applicantId)) {
+        $message = 'Please select an applicant to fill this position.';
+        return;
+    }
+
+    beginTransaction();
+
+    try {
+        // 1. Fetch vacancy details with position and station
+        $sql = "SELECT v.`id`, v.`plantilla_item_id`, v.`vacated_by_id`, v.`date_vacated`, v.`reason`, v.`status`,
+                       pi.`item_number`, pi.`station_id`, pi.`position_id`, pi.`employment_status`,
+                       p.`official_title`, p.`salary_grade`
+                FROM `vacancies` AS v
+                INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id`
+                INNER JOIN `positions` AS p ON pi.`position_id` = p.`id`
+                WHERE v.`id` = ? LIMIT 1";
+        $vacancy = find($sql, [$vacancyId]);
+        if (!$vacancy) {
+            throw new Exception('Vacancy record not found.');
+        }
+
+        $plantillaItemId = $vacancy['plantilla_item_id'];
+        $itemNumber = $vacancy['item_number'];
+        $stationId = $vacancy['station_id'];
+        $positionId = $vacancy['position_id'];
+        $positionTitle = $vacancy['official_title'];
+        $employmentStatus = ucfirst($vacancy['employment_status'] ?: 'Permanent');
+
+        $stationInfo = schoolById($stationId);
+        $stationName = $stationInfo['name'] ?? '';
+
+        // 2. Check if selected applicant is already an employee or not
+        $isEmployee = employee($applicantId) !== false;
+
+        if (!$isEmployee) {
+            // Fetch applicant details
+            $applicant = find("SELECT * FROM `applicants` WHERE `id` = ? LIMIT 1", [$applicantId]);
+            if (!$applicant) {
+                throw new Exception('Applicant record not found.');
+            }
+
+            // Transfer columns that have the same name in both applicants and employees tables
+            $applicantCols = query("DESCRIBE `applicants`");
+            $employeeCols = query("DESCRIBE `employees`");
+            if (!$applicantCols || !$employeeCols) {
+                throw new Exception('Failed to retrieve table schemas.');
+            }
+
+            $applicantColNames = array_column($applicantCols, 'Field');
+            $employeeColNames = array_column($employeeCols, 'Field');
+            $commonCols = array_intersect($applicantColNames, $employeeColNames);
+
+            $employeeData = [];
+            foreach ($commonCols as $col) {
+                $employeeData[$col] = $applicant[$col];
+            }
+
+            // Force override specific required employee fields
+            $employeeData['status'] = 'Active';
+            $employeeData['profile_picture'] = 'assets/img/user.png';
+
+            // Insert into employees table
+            $insertRes = insert('employees', $employeeData);
+            if ($insertRes === false) {
+                throw new Exception('Failed to copy applicant details to employees table.');
+            }
+
+            // Create family background
+            if (createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $applicantId) === false) {
+                throw new Exception('Failed to create family background.');
+            }
+
+            // Create other information
+            if (createOtherInformation(0, 0, null, 0, null, 0, null, null, 0, null, 0, null, 0, null, 0, null, 0, null, 0, null, 0, null, 0, null, $applicantId) === false) {
+                throw new Exception('Failed to create other information.');
+            }
+
+            // Create identification
+            if (createIdentification(null, '', '', $effectivityDate, $applicantId) === false) {
+                throw new Exception('Failed to create identification.');
+            }
+
+            // Create credentials account
+            if (createAccount($applicantId, hashPassword(generateStrongRandomPassword())) === false) {
+                throw new Exception('Failed to create credentials account.');
+            }
+
+            // Delete applicant from applicants table
+            if (delete('applicants', '`id` = ?', [$applicantId]) === false) {
+                throw new Exception('Failed to delete applicant record.');
+            }
+        } else {
+            // Already an employee: activate
+            updateEmployeeStatus('Active', $applicantId);
+        }
+
+        // 3. Update/Assign Station Assignment
+        if (!station($applicantId)) {
+            $affectedStation = createStation($effectivityDate, $stationId, $positionId, $applicantId);
+        } else {
+            $affectedStation = updateStation($effectivityDate, $stationId, $positionId, $applicantId);
+        }
+
+        if ($affectedStation === false) {
+            throw new Exception('Failed to assign station assignment.');
+        }
+
+        // 4. Close previous present service records and open the new one
+        update(
+            'service_records',
+            ['is_present' => '0', 'to_date' => $effectivityDate],
+            '`employee_id` = ? AND `is_present` = 1 AND `to_date` IS NULL',
+            [$applicantId]
+        );
+
+        $affectedRecord = createExperience(
+            $effectivityDate,  // from_date
+            null,              // to_date
+            '1',               // is_present
+            $positionTitle,    // designation
+            $plantillaItemId,  // plantilla_item_id
+            $employmentStatus, // appointment_status
+            '1',               // is_government_service
+            null,              // salary_grade_step_increment
+            null,              // monthly_salary
+            $stationName,      // agency_company
+            null,              // leave_wo_pay
+            '0',               // for_separation
+            null,              // separation_date
+            null,              // separation_cause
+            $applicantId
+        );
+
+        if ($affectedRecord === false) {
+            throw new Exception('Failed to create new service record.');
+        }
+
+        // 5. Save to vacancy history
+        $historyData = [
+            'vacancy_id' => $vacancyId,
+            'plantilla_item_id' => $plantillaItemId,
+            'vacated_by_id' => $vacancy['vacated_by_id'],
+            'date_vacated' => $vacancy['date_vacated'],
+            'date_filled' => $effectivityDate,
+            'reason' => $vacancy['reason'],
+            'filled_by_id' => $applicantId
+        ];
+
+        if (insert('vacancy_history', $historyData) === false) {
+            throw new Exception('Failed to write to vacancy history.');
+        }
+
+        // 6. Update vacancy status to 'filled' in vacancies table
+        $updateVacancy = update('vacancies', ['status' => 'filled'], '`id` = ?', [$vacancyId]);
+        if ($updateVacancy === false) {
+            throw new Exception('Failed to update vacancy status to filled.');
+        }
+
+        $employeeName = userName($applicantId, true);
+        createSystemLog($stationId, $userId, 'Filled vacancy position', "Vacancy: $itemNumber - Filled by: $employeeName", clientIp());
+        commit();
+
+        $message = "Vacancy for plantilla item <strong>" . e($itemNumber) . "</strong> has been successfully filled by <strong>" . e($employeeName) . "</strong>.";
+        $success = true;
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
 
 if (isset($_POST['publish-vacancies'])) {
     $showAlert = true;
