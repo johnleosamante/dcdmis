@@ -21,6 +21,16 @@ function messageAlert($show, $message, $success = true, $align = 'left')
     <?php endif;
 }
 
+function message($text, $color = 'info', $icon = 'info-circle', $marginBottom = 0)
+{ ?>
+    <div class="alert alert-<?= $color ?> p-2 d-flex align-items-start small mb-<?= $marginBottom ?>">
+        <i class="fa fas fa-<?= $icon ?> mt-1 mr-1"></i>
+        <div>
+            <?= $text ?>
+        </div>
+    </div> <?php
+}
+
 function roundPill($text, $bgColor = 'primary', $textColor = 'light')
 {
     if ($bgColor === 'primary') {
