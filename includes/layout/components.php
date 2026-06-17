@@ -266,21 +266,27 @@ function modalItem($link, $text)
 
 function linkButtonSplit($link, $text, $icon, $title = '', $color = 'primary', $newTab = false)
 { ?>
-    <a href="<?= e($link) ?>" class="btn btn-<?= e($color) ?> btn-icon-split btn-sm my-1" title="<?= e($title) ?>"
-        target="<?= $newTab ? '_blank' : '_self' ?>">
-        <span class="icon text-white-50"><i class="fas <?= e($icon) ?> fa-fw"></i></span>
-        <span class="text"><?= e($text) ?></span>
+    <a href="<?= e($link) ?>"
+        class="btn btn-<?= e($color) ?> btn-icon-split btn-sm my-1 p-0 d-inline-flex align-items-stretch overflow-hidden"
+        title="<?= e($title) ?>" target="<?= $newTab ? '_blank' : '_self' ?>">
+        <span class="icon text-white-50 d-inline-flex align-items-center justify-content-center"><i
+                class="fas <?= e($icon) ?> fa-fw"></i></span>
+        <span class="text d-inline-flex align-items-center"><?= e($text) ?></span>
     </a>
 <?php }
 
 function modalButtonSplit($link, $text, $icon, $title = '', $color = 'primary')
 { ?>
-    <a href="#" data-toggle="modal" data-target="#modal" class="btn btn-<?= e($color) ?>  btn-icon-split btn-sm my-1"
+    <a href="#" data-toggle="modal" data-target="#modal"
+        class="btn btn-<?= e($color) ?> btn-icon-split btn-sm my-1 p-0 d-inline-flex align-items-stretch overflow-hidden"
         title="<?= e($title) ?>" onclick="loadData('<?= e($link) ?>')">
-        <span class="icon text-white-50"><i class="fas <?= e($icon) ?> fa-fw"></i></span>
+        <span class="icon text-white-50 d-inline-flex align-items-center justify-content-center">
+            <i class="fas <?= e($icon) ?> fa-fw"></i>
+        </span>
         <?php if (!empty($text)): ?>
-            <span class="text"><?= e($text) ?></span>
+            <span class="text d-inline-flex align-items-center"><?= e($text) ?></span>
         <?php endif ?>
+
     </a>
 <?php }
 
@@ -340,6 +346,7 @@ function dropdownEllipsis()
 function modalHeader($title)
 { ?>
     <div class="modal-header">
+
         <h5 class="modal-title"><?= e($title) ?></h5>
         <button id="close-modal-button" type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
     </div>
@@ -388,6 +395,7 @@ function requiredLegend($marginBottom = 2)
 function progressBar($value, $min = 50)
 { ?>
     <div class="progress mt-1" title="<?= e($value) ?>% Complete">
+
         <div class="progress-bar bg-<?= $value > $min ? 'success' : 'danger' ?>" role="progressbar"
             aria-valuenow="<?= e($value) ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?= e($value) ?>%"></div>
     </div>
@@ -472,6 +480,7 @@ function dateFilterForm($from_date, $to_date)
                         <div class="col-2 d-flex align-items-center">
                             <label for="date-to" class="font-weight-bold m-0">To:</label>
                         </div>
+
                         <div class="col-10">
                             <input class="form-control" id="date-to" type="date" name="date-to" value="<?= e($to_date) ?>">
                         </div>
