@@ -56,7 +56,6 @@ $qualifiedApps = array_filter($apps, function ($app) {
                 <?= e($publication['description']) ?>
             </p>
         <?php endif ?>
-        <small class="text-muted"><?= e($code) ?></small>
     </div>
 </div>
 
