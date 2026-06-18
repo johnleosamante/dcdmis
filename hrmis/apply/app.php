@@ -122,7 +122,7 @@ if (isset($_POST['submit-application'])) {
         if ($applicantData && !empty($applicantData['email_address'])) {
             $email = $applicantData['email_address'];
             $applicantName = toName($applicantData['last_name'], $applicantData['first_name'], $applicantData['middle_name'], $applicantData['name_extension'], true);
-            $title = strtolower($applicantData['sex'] ?? '') === 'male' ? 'Mr. ' : 'Ms. ';
+            $title = strtolower($applicantData['sex'] ?? '') === 'Male' ? 'Mr. ' : 'Ms. ';
 
             $pub = publication($publicationId);
             $pubTitle = $pub ? $pub['title'] : 'Vacancy Call for Application';
