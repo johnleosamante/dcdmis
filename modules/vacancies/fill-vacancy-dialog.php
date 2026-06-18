@@ -11,125 +11,162 @@ require_once root() . '/includes/layout/components.php';
 
 $vacancyId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
 $position = $itemNumber = $stationName = 'N/A';
-$stationId = null;
-$dateFilled = date('Y-m-d');
+$stationId = $positionId = null;
+$effectivityDate = date('Y-m-d');
 
 if (isset($vacancyId)) {
-    $vacancyDataSet = vacancy($vacancyId);
+    $sql = "SELECT v.`id`, pi.`item_number`, pi.`station_id`, pi.`position_id`, p.`official_title`
+            FROM `vacancies` AS v
+            INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id`
+            INNER JOIN `positions` AS p ON pi.`position_id` = p.`id`
+            WHERE v.`id` = ? LIMIT 1";
+    $vacancy = find($sql, [$vacancyId]);
 
-    if (numRows($vacancyDataSet) > 0) {
-        $vacancy = fetchArray($vacancyDataSet);
+    if ($vacancy !== false) {
         $itemNumber = $vacancy['item_number'] ?? 'N/A';
         $stationId = $vacancy['station_id'];
         $positionId = $vacancy['position_id'];
-        $positionData = fetchAssoc(positions($positionId));
-        $position = $positionData['position'] ?? 'Unknown Position';
+        $position = $vacancy['official_title'] ?? 'Unknown Position';
 
         if (!empty($stationId)) {
-            $school = fetchAssoc(schoolById($stationId));
+            $school = schoolById($stationId);
             $stationName = $school['name'] ?? 'Unknown Station';
         }
     }
 }
 ?>
 
-<div class="modal-dialog modal-lg">
+<div class="modal-dialog">
     <div class="modal-content">
-        <?php modalHeader('Fill Vacancy'); ?>
+        <?php modalHeader('Fill Position Item'); ?>
 
         <form action="" method="POST">
             <?= csrf_field(); ?>
             <div class="modal-body">
-                <div class="card bg-light mb-4">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p class="mb-1 small text-muted">Position</p>
-                                <p class="font-weight-bold text-uppercase mb-2">
-                                    <?= e($position) ?>
-                                </p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="mb-1 small text-muted">Item Number</p>
-                                <p class="font-weight-bold text-primary mb-2">
-                                    <?= e($itemNumber) ?>
-                                </p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="mb-1 small text-muted">Station</p>
-                                <p class="font-weight-bold mb-0">
-                                    <?= e($stationName) ?>
-                                </p>
-                            </div>
-                        </div>
+                <div class="card bg-light mb-3">
+                    <div class="card-body px-3 py-2">
+                        <p class="font-weight-bold text-uppercase m-0">
+                            <?= e($position) ?>
+                        </p>
+                        <p class="font-weight-bold text-primary m-0">
+                            <?= e($itemNumber) ?>
+                        </p>
+                        <p class="font-weight-bold m-0">
+                            <?= e($stationName) ?>
+                        </p>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="employee_id" class="mb-0 font-weight-bold">Select Applicant
-                        <?php showAsterisk() ?>
-                    </label>
-                    <p class="small text-muted mb-2">Only applicants for this vacancy are listed.</p>
-                    <select id="employee_id" name="employee_id" class="form-control" required>
-                        <option value="">Select applicant...</option>
-                        <?php
-                        $applications = applicationsByVacancy($vacancyId);
-                        if (numRows($applications) > 0) {
-                            while ($app = fetchAssoc($applications)) {
-                                $empId = $app['employee_id'];
-                                $appName = $app['applicant_name'];
-                                $isDisabled = false;
-                                $statusLabel = '';
+                <?php
+                $pubItem = find("SELECT `publication_id` FROM `vacancy_publication_items` WHERE `vacancy_id` = ? LIMIT 1", [$vacancyId]);
+                $publicationId = $pubItem ? $pubItem['publication_id'] : null;
 
-                                if (!empty($empId)) {
-                                    $statusLabel = ' (Internal)';
-                                } else {
-                                    // Try to find employee by name (simple check? or just disable)
-                                    // For now, if no employee_id, we disable
-                                    $isDisabled = true;
-                                    $statusLabel = ' (External - Employee record required)';
-                                }
-                                ?>
-                                <option value="<?= e($empId) ?>" <?= $isDisabled ? 'disabled' : '' ?>>
-                                    <?= $appName . $statusLabel ?>
-                                </option>
-                                <?php
-                            }
+                $applicants = [];
+                if ($publicationId && $positionId) {
+                    $sql = "SELECT va.id AS application_id, va.application_code_id, ac.code AS application_code,
+                                   s.total_accumulated_score
+                            FROM vacancy_applications AS va
+                            INNER JOIN application_codes AS ac ON va.application_code_id = ac.id
+                            LEFT JOIN assessment_scores AS s ON va.id = s.application_id
+                            WHERE va.publication_id = ? AND va.position_id = ? AND va.status = 'Qualified'
+                            ORDER BY s.total_accumulated_score DESC, ac.code ASC";
+                    $applicants = query($sql, [$publicationId, $positionId]);
+                }
+
+                $optionsHtml = '';
+                $optionsCount = 0;
+
+                if (!empty($applicants)) {
+                    // 1. Calculate ranks based on score ordering
+                    $ranks = [];
+                    $currentRank = 1;
+                    $prevScore = null;
+                    $itemCount = 0;
+                    foreach ($applicants as $index => $app) {
+                        $itemCount++;
+                        $score = $app['total_accumulated_score'];
+                        if ($score === null) {
+                            $ranks[$index] = '-';
                         } else {
-                            // Optional: Show message or empty
-                            echo '<option value="" disabled>No applicants found for this vacancy</option>';
+                            if ($prevScore === null || (float) $score !== (float) $prevScore) {
+                                $currentRank = $itemCount;
+                            }
+                            $ranks[$index] = $currentRank;
+                            $prevScore = $score;
                         }
-                        ?>
-                    </select>
-                </div>
+                    }
 
-                <?php if (numRows($applications) == 0): ?>
-                    <div class="alert alert-warning small">
-                        <i class="fas fa-exclamation-circle mr-1"></i>
-                        No online applicants found. To fill with an existing employee who didn't apply online, ensure they
-                        are
-                        in the database.
-                        <!-- Maybe add a toggle to show all employees? -->
+                    // 2. Filter out already-filled applicants and buffer options string
+                    foreach ($applicants as $index => $app) {
+                        $appId = $app['application_code_id'];
+                        $appCode = $app['application_code'];
+                        $appName = applicantName($appCode);
+                        $score = $app['total_accumulated_score'];
+                        $rank = $ranks[$index];
+
+                        // Check if applicant has already filled a plantilla item in this publication
+                        $hasFilled = false;
+                        if ($publicationId) {
+                            $sqlCheck = "SELECT vh.`id` 
+                                         FROM `vacancy_history` AS vh
+                                         INNER JOIN `vacancy_publication_items` AS vpi ON vh.`vacancy_id` = vpi.`vacancy_id`
+                                         WHERE vh.`filled_by_id` = ? AND vpi.`publication_id` = ?
+                                         LIMIT 1";
+                            $filledCheck = find($sqlCheck, [$appId, $publicationId]);
+                            if ($filledCheck !== false) {
+                                $hasFilled = true;
+                            }
+                        }
+
+                        if ($hasFilled) {
+                            continue;
+                        }
+
+                        $optionsCount++;
+                        $scoreText = ($score !== null) ? ' - Score: ' . number_format($score, 2) : ' - No Score';
+
+                        $optionsHtml .= '<option value="' . e($appId) . '">';
+                        $optionsHtml .= "{$rank} - " . strtoupper(e($appName)) . $scoreText;
+                        $optionsHtml .= '</option>';
+                    }
+                }
+
+                // Conditional rendering based on applicant availability
+                if (empty($applicants) || $optionsCount === 0) {
+                    $messageText = empty($applicants) ? 'No qualified applicants available.' : '';
+                    $messageText = $applicants && $optionsCount === 0 ? 'All applicants have filled a position item.' : $messageText;
+                    message($messageText, 'warning', 'exclamation-circle');
+                    ?>
+                <?php } else { ?>
+                    <div class="form-group">
+                        <label for="employee_id" class="mb-0 font-weight-bold">Select Applicant
+                            <?php showAsterisk() ?>
+                        </label>
+                        <p class="small text-muted mb-1">Qualified applicants for this position (in rank order):</p>
+                        <select id="employee_id" name="employee_id" class="form-control" required>
+                            <option value="">Select applicant...</option>
+                            <?= $optionsHtml ?>
+                        </select>
                     </div>
-                <?php endif; ?>
 
-                <div class="form-group">
-                    <label for="date_filled" class="mb-0 font-weight-bold">Date Filled
-                        <?php showAsterisk() ?>
-                    </label>
-                    <p class="small text-muted mb-2">The date when the vacancy was filled</p>
-                    <input id="date_filled" name="date_filled" type="date" class="form-control"
-                        value="<?= e($dateFilled) ?>" required>
-                </div>
+                    <div class="form-group">
+                        <label for="effectivity_date" class="mb-0 font-weight-bold">Effectivity Date
+                            <?php showAsterisk() ?>
+                        </label>
+                        <p class="small text-muted mb-1">The effective date of appointment / reassignment</p>
+                        <input id="effectivity_date" name="effectivity_date" type="date" class="form-control"
+                            value="<?= e($effectivityDate) ?>" required>
+                    </div>
 
-                <?php requiredLegend(0) ?>
+                    <?php requiredLegend(0) ?>
+                <?php } ?>
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?= cipher($vacancyId) ?>">
-                <button class="btn btn-success" name="fill-vacancy" type="submit">
-                    <i class="fas fa-user-plus fa-fw mr-1"></i>Fill Vacancy
-                </button>
+                <?php if (!empty($applicants) && $optionsCount > 0): ?>
+                    <input type="hidden" name="verifier" value="<?= cipher($vacancyId) ?>">
+                    <button class="btn btn-primary" name="fill-vacancy" type="submit">Continue</button>
+                <?php endif; ?>
                 <?php cancelModalButton() ?>
             </div>
         </form>
