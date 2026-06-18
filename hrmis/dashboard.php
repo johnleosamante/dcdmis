@@ -24,7 +24,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
     <div class="col-xl-3 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Gender</h6>
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Gender</h6>
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
@@ -44,10 +44,34 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
         </div>
     </div>
 
-    <div class="col-xl-9 col-lg-12 mb-4">
+    <div class="col-xl-3 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employee Categories By Gender</h6>
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Category</h6>
+                <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis() ?>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Category'), 'View', 'fa-eye');
+                        linkDropdownItem(customUri('export', 'demographics', 'category'), 'Export', 'fa-file-excel') ?>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie py-2">
+                    <canvas id="category-doughnut-chart"></canvas>
+                    <script>
+                        <?php $employeeCategory = employeeCategory() ?>
+                        generateDoughnutChart(<?= json_encode($employeeCategory) ?>, generateColorPallete(<?= count($employeeCategory) ?>), 'category-doughnut-chart');
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-lg-12 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Category by Gender</h6>
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
@@ -72,21 +96,21 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
     <div class="col-xl-3 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Category</h6>
+                <h6 class="m-0 font-weight-bold text-uppercase">Education</h6>
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Category'), 'View', 'fa-eye');
-                        linkDropdownItem(customUri('export', 'demographics', 'category'), 'Export', 'fa-file-excel') ?>
+                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Education'), 'View', 'fa-eye');
+                        linkDropdownItem(customUri('export', 'demographics', 'education'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                <div class="chart-pie py-2">
-                    <canvas id="category-doughnut-chart"></canvas>
+                <div class="chart-bar h-auto">
+                    <canvas id="education-bar-chart"></canvas>
                     <script>
-                        <?php $employeeCategory = employeeCategory() ?>
-                        generatePieChart(<?= json_encode($employeeCategory) ?>, generateColorPallete(<?= count($employeeCategory) ?>), 'category-doughnut-chart');
+                        <?php $educationEmployees = demographicsEducation() ?>
+                        generatePieChart(<?= json_encode($educationEmployees) ?>, generateColorPallete(<?= count($educationEmployees) ?>), 'education-bar-chart');
                     </script>
                 </div>
             </div>
@@ -96,7 +120,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
     <div class="col-xl-9 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Position</h6>
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Position</h6>
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
@@ -122,11 +146,11 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
     <div class="col-xl-3 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by District</h6>
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">District</h6>
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Districts'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - District'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'districts'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -146,11 +170,11 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
     <div class="col-xl-9 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Employees by Assignment</h6>
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Assignment</h6>
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - School Assignments'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Assignment'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'schools'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -172,11 +196,59 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
     <div class="col-xl-4 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Indigenous People</h6>
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Generation</h6>
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Indigenous People'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Generation'), 'View', 'fa-eye');
+                        linkDropdownItem(customUri('export', 'demographics', 'generation'), 'Export', 'fa-file-excel') ?>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-bar h-auto">
+                    <canvas id="generation-bar-chart"></canvas>
+                    <script>
+                        <?php $generationEmployees = demographicsGeneration() ?>
+                        generateBarChart(<?= json_encode($generationEmployees) ?>, generateColorPallete(<?= count($generationEmployees) ?>), 'generation-bar-chart');
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-lg-12 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Religion</h6>
+                <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis() ?>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Religion'), 'View', 'fa-eye');
+                        linkDropdownItem(customUri('export', 'demographics', 'religion'), 'Export', 'fa-file-excel') ?>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-bar h-auto">
+                    <canvas id="religion-bar-chart"></canvas>
+                    <script>
+                        <?php $religionEmployees = demographicsReligion() ?>
+                        generateDoughnutChart(<?= json_encode($religionEmployees) ?>, generateColorPallete(<?= count($religionEmployees) ?>), 'religion-bar-chart');
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-lg-12 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Ethnic Group</h6>
+                <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis() ?>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Ethnic Group'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'indigenous'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -193,10 +265,10 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
         </div>
     </div>
 
-    <div class="col-xl-4 col-lg-12 mb-4">
+    <div class="col-xl-2 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Persons With Disability</h6>
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Persons with Disability</h6>
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
@@ -217,14 +289,14 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
         </div>
     </div>
 
-    <div class="col-xl-4 col-lg-12">
+    <div class="col-xl-2 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Solo Parents</h6>
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Solo Parent</h6>
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Solo Parents'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Solo Parent'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'solo-parents'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
