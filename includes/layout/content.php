@@ -172,6 +172,20 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Monitoring Tools':
             $file = 'tools/index';
             break;
+        case 'Demographics - Gender':
+        case 'Demographics - Category':
+        case 'Demographics - Category by Gender':
+        case 'Demographics - Position':
+        case 'Demographics - Generation':
+        case 'Demographics - Education':
+        case 'Demographics - Religion':
+        case 'Demographics - Indigenous People':
+        case 'Demographics - PWD':
+        case 'Demographics - Solo Parents':
+        case 'Demographics - Districts':
+        case 'Demographics - School Assignments':
+            $file = 'employees/demographics/page';
+            break;
         case '404':
         default:
             $file = 'error/404';
