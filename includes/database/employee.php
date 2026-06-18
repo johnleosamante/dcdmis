@@ -392,3 +392,221 @@ function employeePositions()
             ORDER BY pos.`salary_grade` DESC, pos.`official_title` ASC";
     return query($sql);
 }
+
+function demographicsGender()
+{
+    $sql = "SELECT `sex` AS `name`, 
+                SUM(CASE WHEN `sex` = 'Male' THEN 1 ELSE 0 END) AS `male`, 
+                SUM(CASE WHEN `sex` = 'Female' THEN 1 ELSE 0 END) AS `female`, 
+                COUNT(*) AS `total`, COUNT(*) AS `count`
+            FROM `employees` 
+            WHERE `status` = 'Active' 
+            GROUP BY `sex` 
+            ORDER BY `sex` DESC";
+    return query($sql);
+}
+
+function demographicsCategory()
+{
+    $sql = "SELECT pos.`category` AS `name`, 
+                SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`, 
+                SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`, 
+                COUNT(p.`id`) AS `total`, COUNT(p.`id`) AS `count`
+            FROM `positions` AS pos
+            INNER JOIN `station_assignments` AS sa ON sa.`position_id` = pos.`id` 
+            INNER JOIN `employees` AS p ON p.`id` = sa.`employee_id` 
+            WHERE p.`status` = 'Active' 
+            GROUP BY pos.`category` 
+            ORDER BY pos.`category` ASC";
+    return query($sql);
+}
+
+function demographicsCategoryGender()
+{
+    return employeeGenderCategory();
+}
+
+function demographicsPosition()
+{
+    $sql = "SELECT pos.`official_title` AS `name`, 
+                SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`, 
+                SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`, 
+                COUNT(p.id) AS `total`, COUNT(p.id) AS `count`
+            FROM `employees` AS p
+            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`employee_id` 
+            INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id` 
+            WHERE p.`status` = 'Active' 
+            GROUP BY pos.`id`, pos.`official_title`, pos.`salary_grade` 
+            ORDER BY pos.`salary_grade` DESC, pos.`official_title` ASC";
+    return query($sql);
+}
+
+function demographicsGeneration()
+{
+    $sql = "SELECT 
+                CASE 
+                    WHEN YEAR(p.birthdate) BETWEEN 1946 AND 1964 THEN 'Baby Boomers (1946-1964)'
+                    WHEN YEAR(p.birthdate) BETWEEN 1965 AND 1980 THEN 'Generation X (1965-1980)'
+                    WHEN YEAR(p.birthdate) BETWEEN 1981 AND 1996 THEN 'Generation Y / Millennials (1981-1996)'
+                    WHEN YEAR(p.birthdate) BETWEEN 1997 AND 2012 THEN 'Generation Z (1997-2012)'
+                    WHEN YEAR(p.birthdate) >= 2013 THEN 'Generation Alpha (2013-Present)'
+                    ELSE 'Silent Generation / Other'
+                END AS `name`,
+                SUM(CASE WHEN p.sex = 'Male' THEN 1 ELSE 0 END) AS male,
+                SUM(CASE WHEN p.sex = 'Female' THEN 1 ELSE 0 END) AS female,
+                COUNT(*) AS total,
+                COUNT(*) AS count
+            FROM employees p
+            WHERE p.status = 'Active' AND p.birthdate IS NOT NULL AND p.birthdate <> '0000-00-00'
+            GROUP BY `name`
+            ORDER BY MIN(p.birthdate) ASC";
+    return query($sql);
+}
+
+function demographicsEducation()
+{
+    $sql = "SELECT 
+                CASE highest_val
+                    WHEN 6 THEN 'Graduate Studies (Doctoral Degree)'
+                    WHEN 5 THEN 'Graduate Studies (Master\'s Degree)'
+                    WHEN 4 THEN 'College'
+                    WHEN 3 THEN 'Vocational'
+                    WHEN 2 THEN 'Secondary'
+                    WHEN 1 THEN 'Elementary'
+                    ELSE 'Not Specified'
+                END AS name,
+                SUM(CASE WHEN sex = 'Male' THEN 1 ELSE 0 END) AS male,
+                SUM(CASE WHEN sex = 'Female' THEN 1 ELSE 0 END) AS female,
+                COUNT(*) AS total,
+                COUNT(*) AS count
+            FROM (
+                SELECT 
+                    p.id,
+                    p.sex,
+                    MAX(CASE eb.level 
+                        WHEN 'Graduate Studies' THEN 
+                            CASE 
+                                WHEN eb.course LIKE '%doctor%' OR eb.course LIKE '%phd%' OR eb.course LIKE '%ph.d%' OR eb.course LIKE '%dem%' OR eb.course LIKE '%doctoral%'
+                                THEN 6 
+                                ELSE 5 
+                            END
+                        WHEN 'College' THEN 4 
+                        WHEN 'Vocational' THEN 3 
+                        WHEN 'Secondary' THEN 2 
+                        WHEN 'Elementary' THEN 1 
+                        ELSE 0 
+                    END) AS highest_val
+                FROM employees p
+                LEFT JOIN educational_backgrounds eb ON p.id = eb.employee_id
+                WHERE p.status = 'Active'
+                GROUP BY p.id, p.sex
+            ) AS employee_highest
+            GROUP BY highest_val
+            ORDER BY highest_val DESC";
+    return query($sql);
+}
+
+function demographicsReligion()
+{
+    $sql = "SELECT 
+                COALESCE(NULLIF(TRIM(religion), ''), 'Not Specified') AS name,
+                SUM(CASE WHEN sex = 'Male' THEN 1 ELSE 0 END) AS male,
+                SUM(CASE WHEN sex = 'Female' THEN 1 ELSE 0 END) AS female,
+                COUNT(*) AS total,
+                COUNT(*) AS count
+            FROM employees
+            WHERE status = 'Active'
+            GROUP BY name
+            ORDER BY total DESC";
+    return query($sql);
+}
+
+function demographicsIndigenous()
+{
+    $sql = "SELECT 
+                CASE 
+                    WHEN o.`is_indigenous` = 1 AND o.`indigenous_group` > '' 
+                    THEN o.`indigenous_group` 
+                    ELSE 'Non-Indigenous' 
+                END AS `name`, 
+                SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                COUNT(p.`id`) AS `total`,
+                COUNT(p.`id`) AS `count`
+            FROM `employees` p 
+            LEFT JOIN `other_informations` o ON p.`id` = o.`employee_id` 
+            WHERE p.`status` = 'Active' 
+            GROUP BY `name` 
+            ORDER BY `total` DESC";
+    return query($sql);
+}
+
+function demographicsPwd()
+{
+    $sql = "SELECT 
+                CASE 
+                    WHEN o.`with_disability` = 1 AND o.`disability` > '' 
+                    THEN o.`disability` 
+                    ELSE 'Non-PWD' 
+                END AS `name`, 
+                SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                COUNT(p.`id`) AS `total`,
+                COUNT(p.`id`) AS `count`
+            FROM `employees` p 
+            LEFT JOIN `other_informations` o ON p.`id` = o.`employee_id` 
+            WHERE p.`status` = 'Active' 
+            GROUP BY `name` 
+            ORDER BY `total` DESC";
+    return query($sql);
+}
+
+function demographicsSoloParent()
+{
+    $sql = "SELECT 
+                CASE WHEN o.`is_solo_parent` = 1 THEN 'Solo Parent' ELSE 'Not Solo Parent' END AS `name`, 
+                SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                COUNT(p.`id`) AS `total`,
+                COUNT(p.`id`) AS `count`
+            FROM `employees` p 
+            LEFT JOIN `other_informations` o ON p.`id` = o.`employee_id` 
+            WHERE p.`status` = 'Active' 
+            GROUP BY `name` 
+            ORDER BY `total` DESC";
+    return query($sql);
+}
+
+function demographicsDistrict()
+{
+    $sql = "SELECT d.`name`, 
+                   SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                   SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                   COUNT(p.`id`) AS `total`,
+                   COUNT(p.`id`) AS `count`
+            FROM `station_assignments` AS sa 
+            INNER JOIN `schools` AS s ON sa.`station_id` = s.`id` 
+            INNER JOIN `employees` AS p ON p.`id` = sa.`employee_id` 
+            INNER JOIN `districts` AS d ON s.`district_id` = d.`id` 
+            WHERE p.`status` = 'Active' 
+            GROUP BY d.`id`, d.`name` 
+            ORDER BY d.`name` ASC";
+    return query($sql);
+}
+
+function demographicsSchool()
+{
+    $sql = "SELECT s.`name`, 
+                   SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                   SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                   COUNT(p.`id`) AS `total`,
+                   COUNT(p.`id`) AS `count`
+            FROM `station_assignments` AS sa 
+            INNER JOIN `schools` AS s ON sa.`station_id` = s.`id` 
+            INNER JOIN `employees` AS p ON p.`id` = sa.`employee_id` 
+            INNER JOIN `districts` AS d ON s.`district_id` = d.`id` 
+            WHERE p.`status` = 'Active' 
+            GROUP BY s.`id`, s.`name` 
+            ORDER BY s.`name` ASC";
+    return query($sql);
+}
