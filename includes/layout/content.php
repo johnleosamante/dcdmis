@@ -179,11 +179,11 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Demographics - Generation':
         case 'Demographics - Education':
         case 'Demographics - Religion':
-        case 'Demographics - Indigenous People':
+        case 'Demographics - Ethnic Group':
         case 'Demographics - PWD':
-        case 'Demographics - Solo Parents':
-        case 'Demographics - Districts':
-        case 'Demographics - School Assignments':
+        case 'Demographics - Solo Parent':
+        case 'Demographics - District':
+        case 'Demographics - Assignment':
             $file = 'employees/demographics/page';
             break;
         case '404':
