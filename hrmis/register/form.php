@@ -150,8 +150,8 @@
                         <select class="form-control" id="sex" name="sex" required>
                             <option value="" disabled <?php echo !isset($form_data['sex']) ? 'selected' : ''; ?>>Select
                                 sex at birth...</option>
-                            <option value="male" <?php echo (isset($form_data['sex']) && $form_data['sex'] === 'male') ? 'selected' : ''; ?>>Male</option>
-                            <option value="female" <?php echo (isset($form_data['sex']) && $form_data['sex'] === 'female') ? 'selected' : ''; ?>>Female</option>
+                            <option value="Male" <?php echo (isset($form_data['sex']) && $form_data['sex'] === 'Male') ? 'selected' : ''; ?>>Male</option>
+                            <option value="Female" <?php echo (isset($form_data['sex']) && $form_data['sex'] === 'Female') ? 'selected' : ''; ?>>Female</option>
                         </select>
                     </div>
                     <div class="form-group col-md-4">
