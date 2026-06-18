@@ -106,18 +106,17 @@ messageAlert($showAlert, $message, $success);
                     <?= e($publication['code']) ?>
                 </p>
                 <?php if (!empty($publication['description'])): ?>
-                    <p class="small text-gray-700 mb-3">
+                    <p class="small text-gray-700 mb-2">
                         <?= e($publication['description']) ?>
                     </p>
                 <?php endif ?>
 
-                <div class="small text-gray-800 mb-1">
-                    <strong>Status:</strong> <span class="badge badge-primary text-capitalize">
+                <div class="text-gray-800 m-0">
+                    <span class="badge badge-primary text-capitalize">
                         <?= e($publication['status']) ?>
                     </span>
                 </div>
                 <div class="small text-gray-800">
-                    <strong>Period:</strong>
                     <?= toLongDate($publication['open_date']) ?> to
                     <?= toLongDate($publication['close_date']) ?>
                 </div>
