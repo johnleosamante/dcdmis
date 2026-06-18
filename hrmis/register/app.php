@@ -151,7 +151,7 @@ if (isset($_POST['register-applicant'])) {
         if ($isRegistered) {
             $applicant_code = $data['code'];
             $applicant_name = toName($data['last_name'], $data['first_name'], $data['middle_name'], $data['name_extension'], true);
-            $title = strtolower($data['sex'] ?? '') === 'male' ? 'Mr. ' : 'Ms. ';
+            $title = strtolower($data['sex'] ?? '') === 'Male' ? 'Mr. ' : 'Ms. ';
 
             $_SESSION['success'] = true;
             $_SESSION['applicant_code'] = $applicant_code;
