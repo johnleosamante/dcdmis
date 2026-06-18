@@ -467,8 +467,8 @@ function demographicsEducation()
 {
     $sql = "SELECT 
                 CASE highest_val
-                    WHEN 6 THEN 'Graduate Studies (Doctoral Degree)'
-                    WHEN 5 THEN 'Graduate Studies (Master\'s Degree)'
+                    WHEN 6 THEN 'Doctoral'
+                    WHEN 5 THEN 'Masteral'
                     WHEN 4 THEN 'College'
                     WHEN 3 THEN 'Vocational'
                     WHEN 2 THEN 'Secondary'
@@ -609,4 +609,111 @@ function demographicsSchool()
             GROUP BY s.`id`, s.`name` 
             ORDER BY s.`name` ASC";
     return query($sql);
+}
+
+function demographicsEmployeeList()
+{
+    $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
+                p.`sex`, p.`birthdate`, p.`religion`,
+                pos.`official_title` AS `position`, pos.`category`, pos.`salary_grade`,
+                d.`name` AS `district`, s.`name` AS `school`,
+                o.`is_indigenous`, o.`indigenous_group`, o.`with_disability`, o.`disability`, o.`is_solo_parent`,
+                (
+                    SELECT MAX(CASE eb.level 
+                        WHEN 'Graduate Studies' THEN 
+                            CASE 
+                                WHEN eb.course LIKE '%doctor%' OR eb.course LIKE '%phd%' OR eb.course LIKE '%ph.d%' OR eb.course LIKE '%dem%' OR eb.course LIKE '%doctoral%'
+                                THEN 6 
+                                ELSE 5 
+                            END
+                        WHEN 'College' THEN 4 
+                        WHEN 'Vocational' THEN 3 
+                        WHEN 'Secondary' THEN 2 
+                        WHEN 'Elementary' THEN 1 
+                        ELSE 0 
+                    END) 
+                    FROM educational_backgrounds eb 
+                    WHERE eb.employee_id = p.id
+                ) AS highest_education_val
+            FROM `employees` AS p
+            INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`employee_id` 
+            INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id`
+            INNER JOIN `schools` AS s ON sa.`station_id` = s.`id`
+            INNER JOIN `districts` AS d ON s.`district_id` = d.`id`
+            LEFT JOIN `other_informations` o ON p.`id` = o.`employee_id`
+            WHERE p.`status` = 'Active'
+            ORDER BY p.`last_name` ASC, p.`first_name` ASC";
+    $results = query($sql);
+    return is_array($results) ? $results : [];
+}
+
+function getEmployeeDemographicGroup($row, $exportId)
+{
+    switch ($exportId) {
+        case 'gender':
+            return $row['sex'] ?? 'Not Specified';
+        case 'category':
+        case 'category-gender':
+            return $row['category'] ?? 'Not Specified';
+        case 'position':
+            return $row['position'] ?? 'Not Specified';
+        case 'generation':
+            if (empty($row['birthdate']) || $row['birthdate'] === '0000-00-00') {
+                return 'Silent Generation / Other';
+            }
+            $year = (int) date('Y', strtotime($row['birthdate']));
+            if ($year >= 1946 && $year <= 1964)
+                return 'Baby Boomers (1946-1964)';
+            if ($year >= 1965 && $year <= 1980)
+                return 'Generation X (1965-1980)';
+            if ($year >= 1981 && $year <= 1996)
+                return 'Generation Y / Millennials (1981-1996)';
+            if ($year >= 1997 && $year <= 2012)
+                return 'Generation Z (1997-2012)';
+            if ($year >= 2013)
+                return 'Generation Alpha (2013-Present)';
+            return 'Silent Generation / Other';
+        case 'education':
+            $val = isset($row['highest_education_val']) ? (int) $row['highest_education_val'] : 0;
+            switch ($val) {
+                case 6:
+                    return 'Doctoral';
+                case 5:
+                    return 'Masteral';
+                case 4:
+                    return 'College';
+                case 3:
+                    return 'Vocational';
+                case 2:
+                    return 'Secondary';
+                case 1:
+                    return 'Elementary';
+                default:
+                    return 'Not Specified';
+            }
+        case 'religion':
+            $religion = trim($row['religion'] ?? '');
+            return $religion !== '' ? $religion : 'Not Specified';
+        case 'indigenous':
+            if (isset($row['is_indigenous']) && $row['is_indigenous'] == 1 && trim($row['indigenous_group'] ?? '') !== '') {
+                return trim($row['indigenous_group']);
+            }
+            return 'Non-Indigenous';
+        case 'pwd':
+            if (isset($row['with_disability']) && $row['with_disability'] == 1 && trim($row['disability'] ?? '') !== '') {
+                return trim($row['disability']);
+            }
+            return 'Non-PWD';
+        case 'solo-parents':
+            if (isset($row['is_solo_parent']) && $row['is_solo_parent'] == 1) {
+                return 'Solo Parent';
+            }
+            return 'Not Solo Parent';
+        case 'districts':
+            return $row['district'] ?? 'Not Specified';
+        case 'schools':
+            return $row['school'] ?? 'Not Specified';
+        default:
+            return 'Other';
+    }
 }
