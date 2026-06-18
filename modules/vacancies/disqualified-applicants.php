@@ -54,7 +54,6 @@ $disqualifiedApps = array_filter($apps, function ($app) {
         <?php if (!empty($publication['description'])): ?>
             <p class="mt-1 mb-1"><?= e($publication['description']) ?></p>
         <?php endif ?>
-        <small class="text-muted">Publication Code: <?= e($code) ?></small>
     </div>
 </div>
 
