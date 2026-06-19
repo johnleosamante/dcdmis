@@ -37,7 +37,14 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-pie py-2">
                     <canvas id="gender-pie-chart"></canvas>
                     <script>
-                        generateDoughnutChart(<?= json_encode(employeeGender()) ?>, <?= json_encode(array('#02a3fe', '#ec49a6')) ?>, 'gender-pie-chart');
+                        <?php
+                        $genderData = employeeGender();
+                        foreach ($genderData as &$item) {
+                            $item['link'] = customUri('hrmis', 'Demographics - Gender') . '&group=' . urlencode($item['name'] ?? '') . '&sex=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
+                        generateDoughnutChart(<?= json_encode($genderData) ?>, <?= json_encode(array('#02a3fe', '#ec49a6')) ?>, 'gender-pie-chart');
                     </script>
                 </div>
             </div>
@@ -60,7 +67,13 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-pie py-2">
                     <canvas id="category-doughnut-chart"></canvas>
                     <script>
-                        <?php $employeeCategory = employeeCategory() ?>
+                        <?php
+                        $employeeCategory = employeeCategory();
+                        foreach ($employeeCategory as &$item) {
+                            $item['link'] = customUri('hrmis', 'Demographics - Category') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
                         generateDoughnutChart(<?= json_encode($employeeCategory) ?>, generateColorPallete(<?= count($employeeCategory) ?>), 'category-doughnut-chart');
                     </script>
                 </div>
@@ -84,7 +97,15 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-bar h-auto">
                     <canvas id="gender-comparative-bar-chart"></canvas>
                     <script>
-                        generateComparativeBarChart(<?= json_encode(employeeGenderCategory()) ?>, <?= json_encode(array('#02a3fe', '#ec49a6')) ?>, 'gender-comparative-bar-chart');
+                        <?php
+                        $genderCategoryData = employeeGenderCategory();
+                        foreach ($genderCategoryData as &$item) {
+                            $item['linkMale'] = customUri('hrmis', 'Demographics - Category by Gender') . '&group=' . urlencode($item['name'] ?? '') . '&sex=Male#demographics-breakdown';
+                            $item['linkFemale'] = customUri('hrmis', 'Demographics - Category by Gender') . '&group=' . urlencode($item['name'] ?? '') . '&sex=Female#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
+                        generateComparativeBarChart(<?= json_encode($genderCategoryData) ?>, <?= json_encode(array('#02a3fe', '#ec49a6')) ?>, 'gender-comparative-bar-chart');
                     </script>
                 </div>
             </div>
@@ -109,7 +130,13 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-bar h-auto">
                     <canvas id="education-bar-chart"></canvas>
                     <script>
-                        <?php $educationEmployees = demographicsEducation() ?>
+                        <?php
+                        $educationEmployees = demographicsEducation();
+                        foreach ($educationEmployees as &$item) {
+                            $item['link'] = customUri('hrmis', 'Demographics - Education') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
                         generatePieChart(<?= json_encode($educationEmployees) ?>, generateColorPallete(<?= count($educationEmployees) ?>), 'education-bar-chart');
                     </script>
                 </div>
@@ -133,7 +160,13 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-bar h-auto">
                     <canvas id="position-bar-chart"></canvas>
                     <script>
-                        <?php $employeePositions = employeePosition() ?>
+                        <?php
+                        $employeePositions = employeePosition();
+                        foreach ($employeePositions as &$item) {
+                            $item['link'] = customUri('hrmis', 'Demographics - Position') . '&group=' . urlencode($item['name'] ?? '') . '&position=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
                         generateBarChart(<?= json_encode($employeePositions) ?>, generateColorPallete(<?= count($employeePositions) ?>), 'position-bar-chart');
                     </script>
                 </div>
@@ -159,7 +192,13 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-pie py-2">
                     <canvas id="district-polar-area-chart"></canvas>
                     <script>
-                        <?php $districtEmployees = districtEmployee() ?>
+                        <?php
+                        $districtEmployees = districtEmployee();
+                        foreach ($districtEmployees as &$item) {
+                            $item['link'] = customUri('hrmis', 'Demographics - District') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
                         generatePolarAreaChart(<?= json_encode($districtEmployees) ?>, generateColorPallete(<?= count($districtEmployees) ?>), 'district-polar-area-chart');
                     </script>
                 </div>
@@ -183,7 +222,13 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-bar h-auto">
                     <canvas id="station-bar-chart"></canvas>
                     <script>
-                        <?php $employeeStations = employeeStation() ?>
+                        <?php
+                        $employeeStations = employeeStation();
+                        foreach ($employeeStations as &$item) {
+                            $item['link'] = customUri('hrmis', 'Demographics - Assignment') . '&group=' . urlencode($item['name'] ?? '') . '&school=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
                         generateBarChart(<?= json_encode($employeeStations) ?>, generateColorPallete(<?= count($employeeStations) ?>), 'station-bar-chart');
                     </script>
                 </div>
@@ -209,7 +254,13 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-bar h-auto">
                     <canvas id="generation-bar-chart"></canvas>
                     <script>
-                        <?php $generationEmployees = demographicsGeneration() ?>
+                        <?php
+                        $generationEmployees = demographicsGeneration();
+                        foreach ($generationEmployees as &$item) {
+                            $item['link'] = customUri('hrmis', 'Demographics - Generation') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
                         generateBarChart(<?= json_encode($generationEmployees) ?>, generateColorPallete(<?= count($generationEmployees) ?>), 'generation-bar-chart');
                     </script>
                 </div>
@@ -233,7 +284,13 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-bar h-auto">
                     <canvas id="religion-bar-chart"></canvas>
                     <script>
-                        <?php $religionEmployees = demographicsReligion() ?>
+                        <?php
+                        $religionEmployees = demographicsReligion();
+                        foreach ($religionEmployees as &$item) {
+                            $item['link'] = customUri('hrmis', 'Demographics - Religion') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
                         generateDoughnutChart(<?= json_encode($religionEmployees) ?>, generateColorPallete(<?= count($religionEmployees) ?>), 'religion-bar-chart');
                     </script>
                 </div>
@@ -257,7 +314,14 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-pie py-2">
                     <canvas id="ip-polar-area-chart"></canvas>
                     <script>
-                        <?php $indigenousEmployees = indigenousEmployeeCount() ?>
+                        <?php
+                        $indigenousEmployees = indigenousEmployeeCount();
+                        foreach ($indigenousEmployees as &$item) {
+                            $groupName = ($item['name'] === 'No') ? 'Non-Indigenous' : ($item['name'] ?? '');
+                            $item['link'] = customUri('hrmis', 'Demographics - Ethnic Group') . '&group=' . urlencode($groupName) . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
                         generateDoughnutChart(<?= json_encode($indigenousEmployees) ?>, generateColorPallete(<?= count($indigenousEmployees) ?>), 'ip-polar-area-chart');
                     </script>
                 </div>
@@ -281,7 +345,14 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-pie py-2">
                     <canvas id="pwd-polar-area-chart"></canvas>
                     <script>
-                        <?php $pwdEmployees = pwdEmployeeCount() ?>
+                        <?php
+                        $pwdEmployees = pwdEmployeeCount();
+                        foreach ($pwdEmployees as &$item) {
+                            $groupName = ($item['name'] === 'No') ? 'Non-PWD' : ($item['name'] ?? '');
+                            $item['link'] = customUri('hrmis', 'Demographics - PWD') . '&group=' . urlencode($groupName) . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
                         generateDoughnutChart(<?= json_encode($pwdEmployees) ?>, generateColorPallete(<?= count($pwdEmployees) ?>), 'pwd-polar-area-chart');
                     </script>
                 </div>
@@ -305,7 +376,14 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="chart-pie py-2">
                     <canvas id="solo-parent-polar-area-chart"></canvas>
                     <script>
-                        <?php $soloParentEmployees = soloParentEmployeeCount() ?>
+                        <?php
+                        $soloParentEmployees = soloParentEmployeeCount();
+                        foreach ($soloParentEmployees as &$item) {
+                            $groupName = ($item['name'] === 'Yes') ? 'Solo Parent' : (($item['name'] === 'No') ? 'Not Solo Parent' : ($item['name'] ?? ''));
+                            $item['link'] = customUri('hrmis', 'Demographics - Solo Parent') . '&group=' . urlencode($groupName) . '#demographics-breakdown';
+                        }
+                        unset($item);
+                        ?>
                         generateDoughnutChart(<?= json_encode($soloParentEmployees) ?>, generateColorPallete(<?= count($soloParentEmployees) ?>), 'solo-parent-polar-area-chart');
                     </script>
                 </div>
