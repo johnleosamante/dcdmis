@@ -178,8 +178,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
     <!-- Data Table Card -->
     <div class="col-xl-7 col-lg-12 mb-4">
         <div class="card shadow h-100">
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white border-bottom">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white border-bottom">
                 <h6 class="m-0 font-weight-bold text-uppercase text-dark">
                     <?= e($config['title']) ?> Summary
                 </h6>
@@ -189,8 +188,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
             </div>
             <div class="card-body">
                 <div class="table-responsive font-weight-normal">
-                    <table class="table table-hover mb-0 text-center table-bordered" id="data-table" width="100%"
-                        cellspacing="0">
+                    <table class="table table-hover mb-0 text-center table-bordered" id="data-table" width="100%" cellspacing="0">
                         <thead class="thead-light">
                             <tr>
                                 <th class="align-middle" width="5%">#</th>
@@ -352,27 +350,28 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                 <!-- Filter Panel Form -->
                 <form method="GET" action="">
                     <input type="hidden" name="v" value="<?= e($_GET['v'] ?? '') ?>">
-                    <?php $isGender = $config['title'] === 'Gender'; ?>
+                    <?php $isGender = $config['title'] === 'Gender';
+                    $isPosition = $config['title'] === 'Position';
+                    $isAssignment = $config['title'] === 'Assignment'; ?>
                     <div class="row">
-                        <div class="col-md-<?= $isGender ? '12' : '8' ?> mb-2">
-                            <label for="filter-group" class="font-weight-bold text-gray-800 small mb-0">Demographic
-                                Group</label>
-                            <select id="filter-group" name="group" class="form-control">
-                                <option value="all" <?= setOptionSelected($selectedGroup, 'all') ?>>All</option>
-                                <?php foreach (array_keys($groupedEmployees) as $gName): ?>
-                                    <option value="<?= e($gName) ?>" <?= setOptionSelected($selectedGroup, $gName) ?>>
-                                        <?= e($gName) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <?php if (!$isGender) : ?>
-                            <div class="col-md-4 mb-2">
-                                <label for="filter-sex" class="font-weight-bold text-gray-800 small mb-0">Sex at
-                                Birth</label>
-                            <select id="filter-sex" name="sex" class="form-control">
-                                <option value="all" <?= setOptionSelected($selectedSex, 'all') ?>>All
-                                    </option>
+                        <?php if (!$isPosition && !$isAssignment) { ?>
+                            <div class="col-md-<?= $isGender ? 12 : 8 ?> mb-2">
+                                <label for="filter-group" class="font-weight-bold text-gray-800 small mb-0"><?= $config['title'] ?></label>
+                                <select id="filter-group" name="group" class="form-control">
+                                    <option value="all" <?= setOptionSelected($selectedGroup, 'all') ?>>All</option>
+                                    <?php foreach (array_keys($groupedEmployees) as $gName): ?>
+                                        <option value="<?= e($gName) ?>" <?= setOptionSelected($selectedGroup, $gName) ?>>
+                                            <?= e($gName) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        <?php }
+                        if (!$isGender) : ?>
+                            <div class="col-md-<?= $isPosition || $isAssignment ? 12 : 4 ?> mb-2">
+                                <label for="filter-sex" class="font-weight-bold text-gray-800 small mb-0">Gender</label>
+                                <select id="filter-sex" name="sex" class="form-control">
+                                    <option value="all" <?= setOptionSelected($selectedSex, 'all') ?>>All</option>
                                     <option value="Male" <?= setOptionSelected($selectedSex, 'Male') ?>>Male</option>
                                     <option value="Female" <?= setOptionSelected($selectedSex, 'Female') ?>>Female</option>
                                 </select>
@@ -400,8 +399,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                     </div>
                     <div class="row">
                         <div class="col-md-12 mb-2">
-                            <label for="filter-school" class="font-weight-bold text-gray-800 small mb-0">Station /
-                                School</label>
+                            <label for="filter-school" class="font-weight-bold text-gray-800 small mb-0">Assignment</label>
                             <select id="filter-school" name="school" class="form-control">
                                 <option value="all" <?= setOptionSelected($selectedSchool, 'all') ?>>All
                                 </option>
