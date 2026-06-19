@@ -294,14 +294,35 @@ function generateComparativeBarChart(data, colors, element, enableLinks = true) 
 			onClick: function (evt, activeElements) {
 				if (enableLinks && activeElements && activeElements.length > 0) {
 					const index = activeElements[0]._index;
+					const datasetIndex = activeElements[0]._datasetIndex;
 					const item = data[index];
-					if (item && item.link) {
-						window.location.href = item.link;
+					if (item) {
+						if (datasetIndex === 0 && item.linkMale) {
+							window.location.href = item.linkMale;
+						} else if (datasetIndex === 1 && item.linkFemale) {
+							window.location.href = item.linkFemale;
+						} else if (item.link) {
+							window.location.href = item.link;
+						}
 					}
 				}
 			},
 			onHover: function (evt, activeElements) {
-				const hasLink = enableLinks && activeElements && activeElements.length > 0 && data[activeElements[0]._index] && data[activeElements[0]._index].link;
+				let hasLink = false;
+				if (enableLinks && activeElements && activeElements.length > 0) {
+					const index = activeElements[0]._index;
+					const datasetIndex = activeElements[0]._datasetIndex;
+					const item = data[index];
+					if (item) {
+						if (datasetIndex === 0 && item.linkMale) {
+							hasLink = true;
+						} else if (datasetIndex === 1 && item.linkFemale) {
+							hasLink = true;
+						} else if (item.link) {
+							hasLink = true;
+						}
+					}
+				}
 				evt.target.style.cursor = hasLink ? "pointer" : "default";
 			}
 		},
