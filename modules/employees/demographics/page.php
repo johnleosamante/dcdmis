@@ -352,8 +352,9 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                 <!-- Filter Panel Form -->
                 <form method="GET" action="">
                     <input type="hidden" name="v" value="<?= e($_GET['v'] ?? '') ?>">
+                    <?php $isGender = $config['title'] === 'Gender'; ?>
                     <div class="row">
-                        <div class="col-md-8 mb-2">
+                        <div class="col-md-<?= $isGender ? '12' : '8' ?> mb-2">
                             <label for="filter-group" class="font-weight-bold text-gray-800 small mb-0">Demographic
                                 Group</label>
                             <select id="filter-group" name="group" class="form-control">
@@ -365,16 +366,18 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-4 mb-2">
-                            <label for="filter-sex" class="font-weight-bold text-gray-800 small mb-0">Sex at
+                        <?php if (!$isGender) : ?>
+                            <div class="col-md-4 mb-2">
+                                <label for="filter-sex" class="font-weight-bold text-gray-800 small mb-0">Sex at
                                 Birth</label>
                             <select id="filter-sex" name="sex" class="form-control">
                                 <option value="all" <?= setOptionSelected($selectedSex, 'all') ?>>All
-                                </option>
-                                <option value="Male" <?= setOptionSelected($selectedSex, 'Male') ?>>Male</option>
-                                <option value="Female" <?= setOptionSelected($selectedSex, 'Female') ?>>Female</option>
-                            </select>
-                        </div>
+                                    </option>
+                                    <option value="Male" <?= setOptionSelected($selectedSex, 'Male') ?>>Male</option>
+                                    <option value="Female" <?= setOptionSelected($selectedSex, 'Female') ?>>Female</option>
+                                </select>
+                            </div>
+                        <?php endif; ?>
                     </div>
                     <div class="row">
                         <div class="col-md-12 mb-2">
