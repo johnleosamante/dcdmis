@@ -39,7 +39,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php if ($isHrmis && $isPersonnel) {
+        <?php if ($isHrmis && ($isPersonnel || $isICT)) {
             contentTitleWithLink('Details', customUri('hrmis', 'Edit Call for Application', $publicationId), 'Edit', 'fa-edit');
         } else {
             contentTitle('Details');
