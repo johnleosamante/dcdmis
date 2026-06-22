@@ -6,6 +6,8 @@ if (!$isHrmis) {
 }
 
 messageAlert($showAlert, $message, $success);
+
+$query = vacantItems();
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -19,7 +21,7 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php if ($isPersonnel) {
+        <?php if ($isHrmis && ($isPersonnel || $isICT)) {
             contentTitleWithModal('Vacancies', "{$baseUri}/modules/vacancies/save-vacancy-dialog.php", 'Add', 'fa-plus');
         } else {
             contentTitle('Vacancies');
@@ -27,13 +29,13 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="card-body">
-        <?php if ($isDmis || $isHrmis) { ?>
+        <?php if ($query && $isHrmis && ($isPersonnel || $isICT)) { ?>
             <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
                 <div class="d-inline-block ml-2">
                     <?php linkButtonSplit(customUri('export', 'vacancies'), 'Export', 'fa-file-excel', 'Export as Excel file', $isHrmis ? 'success' : 'warning') ?>
                 </div>
 
-                <?php if ($isPersonnel): ?>
+                <?php if ($isHrmis && ($isPersonnel || $isICT)): ?>
                     <div class="d-inline-block">
                         <?php linkButtonSplit(customUri('hrmis', 'Create Call for Application'), 'Create Call for Application', 'fa-bullhorn', 'Create Call for Application', 'info') ?>
                     </div>
@@ -49,7 +51,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="15%">Category</th>
                         <th class="align-middle" width="40%">Station</th>
                         <th class="align-middle" width="15%">Date Vacated / Posted</th>
-                        <?php if ($isPersonnel): ?>
+                        <?php if ($isHrmis && ($isPersonnel || $isICT)): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
@@ -57,7 +59,6 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = vacantItems();
                     foreach ($query as $row): ?>
                         <tr class="text-uppercase" data-category="<?= e($row['category']) ?>">
                             <td class="align-middle">
@@ -74,7 +75,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?= toLongDate($row['date_vacated']) ?>
                             </td>
-                            <?php if ($isPersonnel): ?>
+                            <?php if ($isHrmis && ($isPersonnel || $isICT)): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
@@ -94,7 +95,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="15%">Category</th>
                         <th class="align-middle" width="40%">Station</th>
                         <th class="align-middle" width="15%">Date Vacated / Posted</th>
-                        <?php if ($isPersonnel): ?>
+                        <?php if ($isHrmis && ($isPersonnel || $isICT)): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
