@@ -72,7 +72,7 @@ messageAlert($showAlert, $message, $success);
                                         <?php
                                         linkDropdownItem(customUri('hrmis', 'Call for Application Details', $row['id']), 'View', 'fa-eye', 'View Call for Application Details');
 
-                                        if ($isHrmis && $isPersonnel) {
+                                        if ($isHrmis && ($isPersonnel || $isICT)) {
                                             linkDropdownItem(customUri('hrmis', 'Edit Call for Application', $row['id']), 'Edit', 'fa-edit', 'Edit Call for Application'); ?>
                                             <div class="dropdown-divider"></div>
                                             <?php
