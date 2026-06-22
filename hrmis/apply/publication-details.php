@@ -80,8 +80,9 @@ if ($code) {
                             <thead>
                                 <tr class="text-center">
                                     <th width="5%"></th>
-                                    <th width="70%" class="text-left">Vacant Positions</th>
-                                    <th width="25%">Available Items</th>
+                                    <th width="35%" class="text-left">Vacant Positions</th>
+                                    <th width="45%" class="text-left">Station Assignment</th>
+                                    <th width="15%">Available Items</th>
                                 </tr>
                             </thead>
 
@@ -90,15 +91,23 @@ if ($code) {
                                     $groups = [];
                                     foreach ($vacancies as $row) {
                                         $pid = $row['position_id'];
+                                        $stationId = $row['station_id'];
+
+                                        $school = schoolById($stationId);
+                                        $schoolName = $school ? $school['name'] : 'N/A';
 
                                         if (!isset($groups[$pid])) {
                                             $groups[$pid] = [
                                                 'position' => $row['official_title'],
                                                 'salary_grade' => $row['salary_grade'],
-                                                'count' => 0
+                                                'count' => 0,
+                                                'stations' => []
                                             ];
                                         }
                                         $groups[$pid]['count']++;
+                                        if (!in_array($schoolName, $groups[$pid]['stations'])) {
+                                            $groups[$pid]['stations'][] = $schoolName;
+                                        }
                                     }
 
                                     foreach ($groups as $pid => $group) { ?>
@@ -110,7 +119,10 @@ if ($code) {
                                             <td class="align-middle">
                                                 <label for="pos_<?= e($pid) ?>"
                                                     class="mb-0 font-weight-bold cursor-pointer"><?= e($group['position']) ?></label>
-                                                <div class="small" text-muted">Salary Grade <?= e($group['salary_grade']) ?></div>
+                                                <div class="small text-muted">Salary Grade <?= e($group['salary_grade']) ?></div>
+                                            </td>
+                                            <td class="align-middle small">
+                                                <?= implode('<br>', $group['stations']) ?>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <span class="badge badge-success badge-pill px-3 py-2">
@@ -121,19 +133,20 @@ if ($code) {
                                     <?php }
                                 } else { ?>
                                     <tr>
-                                        <td colspan="3" class="text-center">No vacancies found for this call for application.
+                                        <td colspan="4" class="text-center">No vacancies found for this call for application.
                                         </td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
 
-                            <thead>
+                            <tfoot>
                                 <tr class="text-center">
                                     <th width="5%"></th>
-                                    <th width="70%" class="text-left">Vacant Positions</th>
-                                    <th width="25%">Available Items</th>
+                                    <th width="35%" class="text-left">Vacant Positions</th>
+                                    <th width="45%" class="text-left">Station Assignment</th>
+                                    <th width="15%">Available Items</th>
                                 </tr>
-                            </thead>
+                            </tfoot>
                         </table>
                     </div>
 
