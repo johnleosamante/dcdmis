@@ -1728,7 +1728,7 @@ if (isset($_POST['delete-publication'])) {
 }
 
 if (isset($_POST['save-publication'])) {
-    $publicationId = sanitize(decipher($_POST['verifier']));
+    $publicationId = sanitize(decipher($_POST['verifier'] ?? null));
     $code = $statusMessage = null;
     $showAlert = true;
     $success = false;
