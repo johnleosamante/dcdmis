@@ -143,7 +143,7 @@ messageAlert($showAlert, $message, $success);
                         <th width="40%" class="align-middle">Applicant</th>
                         <th width="30%" class="align-middle">Position Applied</th>
                         <th width="15%" class="align-middle">Attachment</th>
-                        <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
+                        <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
                     </tr>
@@ -174,7 +174,7 @@ messageAlert($showAlert, $message, $success);
                                     <div class="small">No document attachment</div>
                                 <?php } ?>
                             </td>
-                            <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
+                            <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
@@ -204,7 +204,7 @@ messageAlert($showAlert, $message, $success);
                         <th width="40%" class="align-middle">Applicant</th>
                         <th width="30%" class="align-middle">Position Applied</th>
                         <th width="15%" class="align-middle">Attachment</th>
-                        <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
+                        <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
                     </tr>
