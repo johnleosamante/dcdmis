@@ -313,3 +313,150 @@ if (
 		preview.value = beforeTitleValue + userName.value + afterTitleValue;
 	});
 }
+
+// Employee search handler - shows employee list when typing
+document.addEventListener('input', function (event) {
+	const target = event.target;
+	if (!target || target.id !== 'employee-search') {
+		return;
+	}
+
+	const query = target.value.trim();
+	const dropdown = document.getElementById('employee-dropdown');
+
+	if (!dropdown) {
+		return;
+	}
+
+	if (query.length < 1) {
+		dropdown.classList.add('d-none');
+		dropdown.innerHTML = '';
+		return;
+	}
+
+	const searchUrl = '/modules/race/get-employees.php';
+
+	fetch(`${searchUrl}?search=${encodeURIComponent(query)}`)
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`HTTP ${response.status}`);
+			}
+			return response.json();
+		})
+		.then(data => {
+			if (data.success && Array.isArray(data.employees) && data.employees.length) {
+				dropdown.innerHTML = '';
+				data.employees.forEach(emp => {
+					const item = document.createElement('a');
+					item.href = '#';
+					item.className = 'list-group-item list-group-item-action';
+					item.textContent = emp.display;
+					item.onclick = (e) => {
+						e.preventDefault();
+						document.getElementById('employee-search').value = emp.display;
+						document.getElementById('employee-id').value = emp.id;
+						dropdown.classList.add('d-none');
+					};
+					dropdown.appendChild(item);
+				});
+				dropdown.classList.remove('d-none');
+			} else {
+				dropdown.innerHTML = '<div class="list-group-item">No employees found</div>';
+				dropdown.classList.remove('d-none');
+			}
+		})
+		.catch(error => {
+			console.error('Error searching employees:', error);
+			dropdown.classList.add('d-none');
+		});
+});
+
+// Close employee dropdown when clicking outside
+document.addEventListener('click', function (event) {
+	const dropdown = document.getElementById('employee-dropdown');
+	const searchInput = document.getElementById('employee-search');
+
+	if (dropdown && !dropdown.contains(event.target) && event.target !== searchInput) {
+		dropdown.classList.add('d-none');
+	}
+});
+
+// Category change handler - loads awards based on selected category
+document.addEventListener('change', function (event) {
+	const target = event.target;
+	if (!target || target.id !== 'category') {
+		return;
+	}
+
+	const awardGroup = document.getElementById('award-group');
+	const awardSelect = document.getElementById('award');
+	const categoryId = target.value;
+	const awardsUrl = target.dataset.getAwardsUrl;
+
+	if (!awardGroup || !awardSelect || !awardsUrl) {
+		return;
+	}
+
+	const employeeGroup = document.getElementById('employee-group');
+	const employeeSearch = document.getElementById('employee-search');
+	const employeeId = document.getElementById('employee-id');
+	if (employeeGroup) {
+		employeeGroup.classList.add('d-none');
+	}
+	if (employeeSearch) {
+		employeeSearch.value = '';
+		employeeSearch.disabled = true;
+	}
+	if (employeeId) {
+		employeeId.value = '';
+	}
+
+	awardSelect.innerHTML = '<option value="">Select Award</option>';
+	awardSelect.disabled = true;
+	awardGroup.classList.add('d-none');
+
+	if (!categoryId) {
+		return;
+	}
+
+	fetch(`${awardsUrl}?category_id=${encodeURIComponent(categoryId)}`)
+		.then(response => response.json())
+		.then(data => {
+			if (data.success && Array.isArray(data.awards) && data.awards.length) {
+				data.awards.forEach(award => {
+					const option = document.createElement('option');
+					option.value = award.id;
+					option.textContent = award.name;
+					awardSelect.appendChild(option);
+				});
+				awardSelect.disabled = false;
+				awardGroup.classList.remove('d-none');
+			}
+		})
+		.catch(error => console.error('Error fetching awards:', error));
+});
+
+// Award change handler - shows employee search when award is selected
+document.addEventListener('change', function (event) {
+	const target = event.target;
+	if (!target || target.id !== 'award') {
+		return;
+	}
+
+	const employeeGroup = document.getElementById('employee-group');
+	const employeeSearch = document.getElementById('employee-search');
+
+	if (!employeeGroup || !employeeSearch) {
+		return;
+	}
+
+	if (target.value) {
+		employeeSearch.disabled = false;
+		employeeGroup.classList.remove('d-none');
+		employeeSearch.focus();
+	} else {
+		employeeSearch.disabled = true;
+		employeeGroup.classList.add('d-none');
+		document.getElementById('employee-id').value = '';
+	}
+});
