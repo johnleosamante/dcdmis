@@ -89,6 +89,13 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Users':
             $file = 'users/page';
             break;
+        case 'Event Schedules':
+        case 'Awards List':
+        case 'Nominees List':
+        case 'Winners Lookup':
+        case 'Awards and Recognitions':
+            $file = 'race/page';
+            break;
         case 'Trainings':
             $file = 'trainings/attended-trainings';
             break;
