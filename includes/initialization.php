@@ -142,3 +142,17 @@ $isICT = $code === 'ICT';
 if (function_exists('verify_csrf_token')) {
     verify_csrf_token();
 }
+
+foreach (['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'monitoring_tools'] as $area) {
+    if (!isset($_SESSION["{$prefix}data_privacy_agreed_{$area}"])) {
+        $_SESSION["{$prefix}data_privacy_agreed_{$area}"] = false;
+    }
+}
+
+if (isset($_POST['accept_data_privacy'])) {
+    $area = $_POST['data_privacy_area'] ?? '';
+    if (in_array($area, ['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'monitoring_tools'])) {
+        $_SESSION["{$prefix}data_privacy_agreed_{$area}"] = true;
+    }
+    redirect($_SERVER['REQUEST_URI']);
+}
