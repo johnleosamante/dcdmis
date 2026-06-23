@@ -34,6 +34,9 @@ function setUserSession($user_id, $prefix)
     }
 
     $_SESSION["{$prefix}station"] = $stationName;
+    foreach (['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'monitoring_tools'] as $area) {
+        $_SESSION["{$prefix}data_privacy_agreed_{$area}"] = false;
+    }
 
     createSystemLog($station_id, $user_id, 'Logged in', $user_id, clientIp());
 }
