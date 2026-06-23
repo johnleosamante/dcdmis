@@ -15,7 +15,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/race/nominate-reminder-dial
     if (!$nominatorOnly):
         card('Schedule', customUri('race', 'Event Schedules'), 'fa-calendar-plus', 'primary', $countSchedules);
     endif;
-    card('Nominee', customUri('race', 'Nominees List'), 'fa-user', 'warning', $countNominees);
+    card('Nominees', customUri('race', 'Nominees List'), 'fa-user', 'warning', $countNominees);
     card('Awards', customUri('race', 'Awards List'), 'fa-award', 'danger', $countAwards);
     if (!$nominatorOnly):
         card('Winners', customUri('race', 'Winners Lookup'), 'fa-trophy', 'success', $countWinners);
