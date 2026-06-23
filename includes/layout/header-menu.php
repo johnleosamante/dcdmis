@@ -126,7 +126,11 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                 }
 
                 if (isStationUser($userId, 'hrtdms')) {
-                    linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training &amp; Development Management System');
+                    linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training and Development Management System');
+                }
+
+                if (isStationUser($userId, 'race')) {
+                    linkDropdownItem(uri() . '/race', 'Rewards and Recognitions', 'fa-trophy', 'Rewards and Recognitions');
                 }
 
                 if (isStationUser($userId, 'dmis')) {
