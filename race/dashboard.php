@@ -7,7 +7,7 @@ $countAwards = number_format(count(recognitionAwardsWithCategory()));
 $countWinners = number_format(count(awardWinners()));
 
 messageAlert($showAlert, $message, $success);
-contentTitle('Dashboard');
+contentTitleWithModal('Dashboard', uri() . '/modules/race/nominate-reminder-dialog.php', 'Nominate', 'fa-user-plus');
 ?>
 
 <div class="row mt-4">
