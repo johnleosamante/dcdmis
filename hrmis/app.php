@@ -101,7 +101,9 @@ if (isset($_POST['update-personal-information'])) {
     $oldPhoto = $employeePhoto;
     $showAlert = true;
     $activeTab = $_SESSION[alias() . '_activeTab'] = 'personal-information';
-    $dualCitizenshipCountry = country(sanitize($_POST['dual-citizenship-country']))['id'];
+    $countryIdInput = (int) sanitize($_POST['dual-citizenship-country']);
+    $countryData = country($countryIdInput);
+    $dualCitizenshipCountry = $countryData['id'] ?? null;
 
     beginTransaction();
 
