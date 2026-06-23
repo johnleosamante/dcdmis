@@ -43,6 +43,7 @@ if ($employee) {
     $hrmisUser = (bool) isStationUser($employeeId, 'hrmis');
     $dmisUser = (bool) isStationUser($employeeId, 'dmis');
     $hrtdmsUser = (bool) isStationUser($employeeId, 'hrtdms');
+    $raceUser = (bool) isStationUser($employeeId, 'race');
 }
 ?>
 
@@ -103,8 +104,16 @@ if ($employee) {
                         <div class="form-check">
                             <input class="form-check-input" id="hrtdms" type="checkbox" name="hrtdms"
                                 <?= setActiveItem($hrtdmsUser, true, 'checked') ?>>
-                            <label class="form-check-label" for="hrtdms">HR Training &amp; Development Management
+                            <label class="form-check-label" for="hrtdms">HR Training and Development Management
                                 System</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-2 mb-0">
+                        <div class="form-check">
+                            <input class="form-check-input" id="race" type="checkbox" name="race"
+                                <?= setActiveItem($raceUser, true, 'checked') ?>>
+                            <label class="form-check-label" for="race">Rewards and Recognition Management System</label>
                         </div>
                     </div>
 
