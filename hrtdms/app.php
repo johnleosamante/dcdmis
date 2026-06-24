@@ -99,14 +99,24 @@ if (isset($_POST['add-participants'])) {
                     $certificate = customUri('print', 'Certificate of Participation', $trainingId, DOMAIN) . '&p=' . encode($id);
                     $appearance = customUri('print', 'Certificate of Appearance', $trainingId, DOMAIN) . '&p=' . encode($id);
                     $repositoryUrl = uri(DOMAIN) . '/hrtdms/repository';
-                    $emailMessage = "Good day $employeeName!\n\n
-                            Congratulations you have successfully completed $title\n
-                            Get your certificates by clicking the links below.\n\n
-                            Certificate of Appearance: $appearance\n\n
-                            Certificate of Participation: $certificate\n\n
-                            If nothing happens when you click the link, copy the links above and paste to your web browser instead.\n\n
-                            You can also go to the DepEd Dipolog City Division Training Repository ($repositoryUrl) to view your trainings. Thank you.\n\n\n
-                            ***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****";
+                    $emailMessage = <<<EOT
+Hello, {$employeeName}
+    
+Congratulations you have successfully completed {$title}
+
+Get your certificates by clicking the links below.
+
+Certificate of Appearance: {$appearance}
+Certificate of Participation: {$certificate}
+                        
+If nothing happens when you click the link, copy the links above and paste to your web browser search bar instead.
+
+You can also go to the DepEd Dipolog City Division Training Repository ($repositoryUrl) to view your trainings. 
+
+Thank you.
+
+***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****"
+EOT;
                     sendMail($employeeEmail, $title, $emailMessage);
                 }
             }
@@ -169,14 +179,24 @@ if (isset($_POST['email-participants'])) {
         $appearance = customUri('print', 'Certificate of Appearance', $trainingId, DOMAIN) . '&p=' . encode($participant['id']);
         $name = strtoupper(toHandleEncoding(toName($participant['last_name'], $participant['first_name'], $participant['middle_name'], $participant['name_extension'], true)));
         $repositoryUrl = uri(DOMAIN) . '/hrtdms/repository';
-        $emailMessage = "Good day $name!\n\n
-                        Congratulations you have successfully completed $title\n
-                        Get your certificates by clicking the links below.\n\n
-                        Certificate of Appearance: $appearance\n\n
-                        Certificate of Participation: $certificate\n\n
-                        If nothing happens when you click the link, copy the links above and paste to your web browser instead.\n\n
-                        You can also go to the DepEd Dipolog City Division Training Repository ($repositoryUrl) to view your trainings. Thank you.\n\n\n
-                        ***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****";
+        $emailMessage = <<<EOT
+Hello, {$name}
+    
+Congratulations you have successfully completed {$title}
+
+Get your certificates by clicking the links below.
+
+Certificate of Appearance: {$appearance}
+Certificate of Participation: {$certificate}
+                        
+If nothing happens when you click the link, copy the links above and paste to your web browser search bar instead.
+
+You can also go to the DepEd Dipolog City Division Training Repository ($repositoryUrl) to view your trainings. 
+
+Thank you.
+
+***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****"
+EOT;
 
         if (sendMail($userEmail, $title, $emailMessage)) {
             $participants++;
