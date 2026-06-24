@@ -144,7 +144,13 @@ Your application for the following position(s) under call for application {$pubC
 
 {$positionsText}
 
-Please retain your Applicant ID ({$applicationCode}) for reference.
+Please retain your Applicant ID ({$applicationCode}) for reference and download the checklist of requirements from the link below:
+
+https://drive.google.com/file/d/1-t8G_AMDZAVoME4e-i47ZDqXn1gOrLHO
+
+If nothing happens when you click the link, copy the link above and paste to your browser search bar instead.
+
+Thank you.
 
 ***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****
 EOT;
