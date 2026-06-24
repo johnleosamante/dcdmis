@@ -584,6 +584,9 @@ if (isset($_POST['bulk-process-documents'])) {
 		$message .= "No outgoing documents for [$stationName] from [$from] to [$to]. ";
 	} else {
 		foreach ($documents as $document) {
+			if ($document['created_from'] !== $documentStationId) {
+				continue;
+			}
 			$documentId = $document['id'];
 
 			beginTransaction();
