@@ -111,7 +111,7 @@ require_once(root() . '/includes/layout/components.php');
                                 with established policies, security protocols, and data protection principles.
                             </p>
 
-                            <h6 class="font-weight-bold mb-1">5. Responsibility and Accountability</h6>
+                            <h6 class="font-weight-bold mb-1">5. Prohibited Acts</h6>
                             <p class="small text-secondary mb-1">You shall not:
                             <ul class="small text-secondary mb-3">
                                 <li>Access data beyond your authorized level or function;</li>
