@@ -51,23 +51,16 @@
                 <h3 class="h4">Personal Information</h3>
                 <h4 class="h5">Applicant Name</h4>
                 <div class="form-row">
-                    <div class="form-group col-md-12 col-lg-9">
+                    <div class="form-group col-12">
                         <label for="last-name" class="small font-weight-bold mb-0">Last Name
                             <?= showAsterisk() ?>
                         </label>
                         <input type="text" class="form-control" id="last-name" name="last_name" placeholder="Last Name"
                             value="<?= isset($form_data['last_name']) ? e($form_data['last_name']) : '' ?>" required>
                     </div>
-
-                    <div class="form-group col-md-12 col-lg-3">
-                        <label for="name-extension" class="small font-weight-bold mb-0">Name Extension</label>
-                        <input type="text" class="form-control" id="name-extension" name="name_extension"
-                            placeholder="Name Extension"
-                            value="<?= isset($form_data['name_extension']) ? e($form_data['name_extension']) : '' ?>">
-                    </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-12 col-lg-6">
+                    <div class="form-group col-lg-9 col-md-9 col-sm-8 col-xs-12">
                         <label for="first-name" class="small font-weight-bold mb-0">First Name
                             <?= showAsterisk() ?>
                         </label>
@@ -76,7 +69,15 @@
                             value="<?= isset($form_data['first_name']) ? e($form_data['first_name']) : '' ?>" required>
                     </div>
 
-                    <div class="form-group col-md-12 col-lg-6">
+                    <div class="form-group col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <label for="name-extension" class="small font-weight-bold mb-0">Name Extension</label>
+                        <input type="text" class="form-control" id="name-extension" name="name_extension"
+                            placeholder="Name Extension" maxlength="5"
+                            value="<?= isset($form_data['name_extension']) ? e($form_data['name_extension']) : '' ?>">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12">
                         <label for="middle-name" class="small font-weight-bold mb-0">Middle Name</label>
                         <input type="text" class="form-control" id="middle-name" name="middle_name"
                             placeholder="Middle Name"
