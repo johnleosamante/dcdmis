@@ -117,6 +117,7 @@ Thank you.
 
 ***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****"
 EOT;
+
                     sendMail($employeeEmail, $title, $emailMessage);
                 }
             }
