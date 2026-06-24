@@ -189,10 +189,10 @@ if (isset($_POST['edit-document'])) {
 	beginTransaction();
 
 	try {
-		if (
-			updateDocument($documentId, $description, $type, $updateDescription) === false &&
-			updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details) === false
-		) {
+		$updatedDocument = updateDocument($documentId, $description, $type, $updateDescription);
+		$updatedLog = updateDocumentLog($documentId, $userId, $station, $destination, $purpose, 1, $details);
+
+		if ($updatedDocument === false && $updatedLog === false) {
 			throw new Exception('Failed to update document.');
 		}
 
