@@ -80,7 +80,7 @@ messageAlert($showAlert, $message, $success);
                     $functional_division = $training['functional_division_id'];
                     $functional_divisions = functionalDivision($functional_division);
                     $training_functional_division = '';
-                    if (count($functional_divisions) > 0) {
+                    if ($functional_divisions && count($functional_divisions) > 0) {
                         $training_functional_division = $functional_divisions['name'];
                     }
                     $functional_division = (!empty($functional_division) && strtolower($functional_division) !== 'n/a') ? " ($training_functional_division)" : '';
