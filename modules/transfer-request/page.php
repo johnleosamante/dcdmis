@@ -111,7 +111,7 @@ if ($currStation) {
 
                     <button class="btn btn-primary btn-block font-weight-bold shadow-sm" name="submit-transfer-request"
                         type="submit">
-                        <i class="fas fa-paper-plane mr-1"></i>Submit Transfer Request
+                        Submit Transfer Request
                     </button>
                 </form>
             </div>
