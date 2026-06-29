@@ -98,11 +98,11 @@ $employeePhoto = '';
             </li>
             <li class="nav-item">
                 <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'learning-development') ?>"
-                    href="#learning-development" data-toggle="tab">Learning &amp; Development</a>
+                    href="#learning-development" data-toggle="tab">Learning and Development</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'special-skills') ?>"
-                    href="#special-skills" data-toggle="tab">Special Skills &amp; Hobbies</a>
+                    href="#special-skills" data-toggle="tab">Special Skills and Hobbies</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-secondary<?= setActiveNavigation(isset($activeTab) && $activeTab === 'recognition') ?>"
