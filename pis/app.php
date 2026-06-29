@@ -153,3 +153,129 @@ if (isset($_POST['delete-payslip'])) {
 
     createSystemLog($stationId, $userId, 'Deleted employee payslip', $employeeId, clientIp());
 }
+
+if (isset($_POST['submit-transfer-request'])) {
+    $targetStationId = sanitize($_POST['target-station']);
+    $reason = sanitize($_POST['reason']);
+    $showAlert = true;
+    $success = false;
+    $stagedFile = null;
+
+    try {
+        if (empty($targetStationId)) {
+            throw new Exception('Please select a preferred station assignment.');
+        }
+        if (empty($reason)) {
+            throw new Exception('Please state your reason for the transfer request.');
+        }
+        if (empty($_FILES['attachment']['tmp_name']) || !is_uploaded_file($_FILES['attachment']['tmp_name'])) {
+            throw new Exception('Please upload a supporting document.');
+        }
+
+        $currStation = station($userId);
+        $currentStationId = $currStation ? $currStation['station_id'] : '';
+
+        if (empty($currentStationId)) {
+            throw new Exception('Your current station assignment could not be resolved. Please contact HR.');
+        }
+
+        if ($currentStationId === $targetStationId) {
+            throw new Exception('Your target station must be different from your current station.');
+        }
+
+        $isTeaching = false;
+        if ($currStation) {
+            $pos = positions($currStation['position_id']);
+            if ($pos && $pos['category'] === 'Teaching') {
+                $isTeaching = true;
+            }
+        }
+
+        $specialization = null;
+        if ($isTeaching) {
+            $specialization = sanitize($_POST['specialization'] ?? '');
+            if (empty($specialization)) {
+                throw new Exception('Please fill up your major subject / area of specialization.');
+            }
+        }
+
+        // Stage the uploaded file
+        $stagedFile = stageUploadedFile(
+            $_FILES['attachment'],
+            [
+                'application/pdf' => 'pdf',
+            ],
+            root() . "/uploads/transfer_requests/{$userId}",
+            "TRANSFER"
+        );
+
+        beginTransaction();
+
+        $attachmentPath = "uploads/transfer_requests/{$userId}/" . $stagedFile['secure_name'];
+        $result = createTransferRequest($userId, $currentStationId, $targetStationId, $reason, $attachmentPath, $specialization);
+
+        if ($result === false) {
+            throw new Exception('We encountered an error saving your request. Please try again later.');
+        }
+
+        commitStagedFile($stagedFile);
+        commit();
+
+        $success = true;
+        $message = 'Your transfer request has been submitted successfully.';
+        createSystemLog($stationId, $userId, 'Submitted transfer request', $userId, clientIp());
+
+    } catch (Exception $e) {
+        rollBack();
+        if ($stagedFile && file_exists($stagedFile['full_path'])) {
+            unlink($stagedFile['full_path']);
+        }
+        $success = false;
+        $message = $e->getMessage();
+    }
+}
+
+if (isset($_POST['cancel-transfer-request'])) {
+    $requestId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $showAlert = true;
+    $success = false;
+
+    try {
+        if (empty($requestId)) {
+            throw new Exception('Invalid transfer request selected.');
+        }
+
+        $request = getTransferRequest($requestId);
+        if (!$request || $request['employee_id'] != $userId) {
+            throw new Exception('The requested transfer request could not be found.');
+        }
+
+        if ($request['status'] !== 'Pending') {
+            throw new Exception('Only pending transfer requests can be canceled.');
+        }
+
+        beginTransaction();
+
+        $result = deleteTransferRequest($requestId, $userId);
+
+        if ($result === false) {
+            throw new Exception('We encountered an error canceling your request. Please try again later.');
+        }
+
+        commit();
+
+        // Unlink attachment
+        if (!empty($request['attachment_path']) && file_exists(root() . "/" . $request['attachment_path'])) {
+            unlink(root() . "/" . $request['attachment_path']);
+        }
+
+        $success = true;
+        $message = 'Your transfer request has been canceled successfully.';
+        createSystemLog($stationId, $userId, 'Canceled transfer request', $userId, clientIp());
+
+    } catch (Exception $e) {
+        rollBack();
+        $success = false;
+        $message = $e->getMessage();
+    }
+}
