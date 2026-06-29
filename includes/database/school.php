@@ -35,7 +35,7 @@ function schoolById($school_id)
 
 function schoolsByDistrict($districtId)
 {
-    return query("SELECT id, `name` FROM `schools` WHERE district_id = ? ORDER BY `name` ASC", [$districtId]);
+    return query("SELECT id, `name`, `alias` FROM `schools` WHERE district_id = ? ORDER BY `name` ASC", [$districtId]);
 }
 
 function updateSchoolHead($schoolId, $headId)
