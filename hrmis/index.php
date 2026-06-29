@@ -26,5 +26,6 @@ require_once(root() . '/includes/database/system-log.php');
 require_once(root() . '/includes/database/201-file.php');
 require_once(root() . '/includes/database/vacancy.php');
 require_once(root() . '/includes/database/utility.php');
+require_once(root() . '/includes/database/transfer-request.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/layout/theme-dashboard.php');
