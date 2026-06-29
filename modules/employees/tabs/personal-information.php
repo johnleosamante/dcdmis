@@ -47,7 +47,7 @@
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label for="ext" class="mb-0">Name Extension</label>
-                            <input id="ext" name="ext" type="text" class="form-control"
+                            <input id="ext" name="ext" type="text" class="form-control" maxlength="5"
                                 <?= setActiveNavigation($editMode, 'title="Example: Jr., Sr., III (Leave blank if not applicable)"') ?> value="<?= e($employee['name_extension']) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
                         </div>
                     </div>
