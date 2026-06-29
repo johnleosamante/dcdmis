@@ -21,9 +21,9 @@ function messageAlert($show, $message, $success = true, $align = 'left')
     <?php endif;
 }
 
-function message($text, $color = 'info', $icon = 'info-circle', $marginBottom = 0)
+function message($text, $color = 'info', $icon = 'info-circle', $marginBottom = 0, $marginTop = 0)
 { ?>
-    <div class="alert alert-<?= $color ?> p-2 d-flex align-items-start small mb-<?= $marginBottom ?>">
+    <div class="alert alert-<?= $color ?> p-2 d-flex align-items-start small mb-<?= $marginBottom ?> mt-<?= $marginTop ?>">
         <i class="fa fas fa-<?= $icon ?> mt-1 mr-1"></i>
         <div>
             <?= $text ?>
