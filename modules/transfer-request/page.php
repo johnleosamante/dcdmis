@@ -1,6 +1,7 @@
 <?php
 // modules/transfer-request/page.php
-if (!$isPis || !$isSchoolPortal) {
+$isNonDivision = $stationId !== '143';
+if (!$isPis || (!$isSchoolPortal && !$isNonDivision)) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
