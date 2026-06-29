@@ -2120,3 +2120,114 @@ if (isset($_POST['save-assessment-score'])) {
         $message = $e->getMessage();
     }
 }
+
+if (isset($_POST['approve-transfer-request'])) {
+    $requestId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $remarks = sanitize($_POST['remarks'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        if (empty($requestId)) {
+            throw new Exception('Invalid transfer request selected.');
+        }
+
+        $request = getTransferRequest($requestId);
+        if (!$request) {
+            throw new Exception('Transfer request not found.');
+        }
+
+        if ($request['status'] !== 'Pending') {
+            throw new Exception('This transfer request has already been processed.');
+        }
+
+        $eId = $request['employee_id'];
+        $eTargetStationId = $request['target_station_id'];
+
+        $pos = position($eId);
+        $positionId = $pos ? $pos['position_id'] : '';
+
+        if (empty($positionId)) {
+            throw new Exception('Employee position could not be resolved. Please set a position for this employee first.');
+        }
+
+        beginTransaction();
+
+        // Update transfer request status
+        $res1 = updateTransferRequestStatus($requestId, 'Approved', $remarks);
+        if ($res1 === false) {
+            throw new Exception('Failed to update transfer request status.');
+        }
+
+        if (user($eId)) {
+            deleteUserRoles($eId);
+        }
+
+        // Update station assignment
+        $date = date('Y-m-d');
+        if (!station($eId)) {
+            $res2 = createStation($date, $eTargetStationId, $positionId, $eId);
+        } else {
+            updateEmployeeStatus('Active', $eId);
+            $res2 = updateStation($date, $eTargetStationId, $positionId, $eId);
+        }
+
+        if ($res2 === false) {
+            throw new Exception('Failed to update employee station assignment.');
+        }
+
+        createSystemLog($stationId, $userId, 'Approved transfer request', $eId, clientIp());
+        commit();
+
+        $success = true;
+        $message = 'Transfer request has been approved successfully and the employee assignment has been updated.';
+    } catch (Exception $e) {
+        rollBack();
+        $success = false;
+        $message = $e->getMessage();
+    }
+}
+
+if (isset($_POST['disapprove-transfer-request'])) {
+    $requestId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $remarks = sanitize($_POST['remarks'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        if (empty($requestId)) {
+            throw new Exception('Invalid transfer request selected.');
+        }
+        if (empty($remarks)) {
+            throw new Exception('Remarks are required when disapproving a request.');
+        }
+
+        $request = getTransferRequest($requestId);
+        if (!$request) {
+            throw new Exception('Transfer request not found.');
+        }
+
+        if ($request['status'] !== 'Pending') {
+            throw new Exception('This transfer request has already been processed.');
+        }
+
+        $eId = $request['employee_id'];
+
+        beginTransaction();
+
+        $res1 = updateTransferRequestStatus($requestId, 'Disapproved', $remarks);
+        if ($res1 === false) {
+            throw new Exception('Failed to update transfer request status.');
+        }
+
+        createSystemLog($stationId, $userId, 'Disapproved transfer request', $eId, clientIp());
+        commit();
+
+        $success = true;
+        $message = 'Transfer request has been disapproved successfully.';
+    } catch (Exception $e) {
+        rollBack();
+        $success = false;
+        $message = $e->getMessage();
+    }
+}
