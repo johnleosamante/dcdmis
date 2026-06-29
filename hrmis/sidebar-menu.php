@@ -10,12 +10,15 @@ $countPublications = number_format(countPublications());
 $districtCount = number_format(countDistricts());
 $schoolCount = number_format(countSchools());
 $sectionCount = number_format(countSections());
+$countPendingTransfers = number_format(countPendingTransferRequests());
 
 sidebarModalItem(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus');
 sidebarMenuItem(customUri('hrmis', 'Active Employees'), 'Active', 'fa-user-check', isset($url) && str_contains($url, 'Active'), $countActive);
 sidebarMenuItem(customUri('hrmis', 'Retirable Employees'), 'Retirable', 'fa-user-clock', isset($url) && str_contains($url, 'Retirable'), $countRetirable);
 sidebarMenuItem(customUri('hrmis', 'Celebrant Employees'), 'Celebrants', 'fa-birthday-cake', isset($url) && str_contains($url, 'Celebrant'));
 sidebarMenuItem(customUri('hrmis', 'Archived Employees'), 'Archived', 'fa-archive', isset($url) && str_contains($url, 'Archived'));
+sidebarDivider();
+sidebarMenuItem(customUri('hrmis', 'Transfer Requests'), 'Transfer Requests', 'fa-exchange-alt', isset($url) && str_contains($url, 'Transfer'), $countPendingTransfers);
 sidebarDivider();
 sidebarMenuItem(customUri('hrmis', 'Demographics - Gender'), 'Demographics', 'fa-chart-pie', isset($url) && str_contains($url, 'Demographics'));
 sidebarDivider();
