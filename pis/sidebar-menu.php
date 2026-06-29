@@ -8,7 +8,8 @@ sidebarMenuItem(customUri('pis', '201 Files', $userId), '201 Files', 'fa-folder-
 sidebarMenuItem(customUri('pis', 'Trainings', $userId), 'Trainings', 'fa-chalkboard-teacher', isset($url) && str_contains($url, 'Trainings'));
 sidebarMenuItem(customUri('pis', 'Payslips', $userId), 'Payslips', 'fa-money-check', isset($url) && str_contains($url, 'Payslips'));
 
-if ($isSchoolPortal) {
+$isNonDivision = $stationId !== '143';
+if ($isSchoolPortal || $isNonDivision) {
     sidebarDivider();
     sidebarMenuItem(customUri('pis', 'Request Transfer'), 'Request Transfer', 'fa-exchange-alt', isset($url) && str_contains($url, 'Request Transfer'));
 }
