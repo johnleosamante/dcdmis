@@ -14,26 +14,38 @@ function setUserSession($user_id, $prefix)
 {
     $user = user($user_id);
 
-    if (!$user) {
-        return;
+    $portal = null;
+    $access = null;
+    $station_id = null;
+    $stationName = '';
+
+    if ($user) {
+        $portal = $user['link'];
+        $access = $user['access'];
+        $station_id = $user['station_id'];
+
+        if ($portal === 'sch_portal') {
+            $school = schoolById($access);
+            $stationName = $school['alias'] ?? '';
+        } else {
+            $stationName = $access ?? '';
+        }
+    } else {
+        // Fallback for users with no set permissions: retrieve their station assignment if it exists
+        $empStation = station($user_id);
+        if ($empStation) {
+            $station_id = $empStation['station_id'];
+            $school = schoolById($station_id);
+            $stationName = $school['alias'] ?? $station_id;
+        }
     }
 
-    $portal = $user['link'];
-    $access = $user['access'];
-    $station_id = $user['station_id'];
     $_SESSION["{$prefix}userId"] = $user_id;
     $_SESSION["{$prefix}stationId"] = $station_id;
     $_SESSION["{$prefix}code"] = $access;
     $_SESSION["{$prefix}portal"] = $portal;
-
-    if ($portal === 'sch_portal') {
-        $school = schoolById($access);
-        $stationName = $school['alias'] ?? '';
-    } else {
-        $stationName = $access ?? '';
-    }
-
     $_SESSION["{$prefix}station"] = $stationName;
+
     foreach (['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'monitoring_tools'] as $area) {
         $_SESSION["{$prefix}data_privacy_agreed_{$area}"] = false;
     }
