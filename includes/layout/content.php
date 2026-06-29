@@ -71,6 +71,12 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Payslips':
             $file = 'payslip/page';
             break;
+        case 'Request Transfer':
+            $file = 'transfer-request/page';
+            break;
+        case 'Transfer Requests':
+            $file = 'transfer-request/requests';
+            break;
         case 'Step Increment':
             $file = 'step-increment/page';
             break;
