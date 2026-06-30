@@ -87,7 +87,9 @@ messageAlert($showAlert, $message, $success);
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-0">
                             Total Applications</div>
                         <div class="h4 mb-0 font-weight-bold text-gray-800">
-                            <?= countApplicationsByPublication($publicationId) ?>
+                            <a href="<?= customUri('hrmis', 'Applicants List', $publicationId) ?>" class="text-dark">
+                                <?= countApplicationsByPublication($publicationId) ?>
+                            </a>
                         </div>
                         <div class="small text-muted mt-0">
                             <?php $applicantsCount = countApplicantsByPublication($publicationId);
@@ -123,6 +125,93 @@ messageAlert($showAlert, $message, $success);
         </div>
     </div>
 </div>
+
+<?php
+$positionChartData = applicantsCountByPosition($publicationId);
+foreach ($positionChartData as &$item) {
+    $item['link'] = customUri('hrmis', 'Applicants List', $publicationId) . '&position_id=' . encode($item['position_id']);
+}
+unset($item);
+
+$empStatus = applicantEmploymentStatusCount($publicationId);
+$employedCount = (int) ($empStatus['employed'] ?? 0);
+$notEmployedCount = (int) ($empStatus['not_employed'] ?? 0);
+
+$employmentChartData = [
+    [
+        'name' => 'Currently Employed',
+        'count' => $employedCount,
+        'link' => customUri('hrmis', 'Applicants List', $publicationId) . '&status=employed'
+    ],
+    [
+        'name' => 'Not Employed',
+        'count' => $notEmployedCount,
+        'link' => customUri('hrmis', 'Applicants List', $publicationId) . '&status=not_employed'
+    ]
+];
+?>
+
+<div class="row">
+    <div class="col-xl-8 col-lg-7 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Applicants by Position</h6>
+            </div>
+            <div class="card-body">
+                <?php if (count($positionChartData) > 0): ?>
+                    <div class="chart-bar h-auto" style="position: relative; height: 350px;">
+                        <canvas id="applicants-position-chart"></canvas>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center py-5">
+                        <i class="fas fa-chart-bar fa-3x text-gray-300 mb-3"></i>
+                        <p class="text-muted mb-0">No applicant data available for this call for application.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-5 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Employment Status</h6>
+            </div>
+            <div class="card-body">
+                <?php if ($employedCount > 0 || $notEmployedCount > 0): ?>
+                    <div class="chart-pie pt-4 pb-2" style="position: relative; height: 300px;">
+                        <canvas id="employment-status-chart"></canvas>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center py-5">
+                        <i class="fas fa-chart-pie fa-3x text-gray-300 mb-3"></i>
+                        <p class="text-muted mb-0">No applicant data available.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="<?= uri() ?>/assets/vendor/chart.js/Chart.min.js"></script>
+<script src="<?= uri() ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
+<script src="<?= uri() ?>/assets/js/chart-custom.js?v=1.3"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        <?php if (count($positionChartData) > 0): ?>
+            const posData = <?= json_encode($positionChartData) ?>;
+            const posColors = generateColorPallete(posData.length);
+            generateBarChart(posData, posColors, 'applicants-position-chart', true);
+        <?php endif; ?>
+
+        <?php if ($employedCount > 0 || $notEmployedCount > 0): ?>
+            const empData = <?= json_encode($employmentChartData) ?>;
+            const empColors = ['#4e73df', '#1cc88a'];
+            generateBarChart(empData, empColors, 'employment-status-chart', true);
+        <?php endif; ?>
+    });
+</script>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -164,14 +253,14 @@ messageAlert($showAlert, $message, $success);
                                     <?= e($app['official_title']) ?>
                                 </div>
                             </td>
-                            <td class="align-middle text-capitalize">
+                            <td class="align-middle">
                                 <?php
                                 $applicantDocument = applicantDocument($publicationId, applicantId($app['application_code']));
                                 $documentUri = root() . "/{$applicantDocument}";
                                 if (!empty($applicantDocument) && file_exists($documentUri)) {
                                     linkButtonSplit("{$baseUri}/{$applicantDocument}", 'Document', 'fa-paperclip', "View Document Attachment", 'secondary', true);
                                 } else { ?>
-                                    <div class="small">No document attachment</div>
+                                    <div class="small text-uppercase">No document attachment</div>
                                 <?php } ?>
                             </td>
                             <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
@@ -228,7 +317,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="20%">Item Number</th>
                         <th class="align-middle" width="35%">Station</th>
                         <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
-                            <th class="align-middle" width="15%">Action</th>
+                            <th class="align-middle" width="15%">Status</th>
                         <?php endif ?>
                     </tr>
                 </thead>
@@ -268,7 +357,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="20%">Item Number</th>
                         <th class="align-middle" width="35%">Station</th>
                         <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
-                            <th class="align-middle" width="15%">Action</th>
+                            <th class="align-middle" width="15%">Status</th>
                         <?php endif ?>
                     </tr>
                 </tfoot>
