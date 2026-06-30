@@ -68,6 +68,9 @@ if ($code) {
                         </div>
                         <input type="text" class="form-control" id="applicant-id" name="applicant_id"
                             placeholder="Enter your 18-digit applicant ID..." required>
+                        <div class="small text-left mt-1">
+                            <a href=" <?= uri() . '/hrmis/register' ?>" target="_blank">Don't have an applicant ID yet?</a>
+                        </div>
                     </div>
 
                     <div class="mb-2">
@@ -172,10 +175,6 @@ if ($code) {
                     <button name="submit-application" type="submit" class="btn btn-primary btn-block mt-2">
                         Submit Application
                     </button>
-
-                    <div class="small text-center mt-3">
-                        <a href=" <?= uri() . '/hrmis/register' ?>" target="_blank">Don't have an applicant ID yet?</a>
-                    </div>
                 </div>
             </form>
         <?php endif ?>
