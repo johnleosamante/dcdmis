@@ -585,3 +585,13 @@ function countQualifiedApplicants($publicationId, $positionId)
     $result = find($sql, [$publicationId, $positionId]);
     return $result ? (int) $result['total'] : 0;
 }
+
+function countAssessedQualifiedApplicants($publicationId, $positionId)
+{
+    $sql = "SELECT COUNT(va.id) AS total 
+            FROM vacancy_applications AS va
+            INNER JOIN assessment_scores AS s ON va.id = s.application_id
+            WHERE va.publication_id = ? AND va.position_id = ? AND va.status = 'Qualified' AND s.total_accumulated_score IS NOT NULL";
+    $result = find($sql, [$publicationId, $positionId]);
+    return $result ? (int) $result['total'] : 0;
+}
