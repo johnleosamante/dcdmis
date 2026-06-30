@@ -38,7 +38,9 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="15%">Open Date</th>
                         <th class="align-middle" width="15%">Close Date</th>
                         <th class="align-middle" width="10%">Status</th>
-                        <th class="align-middle" width="5%">Action</th>
+                        <?php if ($isHrmis && ($isICT || $isPersonnel)): ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
 
@@ -49,10 +51,12 @@ messageAlert($showAlert, $message, $success);
                         $vacancyCount = countPublicationItems($row['id']);
                         ?>
                         <tr class="text-uppercase">
-                            <td class="align-middle text-left"><a
-                                    href="<?= customUri('hrmis', 'Call for Application Details', $row['id']) ?>">
+                            <td class="align-middle text-left">
+                                <a href="<?= $isHrmis && ($isICT || $isPersonnel) ? customUri('hrmis', 'Call for Application Details', $row['id']) : uri() . '/hrmis/apply?p=' . $row['code'] ?>"
+                                    target="<?= $isHrmis && ($isICT || $isPersonnel) ? '_self' : '_blank' ?>">
                                     <?= e($row['title']) ?>
-                                </a></td>
+                                </a>
+                            </td>
                             <td class="align-middle">
                                 <span class="badge badge-secondary badge-pill"><?= e($vacancyCount) ?> Items</span>
                             </td>
@@ -65,23 +69,20 @@ messageAlert($showAlert, $message, $success);
                                     <span class="badge badge-secondary badge-pill"><?= $row['status'] ?></span>
                                 <?php endif; ?>
                             </td>
-                            <td class="align-middle text-capitalize">
-                                <div class="dropdown no-arrow">
-                                    <?php dropdownEllipsis() ?>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                        <?php
-                                        linkDropdownItem(customUri('hrmis', 'Call for Application Details', $row['id']), 'View', 'fa-eye', 'View Call for Application Details');
-
-                                        if ($isHrmis && ($isPersonnel || $isICT)) {
+                            <?php if ($isHrmis && ($isICT || $isPersonnel)): ?>
+                                <td class="align-middle text-capitalize">
+                                    <div class="dropdown no-arrow">
+                                        <?php dropdownEllipsis() ?>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                            <?php
+                                            linkDropdownItem(customUri('hrmis', 'Call for Application Details', $row['id']), 'View', 'fa-eye', 'View Call for Application Details');
                                             linkDropdownItem(customUri('hrmis', 'Edit Call for Application', $row['id']), 'Edit', 'fa-edit', 'Edit Call for Application'); ?>
                                             <div class="dropdown-divider"></div>
-                                            <?php
-                                            modalDropdownItem(uri() . '/modules/vacancies/delete-publication-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Call for Application');
-                                        }
-                                        ?>
+                                            <?php modalDropdownItem(uri() . '/modules/vacancies/delete-publication-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Call for Application'); ?>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
@@ -93,7 +94,9 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="15%">Open Date</th>
                         <th class="align-middle" width="15%">Close Date</th>
                         <th class="align-middle" width="10%">Status</th>
-                        <th class="align-middle" width="5%">Action</th>
+                        <?php if ($isHrmis && ($isICT || $isPersonnel)): ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif; ?>
                     </tr>
                 </tfoot>
             </table>
