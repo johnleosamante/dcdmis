@@ -79,7 +79,7 @@ $qualifiedApps = array_filter($apps, function ($app) {
                         <th width="25%" class="align-middle">Position Applied</th>
                         <th width="10%" class="align-middle">Score</th>
                         <th width="10%" class="align-middle">Document</th>
-                        <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
+                        <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
                             <th width="10%" class="align-middle">Action</th>
                         <?php endif ?>
                     </tr>
@@ -116,7 +116,7 @@ $qualifiedApps = array_filter($apps, function ($app) {
                                         <div class="text-muted font-italic small text-uppercase">No document attachment</div>
                                     <?php } ?>
                                 </td>
-                                <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
+                                <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
                                     <td class="align-middle text-capitalize">
                                         <div class="dropdown no-arrow">
                                             <?php dropdownEllipsis() ?>
@@ -144,7 +144,7 @@ $qualifiedApps = array_filter($apps, function ($app) {
                         <th width="25%" class="align-middle">Position Applied</th>
                         <th width="10%" class="align-middle">Score</th>
                         <th width="10%" class="align-middle">Document</th>
-                        <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
+                        <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
                             <th width="10%" class="align-middle">Action</th>
                         <?php endif ?>
                     </tr>
