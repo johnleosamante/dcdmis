@@ -37,6 +37,7 @@ if (isset($_POST['register-applicant'])) {
     $errors = [];
     $form_data = $_POST;
     $is_current_employee = !empty($_POST['is_current_employee']);
+    $employee_id = null;
 
     $email = $is_current_employee ? sanitize($_POST['employee_email'] ?? null) : sanitize($_POST['email'] ?? null);
 
@@ -56,41 +57,49 @@ if (isset($_POST['register-applicant'])) {
                 $errors[] = 'You have already registered as an applicant with this email.';
             }
         } else {
-            foreach ($required_fields as $field => $label) {
-                if (empty(trim($_POST[$field] ?? ''))) {
-                    $errors[] = "$label is required.";
-                }
-            }
+            $employee_id = findEmployeeByEmail($email);
 
-            $eligibility_keys = ['csc_professional', 'csc_sub_professional', 'let_pbet_lept', 'honor_graduate', 'barangay_official', 'other_eligibility'];
-            $has_eligibility = array_filter(array_intersect_key($_POST, array_flip($eligibility_keys)));
-
-            if (!$has_eligibility) {
-                $errors[] = 'At least one eligibility must be selected.';
-            }
-
-            if (applicantEmailExists($email)) {
-                $errors[] = 'Email address is already registered.';
-            }
-
-            $mobile = sanitize($_POST['mobile'] ?? null);
-
-            if (strlen($mobile ?? '') < 10) {
-                $errors[] = "Please provide a valid mobile number.";
-            }
-
-            if (applicantMobileExists($mobile)) {
-                $errors[] = 'Mobile number is already registered.';
-            }
-
-            $birthdate = $_POST['birth_date'] ?? '';
-
-            if ($birthdate && $date = date_create($birthdate)) {
-                if (date_diff($date, date_create('today'))->y < 18) {
-                    $errors[] = 'You must be at least 18 years old.';
+            if ($employee_id) {
+                if (applicantCode($employee_id)) {
+                    $errors[] = 'You have already registered as an applicant with this email.';
                 }
             } else {
-                $errors[] = 'Please provide a valid birth date.';
+                foreach ($required_fields as $field => $label) {
+                    if (empty(trim($_POST[$field] ?? ''))) {
+                        $errors[] = "$label is required.";
+                    }
+                }
+
+                $eligibility_keys = ['csc_professional', 'csc_sub_professional', 'let_pbet_lept', 'honor_graduate', 'barangay_official', 'other_eligibility'];
+                $has_eligibility = array_filter(array_intersect_key($_POST, array_flip($eligibility_keys)));
+
+                if (!$has_eligibility) {
+                    $errors[] = 'At least one eligibility must be selected.';
+                }
+
+                if (applicantEmailExists($email)) {
+                    $errors[] = 'Email address is already registered.';
+                }
+
+                $mobile = sanitize($_POST['mobile'] ?? null);
+
+                if (strlen($mobile ?? '') < 10) {
+                    $errors[] = "Please provide a valid mobile number.";
+                }
+
+                if (applicantMobileExists($mobile)) {
+                    $errors[] = 'Mobile number is already registered.';
+                }
+
+                $birthdate = $_POST['birth_date'] ?? '';
+
+                if ($birthdate && $date = date_create($birthdate)) {
+                    if (date_diff($date, date_create('today'))->y < 18) {
+                        $errors[] = 'You must be at least 18 years old.';
+                    }
+                } else {
+                    $errors[] = 'Please provide a valid birth date.';
+                }
             }
         }
     }
@@ -100,7 +109,7 @@ if (isset($_POST['register-applicant'])) {
         $isRegistered = false;
 
         try {
-            if ($is_current_employee) {
+            if (!empty($employee_id)) {
                 $employee = employee($employee_id);
 
                 if (!$employee) {
