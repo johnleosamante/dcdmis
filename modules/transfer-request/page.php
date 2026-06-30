@@ -177,7 +177,7 @@ if ($currStation) {
                                             <?php dropdownEllipsis() ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                                 <?php if ($row['status'] === 'Pending'): ?>
-                                                    <?php modalDropdownItem(uri() . '/modules/transfer-request/cancel-request-dialog.php?id=' . cipher($row['id']), 'Cancel Request', 'fa-times', 'Cancel Transfer Request'); ?>
+                                                    <?php modalDropdownItem(uri() . '/modules/transfer-request/cancel-request-dialog.php?id=' . cipher($row['id']), 'Cancel', 'fa-times', 'Cancel Transfer Request'); ?>
                                                 <?php else: ?>
                                                     <?php linkDropdownItem(uri() . '/' . e($row['attachment_path']), 'View Attachment', 'fa-eye', 'View Document Attachment', true); ?>
                                                 <?php endif; ?>
