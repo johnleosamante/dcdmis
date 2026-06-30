@@ -227,7 +227,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="30%">Position / Salary Grade</th>
                         <th class="align-middle" width="20%">Item Number</th>
                         <th class="align-middle" width="35%">Station</th>
-                        <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
+                        <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
                             <th class="align-middle" width="15%">Action</th>
                         <?php endif ?>
                     </tr>
@@ -245,13 +245,15 @@ messageAlert($showAlert, $message, $success);
                                 <?php $school = schoolById($item['station_id']);
                                 echo $school ? $school['name'] : 'N/A'; ?>
                             </td>
-                            <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
+                            <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
                                 <td class="align-middle text-capitalize">
                                     <?php if ($item['status'] === 'filled') { ?>
                                         <span class="badge badge-success py-1 px-2 text-uppercase small">Filled</span>
                                     <?php } elseif (countQualifiedApplicants($publicationId, $item['position_id']) === 0) { ?>
                                         <span class="badge badge-secondary py-1 px-2 text-uppercase small">No Qualified
                                             Applicants</span>
+                                    <?php } elseif (countQualifiedApplicants($publicationId, $item['position_id']) !== countAssessedQualifiedApplicants($publicationId, $item['position_id'])) { ?>
+                                        <span class="badge badge-secondary py-1 px-2 text-uppercase small">Pending Assessment</span>
                                     <?php } else {
                                         modalButtonSplit(uri() . '/modules/vacancies/fill-vacancy-dialog.php?id=' . cipher($item['vacancy_id']), 'Fill Position', 'fa-user-plus', 'Fill Position Item');
                                     } ?>
@@ -265,7 +267,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="30%">Position / Salary Grade</th>
                         <th class="align-middle" width="20%">Item Number</th>
                         <th class="align-middle" width="35%">Station</th>
-                        <?php if ($isHrmis && $isPersonnel && $publication['status'] === 'open'): ?>
+                        <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
                             <th class="align-middle" width="15%">Action</th>
                         <?php endif ?>
                     </tr>
