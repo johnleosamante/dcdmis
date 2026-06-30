@@ -17,17 +17,19 @@ sidebarMenuItem(customUri('hrmis', 'Active Employees'), 'Active', 'fa-user-check
 sidebarMenuItem(customUri('hrmis', 'Retirable Employees'), 'Retirable', 'fa-user-clock', isset($url) && str_contains($url, 'Retirable'), $countRetirable);
 sidebarMenuItem(customUri('hrmis', 'Celebrant Employees'), 'Celebrants', 'fa-birthday-cake', isset($url) && str_contains($url, 'Celebrant'));
 sidebarMenuItem(customUri('hrmis', 'Archived Employees'), 'Archived', 'fa-archive', isset($url) && str_contains($url, 'Archived'));
+if ($isHrmis && ($isPersonnel || $isICT)) {
+    sidebarDivider();
+    sidebarMenuItem(customUri('hrmis', 'Transfer Requests'), 'Transfer Requests', 'fa-exchange-alt', isset($url) && str_contains($url, 'Transfer'), $countPendingTransfers);
+    sidebarDivider();
+    sidebarMenuItem(customUri('hrmis', 'Demographics - Gender'), 'Demographics', 'fa-chart-pie', isset($url) && str_contains($url, 'Demographics'));
+}
 sidebarDivider();
-sidebarMenuItem(customUri('hrmis', 'Transfer Requests'), 'Transfer Requests', 'fa-exchange-alt', isset($url) && str_contains($url, 'Transfer'), $countPendingTransfers);
-sidebarDivider();
-sidebarMenuItem(customUri('hrmis', 'Demographics - Gender'), 'Demographics', 'fa-chart-pie', isset($url) && str_contains($url, 'Demographics'));
-sidebarDivider();
-if (($isHrmis && $isPersonnel) || ($isHrmis && $isICT)) {
+if ($isHrmis && ($isPersonnel || $isICT)) {
     sidebarMenuItem(customUri('hrmis', 'Positions'), 'Positions', 'fa-user-tie', isset($url) && str_contains($url, 'Positions'));
     sidebarMenuItem(customUri('hrmis', 'Plantilla Items'), 'Plantilla Items', 'fa-list', isset($url) && str_contains($url, 'Plantilla Items'));
     sidebarDivider();
+    sidebarMenuItem(customUri('hrmis', 'Vacancies'), 'Vacancies', 'fa-user-times', isset($url) && str_contains($url, 'Vacancies'), $countVacancy);
 }
-sidebarMenuItem(customUri('hrmis', 'Vacancies'), 'Vacancies', 'fa-user-times', isset($url) && str_contains($url, 'Vacancies'), $countVacancy);
 sidebarMenuItem(customUri('hrmis', 'Call for Applications'), 'Call for Applications', 'fa-bullhorn', isset($url) && str_contains($url, 'Call for Applications'), $countPublications);
 sidebarDivider();
 sidebarMenuItem(customUri('hrmis', 'Districts'), 'Districts', 'fa-map-marked-alt', isset($url) && str_contains($url, 'District'), $districtCount);
