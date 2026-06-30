@@ -595,3 +595,60 @@ function countAssessedQualifiedApplicants($publicationId, $positionId)
     $result = find($sql, [$publicationId, $positionId]);
     return $result ? (int) $result['total'] : 0;
 }
+
+function applicantsCountByPosition($publicationId)
+{
+    $sql = "SELECT p.id AS position_id, p.official_title AS name, COUNT(DISTINCT va.application_code_id) AS count
+            FROM vacancy_applications AS va
+            INNER JOIN positions AS p ON va.position_id = p.id
+            WHERE va.publication_id = ?
+            GROUP BY p.id, p.official_title
+            ORDER BY count DESC, p.official_title ASC";
+    return query($sql, [$publicationId]);
+}
+
+function applicantEmploymentStatusCount($publicationId)
+{
+    $sql = "SELECT 
+                SUM(CASE WHEN e.id IS NOT NULL THEN 1 ELSE 0 END) AS employed,
+                SUM(CASE WHEN e.id IS NULL THEN 1 ELSE 0 END) AS not_employed
+            FROM (
+                SELECT DISTINCT application_code_id
+                FROM vacancy_applications
+                WHERE publication_id = ?
+            ) AS unique_applicants
+            LEFT JOIN employees AS e ON unique_applicants.application_code_id = e.id";
+    return find($sql, [$publicationId]);
+}
+
+function applicantsListByPublication($publicationId, $positionId = null, $status = null)
+{
+    $params = [$publicationId];
+    $filters = "";
+    
+    if ($positionId !== null && $positionId !== '' && $positionId !== 'all') {
+        $filters .= " AND va.position_id = ? ";
+        $params[] = $positionId;
+    }
+    
+    if ($status === 'employed') {
+        $filters .= " AND e.id IS NOT NULL ";
+    } elseif ($status === 'not_employed') {
+        $filters .= " AND e.id IS NULL ";
+    }
+    
+    $sql = "SELECT va.id, va.created_at, ac.code AS application_code, p.official_title, p.category AS position_group,
+                   va.status, va.application_code_id,
+                   IF(e.id IS NOT NULL, 1, 0) AS is_employed,
+                   va.remarks, s.total_accumulated_score
+            FROM vacancy_applications AS va
+            INNER JOIN application_codes AS ac ON va.application_code_id = ac.id
+            INNER JOIN positions AS p ON va.position_id = p.id
+            LEFT JOIN employees AS e ON ac.id = e.id
+            LEFT JOIN assessment_scores AS s ON va.id = s.application_id
+            WHERE va.publication_id = ?
+            {$filters}
+            ORDER BY p.category ASC, p.official_title ASC, va.created_at DESC";
+
+    return query($sql, $params);
+}
