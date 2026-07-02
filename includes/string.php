@@ -27,7 +27,7 @@ function toName(string $last_name, string $first_name, ?string $middle_name = nu
     }
 }
 
-function toAddress(string $lot, string $street, string $subdivision, string $barangay, string $city, string $province = ''): string
+function toAddress(?string $lot, ?string $street, ?string $subdivision, ?string $barangay, ?string $city, ?string $province = ''): string
 {
     return toString($lot, '', ', ') . toString($street, '', ', ') . toString($subdivision, '', ', ') . toString($barangay, '', ', ') . toString($city) . toString($province, ', ');
 }
