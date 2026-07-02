@@ -40,11 +40,11 @@ $filter = isset($_GET['id']) ? "{$filter} AND sa.`station_id`='" . sanitize(deco
 		<?php
 		$i = 1;
 		$rows = query(
-			"SELECT p.`agency_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, 
+			"SELECT p.`agency_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, p.`sex`, p.`birthdate`, 
 				p.`gsis_crn`, p.`gsis_bp`, p.`pagibig`, p.`philhealth`, p.`sss`, p.`tin`, p.`mobile_number`, p.`email_address`, pos.`official_title` AS `position`, 
 				s.`name` AS `school`, p.`residence_street`, p.`residence_subdivision`, p.`residence_barangay`, p.`residence_city`, p.`residence_province` 
-			FROM `persons` AS p 
-			INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`person_id` 
+			FROM `employees` AS p 
+			INNER JOIN `station_assignments` AS sa ON p.`id` = sa.`employee_id` 
 			INNER JOIN `schools` AS s ON sa.`station_id` = s.`id` 
 			INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id` 
 			WHERE p.`status`='Active' {$filter} ORDER BY s.`name`, p.`last_name`;"
