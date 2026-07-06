@@ -188,19 +188,29 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Monitoring Tools':
             $file = 'tools/index';
             break;
-        case 'Demographics - Gender':
-        case 'Demographics - Category':
-        case 'Demographics - Category by Gender':
-        case 'Demographics - Position':
-        case 'Demographics - Generation':
-        case 'Demographics - Education':
-        case 'Demographics - Religion':
-        case 'Demographics - Ethnic Group':
-        case 'Demographics - PWD':
-        case 'Demographics - Solo Parent':
-        case 'Demographics - District':
-        case 'Demographics - Assignment':
-            $file = 'employees/demographics/page';
+        case 'Workforce Diversity - Gender':
+        case 'Workforce Diversity - Category':
+        case 'Workforce Diversity - Category by Gender':
+        case 'Workforce Diversity - Position':
+        case 'Workforce Diversity - Generation':
+        case 'Workforce Diversity - Education':
+        case 'Workforce Diversity - Religion':
+        case 'Workforce Diversity - Ethnic Group':
+        case 'Workforce Diversity - PWD':
+        case 'Workforce Diversity - Solo Parent':
+        case 'Workforce Diversity - District':
+        case 'Workforce Diversity - Assignment':
+            $file = 'employees/diversity/page';
+            break;
+        case 'Talent Pool Diversity - Gender':
+        case 'Talent Pool Diversity - Generation':
+        case 'Talent Pool Diversity - Religion':
+        case 'Talent Pool Diversity - Ethnic Group':
+        case 'Talent Pool Diversity - PWD':
+        case 'Talent Pool Diversity - Undergraduate':
+        case 'Talent Pool Diversity - Post Graduate':
+        case 'Talent Pool Diversity - Registration':
+            $file = 'applicants/diversity/page';
             break;
         case '404':
         default:
