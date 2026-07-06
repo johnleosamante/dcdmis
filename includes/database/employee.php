@@ -614,7 +614,7 @@ function demographicsSchool()
 function demographicsEmployeeList()
 {
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
-                p.`sex`, p.`birthdate`, p.`religion`,
+                p.`sex`, p.`birthdate`, p.`religion`, p.`profile_picture`,
                 pos.`official_title` AS `position`, pos.`category`, pos.`salary_grade`,
                 d.`name` AS `district`, s.`name` AS `school`,
                 o.`is_indigenous`, o.`indigenous_group`, o.`with_disability`, o.`disability`, o.`is_solo_parent`,
