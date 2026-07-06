@@ -134,19 +134,16 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
     </nav>
 </div>
 
-<!-- Sub-navigation links bar -->
-<div class="card shadow mb-4 border-left-primary">
-    <div class="card-body p-2 bg-light">
-        <div class="d-flex flex-wrap align-items-center justify-content-start" style="gap: 6px;">
-            <?php foreach ($demographicsConfig as $viewName => $info): ?>
-                <a href="<?= customUri('hrmis', $viewName) ?>"
-                    class="btn btn-sm <?= $url === $viewName ? 'btn-primary' : 'btn-light border text-secondary' ?> d-flex align-items-center"
-                    style="gap: 5px; font-weight: 500; border-radius: 20px; padding: 6px 14px; transition: all 0.2s;">
-                    <i class="fas <?= $info['icon'] ?>"></i>
-                    <span><?= e(str_replace(['Demographics', 'Employee ', 'Employees by ', 'Demographics'], '', $info['title'])) ?></span>
-                </a>
-            <?php endforeach; ?>
-        </div>
+<div class="mb-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-start" style="gap: 6px;">
+        <?php foreach ($demographicsConfig as $viewName => $info): ?>
+            <a href="<?= customUri('hrmis', $viewName) ?>"
+                class="btn btn-sm <?= $url === $viewName ? 'btn-primary' : 'btn-light border text-secondary' ?> d-flex align-items-center"
+                style="gap: 5px; font-weight: 500; border-radius: 20px; padding: 6px 14px; transition: all 0.2s;">
+                <i class="fas <?= $info['icon'] ?>"></i>
+                <span><?= e(str_replace(['Demographics', 'Employee ', 'Employees by ', 'Demographics'], '', $info['title'])) ?></span>
+            </a>
+        <?php endforeach; ?>
     </div>
 </div>
 
