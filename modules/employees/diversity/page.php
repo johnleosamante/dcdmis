@@ -244,9 +244,9 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
     </div>
 </div>
 
-<div class="row mt-4">
+<div class="row mb-0">
     <div class="col-12">
-        <div class="card shadow mb-4" id="demographics-breakdown">
+        <div class="card shadow" id="demographics-breakdown">
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white border-bottom">
                 <h6 class="m-0 font-weight-bold text-dark text-uppercase">
@@ -384,17 +384,16 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                             <label for="filter-position"
                                 class="font-weight-bold text-gray-800 small mb-0">Position</label>
                             <select id="filter-position" name="position" class="form-control">
-                                <option value="all" <?= setOptionSelected($selectedPosition, 'all') ?>>All
-                                </option>
-                                                        <?php foreach ($positionsByCategory as $catName => $posList): ?>
+                                <option value="all" <?= setOptionSelected($selectedPosition, 'all') ?>>All</option>
+                                <?php foreach ($positionsByCategory as $catName => $posList): ?>
                                     <optgroup label="<?= e($catName) ?>">
-                                                                <?php foreach ($posList as $posOpt): ?>
+                                        <?php foreach ($posList as $posOpt): ?>
                                             <option value="<?= e($posOpt) ?>" <?= setOptionSelected($selectedPosition, $posOpt) ?>>
-                                                                        <?= e($posOpt) ?>
+                                                <?= e($posOpt) ?>
                                             </option>
-                                                                <?php endforeach; ?>
+                                        <?php endforeach; ?>
                                     </optgroup>
-                                                        <?php endforeach; ?>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -416,7 +415,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                             </select>
                         </div>
                     </div>
-                    <div class="row mt-1 mb-4">
+                    <div class="row mt-3 mb-4">
                         <div class="col-md-12 text-right">
                             <button type="submit" class="btn btn-primary px-4">
                                 <i class="fas fa-filter mr-1"></i> Filter Result
@@ -437,9 +436,8 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                         <thead>
                             <tr>
                                 <th class="align-middle" width="5%">Photo</th>
-                                <th class="align-middle" width="25%">Name</th>
-                                <th class="align-middle" width="20%">Position</th>
-                                <th class="align-middle" width="40%">Station / District</th>
+                                <th class="align-middle" width="40%">Name / Position</th>
+                                <th class="align-middle" width="55%">Station / District</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -463,9 +461,9 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                                         </div>
                                     </td>
                                     <td class="align-middle text-left text-dark">
-                                        <?= linkItem(customUri('hrmis', 'Employee Information', $empRow['id']), $employeeName); ?>
+                                        <div><?= linkItem(customUri('hrmis', 'Employee Information', $empRow['id']), $employeeName); ?></div>
+                                        <div class="small"><?= e($pos) ?></div>
                                     </td>
-                                    <td class="align-middle text-left"><?= e($pos) ?></td>
                                     <td class="align-middle text-left">
                                         <div><?= e($school) ?></div>
                                         <div class="small"><?= e($district) ?></div>
@@ -473,6 +471,13 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
+                        <tfoot class="small">
+                            <tr>
+                                <th class="align-middle" width="5%">Photo</th>
+                                <th class="align-middle" width="40%">Name / Position</th>
+                                <th class="align-middle" width="55%">Station / District</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -481,32 +486,30 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
 </div>
 
 <script>
-    $(document).ready(function () {
-        // Initialize DataTable
-        const table = $('#demographics-breakdown-table').DataTable({
-            responsive: true,
-            pagingType: "simple",
-            lengthMenu: [
-                [10, 25, 50, 75, 100, -1],
-                [10, 25, 50, 75, 100, "All"],
-            ],
-            paging: true,
-            order: [],
-            autoWidth: false,
-            info: true,
+    document.addEventListener("DOMContentLoaded", function () {
+        $(document).ready(function () {
+            // Initialize DataTable
+            const table = $('#demographics-breakdown-table').DataTable({
+                responsive: true,
+                pagingType: "simple",
+                lengthMenu: [
+                    [10, 25, 50, 75, 100, -1],
+                    [10, 25, 50, 75, 100, "All"],
+                ],
+                paging: true,
+                order: [],
+                autoWidth: false,
+                info: true,
+            });
+
+            // Dynamic column indexing for visible rows
+            table.on('order.dt search.dt', function () {
+                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
         });
 
-        // Dynamic column indexing for visible rows
-        table.on('order.dt search.dt', function () {
-            table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                cell.innerHTML = i + 1;
-            });
-        }).draw();
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
         const rawData = <?= json_encode($rows) ?>;
         const chartType = '<?= $config['chart_type'] ?>';
 
