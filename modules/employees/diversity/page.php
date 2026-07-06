@@ -7,7 +7,7 @@ if (!$isHrmis && !$isHrtdms && !$isDmis) {
 
 // Map the URL path to our configuration
 $demographicsConfig = [
-    'Demographics - Gender' => [
+    'Workforce Diversity - Gender' => [
         'title' => 'Gender',
         'icon' => 'fa-venus-mars',
         'db_function' => 'demographicsGender',
@@ -15,7 +15,7 @@ $demographicsConfig = [
         'chart_type' => 'doughnut',
         'export_id' => 'gender',
     ],
-    'Demographics - Category' => [
+    'Workforce Diversity - Category' => [
         'title' => 'Category',
         'icon' => 'fa-tags',
         'db_function' => 'demographicsCategory',
@@ -23,7 +23,7 @@ $demographicsConfig = [
         'chart_type' => 'doughnut',
         'export_id' => 'category',
     ],
-    'Demographics - Category by Gender' => [
+    'Workforce Diversity - Category by Gender' => [
         'title' => 'Category by Gender',
         'icon' => 'fa-user-tag',
         'db_function' => 'demographicsCategoryGender',
@@ -31,7 +31,7 @@ $demographicsConfig = [
         'chart_type' => 'comparative-bar',
         'export_id' => 'category-gender',
     ],
-    'Demographics - Education' => [
+    'Workforce Diversity - Education' => [
         'title' => 'Education',
         'icon' => 'fa-graduation-cap',
         'db_function' => 'demographicsEducation',
@@ -39,7 +39,7 @@ $demographicsConfig = [
         'chart_type' => 'bar',
         'export_id' => 'education',
     ],
-    'Demographics - Position' => [
+    'Workforce Diversity - Position' => [
         'title' => 'Position',
         'icon' => 'fa-user-tie',
         'db_function' => 'demographicsPosition',
@@ -47,7 +47,7 @@ $demographicsConfig = [
         'chart_type' => 'bar',
         'export_id' => 'position',
     ],
-    'Demographics - District' => [
+    'Workforce Diversity - District' => [
         'title' => 'District',
         'icon' => 'fa-map-marked-alt',
         'db_function' => 'demographicsDistrict',
@@ -55,7 +55,7 @@ $demographicsConfig = [
         'chart_type' => 'polarArea',
         'export_id' => 'districts',
     ],
-    'Demographics - Assignment' => [
+    'Workforce Diversity - Assignment' => [
         'title' => 'Assignment',
         'icon' => 'fa-school',
         'db_function' => 'demographicsSchool',
@@ -63,7 +63,7 @@ $demographicsConfig = [
         'chart_type' => 'bar',
         'export_id' => 'schools',
     ],
-    'Demographics - Generation' => [
+    'Workforce Diversity - Generation' => [
         'title' => 'Generation',
         'icon' => 'fa-hourglass-half',
         'db_function' => 'demographicsGeneration',
@@ -71,7 +71,7 @@ $demographicsConfig = [
         'chart_type' => 'bar',
         'export_id' => 'generation',
     ],
-    'Demographics - Religion' => [
+    'Workforce Diversity - Religion' => [
         'title' => 'Religion',
         'icon' => 'fa-hands-helping',
         'db_function' => 'demographicsReligion',
@@ -79,7 +79,7 @@ $demographicsConfig = [
         'chart_type' => 'doughnut',
         'export_id' => 'religion',
     ],
-    'Demographics - Ethnic Group' => [
+    'Workforce Diversity - Ethnic Group' => [
         'title' => 'Ethnic Group',
         'icon' => 'fa-users',
         'db_function' => 'demographicsIndigenous',
@@ -87,7 +87,7 @@ $demographicsConfig = [
         'chart_type' => 'doughnut',
         'export_id' => 'indigenous',
     ],
-    'Demographics - PWD' => [
+    'Workforce Diversity - PWD' => [
         'title' => 'Persons with Disability',
         'icon' => 'fa-wheelchair',
         'db_function' => 'demographicsPwd',
@@ -95,7 +95,7 @@ $demographicsConfig = [
         'chart_type' => 'doughnut',
         'export_id' => 'pwd',
     ],
-    'Demographics - Solo Parent' => [
+    'Workforce Diversity - Solo Parent' => [
         'title' => 'Solo Parent',
         'icon' => 'fa-user-friends',
         'db_function' => 'demographicsSoloParent',
@@ -128,7 +128,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item active">Demographics</li>
+            <li class="breadcrumb-item active">Workforce Diversity</li>
             <li class="breadcrumb-item active"><?= e($config['title']) ?></li>
         </ol>
     </nav>
@@ -188,8 +188,8 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
             </div>
             <div class="card-body">
                 <div class="table-responsive font-weight-normal">
-                    <table class="table table-hover mb-0 text-center table-bordered" id="data-table" width="100%" cellspacing="0">
-                        <thead class="thead-light">
+                    <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+                        <thead>
                             <tr>
                                 <th class="align-middle" width="5%">#</th>
                                 <?php foreach ($config['headers'] as $header): ?>
@@ -227,7 +227,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
-                            <tr class="bg-light font-weight-bold text-dark text-uppercase">
+                            <tr class="font-weight-bold text-dark text-uppercase">
                                 <td colspan="2" class="text-right align-middle">Grand Total</td>
                                 <?php if ($hasGenderBreakdown): ?>
                                     <td class="align-middle text-mars"><?= number_format($totalMale) ?></td>
@@ -431,9 +431,9 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                 </form>
 
                 <div class="table-responsive font-weight-normal">
-                    <table class="table table-hover table-bordered mb-0 text-center" id="data-table-next" width="100%"
+                    <table class="table table-hover mb-0 text-center" id="data-table-next" width="100%"
                         cellspacing="0">
-                        <thead class="bg-light">
+                        <thead>
                             <tr>
                                 <th class="align-middle" width="5%">#</th>
                                 <th class="align-middle">Employee Name</th>
