@@ -625,18 +625,15 @@ function applicantsListByPublication($publicationId, $positionId = null, $status
 {
     $params = [$publicationId];
     $filters = "";
-    
     if ($positionId !== null && $positionId !== '' && $positionId !== 'all') {
         $filters .= " AND va.position_id = ? ";
         $params[] = $positionId;
     }
-    
     if ($status === 'employed') {
         $filters .= " AND e.id IS NOT NULL ";
     } elseif ($status === 'not_employed') {
         $filters .= " AND e.id IS NULL ";
     }
-    
     $sql = "SELECT va.id, va.created_at, ac.code AS application_code, p.official_title, p.category AS position_group,
                    va.status, va.application_code_id,
                    IF(e.id IS NOT NULL, 1, 0) AS is_employed,
@@ -651,4 +648,222 @@ function applicantsListByPublication($publicationId, $positionId = null, $status
             ORDER BY p.category ASC, p.official_title ASC, va.created_at DESC";
 
     return query($sql, $params);
+}
+
+function applicantDiversityGender()
+{
+    $sql = "SELECT a.`sex` AS `name`, 
+                SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`, 
+                SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`, 
+                COUNT(*) AS `total`, COUNT(*) AS `count`
+            FROM `applicants` a
+            INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id
+            LEFT JOIN `employees` e ON a.`id` = e.`id`
+            WHERE e.`id` IS NULL
+            GROUP BY a.`sex` 
+            ORDER BY a.`sex` DESC";
+    return query($sql);
+}
+
+function applicantDiversityGeneration()
+{
+    $sql = "SELECT 
+                CASE 
+                    WHEN YEAR(a.`birthdate`) BETWEEN 1946 AND 1964 THEN 'Baby Boomers (1946-1964)'
+                    WHEN YEAR(a.`birthdate`) BETWEEN 1965 AND 1980 THEN 'Generation X (1965-1980)'
+                    WHEN YEAR(a.`birthdate`) BETWEEN 1981 AND 1996 THEN 'Generation Y / Millennials (1981-1996)'
+                    WHEN YEAR(a.`birthdate`) BETWEEN 1997 AND 2012 THEN 'Generation Z (1997-2012)'
+                    WHEN YEAR(a.`birthdate`) >= 2013 THEN 'Generation Alpha (2013-Present)'
+                    ELSE 'Silent Generation / Other'
+                END AS `name`,
+                SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                COUNT(*) AS `total`,
+                COUNT(*) AS `count`
+            FROM `applicants` a
+            INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id
+            LEFT JOIN `employees` e ON a.`id` = e.`id`
+            WHERE e.`id` IS NULL AND a.`birthdate` IS NOT NULL AND a.`birthdate` <> '0000-00-00'
+            GROUP BY `name`
+            ORDER BY MIN(a.`birthdate`) ASC";
+    return query($sql);
+}
+
+function applicantDiversityReligion()
+{
+    $sql = "SELECT 
+                COALESCE(NULLIF(TRIM(a.`religion`), ''), 'Not Specified') AS `name`,
+                SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                COUNT(*) AS `total`,
+                COUNT(*) AS `count`
+            FROM `applicants` a
+            INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id
+            LEFT JOIN `employees` e ON a.`id` = e.`id`
+            WHERE e.`id` IS NULL
+            GROUP BY `name`
+            ORDER BY `total` DESC";
+    return query($sql);
+}
+
+function applicantDiversityIndigenous()
+{
+    $sql = "SELECT 
+                CASE 
+                    WHEN a.`is_indigenous` = 1 AND a.`indigenous_group` > '' 
+                    THEN TRIM(a.`indigenous_group`) 
+                    ELSE 'Non-Indigenous' 
+                END AS `name`, 
+                SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                COUNT(a.`id`) AS `total`,
+                COUNT(a.`id`) AS `count`
+            FROM `applicants` a
+            INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id
+            LEFT JOIN `employees` e ON a.`id` = e.`id`
+            WHERE e.`id` IS NULL
+            GROUP BY `name` 
+            ORDER BY `total` DESC";
+    return query($sql);
+}
+
+function applicantDiversityPwd()
+{
+    $sql = "SELECT 
+                CASE 
+                    WHEN a.`with_disability` = 1 THEN 'PWD' 
+                    ELSE 'Non-PWD' 
+                END AS `name`, 
+                SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                COUNT(a.`id`) AS `total`,
+                COUNT(a.`id`) AS `count`
+            FROM `applicants` a
+            INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id
+            LEFT JOIN `employees` e ON a.`id` = e.`id`
+            WHERE e.`id` IS NULL
+            GROUP BY `name` 
+            ORDER BY `total` DESC";
+    return query($sql);
+}
+
+function applicantDiversityUndergraduate()
+{
+    $sql = "SELECT 
+                COALESCE(NULLIF(TRIM(a.`undergraduate`), ''), 'Not Specified') AS `name`,
+                SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                COUNT(a.`id`) AS `total`,
+                COUNT(a.`id`) AS `count`
+            FROM `applicants` a
+            INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id
+            LEFT JOIN `employees` e ON a.`id` = e.`id`
+            WHERE e.`id` IS NULL
+            GROUP BY `name`
+            ORDER BY `total` DESC";
+    return query($sql);
+}
+
+function applicantDiversityPostGraduate()
+{
+    $sql = "SELECT 
+                COALESCE(NULLIF(TRIM(a.`graduate_studies`), ''), 'Not Specified') AS `name`,
+                SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                COUNT(a.`id`) AS `total`,
+                COUNT(a.`id`) AS `count`
+            FROM `applicants` a
+            INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id
+            LEFT JOIN `employees` e ON a.`id` = e.`id`
+            WHERE e.`id` IS NULL
+            GROUP BY `name`
+            ORDER BY `total` DESC";
+    return query($sql);
+}
+
+function applicantDiversityRegistration()
+{
+    $sql = "SELECT 
+                CASE 
+                    WHEN va.application_code_id IS NOT NULL THEN 'Applied to Vacancy' 
+                    ELSE 'No Application Made' 
+                END AS `name`,
+                SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
+                SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
+                COUNT(*) AS `total`,
+                COUNT(*) AS `count`
+            FROM `applicants` a
+            LEFT JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id
+            LEFT JOIN `employees` e ON a.`id` = e.`id`
+            WHERE e.`id` IS NULL
+            GROUP BY `name`
+            ORDER BY `total` DESC";
+    return query($sql);
+}
+
+function applicantDiversityList($onlyApplied = false)
+{
+    $join = "";
+    if ($onlyApplied) {
+        $join = " INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id ";
+    }
+    $sql = "SELECT a.`id`, a.`last_name`, a.`first_name`, a.`middle_name`, a.`name_extension`, 
+                a.`sex`, a.`birthdate`, a.`religion`, a.`civil_status`,
+                a.`is_indigenous`, a.`indigenous_group`, a.`email_address`, a.`mobile_number`, a.`with_disability`, a.`undergraduate`, a.`graduate_studies`,
+                IF(va_status.application_code_id IS NOT NULL, 1, 0) AS `has_applied`
+            FROM `applicants` AS a
+            {$join}
+            LEFT JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va_status ON a.`id` = va_status.application_code_id
+            LEFT JOIN `employees` AS e ON a.`id` = e.`id`
+            WHERE e.`id` IS NULL
+            ORDER BY a.`last_name` ASC, a.`first_name` ASC";
+    $results = query($sql);
+    return is_array($results) ? $results : [];
+}
+
+function getApplicantDemographicGroup($row, $exportId)
+{
+    switch ($exportId) {
+        case 'gender':
+            return $row['sex'] ?? 'Not Specified';
+        case 'generation':
+            if (empty($row['birthdate']) || $row['birthdate'] === '0000-00-00') {
+                return 'Silent Generation / Other';
+            }
+            $year = (int) date('Y', strtotime($row['birthdate']));
+            if ($year >= 1946 && $year <= 1964)
+                return 'Baby Boomers (1946-1964)';
+            if ($year >= 1965 && $year <= 1980)
+                return 'Generation X (1965-1980)';
+            if ($year >= 1981 && $year <= 1996)
+                return 'Generation Y / Millennials (1981-1996)';
+            if ($year >= 1997 && $year <= 2012)
+                return 'Generation Z (1997-2012)';
+            if ($year >= 2013)
+                return 'Generation Alpha (2013-Present)';
+            return 'Silent Generation / Other';
+        case 'religion':
+            $religion = trim($row['religion'] ?? '');
+            return $religion !== '' ? $religion : 'Not Specified';
+        case 'indigenous':
+            if (isset($row['is_indigenous']) && $row['is_indigenous'] == 1 && trim($row['indigenous_group'] ?? '') !== '') {
+                return trim($row['indigenous_group']);
+            }
+            return 'Non-Indigenous';
+        case 'pwd':
+            if (isset($row['with_disability']) && $row['with_disability'] == 1) {
+                return 'PWD';
+            }
+            return 'Non-PWD';
+        case 'undergraduate':
+            $undergrad = trim($row['undergraduate'] ?? '');
+            return $undergrad !== '' ? $undergrad : 'Not Specified';
+        case 'postgraduate':
+            $postgrad = trim($row['graduate_studies'] ?? '');
+            return $postgrad !== '' ? $postgrad : 'Not Specified';
+        case 'registration':
+            return (isset($row['has_applied']) && $row['has_applied'] == 1) ? 'Applied to Vacancy' : 'No Application Made';
+        default:
+            return 'Other';
+    }
 }
