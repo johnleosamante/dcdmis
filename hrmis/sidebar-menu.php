@@ -21,7 +21,9 @@ if ($isHrmis && ($isPersonnel || $isICT)) {
     sidebarDivider();
     sidebarMenuItem(customUri('hrmis', 'Transfer Requests'), 'Transfer Requests', 'fa-exchange-alt', isset($url) && str_contains($url, 'Transfer'), $countPendingTransfers);
     sidebarDivider();
-    sidebarMenuItem(customUri('hrmis', 'Demographics - Gender'), 'Demographics', 'fa-chart-pie', isset($url) && str_contains($url, 'Demographics'));
+    sidebarHeading('Diversity');
+    sidebarMenuItem(customUri('hrmis', 'Workforce Diversity - Gender'), 'Workforce', 'fa-chart-pie', isset($url) && str_contains($url, 'Workforce Diversity'));
+    sidebarMenuItem(customUri('hrmis', 'Talent Pool Diversity - Gender'), 'Talent Pool', 'fa-chart-bar', isset($url) && str_contains($url, 'Talent Pool'));
 }
 sidebarDivider();
 if ($isHrmis && ($isPersonnel || $isICT)) {
