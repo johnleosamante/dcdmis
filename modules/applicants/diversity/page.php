@@ -99,19 +99,16 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
     </nav>
 </div>
 
-<!-- Sub-navigation links bar -->
-<div class="card shadow mb-4 border-left-primary">
-    <div class="card-body p-2 bg-light">
-        <div class="d-flex flex-wrap align-items-center justify-content-start" style="gap: 6px;">
-            <?php foreach ($diversityConfig as $viewName => $info): ?>
-                <a href="<?= customUri('hrmis', $viewName) ?>"
-                    class="btn btn-sm <?= $url === $viewName ? 'btn-primary' : 'btn-light border text-secondary' ?> d-flex align-items-center"
-                    style="gap: 5px; font-weight: 500; border-radius: 20px; padding: 6px 14px; transition: all 0.2s;">
-                    <i class="fas <?= $info['icon'] ?>"></i>
-                    <span><?= e(str_replace(['Applicant ', 'Diversity', 'Demographics'], '', $info['title'])) ?></span>
-                </a>
-            <?php endforeach; ?>
-        </div>
+<div class="mb-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-start" style="gap: 6px;">
+        <?php foreach ($diversityConfig as $viewName => $info): ?>
+            <a href="<?= customUri('hrmis', $viewName) ?>"
+                class="btn btn-sm <?= $url === $viewName ? 'btn-primary' : 'btn-light border text-secondary' ?> d-flex align-items-center"
+                style="gap: 5px; font-weight: 500; border-radius: 20px; padding: 6px 14px; transition: all 0.2s;">
+                <i class="fas <?= $info['icon'] ?>"></i>
+                <span><?= e(str_replace(['Applicant ', 'Diversity', 'Demographics'], '', $info['title'])) ?></span>
+            </a>
+        <?php endforeach; ?>
     </div>
 </div>
 
@@ -310,7 +307,7 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
                         <thead>
                             <tr>
                                 <th class="align-middle" width="5%">Photo</th>
-                                <th class="align-middle" width="30%">Name / Birthdate</th>
+                                <th class="align-middle" width="30%">Name / Date of Birth</th>
                                 <th class="align-middle" width="45%">Education</th>
                                 <th class="align-middle" width="20%">Contact Details</th>
                             </tr>
@@ -366,6 +363,14 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
+                        <tfoot>
+                            <tr class="small">
+                                <th class="align-middle" width="5%">Photo</th>
+                                <th class="align-middle" width="30%">Name / Date of Birth</th>
+                                <th class="align-middle" width="45%">Education</th>
+                                <th class="align-middle" width="20%">Contact Details</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
