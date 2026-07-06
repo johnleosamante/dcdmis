@@ -350,12 +350,13 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                 <!-- Filter Panel Form -->
                 <form method="GET" action="">
                     <input type="hidden" name="v" value="<?= e($_GET['v'] ?? '') ?>">
-                    <?php $isGender = $config['title'] === 'Gender';
-                    $isPosition = $config['title'] === 'Position';
-                    $isAssignment = $config['title'] === 'Assignment'; ?>
+                    <?php
+                    $mode = $config['title'];
+                    $isDiversityGroup = in_array($mode, ['Position', 'Assignment', 'Category', 'Category by Gender', 'District']);
+                    ?>
                     <div class="row">
-                        <?php if (!$isPosition && !$isAssignment) { ?>
-                            <div class="col-md-<?= $isGender ? 12 : 8 ?> mb-2">
+                        <?php if (!$isDiversityGroup) { ?>
+                            <div class="col-md-<?= $mode === 'Gender' ? 12 : 8 ?> mb-2">
                                 <label for="filter-group" class="font-weight-bold text-gray-800 small mb-0"><?= $config['title'] ?></label>
                                 <select id="filter-group" name="group" class="form-control">
                                     <option value="all" <?= setOptionSelected($selectedGroup, 'all') ?>>All</option>
@@ -367,8 +368,8 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                                 </select>
                             </div>
                         <?php }
-                        if (!$isGender) : ?>
-                            <div class="col-md-<?= $isPosition || $isAssignment ? 12 : 4 ?> mb-2">
+                        if ($mode !== 'Gender') : ?>
+                            <div class="col-md-<?= $isDiversityGroup ? 12 : 4 ?> mb-2">
                                 <label for="filter-sex" class="font-weight-bold text-gray-800 small mb-0">Gender</label>
                                 <select id="filter-sex" name="sex" class="form-control">
                                     <option value="all" <?= setOptionSelected($selectedSex, 'all') ?>>All</option>
@@ -435,33 +436,40 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                         cellspacing="0">
                         <thead>
                             <tr>
-                                <th class="align-middle" width="5%">#</th>
-                                <th class="align-middle">Employee Name</th>
-                                <th class="align-middle">Sex at Birth</th>
-                                <th class="align-middle">Position</th>
-                                <th class="align-middle">School / Station</th>
-                                <th class="align-middle">District</th>
+                                <th class="align-middle" width="5%">Photo</th>
+                                <th class="align-middle" width="25%">Name</th>
+                                <th class="align-middle" width="20%">Position</th>
+                                <th class="align-middle" width="40%">Station / District</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            $i = 1;
                             foreach ($allEmployees as $empRow):
-                                $fullName = toName($empRow['last_name'], $empRow['first_name'], $empRow['middle_name'], $empRow['name_extension']);
+                                $employeeName = toName($empRow['last_name'], $empRow['first_name'], $empRow['middle_name'], $empRow['name_extension']);
                                 $sex = $empRow['sex'] ?? '';
                                 $pos = $empRow['position'] ?? '';
                                 $school = $empRow['school'] ?? '';
                                 $district = $empRow['district'] ?? '';
+                                $photo = file_exists(root() . '/' . $empRow['profile_picture']) ? uri() . '/' . $empRow['profile_picture'] : uri() . '/assets/img/user.png';
                                 ?>
                                 <tr class="text-uppercase row-employee">
-                                    <td class="align-middle index-cell"><?= $i++ ?></td>
-                                    <td class="align-middle text-left text-dark">
-                                        <?= e($fullName) ?>
+                                    <td class="align-middle">
+                                        <div class="image-container">
+                                            <span
+                                                class="d-flex justify-content-center align-middle employee-photo rounded-circle overflow-hidden">
+                                                <img height="100%" src="<?= e($photo) ?>" alt="<?= e($employeeName) ?>">
+                                            </span>
+                                            <div class="sex-sign"><?php sex($empRow['sex']) ?></div>
+                                        </div>
                                     </td>
-                                    <td class="align-middle"><?= e($sex) ?></td>
+                                    <td class="align-middle text-left text-dark">
+                                        <?= linkItem(customUri('hrmis', 'Employee Information', $empRow['id']), $employeeName); ?>
+                                    </td>
                                     <td class="align-middle text-left"><?= e($pos) ?></td>
-                                    <td class="align-middle text-left"><?= e($school) ?></td>
-                                    <td class="align-middle text-left"><?= e($district) ?></td>
+                                    <td class="align-middle text-left">
+                                        <div><?= e($school) ?></div>
+                                        <div class="small"><?= e($district) ?></div>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
