@@ -14,6 +14,12 @@ if ($isSchoolPortal || $isNonDivision) {
     sidebarMenuItem(customUri('pis', 'Request Transfer'), 'Request Transfer', 'fa-exchange-alt', isset($url) && str_contains($url, 'Request Transfer'));
 }
 
+$schoolInfo = schoolByHead($userId);
+if ($schoolInfo) {
+    sidebarDivider();
+    sidebarMenuItem(customUri('pis', 'Employees'), 'School Employees', 'fa-users', isset($url) && ($url === 'Employees' || $url === 'Active Employees'));
+}
+
 if (dtsUser($userId) && station($userId)['station_id'] === '143') {
     sidebarDivider();
     sidebarMenuItem(customUri('pis', 'Monitoring Tools'), 'Monitoring Tools', 'fa-binoculars', isset($url) && str_contains($url, 'Monitoring Tools'));
