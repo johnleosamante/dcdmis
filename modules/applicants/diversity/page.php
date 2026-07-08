@@ -19,7 +19,7 @@ $diversityConfig = [
         'icon' => 'fa-hourglass-half',
         'db_function' => 'applicantDiversityGeneration',
         'headers' => ['Generation', 'Male', 'Female', 'Total'],
-        'chart_type' => 'bar',
+        'chart_type' => 'pie',
         'export_id' => 'generation',
     ],
     'Talent Pool Diversity - Religion' => [
@@ -27,7 +27,7 @@ $diversityConfig = [
         'icon' => 'fa-hands-helping',
         'db_function' => 'applicantDiversityReligion',
         'headers' => ['Religion', 'Male', 'Female', 'Total'],
-        'chart_type' => 'doughnut',
+        'chart_type' => 'pie',
         'export_id' => 'religion',
     ],
     'Talent Pool Diversity - Ethnic Group' => [
@@ -35,7 +35,7 @@ $diversityConfig = [
         'icon' => 'fa-users',
         'db_function' => 'applicantDiversityIndigenous',
         'headers' => ['Indigenous Group', 'Male', 'Female', 'Total'],
-        'chart_type' => 'doughnut',
+        'chart_type' => 'pie',
         'export_id' => 'indigenous',
     ],
     'Talent Pool Diversity - PWD' => [
@@ -118,8 +118,9 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
 
 <div class="row">
     <!-- Visual Chart Card -->
-    <div class="col-xl-5 col-lg-12 mb-4">
-        <div class="card shadow h-100">
+    <?php $isUndergraduateCourse = $config['title'] === 'Undergraduate Courses'; ?>
+    <div class="col-xl-<?= $isUndergraduateCourse ? '12' : '5' ?> col-lg-12 mb-4">
+        <div class="card shadow <?= $isUndergraduateCourse ? 'h-100' : '' ?>">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-dark text-uppercase">
                     <?= e($config['title']) ?> Chart
@@ -138,15 +139,17 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
     </div>
 
     <!-- Data Table Card -->
-    <div class="col-xl-7 col-lg-12 mb-4">
-        <div class="card shadow h-100">
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white border-bottom">
+    <div class="col-xl-<?= $isUndergraduateCourse ? '12' : '7' ?> col-lg-12 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-bottom">
                 <h6 class="m-0 font-weight-bold text-uppercase text-dark">
                     <?= e($config['title']) ?> Summary
                 </h6>
-                <div class="d-inline-block">
-                    <?php linkButtonSplit(customUri('export', 'applicant-diversity', $config['export_id']), 'Export', 'fa-file-excel', 'Export to Excel', 'success') ?>
+                <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis() ?>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <?php linkDropdownItem(customUri('export', 'applicant-diversity', $config['export_id']), 'Export', 'fa-file-excel') ?>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -210,8 +213,7 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
 <div class="row mb-0">
     <div class="col-12">
         <div class="card shadow" id="diversity-breakdown">
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white border-bottom">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-bottom">
                 <h6 class="m-0 font-weight-bold text-dark text-uppercase">
                     <?= e($config['title']) ?> Breakdown
                 </h6>
@@ -303,7 +305,7 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
                 </form>
 
                 <div class="table-responsive font-weight-normal">
-                    <table class="table table-hover mb-0 text-center" id="data-table-next" width="100%" cellspacing="0">
+                    <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th class="align-middle" width="5%">Photo</th>
@@ -381,26 +383,27 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         $(document).ready(function () {
-            // Initialize DataTable
-            const table = $('#diversity-breakdown-table').DataTable({
-                responsive: true,
-                pagingType: "simple",
-                lengthMenu: [
-                    [10, 25, 50, 75, 100, -1],
-                    [10, 25, 50, 75, 100, "All"],
-                ],
-                paging: true,
-                order: [],
-                autoWidth: false,
-                info: true,
-            });
-
-            // Dynamic column indexing for visible rows
-            table.on('order.dt search.dt', function () {
-                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1;
+            const breakdownTable = $('#data-table-next');
+            if (breakdownTable.length) {
+                const table = breakdownTable.DataTable({
+                    responsive: true,
+                    pagingType: "simple",
+                    lengthMenu: [
+                        [10, 25, 50, 75, 100, -1],
+                        [10, 25, 50, 75, 100, "All"],
+                    ],
+                    paging: true,
+                    order: [],
+                    autoWidth: false,
+                    info: true,
                 });
-            }).draw();
+
+                table.on('order.dt search.dt', function () {
+                    table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                        cell.innerHTML = i + 1;
+                    });
+                }).draw();
+            }
         });
 
         const rawData = <?= json_encode($rows) ?>;
