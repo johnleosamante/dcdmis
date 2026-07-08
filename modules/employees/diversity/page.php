@@ -20,7 +20,7 @@ $demographicsConfig = [
         'icon' => 'fa-tags',
         'db_function' => 'demographicsCategory',
         'headers' => ['Category', 'Total'],
-        'chart_type' => 'doughnut',
+        'chart_type' => 'pie',
         'export_id' => 'category',
     ],
     'Workforce Diversity - Category by Gender' => [
@@ -36,7 +36,7 @@ $demographicsConfig = [
         'icon' => 'fa-graduation-cap',
         'db_function' => 'demographicsEducation',
         'headers' => ['Education Level', 'Male', 'Female', 'Total'],
-        'chart_type' => 'bar',
+        'chart_type' => 'pie',
         'export_id' => 'education',
     ],
     'Workforce Diversity - Position' => [
@@ -52,7 +52,7 @@ $demographicsConfig = [
         'icon' => 'fa-map-marked-alt',
         'db_function' => 'demographicsDistrict',
         'headers' => ['District', 'Male', 'Female', 'Total'],
-        'chart_type' => 'polarArea',
+        'chart_type' => 'pie',
         'export_id' => 'districts',
     ],
     'Workforce Diversity - Assignment' => [
@@ -68,7 +68,7 @@ $demographicsConfig = [
         'icon' => 'fa-hourglass-half',
         'db_function' => 'demographicsGeneration',
         'headers' => ['Generation', 'Male', 'Female', 'Total'],
-        'chart_type' => 'bar',
+        'chart_type' => 'pie',
         'export_id' => 'generation',
     ],
     'Workforce Diversity - Religion' => [
@@ -76,7 +76,7 @@ $demographicsConfig = [
         'icon' => 'fa-hands-helping',
         'db_function' => 'demographicsReligion',
         'headers' => ['Religion', 'Male', 'Female', 'Total'],
-        'chart_type' => 'doughnut',
+        'chart_type' => 'pie',
         'export_id' => 'religion',
     ],
     'Workforce Diversity - Ethnic Group' => [
@@ -84,7 +84,7 @@ $demographicsConfig = [
         'icon' => 'fa-users',
         'db_function' => 'demographicsIndigenous',
         'headers' => ['Indigenous Group', 'Male', 'Female', 'Total'],
-        'chart_type' => 'doughnut',
+        'chart_type' => 'pie',
         'export_id' => 'indigenous',
     ],
     'Workforce Diversity - PWD' => [
@@ -100,7 +100,7 @@ $demographicsConfig = [
         'icon' => 'fa-user-friends',
         'db_function' => 'demographicsSoloParent',
         'headers' => ['Solo Parent Status', 'Male', 'Female', 'Total'],
-        'chart_type' => 'pie',
+        'chart_type' => 'doughnut',
         'export_id' => 'solo-parents',
     ],
 ];
@@ -154,7 +154,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
 <div class="row">
     <!-- Visual Chart Card -->
     <div class="col-xl-5 col-lg-12 mb-4">
-        <div class="card shadow h-100">
+        <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-dark text-uppercase">
                     <?= e($config['title']) ?> Chart
@@ -174,13 +174,16 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
 
     <!-- Data Table Card -->
     <div class="col-xl-7 col-lg-12 mb-4">
-        <div class="card shadow h-100">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white border-bottom">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-bottom">
                 <h6 class="m-0 font-weight-bold text-uppercase text-dark">
                     <?= e($config['title']) ?> Summary
                 </h6>
-                <div class="d-inline-block">
-                    <?php linkButtonSplit(customUri('export', 'demographics', $config['export_id']), 'Export', 'fa-file-excel', 'Export to Excel', 'success') ?>
+                <div class="dropdown no-arrow">
+                    <?php dropdownEllipsis() ?>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <?php linkDropdownItem(customUri('export', 'demographics', $config['export_id']), 'Export', 'fa-file-excel') ?>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -245,7 +248,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
     <div class="col-12">
         <div class="card shadow" id="demographics-breakdown">
             <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white border-bottom">
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-bottom">
                 <h6 class="m-0 font-weight-bold text-dark text-uppercase">
                     <?= e($config['title']) ?> Breakdown
                 </h6>
@@ -428,7 +431,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                 </form>
 
                 <div class="table-responsive font-weight-normal">
-                    <table class="table table-hover mb-0 text-center" id="data-table-next" width="100%"
+                    <table class="table table-hover mb-0 text-center" id="data-table" width="100%"
                         cellspacing="0">
                         <thead>
                             <tr>
@@ -485,26 +488,27 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         $(document).ready(function () {
-            // Initialize DataTable
-            const table = $('#demographics-breakdown-table').DataTable({
-                responsive: true,
-                pagingType: "simple",
-                lengthMenu: [
-                    [10, 25, 50, 75, 100, -1],
-                    [10, 25, 50, 75, 100, "All"],
-                ],
-                paging: true,
-                order: [],
-                autoWidth: false,
-                info: true,
-            });
-
-            // Dynamic column indexing for visible rows
-            table.on('order.dt search.dt', function () {
-                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1;
+            const breakdownTable = $('#data-table-next');
+            if (breakdownTable.length) {
+                const table = breakdownTable.DataTable({
+                    responsive: true,
+                    pagingType: "simple",
+                    lengthMenu: [
+                        [10, 25, 50, 75, 100, -1],
+                        [10, 25, 50, 75, 100, "All"],
+                    ],
+                    paging: true,
+                    order: [],
+                    autoWidth: false,
+                    info: true,
                 });
-            }).draw();
+
+                table.on('order.dt search.dt', function () {
+                    table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                        cell.innerHTML = i + 1;
+                    });
+                }).draw();
+            }
         });
 
         const rawData = <?= json_encode($rows) ?>;
