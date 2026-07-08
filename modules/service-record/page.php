@@ -7,7 +7,16 @@ if (!$isPis && !$isHrmis) {
 
 $employeeId = (int) sanitize(decode($_GET['id'] ?? null));
 
-if ($isPis && $userId !== $employeeId) {
+$isHeadOfThisEmployee = false;
+$schoolInfo = schoolByHead($userId);
+if ($schoolInfo && $employeeId > 0) {
+    $empStation = station($employeeId);
+    if ($empStation && $empStation['station_id'] === $schoolInfo['id']) {
+        $isHeadOfThisEmployee = true;
+    }
+}
+
+if ($isPis && $userId !== $employeeId && !$isHeadOfThisEmployee) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
@@ -44,7 +53,7 @@ if ($isHrmis) {
         <?php if ($isHrmis) {
             contentTitleWithModal('Service Record : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/modules/service-record/save-service-record-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus');
         } else {
-            contentTitleWithLink('Service Record', uri() . '/pis');
+            contentTitleWithLink('Service Record : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/pis');
         } ?>
     </div>
 
