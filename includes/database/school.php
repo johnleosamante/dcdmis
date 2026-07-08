@@ -210,3 +210,18 @@ function deleteDistrict($id)
 {
     return delete('districts', '`id` = ?', [$id]);
 }
+
+function schoolByHead($headId)
+{
+    return find("SELECT * FROM `schools` WHERE `head_id` = ? LIMIT 1", [$headId]);
+}
+
+function isSchoolHeadOfEmployee($headId, $employeeId)
+{
+    $school = schoolByHead($headId);
+    if (!$school) {
+        return false;
+    }
+    $empStation = station($employeeId);
+    return $empStation && $empStation['station_id'] === $school['id'];
+}
