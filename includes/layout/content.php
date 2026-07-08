@@ -60,12 +60,15 @@ if (!isset($url) || $url === 'dashboard') {
             break;
         case 'Employee Information':
         case 'Edit Employee Information':
+        case 'School Employee Information':
             $file = 'employees/employee-information';
             break;
         case 'Service Record':
+        case 'School Employee Service Record':
             $file = 'service-record/page';
             break;
         case '201 Files':
+        case 'School Employee 201 Files':
             $file = '201-file/page';
             break;
         case 'Payslips':
@@ -103,6 +106,7 @@ if (!isset($url) || $url === 'dashboard') {
             $file = 'race/page';
             break;
         case 'Trainings':
+        case 'School Employee Trainings':
             $file = 'trainings/attended-trainings';
             break;
         case 'Scheduled Trainings':
