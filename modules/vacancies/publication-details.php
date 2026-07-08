@@ -219,7 +219,8 @@ $employmentChartData = [
             <h6 class="m-0 font-weight-bold">Applications for Initial Screening</h6>
             <div>
                 <?php linkButtonSplit(customUri('hrmis', 'Qualified Applicants', $publicationId), 'Qualified', 'fa-thumbs-up', 'View Qualified Applicants', 'success');
-                linkButtonSplit(customUri('hrmis', 'Disqualified Applicants', $publicationId), 'Disqualified', 'fa-thumbs-down', 'View Disqualified Applicants', 'danger'); ?>
+                linkButtonSplit(customUri('hrmis', 'Disqualified Applicants', $publicationId), 'Disqualified', 'fa-thumbs-down', 'View Disqualified Applicants', 'danger');
+                linkButtonSplit(uri() . '/export?v=' . encode('publication-applicants-details') . '&id=' . encode($publicationId), 'Export Details', 'fa-file-excel', 'Export Applicant Details', 'info'); ?>
             </div>
         </div>
     </div>
