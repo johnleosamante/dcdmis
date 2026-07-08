@@ -1,6 +1,9 @@
 <?php
 // modules/employees/active-employees.php
-if (!$isHrmis && !$isHrtdms && !$isDmis) {
+$schoolInfo = schoolByHead($userId);
+$isSchoolHead = !empty($schoolInfo);
+
+if (!$isHrmis && !$isHrtdms && !$isDmis && !($isPis && $isSchoolHead)) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -13,7 +16,7 @@ messageAlert($showAlert, $message, $success);
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <li class="breadcrumb-item active">
-                <?= $isHrmis ? 'Active' : 'Employees' ?>
+                <?= ($isPis && $isSchoolHead) ? 'School Employees' : ($isHrmis ? 'Active' : 'Employees') ?>
             </li>
         </ol>
     </nav>
@@ -30,7 +33,7 @@ messageAlert($showAlert, $message, $success);
         <?php if ($isHrmis) {
             contentTitleWithLink('Active Employees', uri() . '/hrmis');
         } else {
-            contentTitle('Employees');
+            contentTitle(($isPis && $isSchoolHead) ? 'School Employees' : 'Employees');
         } ?>
     </div>
 
@@ -70,7 +73,8 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = activeEmployees();
+                    $schoolIdForEmployeeList = ($isPis && $isSchoolHead) ? $schoolInfo['id'] : null;
+                    $query = activeEmployees($schoolIdForEmployeeList);
                     foreach ($query as $row):
                         $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
                         $photo = file_exists(root() . '/' . $row['profile_picture']) ? uri() . '/' . $row['profile_picture'] : uri() . '/assets/img/user.png';
@@ -90,6 +94,8 @@ messageAlert($showAlert, $message, $success);
                                     linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
                                 } elseif ($isDmis) {
                                     modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName);
+                                } elseif ($isPis && $isSchoolHead) {
+                                    linkItem(customUri('pis', 'Employee Information', $row['id']), $employeeName);
                                 } else {
                                     modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                                 } ?>
@@ -102,7 +108,13 @@ messageAlert($showAlert, $message, $success);
                             </td>
                             <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
                             <td class="align-middle">
-                                <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']) ?>
+                                <?php
+                                if ($isPis) {
+                                    echo e(schoolById($row['station_id'])['name']);
+                                } else {
+                                    linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']);
+                                }
+                                ?>
                             </td>
                             <?php if ($isHrmis): ?>
                                 <td class="align-middle">
@@ -128,6 +140,11 @@ messageAlert($showAlert, $message, $success);
                                                     modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
                                                     modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
                                                 }
+                                            } elseif ($isPis && $isSchoolHead) {
+                                                linkDropdownItem(customUri('pis', 'School Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
+                                                linkDropdownItem(customUri('pis', 'School Employee Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
+                                                linkDropdownItem(customUri('pis', 'School Employee 201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
+                                                linkDropdownItem(customUri('pis', 'School Employee Trainings', $row['id']), 'Trainings', 'fa-chalkboard-teacher', 'Trainings');
                                             } else {
                                                 modalDropdownItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), 'Set User', 'fa-user-cog', 'Set User Access');
                                                 modalDropdownItem(uri() . '/modules/users/reset-user-dialog.php?id=' . cipher($row['id']), 'Reset', 'fa-undo-alt', 'Reset User');
