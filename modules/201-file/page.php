@@ -7,7 +7,16 @@ if (!$isPis && !$isHrmis) {
 
 $employeeId = (int) sanitize(decode($_GET['id'] ?? null));
 
-if ($isPis && $userId !== $employeeId) {
+$isHeadOfThisEmployee = false;
+$schoolInfo = schoolByHead($userId);
+if ($schoolInfo && $employeeId > 0) {
+    $empStation = station($employeeId);
+    if ($empStation && $empStation['station_id'] === $schoolInfo['id']) {
+        $isHeadOfThisEmployee = true;
+    }
+}
+
+if ($isPis && $userId !== $employeeId && !$isHeadOfThisEmployee) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
@@ -50,7 +59,7 @@ if (!is_dir($uploadDirectory)) {
         <?php if ($isHrmis) {
             contentTitleWithModal('201 Files : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus');
         } else {
-            contentTitleWithLink('201 Files', uri() . '/pis');
+            contentTitleWithLink('201 Files : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/pis');
         } ?>
     </div>
 
