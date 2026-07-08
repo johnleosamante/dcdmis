@@ -93,7 +93,12 @@ if (empty($userId) && isset($_COOKIE["{$prefix}remember_token"])) {
                 $_SESSION["{$prefix}portal"] = $portal;
                 $_SESSION["{$prefix}email"] = $rememberAccount['email_address'];
 
-                $stationName = $portal === 'sch_portal' ? '' : $access ?? '';
+                if ($portal === 'sch_portal') {
+                    $school = find("SELECT `alias` FROM `schools` WHERE id = ? LIMIT 1", [$access]);
+                    $stationName = $school['alias'] ?? '';
+                } else {
+                    $stationName = $access ?? '';
+                }
                 $_SESSION["{$prefix}station"] = $stationName;
 
                 $userId = $cookieEmployeeId;
