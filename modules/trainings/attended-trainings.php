@@ -7,7 +7,16 @@ if (!$isPis && !$isHrmis && !$isHrtdms) {
 
 $employeeId = (int) sanitize(decode($_GET['id'] ?? null));
 
-if ($isPis && $userId !== $employeeId) {
+$isHeadOfThisEmployee = false;
+$schoolInfo = schoolByHead($userId);
+if ($schoolInfo && $employeeId > 0) {
+    $empStation = station($employeeId);
+    if ($empStation && $empStation['station_id'] === $schoolInfo['id']) {
+        $isHeadOfThisEmployee = true;
+    }
+}
+
+if ($isPis && $userId !== $employeeId && !$isHeadOfThisEmployee) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
