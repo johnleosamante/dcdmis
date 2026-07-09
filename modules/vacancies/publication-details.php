@@ -153,7 +153,7 @@ $employmentChartData = [
 
 <div class="row">
     <div class="col-xl-8 col-lg-7 mb-4">
-        <div class="card shadow h-100">
+        <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Applicants by Position</h6>
             </div>
@@ -173,7 +173,7 @@ $employmentChartData = [
     </div>
 
     <div class="col-xl-4 col-lg-5 mb-4">
-        <div class="card shadow h-100">
+        <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Employment Status</h6>
             </div>
