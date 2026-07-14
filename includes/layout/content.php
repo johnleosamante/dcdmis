@@ -124,7 +124,7 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Attendance Summary':
             $file = 'trainings/modules/attendance_summary';
             break;
-        case 'Program':
+        case 'Programs':
             $file = 'trainings/modules/program-dashboard';
             break;
         case 'Program Detail':
