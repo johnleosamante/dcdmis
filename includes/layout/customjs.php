@@ -12,7 +12,7 @@ if (isset($_GET['v'])) {
         echo '<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>';
     } else if ($v === 'ProjectDetail') {
         echo '<script src="' . uri() . '/modules/lnd-activity/activity.js" type="text/javascript"></script>';
-    } else if ($v === 'Add Attendance') {
+    } else if ($v === 'Attendance') {
         echo '<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>';
         echo '<script src="' . uri() . '/modules/trainings/modules/activity.js" type="text/javascript"></script>';
     } else if ($v === 'Attendance Summary') {

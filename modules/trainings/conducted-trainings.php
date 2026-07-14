@@ -34,11 +34,11 @@ messageAlert($showAlert, $message, $success);
                 <thead>
                     <tr>
                         <th class="align-middle" width="15%">Code</th>
-                        <th class="align-middle" width="30%">Title of Learning &amp; Development Interventions /
+                        <th class="align-middle" width="30%">Title of Learning and Development Interventions /
                             Training Programs</th>
                         <th class="align-middle" width="5%">From</th>
                         <th class="align-middle" width="5%">To</th>
-                        <th class="align-middle" width="15%">Type of Learning &amp; Development</th>
+                        <th class="align-middle" width="15%">Type of Learning and Development</th>
                         <th class="align-middle" width="25%">Conducted / Sponsored by</th>
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
@@ -62,7 +62,7 @@ messageAlert($showAlert, $message, $success);
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                                         <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['id']), 'View', 'fa-eye', 'View Training');
-                                        linkDropdownItem(customUri('hrtdms', 'Add Attendance', $training['id']), 'Attendance', 'fa-calendar-check', 'Add Attendance');
+                                        linkDropdownItem(customUri('hrtdms', 'Attendance', $training['id']), 'Attendance', 'fa-calendar-check', 'Attendance');
                                         linkDropdownItem(customUri('hrtdms', 'Add Training Participants', $training['id']), 'Add Participants', 'fa-user-plus', 'Add Participants');
                                         modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['id']), 'Edit', 'fa-edit', 'Edit Training') ?>
                                     </div>
@@ -75,11 +75,11 @@ messageAlert($showAlert, $message, $success);
                 <tfoot>
                     <tr>
                         <th class="align-middle" width="15%">Code</th>
-                        <th class="align-middle" width="30%">Title of Learning &amp; Development Interventions /
+                        <th class="align-middle" width="30%">Title of Learning and Development Interventions /
                             Training Programs</th>
                         <th class="align-middle" width="5%">From</th>
                         <th class="align-middle" width="5%">To</th>
-                        <th class="align-middle" width="15%">Type of Learning &amp; Development</th>
+                        <th class="align-middle" width="15%">Type of Learning and Development</th>
                         <th class="align-middle" width="25%">Conducted / Sponsored by</th>
                         <th class="align-middle" width="5%">Action</th>
                     </tr>
