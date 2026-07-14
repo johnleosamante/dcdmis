@@ -24,6 +24,8 @@ if (isset($_POST['save-training'])) {
     $rawId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
     $trainingId = sanitize($rawId);
     $data = [
+        'program_id' => sanitize($_POST['program_id']),
+        'project_id' => sanitize($_POST['project_id']),
         'title' => sanitize($_POST['title']),
         'from' => sanitize($_POST['from']),
         'to' => sanitize($_POST['to']),
@@ -44,11 +46,11 @@ if (isset($_POST['save-training'])) {
         $status = 'saved';
         $year = toDate($data['from'], 'y', date('y'));
         $trainingId = "HRTD-$year-" . sprintf("%04d", countTrainings($year) + 1);
-        $affectedTraining = createTraining($trainingId, $data['title'], $data['from'], $data['to'], $data['hours'], $data['type'], $data['level'], $data['sponsor'], $data['venue'], $data['dates'], $signatory, $data['hasCert'], $data['division']);
+        $affectedTraining = createTraining($trainingId, $data['program_id'], $data['project_id'], $data['title'], $data['from'], $data['to'], $data['hours'], $data['type'], $data['level'], $data['sponsor'], $data['venue'], $data['dates'], $signatory, $data['hasCert'], $data['division']);
     } else {
         $logMessage = 'Updated training';
         $status = 'updated';
-        $affectedTraining = updateTraining($trainingId, $data['title'], $data['from'], $data['to'], $data['hours'], $data['type'], $data['level'], $data['sponsor'], $data['venue'], $data['dates'], $signatory, $data['hasCert'], $data['division']);
+        $affectedTraining = updateTraining($trainingId, $data['program_id'], $data['project_id'], $data['title'], $data['from'], $data['to'], $data['hours'], $data['type'], $data['level'], $data['sponsor'], $data['venue'], $data['dates'], $signatory, $data['hasCert'], $data['division']);
     }
 
     if ($affectedTraining === false) {
