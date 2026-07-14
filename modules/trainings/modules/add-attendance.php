@@ -67,10 +67,19 @@ messageAlert($showAlert, $message, $success);
 
         <div class="table-responsive mb-3">
             <table cellspacing="0">
-                <tr>
-                    <th class="pr-5" scope="row">Program:</th>
-                    <td class="text-uppercase"><b><?= e($program[0]['program_name']) ?></b> <span class="badge badge-secondary">Project : <?= $project[0]['project_name']?></span></td>
-                </tr>
+                <?php if (isset($program[0])): ?>
+                    <tr>
+                        <th class="pr-5" scope="row">Program</th>
+                        <td class="text-uppercase"><?= e($program[0]['program_name']) ?>
+                        </td>
+                    </tr>
+                <?php endif;
+                if (isset($project[0])): ?>
+                    <tr>
+                        <th class="pr-5" scope="row">Project</th>
+                        <td class="text-uppercase"><?= e($project[0]['project_name']) ?></td>
+                    </tr>
+                <?php endif; ?>
                 <tr>
                     <th class="pr-5" scope="row">Code</th>
                     <td class="text-uppercase"><?= e($training['id']) ?></td>
@@ -130,7 +139,7 @@ messageAlert($showAlert, $message, $success);
 
 
         </div>
- 
+
         <?php
         $dates = [];
         $start = new DateTime($training['start_date']);
@@ -145,12 +154,8 @@ messageAlert($showAlert, $message, $success);
         <ul class="nav nav-tabs" id="attendanceTabs" role="tablist">
             <?php foreach ($dates as $i => $date): ?>
                 <li class="nav-item" style="border: solid 1px #dadada;">
-                    <a class="nav-link <?= $i == 0 ? 'active' : '' ?>" 
-                       id="tab-<?= $i ?>" 
-                       data-toggle="tab" 
-                       href="#day<?= $i ?>" 
-                       role="tab"
-                       data-date="<?= $date ?>"> 
+                    <a class="nav-link <?= $i == 0 ? 'active' : '' ?>" id="tab-<?= $i ?>" data-toggle="tab"
+                        href="#day<?= $i ?>" role="tab" data-date="<?= $date ?>">
 
                         <i class="fas fa-calendar-alt me-1"></i>
                         <strong>Day</strong> <?= $i + 1 ?> (<?= date('M d, Y', strtotime($date)) ?>)
@@ -169,11 +174,12 @@ messageAlert($showAlert, $message, $success);
         <div class="mb-3 d-flex" style="margin-top: 15px;">
 
             <input type="hidden" id="csrf_token" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-            <input type="text" id="qrInput" class="form-control me-2"  style="width: 50%;"
-                   placeholder="Scan ID or type employee name..." autofocus>
-            <button id="addAttendanceBtn" class="btn btn-primary mr-1" ><i class="fas fa-plus"></i> Add Attendance </button>
+            <input type="text" id="qrInput" class="form-control me-2" style="width: 50%;"
+                placeholder="Scan ID or type employee name..." autofocus>
+            <button id="addAttendanceBtn" class="btn btn-primary mr-1"><i class="fas fa-plus"></i> Add Attendance
+            </button>
 
-            <button id="viewAttendanceSum" class="btn btn-info mr-1"title="View Actual Attendees">
+            <button id="viewAttendanceSum" class="btn btn-info mr-1" title="View Actual Attendees">
                 <i class="fas fa-list"></i> View
             </button>
 
@@ -183,8 +189,7 @@ messageAlert($showAlert, $message, $success);
 
 
             <a href="http://<?= $_SERVER['HTTP_HOST'] ?>/hrtdms/?v=<?= base64_encode('Attendance Summary') ?>&id=<?= base64_encode($training['id']) ?>"
-               target="_blank"
-               class="btn btn-info">
+                target="_blank" class="btn btn-info">
                 <i class="fas fa-chart-line"></i> Summary
 
             </a>
@@ -193,8 +198,7 @@ messageAlert($showAlert, $message, $success);
         <div class="tab-content mt-3" style="background-color: white; padding: 15px;">
             <?php foreach ($dates as $i => $date): ?>
                 <div class="tab-pane fade <?= $i == 0 ? 'show active' : '' ?>" id="day<?= $i ?>" role="tabpanel">
-                    <table class="table table-hover table-bordered table-striped text-center attendance-table"
-                           id="">
+                    <table class="table table-hover table-bordered table-striped text-center attendance-table" id="">
 
                         <thead>
                             <tr>
@@ -220,11 +224,9 @@ messageAlert($showAlert, $message, $success);
 
                                     <td>
                                         <?php if (!empty($trainingAttendance['img_url'])): ?>
-                                            <i class="fas fa-image text-primary view-img"
-                                               style="cursor:pointer;"
-                                               data-img="<?= $trainingAttendance['img_url'] ?>"
-                                               title="View Image"></i>
-                                           <?php else: ?>
+                                            <i class="fas fa-image text-primary view-img" style="cursor:pointer;"
+                                                data-img="<?= $trainingAttendance['img_url'] ?>" title="View Image"></i>
+                                        <?php else: ?>
                                             <span class="text-muted">No image</span>
                                         <?php endif; ?>
                                     </td>
@@ -254,9 +256,8 @@ messageAlert($showAlert, $message, $success);
                                             <?php dropdownEllipsis(); ?>
 
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                                <a href="javascript:void(0);"
-                                                   class="dropdown-item"
-                                                   onclick="showDeleteAttendance('<?= $trainingAttendance['id'] ?>')">
+                                                <a href="javascript:void(0);" class="dropdown-item"
+                                                    onclick="showDeleteAttendance('<?= $trainingAttendance['id'] ?>')">
 
                                                     <i class="fas fa-trash"></i> Delete
                                                 </a>
@@ -279,7 +280,6 @@ messageAlert($showAlert, $message, $success);
 </div>
 <!--Custom STYLE-->
 <style>
-
     .ui-autocomplete {
         background: #fff;
         border: 1px solid #ddd;
@@ -288,7 +288,7 @@ messageAlert($showAlert, $message, $success);
         overflow-y: auto;
         overflow-x: hidden;
         padding: 5px 0;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
         z-index: 9999;
 
     }
@@ -307,7 +307,6 @@ messageAlert($showAlert, $message, $success);
         color: #fff;
         border-radius: 6px;
     }
-
 </style>
 
 <div class="modal fade" id="attendanceModal" tabindex="-1">
@@ -347,10 +346,9 @@ messageAlert($showAlert, $message, $success);
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <input type="hidden" name="AttendanceT_id_hidden" id="AttendanceT_id_hidden" value="">
-                <button type="button" class="btn btn-danger" onclick="deleteAttendanceTraining()">Confirm Delete</button>
+                <button type="button" class="btn btn-danger" onclick="deleteAttendanceTraining()">Confirm
+                    Delete</button>
             </div>
         </div>
     </div>
 </div>
-
-
