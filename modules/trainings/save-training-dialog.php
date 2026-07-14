@@ -16,6 +16,7 @@ $modalTitle = 'Add Training';
 $notFound = true;
 $programs = getPrograms();
 $projects = getProjectList();
+$project_id = null;
 
 if ($training) {
     $trainingId = $training['id'];
