@@ -27,7 +27,7 @@ if (!$training_id || !$date) {
 }
 
 // DATABASE
-$mysqli = new mysqli(HOSTNAME, USER, '', DATABASE);
+$mysqli = new mysqli(HOSTNAME, USER, PASSWORD, DATABASE);
 
 if ($mysqli->connect_error) {
     die("Database connection failed: " . $mysqli->connect_error);
@@ -384,16 +384,16 @@ $canvas = $dompdf->getCanvas();
 $font = $dompdf->getFontMetrics()->get_font("Helvetica", "normal");
 
 $canvas->page_text(
-        800,
-        560,
-        "Page {PAGE_NUM} of {PAGE_COUNT}",
-        $font,
-        10
+    800,
+    560,
+    "Page {PAGE_NUM} of {PAGE_COUNT}",
+    $font,
+    10
 );
 
 // STREAM PDF
 $dompdf->stream(
-        "attendance_report_" . date("Ymd", strtotime($date)) . ".pdf",
-        ["Attachment" => false]
+    "attendance_report_" . date("Ymd", strtotime($date)) . ".pdf",
+    ["Attachment" => false]
 );
 ?>
