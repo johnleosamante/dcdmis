@@ -1,30 +1,4 @@
 <?php
-// Self-healing database check to ensure required columns exist
-try {
-    $columnsStatus = query("SHOW COLUMNS FROM `awards_categories_nominees` LIKE 'status'");
-    if (empty($columnsStatus)) {
-        query("ALTER TABLE `awards_categories_nominees` ADD COLUMN `status` VARCHAR(50) NOT NULL DEFAULT 'Nominated'");
-    }
-    $columnsType = query("SHOW COLUMNS FROM `awards_categories_nominees` LIKE 'nominee_type'");
-    if (empty($columnsType)) {
-        query("ALTER TABLE `awards_categories_nominees` ADD COLUMN `nominee_type` VARCHAR(50) NOT NULL DEFAULT 'Employee'");
-    }
-    $columnsLevel = query("SHOW COLUMNS FROM `awards_categories_nominees` LIKE 'level'");
-    if (empty($columnsLevel)) {
-        query("ALTER TABLE `awards_categories_nominees` ADD COLUMN `level` VARCHAR(50) NULL AFTER `nominee_type`");
-    }
-    $colNomStart = query("SHOW COLUMNS FROM `award_schedule` LIKE 'nomination_start'");
-    if (empty($colNomStart)) {
-        query("ALTER TABLE `award_schedule` ADD COLUMN `nomination_start` DATE DEFAULT NULL AFTER `venue`");
-    }
-    $colNomDeadline = query("SHOW COLUMNS FROM `award_schedule` LIKE 'nomination_deadline'");
-    if (empty($colNomDeadline)) {
-        query("ALTER TABLE `award_schedule` ADD COLUMN `nomination_deadline` DATE DEFAULT NULL AFTER `nomination_start`");
-    }
-} catch (Exception $e) {
-    error_log($e->getMessage());
-}
-
 // recognitions
 function recognitions($employee_id)
 {
