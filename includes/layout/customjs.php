@@ -6,20 +6,16 @@ if (isset($_GET['v'])) {
     if ($v === 'Courses') {
         echo ' <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
         echo '<script src="' . uri() . '/modules/courses/course.js" type="text/javascript"></script>';
-    } else
-    if ($v === 'Activity') {
+    } else if ($v === 'Activity') {
         echo ' <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
         echo '<script src="' . uri() . '/modules/lnd-activity/activity.js" type="text/javascript"></script>';
         echo '<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>';
-    } else
-    if ($v === 'ProjectDetail') {
+    } else if ($v === 'ProjectDetail') {
         echo '<script src="' . uri() . '/modules/lnd-activity/activity.js" type="text/javascript"></script>';
-    } else
-    if ($v === 'Add Attendance') {
+    } else if ($v === 'Add Attendance') {
         echo '<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>';
         echo '<script src="' . uri() . '/modules/trainings/modules/activity.js" type="text/javascript"></script>';
-    } else
-    if ($v === 'Attendance Summary') {
+    } else if ($v === 'Attendance Summary') {
         echo '<script src="' . uri() . '/assets/vendor/toastr/toastr.min.js" type="text/javascript"></script>';
         echo '<script src="' . uri() . '/modules/trainings/modules/activity.js" type="text/javascript"></script>';
 
@@ -35,7 +31,7 @@ if (isset($_GET['v'])) {
 
         // Print Button
         echo '<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>';
-    } else if ($v === 'Program') {
+    } else if ($v === 'Programs') {
         echo '<script src="' . uri() . '/modules/trainings/modules/program.js" type="text/javascript"></script>';
     } else if ($v === 'Conducted Trainings') {
         echo '<script src="' . uri() . '/modules/trainings/modules/program.js" type="text/javascript"></script>';
@@ -47,4 +43,3 @@ if (isset($_GET['v'])) {
         echo '<script src="' . uri() . '/modules/rewards/reward.js" type="text/javascript"></script>';
     }
 }
-?>
