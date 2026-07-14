@@ -20,11 +20,13 @@ function countTrainings($year)
     return is_array($result) ? count($result) : 0;
 }
 
-function createTraining($training_id, $title, $start_date, $end_date, $number_of_hours, $training_type_id, $training_level_id, $sponsored_by, $venue, $unconsecutive_dates, $signatory_id, $has_certificate, $functional_division_id)
+function createTraining($training_id, $program_id, $project_id, $title, $start_date, $end_date, $number_of_hours, $training_type_id, $training_level_id, $sponsored_by, $venue, $unconsecutive_dates, $signatory_id, $has_certificate, $functional_division_id)
 {
     $data = [
         'id' => $training_id,
         'title' => $title,
+        'program_id' => $program_id,
+        'project_id' => $project_id,
         'start_date' => $start_date,
         'end_date' => $end_date,
         'training_level_id' => $training_level_id,
@@ -40,10 +42,12 @@ function createTraining($training_id, $title, $start_date, $end_date, $number_of
     return insert('trainings', $data);
 }
 
-function updateTraining($training_id, $title, $start_date, $end_date, $number_of_hours, $training_type_id, $training_level_id, $sponsored_by, $venue, $unconsecutive_dates, $signatory_id, $has_certificate, $functional_division_id)
+function updateTraining($training_id, $program_id, $project_id, $title, $start_date, $end_date, $number_of_hours, $training_type_id, $training_level_id, $sponsored_by, $venue, $unconsecutive_dates, $signatory_id, $has_certificate, $functional_division_id)
 {
     $data = [
         'title' => $title,
+        'program_id' => $program_id,
+        'project_id' => $project_id,
         'start_date' => $start_date,
         'end_date' => $end_date,
         'number_of_hours' => $number_of_hours,
@@ -207,5 +211,29 @@ function trainedEmployeesByYear($limit = null)
     if ($limit !== null) {
         $sql .= " LIMIT " . (int) $limit;
     }
+    return query($sql);
+}
+
+function getPrograms()
+{
+    $sql = "SELECT * FROM `programs`";
+    return query($sql);
+}
+
+function getProjectList()
+{
+    $sql = "SELECT * FROM `projects`";
+    return query($sql);
+}
+
+function getProgramByID($progID)
+{
+    $sql = "SELECT program_name FROM programs WHERE program_id = '$progID'";
+    return query($sql);
+}
+
+function getProjectByID($projID)
+{
+    $sql = "SELECT project_name FROM projects WHERE project_id = '$projID'";
     return query($sql);
 }
