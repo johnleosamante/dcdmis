@@ -14,6 +14,8 @@ $dateFrom = $dateTo = date('Y-m-d');
 $generateCertificate = false;
 $modalTitle = 'Add Training';
 $notFound = true;
+$programs = getPrograms();
+$projects = getProjectList();
 
 if ($training) {
     $trainingId = $training['id'];
@@ -29,6 +31,7 @@ if ($training) {
     $unconsecutiveDates = $training['unconsecutive_dates'];
     $generateCertificate = $training['has_certificate'] === 1;
     $modalTitle = 'Edit Training';
+    $project_id = $training['project_id'];
     $notFound = false;
 }
 ?>
@@ -47,6 +50,20 @@ if ($training) {
                             disabled>
                     </div>
                 <?php endif ?>
+
+                <div class="form-group">
+                    <label>Project</label>
+                    <select id="project_id" class="form-control" name="project_id">
+                        <option value="">Select Project</option>
+                        <?php foreach ($projects as $project): ?>
+                            <option value="<?= $project['project_id'] ?>" data-program-id="<?= $project['program_id'] ?>"
+                                <?= setOptionSelected($project['project_id'], $project_id) ?>>
+                                <?= e($project['project_name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
 
                 <div class="form-group">
                     <label for="title" class="mb-0">Title <?php showAsterisk() ?></label>
