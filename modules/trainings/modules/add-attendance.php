@@ -45,17 +45,20 @@ messageAlert($showAlert, $message, $success);
                 <?php if (strtotime($training['start_date']) < strtotime(date('Y-m-d'))): ?>
                     <a href="<?= customUri('hrtdms', 'Conducted Trainings') ?>">Conducted Trainings</a>
                 <?php else: ?>
-                    <a href="<?= customUri('hrtdms', 'Training Details View') ?>">Training Details View</a>
+                    <a href="<?= customUri('hrtdms', 'Scheduled Trainings') ?>">Scheduled Trainings</a>
                 <?php endif ?>
             </li>
-            <li class="breadcrumb-item active"><?= e($training['id']) ?></li>
+            <li class="breadcrumb-item"><a
+                    href="<?= customUri('hrtdms', 'Training Details', $training['id']) ?>"><?= e($training['id']) ?></a>
+            </li>
+            <li class="breadcrumb-item active">Attendance</li>
         </ol>
     </nav>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithModal('Training Details', uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['id']), 'Edit', 'fa-edit') ?>
+        <?php contentTitleWithModal('Training Attendance', uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['id']), 'Edit', 'fa-edit') ?>
     </div>
 
     <div class="card-body">
@@ -172,25 +175,23 @@ messageAlert($showAlert, $message, $success);
 
         <!-- Activities List -->
         <div class="mb-3 d-flex" style="margin-top: 15px;">
-
             <input type="hidden" id="csrf_token" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
             <input type="text" id="qrInput" class="form-control me-2" style="width: 50%;"
                 placeholder="Scan ID or type employee name..." autofocus>
-            <button id="addAttendanceBtn" class="btn btn-primary mr-1"><i class="fas fa-plus"></i> Add Attendance
+            <button id="addAttendanceBtn" class="btn btn-primary ml-1 mr-3"><i class="fas fa-plus"></i> Add
             </button>
 
-            <button id="viewAttendanceSum" class="btn btn-info mr-1" title="View Actual Attendees">
-                <i class="fas fa-list"></i> View
+            <button id="viewAttendanceSum" class="btn btn-info mr-1" title="View Attendees">
+                <i class="fas fa-list"></i>
             </button>
 
             <button id="generatePDF" class="btn btn-info mr-1" title="Generate PDF">
-                <i class="fas fa-file-pdf"></i> Print
+                <i class="fas fa-file-pdf"></i>
             </button>
 
-
             <a href="http://<?= $_SERVER['HTTP_HOST'] ?>/hrtdms/?v=<?= base64_encode('Attendance Summary') ?>&id=<?= base64_encode($training['id']) ?>"
-                target="_blank" class="btn btn-info">
-                <i class="fas fa-chart-line"></i> Summary
+                target="_blank" class="btn btn-info" title="View Summary">
+                <i class="fas fa-chart-line"></i>
 
             </a>
         </div>
