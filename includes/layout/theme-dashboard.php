@@ -21,6 +21,10 @@ require_once(root() . '/includes/layout/components.php');
     <?php require_once(root() . '/includes/layout/header.php') ?>
     <link rel="stylesheet" href="<?= uri() ?>/assets/vendor/datatables/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= uri() ?>/assets/vendor/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <script>
+        <?php $uri = (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST']; ?>
+        var SITE_URL = "<?= $uri ?>";
+    </script>
 </head>
 
 <body id="page-top">
@@ -169,6 +173,7 @@ require_once(root() . '/includes/layout/components.php');
     <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="<?= uri() ?>/assets/js/script.js?v=1.2.3"></script>
+    <?php require_once(root() . '/includes/layout/customjs.php') ?>
 
     <?php if ($needsAgreement): ?>
         <script>
