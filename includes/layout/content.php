@@ -118,6 +118,21 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Training Details':
             $file = 'trainings/training-details';
             break;
+        case 'Add Attendance':
+            $file = 'trainings/modules/add-attendance';
+            break;
+        case 'Attendance Summary':
+            $file = 'trainings/modules/attendance_summary';
+            break;
+        case 'Program':
+            $file = 'trainings/modules/program-dashboard';
+            break;
+        case 'Program Detail':
+            $file = 'trainings/modules/program-detail';
+            break;
+        case 'Project Detail':
+            $file = 'trainings/modules/project-detail';
+            break;
         case 'Add Training Participants':
             $file = 'trainings/add-training-participants';
             break;
