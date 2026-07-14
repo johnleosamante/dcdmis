@@ -156,7 +156,7 @@ messageAlert($showAlert, $message, $success);
 
         <ul class="nav nav-tabs" id="attendanceTabs" role="tablist">
             <?php foreach ($dates as $i => $date): ?>
-                <li class="nav-item" style="border: solid 1px #dadada;">
+                <li class="nav-item">
                     <a class="nav-link <?= $i == 0 ? 'active' : '' ?>" id="tab-<?= $i ?>" data-toggle="tab"
                         href="#day<?= $i ?>" role="tab" data-date="<?= $date ?>">
 
