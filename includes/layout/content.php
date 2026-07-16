@@ -231,6 +231,12 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Talent Pool Diversity - Registration':
             $file = 'applicants/diversity/page';
             break;
+        case 'Performance Management':
+            $file = 'pm/page';
+            break;
+        case 'Daily Time Record':
+            $file = 'dtr/page';
+            break;
         case '404':
         default:
             $file = 'error/404';

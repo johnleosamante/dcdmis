@@ -24,3 +24,6 @@ if (dtsUser($userId) && station($userId)['station_id'] === '143') {
     sidebarDivider();
     sidebarMenuItem(customUri('pis', 'Monitoring Tools'), 'Monitoring Tools', 'fa-binoculars', isset($url) && str_contains($url, 'Monitoring Tools'));
 }
+
+sidebarMenuItem(customUri('pis', 'Performance Management', $userId), 'Performance Management', 'fa-chart-line', isset($url) && str_contains($url, 'Performance Management'));
+sidebarMenuItem(customUri('pis', 'Daily Time Record', $userId), 'Daily Time Record', 'fa-clock', isset($url) && str_contains($url, 'Daily Time Record'));
