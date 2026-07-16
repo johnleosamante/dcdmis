@@ -50,6 +50,7 @@ if (!isset($url) || $url === 'dashboard') {
             break;
         case 'Active Employees':
         case 'Employees':
+        case 'School Employees':
             $file = 'employees/active-employees';
             break;
         case 'Retirable Employees':
