@@ -256,7 +256,8 @@ if (isset($_POST['edit-user'])) {
 		'HRMIS' => isset($_POST['hrmis']),
 		'DMIS' => isset($_POST['dmis']),
 		'HRTDMS' => isset($_POST['hrtdms']),
-		'RACE' => isset($_POST['race'])
+		'RACE' => isset($_POST['race']),
+		'DTR' => isset($_POST['dtr'])
 	];
 
 	$showAlert = true;
