@@ -25,26 +25,48 @@
                 <tbody>
                     <?php
                     $recognitions = recognitions($employee['id']);
+                    $raceAwards = employeeAwardedRecognitions($employee['id']);
 
-                    if ($recognitions) {
-                        foreach ($recognitions as $recognition): ?>
-                            <tr class="text-uppercase">
-                                <td class="align-middle"><?= e($recognition['title']) ?></td>
-                                <?php if ($editMode): ?>
-                                    <td class="align-middle text-capitalize">
-                                        <div class="dropdown no-arrow">
-                                            <?php dropdownEllipsis() ?>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                                <?php modalDropdownItem(uri() . '/modules/employees/save/save-recognition-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['id']), 'Edit', 'fa-edit', 'Edit Recognition');
-                                                modalDropdownItem(uri() . '/modules/employees/save/save-recognition-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($recognition['id']), 'Copy', 'fa-copy', 'Copy Recognition') ?>
-                                                <div class="dropdown-divider"></div>
-                                                <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-recognition-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['id']), 'Delete', 'fa-trash', 'Delete Recognition') ?>
+                    if (!empty($recognitions) || !empty($raceAwards)) {
+                        if (!empty($recognitions)) {
+                            foreach ($recognitions as $recognition): ?>
+                                <tr class="text-uppercase">
+                                    <td class="align-middle"><?= e($recognition['title']) ?></td>
+                                    <?php if ($editMode): ?>
+                                        <td class="align-middle text-capitalize">
+                                            <div class="dropdown no-arrow">
+                                                <?php dropdownEllipsis() ?>
+                                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                                    <?php modalDropdownItem(uri() . '/modules/employees/save/save-recognition-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['id']), 'Edit', 'fa-edit', 'Edit Recognition');
+                                                    modalDropdownItem(uri() . '/modules/employees/save/save-recognition-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($recognition['id']), 'Copy', 'fa-copy', 'Copy Recognition') ?>
+                                                    <div class="dropdown-divider"></div>
+                                                    <?php modalDropdownItem(uri() . '/modules/employees/delete/delete-recognition-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($recognition['id']), 'Delete', 'fa-trash', 'Delete Recognition') ?>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </td>
+                                    <?php endif ?>
+                                </tr>
+                            <?php endforeach;
+                        }
+                        if (!empty($raceAwards)) {
+                            foreach ($raceAwards as $raceAward):
+                                $raceUrl = customUri('race', 'Event Schedules') . '&schedule_id=' . cipher($raceAward['schedule_id']) . '&award_id=' . cipher($raceAward['award_id']);
+                                ?>
+                                <tr class="text-uppercase">
+                                    <td class="align-middle"><?= e($raceAward['award_name']) ?>
+                                        (<?= e($raceAward['schedule_title']) ?>)
                                     </td>
-                                <?php endif ?>
-                            </tr>
-                        <?php endforeach;
+                                    <?php if ($editMode): ?>
+                                        <td class="align-middle text-capitalize">
+                                            <span class="badge badge-light border text-muted px-2 py-1 text-xs"
+                                                title="Managed by Rewards & Recognition System">
+                                                <i class="fas fa-lock mr-1"></i>
+                                            </span>
+                                        </td>
+                                    <?php endif ?>
+                                </tr>
+                            <?php endforeach;
+                        }
                     } else { ?>
                         <tr>
                             <td colspan="<?= $editMode ? '2' : '1' ?>" class="align-middle">No data available in table</td>
