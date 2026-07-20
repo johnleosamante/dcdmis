@@ -153,6 +153,7 @@ if (!isset($url) || $url === 'dashboard') {
             $file = 'positions/plantilla-items';
             break;
         case 'School Information':
+        case 'Division Office Information':
             $file = 'schools/school-information';
             break;
         case 'Sections':
@@ -215,7 +216,7 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Workforce Diversity - Generation':
         case 'Workforce Diversity - Education':
         case 'Workforce Diversity - Religion':
-        case 'Workforce Diversity - Ethnic Group':
+        case 'Workforce Diversity - Indigenous Group':
         case 'Workforce Diversity - PWD':
         case 'Workforce Diversity - Solo Parent':
         case 'Workforce Diversity - District':
