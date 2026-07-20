@@ -52,6 +52,6 @@ contentTitle('Monitoring Tools');
     cardMini('Project TRACE SY 2025-2026', 'https://depedph-my.sharepoint.com/:x:/g/personal/smme_dipolog_deped_gov_ph/IQB5qVXMavCeS7lnrnKRJ-nuAQuFN0dcgiossurYPr9bfHc?e=TOxaIe', 'fa-file-excel', 'orange', true);
     cardMini('Project TRACE SY 2026-2027', 'https://depedph-my.sharepoint.com/:x:/g/personal/smme_dipolog_deped_gov_ph/IQAs1Jt1VwAzRa6Zazby-5M8AR7uYnpPPSMGH-J9LoXUVFc?e=0c9SVh', 'fa-file-excel', 'orange', true);
     cardMini('Monitoring Tool for PRIME-HRM Level III', 'https://depedph-my.sharepoint.com/:x:/g/personal/smme_dipolog_deped_gov_ph/IQD3HpsFq2nsSqDIV9ugNY9DAbCjeWIST5zuiRk3W3c6SE0?rtime=GPLFmc7G3kg', 'fa-file-excel', 'orange', true);
-    cardMini('SDO PIR-RMETA 2026', 'https://depedph-my.sharepoint.com/:x:/g/personal/smme_dipolog_deped_gov_ph/IQB_wa08dXd9T6QIEoxgDabFAfwcr6-SyLbJliKitqco46U?e=eq2nhf', 'fa-file-excel', 'orange', true);
+    cardMini('SDO PIR-RMETA 2026', 'https://tinyurl.com/SDODIPOLOG-PIR-RMETA2026', 'fa-file-excel', 'orange', true);
     ?>
 </div>
