@@ -59,7 +59,10 @@ if (!is_dir($uploadDirectory)) {
                     <?php
                     $payslips = payslips($employeeId);
 
-                    foreach ($payslips as $payslip): ?>
+                    foreach ($payslips as $payslip):
+                        $payslipPath = root() . '/' . $payslip['file_name'];
+                        $payslipExists = !empty($payslip['file_name']) && file_exists($payslipPath);
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= toDateTime($payslip['updated_at']) ?></td>
                             <td class="align-middle text-left"><?= e($payslip['description']) ?></td>
@@ -67,8 +70,13 @@ if (!is_dir($uploadDirectory)) {
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                                        <?php previewLinkDropdownItem(uri() . '/' . $payslip['file_name'], 'Preview', 'fa-eye', 'Preview ' . $payslip['description']);
-                                        downloadLinkDropdownItem(uri() . '/' . $payslip['file_name'], 'Download', 'fa-download', 'Download ' . $payslip['description'], $payslip['description'] . '.' . $payslip['file_extension'], true);
+                                        <?php
+                                        if ($payslipExists) {
+                                            previewLinkDropdownItem(uri() . '/' . $payslip['file_name'], 'Preview', 'fa-eye', 'Preview ' . $payslip['description']);
+                                            downloadLinkDropdownItem(uri() . '/' . $payslip['file_name'], 'Download', 'fa-download', 'Download ' . $payslip['description'], $payslip['description'] . '.' . $payslip['file_extension'], true);
+                                            echo '<div class="dropdown-divider"></div>';
+                                        }
+
                                         modalDropdownItem(uri() . '/modules/payslip/save-payslip-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Edit', 'fa-edit', 'Edit Payslip');
                                         modalDropdownItem(uri() . '/modules/payslip/save-payslip-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($payslip['id']), 'Copy', 'fa-copy', 'Copy Payslip'); ?>
                                         <div class="dropdown-divider"></div>
