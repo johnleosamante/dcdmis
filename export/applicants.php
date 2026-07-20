@@ -61,8 +61,8 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
             <td style="font-weight: bold;">Applied Filters:</td>
             <td colspan="4">
                 Position: <?= ($selectedPositionId === 'all') ? 'All' : 'Filtered' ?> |
-                Employment Status:
-                <?= ($selectedStatus === 'all') ? 'All' : (($selectedStatus === 'employed') ? 'Currently Employed' : 'Not Employed') ?>
+                Applicant Type:
+                <?= ($selectedStatus === 'all') ? 'All' : (($selectedStatus === 'internal') ? 'Internal' : 'External') ?>
             </td>
         </tr>
         <tr>
@@ -76,7 +76,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
         <tr>
             <th>No.</th>
             <th colspan="2">Applicant Name</th>
-            <th>Employment Status</th>
+            <th>Applicant Type</th>
             <th>Applied On</th>
         </tr>
     </thead>
@@ -94,7 +94,6 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
             ];
         }
 
-        // Output grouped data
         foreach ($groupedByCategory as $group => $positions):
             $groupTotal = array_sum(array_map('count', $positions));
             ?>
