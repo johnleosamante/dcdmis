@@ -29,7 +29,7 @@ require_once(root() . '/includes/database/utility.php');
     <tbody>
         <?php
         $i = 1;
-        $query = districts();
+        $query = districts(true);
 
         foreach ($query as $row): ?>
             <tr>
