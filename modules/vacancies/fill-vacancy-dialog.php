@@ -123,7 +123,7 @@ if (isset($vacancyId)) {
                         }
 
                         $optionsCount++;
-                        $scoreText = ($score !== null) ? ' - Score: ' . number_format($score, 2) : ' - No Score';
+                        $scoreText = ($score !== null) ? ' - Score: ' . number_format($score, 3, '.', '') : ' - No Score';
 
                         $optionsHtml .= '<option value="' . e($appId) . '">';
                         $optionsHtml .= "{$rank} - " . strtoupper(e($appName)) . $scoreText;
