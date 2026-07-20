@@ -41,7 +41,7 @@ require_once(root() . '/includes/database/utility.php');
     <tbody>
         <?php
         $i = 1;
-        $query = schools();
+        $query = schools(true);
 
         foreach ($query as $row): ?>
             <tr>
