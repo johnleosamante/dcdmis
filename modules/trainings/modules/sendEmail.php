@@ -50,10 +50,10 @@ $stmt->execute();
 $emp = $stmt->get_result()->fetch_assoc();
 
 $employeeName = strtoupper(trim(
-                $emp['first_name'] . ' ' .
-                ($emp['middle_name'] ? substr($emp['middle_name'], 0, 1) . '. ' : '') .
-                $emp['last_name']
-        ));
+    $emp['first_name'] . ' ' .
+    ($emp['middle_name'] ? substr($emp['middle_name'], 0, 1) . '. ' : '') .
+    $emp['last_name']
+));
 
 $stmt = $mysqli->prepare("
     SELECT title
@@ -68,9 +68,9 @@ $training = $stmt->get_result()->fetch_assoc();
 $title = $training['title'] ?? 'Training';
 
 
-$certificate =  'https://depeddipolog.com/print/?&v='. urlencode(base64_encode("Certificate of Participation")).'&id='.urlencode(base64_encode($trainingID)).'&p='.urlencode(base64_encode($employeeID));
+$certificate = 'https://depeddipolog.com/print/?&v=' . urlencode(base64_encode("Certificate of Participation")) . '&id=' . urlencode(base64_encode($trainingID)) . '&p=' . urlencode(base64_encode($employeeID));
 
-$appearance = 'https://depeddipolog.com/print/?&v='. urlencode(base64_encode("Certificate of Appearance")).'&id='.urlencode(base64_encode($trainingID)).'&p='.urlencode(base64_encode($employeeID));
+$appearance = 'https://depeddipolog.com/print/?&v=' . urlencode(base64_encode("Certificate of Appearance")) . '&id=' . urlencode(base64_encode($trainingID)) . '&p=' . urlencode(base64_encode($employeeID));
 
 $stmt = $mysqli->prepare("
     SELECT title
@@ -90,12 +90,12 @@ $mail = new PHPMailer(true);
 try {
 
     $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
+    $mail->Host = SMTP_HOST;
     $mail->SMTPAuth = true;
-    $mail->Username = 'yvicronil@gmail.com';
-    $mail->Password = 'rfpwumtoiwmkbzis';
+    $mail->Username = SMTP_USER;
+    $mail->Password = SMTP_PASSWORD;
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 587;
+    $mail->Port = SMTP_PORT;
 
     $mail->setFrom('yvicronill@gmail.com', 'DepEd System');
     $mail->addAddress($email);
