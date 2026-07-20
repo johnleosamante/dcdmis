@@ -54,7 +54,7 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = schools();
+                    $query = schools(true);
                     foreach ($query as $row):
                         $logo = ($row['logo'] !== null && file_exists(root() . '/' . $row['logo'])) ? "{$baseUri}/" . $row['logo'] : "{$baseUri}/uploads/division/division.png";
                         $schoolName = $row['name'];
