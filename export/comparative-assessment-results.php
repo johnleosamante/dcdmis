@@ -137,31 +137,31 @@ if ($results) {
                         <td style="text-align: center; border: 1px solid #000000;"><?= $ranks[$index] ?></td>
                         <td style="border: 1px solid #000000;"><?= strtoupper(e($name)) ?></td>
                         <td style="text-align: center; border: 1px solid #000000;">
-                            <?= $isAssessed ? number_format($res['education_score'], 2) : '0.00' ?>
+                            <?= $isAssessed ? number_format($res['education_score'], 3, '.', '') : '0.000' ?>
                         </td>
                         <td style="text-align: center; border: 1px solid #000000;">
-                            <?= $isAssessed ? number_format($res['training_score'], 2) : '0.00' ?>
+                            <?= $isAssessed ? number_format($res['training_score'], 3, '.', '') : '0.000' ?>
                         </td>
                         <td style="text-align: center; border: 1px solid #000000;">
-                            <?= $isAssessed ? number_format($res['experience_score'], 2) : '0.00' ?>
+                            <?= $isAssessed ? number_format($res['experience_score'], 3, '.', '') : '0.000' ?>
                         </td>
                         <td style="text-align: center; border: 1px solid #000000;">
-                            <?= $isAssessed ? number_format($res['performance_score'], 2) : '0.00' ?>
+                            <?= $isAssessed ? number_format($res['performance_score'], 3, '.', '') : '0.000' ?>
                         </td>
                         <td style="text-align: center; border: 1px solid #000000;">
-                            <?= $isAssessed ? number_format($res['outstanding_accomplishments_score'], 2) : '0.00' ?>
+                            <?= $isAssessed ? number_format($res['outstanding_accomplishments_score'], 3, '.', '') : '0.000' ?>
                         </td>
                         <td style="text-align: center; border: 1px solid #000000;">
-                            <?= $isAssessed ? number_format($res['application_of_education_score'], 2) : '0.00' ?>
+                            <?= $isAssessed ? number_format($res['application_of_education_score'], 3, '.', '') : '0.000' ?>
                         </td>
                         <td style="text-align: center; border: 1px solid #000000;">
-                            <?= $isAssessed ? number_format($res['application_of_ld_score'], 2) : '0.00' ?>
+                            <?= $isAssessed ? number_format($res['application_of_ld_score'], 3, '.', '') : '0.000' ?>
                         </td>
                         <td style="text-align: center; border: 1px solid #000000;">
-                            <?= $isAssessed ? number_format($res['potential_final_score'], 2) : '0.00' ?>
+                            <?= $isAssessed ? number_format($res['potential_final_score'], 3, '.', '') : '0.000' ?>
                         </td>
                         <td style="text-align: center; font-weight: bold; border: 1px solid #000000;">
-                            <?= $isAssessed ? number_format($res['total_accumulated_score'], 2) : 'Not Assessed' ?>
+                            <?= $isAssessed ? number_format($res['total_accumulated_score'], 3, '.', '') : 'Not Assessed' ?>
                         </td>
                         <td style="border: 1px solid #000000;"><?= e($res['hrmspb_remarks'] ?? '') ?></td>
                     </tr>
