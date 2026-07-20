@@ -12,7 +12,8 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
     card('Archived Employees', customUri('hrmis', 'Archived Employees'), 'fa-archive', 'warning');
     card('Districts', customUri('hrmis', 'Districts'), 'fa-map-marked-alt', 'danger', $districtCount);
     card('Schools', customUri('hrmis', 'Schools'), 'fa-school', 'secondary', $schoolCount);
-    card('Sections', customUri('hrmis', 'Sections'), 'fa-map-signs', 'primary', $sectionCount);
+    card('Division Office', customUri('hrmis', 'Division Office Information', DIVISION_ID), 'fa-building', 'primary');
+    card('Sections', customUri('hrmis', 'Sections'), 'fa-map-signs', 'success', $sectionCount);
     ?>
 </div>
 
@@ -28,7 +29,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Gender'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - Gender'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'gender'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -40,7 +41,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         <?php
                         $genderData = employeeGender();
                         foreach ($genderData as &$item) {
-                            $item['link'] = customUri('hrmis', 'Demographics - Gender') . '&group=' . urlencode($item['name'] ?? '') . '&sex=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - Gender') . '&group=' . urlencode($item['name'] ?? '') . '&sex=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -58,7 +59,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Category'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - Category'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'category'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -70,7 +71,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         <?php
                         $employeeCategory = employeeCategory();
                         foreach ($employeeCategory as &$item) {
-                            $item['link'] = customUri('hrmis', 'Demographics - Category') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - Category') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -88,7 +89,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Category by Gender'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - Category by Gender'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'category-gender'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -100,8 +101,8 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         <?php
                         $genderCategoryData = employeeGenderCategory();
                         foreach ($genderCategoryData as &$item) {
-                            $item['linkMale'] = customUri('hrmis', 'Demographics - Category by Gender') . '&group=' . urlencode($item['name'] ?? '') . '&sex=Male#demographics-breakdown';
-                            $item['linkFemale'] = customUri('hrmis', 'Demographics - Category by Gender') . '&group=' . urlencode($item['name'] ?? '') . '&sex=Female#demographics-breakdown';
+                            $item['linkMale'] = customUri('hrmis', 'Workforce Diversity - Category by Gender') . '&group=' . urlencode($item['name'] ?? '') . '&sex=Male#demographics-breakdown';
+                            $item['linkFemale'] = customUri('hrmis', 'Workforce Diversity - Category by Gender') . '&group=' . urlencode($item['name'] ?? '') . '&sex=Female#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -121,7 +122,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Education'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - Education'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'education'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -133,7 +134,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         <?php
                         $educationEmployees = demographicsEducation();
                         foreach ($educationEmployees as &$item) {
-                            $item['link'] = customUri('hrmis', 'Demographics - Education') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - Education') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -151,7 +152,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Position'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - Position'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'position'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -163,7 +164,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         <?php
                         $employeePositions = employeePosition();
                         foreach ($employeePositions as &$item) {
-                            $item['link'] = customUri('hrmis', 'Demographics - Position') . '&group=' . urlencode($item['name'] ?? '') . '&position=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - Position') . '&group=' . urlencode($item['name'] ?? '') . '&position=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -183,7 +184,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - District'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - District'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'districts'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -195,7 +196,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         <?php
                         $districtEmployees = districtEmployee();
                         foreach ($districtEmployees as &$item) {
-                            $item['link'] = customUri('hrmis', 'Demographics - District') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - District') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -213,7 +214,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Assignment'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - Assignment'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'schools'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -225,7 +226,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         <?php
                         $employeeStations = employeeStation();
                         foreach ($employeeStations as &$item) {
-                            $item['link'] = customUri('hrmis', 'Demographics - Assignment') . '&group=' . urlencode($item['name'] ?? '') . '&school=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - Assignment') . '&group=' . urlencode($item['name'] ?? '') . '&school=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -245,7 +246,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Generation'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - Generation'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'generation'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -257,7 +258,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         <?php
                         $generationEmployees = demographicsGeneration();
                         foreach ($generationEmployees as &$item) {
-                            $item['link'] = customUri('hrmis', 'Demographics - Generation') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - Generation') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -275,7 +276,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Religion'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - Religion'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'religion'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -287,7 +288,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         <?php
                         $religionEmployees = demographicsReligion();
                         foreach ($religionEmployees as &$item) {
-                            $item['link'] = customUri('hrmis', 'Demographics - Religion') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - Religion') . '&group=' . urlencode($item['name'] ?? '') . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -301,11 +302,11 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
     <div class="col-xl-2 col-lg-12 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Ethnic Group</h6>
+                <h6 class="m-0 font-weight-bold text-dark text-uppercase">Indigenous Group</h6>
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Ethnic Group'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - Indigenous Group'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'indigenous'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -318,7 +319,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         $indigenousEmployees = indigenousEmployeeCount();
                         foreach ($indigenousEmployees as &$item) {
                             $groupName = ($item['name'] === 'No') ? 'Non-Indigenous' : ($item['name'] ?? '');
-                            $item['link'] = customUri('hrmis', 'Demographics - Ethnic Group') . '&group=' . urlencode($groupName) . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - Indigenous Group') . '&group=' . urlencode($groupName) . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -336,7 +337,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - PWD'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - PWD'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'pwd'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -349,7 +350,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         $pwdEmployees = pwdEmployeeCount();
                         foreach ($pwdEmployees as &$item) {
                             $groupName = ($item['name'] === 'No') ? 'Non-PWD' : ($item['name'] ?? '');
-                            $item['link'] = customUri('hrmis', 'Demographics - PWD') . '&group=' . urlencode($groupName) . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - PWD') . '&group=' . urlencode($groupName) . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
@@ -367,7 +368,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                 <div class="dropdown no-arrow">
                     <?php dropdownEllipsis() ?>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('hrmis', 'Demographics - Solo Parent'), 'View', 'fa-eye');
+                        <?php linkDropdownItem(customUri('hrmis', 'Workforce Diversity - Solo Parent'), 'View', 'fa-eye');
                         linkDropdownItem(customUri('export', 'demographics', 'solo-parents'), 'Export', 'fa-file-excel') ?>
                     </div>
                 </div>
@@ -380,7 +381,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/employees/save-employee-dia
                         $soloParentEmployees = soloParentEmployeeCount();
                         foreach ($soloParentEmployees as &$item) {
                             $groupName = ($item['name'] === 'Yes') ? 'Solo Parent' : (($item['name'] === 'No') ? 'Not Solo Parent' : ($item['name'] ?? ''));
-                            $item['link'] = customUri('hrmis', 'Demographics - Solo Parent') . '&group=' . urlencode($groupName) . '#demographics-breakdown';
+                            $item['link'] = customUri('hrmis', 'Workforce Diversity - Solo Parent') . '&group=' . urlencode($groupName) . '#demographics-breakdown';
                         }
                         unset($item);
                         ?>
