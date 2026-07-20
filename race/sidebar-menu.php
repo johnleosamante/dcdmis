@@ -9,7 +9,7 @@ $countAwards = number_format(count(recognitionAwardsWithCategory()));
 $countNominees = number_format(count(allNominees()));
 $countWinners = number_format(count(awardWinners()));
 
-if (!$nominatorOnly):
+if ($isICT || !$nominatorOnly):
     sidebarMenuItem(customUri('race', 'Event Schedules'), 'Schedules', 'fa-calendar-plus', isset($url) && str_contains($url, 'Event Schedules'), $countSchedules);
 endif;
 
@@ -17,6 +17,6 @@ sidebarMenuItem(customUri('race', 'Nominees List'), 'Nominees', 'fa-user', isset
 sidebarMenuItem(customUri('race', 'Awards List'), 'Awards', 'fa-award', isset($url) && str_contains($url, 'Awards List'), $countAwards);
 
 
-if (!$nominatorOnly):
+if ($isICT || !$nominatorOnly):
     sidebarMenuItem(customUri('race', 'Winners Lookup'), 'Winners', 'fa-trophy', isset($url) && str_contains($url, 'Winners Lookup'), $countWinners);
 endif;
