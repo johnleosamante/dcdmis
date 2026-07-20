@@ -83,7 +83,7 @@ foreach ($items as $item) {
                     <label for="filter-position" class="font-weight-bold text-gray-800 small mb-0">Position
                         Applied</label>
                     <select id="filter-position" name="position_id" class="form-control">
-                        <option value="all" <?= ($selectedPositionId === 'all') ? 'selected' : '' ?>>All Positions</option>
+                        <option value="all" <?= ($selectedPositionId === 'all') ? 'selected' : '' ?>>All</option>
                         <?php foreach ($pubPositions as $posId => $posTitle):
                             $encodedPosId = cipher($posId); ?>
                             <option value="<?= e($encodedPosId) ?>" <?= ($selectedPositionId !== 'all' && decipher($selectedPositionId) == $posId) ? 'selected' : '' ?>>
@@ -93,14 +93,14 @@ foreach ($items as $item) {
                     </select>
                 </div>
                 <div class="col-md-4 mb-2">
-                    <label for="filter-status" class="font-weight-bold text-gray-800 small mb-0">Employment
-                        Status</label>
+                    <label for="filter-status" class="font-weight-bold text-gray-800 small mb-0">Applicant
+                        Type</label>
                     <select id="filter-status" name="status" class="form-control">
-                        <option value="all" <?= ($selectedStatus === 'all') ? 'selected' : '' ?>>All Statuses</option>
-                        <option value="employed" <?= ($selectedStatus === 'employed') ? 'selected' : '' ?>>Currently
-                            Employed</option>
-                        <option value="not_employed" <?= ($selectedStatus === 'not_employed') ? 'selected' : '' ?>>Not
-                            Employed</option>
+                        <option value="all" <?= ($selectedStatus === 'all') ? 'selected' : '' ?>>All</option>
+                        <option value="internal" <?= ($selectedStatus === 'internal') ? 'selected' : '' ?>>Internal
+                        </option>
+                        <option value="external" <?= ($selectedStatus === 'external') ? 'selected' : '' ?>>External
+                        </option>
                     </select>
                 </div>
                 <div class="col-md-3 mb-2 d-flex align-items-end">
@@ -135,9 +135,9 @@ foreach ($items as $item) {
                             <td class="align-middle text-left">
                                 <div><?= applicantName($app['application_code']) ?></div>
                                 <?php if ($app['is_employed']): ?>
-                                    <span class="badge badge-primary py-1 px-2">Employed</span>
+                                    <span class="badge badge-primary py-1 px-2">Internal</span>
                                 <?php else: ?>
-                                    <span class="badge badge-success py-1 px-2">Not Employed</span>
+                                    <span class="badge badge-success py-1 px-2">External</span>
                                 <?php endif ?>
                             </td>
                             <td class="align-middle text-left">
