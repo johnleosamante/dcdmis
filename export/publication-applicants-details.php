@@ -32,7 +32,8 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
 <table>
     <tbody>
         <tr>
-            <td colspan="25" style="font-weight: bold; font-size: 14px;">CALL FOR APPLICATION - APPLICANTS COMPLETE DETAILS</td>
+            <td colspan="25" style="font-weight: bold; font-size: 14px;">CALL FOR APPLICATION - APPLICANTS COMPLETE
+                DETAILS</td>
         </tr>
         <tr>
             <td style="font-weight: bold;">Call Code:</td>
@@ -75,8 +76,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
             <th>Residence Address</th>
             <th>PWD?</th>
             <th>Disability Details</th>
-            <th>Indigenous?</th>
-            <th>Indigenous Group</th>
+            <th>Ethnic Group</th>
             <th>Undergraduate Studies</th>
             <th>Graduate Studies</th>
             <th>Eligibilities</th>
@@ -88,7 +88,6 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
         foreach ($apps as $app):
             $isEmployed = (int) $app['is_employed'];
             $applicantId = $app['application_code_id'];
-            
             $lastName = '';
             $firstName = '';
             $middleName = '';
@@ -103,7 +102,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
             $withDisability = 'No';
             $disabilityDetails = '';
             $isIndigenous = 'No';
-            $indigenousGroup = '';
+            $ethnicGroup = '';
             $undergraduate = '';
             $graduateStudies = '';
             $eligibilities = '';
@@ -122,7 +121,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                     $religion = $p['religion'] ?? '';
                     $email = $p['email_address'] ?? '';
                     $mobile = $p['mobile_number'] ?? '';
-                    
+                    $ethnicGroup = $p['ethnic_group'] ?? '';
                     $lot = $p['residence_lot'] ?? '';
                     $street = $p['residence_street'] ?? '';
                     $subdiv = $p['residence_subdivision'] ?? '';
@@ -135,7 +134,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                         $address = trim($address) . " " . $zip;
                     }
                 }
-                
+
                 $other = otherInformation($applicantId);
                 if ($other) {
                     $withDisability = (isset($other['with_disability']) && $other['with_disability'] == 1) ? 'Yes' : 'No';
@@ -143,7 +142,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                     $isIndigenous = (isset($other['is_indigenous']) && $other['is_indigenous'] == 1) ? 'Yes' : 'No';
                     $indigenousGroup = $other['indigenous_group'] ?? '';
                 }
-                
+
                 $edbs = educationalBackgrounds($applicantId);
                 $undergradList = [];
                 $gradList = [];
@@ -161,7 +160,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                 }
                 $undergraduate = implode('; ', $undergradList);
                 $graduateStudies = implode('; ', $gradList);
-                
+
                 $eligs = eligibilities($applicantId);
                 $eligList = [];
                 foreach ($eligs as $el) {
@@ -182,7 +181,11 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                     $religion = $p['religion'] ?? '';
                     $email = $p['email_address'] ?? '';
                     $mobile = $p['mobile_number'] ?? '';
-                    
+                    $ethnicGroup = $p['ethnic_group'] ?? '';
+                    if ($ethnicGroup === 'Others' && !empty($p['ethnic_group_specify'])) {
+                        $ethnicGroup = $p['ethnic_group_specify'];
+                    }
+
                     $lot = $p['lot'] ?? '';
                     $street = $p['street'] ?? '';
                     $subdiv = $p['subdivision'] ?? '';
@@ -194,14 +197,14 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                     if (!empty($zip)) {
                         $address = trim($address) . " " . $zip;
                     }
-                    
+
                     $withDisability = (isset($p['with_disability']) && $p['with_disability'] == 1) ? 'Yes' : 'No';
-                    $isIndigenous = (isset($p['is_indigenous']) && $p['is_indigenous'] == 1) ? 'Yes' : 'No';
-                    $indigenousGroup = $p['indigenous_group'] ?? '';
-                    
+                    $isIndigenous = 'No';
+                    $indigenousGroup = '';
+
                     $undergraduate = $p['undergraduate'] ?? '';
                     $graduateStudies = $p['graduate_studies'] ?? '';
-                    
+
                     if (!empty($p['eligibilities'])) {
                         $eligsDecoded = json_decode($p['eligibilities'], true);
                         if (is_array($eligsDecoded)) {
@@ -244,6 +247,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                 <td><?= e($disabilityDetails) ?></td>
                 <td><?= e($isIndigenous) ?></td>
                 <td><?= e($indigenousGroup) ?></td>
+                <td><?= e($ethnicGroup) ?></td>
                 <td style="text-transform: none;"><?= e($undergraduate) ?></td>
                 <td style="text-transform: none;"><?= e($graduateStudies) ?></td>
                 <td style="text-transform: none;"><?= e($eligibilities) ?></td>
