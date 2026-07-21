@@ -11,8 +11,17 @@ header('Content-Type: application/json');
 
 $prefix = alias() . '_';
 $userId = $_SESSION["{$prefix}userId"] ?? null;
+$activeApp = $_SESSION["{$prefix}activeApp"] ?? 'pis';
 
-if (!$userId || raceAccessLevel($userId) === 'none') {
+$userPositionId = null;
+if (!function_exists('position')) {
+    require_once(root() . '/includes/database/position.php');
+}
+$userPosition = position($userId);
+$userPositionId = $userPosition['position_id'] ?? null;
+$isAllowedHigherPosition = ($activeApp === 'pis') && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if (!$userId || (raceAccessLevel($userId) === 'none' && !$isAllowedHigherPosition)) {
     echo json_encode(['access' => false]);
 } else {
     echo json_encode(['access' => true]);
