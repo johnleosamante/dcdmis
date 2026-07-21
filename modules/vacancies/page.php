@@ -1,6 +1,18 @@
 <?php
 // modules/vacancies/page.php
-if (!$isHrmis) {
+$userPositionId = null;
+if ($isPis) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+
+    require_once(root() . '/includes/database/vacancy.php');
+}
+$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if (!$isHrmis && !$isAllowedHigherPosition) {
     require_once root() . '/modules/error/403.php';
     return;
 }
@@ -14,6 +26,12 @@ $query = vacantItems();
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
+            <?php if ($isPis): ?>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a
+                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        Placement</a></li>
+            <?php endif ?>
             <li class="breadcrumb-item active">Vacancies</li>
         </ol>
     </nav>
