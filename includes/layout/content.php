@@ -233,6 +233,21 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Talent Pool Diversity - Registration':
             $file = 'applicants/diversity/page';
             break;
+        case 'System Overview':
+            $file = 'overview/page';
+            break;
+        case 'Recruitment, Selection and Placement':
+            $file = 'overview/rsp';
+            break;
+        case 'Learning and Development':
+            $file = 'overview/lnd';
+            break;
+        case 'Performance Management':
+            $file = 'overview/pm';
+            break;
+        case 'Rewards and Recognition':
+            $file = 'overview/rnr';
+            break;
         case '404':
         default:
             $file = 'error/404';
