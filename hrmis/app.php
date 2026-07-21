@@ -125,7 +125,17 @@ if (isset($_POST['update-personal-information'])) {
             }
         }
 
-        $affectedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), sanitize($_POST['dob']), sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), sanitize($_POST['religion']), sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), $dualCitizenshipCountry, sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
+        $religion = sanitize($_POST['religion'] ?? null);
+        if ($religion === 'Others' && !empty($_POST['religion_specify'])) {
+            $religion = sanitize($_POST['religion_specify']);
+        }
+
+        $ethnic_group = sanitize($_POST['ethnic_group'] ?? null);
+        if ($ethnic_group === 'Others' && !empty($_POST['ethnic_group_specify'])) {
+            $ethnic_group = sanitize($_POST['ethnic_group_specify']);
+        }
+
+        $affectedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), sanitize($_POST['dob']), sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), $religion, $ethnic_group, sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), $dualCitizenshipCountry, sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
 
         if ($affectedEmployee == false && !$stagedFile) {
             throw new Exception('No changes have been made to personal information.');
@@ -850,15 +860,21 @@ if (isset($_POST['promote-employee'])) {
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been promoted successfully to [' . $position . '].';
         $success = true;
 
-        if (!$skipVacancy) {
-            $plantillaItemId = employeeItemNumber($employeeId);
+        $plantillaItemData = employeeItemNumber($employeeId);
+        $plantillaItemId = $plantillaItemData['id'] ?? null;
 
-            if ($plantillaItemId) {
-                if (createVacancy($plantillaItemId, 'open', $employeeId, $datePromoted, 'promoted')) {
-                    $message .= ' A vacant item has been created for this position.';
+        update(
+            'service_records',
+            ['is_present' => '0', 'to_date' => $datePromoted],
+            '`employee_id` = ? AND `is_present` = 1 AND `to_date` IS NULL',
+            [$employeeId]
+        );
 
-                    createSystemLog($stationId, $userId, 'Created vacant item', $employeeId, clientIp());
-                }
+        if (!$skipVacancy && $plantillaItemId) {
+            if (createVacancy($plantillaItemId, 'open', $employeeId, $datePromoted, 'promoted')) {
+                $message .= ' A vacant item has been created for this position.';
+
+                createSystemLog($stationId, $userId, 'Created vacant item', $employeeId, clientIp());
             }
         }
 
@@ -880,7 +896,7 @@ if (isset($_POST['remove-employee'])) {
         return;
     }
 
-    $dateVacated = date('Y-m-d');
+    $dateVacated = sanitize($_POST['effectivity_date'] ?? date('Y-m-d'));
 
     beginTransaction();
 
@@ -889,25 +905,36 @@ if (isset($_POST['remove-employee'])) {
             throw new Exception("Employee not found.");
         }
 
+        $plantillaItemData = employeeItemNumber($employeeId);
+        $plantillaItemId = $plantillaItemData['id'] ?? null;
+
         $affectedEmployeeStatus = updateEmployeeStatus($reason, $employeeId);
 
         if ($affectedEmployeeStatus === false) {
             throw new Exception('No changes to employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] status has been made.');
         }
 
+        update(
+            'service_records',
+            [
+                'is_present' => '0',
+                'to_date' => $dateVacated,
+                'for_separation' => '1',
+                'separation_date' => $dateVacated,
+                'separation_cause' => $reason
+            ],
+            '`employee_id` = ? AND `is_present` = 1 AND `to_date` IS NULL',
+            [$employeeId]
+        );
+
         $message = 'Employee [<a href="' . customUri('hrmis', 'Employee Information', $employeeId) . '" title="View ' . userName($employeeId) . ' employee information">' . userName($employeeId, true) . '</a>] has been removed successfully.';
         $success = true;
         createSystemLog($stationId, $userId, 'Removed employee', $employeeId, clientIp());
 
-        if (!$skipVacancy && strtolower($reason) !== 'duplicate') {
-            $plantillaItemData = employeeItemNumber($employeeId);
-            $plantillaItemId = $plantillaItemData['id'] ?? null;
-
-            if ($plantillaItemId) {
-                if (createVacancy($plantillaItemId, 'open', $employeeId, $dateVacated, $reason)) {
-                    $message .= ' A vacant item has been created for this position.';
-                    createSystemLog($stationId, $userId, 'Created vacant item', $employeeId, clientIp());
-                }
+        if (!$skipVacancy && strtolower($reason) !== 'duplicate' && $plantillaItemId) {
+            if (createVacancy($plantillaItemId, 'open', $employeeId, $dateVacated, $reason)) {
+                $message .= ' A vacant item has been created for this position.';
+                createSystemLog($stationId, $userId, 'Created vacant item', $employeeId, clientIp());
             }
         }
 
@@ -1312,7 +1339,7 @@ if (isset($_POST['save-plantilla-item'])) {
         }
 
         if ($affectedPlantillaItem === false) {
-            throw new Exception(doesItemNumberExist($item_number) ? 'Item number already exists.' : 'No changes have been made to plantilla items.');
+            throw new Exception(doesItemNumberExist($item_number, $plantillaItemId) ? 'Item number already exists.' : 'No changes have been made to plantilla items.');
         }
 
         createSystemLog($stationId, $userId, 'Added Plantilla Item', $item_number, clientIp());
@@ -1981,16 +2008,16 @@ if (isset($_POST['save-assessment-score'])) {
             'total' => $scoringWeights ? (float) $scoringWeights['total_max_points'] : 100,
         ];
 
-        $educationScore = (float) ($_POST['education_score'] ?? 0);
-        $trainingScore = (float) ($_POST['training_score'] ?? 0);
-        $experienceScore = (float) ($_POST['experience_score'] ?? 0);
-        $performanceScore = (float) ($_POST['performance_score'] ?? 0);
-        $accomplishmentsScore = (float) ($_POST['outstanding_accomplishments_score'] ?? 0);
-        $appEduScore = (float) ($_POST['application_of_education_score'] ?? 0);
-        $appLdScore = (float) ($_POST['application_of_ld_score'] ?? 0);
-        $examRaw = (float) ($_POST['potential_written_exam_raw'] ?? 0);
-        $beiRaw = (float) ($_POST['potential_bei_raw'] ?? 0);
-        $wstRaw = (float) ($_POST['potential_wst_raw'] ?? 0);
+        $educationScore = round((float) ($_POST['education_score'] ?? 0), 3);
+        $trainingScore = round((float) ($_POST['training_score'] ?? 0), 3);
+        $experienceScore = round((float) ($_POST['experience_score'] ?? 0), 3);
+        $performanceScore = round((float) ($_POST['performance_score'] ?? 0), 3);
+        $accomplishmentsScore = round((float) ($_POST['outstanding_accomplishments_score'] ?? 0), 3);
+        $appEduScore = round((float) ($_POST['application_of_education_score'] ?? 0), 3);
+        $appLdScore = round((float) ($_POST['application_of_ld_score'] ?? 0), 3);
+        $examRaw = round((float) ($_POST['potential_written_exam_raw'] ?? 0), 3);
+        $beiRaw = round((float) ($_POST['potential_bei_raw'] ?? 0), 3);
+        $wstRaw = round((float) ($_POST['potential_wst_raw'] ?? 0), 3);
 
         if ($educationScore < 0 || $educationScore > $w['education']) {
             throw new Exception("Education score must be between 0 and {$w['education']}.");
@@ -2025,7 +2052,7 @@ if (isset($_POST['save-assessment-score'])) {
             throw new Exception("WST raw score must be between 0 and {$w['potential']}.");
         }
 
-        $potentialFinal = $examRaw + $beiRaw + $wstRaw;
+        $potentialFinal = round($examRaw + $beiRaw + $wstRaw, 3);
         if ($potentialFinal > $w['potential']) {
             throw new Exception("Combined Potential score ({$potentialFinal}) exceeds the maximum allowed ({$w['potential']}).");
         }
@@ -2034,7 +2061,7 @@ if (isset($_POST['save-assessment-score'])) {
             + $performanceScore + $accomplishmentsScore + $appEduScore + $appLdScore
             + $potentialFinal;
 
-        $totalAccumulated = min($totalAccumulated, $w['total']);
+        $totalAccumulated = round(min($totalAccumulated, $w['total']), 3);
 
         $applicationCodeId = $application['application_code_id'];
         $applicationCode = applicantCode($applicationCodeId);
