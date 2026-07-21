@@ -65,8 +65,17 @@ if (isset($_POST['register-applicant'])) {
                 }
             } else {
                 foreach ($required_fields as $field => $label) {
-                    if (empty(trim($_POST[$field] ?? ''))) {
-                        $errors[] = "$label is required.";
+                    if ($field === 'religion') {
+                        $religion_val = trim($_POST['religion'] ?? '');
+                        if (empty($religion_val)) {
+                            $errors[] = "Religion is required.";
+                        } elseif ($religion_val === 'Others' && empty(trim($_POST['religion_specify'] ?? ''))) {
+                            $errors[] = "Please specify your religion.";
+                        }
+                    } else {
+                        if (empty(trim($_POST[$field] ?? ''))) {
+                            $errors[] = "$label is required.";
+                        }
                     }
                 }
 
@@ -148,7 +157,7 @@ if (isset($_POST['register-applicant'])) {
             if (createApplicantCode($data['id'], $data['code']) === false) {
                 throw new Exception('Failed to create applicant code.');
             }
-            createSystemLog('143', null, 'Applicant registration', $data['id'], clientIp());
+            createSystemLog(DIVISION_ID, null, 'Applicant registration', $data['id'], clientIp());
             commit();
             $isRegistered = true;
         } catch (Exception $e) {
