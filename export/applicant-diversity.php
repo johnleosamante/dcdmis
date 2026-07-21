@@ -25,10 +25,10 @@ $exportConfig = [
         'db_function' => 'applicantDiversityReligion',
         'headers' => ['Religion', 'Male', 'Female', 'Total'],
     ],
-    'indigenous' => [
-        'title' => 'Applicant Indigenous People Demographics',
-        'db_function' => 'applicantDiversityIndigenous',
-        'headers' => ['Indigenous Group', 'Male', 'Female', 'Total'],
+    'ethnic' => [
+        'title' => 'Applicant Ethnic Group Demographics',
+        'db_function' => 'applicantDiversityEthnic',
+        'headers' => ['Ethnic Group', 'Male', 'Female', 'Total'],
     ],
     'pwd' => [
         'title' => 'Applicant Persons with Disability (PWD) Demographics',
