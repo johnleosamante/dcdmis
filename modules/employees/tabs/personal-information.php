@@ -134,15 +134,108 @@
                         </div>
                     </div>
 
+                    <?php
+                    $religion_list = religions();
+                    $religion_names = array_column($religion_list, 'name');
+                    $current_religion = $employee['religion'];
+                    $is_common = in_array($current_religion, $religion_names);
+                    $selected_value = '';
+                    $specify_value = '';
+                    if ($current_religion !== '') {
+                        if ($is_common) {
+                            $selected_value = $current_religion;
+                        } else {
+                            $selected_value = 'Others';
+                            $specify_value = $current_religion;
+                        }
+                    }
+                    ?>
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label for="religion" class="mb-0">Religion</label>
-                            <input id="religion" name="religion"
-                                <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                type="text" class="form-control" value="<?= e($employee['religion']) ?>"
-                                <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                            <?php if (!$editMode): ?>
+                                <input id="religion" type="text" class="form-control" value="<?= e($selected_value === 'Others' ? 'Others' : $current_religion) ?>" readonly>
+                            <?php else: ?>
+                                <select id="religion" name="religion" class="form-control" onchange="toggleReligionSpecify(this, 'religion-specify-group')">
+                                    <?php foreach ($religion_list as $r): ?>
+                                        <option value="<?= e($r['name']) ?>" <?= $selected_value === $r['name'] ? 'selected' : '' ?>><?= e($r['name']) ?></option>
+                                    <?php endforeach ?>
+                                    <option value="Others" <?= $selected_value === 'Others' ? 'selected' : '' ?>>Others</option>
+                                </select>
+                            <?php endif ?>
                         </div>
                     </div>
+
+                    <?php if (!$editMode): ?>
+                        <?php if ($selected_value === 'Others'): ?>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="religion-specify" class="mb-0">Specify Religion</label>
+                                    <input id="religion-specify" type="text" class="form-control" value="<?= e($specify_value) ?>" readonly>
+                                </div>
+                            </div>
+                        <?php endif ?>
+                    <?php else: ?>
+                        <div class="col-lg-12" id="religion-specify-group" style="display: <?= $selected_value === 'Others' ? 'block' : 'none' ?>;">
+                            <div class="form-group">
+                                <label for="religion-specify" class="mb-0">Specify Religion</label>
+                                <input id="religion-specify" name="religion_specify" type="text" class="form-control" value="<?= e($specify_value) ?>" <?= $selected_value === 'Others' ? 'required' : '' ?>>
+                            </div>
+                        </div>
+                    <?php endif ?>
+                </div>
+
+                <?php
+                $ethnic_list = ethnic_groups();
+                $ethnic_names = array_column($ethnic_list, 'name');
+                $current_ethnic = $employee['ethnic_group'] ?? '';
+                $is_common_ethnic = in_array($current_ethnic, $ethnic_names);
+                $selected_ethnic_value = '';
+                $specify_ethnic_value = '';
+                if ($current_ethnic !== '') {
+                    if ($is_common_ethnic) {
+                        $selected_ethnic_value = $current_ethnic;
+                    } else {
+                        $selected_ethnic_value = 'Others';
+                        $specify_ethnic_value = $current_ethnic;
+                    }
+                }
+                ?>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="ethnic-group" class="mb-0">Ethnic Group</label>
+                            <?php if (!$editMode): ?>
+                                <input id="ethnic-group" type="text" class="form-control" value="<?= e($selected_ethnic_value === 'Others' ? 'Others' : $current_ethnic) ?>" readonly>
+                            <?php else: ?>
+                                <select id="ethnic-group" name="ethnic_group" class="form-control" onchange="toggleEthnicGroupSpecify(this, 'ethnic-group-specify-group')">
+                                    <option value="">-- Select Ethnic Group --</option>
+                                    <?php foreach ($ethnic_list as $eg): ?>
+                                        <option value="<?= e($eg['name']) ?>" <?= $selected_ethnic_value === $eg['name'] ? 'selected' : '' ?>><?= e($eg['name']) ?></option>
+                                    <?php endforeach ?>
+                                    <option value="Others" <?= $selected_ethnic_value === 'Others' ? 'selected' : '' ?>>Others</option>
+                                </select>
+                            <?php endif ?>
+                        </div>
+                    </div>
+
+                    <?php if (!$editMode): ?>
+                        <?php if ($selected_ethnic_value === 'Others'): ?>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="ethnic-group-specify" class="mb-0">Specify Ethnic Group</label>
+                                    <input id="ethnic-group-specify" type="text" class="form-control" value="<?= e($specify_ethnic_value) ?>" readonly>
+                                </div>
+                            </div>
+                        <?php endif ?>
+                    <?php else: ?>
+                        <div class="col-lg-12" id="ethnic-group-specify-group" style="display: <?= $selected_ethnic_value === 'Others' ? 'block' : 'none' ?>;">
+                            <div class="form-group">
+                                <label for="ethnic-group-specify" class="mb-0">Specify Ethnic Group</label>
+                                <input id="ethnic-group-specify" name="ethnic_group_specify" type="text" class="form-control" value="<?= e($specify_ethnic_value) ?>" <?= $selected_ethnic_value === 'Others' ? 'required' : '' ?>>
+                            </div>
+                        </div>
+                    <?php endif ?>
                 </div>
 
                 <div class="row">
@@ -564,3 +657,32 @@
         </form>
     <?php endif ?>
 </div>
+<?php if ($editMode): ?>
+<script>
+    function toggleReligionSpecify(selectElement, targetId) {
+        const targetGroup = document.getElementById(targetId);
+        const specifyInput = document.getElementById('religion-specify');
+        if (selectElement.value === 'Others') {
+            targetGroup.style.display = 'block';
+            specifyInput.setAttribute('required', 'required');
+        } else {
+            targetGroup.style.display = 'none';
+            specifyInput.removeAttribute('required');
+            specifyInput.value = '';
+        }
+    }
+
+    function toggleEthnicGroupSpecify(selectElement, targetId) {
+        const targetGroup = document.getElementById(targetId);
+        const specifyInput = document.getElementById('ethnic-group-specify');
+        if (selectElement.value === 'Others') {
+            targetGroup.style.display = 'block';
+            specifyInput.setAttribute('required', 'required');
+        } else {
+            targetGroup.style.display = 'none';
+            specifyInput.removeAttribute('required');
+            specifyInput.value = '';
+        }
+    }
+</script>
+<?php endif ?>
