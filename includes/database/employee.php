@@ -291,7 +291,7 @@ function createEmployee($employee_id, $last_name, $first_name, $middle_name, $na
     return insert('employees', $data);
 }
 
-function updateEmployee($last_name, $first_name, $middle_name, $name_extension, $birthdate, $place_of_birth, $sex, $civil_status, $specify_other_civil_status, $religion, $citizenship_id, $dual_citizenship_type, $dual_citizenship_country_id, $residence_lot, $residence_street, $residence_subdivision, $residence_barangay, $residence_city, $residence_province, $residence_zip, $permanent_lot, $permanent_street, $permanent_subdivision, $permanent_barangay, $permanent_city, $permanent_province, $permanent_zip, $height, $weight, $blood_type, $umid, $crn, $bp, $pagibig, $philhealth, $philsys, $sss, $telephone, $mobile, $email, $tin, $agency_id, $prc, $photo, $id)
+function updateEmployee($last_name, $first_name, $middle_name, $name_extension, $birthdate, $place_of_birth, $sex, $civil_status, $specify_other_civil_status, $religion, $ethnic_group, $citizenship_id, $dual_citizenship_type, $dual_citizenship_country_id, $residence_lot, $residence_street, $residence_subdivision, $residence_barangay, $residence_city, $residence_province, $residence_zip, $permanent_lot, $permanent_street, $permanent_subdivision, $permanent_barangay, $permanent_city, $permanent_province, $permanent_zip, $height, $weight, $blood_type, $umid, $crn, $bp, $pagibig, $philhealth, $philsys, $sss, $telephone, $mobile, $email, $tin, $agency_id, $prc, $photo, $id)
 {
     $data = [
         'last_name' => $last_name,
@@ -304,6 +304,7 @@ function updateEmployee($last_name, $first_name, $middle_name, $name_extension, 
         'civil_status' => $civil_status,
         'specify_other_civil_status' => $specify_other_civil_status,
         'religion' => $religion,
+        'ethnic_group' => $ethnic_group,
         'citizenship_id' => $citizenship_id,
         'dual_citizenship_type' => $dual_citizenship_type,
         'dual_citizenship_country_id' => $dual_citizenship_country_id,
@@ -341,60 +342,6 @@ function updateEmployee($last_name, $first_name, $middle_name, $name_extension, 
     ];
     return update('employees', $data, '`id` = ?', [$id]);
 }
-
-// function updateEmployee($last_name, $first_name, $middle_name, $name_extension, $birthdate, $place_of_birth, $sex, $civil_status, $specify_other_civil_status, $religion, $ethnic_group, $citizenship_id, $dual_citizenship_type, $dual_citizenship_country_id, $residence_lot, $residence_street, $residence_subdivision, $residence_barangay, $residence_city, $residence_province, $residence_zip, $permanent_lot, $permanent_street, $permanent_subdivision, $permanent_barangay, $permanent_city, $permanent_province, $permanent_zip, $height, $weight, $blood_type, $umid, $crn, $bp, $pagibig, $philhealth, $philsys, $sss, $telephone, $mobile, $email, $tin, $agency_id, $prc, $photo, $id)
-// {
-//     $data = [
-//         'last_name' => $last_name,
-//         'first_name' => $first_name,
-//         'middle_name' => $middle_name,
-//         'name_extension' => $name_extension,
-//         'birthdate' => $birthdate,
-//         'place_of_birth' => $place_of_birth,
-//         'sex' => $sex,
-//         'civil_status' => $civil_status,
-//         'specify_other_civil_status' => $specify_other_civil_status,
-//         'religion' => $religion,
-//         'ethnic_group' => $ethnic_group,
-//         'citizenship_id' => $citizenship_id,
-//         'dual_citizenship_type' => $dual_citizenship_type,
-//         'dual_citizenship_country_id' => $dual_citizenship_country_id,
-//         'residence_lot' => $residence_lot,
-//         'residence_street' => $residence_street,
-//         'residence_subdivision' => $residence_subdivision,
-//         'residence_barangay' => $residence_barangay,
-//         'residence_city' => $residence_city,
-//         'residence_province' => $residence_province,
-//         'residence_zip' => $residence_zip,
-//         'permanent_lot' => $permanent_lot,
-//         'permanent_street' => $permanent_street,
-//         'permanent_subdivision' => $permanent_subdivision,
-//         'permanent_barangay' => $permanent_barangay,
-//         'permanent_city' => $permanent_city,
-//         'permanent_province' => $permanent_province,
-//         'permanent_zip' => $permanent_zip,
-//         'height' => $height,
-//         'weight' => $weight,
-//         'blood_type' => $blood_type,
-//         'umid_id' => $umid,
-//         'gsis_crn' => $crn,
-//         'gsis_bp' => $bp,
-//         'pagibig' => $pagibig,
-//         'philhealth' => $philhealth,
-//         'philsys' => $philsys,
-//         'sss' => $sss,
-//         'telephone' => $telephone,
-//         'mobile_number' => $mobile,
-//         'email_address' => $email,
-//         'tin' => $tin,
-//         'agency_id' => $agency_id,
-//         'prc' => $prc,
-//         'profile_picture' => $photo
-//     ];
-//     return update('employees', $data, '`id` = ?', [$id]);
-// }
-
-
 
 function isDuplicateEmployee($id)
 {
