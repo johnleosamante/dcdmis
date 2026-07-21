@@ -1,6 +1,16 @@
 <?php
 // modules/employees/active-employees.php
-if (!$isHrmis) {
+$userPositionId = null;
+if ($isPis) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+}
+$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if (!$isHrmis && !$isAllowedHigherPosition) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -12,18 +22,26 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item active">Retirable</li>
+            <?php if ($isPis): ?>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a
+                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        Placement</a></li>
+            <?php endif ?>
+            <li class="breadcrumb-item active">Retirable Employees</li>
         </ol>
     </nav>
 
-    <div class="d-inline-block">
-        <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus') ?>
-    </div>
+    <?php if ($isHrmis): ?>
+        <div class="d-inline-block">
+            <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus') ?>
+        </div>
+    <?php endif ?>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithLink('Retirable Employees', uri() . '/hrmis') ?>
+        <?php contentTitleWithLink('Retirable Employees', uri() . '/' . $activeApp) ?>
     </div>
 
     <div class="card-body">
@@ -45,7 +63,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
                         <th class="align-middle" width="25%">Station</th>
-                        <?php if (!$isHrtdms): ?>
+                        <?php if (!$isHrtdms && !$isAllowedHigherPosition): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>
                     </tr>
@@ -71,6 +89,8 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle text-left">
                                 <?php if ($isHrmis) {
                                     linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
+                                } elseif ($isAllowedHigherPosition) {
+                                    linkItem(customUri('pis', 'Employee Information', $row['id']), $employeeName);
                                 } else {
                                     modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                                 } ?>
@@ -85,7 +105,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle">
                                 <?php linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']) ?>
                             </td>
-                            <?php if (!$isHrtdms): ?>
+                            <?php if (!$isHrtdms && !$isAllowedHigherPosition): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
@@ -120,7 +140,7 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="5%">Age</th>
                         <th class="align-middle" width="20%">Position</th>
                         <th class="align-middle" width="25%">Station</th>
-                        <?php if (!$isHrtdms): ?>
+                        <?php if (!$isHrtdms && !$isAllowedHigherPosition): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif; ?>
                     </tr>
