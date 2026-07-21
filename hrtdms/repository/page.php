@@ -50,5 +50,5 @@ if (!MAINTENANCE_MODE) {
         <?php endif ?>
     </div>
 <?php } else {
-    require_once(root() . 'oops/maintenance.php');
+    require_once(root() . '/oops/maintenance.php');
 } ?>

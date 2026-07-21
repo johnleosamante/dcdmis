@@ -175,15 +175,80 @@
                         <label for="religion" class="small font-weight-bold mb-0">Religion
                             <?= showAsterisk() ?>
                         </label>
-                        <input type="text" class="form-control" id="religion" name="religion" placeholder="Religion"
-                            value="<?= isset($form_data['religion']) ? e($form_data['religion']) : '' ?>">
+                        <?php
+                        $religion_list = religions();
+                        $religion_names = array_column($religion_list, 'name');
+                        $current_religion = $form_data['religion'] ?? '';
+                        $is_common = in_array($current_religion, $religion_names);
+                        $selected_value = '';
+                        $specify_value = '';
+                        if ($current_religion !== '') {
+                            if ($is_common) {
+                                $selected_value = $current_religion;
+                            } else {
+                                $selected_value = 'Others';
+                                $specify_value = $current_religion;
+                            }
+                        }
+                        ?>
+                        <select class="form-control" id="religion" name="religion"
+                            onchange="toggleReligionSpecify(this, 'religion-specify-group')">
+                            <option value="">Select Religion</option>
+                            <?php foreach ($religion_list as $r): ?>
+                                <option value="<?= e($r['name']) ?>" <?= $selected_value === $r['name'] ? 'selected' : '' ?>>
+                                    <?= e($r['name']) ?>
+                                </option>
+                            <?php endforeach ?>
+                            <option value="Others" <?= $selected_value === 'Others' ? 'selected' : '' ?>>Others</option>
+                        </select>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="ethnic-group" class="small font-weight-bold mb-0">Indigenous/Ethnic
-                            Group</label>
-                        <input type="text" class="form-control" id="ethnic-group" name="ethnic_group"
-                            placeholder="If applicable"
-                            value="<?= isset($form_data['ethnic_group']) ? e($form_data['ethnic_group']) : '' ?>">
+                        <label for="ethnic-group" class="small font-weight-bold mb-0">Ethnic Group</label>
+                        <?php
+                        $ethnic_list = ethnic_groups();
+                        $ethnic_names = array_column($ethnic_list, 'name');
+                        $current_ethnic = $form_data['ethnic_group'] ?? '';
+                        $is_common_ethnic = in_array($current_ethnic, $ethnic_names);
+                        $selected_ethnic_value = '';
+                        $specify_ethnic_value = '';
+                        if ($current_ethnic !== '') {
+                            if ($is_common_ethnic) {
+                                $selected_ethnic_value = $current_ethnic;
+                            } else {
+                                $selected_ethnic_value = 'Others';
+                                $specify_ethnic_value = $current_ethnic;
+                            }
+                        }
+                        ?>
+                        <select class="form-control" id="ethnic-group" name="ethnic_group"
+                            onchange="toggleEthnicGroupSpecify(this, 'ethnic-group-specify-group')">
+                            <option value="">Select Ethnic Group</option>
+                            <?php foreach ($ethnic_list as $eg): ?>
+                                <option value="<?= e($eg['name']) ?>" <?= $selected_ethnic_value === $eg['name'] ? 'selected' : '' ?>><?= e($eg['name']) ?></option>
+                            <?php endforeach ?>
+                            <option value="Others" <?= $selected_ethnic_value === 'Others' ? 'selected' : '' ?>>Others
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row" id="religion-specify-group"
+                    style="display: <?= $selected_value === 'Others' ? 'block' : 'none' ?>;">
+                    <div class="form-group col-md-6">
+                        <label for="religion-specify" class="small font-weight-bold mb-0">Specify Religion
+                            <?= showAsterisk() ?></label>
+                        <input type="text" class="form-control" id="religion-specify" name="religion_specify"
+                            placeholder="Specify Religion" value="<?= e($specify_value) ?>"
+                            <?= $selected_value === 'Others' ? 'required' : '' ?>>
+                    </div>
+                </div>
+                <div class="form-row" id="ethnic-group-specify-group"
+                    style="display: <?= $selected_ethnic_value === 'Others' ? 'block' : 'none' ?>;">
+                    <div class="form-group col-md-12">
+                        <label for="ethnic-group-specify" class="small font-weight-bold mb-0">Specify Ethnic Group
+                            <?= showAsterisk() ?></label>
+                        <input type="text" class="form-control" id="ethnic-group-specify" name="ethnic_group_specify"
+                            placeholder="Specify Ethnic Group" value="<?= e($specify_ethnic_value) ?>"
+                            <?= $selected_ethnic_value === 'Others' ? 'required' : '' ?>>
                     </div>
                 </div>
                 <div class="form-group">
@@ -324,6 +389,32 @@
 </div>
 
 <script>
+    function toggleReligionSpecify(selectElement, targetId) {
+        const targetGroup = document.getElementById(targetId);
+        const specifyInput = document.getElementById('religion-specify');
+        if (selectElement.value === 'Others') {
+            targetGroup.style.display = 'block';
+            specifyInput.setAttribute('required', 'required');
+        } else {
+            targetGroup.style.display = 'none';
+            specifyInput.removeAttribute('required');
+            specifyInput.value = '';
+        }
+    }
+
+    function toggleEthnicGroupSpecify(selectElement, targetId) {
+        const targetGroup = document.getElementById(targetId);
+        const specifyInput = document.getElementById('ethnic-group-specify');
+        if (selectElement.value === 'Others') {
+            targetGroup.style.display = 'block';
+            specifyInput.setAttribute('required', 'required');
+        } else {
+            targetGroup.style.display = 'none';
+            specifyInput.removeAttribute('required');
+            specifyInput.value = '';
+        }
+    }
+
     function toggleEmployeeFields() {
         const isEmployee = document.getElementById('is_current_employee').checked;
         const employeeFields = document.getElementById('employee-fields');
@@ -362,6 +453,20 @@
                     field.setAttribute('required', 'required');
                 }
             });
+
+            // If religion is Others, make specify field required
+            const religionSelect = document.getElementById('religion');
+            const specifyInput = document.getElementById('religion-specify');
+            if (religionSelect && religionSelect.value === 'Others' && specifyInput) {
+                specifyInput.setAttribute('required', 'required');
+            }
+
+            // If ethnic group is Others, make specify field required
+            const ethnicSelect = document.getElementById('ethnic-group');
+            const ethnicSpecifyInput = document.getElementById('ethnic-group-specify');
+            if (ethnicSelect && ethnicSelect.value === 'Others' && ethnicSpecifyInput) {
+                ethnicSpecifyInput.setAttribute('required', 'required');
+            }
 
             // Remove required from employee email
             emailEmployeeInput.removeAttribute('required');

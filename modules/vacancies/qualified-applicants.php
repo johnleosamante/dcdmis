@@ -100,7 +100,7 @@ $qualifiedApps = array_filter($apps, function ($app) {
                                 <td class="align-middle">
                                     <?php if (isset($app['total_accumulated_score']) && $app['total_accumulated_score'] !== null): ?>
                                         <div class="font-weight-bold text-primary">
-                                            <?= number_format($app['total_accumulated_score'], 2) ?>
+                                            <?= number_format($app['total_accumulated_score'], 3) ?>
                                         </div>
                                     <?php else: ?>
                                         <div class="text-muted font-italic small text-uppercase">Not assessed</div>

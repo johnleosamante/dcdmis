@@ -1,6 +1,18 @@
 <?php
 // modules/vacancies/publications.php
-if (!$isHrmis) {
+$userPositionId = null;
+if ($isPis) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+
+    require_once(root() . '/includes/database/vacancy.php');
+}
+$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if (!$isHrmis && !$isAllowedHigherPosition) {
     require_once root() . '/modules/error/403.php';
     return;
 }
@@ -12,6 +24,12 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <?php if ($isPis): ?>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a
+                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        Placement</a></li>
+            <?php endif ?>
             <li class="breadcrumb-item active">Call for Applications</li>
         </ol>
     </nav>
@@ -52,8 +70,8 @@ messageAlert($showAlert, $message, $success);
                         ?>
                         <tr class="text-uppercase">
                             <td class="align-middle text-left">
-                                <a href="<?= $isHrmis && ($isICT || $isPersonnel) ? customUri('hrmis', 'Call for Application Details', $row['id']) : uri() . '/hrmis/apply?p=' . $row['code'] ?>"
-                                    target="<?= $isHrmis && ($isICT || $isPersonnel) ? '_self' : '_blank' ?>">
+                                <a href="<?= (($isHrmis && ($isICT || $isPersonnel)) || $isAllowedHigherPosition) ? customUri($activeApp, 'Call for Application Details', $row['id']) : uri() . '/hrmis/apply?p=' . $row['code'] ?>"
+                                    target="<?= (($isHrmis && ($isICT || $isPersonnel)) || $isAllowedHigherPosition) ? '_self' : '_blank' ?>">
                                     <?= e($row['title']) ?>
                                 </a>
                             </td>

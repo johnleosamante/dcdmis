@@ -16,7 +16,17 @@ if ($schoolInfo && $employeeId > 0) {
     }
 }
 
-if ($isPis && $userId !== $employeeId && !$isHeadOfThisEmployee) {
+$userPositionId = null;
+if ($isPis) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+}
+$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if ($isPis && $userId !== $employeeId && !$isHeadOfThisEmployee && !$isAllowedHigherPosition) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
@@ -78,7 +88,11 @@ if (!is_dir($uploadDirectory)) {
                     <?php
                     $results = fileAttachments($employeeId);
 
-                    foreach ($results as $row): ?>
+                    foreach ($results as $row):
+                        $fullPath = root() . '/' . $row['file_name'];
+                        $fileExists = !empty($row['file_name']) && file_exists($fullPath);
+                        $showActions = $fileExists || $isHrmis;
+                        ?>
                         <tr class="text-uppercase">
                             <td class="align-middle"><?= toDatetime($row['created_at']) ?></td>
                             <td class="align-middle text-left">
@@ -86,23 +100,29 @@ if (!is_dir($uploadDirectory)) {
                                 <div class="small text-muted"><?= e($row['file_type']) ?></div>
                             </td>
                             <td class="align-middle text-capitalize">
-                                <div class="dropdown no-arrow">
-                                    <?php dropdownEllipsis() ?>
-                                    <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
-                                        <?php
-                                        previewLinkDropdownItem(uri() . '/' . $row['file_name'], 'Preview', 'fa-eye', 'Preview ' . $row['description']);
-                                        downloadLinkDropdownItem(uri() . '/' . $row['file_name'], 'Download', 'fa-download', 'Download ' . $row['description'], $row['description'] . '.' . $row['file_extension'], true);
-
-                                        if ($isHrmis) { ?>
-                                            <div class="dropdown-divider"></div>
+                                <?php if ($showActions): ?>
+                                    <div class="dropdown no-arrow">
+                                        <?php dropdownEllipsis() ?>
+                                        <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                                             <?php
-                                            modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit 201 File');
-                                            modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy 201 File') ?>
-                                            <div class="dropdown-divider"></div>
-                                            <?php modalDropdownItem(uri() . '/modules/201-file/delete-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete 201 File');
-                                        } ?>
+                                            if ($fileExists) {
+                                                previewLinkDropdownItem(uri() . '/' . $row['file_name'], 'Preview', 'fa-eye', 'Preview ' . $row['description']);
+                                                downloadLinkDropdownItem(uri() . '/' . $row['file_name'], 'Download', 'fa-download', 'Download ' . $row['description'], $row['description'] . '.' . $row['file_extension'], true);
+                                            }
+
+                                            if ($isHrmis) {
+                                                if ($fileExists) {
+                                                    echo '<div class="dropdown-divider"></div>';
+                                                }
+                                                modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit 201 File');
+                                                modalDropdownItem(uri() . '/modules/201-file/save-201-file-dialog.php?c=' . cipher($employeeId) . '&e=' . cipher($employeeId) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy 201 File');
+                                                echo '<div class="dropdown-divider"></div>';
+                                                modalDropdownItem(uri() . '/modules/201-file/delete-201-file-dialog.php?e=' . cipher($employeeId) . '&id=' . cipher($row['id']), 'Delete', 'fa-trash', 'Delete 201 File');
+                                            }
+                                            ?>
+                                        </div>
                                     </div>
-                                </div>
+                                <?php endif ?>
                             </td>
                         </tr>
                     <?php endforeach ?>

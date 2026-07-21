@@ -18,3 +18,7 @@ const ERROR_LOG_FILE = '';
 const MAINTENANCE_MODE = false;
 const PRODUCTION_MODE = false;
 const DEVELOPER_EMAIL = 'developer@email.com';
+const SMTP_HOST = 'host';
+const SMTP_USER = 'user';
+const SMTP_PASSWORD = 'password';
+const SMTP_PORT = 123;

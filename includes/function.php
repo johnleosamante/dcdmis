@@ -199,9 +199,14 @@ function validateFileMimeType(string $filePath, array $allowedMimes): bool
     if (!file_exists($filePath)) {
         return false;
     }
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $mimeType = finfo_file($finfo, $filePath);
-    finfo_close($finfo);
+
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->file($filePath);
+
+    if ($mimeType === false) {
+        return false;
+    }
+
     return in_array($mimeType, $allowedMimes, true);
 }
 
@@ -267,11 +272,14 @@ function stageUploadedFile(array $file_data, array $allowed_MIME_map, string $ta
         throw new Exception("The chosen file size exceeds the strict system limit configuration.");
     }
 
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $real_MIME_type = finfo_file($finfo, $file_data['tmp_name']);
-    finfo_close($finfo);
+    try {
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $real_MIME_type = $finfo->file($file_data['tmp_name']);
+    } catch (Exception $e) {
+        throw new Exception("Failed to analyze the file properties securely.");
+    }
 
-    if (!array_key_exists($real_MIME_type, $allowed_MIME_map)) {
+    if (!$real_MIME_type || !array_key_exists($real_MIME_type, $allowed_MIME_map)) {
         throw new Exception("Invalid file content structure detected. Format transformation rejected.");
     }
 

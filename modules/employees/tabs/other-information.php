@@ -292,9 +292,16 @@ if ($information) {
 
                         <div class="form-group mb-0">
                             <label for="indigenous-specify" class="m-0">If YES, please specify:</label>
-                            <input id="indigenous-specify" name="indigenous-specify" type="text"
-                                value="<?= e($isIndigenousSpecify) ?>" title="Leave blank if NO" class="form-control"
-                                <?= !$editMode ? ' readonly' : '' ?>>
+                            <?php if (!$editMode): ?>
+                                <input id="indigenous-specify" type="text" value="<?= e($isIndigenousSpecify) ?>" class="form-control" readonly>
+                            <?php else: ?>
+                                <select id="indigenous-specify" name="indigenous-specify" class="form-control">
+                                    <option value="">-- Select --</option>
+                                    <?php foreach (indigenous_groups() as $ig): ?>
+                                        <option value="<?= e($ig['name']) ?>" <?= setOptionSelected($ig['name'], $isIndigenousSpecify) ?>><?= e($ig['name']) ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            <?php endif ?>
                         </div>
                     </div>
                 </li>

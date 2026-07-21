@@ -143,12 +143,15 @@ $isRecordsPortal = $portal === 'rec_portal';
 $isAdminPortal = $portal === 'adm_portal';
 $isPersonnel = $code === 'PER';
 $isICT = $code === 'ICT';
+$allowedMonitoringPositions = ['SDS', 'ASDS', 'CES', 'ATY3', 'ITO1', 'A3', 'ADOF5', 'ADOF4', 'SEPS', 'EPS2', 'PSDS', 'EPS', 'PLO3'];
 
 if (function_exists('verify_csrf_token')) {
     verify_csrf_token();
 }
 
-foreach (['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'dtr', 'monitoring_tools'] as $area) {
+$modules = ['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'monitoring_tools'];
+
+foreach ($modules as $area) {
     if (!isset($_SESSION["{$prefix}data_privacy_agreed_{$area}"])) {
         $_SESSION["{$prefix}data_privacy_agreed_{$area}"] = false;
     }
@@ -156,7 +159,7 @@ foreach (['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'dtr', 'monitoring_to
 
 if (isset($_POST['accept_data_privacy'])) {
     $area = $_POST['data_privacy_area'] ?? '';
-    if (in_array($area, ['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'dtr', 'monitoring_tools'])) {
+    if (in_array($area, $modules)) {
         $_SESSION["{$prefix}data_privacy_agreed_{$area}"] = true;
     }
     redirect($_SERVER['REQUEST_URI']);

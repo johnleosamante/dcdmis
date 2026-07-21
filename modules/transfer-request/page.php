@@ -1,6 +1,6 @@
 <?php
 // modules/transfer-request/page.php
-$isNonDivision = $stationId !== '143';
+$isNonDivision = $stationId !== DIVISION_ID;
 if (!$isPis || (!$isSchoolPortal && !$isNonDivision)) {
     require_once(root() . '/modules/error/403.php');
     return;
@@ -67,7 +67,7 @@ if ($currStation) {
                                     <?php
                                     $schools = schoolsByDistrict($district['id']);
                                     foreach ($schools as $school): ?>
-                                        <?php if ($school['id'] !== $currentStationId && $school['id'] !== '143' && strtolower($school['alias']) !== 'sdo'): ?>
+                                        <?php if ($school['id'] !== $currentStationId && $school['id'] !== DIVISION_ID && strtolower($school['alias']) !== 'sdo'): ?>
                                             <option value="<?= e($school['id']) ?>">
                                                 <?= e($school['name']) ?>
                                             </option>

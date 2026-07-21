@@ -16,7 +16,17 @@ if ($schoolInfo && $employeeId > 0) {
     }
 }
 
-if ($isPis && $userId !== $employeeId && !$isHeadOfThisEmployee) {
+$userPositionId = null;
+if ($isPis) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+}
+$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if ($isPis && $userId !== $employeeId && !$isHeadOfThisEmployee && !$isAllowedHigherPosition) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }

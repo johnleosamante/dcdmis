@@ -1,6 +1,16 @@
 <?php
 // modules/trainings/scheduled-trainings.php
-if (!$isHrtdms) {
+$userPositionId = null;
+if ($isPis) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+}
+$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if (!$isHrtdms && !$isAllowedHigherPosition) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -12,6 +22,11 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <?php if ($isPis): ?>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'Learning and Development') ?>">Learning and
+                        Development</a></li>
+            <?php endif; ?>
             <li class="breadcrumb-item active">Scheduled Trainings</li>
         </ol>
     </nav>

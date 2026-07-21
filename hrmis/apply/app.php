@@ -112,7 +112,7 @@ if (isset($_POST['submit-application'])) {
         $verbConjugation = $appliedCount > 1 ? 'have' : 'has';
         $message = "Your application for {$appliedCount} position{$pluralSuffix} {$verbConjugation} been processed successfully. Please check your email for confirmation.";
 
-        createSystemLog('143', null, "Submitted application for {$appliedCount} position{$pluralSuffix}", $applicationCode, clientIp());
+        createSystemLog(DIVISION_ID, null, "Submitted application for {$appliedCount} position{$pluralSuffix}", $applicationCode, clientIp());
 
         $applicantData = employee($applicationId);
         if (!$applicantData) {

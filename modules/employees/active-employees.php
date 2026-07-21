@@ -3,7 +3,17 @@
 $schoolInfo = schoolByHead($userId);
 $isSchoolHead = !empty($schoolInfo);
 
-if (!$isHrmis && !$isHrtdms && !$isDmis && !($isPis && $isSchoolHead)) {
+$userPositionId = null;
+if ($isPis) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+}
+$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if (!$isHrmis && !$isHrtdms && !$isDmis && !($isPis && ($isSchoolHead || $isAllowedHigherPosition))) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -15,8 +25,14 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <?php if ($isPis): ?>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a
+                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        Placement</a></li>
+            <?php endif ?>
             <li class="breadcrumb-item active">
-                <?= ($isPis && $isSchoolHead) ? 'School Employees' : ($isHrmis ? 'Active' : 'Employees') ?>
+                <?= ($isPis && $isSchoolHead) ? 'School Employees' : ($isHrmis || $isPis ? 'Active Employees' : 'Employees') ?>
             </li>
         </ol>
     </nav>
@@ -33,7 +49,7 @@ messageAlert($showAlert, $message, $success);
         <?php if ($isHrmis) {
             contentTitleWithLink('Active Employees', uri() . '/hrmis');
         } else {
-            contentTitle(($isPis && $isSchoolHead) ? 'School Employees' : 'Employees');
+            contentTitle(($isPis && $isSchoolHead) ? 'School Employees' : $url);
         } ?>
     </div>
 
@@ -65,7 +81,7 @@ messageAlert($showAlert, $message, $success);
                         <?php if ($isHrmis): ?>
                             <th class="align-middle" width="10%">Progress</th>
                         <?php endif ?>
-                        <?php if (!$isHrtdms): ?>
+                        <?php if (!$isHrtdms && !$isAllowedHigherPosition): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
@@ -73,7 +89,7 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $schoolIdForEmployeeList = ($isPis && $isSchoolHead) ? $schoolInfo['id'] : null;
+                    $schoolIdForEmployeeList = ($isPis && $isSchoolHead && !$isAllowedHigherPosition) ? $schoolInfo['id'] : null;
                     $query = activeEmployees($schoolIdForEmployeeList);
                     foreach ($query as $row):
                         $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
@@ -94,7 +110,7 @@ messageAlert($showAlert, $message, $success);
                                     linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
                                 } elseif ($isDmis) {
                                     modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName);
-                                } elseif ($isPis && $isSchoolHead) {
+                                } elseif ($isPis && ($isSchoolHead || $isAllowedHigherPosition)) {
                                     linkItem(customUri('pis', 'Employee Information', $row['id']), $employeeName);
                                 } else {
                                     modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
@@ -121,7 +137,7 @@ messageAlert($showAlert, $message, $success);
                                     <?php progressBar(pdsProgress($row['id'])) ?>
                                 </td>
                             <?php endif ?>
-                            <?php if (!$isHrtdms): ?>
+                            <?php if (!$isHrtdms && !$isAllowedHigherPosition): ?>
                                 <td class="align-middle text-capitalize">
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
@@ -140,7 +156,7 @@ messageAlert($showAlert, $message, $success);
                                                     modalDropdownItem(uri() . '/modules/employees/promote-employee-dialog.php?id=' . cipher($row['id']), 'Promote', 'fa-thumbs-up', 'Promote Employee');
                                                     modalDropdownItem(uri() . '/modules/employees/remove-employee-dialog.php?id=' . cipher($row['id']), 'Remove', 'fa-trash', 'Remove Employee');
                                                 }
-                                            } elseif ($isPis && $isSchoolHead) {
+                                            } elseif ($isPis && ($isSchoolHead || $isAllowedHigherPosition)) {
                                                 linkDropdownItem(customUri('pis', 'School Employee Information', $row['id']), 'Employee Information', 'fa-user', 'Employee Information');
                                                 linkDropdownItem(customUri('pis', 'School Employee Service Record', $row['id']), 'Service Record', 'fa-file-alt', 'Service Record');
                                                 linkDropdownItem(customUri('pis', 'School Employee 201 Files', $row['id']), '201 Files', 'fa-folder-open', '201 Files');
@@ -168,7 +184,7 @@ messageAlert($showAlert, $message, $success);
                         <?php if ($isHrmis): ?>
                             <th class="align-middle" width="10%">Progress</th>
                         <?php endif ?>
-                        <?php if (!$isHrtdms): ?>
+                        <?php if (!$isHrtdms && !$isAllowedHigherPosition): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>

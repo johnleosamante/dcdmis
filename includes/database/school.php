@@ -1,13 +1,16 @@
 <?php
 // schools
-function schools()
+function schools($excludeSDO = false)
 {
+    if ($excludeSDO) {
+        return query("SELECT * FROM `schools` WHERE `id` <> '143' AND `alias` <> 'SDO' ORDER BY `name` ASC");
+    }
     return query("SELECT * FROM `schools` ORDER BY `name` ASC");
 }
 
 function countSchools()
 {
-    $sql = "SELECT COUNT(*) AS `count` FROM `schools`";
+    $sql = "SELECT COUNT(*) AS `count` FROM `schools` WHERE `id` <> '143' AND `alias` <> 'SDO'";
     $result = find($sql);
     return (int) ($result['count'] ?? 0);
 }
@@ -162,14 +165,17 @@ function district($district_id)
     return find("SELECT * FROM `districts` WHERE `id` = ? LIMIT 1", [$district_id]);
 }
 
-function districts()
+function districts($excludeSDO = false)
 {
+    if ($excludeSDO) {
+        return query("SELECT * FROM `districts` WHERE `id` <> 'SDO' ORDER BY `name` ASC");
+    }
     return query("SELECT * FROM `districts` ORDER BY `name` ASC");
 }
 
 function countDistricts()
 {
-    $sql = "SELECT COUNT(*) AS `count` FROM `districts`";
+    $sql = "SELECT COUNT(*) AS `count` FROM `districts` WHERE `id` <> 'SDO'";
     $result = find($sql);
     return (int) ($result['count'] ?? 0);
 }

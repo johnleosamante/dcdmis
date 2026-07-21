@@ -8,16 +8,29 @@ sidebarMenuItem(customUri('pis', '201 Files', $userId), '201 Files', 'fa-folder-
 sidebarMenuItem(customUri('pis', 'Trainings', $userId), 'Trainings', 'fa-chalkboard-teacher', isset($url) && str_contains($url, 'Trainings'));
 sidebarMenuItem(customUri('pis', 'Payslips', $userId), 'Payslips', 'fa-money-check', isset($url) && str_contains($url, 'Payslips'));
 
-$isNonDivision = $stationId !== '143';
-if ($isSchoolPortal || $isNonDivision) {
+$showMonitoringTools = dtsUser($userId) && station($userId)['station_id'] === DIVISION_ID;
+
+if ($showMonitoringTools) {
     sidebarDivider();
-    sidebarMenuItem(customUri('pis', 'Request Transfer'), 'Request Transfer', 'fa-exchange-alt', isset($url) && str_contains($url, 'Request Transfer'));
+    sidebarMenuItem(customUri('pis', 'Monitoring Tools'), 'Monitoring Tools', 'fa-binoculars', isset($url) && str_contains($url, 'Monitoring Tools'));
 }
 
-$schoolInfo = schoolByHead($userId);
-if ($schoolInfo) {
-    sidebarDivider();
-    sidebarMenuItem(customUri('pis', 'Employees'), 'School Employees', 'fa-users', isset($url) && ($url === 'Employees' || $url === 'Active Employees'));
+$userPositionId = position($userId)['position_id'];
+$showOverview = in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT;
+
+if ($showOverview) {
+    $primeHrmPillars = [
+        'Recruitment, Selection and Placement',
+        'Learning and Development',
+        'Performance Management',
+        'Rewards and Recognition'
+    ];
+
+    if (!$showMonitoringTools) {
+        sidebarDivider();
+    }
+
+    sidebarMenuItem(customUri('pis', 'System Overview'), 'System Overview', 'fa-network-wired', isset($url) && (str_contains($url, 'System Overview') || in_array($url, $primeHrmPillars, true)));
 }
 
 if (dtsUser($userId) && station($userId)['station_id'] === '143') {
@@ -27,3 +40,7 @@ if (dtsUser($userId) && station($userId)['station_id'] === '143') {
 
 sidebarMenuItem(customUri('pis', 'Performance Management', $userId), 'Performance Management', 'fa-chart-line', isset($url) && str_contains($url, 'Performance Management'));
 sidebarMenuItem(customUri('pis', 'Daily Time Record', $userId), 'Daily Time Record', 'fa-clock', isset($url) && str_contains($url, 'Daily Time Record'));
+$isNonDivision = $stationId !== DIVISION_ID;
+if ($isSchoolPortal || $isNonDivision) {
+    sidebarMenuItem(customUri('pis', 'Request Transfer'), 'Request Transfer', 'fa-exchange-alt', isset($url) && str_contains($url, 'Request Transfer'));
+}

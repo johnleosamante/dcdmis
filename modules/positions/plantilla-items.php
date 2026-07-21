@@ -1,6 +1,17 @@
 <?php
 // modules/plantilla/page.php
-if (!($isHrmis && $isPersonnel) && !($isHrmis && $isICT)) {
+$userPositionId = null;
+if ($isPis) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+}
+$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+$isPersonnelOrICT = $isHrmis && ($isPersonnel || $isICT);
+
+if (!$isPersonnelOrICT && !$isAllowedHigherPosition) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -16,6 +27,12 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
+            <?php if ($isPis): ?>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a
+                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        Placement</a></li>
+            <?php endif ?>
             <li class="breadcrumb-item active">Plantilla Items</li>
         </ol>
     </nav>
@@ -23,7 +40,11 @@ messageAlert($showAlert, $message, $success);
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithModal('Plantilla Items', uri() . '/modules/positions/save-plantilla-item-dialog.php', 'Add', 'fa-plus') ?>
+        <?php if ($isPersonnelOrICT) {
+            contentTitleWithModal('Plantilla Items', uri() . '/modules/positions/save-plantilla-item-dialog.php', 'Add', 'fa-plus');
+        } else {
+            contentTitle('Plantilla Items');
+        } ?>
     </div>
 
     <div class="card-body">
@@ -40,7 +61,9 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="60%">Item Number / Position</th>
                         <th class="align-middle" width="25%">Station</th>
                         <th class="align-middle" width="10%">Status</th>
-                        <th class="align-middle" width="5%">Action</th>
+                        <?php if ($isPersonnelOrICT): ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif ?>
                     </tr>
                 </thead>
 
@@ -71,28 +94,30 @@ messageAlert($showAlert, $message, $success);
                                     <span class="badge badge-danger badge-pill">Dissolved</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="align-middle text-capitalize">
-                                <div class="dropdown no-arrow">
-                                    <?php dropdownEllipsis() ?>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                        <?php
-                                        $isVacantItem = vacantItem($row['id']);
-                                        if (!$isVacantItem && $row['is_vacant']) {
-                                            modalDropdownItem(uri() . '/modules/positions/fill-employee-dialog.php?id=' . cipher($row['id']), 'Fill', 'fa-user-plus', 'Fill Employee Position'); ?>
-                                            <div class="dropdown-divider"></div>
+                            <?php if ($isPersonnelOrICT): ?>
+                                <td class="align-middle text-capitalize">
+                                    <div class="dropdown no-arrow">
+                                        <?php dropdownEllipsis() ?>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                             <?php
-                                        }
-                                        if (!$isVacantItem && $row['is_vacant']) {
-                                            modalDropdownItem(uri() . '/modules/positions/save-plantilla-item-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Plantilla Item');
-                                        }
-                                        modalDropdownItem(uri() . '/modules/positions/save-plantilla-item-dialog.php?c=' . cipher($row['id']) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Plantilla Item');
-                                        if (!$isVacantItem && $row['is_vacant']) { ?>
-                                            <div class="dropdown-divider"></div>
-                                            <?php modalDropdownItem(uri() . '/modules/positions/delete-plantilla-item-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Plantilla Item');
-                                        } ?>
+                                            $isVacantItem = vacantItem($row['id']);
+                                            if (!$isVacantItem && $row['is_vacant']) {
+                                                modalDropdownItem(uri() . '/modules/positions/fill-employee-dialog.php?id=' . cipher($row['id']), 'Fill', 'fa-user-plus', 'Fill Employee Position'); ?>
+                                                <div class="dropdown-divider"></div>
+                                                <?php
+                                            }
+                                            if ($row['is_vacant']) {
+                                                modalDropdownItem(uri() . '/modules/positions/save-plantilla-item-dialog.php?id=' . cipher($row['id']), 'Edit', 'fa-edit', 'Edit Plantilla Item');
+                                            }
+                                            modalDropdownItem(uri() . '/modules/positions/save-plantilla-item-dialog.php?c=' . cipher($row['id']) . '&id=' . cipher($row['id']), 'Copy', 'fa-copy', 'Copy Plantilla Item');
+                                            if (!$isVacantItem && $row['is_vacant']) { ?>
+                                                <div class="dropdown-divider"></div>
+                                                <?php modalDropdownItem(uri() . '/modules/positions/delete-plantilla-item-dialog.php?id=' . cipher($row['id']), 'Delete', 'fa-trash-alt', 'Delete Plantilla Item');
+                                            } ?>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
+                                </td>
+                            <?php endif ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -102,7 +127,9 @@ messageAlert($showAlert, $message, $success);
                         <th class="align-middle" width="60%">Item Number / Position</th>
                         <th class="align-middle" width="25%">Station</th>
                         <th class="align-middle" width="10%">Status</th>
-                        <th class="align-middle" width="5%">Action</th>
+                        <?php if ($isPersonnelOrICT): ?>
+                            <th class="align-middle" width="5%">Action</th>
+                        <?php endif ?>
                     </tr>
                 </tfoot>
             </table>

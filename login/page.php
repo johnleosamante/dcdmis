@@ -53,5 +53,5 @@ if (!MAINTENANCE_MODE) {
         </div>
     </div>
 <?php } else {
-    require_once(root() . 'oops/maintenance.php');
+    require_once(root() . '/oops/maintenance.php');
 } ?>

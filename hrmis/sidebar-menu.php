@@ -36,4 +36,5 @@ sidebarMenuItem(customUri('hrmis', 'Call for Applications'), 'Call for Applicati
 sidebarDivider();
 sidebarMenuItem(customUri('hrmis', 'Districts'), 'Districts', 'fa-map-marked-alt', isset($url) && str_contains($url, 'District'), $districtCount);
 sidebarMenuItem(customUri('hrmis', 'Schools'), 'Schools', 'fa-school', isset($url) && str_contains($url, 'School'), $schoolCount);
+sidebarMenuItem(customUri('hrmis', 'Division Office Information', DIVISION_ID), 'Division Office', 'fa-building', isset($url) && $url === 'School Information' && isset($_GET['id']) && decode($_GET['id']) === DIVISION_ID);
 sidebarMenuItem(customUri('hrmis', 'Sections'), 'Sections', 'fa-map-signs', isset($url) && str_contains($url, 'Section'), $sectionCount);

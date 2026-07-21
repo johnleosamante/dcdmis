@@ -457,7 +457,9 @@ function prepareApplicantData(array $post)
         'birthdate' => sanitize($post['birth_date'] ?? null),
         'sex' => sanitize($post['sex'] ?? null),
         'civil_status' => sanitize($post['civil_status'] ?? null),
-        'religion' => sanitize($post['religion'] ?? null),
+        'religion' => (isset($post['religion']) && $post['religion'] === 'Others') ? sanitize($post['religion_specify'] ?? null) : sanitize($post['religion'] ?? null),
+        'ethnic_group' => sanitize($post['ethnic_group'] ?? null),
+        'ethnic_group_specify' => (isset($post['ethnic_group']) && $post['ethnic_group'] === 'Others') ? sanitize($post['ethnic_group_specify'] ?? null) : null,
         'lot' => sanitize($post['lot'] ?? null),
         'street' => sanitize($post['street'] ?? null),
         'subdivision' => sanitize($post['subdivision'] ?? null),
@@ -466,8 +468,6 @@ function prepareApplicantData(array $post)
         'province' => sanitize($post['province'] ?? null),
         'zip' => sanitize($post['zip'] ?? null),
         'with_disability' => isset($post['is_pwd']) ? 1 : 0,
-        'is_indigenous' => isset($post['ethnic_group']) && !empty($post['ethnic_group']) ? 1 : 0,
-        'indigenous_group' => sanitize($post['ethnic_group'] ?? null),
         'email_address' => sanitize($post['email'] ?? null),
         'mobile_number' => sanitize($post['mobile'] ?? null),
         'undergraduate' => sanitize($post['education'] ?? null),
@@ -610,8 +610,8 @@ function applicantsCountByPosition($publicationId)
 function applicantEmploymentStatusCount($publicationId)
 {
     $sql = "SELECT 
-                SUM(CASE WHEN e.id IS NOT NULL THEN 1 ELSE 0 END) AS employed,
-                SUM(CASE WHEN e.id IS NULL THEN 1 ELSE 0 END) AS not_employed
+                SUM(CASE WHEN e.id IS NOT NULL THEN 1 ELSE 0 END) AS `internal`,
+                SUM(CASE WHEN e.id IS NULL THEN 1 ELSE 0 END) AS `external`
             FROM (
                 SELECT DISTINCT application_code_id
                 FROM vacancy_applications
@@ -629,9 +629,9 @@ function applicantsListByPublication($publicationId, $positionId = null, $status
         $filters .= " AND va.position_id = ? ";
         $params[] = $positionId;
     }
-    if ($status === 'employed') {
+    if ($status === 'internal' || $status === 'employed') {
         $filters .= " AND e.id IS NOT NULL ";
-    } elseif ($status === 'not_employed') {
+    } elseif ($status === 'external' || $status === 'not_employed') {
         $filters .= " AND e.id IS NULL ";
     }
     $sql = "SELECT va.id, va.created_at, ac.code AS application_code, p.official_title, p.category AS position_group,
@@ -706,13 +706,14 @@ function applicantDiversityReligion()
     return query($sql);
 }
 
-function applicantDiversityIndigenous()
+
+function applicantDiversityEthnic()
 {
     $sql = "SELECT 
                 CASE 
-                    WHEN a.`is_indigenous` = 1 AND a.`indigenous_group` > '' 
-                    THEN TRIM(a.`indigenous_group`) 
-                    ELSE 'Non-Indigenous' 
+                    WHEN a.`ethnic_group` = 'Others' AND a.`ethnic_group_specify` > '' 
+                    THEN TRIM(a.`ethnic_group_specify`) 
+                    ELSE COALESCE(NULLIF(TRIM(a.`ethnic_group`), ''), 'Not Specified') 
                 END AS `name`, 
                 SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
                 SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
@@ -809,7 +810,7 @@ function applicantDiversityList($onlyApplied = false)
     }
     $sql = "SELECT a.`id`, a.`last_name`, a.`first_name`, a.`middle_name`, a.`name_extension`, 
                 a.`sex`, a.`birthdate`, a.`religion`, a.`civil_status`,
-                a.`is_indigenous`, a.`indigenous_group`, a.`email_address`, a.`mobile_number`, a.`with_disability`, a.`undergraduate`, a.`graduate_studies`,
+                a.`ethnic_group`, a.`ethnic_group_specify`, a.`email_address`, a.`mobile_number`, a.`with_disability`, a.`undergraduate`, a.`graduate_studies`,
                 IF(va_status.application_code_id IS NOT NULL, 1, 0) AS `has_applied`
             FROM `applicants` AS a
             {$join}
@@ -845,11 +846,12 @@ function getApplicantDemographicGroup($row, $exportId)
         case 'religion':
             $religion = trim($row['religion'] ?? '');
             return $religion !== '' ? $religion : 'Not Specified';
-        case 'indigenous':
-            if (isset($row['is_indigenous']) && $row['is_indigenous'] == 1 && trim($row['indigenous_group'] ?? '') !== '') {
-                return trim($row['indigenous_group']);
+        case 'ethnic':
+            $ethnic = trim($row['ethnic_group'] ?? '');
+            if ($ethnic === 'Others' && !empty($row['ethnic_group_specify'])) {
+                return trim($row['ethnic_group_specify']);
             }
-            return 'Non-Indigenous';
+            return $ethnic !== '' ? $ethnic : 'Not Specified';
         case 'pwd':
             if (isset($row['with_disability']) && $row['with_disability'] == 1) {
                 return 'PWD';

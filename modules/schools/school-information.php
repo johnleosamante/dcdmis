@@ -37,8 +37,12 @@ if ($school) {
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Schools') ?>">Schools</a></li>
-            <li class="breadcrumb-item active"><?= e($schoolName) ?></li>
+            <?php if ($schoolId === DIVISION_ID): ?>
+                <li class="breadcrumb-item active"><?= e($schoolName) ?></li>
+            <?php else: ?>
+                <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Schools') ?>">Schools</a></li>
+                <li class="breadcrumb-item active"><?= e($schoolName) ?></li>
+            <?php endif; ?>
         </ol>
     </nav>
 </div>
@@ -46,12 +50,14 @@ if ($school) {
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
         <?php
+        $titlePrefix = ($schoolId === DIVISION_ID) ? 'Division Office Information' : 'School Information';
+        $backLink = ($schoolId === DIVISION_ID) ? uri() . '/' . $activeApp : customUri($activeApp, 'Schools');
         if ($activeApp === 'dmis') {
-            contentTitleWithModal('School Information: ' . strtoupper($schoolName), uri() . '/modules/schools/save-school-dialog.php?id=' . cipher($schoolId) . '&e=' . cipher($alias), 'Edit', 'fa-edit');
+            contentTitleWithModal("$titlePrefix: " . strtoupper($schoolName), uri() . '/modules/schools/save-school-dialog.php?id=' . cipher($schoolId) . '&e=' . cipher($alias), 'Edit', 'fa-edit');
         } elseif ($activeApp === 'hrmis') {
-            contentTitleWithModal('School Information: ' . strtoupper($schoolName), uri() . '/modules/employees/save-employee-dialog.php?s=' . cipher($schoolId), 'Add Employee', 'fa-user-plus');
+            contentTitleWithModal("$titlePrefix: " . strtoupper($schoolName), uri() . '/modules/employees/save-employee-dialog.php?s=' . cipher($schoolId), 'Add Employee', 'fa-user-plus');
         } else {
-            contentTitleWithLink('School Information: ' . strtoupper($schoolName), customUri($activeApp, 'Schools'));
+            contentTitleWithLink("$titlePrefix: " . strtoupper($schoolName), $backLink);
         } ?>
     </div>
 

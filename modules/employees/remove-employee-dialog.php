@@ -61,6 +61,12 @@ if ($employee) {
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label for="effectivity-date" class="mb-0">Date of Effectivity / Separation <?php showAsterisk() ?></label>
+                        <input class="form-control" type="date" id="effectivity-date" name="effectivity_date"
+                            value="<?= date('Y-m-d') ?>" title="Set date of effectivity..." required>
+                    </div>
+
                     <div class="form-group mb-2" id="vacancy-option">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="skip-vacancy" name="skip_vacancy"

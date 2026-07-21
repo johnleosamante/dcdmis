@@ -1,6 +1,14 @@
 <?php
-// modules/employees/demographics/page.php
-if (!$isHrmis && !$isHrtdms && !$isDmis) {
+// modules/employees/diversity/page.php
+if ($isPis) {
+    $userPositionId = position($userId)['position_id'];
+    $showPrimeHrm = in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT;
+
+    if (!$showPrimeHrm) {
+        require_once(root() . '/modules/error/403.php');
+        return;
+    }
+} elseif (!$isHrmis && !$isHrtdms && !$isDmis) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -79,8 +87,8 @@ $demographicsConfig = [
         'chart_type' => 'pie',
         'export_id' => 'religion',
     ],
-    'Workforce Diversity - Ethnic Group' => [
-        'title' => 'Ethnic Group',
+    'Workforce Diversity - Indigenous Group' => [
+        'title' => 'Indigenous Group',
         'icon' => 'fa-users',
         'db_function' => 'demographicsIndigenous',
         'headers' => ['Indigenous Group', 'Male', 'Female', 'Total'],
@@ -128,7 +136,13 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item active">Workforce Diversity</li>
+            <?php if ($isPis) : ?>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a
+                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        Placement</a></li>
+            <?php endif; ?>
+            <li class="breadcrumb-item"><a href="<?= customUri('pis', 'Workforce Diversity - Gender') ?>">Workforce Diversity</a></li>
             <li class="breadcrumb-item active"><?= e($config['title']) ?></li>
         </ol>
     </nav>
@@ -274,6 +288,12 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
             <div class="card-body">
                 <?php
                 $allEmployees = demographicsEmployeeList();
+                if ($config['export_id'] === 'districts') {
+                    $allEmployees = array_filter($allEmployees, function($emp) {
+                        $dist = $emp['district'] ?? '';
+                        return strcasecmp($dist, 'Schools Division Office') !== 0 && strcasecmp($dist, 'SDO') !== 0;
+                    });
+                }
                 $groupedEmployees = [];
                 foreach ($rows as $r) {
                     $groupName = $r['name'] ?? 'Not Specified';
@@ -431,7 +451,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                 </form>
 
                 <div class="table-responsive font-weight-normal">
-                    <table class="table table-hover mb-0 text-center" id="data-table" width="100%"
+                    <table class="table table-hover mb-0 text-center" id="data-table-next" width="100%"
                         cellspacing="0">
                         <thead>
                             <tr>
@@ -487,30 +507,6 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        $(document).ready(function () {
-            const breakdownTable = $('#data-table-next');
-            if (breakdownTable.length) {
-                const table = breakdownTable.DataTable({
-                    responsive: true,
-                    pagingType: "simple",
-                    lengthMenu: [
-                        [10, 25, 50, 75, 100, -1],
-                        [10, 25, 50, 75, 100, "All"],
-                    ],
-                    paging: true,
-                    order: [],
-                    autoWidth: false,
-                    info: true,
-                });
-
-                table.on('order.dt search.dt', function () {
-                    table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                        cell.innerHTML = i + 1;
-                    });
-                }).draw();
-            }
-        });
-
         const rawData = <?= json_encode($rows) ?>;
         const chartType = '<?= $config['chart_type'] ?>';
 

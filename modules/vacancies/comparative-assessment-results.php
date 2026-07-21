@@ -261,31 +261,31 @@ messageAlert($showAlert, $message, $success);
                                                     </div>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <?= $isAssessed ? number_format($res['education_score'], 2) : '<span class="text-muted font-italic small">-</span>' ?>
+                                                    <?= $isAssessed ? number_format($res['education_score'], 3, '.', '') : '<span class="text-muted font-italic small">-</span>' ?>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <?= $isAssessed ? number_format($res['training_score'], 2) : '<span class="text-muted font-italic small">-</span>' ?>
+                                                    <?= $isAssessed ? number_format($res['training_score'], 3, '.', '') : '<span class="text-muted font-italic small">-</span>' ?>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <?= $isAssessed ? number_format($res['experience_score'], 2) : '<span class="text-muted font-italic small">-</span>' ?>
+                                                    <?= $isAssessed ? number_format($res['experience_score'], 3, '.', '') : '<span class="text-muted font-italic small">-</span>' ?>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <?= $isAssessed ? number_format($res['performance_score'], 2) : '<span class="text-muted font-italic small">-</span>' ?>
+                                                    <?= $isAssessed ? number_format($res['performance_score'], 3, '.', '') : '<span class="text-muted font-italic small">-</span>' ?>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <?= $isAssessed ? number_format($res['outstanding_accomplishments_score'], 2) : '<span class="text-muted font-italic small">-</span>' ?>
+                                                    <?= $isAssessed ? number_format($res['outstanding_accomplishments_score'], 3, '.', '') : '<span class="text-muted font-italic small">-</span>' ?>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <?= $isAssessed ? number_format($res['application_of_education_score'], 2) : '<span class="text-muted font-italic small">-</span>' ?>
+                                                    <?= $isAssessed ? number_format($res['application_of_education_score'], 3, '.', '') : '<span class="text-muted font-italic small">-</span>' ?>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <?= $isAssessed ? number_format($res['application_of_ld_score'], 2) : '<span class="text-muted font-italic small">-</span>' ?>
+                                                    <?= $isAssessed ? number_format($res['application_of_ld_score'], 3, '.', '') : '<span class="text-muted font-italic small">-</span>' ?>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <?= $isAssessed ? number_format($res['potential_final_score'], 2) : '<span class="text-muted font-italic small">-</span>' ?>
+                                                    <?= $isAssessed ? number_format($res['potential_final_score'], 3, '.', '') : '<span class="text-muted font-italic small">-</span>' ?>
                                                 </td>
                                                 <td class="align-middle font-weight-bold text-primary">
-                                                    <?= $isAssessed ? number_format($res['total_accumulated_score'], 2) : '<span class="text-muted font-italic small">Not Assessed</span>' ?>
+                                                    <?= $isAssessed ? number_format($res['total_accumulated_score'], 3, '.', '') : '<span class="text-muted font-italic small">Not Assessed</span>' ?>
                                                 </td>
                                                 <td class="align-middle text-capitalize small" style="white-space: normal;">
                                                     <?= !empty($res['hrmspb_remarks']) ? e($res['hrmspb_remarks']) : '<span class="text-muted font-italic">No Remarks</span>' ?>

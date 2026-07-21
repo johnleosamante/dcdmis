@@ -1,7 +1,19 @@
 <?php
 // modules/vacancies/publication-details.php
 
-if (!$isHrmis) {
+$userPositionId = null;
+if ($isPis) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+
+    require_once(root() . '/includes/database/vacancy.php');
+}
+$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if (!$isHrmis && !$isAllowedHigherPosition) {
     require_once root() . '/modules/error/403.php';
     return;
 }
@@ -28,7 +40,13 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Call for Applications') ?>">Call for
+            <?php if ($isPis): ?>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a
+                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        Placement</a></li>
+            <?php endif ?>
+            <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Call for Applications') ?>">Call for
                     Applications</a></li>
             <li class="breadcrumb-item active">
                 <?= e($code) ?>
@@ -134,19 +152,19 @@ foreach ($positionChartData as &$item) {
 unset($item);
 
 $empStatus = applicantEmploymentStatusCount($publicationId);
-$employedCount = (int) ($empStatus['employed'] ?? 0);
-$notEmployedCount = (int) ($empStatus['not_employed'] ?? 0);
+$employedCount = (int) ($empStatus['internal'] ?? 0);
+$notEmployedCount = (int) ($empStatus['external'] ?? 0);
 
 $employmentChartData = [
     [
-        'name' => 'Currently Employed',
+        'name' => 'Internal',
         'count' => $employedCount,
-        'link' => customUri('hrmis', 'Applicants List', $publicationId) . '&status=employed'
+        'link' => customUri('hrmis', 'Applicants List', $publicationId) . '&status=internal'
     ],
     [
-        'name' => 'Not Employed',
+        'name' => 'External',
         'count' => $notEmployedCount,
-        'link' => customUri('hrmis', 'Applicants List', $publicationId) . '&status=not_employed'
+        'link' => customUri('hrmis', 'Applicants List', $publicationId) . '&status=external'
     ]
 ];
 ?>
@@ -175,7 +193,7 @@ $employmentChartData = [
     <div class="col-xl-4 col-lg-5 mb-4">
         <div class="card shadow">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Employment Status</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Applicant Type</h6>
             </div>
             <div class="card-body">
                 <?php if ($employedCount > 0 || $notEmployedCount > 0): ?>

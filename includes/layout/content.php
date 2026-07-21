@@ -50,6 +50,7 @@ if (!isset($url) || $url === 'dashboard') {
             break;
         case 'Active Employees':
         case 'Employees':
+        case 'School Employees':
             $file = 'employees/active-employees';
             break;
         case 'Retirable Employees':
@@ -152,6 +153,7 @@ if (!isset($url) || $url === 'dashboard') {
             $file = 'positions/plantilla-items';
             break;
         case 'School Information':
+        case 'Division Office Information':
             $file = 'schools/school-information';
             break;
         case 'Sections':
@@ -214,7 +216,7 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Workforce Diversity - Generation':
         case 'Workforce Diversity - Education':
         case 'Workforce Diversity - Religion':
-        case 'Workforce Diversity - Ethnic Group':
+        case 'Workforce Diversity - Indigenous Group':
         case 'Workforce Diversity - PWD':
         case 'Workforce Diversity - Solo Parent':
         case 'Workforce Diversity - District':
@@ -236,6 +238,20 @@ if (!isset($url) || $url === 'dashboard') {
             break;
         case 'Daily Time Record':
             $file = 'dtr/page';
+        case 'System Overview':
+            $file = 'overview/page';
+            break;
+        case 'Recruitment, Selection and Placement':
+            $file = 'overview/rsp';
+            break;
+        case 'Learning and Development':
+            $file = 'overview/lnd';
+            break;
+        case 'Performance Management':
+            $file = 'overview/pm';
+            break;
+        case 'Rewards and Recognition':
+            $file = 'overview/rnr';
             break;
         case '404':
         default:

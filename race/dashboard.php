@@ -12,12 +12,12 @@ contentTitleWithModal('Dashboard', uri() . '/modules/race/nominate-reminder-dial
 
 <div class="row mt-4">
     <?php
-    if (!$nominatorOnly):
+    if ($isICT || !$nominatorOnly):
         card('Schedule', customUri('race', 'Event Schedules'), 'fa-calendar-plus', 'primary', $countSchedules);
     endif;
     card('Nominees', customUri('race', 'Nominees List'), 'fa-user', 'warning', $countNominees);
     card('Awards', customUri('race', 'Awards List'), 'fa-award', 'danger', $countAwards);
-    if (!$nominatorOnly):
+    if ($isICT || !$nominatorOnly):
         card('Winners', customUri('race', 'Winners Lookup'), 'fa-trophy', 'success', $countWinners);
     endif;
     ?>

@@ -51,7 +51,7 @@ messageAlert($showAlert, $message, $success);
 
                 <tbody>
                     <?php
-                    $query = districts();
+                    $query = districts(true);
                     foreach ($query as $row): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle text-center">

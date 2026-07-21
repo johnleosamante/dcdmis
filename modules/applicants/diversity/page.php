@@ -1,9 +1,19 @@
 <?php
 // modules/applicants/diversity/page.php
-if (!$isHrmis && !$isHrtdms && !$isDmis) {
+if ($isPis) {
+    $userPositionId = position($userId)['position_id'];
+    $showPrimeHrm = in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT;
+
+    if (!$showPrimeHrm) {
+        require_once(root() . '/modules/error/403.php');
+        return;
+    }
+} elseif (!$isHrmis && !$isHrtdms && !$isDmis) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
+
+require_once(root() . '/includes/database/vacancy.php');
 
 $diversityConfig = [
     'Talent Pool Diversity - Gender' => [
@@ -33,10 +43,10 @@ $diversityConfig = [
     'Talent Pool Diversity - Ethnic Group' => [
         'title' => 'Ethnic Group',
         'icon' => 'fa-users',
-        'db_function' => 'applicantDiversityIndigenous',
-        'headers' => ['Indigenous Group', 'Male', 'Female', 'Total'],
+        'db_function' => 'applicantDiversityEthnic',
+        'headers' => ['Ethnic Group', 'Male', 'Female', 'Total'],
         'chart_type' => 'pie',
-        'export_id' => 'indigenous',
+        'export_id' => 'ethnic',
     ],
     'Talent Pool Diversity - PWD' => [
         'title' => 'Persons with Disability',
@@ -93,7 +103,14 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item active">Talent Pool Diversity</li>
+            <?php if ($isPis): ?>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a
+                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        Placement</a></li>
+            <?php endif; ?>
+            <li class="breadcrumb-item"><a href="<?= customUri('pis', 'Talent Pool Diversity - Gender') ?>">Talent
+                    Pool Diversity</a></li>
             <li class="breadcrumb-item active"><?= e($config['title']) ?></li>
         </ol>
     </nav>
@@ -102,7 +119,7 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
 <div class="mb-4">
     <div class="d-flex flex-wrap align-items-center justify-content-start" style="gap: 6px;">
         <?php foreach ($diversityConfig as $viewName => $info): ?>
-            <a href="<?= customUri('hrmis', $viewName) ?>"
+            <a href="<?= customUri($activeApp, $viewName) ?>"
                 class="btn btn-sm <?= $url === $viewName ? 'btn-primary' : 'btn-light border text-secondary' ?> d-flex align-items-center"
                 style="gap: 5px; font-weight: 500; border-radius: 20px; padding: 6px 14px; transition: all 0.2s;">
                 <i class="fas <?= $info['icon'] ?>"></i>
@@ -305,7 +322,7 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
                 </form>
 
                 <div class="table-responsive font-weight-normal">
-                    <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+                    <table class="table table-hover mb-0 text-center" id="data-table-next" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th class="align-middle" width="5%">Photo</th>
@@ -382,30 +399,6 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        $(document).ready(function () {
-            const breakdownTable = $('#data-table-next');
-            if (breakdownTable.length) {
-                const table = breakdownTable.DataTable({
-                    responsive: true,
-                    pagingType: "simple",
-                    lengthMenu: [
-                        [10, 25, 50, 75, 100, -1],
-                        [10, 25, 50, 75, 100, "All"],
-                    ],
-                    paging: true,
-                    order: [],
-                    autoWidth: false,
-                    info: true,
-                });
-
-                table.on('order.dt search.dt', function () {
-                    table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                        cell.innerHTML = i + 1;
-                    });
-                }).draw();
-            }
-        });
-
         const rawData = <?= json_encode($rows) ?>;
         const chartType = '<?= $config['chart_type'] ?>';
 
