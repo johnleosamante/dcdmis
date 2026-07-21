@@ -133,6 +133,10 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                     linkDropdownItem(uri() . '/race', 'Rewards and Recognitions', 'fa-trophy', 'Rewards and Recognitions');
                 }
 
+                if (isStationUser($userId, 'dtr')) {
+                    linkDropdownItem(uri() . '/dtr', 'Daily Time Record', 'fa-clock', 'Daily Time Records');
+                }
+
                 if (isStationUser($userId, 'dmis')) {
                     linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-industry', 'Division Management Information System');
                 }

@@ -44,6 +44,7 @@ if ($employee) {
     $dmisUser = (bool) isStationUser($employeeId, 'dmis');
     $hrtdmsUser = (bool) isStationUser($employeeId, 'hrtdms');
     $raceUser = (bool) isStationUser($employeeId, 'race');
+    $dtrUser = (bool) isStationUser($employeeId, 'dtr');
 }
 ?>
 
@@ -114,6 +115,14 @@ if ($employee) {
                             <input class="form-check-input" id="race" type="checkbox" name="race"
                                 <?= setActiveItem($raceUser, true, 'checked') ?>>
                             <label class="form-check-label" for="race">Rewards and Recognition Management System</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-2 mb-0">
+                        <div class="form-check">
+                            <input class="form-check-input" id="dtr" type="checkbox" name="dtr"
+                                <?= setActiveItem($dtrUser, true, 'checked') ?>>
+                            <label class="form-check-label" for="dtr">Daily Time Record</label>
                         </div>
                     </div>
 
