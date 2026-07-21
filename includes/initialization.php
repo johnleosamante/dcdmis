@@ -143,7 +143,7 @@ $isRecordsPortal = $portal === 'rec_portal';
 $isAdminPortal = $portal === 'adm_portal';
 $isPersonnel = $code === 'PER';
 $isICT = $code === 'ICT';
-$allowedHigherPositions = ['SDS', 'ASDS', 'CES', 'ATY3', 'ITO1', 'A3', 'ADOF5', 'ADOF5', 'SEPS', 'EPS2', 'PSDS', 'EPS', 'PLO3'];
+$allowedMonitoringPositions = ['SDS', 'ASDS', 'CES', 'ATY3', 'ITO1', 'A3', 'ADOF5', 'ADOF4', 'SEPS', 'EPS2', 'PSDS', 'EPS', 'PLO3'];
 
 if (function_exists('verify_csrf_token')) {
     verify_csrf_token();
