@@ -259,12 +259,8 @@ function activeEmployeesWithPosition($stationId = null, $category = null)
         $params[] = $stationId;
     }
     if ($category !== null && $category !== '') {
-        if ($category === 'Teaching-Related') {
-            $conditions[] = "pos.`category` IN ('Teaching', 'Teaching-Related')";
-        } else {
-            $conditions[] = "pos.`category` = ?";
-            $params[] = $category;
-        }
+        $conditions[] = "pos.`category` = ?";
+        $params[] = $category;
     }
     if (!empty($conditions)) {
         $sql .= " WHERE " . implode(' AND ', $conditions);
@@ -309,12 +305,8 @@ function activeEmployeesInDistrict($districtId, $category = null)
             WHERE sch.`district_id` = ?";
     $params = [$districtId];
     if ($category !== null && $category !== '') {
-        if ($category === 'Teaching-Related') {
-            $sql .= " AND pos.`category` IN ('Teaching', 'Teaching-Related')";
-        } else {
-            $sql .= " AND pos.`category` = ?";
-            $params[] = $category;
-        }
+        $sql .= " AND pos.`category` = ?";
+        $params[] = $category;
     }
     $sql .= " ORDER BY p.`last_name` ASC, p.`first_name` ASC";
     $results = query($sql, $params);
