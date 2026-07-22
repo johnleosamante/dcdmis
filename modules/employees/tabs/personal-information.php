@@ -136,17 +136,25 @@
 
                     <?php
                     $religion_list = religions();
-                    $religion_names = array_column($religion_list, 'name');
-                    $current_religion = $employee['religion'];
-                    $is_common = in_array($current_religion, $religion_names);
-                    $selected_value = '';
-                    $specify_value = '';
-                    if ($current_religion !== '') {
-                        if ($is_common) {
-                            $selected_value = $current_religion;
-                        } else {
-                            $selected_value = 'Others';
-                            $specify_value = $current_religion;
+                    $current_religion_id = $employee['religion_id'] ?? null;
+                    $specify_religion_value = $employee['specify_other_religion'] ?? '';
+
+                    $is_religion_others = false;
+                    $religion_display_name = '';
+
+                    if (!empty($current_religion_id)) {
+                        foreach ($religion_list as $r) {
+                            if ((int)$r['id'] === (int)$current_religion_id) {
+                                $religion_display_name = $r['name'];
+                                break;
+                            }
+                        }
+                    }
+
+                    if (empty($religion_display_name)) {
+                        if (!empty($specify_religion_value) || (string)$current_religion_id === 'Others') {
+                            $is_religion_others = true;
+                            $religion_display_name = 'Others';
                         }
                     }
                     ?>
@@ -154,32 +162,33 @@
                         <div class="form-group">
                             <label for="religion" class="mb-0">Religion</label>
                             <?php if (!$editMode): ?>
-                                <input id="religion" type="text" class="form-control" value="<?= e($selected_value === 'Others' ? 'Others' : $current_religion) ?>" readonly>
+                                <input id="religion" type="text" class="form-control" value="<?= e($is_religion_others ? 'Others' : ($religion_display_name !== '' ? $religion_display_name : 'Not Specified')) ?>" readonly>
                             <?php else: ?>
-                                <select id="religion" name="religion" class="form-control" onchange="toggleReligionSpecify(this, 'religion-specify-group')">
+                                <select id="religion" name="religion_id" class="form-control" onchange="toggleReligionSpecify(this, 'religion-specify-group')">
+                                    <option value="">-- Select --</option>
                                     <?php foreach ($religion_list as $r): ?>
-                                        <option value="<?= e($r['name']) ?>" <?= $selected_value === $r['name'] ? 'selected' : '' ?>><?= e($r['name']) ?></option>
+                                        <option value="<?= $r['id'] ?>" <?= (string)$current_religion_id === (string)$r['id'] ? 'selected' : '' ?>><?= e($r['name']) ?></option>
                                     <?php endforeach ?>
-                                    <option value="Others" <?= $selected_value === 'Others' ? 'selected' : '' ?>>Others</option>
+                                    <option value="Others" <?= $is_religion_others ? 'selected' : '' ?>>Others</option>
                                 </select>
                             <?php endif ?>
                         </div>
                     </div>
 
                     <?php if (!$editMode): ?>
-                        <?php if ($selected_value === 'Others'): ?>
+                        <?php if ($is_religion_others): ?>
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="religion-specify" class="mb-0">Specify Religion</label>
-                                    <input id="religion-specify" type="text" class="form-control" value="<?= e($specify_value) ?>" readonly>
+                                    <label for="specify-other-religion" class="mb-0">Specify Religion</label>
+                                    <input id="specify-other-religion" type="text" class="form-control" value="<?= e($specify_religion_value) ?>" readonly>
                                 </div>
                             </div>
                         <?php endif ?>
                     <?php else: ?>
-                        <div class="col-lg-12" id="religion-specify-group" style="display: <?= $selected_value === 'Others' ? 'block' : 'none' ?>;">
+                        <div class="col-lg-12" id="religion-specify-group" style="display: <?= $is_religion_others ? 'block' : 'none' ?>;">
                             <div class="form-group">
-                                <label for="religion-specify" class="mb-0">Specify Religion</label>
-                                <input id="religion-specify" name="religion_specify" type="text" class="form-control" value="<?= e($specify_value) ?>" <?= $selected_value === 'Others' ? 'required' : '' ?>>
+                                <label for="specify-other-religion" class="mb-0">Specify Religion</label>
+                                <input id="specify-other-religion" name="specify_other_religion" type="text" class="form-control" value="<?= e($specify_religion_value) ?>" <?= $is_religion_others ? 'required' : '' ?>>
                             </div>
                         </div>
                     <?php endif ?>
