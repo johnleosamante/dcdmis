@@ -134,12 +134,19 @@ if (isset($_POST['update-personal-information'])) {
             $religion_id = !empty($raw_religion) ? (int)$raw_religion : null;
         }
 
-        $ethnic_group = sanitize($_POST['ethnic_group'] ?? null);
-        if ($ethnic_group === 'Others' && !empty($_POST['ethnic_group_specify'])) {
-            $ethnic_group = sanitize($_POST['ethnic_group_specify']);
+        $raw_ethnic = sanitize($_POST['ethnic_group'] ?? null);
+        $ethnic_group_id = null;
+        $specify_other_ethnic_group = null;
+        if ($raw_ethnic === 'Others') {
+            $specify_other_ethnic_group = sanitize($_POST['ethnic_group_specify'] ?? null);
+        } elseif ($raw_ethnic === 'Not Applicable') {
+            $specify_other_ethnic_group = 'Not Applicable';
+            $ethnic_group_id = null;
+        } else {
+            $ethnic_group_id = !empty($raw_ethnic) ? (int)$raw_ethnic : null;
         }
 
-        $affectedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), sanitize($_POST['dob']), sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), $religion_id, $specify_other_religion, $ethnic_group, sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), $dualCitizenshipCountry, sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
+        $affectedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), sanitize($_POST['dob']), sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), $religion_id, $specify_other_religion, $ethnic_group_id, $specify_other_ethnic_group, sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), $dualCitizenshipCountry, sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
 
         if ($affectedEmployee == false && !$stagedFile) {
             throw new Exception('No changes have been made to personal information.');
