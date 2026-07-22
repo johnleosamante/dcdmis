@@ -30,8 +30,12 @@ if ($scheduleParam && $awardId) {
         <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
             <?php if (!empty($criteria)): ?>
                 <div class="criteria-content">
-                    <?php if (strpos($criteria, '<table') !== false): ?>
-                        <div class="table-responsive"><?= $criteria ?></div>
+                    <?php if (strpos($criteria, '<thead') !== false): ?>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover mb-0">
+                                <?= $criteria ?>
+                            </table>
+                        </div>
                     <?php else: ?>
                         <?= nl2br(e($criteria)) ?>
                     <?php endif; ?>
