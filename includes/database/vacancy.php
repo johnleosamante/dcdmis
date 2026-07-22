@@ -379,14 +379,16 @@ function applicantName($application_code, $uppercase = false)
 
 function createApplicant(array $data)
 {
-    $required = ['id', 'last_name', 'first_name', 'birthdate', 'sex', 'civil_status', 'religion', 'barangay', 'city', 'province', 'zip', 'email_address', 'mobile_number', 'undergraduate'];
+    $required = ['id', 'last_name', 'first_name', 'birthdate', 'sex', 'civil_status', 'barangay', 'city', 'province', 'zip', 'email_address', 'mobile_number', 'undergraduate'];
     foreach ($required as $field) {
         if (!isset($data[$field]) || $data[$field] === null) {
             return false;
         }
     }
+    if (empty($data['religion_id']) && empty($data['specify_other_religion'])) {
+        return false;
+    }
     $data['with_disability'] = isset($data['with_disability']) ? (int) $data['with_disability'] : 0;
-    $data['is_indigenous'] = isset($data['is_indigenous']) ? (int) $data['is_indigenous'] : 0;
     if (!isset($data['eligibilities'])) {
         $data['eligibilities'] = json_encode([]);
     } elseif (is_array($data['eligibilities'])) {
@@ -448,6 +450,25 @@ function prepareApplicantData(array $post)
     if (isset($post['other_eligibility']) && $post['other_eligibility']) {
         $eligibilities[] = 'Others';
     }
+
+    $raw_religion = sanitize($post['religion_id'] ?? null);
+    $religion_id = null;
+    $specify_other_religion = null;
+    if ($raw_religion === 'Others') {
+        $specify_other_religion = sanitize($post['specify_other_religion'] ?? null);
+    } else {
+        $religion_id = !empty($raw_religion) ? (int) $raw_religion : null;
+    }
+
+    $raw_ethnic = sanitize($post['ethnic_group'] ?? null);
+    $ethnic_group_id = null;
+    $specify_other_ethnic_group = null;
+    if ($raw_ethnic === 'Others') {
+        $specify_other_ethnic_group = sanitize($post['ethnic_group_specify'] ?? null);
+    } else {
+        $ethnic_group_id = !empty($raw_ethnic) ? (int) $raw_ethnic : null;
+    }
+
     $data = [
         'id' => $applicant_code,
         'last_name' => sanitize($post['last_name'] ?? null),
@@ -457,9 +478,10 @@ function prepareApplicantData(array $post)
         'birthdate' => sanitize($post['birth_date'] ?? null),
         'sex' => sanitize($post['sex'] ?? null),
         'civil_status' => sanitize($post['civil_status'] ?? null),
-        'religion' => (isset($post['religion']) && $post['religion'] === 'Others') ? sanitize($post['religion_specify'] ?? null) : sanitize($post['religion'] ?? null),
-        'ethnic_group' => sanitize($post['ethnic_group'] ?? null),
-        'ethnic_group_specify' => (isset($post['ethnic_group']) && $post['ethnic_group'] === 'Others') ? sanitize($post['ethnic_group_specify'] ?? null) : null,
+        'religion_id' => $religion_id,
+        'specify_other_religion' => $specify_other_religion,
+        'ethnic_group_id' => $ethnic_group_id,
+        'specify_other_ethnic_group' => $specify_other_ethnic_group,
         'lot' => sanitize($post['lot'] ?? null),
         'street' => sanitize($post['street'] ?? null),
         'subdivision' => sanitize($post['subdivision'] ?? null),
@@ -637,11 +659,16 @@ function applicantsListByPublication($publicationId, $positionId = null, $status
     $sql = "SELECT va.id, va.created_at, ac.code AS application_code, p.official_title, p.category AS position_group,
                    va.status, va.application_code_id,
                    IF(e.id IS NOT NULL, 1, 0) AS is_employed,
-                   va.remarks, s.total_accumulated_score
+                   va.remarks, s.total_accumulated_score,
+                   e.`religion_id`, e.`specify_other_religion`, e.`ethnic_group_id`, e.`specify_other_ethnic_group`
             FROM vacancy_applications AS va
             INNER JOIN application_codes AS ac ON va.application_code_id = ac.id
             INNER JOIN positions AS p ON va.position_id = p.id
-            LEFT JOIN employees AS e ON ac.id = e.id
+            LEFT JOIN (
+                `employees` AS e
+                INNER JOIN `ethnic_groups` AS eg ON e.`ethnic_group_id` = eg.`id`
+                INNER JOIN `religion` AS r ON e.`religion_id` = r.`id`
+            ) ON ac.`id` = e.`id`
             LEFT JOIN assessment_scores AS s ON va.id = s.application_id
             WHERE va.publication_id = ?
             {$filters}
@@ -692,7 +719,7 @@ function applicantDiversityGeneration()
 function applicantDiversityReligion()
 {
     $sql = "SELECT 
-                COALESCE(NULLIF(TRIM(a.`religion`), ''), 'Not Specified') AS `name`,
+                COALESCE(NULLIF(TRIM(r.`name`), ''), NULLIF(TRIM(a.`specify_other_religion`), ''), 'Not Specified') AS `name`,
                 SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
                 SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
                 COUNT(*) AS `total`,
@@ -700,6 +727,7 @@ function applicantDiversityReligion()
             FROM `applicants` a
             INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id
             LEFT JOIN `employees` e ON a.`id` = e.`id`
+            LEFT JOIN `religion` r ON a.`religion_id` = r.`id`
             WHERE e.`id` IS NULL
             GROUP BY `name`
             ORDER BY `total` DESC";
@@ -710,11 +738,7 @@ function applicantDiversityReligion()
 function applicantDiversityEthnic()
 {
     $sql = "SELECT 
-                CASE 
-                    WHEN a.`ethnic_group` = 'Others' AND a.`ethnic_group_specify` > '' 
-                    THEN TRIM(a.`ethnic_group_specify`) 
-                    ELSE COALESCE(NULLIF(TRIM(a.`ethnic_group`), ''), 'Not Specified') 
-                END AS `name`, 
+                COALESCE(NULLIF(TRIM(eg.`name`), ''), NULLIF(TRIM(a.`specify_other_ethnic_group`), ''), 'Not Specified') AS `name`, 
                 SUM(CASE WHEN a.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`,
                 SUM(CASE WHEN a.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
                 COUNT(a.`id`) AS `total`,
@@ -722,6 +746,7 @@ function applicantDiversityEthnic()
             FROM `applicants` a
             INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id
             LEFT JOIN `employees` e ON a.`id` = e.`id`
+            LEFT JOIN `ethnic_groups` eg ON a.`ethnic_group_id` = eg.`id`
             WHERE e.`id` IS NULL
             GROUP BY `name` 
             ORDER BY `total` DESC";
@@ -809,13 +834,19 @@ function applicantDiversityList($onlyApplied = false)
         $join = " INNER JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va ON a.`id` = va.application_code_id ";
     }
     $sql = "SELECT a.`id`, a.`last_name`, a.`first_name`, a.`middle_name`, a.`name_extension`, 
-                a.`sex`, a.`birthdate`, a.`religion`, a.`civil_status`,
-                a.`ethnic_group`, a.`ethnic_group_specify`, a.`email_address`, a.`mobile_number`, a.`with_disability`, a.`undergraduate`, a.`graduate_studies`,
+                a.`sex`, a.`birthdate`, a.`civil_status`,
+                a.`religion_id`, a.`specify_other_religion`, a.`ethnic_group_id`, a.`specify_other_ethnic_group`,
+                COALESCE(NULLIF(TRIM(r.`name`), ''), NULLIF(TRIM(a.`specify_other_religion`), ''), 'Not Specified') AS `religion`,
+                COALESCE(NULLIF(TRIM(eg.`name`), ''), NULLIF(TRIM(a.`specify_other_ethnic_group`), ''), 'Not Specified') AS `ethnic_group`,
+                a.`specify_other_ethnic_group` AS `ethnic_group_specify`,
+                a.`email_address`, a.`mobile_number`, a.`with_disability`, a.`undergraduate`, a.`graduate_studies`,
                 IF(va_status.application_code_id IS NOT NULL, 1, 0) AS `has_applied`
             FROM `applicants` AS a
             {$join}
             LEFT JOIN (SELECT DISTINCT application_code_id FROM vacancy_applications) va_status ON a.`id` = va_status.application_code_id
             LEFT JOIN `employees` AS e ON a.`id` = e.`id`
+            LEFT JOIN `religion` AS r ON a.`religion_id` = r.`id`
+            LEFT JOIN `ethnic_groups` AS eg ON a.`ethnic_group_id` = eg.`id`
             WHERE e.`id` IS NULL
             ORDER BY a.`last_name` ASC, a.`first_name` ASC";
     $results = query($sql);
