@@ -751,7 +751,7 @@ function religion($religion_id)
 // indigenous groups
 function indigenous_groups()
 {
-    return query("SELECT `id`, `name` FROM `indigenous_groups` ORDER BY `name` ASC") ?: [];
+    return query("SELECT `id`, `name` FROM `ethnic_groups` WHERE `is_indigenous`=1 ORDER BY `name` ASC") ?: [];
 }
 
 // ethnic groups
