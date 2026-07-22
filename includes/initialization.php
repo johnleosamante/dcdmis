@@ -164,3 +164,8 @@ if (isset($_POST['accept_data_privacy'])) {
     }
     redirect($_SERVER['REQUEST_URI']);
 }
+
+// Require database and backup logic to check and run daily backup
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/backup.php');
+checkAndRunDatabaseBackup();
