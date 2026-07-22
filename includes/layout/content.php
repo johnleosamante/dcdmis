@@ -103,6 +103,7 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Awards List':
         case 'Nominees List':
         case 'Winners Lookup':
+        case 'Ranking':
         case 'Awards and Recognitions':
             $file = 'race/page';
             break;

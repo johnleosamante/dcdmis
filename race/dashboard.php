@@ -5,9 +5,10 @@ $countSchedules = number_format(count(awardSchedules()));
 $countNominees = number_format(count(allNominees()));
 $countAwards = number_format(count(recognitionAwardsWithCategory()));
 $countWinners = number_format(count(awardWinners()));
+$countRankAwards = number_format(count(awardsWithNominees()));
 
 messageAlert($showAlert, $message, $success);
-contentTitleWithModal('Dashboard', uri() . '/modules/race/nominate-reminder-dialog.php', 'Nominate', 'fa-user-plus');
+contentTitleWithModal('Dashboard', uri() . '/modules/race/nominate-select-schedule-dialog.php', 'Nominate', 'fa-user-plus');
 ?>
 
 <div class="row mt-4">
@@ -18,6 +19,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/race/nominate-reminder-dial
     card('Nominees', customUri('race', 'Nominees List'), 'fa-user', 'warning', $countNominees);
     card('Awards', customUri('race', 'Awards List'), 'fa-award', 'danger', $countAwards);
     if ($isICT || !$nominatorOnly):
+        card('Ranking', customUri('race', 'Ranking'), 'fa-chart-bar', 'info', $countRankAwards);
         card('Winners', customUri('race', 'Winners Lookup'), 'fa-trophy', 'success', $countWinners);
     endif;
     ?>
