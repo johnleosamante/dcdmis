@@ -175,6 +175,11 @@ function recognitionCategory($category_id)
     return find("SELECT * FROM `recognition_categories` WHERE `id` = ? LIMIT 1", [$category_id]);
 }
 
+function createRecognitionCategory($name)
+{
+    return insert('recognition_categories', ['name' => $name]);
+}
+
 // recognition_awards
 function recognitionAwards($category_id = null)
 {
