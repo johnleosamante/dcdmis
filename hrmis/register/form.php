@@ -179,66 +179,70 @@
                         $religion_list = religions();
                         $current_religion_id = $form_data['religion_id'] ?? null;
                         $specify_religion_value = $form_data['specify_other_religion'] ?? '';
-                        $is_religion_others = (string)$current_religion_id === 'Others' || !empty($specify_religion_value);
+                        $is_religion_others = (string) $current_religion_id === 'Others' || !empty($specify_religion_value);
                         ?>
                         <select class="form-control" id="religion" name="religion_id"
                             onchange="toggleReligionSpecify(this, 'religion-specify-group')">
                             <option value="">Select Religion</option>
                             <?php foreach ($religion_list as $r): ?>
-                                <option value="<?= $r['id'] ?>" <?= (string)$current_religion_id === (string)$r['id'] ? 'selected' : '' ?>>
+                                <option value="<?= $r['id'] ?>" <?= (string) $current_religion_id === (string) $r['id'] ? 'selected' : '' ?>>
                                     <?= e($r['name']) ?>
                                 </option>
                             <?php endforeach ?>
                             <option value="Others" <?= $is_religion_others ? 'selected' : '' ?>>Others</option>
                         </select>
+                        <div id="religion-specify-group" class="mt-2"
+                            style="display: <?= $is_religion_others ? 'block' : 'none' ?>;">
+                            <label for="religion-specify" class="small font-weight-bold mb-0">Specify Religion
+                                <?= showAsterisk() ?></label>
+                            <input type="text" class="form-control" id="religion-specify" name="specify_other_religion"
+                                placeholder="Specify Religion" value="<?= e($specify_religion_value) ?>"
+                                <?= $is_religion_others ? 'required' : '' ?>>
+                        </div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="ethnic-group" class="small font-weight-bold mb-0">Ethnic Group</label>
                         <?php
                         $ethnic_list = ethnic_groups();
-                        $ethnic_names = array_column($ethnic_list, 'name');
                         $current_ethnic = $form_data['ethnic_group'] ?? '';
-                        $is_common_ethnic = in_array($current_ethnic, $ethnic_names);
+                        $specify_ethnic_value = $form_data['ethnic_group_specify'] ?? '';
                         $selected_ethnic_value = '';
-                        $specify_ethnic_value = '';
                         if ($current_ethnic !== '') {
-                            if ($is_common_ethnic) {
+                            if (is_numeric($current_ethnic)) {
                                 $selected_ethnic_value = $current_ethnic;
-                            } else {
+                            } elseif ($current_ethnic === 'Not Applicable') {
+                                $selected_ethnic_value = 'Not Applicable';
+                            } elseif ($current_ethnic === 'Others') {
                                 $selected_ethnic_value = 'Others';
-                                $specify_ethnic_value = $current_ethnic;
+                            } else {
+                                $ethnic_names_map = array_column($ethnic_list, 'id', 'name');
+                                if (isset($ethnic_names_map[$current_ethnic])) {
+                                    $selected_ethnic_value = (string) $ethnic_names_map[$current_ethnic];
+                                } else {
+                                    $selected_ethnic_value = 'Others';
+                                    $specify_ethnic_value = $current_ethnic;
+                                }
                             }
                         }
                         ?>
                         <select class="form-control" id="ethnic-group" name="ethnic_group"
                             onchange="toggleEthnicGroupSpecify(this, 'ethnic-group-specify-group')">
                             <option value="">Select Ethnic Group</option>
+                            <option value="Not Applicable" <?= $selected_ethnic_value === 'Not Applicable' ? 'selected' : '' ?>>Not Applicable</option>
                             <?php foreach ($ethnic_list as $eg): ?>
-                                <option value="<?= e($eg['name']) ?>" <?= $selected_ethnic_value === $eg['name'] ? 'selected' : '' ?>><?= e($eg['name']) ?></option>
+                                <option value="<?= $eg['id'] ?>" <?= $selected_ethnic_value === (string) $eg['id'] ? 'selected' : '' ?>><?= e($eg['name']) ?></option>
                             <?php endforeach ?>
                             <option value="Others" <?= $selected_ethnic_value === 'Others' ? 'selected' : '' ?>>Others
                             </option>
                         </select>
-                    </div>
-                </div>
-                <div class="form-row" id="religion-specify-group"
-                    style="display: <?= $is_religion_others ? 'block' : 'none' ?>;">
-                    <div class="form-group col-md-6">
-                        <label for="religion-specify" class="small font-weight-bold mb-0">Specify Religion
-                            <?= showAsterisk() ?></label>
-                        <input type="text" class="form-control" id="religion-specify" name="specify_other_religion"
-                            placeholder="Specify Religion" value="<?= e($specify_religion_value) ?>"
-                            <?= $is_religion_others ? 'required' : '' ?>>
-                    </div>
-                </div>
-                <div class="form-row" id="ethnic-group-specify-group"
-                    style="display: <?= $selected_ethnic_value === 'Others' ? 'block' : 'none' ?>;">
-                    <div class="form-group col-md-12">
-                        <label for="ethnic-group-specify" class="small font-weight-bold mb-0">Specify Ethnic Group
-                            <?= showAsterisk() ?></label>
-                        <input type="text" class="form-control" id="ethnic-group-specify" name="ethnic_group_specify"
-                            placeholder="Specify Ethnic Group" value="<?= e($specify_ethnic_value) ?>"
-                            <?= $selected_ethnic_value === 'Others' ? 'required' : '' ?>>
+                        <div id="ethnic-group-specify-group" class="mt-2"
+                            style="display: <?= $selected_ethnic_value === 'Others' ? 'block' : 'none' ?>;">
+                            <label for="ethnic-group-specify" class="small font-weight-bold mb-0">Specify Ethnic Group
+                                <?= showAsterisk() ?></label>
+                            <input type="text" class="form-control" id="ethnic-group-specify"
+                                name="ethnic_group_specify" placeholder="Specify Ethnic Group"
+                                value="<?= e($specify_ethnic_value) ?>" <?= $selected_ethnic_value === 'Others' ? 'required' : '' ?>>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
