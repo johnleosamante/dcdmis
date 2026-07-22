@@ -260,7 +260,7 @@ function activeEmployeesWithPosition($stationId = null, $category = null)
     }
     if ($category !== null && $category !== '') {
         if ($category === 'Teaching-Related') {
-            $conditions[] = "(pos.`category` = ? OR pos.`category` = ?)";
+            $conditions[] = "(pos.`category` = ? OR pos.`category` = ? OR pos.`id` IN ('PDO1', 'PDO2'))";
             $params[] = 'Teaching-Related';
             $params[] = 'Teaching';
         } else {
@@ -312,7 +312,7 @@ function activeEmployeesInDistrict($districtId, $category = null)
     $params = [$districtId];
     if ($category !== null && $category !== '') {
         if ($category === 'Teaching-Related') {
-            $sql .= " AND (pos.`category` = ? OR pos.`category` = ?)";
+            $sql .= " AND (pos.`category` = ? OR pos.`category` = ? OR pos.`id` IN ('PDO1', 'PDO2'))";
             $params[] = 'Teaching-Related';
             $params[] = 'Teaching';
         } else {
