@@ -196,18 +196,16 @@
 
                 <?php
                 $ethnic_list = ethnic_groups();
-                $ethnic_names = array_column($ethnic_list, 'name');
-                $current_ethnic = $employee['ethnic_group'] ?? '';
-                $is_common_ethnic = in_array($current_ethnic, $ethnic_names);
+                $current_ethnic_id = $employee['ethnic_group_id'] ?? null;
+                $specify_ethnic_value = $employee['specify_other_ethnic_group'] ?? '';
                 $selected_ethnic_value = '';
-                $specify_ethnic_value = '';
-                if ($current_ethnic !== '') {
-                    if ($is_common_ethnic) {
-                        $selected_ethnic_value = $current_ethnic;
-                    } else {
-                        $selected_ethnic_value = 'Others';
-                        $specify_ethnic_value = $current_ethnic;
-                    }
+                if (!empty($current_ethnic_id)) {
+                    $selected_ethnic_value = (string)$current_ethnic_id;
+                } elseif ($specify_ethnic_value === 'Not Applicable') {
+                    $selected_ethnic_value = 'Not Applicable';
+                    $specify_ethnic_value = '';
+                } elseif (!empty($specify_ethnic_value)) {
+                    $selected_ethnic_value = 'Others';
                 }
                 ?>
                 <div class="row">
@@ -215,12 +213,28 @@
                         <div class="form-group">
                             <label for="ethnic-group" class="mb-0">Ethnic Group</label>
                             <?php if (!$editMode): ?>
-                                <input id="ethnic-group" type="text" class="form-control" value="<?= e($selected_ethnic_value === 'Others' ? 'Others' : $current_ethnic) ?>" readonly>
+                                <?php
+                                $display_ethnic = 'Not Specified';
+                                if ($selected_ethnic_value === 'Not Applicable') {
+                                    $display_ethnic = 'Not Applicable';
+                                } elseif ($selected_ethnic_value === 'Others') {
+                                    $display_ethnic = 'Others';
+                                } elseif (!empty($selected_ethnic_value)) {
+                                    foreach ($ethnic_list as $eg) {
+                                        if ((string)$eg['id'] === $selected_ethnic_value) {
+                                            $display_ethnic = $eg['name'];
+                                            break;
+                                        }
+                                    }
+                                }
+                                ?>
+                                <input id="ethnic-group" type="text" class="form-control" value="<?= e($display_ethnic) ?>" readonly>
                             <?php else: ?>
                                 <select id="ethnic-group" name="ethnic_group" class="form-control" onchange="toggleEthnicGroupSpecify(this, 'ethnic-group-specify-group')">
                                     <option value="">-- Select Ethnic Group --</option>
+                                    <option value="Not Applicable" <?= $selected_ethnic_value === 'Not Applicable' ? 'selected' : '' ?>>Not Applicable</option>
                                     <?php foreach ($ethnic_list as $eg): ?>
-                                        <option value="<?= e($eg['name']) ?>" <?= $selected_ethnic_value === $eg['name'] ? 'selected' : '' ?>><?= e($eg['name']) ?></option>
+                                        <option value="<?= $eg['id'] ?>" <?= $selected_ethnic_value === (string)$eg['id'] ? 'selected' : '' ?>><?= e($eg['name']) ?></option>
                                     <?php endforeach ?>
                                     <option value="Others" <?= $selected_ethnic_value === 'Others' ? 'selected' : '' ?>>Others</option>
                                 </select>
