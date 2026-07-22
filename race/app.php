@@ -387,6 +387,30 @@ if (isset($_POST['declare-winner'])) {
     }
 }
 
+if (isset($_POST['save-recognition-category'])) {
+    $category_name = sanitize($_POST['category_name'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    if ($category_name) {
+        $existing = find("SELECT `id` FROM `recognition_categories` WHERE LOWER(`name`) = LOWER(?) LIMIT 1", [$category_name]);
+        if ($existing) {
+            $message = 'A category with this name already exists.';
+        } else {
+            $affected = createRecognitionCategory($category_name);
+            if ($affected) {
+                $message = 'Category has been added successfully.';
+                $success = true;
+                createSystemLog($stationId, $userId, 'Added recognition category', $affected, clientIp());
+            } else {
+                $message = 'Failed to add category. Please try again.';
+            }
+        }
+    } else {
+        $message = 'Category name is required.';
+    }
+}
+
 if (isset($_POST['save-recognition-award'])) {
     $category_id = sanitize($_POST['category_id'] ?? '');
     $award_name = sanitize($_POST['award_name'] ?? '');
