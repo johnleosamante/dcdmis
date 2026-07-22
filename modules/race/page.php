@@ -124,8 +124,9 @@ messageAlert($showAlert, $message, $success);
     <?php elseif ($view === 'awards'): ?>
         <?php if (!$nominatorOnly): ?>
         <div class="card-header py-3 d-flex align-items-center justify-content-between">
-            <div>
+            <div class="d-flex align-items-center">
                 <?php modalButtonSplit(uri() . '/modules/race/save-award-dialog.php', 'Add Award', 'fa-plus', 'Add Award') ?>
+                <?php modalButtonSplit(uri() . '/modules/race/save-category-dialog.php', 'Add Category', 'fa-folder-plus', 'Add Category') ?>
             </div>
         </div>
         <?php endif; ?>
@@ -544,7 +545,7 @@ messageAlert($showAlert, $message, $success);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($allWinners)):
+                        <?php
                             $winnerNum = 0;
                             foreach ($allWinners as $w):
                                 $winnerNum++;
@@ -581,12 +582,7 @@ messageAlert($showAlert, $message, $success);
                                 </td>
                                 <td class="align-middle"><?= e($w['schedule_title']) ?></td>
                             </tr>
-                        <?php endforeach;
-                        else: ?>
-                            <tr>
-                                <td colspan="6" class="text-center py-4">No winners declared yet.</td>
-                            </tr>
-                        <?php endif; ?>
+                        <?php endforeach;?>
                     </tbody>
                 </table>
 
