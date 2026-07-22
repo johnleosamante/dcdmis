@@ -27,7 +27,7 @@ $required_fields = [
     'birth_date' => 'Birth Date',
     'sex' => 'Sex at birth',
     'civil_status' => 'Civil Status',
-    'religion' => 'Religion',
+    'religion_id' => 'Religion',
     'email' => 'Email Address',
     'mobile' => 'Mobile Number',
     'education' => 'Education'
@@ -65,11 +65,11 @@ if (isset($_POST['register-applicant'])) {
                 }
             } else {
                 foreach ($required_fields as $field => $label) {
-                    if ($field === 'religion') {
-                        $religion_val = trim($_POST['religion'] ?? '');
+                    if ($field === 'religion_id') {
+                        $religion_val = trim($_POST['religion_id'] ?? '');
                         if (empty($religion_val)) {
                             $errors[] = "Religion is required.";
-                        } elseif ($religion_val === 'Others' && empty(trim($_POST['religion_specify'] ?? ''))) {
+                        } elseif ($religion_val === 'Others' && empty(trim($_POST['specify_other_religion'] ?? ''))) {
                             $errors[] = "Please specify your religion.";
                         }
                     } else {
