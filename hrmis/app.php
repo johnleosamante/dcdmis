@@ -131,7 +131,7 @@ if (isset($_POST['update-personal-information'])) {
         if ($raw_religion === 'Others') {
             $specify_other_religion = sanitize($_POST['specify_other_religion'] ?? null);
         } else {
-            $religion_id = !empty($raw_religion) ? (int)$raw_religion : null;
+            $religion_id = !empty($raw_religion) ? (int) $raw_religion : null;
         }
 
         $raw_ethnic = sanitize($_POST['ethnic_group'] ?? null);
@@ -143,7 +143,7 @@ if (isset($_POST['update-personal-information'])) {
             $specify_other_ethnic_group = 'Not Applicable';
             $ethnic_group_id = null;
         } else {
-            $ethnic_group_id = !empty($raw_ethnic) ? (int)$raw_ethnic : null;
+            $ethnic_group_id = !empty($raw_ethnic) ? (int) $raw_ethnic : null;
         }
 
         $affectedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), sanitize($_POST['dob']), sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), $religion_id, $specify_other_religion, $ethnic_group_id, $specify_other_ethnic_group, sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), $dualCitizenshipCountry, sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
@@ -1990,7 +1990,11 @@ if (isset($_POST['save-assessment-score'])) {
         $positionSG = $positionData ? (int) $positionData['salary_grade'] : 0;
         $positionCat = $positionData ? $positionData['category'] : '';
 
-        if ($positionSG >= 1 && $positionSG <= 9) {
+        $positionTitle = $positionData ? $positionData['official_title'] : '';
+        $isPrincipal = stripos($positionTitle, 'Principal') !== false;
+        if ($isPrincipal && $positionSG >= 17 && $positionSG <= 22) {
+            $sgLabel = 'SG 17-22 (School Administration Positions)';
+        } elseif ($positionSG >= 1 && $positionSG <= 9) {
             $sgLabel = stripos($positionCat, 'general service') !== false
                 ? 'SG 1-9 (General Services)'
                 : 'SG 1-9 (Non-General Services)';
