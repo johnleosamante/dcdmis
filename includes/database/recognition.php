@@ -25,6 +25,10 @@ try {
     if (empty($colNomDeadline)) {
         query("ALTER TABLE `award_schedule` ADD COLUMN `nomination_deadline` DATE DEFAULT NULL AFTER `nomination_start`");
     }
+    $colCriteria = query("SHOW COLUMNS FROM `recognition_awards` LIKE 'criteria'");
+    if (empty($colCriteria)) {
+        query("ALTER TABLE `recognition_awards` ADD COLUMN `criteria` TEXT NULL AFTER `has_level`");
+    }
     // schedule_awards linking table
     $tableExists = query("SHOW TABLES LIKE 'schedule_awards'");
     if (empty($tableExists)) {
@@ -693,6 +697,12 @@ function awardWinnerByScheduleAndAward($schedule_id, $award_id, $level = null)
 
 function raceAccessLevel($userId)
 {
+    $prefix = alias() . '_';
+    $code = $_SESSION["{$prefix}code"] ?? null;
+    if ($code === 'ICT') {
+        return 'admin';
+    }
+
     $adminPositions = ['SREPS', 'EPS2', 'ITO1'];
     $nominatorPositions = ['SP1', 'SP2', 'SP3', 'SP4', 'ASP2', 'ADOF5', 'PSDS'];
     $pos = position($userId);
