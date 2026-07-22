@@ -177,29 +177,19 @@
                         </label>
                         <?php
                         $religion_list = religions();
-                        $religion_names = array_column($religion_list, 'name');
-                        $current_religion = $form_data['religion'] ?? '';
-                        $is_common = in_array($current_religion, $religion_names);
-                        $selected_value = '';
-                        $specify_value = '';
-                        if ($current_religion !== '') {
-                            if ($is_common) {
-                                $selected_value = $current_religion;
-                            } else {
-                                $selected_value = 'Others';
-                                $specify_value = $current_religion;
-                            }
-                        }
+                        $current_religion_id = $form_data['religion_id'] ?? null;
+                        $specify_religion_value = $form_data['specify_other_religion'] ?? '';
+                        $is_religion_others = (string)$current_religion_id === 'Others' || !empty($specify_religion_value);
                         ?>
-                        <select class="form-control" id="religion" name="religion"
+                        <select class="form-control" id="religion" name="religion_id"
                             onchange="toggleReligionSpecify(this, 'religion-specify-group')">
                             <option value="">Select Religion</option>
                             <?php foreach ($religion_list as $r): ?>
-                                <option value="<?= e($r['name']) ?>" <?= $selected_value === $r['name'] ? 'selected' : '' ?>>
+                                <option value="<?= $r['id'] ?>" <?= (string)$current_religion_id === (string)$r['id'] ? 'selected' : '' ?>>
                                     <?= e($r['name']) ?>
                                 </option>
                             <?php endforeach ?>
-                            <option value="Others" <?= $selected_value === 'Others' ? 'selected' : '' ?>>Others</option>
+                            <option value="Others" <?= $is_religion_others ? 'selected' : '' ?>>Others</option>
                         </select>
                     </div>
                     <div class="form-group col-md-6">
@@ -232,13 +222,13 @@
                     </div>
                 </div>
                 <div class="form-row" id="religion-specify-group"
-                    style="display: <?= $selected_value === 'Others' ? 'block' : 'none' ?>;">
+                    style="display: <?= $is_religion_others ? 'block' : 'none' ?>;">
                     <div class="form-group col-md-6">
                         <label for="religion-specify" class="small font-weight-bold mb-0">Specify Religion
                             <?= showAsterisk() ?></label>
-                        <input type="text" class="form-control" id="religion-specify" name="religion_specify"
-                            placeholder="Specify Religion" value="<?= e($specify_value) ?>"
-                            <?= $selected_value === 'Others' ? 'required' : '' ?>>
+                        <input type="text" class="form-control" id="religion-specify" name="specify_other_religion"
+                            placeholder="Specify Religion" value="<?= e($specify_religion_value) ?>"
+                            <?= $is_religion_others ? 'required' : '' ?>>
                     </div>
                 </div>
                 <div class="form-row" id="ethnic-group-specify-group"
@@ -448,7 +438,7 @@
             // Add required attribute back to all form fields
             document.querySelectorAll('#employee-fields input[type="text"], #employee-fields input[type="date"], #employee-fields input[type="email"], #employee-fields select').forEach(field => {
                 const fieldName = field.name;
-                const requiredFields = ['last_name', 'first_name', 'barangay', 'city', 'province', 'zip', 'birth_date', 'sex', 'civil_status', 'religion', 'email', 'mobile', 'education'];
+                const requiredFields = ['last_name', 'first_name', 'barangay', 'city', 'province', 'zip', 'birth_date', 'sex', 'civil_status', 'religion_id', 'email', 'mobile', 'education'];
                 if (requiredFields.includes(fieldName)) {
                     field.setAttribute('required', 'required');
                 }
