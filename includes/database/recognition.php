@@ -282,13 +282,6 @@ function isDistrictSupervisor($userId)
     return $pos && isset($pos['position_id']) && $pos['position_id'] === 'PSDS';
 }
 
-function isSectionHead($userId)
-{
-    $sectionHeadPositions = ['EPSVR', 'CES', 'SREPS'];
-    $pos = position($userId);
-    return $pos && isset($pos['position_id']) && in_array($pos['position_id'], $sectionHeadPositions);
-}
-
 function districtBySupervisor($userId)
 {
     return find("SELECT * FROM `districts` WHERE `supervisor_id` = ? LIMIT 1", [$userId]);
@@ -688,7 +681,7 @@ function awardWinnerByScheduleAndAward($schedule_id, $award_id, $level = null)
 
 function raceAccessLevel($userId)
 {
-    $adminPositions = ['SREPS', 'ITO1'];
+    $adminPositions = ['SREPS', 'EPS2', 'ITO1'];
     $nominatorPositions = ['SP1', 'SP2', 'SP3', 'SP4', 'ASP2', 'ADOF5', 'PSDS'];
     $pos = position($userId);
     if ($pos && isset($pos['position_id'])) {
