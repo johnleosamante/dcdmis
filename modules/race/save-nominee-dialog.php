@@ -219,7 +219,7 @@ $typeSwitchParams = $_GET;
                             <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Current school principals are included so former teachers now serving as principals can be nominated.</small>
                         <?php endif; ?>
                         <?php if ($filterCategory === 'Teaching-Related'): ?>
-                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Teachers and Guidance Counselors are included for Related Teaching awards.</small>
+                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Guidance Counselors are included for Related Teaching awards.</small>
                         <?php endif; ?>
                         <select id="employee-id" name="employee-id" class="form-control" title="Select employee..." required>
                             <option value="">Select Employee...</option>
