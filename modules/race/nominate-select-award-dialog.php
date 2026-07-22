@@ -11,7 +11,7 @@ if ($scheduleId) {
     $schedule = awardSchedule($scheduleId);
 }
 
-$awards = recognitionAwardsWithCategory();
+$awards = $scheduleId ? scheduleAwards($scheduleId) : [];
 $nomineeCounts = $scheduleId ? nomineesCountByAward($scheduleId) : [];
 
 $modalTitle = 'Select Award';
@@ -47,7 +47,7 @@ if ($schedule) {
                         $count = $nomineeCounts[$aw['id']] ?? 0;
                         ?>
                         <a href="#" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between py-3 px-4"
-                           onclick="loadData('<?= uri() ?>/modules/race/save-nominee-dialog.php?e=<?= cipher($scheduleId) ?>&award_id=<?= cipher($aw['id']) ?>'); return false;">
+                           onclick="loadData('<?= uri() ?>/modules/race/nominate-reminder-dialog.php?e=<?= cipher($scheduleId) ?>&award_id=<?= cipher($aw['id']) ?>'); return false;">
                             <div>
                                 <div class="font-weight-bold text-dark text-uppercase"><?= e($aw['name']) ?></div>
                                 <div class="text-muted small"><?= e($aw['category_name']) ?></div>
@@ -62,7 +62,7 @@ if ($schedule) {
             <?php else: ?>
                 <div class="text-center py-5 text-muted">
                     <div class="mb-2" style="font-size: 2rem;"><i class="fas fa-award"></i></div>
-                    <p>No awards found.</p>
+                    <p>No awards have been added to this schedule yet.</p>
                 </div>
             <?php endif; ?>
         </div>
