@@ -179,7 +179,7 @@ function runMysqldump(string $path, string $filePath, string &$errorMsg): bool
 /**
  * Runs backup using pure PHP streaming.
  */
-function runPHPBackup(string $filePath, string &$errorMsg): bool
+function runPHPBackup(string $filePath, ?string &$errorMsg = null): bool
 {
     try {
         $db = connection();
@@ -239,7 +239,8 @@ function runPHPBackup(string $filePath, string &$errorMsg): bool
 function writeInsertChunkToFile($handle, string $table, array $rows, PDO $db): void
 {
     $keys = array_map(function ($k) {
-        return "`$k`"; }, array_keys($rows[0]));
+        return "`$k`";
+    }, array_keys($rows[0]));
     $sqlHeader = "INSERT INTO `$table` (" . implode(', ', $keys) . ") VALUES \n";
 
     $valueGroups = [];
