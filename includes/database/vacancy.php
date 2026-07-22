@@ -667,11 +667,9 @@ function applicantsListByPublication($publicationId, $positionId = null, $status
             FROM vacancy_applications AS va
             INNER JOIN application_codes AS ac ON va.application_code_id = ac.id
             INNER JOIN positions AS p ON va.position_id = p.id
-            LEFT JOIN (
-                `employees` AS e
-                INNER JOIN `ethnic_groups` AS eg ON e.`ethnic_group_id` = eg.`id`
-                INNER JOIN `religion` AS r ON e.`religion_id` = r.`id`
-            ) ON ac.`id` = e.`id`
+            LEFT JOIN `employees` AS e ON ac.`id` = e.`id`
+            LEFT JOIN `ethnic_groups` AS eg ON e.`ethnic_group_id` = eg.`id`
+            LEFT JOIN `religion` AS r ON e.`religion_id` = r.`id`
             LEFT JOIN assessment_scores AS s ON va.id = s.application_id
             WHERE va.publication_id = ?
             {$filters}
