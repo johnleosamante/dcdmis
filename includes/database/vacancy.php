@@ -465,6 +465,9 @@ function prepareApplicantData(array $post)
     $specify_other_ethnic_group = null;
     if ($raw_ethnic === 'Others') {
         $specify_other_ethnic_group = sanitize($post['ethnic_group_specify'] ?? null);
+    } elseif ($raw_ethnic === 'Not Applicable') {
+        $specify_other_ethnic_group = 'Not Applicable';
+        $ethnic_group_id = null;
     } else {
         $ethnic_group_id = !empty($raw_ethnic) ? (int) $raw_ethnic : null;
     }
