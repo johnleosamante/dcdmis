@@ -291,7 +291,7 @@ function createEmployee($employee_id, $last_name, $first_name, $middle_name, $na
     return insert('employees', $data);
 }
 
-function updateEmployee($last_name, $first_name, $middle_name, $name_extension, $birthdate, $place_of_birth, $sex, $civil_status, $specify_other_civil_status, $religion, $ethnic_group, $citizenship_id, $dual_citizenship_type, $dual_citizenship_country_id, $residence_lot, $residence_street, $residence_subdivision, $residence_barangay, $residence_city, $residence_province, $residence_zip, $permanent_lot, $permanent_street, $permanent_subdivision, $permanent_barangay, $permanent_city, $permanent_province, $permanent_zip, $height, $weight, $blood_type, $umid, $crn, $bp, $pagibig, $philhealth, $philsys, $sss, $telephone, $mobile, $email, $tin, $agency_id, $prc, $photo, $id)
+function updateEmployee($last_name, $first_name, $middle_name, $name_extension, $birthdate, $place_of_birth, $sex, $civil_status, $specify_other_civil_status, $religion_id, $specify_other_religion, $ethnic_group, $citizenship_id, $dual_citizenship_type, $dual_citizenship_country_id, $residence_lot, $residence_street, $residence_subdivision, $residence_barangay, $residence_city, $residence_province, $residence_zip, $permanent_lot, $permanent_street, $permanent_subdivision, $permanent_barangay, $permanent_city, $permanent_province, $permanent_zip, $height, $weight, $blood_type, $umid, $crn, $bp, $pagibig, $philhealth, $philsys, $sss, $telephone, $mobile, $email, $tin, $agency_id, $prc, $photo, $id)
 {
     $data = [
         'last_name' => $last_name,
@@ -303,7 +303,8 @@ function updateEmployee($last_name, $first_name, $middle_name, $name_extension, 
         'sex' => $sex,
         'civil_status' => $civil_status,
         'specify_other_civil_status' => $specify_other_civil_status,
-        'religion' => $religion,
+        'religion_id' => $religion_id,
+        'specify_other_religion' => $specify_other_religion,
         'ethnic_group' => $ethnic_group,
         'citizenship_id' => $citizenship_id,
         'dual_citizenship_type' => $dual_citizenship_type,
@@ -510,13 +511,14 @@ function demographicsEducation()
 function demographicsReligion()
 {
     $sql = "SELECT 
-                COALESCE(NULLIF(TRIM(religion), ''), 'Not Specified') AS name,
-                SUM(CASE WHEN sex = 'Male' THEN 1 ELSE 0 END) AS male,
-                SUM(CASE WHEN sex = 'Female' THEN 1 ELSE 0 END) AS female,
+                COALESCE(NULLIF(TRIM(r.`name`), ''), NULLIF(TRIM(e.`specify_other_religion`), ''), 'Not Specified') AS name,
+                SUM(CASE WHEN e.`sex` = 'Male' THEN 1 ELSE 0 END) AS male,
+                SUM(CASE WHEN e.`sex` = 'Female' THEN 1 ELSE 0 END) AS female,
                 COUNT(*) AS total,
                 COUNT(*) AS count
-            FROM employees
-            WHERE status = 'Active'
+            FROM employees e
+            LEFT JOIN religion r ON e.religion_id = r.id
+            WHERE e.status = 'Active'
             GROUP BY name
             ORDER BY total DESC";
     return query($sql);
@@ -615,7 +617,8 @@ function demographicsSchool()
 function demographicsEmployeeList()
 {
     $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
-                p.`sex`, p.`birthdate`, p.`religion`, p.`profile_picture`,
+                p.`sex`, p.`birthdate`, p.`religion_id`, p.`specify_other_religion`, p.`ethnic_group_id`, p.`specify_other_ethnic_group`,
+                r.`name` AS `religion_name`, eg.`name` AS `ethnic_group_name`, p.`profile_picture`,
                 pos.`official_title` AS `position`, pos.`category`, pos.`salary_grade`,
                 d.`name` AS `district`, s.`name` AS `school`,
                 o.`is_indigenous`, o.`indigenous_group`, o.`with_disability`, o.`disability`, o.`is_solo_parent`,
@@ -641,6 +644,8 @@ function demographicsEmployeeList()
             INNER JOIN `positions` AS pos ON sa.`position_id` = pos.`id`
             INNER JOIN `schools` AS s ON sa.`station_id` = s.`id`
             INNER JOIN `districts` AS d ON s.`district_id` = d.`id`
+            LEFT JOIN `ethnic_groups` AS eg ON p.`ethnic_group_id` = eg.`id`
+            LEFT JOIN `religion` AS r ON p.`religion_id` = r.`id`
             LEFT JOIN `other_informations` o ON p.`id` = o.`employee_id`
             WHERE p.`status` = 'Active'
             ORDER BY p.`last_name` ASC, p.`first_name` ASC";
@@ -693,8 +698,17 @@ function getEmployeeDemographicGroup($row, $exportId)
                     return 'Not Specified';
             }
         case 'religion':
-            $religion = trim($row['religion'] ?? '');
-            return $religion !== '' ? $religion : 'Not Specified';
+            if (!empty($row['religion_name'])) {
+                return trim($row['religion_name']);
+            }
+            if (!empty($row['religion_id'])) {
+                $rel = religion($row['religion_id']);
+                if ($rel && !empty($rel['name'])) {
+                    return trim($rel['name']);
+                }
+            }
+            $specify = trim($row['specify_other_religion'] ?? '');
+            return $specify !== '' ? $specify : 'Not Specified';
         case 'indigenous':
             if (isset($row['is_indigenous']) && $row['is_indigenous'] == 1 && trim($row['indigenous_group'] ?? '') !== '') {
                 return trim($row['indigenous_group']);
@@ -723,6 +737,14 @@ function getEmployeeDemographicGroup($row, $exportId)
 function religions()
 {
     return query("SELECT `id`, `name` FROM `religion` ORDER BY `name` ASC") ?: [];
+}
+
+function religion($religion_id)
+{
+    if (empty($religion_id)) {
+        return null;
+    }
+    return find("SELECT `id`, `name` FROM `religion` WHERE `id` = ? LIMIT 1", [$religion_id]);
 }
 
 // indigenous groups
