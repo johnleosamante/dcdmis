@@ -32,23 +32,20 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
 <table>
     <tbody>
         <tr>
-            <td colspan="25" style="font-weight: bold; font-size: 14px;">CALL FOR APPLICATION - APPLICANTS COMPLETE
+            <td colspan="24" style="font-weight: bold; font-size: 14px;">CALL FOR APPLICATION - APPLICANTS COMPLETE
                 DETAILS</td>
         </tr>
         <tr>
             <td style="font-weight: bold;">Call Code:</td>
-            <td colspan="24"><?= e($publication['code'] ?? 'N/A') ?></td>
+            <td colspan="23"><?= e($publication['code'] ?? 'N/A') ?></td>
         </tr>
         <tr>
             <td style="font-weight: bold;">Title:</td>
-            <td colspan="24"><?= e($publication['title'] ?? 'N/A') ?></td>
+            <td colspan="23"><?= e($publication['title'] ?? 'N/A') ?></td>
         </tr>
         <tr>
             <td style="font-weight: bold;">Export Date:</td>
-            <td colspan="24"><?= date('F d, Y g:i A') ?></td>
-        </tr>
-        <tr>
-            <td colspan="25"></td>
+            <td colspan="23"><?= date('F d, Y g:i A') ?></td>
         </tr>
     </tbody>
 </table>
@@ -118,10 +115,24 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                     $sex = $p['sex'] ?? '';
                     $birthdate = $p['birthdate'] ?? '';
                     $civilStatus = $p['civil_status'] ?? '';
-                    $religion = $p['religion'] ?? '';
+                    $religion = '';
+                    if (!empty($p['religion_id'])) {
+                        $relData = religion($p['religion_id']);
+                        $religion = $relData ? $relData['name'] : '';
+                    }
+                    if (empty($religion) || $religion === 'Others') {
+                        $religion = $p['specify_other_religion'] ?? '';
+                    }
                     $email = $p['email_address'] ?? '';
                     $mobile = $p['mobile_number'] ?? '';
-                    $ethnicGroup = $p['ethnic_group'] ?? '';
+                    $ethnicGroup = '';
+                    if (!empty($p['ethnic_group_id'])) {
+                        $egData = find("SELECT `name` FROM `ethnic_groups` WHERE `id` = ? LIMIT 1", [$p['ethnic_group_id']]);
+                        $ethnicGroup = $egData ? $egData['name'] : '';
+                    }
+                    if (empty($ethnicGroup) || $ethnicGroup === 'Others') {
+                        $ethnicGroup = $p['specify_other_ethnic_group'] ?? '';
+                    }
                     $lot = $p['residence_lot'] ?? '';
                     $street = $p['residence_street'] ?? '';
                     $subdiv = $p['residence_subdivision'] ?? '';
@@ -139,8 +150,6 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                 if ($other) {
                     $withDisability = (isset($other['with_disability']) && $other['with_disability'] == 1) ? 'Yes' : 'No';
                     $disabilityDetails = $other['disability'] ?? '';
-                    $isIndigenous = (isset($other['is_indigenous']) && $other['is_indigenous'] == 1) ? 'Yes' : 'No';
-                    $indigenousGroup = $other['indigenous_group'] ?? '';
                 }
 
                 $edbs = educationalBackgrounds($applicantId);
@@ -178,12 +187,23 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                     $sex = $p['sex'] ?? '';
                     $birthdate = $p['birthdate'] ?? '';
                     $civilStatus = $p['civil_status'] ?? '';
-                    $religion = $p['religion'] ?? '';
+                    $religion = '';
+                    if (!empty($p['religion_id'])) {
+                        $relData = religion($p['religion_id']);
+                        $religion = $relData ? $relData['name'] : '';
+                    }
+                    if (empty($religion) || $religion === 'Others') {
+                        $religion = $p['specify_other_religion'] ?? '';
+                    }
                     $email = $p['email_address'] ?? '';
                     $mobile = $p['mobile_number'] ?? '';
-                    $ethnicGroup = $p['ethnic_group'] ?? '';
-                    if ($ethnicGroup === 'Others' && !empty($p['ethnic_group_specify'])) {
-                        $ethnicGroup = $p['ethnic_group_specify'];
+                    $ethnicGroup = '';
+                    if (!empty($p['ethnic_group_id'])) {
+                        $egData = find("SELECT `name` FROM `ethnic_groups` WHERE `id` = ? LIMIT 1", [$p['ethnic_group_id']]);
+                        $ethnicGroup = $egData ? $egData['name'] : '';
+                    }
+                    if (empty($ethnicGroup) || $ethnicGroup === 'Others') {
+                        $ethnicGroup = $p['specify_other_ethnic_group'] ?? '';
                     }
 
                     $lot = $p['lot'] ?? '';
@@ -245,8 +265,6 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                 <td><?= e($address) ?></td>
                 <td><?= e($withDisability) ?></td>
                 <td><?= e($disabilityDetails) ?></td>
-                <td><?= e($isIndigenous) ?></td>
-                <td><?= e($indigenousGroup) ?></td>
                 <td><?= e($ethnicGroup) ?></td>
                 <td style="text-transform: none;"><?= e($undergraduate) ?></td>
                 <td style="text-transform: none;"><?= e($graduateStudies) ?></td>
@@ -255,7 +273,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
         <?php endforeach; ?>
         <?php if (count($apps) === 0): ?>
             <tr>
-                <td colspan="25" style="text-align: center;">No applicants found for this call for application.</td>
+                <td colspan="24" style="text-align: center;">No applicants found for this call for application.</td>
             </tr>
         <?php endif; ?>
     </tbody>
