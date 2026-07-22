@@ -145,6 +145,24 @@ function deleteRecognitions($employee_id)
     return delete('recognitions', '`employee_id` = ?', [$employee_id]);
 }
 
+function employeeAwardedRecognitions($employee_id)
+{
+    $sql = "SELECT n.`id`, n.`schedule_id`, n.`award_id`, n.`status`, n.`created_at`, n.`nominee_type`, n.`nominee_id`, n.`level`,
+                   cat.`name` AS `category_name`,
+                   aw.`name` AS `award_name`,
+                   s.`title` AS `schedule_title`
+            FROM `awards_categories_nominees` AS n
+            LEFT JOIN `recognition_awards` AS aw ON n.`award_id` = aw.`id`
+            LEFT JOIN `recognition_categories` AS cat ON aw.`category_id` = cat.`id`
+            INNER JOIN `award_schedule` AS s ON n.`schedule_id` = s.`id`
+            WHERE n.`status` = 'Awarded' 
+              AND n.`nominee_type` = 'Employee' 
+              AND n.`nominee_id` = ?
+            ORDER BY s.`date` DESC, n.`created_at` DESC";
+    $results = query($sql, [$employee_id]);
+    return is_array($results) ? $results : [];
+}
+
 // recognition_categories
 function recognitionCategories()
 {
@@ -856,7 +874,8 @@ function saveFinalRankings($schedule_id, $award_id, $ranked_by = null, $level = 
         query("DELETE r FROM `rankings` AS r
                INNER JOIN `awards_categories_nominees` AS n ON r.`nominee_id` = n.`id`
                WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`level` = ?",
-              [$schedule_id, $award_id, $level]);
+            [$schedule_id, $award_id, $level]
+        );
     } else {
         delete('rankings', '`schedule_id` = ? AND `award_id` = ?', [$schedule_id, $award_id]);
     }
@@ -919,7 +938,8 @@ function deleteRankingsByScheduleAndAward($schedule_id, $award_id, $level = null
         return query("DELETE r FROM `rankings` AS r
                       INNER JOIN `awards_categories_nominees` AS n ON r.`nominee_id` = n.`id`
                       WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`level` = ?",
-                     [$schedule_id, $award_id, $level]);
+            [$schedule_id, $award_id, $level]
+        );
     }
     return delete('rankings', '`schedule_id` = ? AND `award_id` = ?', [$schedule_id, $award_id]);
 }
@@ -931,7 +951,8 @@ function finalizeRankings($schedule_id, $award_id, $level = null)
                       INNER JOIN `awards_categories_nominees` AS n ON r.`nominee_id` = n.`id`
                       SET r.`status` = 'Finalized'
                       WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`level` = ?",
-                     [$schedule_id, $award_id, $level]);
+            [$schedule_id, $award_id, $level]
+        );
     }
     return query("UPDATE `rankings` SET `status` = 'Finalized' WHERE `schedule_id` = ? AND `award_id` = ?", [$schedule_id, $award_id]);
 }
