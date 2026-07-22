@@ -68,9 +68,12 @@ if ($weightsData) {
     }
 }
 
-function getScoringCategoryLabelForResults($salaryGrade, $category)
+function getScoringCategoryLabelForResults($salaryGrade, $category, $title = '')
 {
-    if ($salaryGrade >= 1 && $salaryGrade <= 9) {
+    $isPrincipal = stripos($title, 'Principal') !== false;
+    if ($isPrincipal && $salaryGrade >= 17 && $salaryGrade <= 22) {
+        return 'SG 17-22 (School Administration Positions)';
+    } elseif ($salaryGrade >= 1 && $salaryGrade <= 9) {
         return stripos($category, 'general service') !== false
             ? 'SG 1-9 (General Services)'
             : 'SG 1-9 (Non-General Services)';
@@ -157,7 +160,7 @@ messageAlert($showAlert, $message, $success);
                     $posResults = $resultsByPosition[$posId] ?? [];
 
                     // Determine weights for this position
-                    $sgLabel = getScoringCategoryLabelForResults($pos['salary_grade'], $pos['category']);
+                    $sgLabel = getScoringCategoryLabelForResults($pos['salary_grade'], $pos['category'], $pos['official_title']);
                     $weights = $weightsByCategory[$sgLabel] ?? [
                         'education' => 5,
                         'training' => 10,
