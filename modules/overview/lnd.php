@@ -1,5 +1,5 @@
 <?php
-// modules/prime-hrm/lnd.php
+// modules/overview/lnd.php
 $userPositionId = null;
 if ($isPis) {
     if (!function_exists('position')) {
@@ -24,7 +24,7 @@ $countScheduled = number_format(count(scheduledTrainings()));
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+            <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
             <li class="breadcrumb-item active">Learning and Development</li>
         </ol>
     </nav>

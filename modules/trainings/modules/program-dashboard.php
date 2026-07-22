@@ -27,7 +27,7 @@ $programs = getProgramslist();
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <?php if ($isPis): ?>
-                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
                 <li class="breadcrumb-item"><a href="<?= customUri('pis', 'Learning and Development') ?>">Learning and
                         Development</a></li>
             <?php endif; ?>

@@ -1,5 +1,5 @@
 <?php
-// modules/prime-hrm/rsp.php
+// modules/overview/rsp.php
 if (!$isPis) {
     require_once(root() . '/modules/error/403.php');
     return;
@@ -17,7 +17,7 @@ $countPublications = number_format(countPublications());
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+            <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
             <li class="breadcrumb-item active">Recruitment, Selection and Placement</li>
         </ol>
     </nav>
