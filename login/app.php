@@ -46,7 +46,8 @@ function setUserSession($user_id, $prefix)
     $_SESSION["{$prefix}portal"] = $portal;
     $_SESSION["{$prefix}station"] = $stationName;
 
-    foreach (['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'monitoring_tools'] as $area) {
+    global $modules;
+    foreach ($modules as $area) {
         $_SESSION["{$prefix}data_privacy_agreed_{$area}"] = false;
     }
 
