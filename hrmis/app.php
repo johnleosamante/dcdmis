@@ -697,7 +697,7 @@ if (isset($_POST['update-other-information'])) {
     $resigned = sanitize($_POST['resigned']);
     $resignedDetails = $resigned ? sanitize($_POST['resigned-details']) : 'N/A';
     $immigrant = sanitize($_POST['immigrant']);
-    $immigrantCountry = $immigrant ? sanitize($_POST['immigrant-country']) : 'N/A';
+    $immigrantCountry = $immigrant ? sanitize($_POST['immigrant-country']) : null;
     $isIndigenous = sanitize($_POST['is-indigenous']);
     $indigenousSpecify = $isIndigenous ? sanitize($_POST['indigenous-specify']) : 'N/A';
     $isDifferentlyAbled = sanitize($_POST['is-differently-abled']);
