@@ -114,7 +114,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                 $i = 1;
                 foreach ($entries as $entry):
                     $appRow = $entry['app'];
-                    $empStatusText = $appRow['is_employed'] ? 'Currently Employed' : 'Not Employed';
+                    $empStatusText = $appRow['is_employed'] ? 'Internal' : 'External';
                     ?>
                     <tr style="text-transform: uppercase;">
                         <td><?= $i++ ?></td>
