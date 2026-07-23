@@ -583,6 +583,11 @@ messageAlert($showAlert, $message, $success);
                                 <td class="align-middle"><?= e($w['schedule_title']) ?></td>
                             </tr>
                         <?php endforeach;?>
+                        <?php if (empty($allWinners)): ?>
+                            <tr>
+                                <td colspan="6" class="text-center py-4">No winners declared yet.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
 
