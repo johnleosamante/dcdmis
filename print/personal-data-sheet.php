@@ -376,7 +376,7 @@ $pdf->SetFont('Arial', '', 6);
 $pdf->Cell($rightW - 2, 3.5, 'If dual citizen, indicate country:', 0, 1, 'L');
 $pdf->SetXY($xRight + 1, $yAfterNames + 19.5);
 $dualCountryId = $e['dual_citizenship_country_id'];
-$dualCountry = ($dualCountryId !== null) ? strtoupper(country($dualCountryId)) : 'N/A';
+$dualCountry = ($dualCountryId !== null && ($c = country($dualCountryId))) ? strtoupper($c['name']) : 'N/A';
 $pdf->SetFont('Arial', '', 7.5);
 $pdf->Cell($rightW - 2, 3.5, $dualCountry, 'B', 1, 'C');
 
@@ -1122,7 +1122,7 @@ $questions = [
         'minH' => 14,
         'yes_a' => isset($otherInfo['is_immigrant']) ? ($otherInfo['is_immigrant'] == 1) : false,
         'no_a' => isset($otherInfo['is_immigrant']) ? ($otherInfo['is_immigrant'] == 0) : false,
-        'details' => isset($otherInfo['immigrant_country_id']) && $otherInfo['immigrant_country_id'] ? country($otherInfo['immigrant_country_id']) : '',
+        'details' => isset($otherInfo['immigrant_country_id']) && $otherInfo['immigrant_country_id'] && ($c = country($otherInfo['immigrant_country_id'])) ? $c['name'] : '',
         'multi' => false,
     ],
     40 => [
