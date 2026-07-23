@@ -29,44 +29,44 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
 <table>
     <tbody>
         <tr>
-            <td colspan="5" style="font-weight: bold; font-size: 14px;">APPLICANTS REPORT</td>
+            <td colspan="8" style="font-weight: bold; font-size: 14px;">APPLICANTS REPORT</td>
         </tr>
         <tr>
-            <td style="font-weight: bold;">Call for Application Code:</td>
-            <td colspan="4">
+            <td colspan="2" style="font-weight: bold;">Call for Application Code:</td>
+            <td colspan="6">
                 <?= e($publication['code'] ?? 'N/A') ?>
             </td>
         </tr>
         <tr>
-            <td style="font-weight: bold;">Call for Application Title:</td>
-            <td colspan="4">
+            <td colspan="2" style="font-weight: bold;">Call for Application Title:</td>
+            <td colspan="6">
                 <?= e($publication['title'] ?? 'N/A') ?>
             </td>
         </tr>
         <?php if (!empty($publication['description'])): ?>
             <tr>
-                <td style="font-weight: bold;">Call for Application Description:</td>
-                <td colspan="4">
+                <td colspan="2" style="font-weight: bold;">Call for Application Description:</td>
+                <td colspan="6">
                     <?= e($publication['description']) ?>
                 </td>
             </tr>
         <?php endif ?>
         <tr>
-            <td style="font-weight: bold;">Export Date:</td>
-            <td colspan="4">
+            <td colspan="2" style="font-weight: bold;">Export Date:</td>
+            <td colspan="6">
                 <?= date('F d, Y g:i A') ?>
             </td>
         </tr>
         <tr>
-            <td style="font-weight: bold;">Applied Filters:</td>
-            <td colspan="4">
+            <td colspan="2" style="font-weight: bold;">Applied Filters:</td>
+            <td colspan="6">
                 Position: <?= ($selectedPositionId === 'all') ? 'All' : 'Filtered' ?> |
                 Applicant Type:
                 <?= ($selectedStatus === 'all') ? 'All' : (($selectedStatus === 'internal') ? 'Internal' : 'External') ?>
             </td>
         </tr>
         <tr>
-            <td colspan="5"></td>
+            <td colspan="8"></td>
         </tr>
     </tbody>
 </table>
@@ -75,7 +75,11 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
     <thead>
         <tr>
             <th>No.</th>
-            <th colspan="2">Applicant Name</th>
+            <th>Application Code</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Name Extension</th>
+            <th>Middle Name</th>
             <th>Applicant Type</th>
             <th>Applied On</th>
         </tr>
@@ -87,9 +91,21 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
         foreach ($apps as $app) {
             $group = $app['position_group'] ?? 'Uncategorized';
             $position = $app['official_title'] ?? 'Unknown Position';
-            $applicantName = applicantName($app['application_code']);
+
+            $applicantId = $app['application_code_id'] ?? null;
+            $data = null;
+            if ($applicantId) {
+                $data = employee($applicantId);
+                if (!$data) {
+                    $data = applicant($applicantId);
+                }
+            }
+
             $groupedByCategory[$group][$position][] = [
-                'name' => $applicantName,
+                'last_name' => $data['last_name'] ?? '',
+                'first_name' => $data['first_name'] ?? '',
+                'name_extension' => $data['name_extension'] ?? '',
+                'middle_name' => $data['middle_name'] ?? '',
                 'app' => $app,
             ];
         }
@@ -98,7 +114,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
             $groupTotal = array_sum(array_map('count', $positions));
             ?>
             <tr>
-                <td colspan="5" style="font-weight: bold; background-color: #d0d0d0; font-size: 13px;">
+                <td colspan="8" style="font-weight: bold; background-color: #d0d0d0; font-size: 13px;">
                     <?= e($group) ?> &mdash; <?= $groupTotal ?> applicant<?= $groupTotal !== 1 ? 's' : '' ?>
                 </td>
             </tr>
@@ -106,7 +122,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                 $posCount = count($entries);
                 ?>
                 <tr>
-                    <td colspan="5" style="font-weight: bold; background-color: #f0f0f0; padding-left: 16px;">
+                    <td colspan="8" style="font-weight: bold; background-color: #f0f0f0; padding-left: 16px;">
                         <?= e($positionTitle) ?> &mdash; <?= $posCount ?> applicant<?= $posCount !== 1 ? 's' : '' ?>
                     </td>
                 </tr>
@@ -118,7 +134,11 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
                     ?>
                     <tr style="text-transform: uppercase;">
                         <td><?= $i++ ?></td>
-                        <td colspan="2"><?= e($entry['name']) ?></td>
+                        <td style="mso-number-format:'\@';"><?= e($appRow['application_code']) ?></td>
+                        <td><?= e($entry['last_name']) ?></td>
+                        <td><?= e($entry['first_name']) ?></td>
+                        <td><?= e($entry['name_extension']) ?></td>
+                        <td><?= e($entry['middle_name']) ?></td>
                         <td><?= $empStatusText ?></td>
                         <td><?= toDatetime($appRow['created_at']) ?></td>
                     </tr>
@@ -128,7 +148,7 @@ $apps = applicantsListByPublication($publicationId, $positionIdParam, $statusPar
 
         <?php if (count($apps) === 0): ?>
             <tr>
-                <td colspan="5" style="text-align: center;">No applicants found matching the filter criteria.</td>
+                <td colspan="8" style="text-align: center;">No applicants found matching the filter criteria.</td>
             </tr>
         <?php endif; ?>
     </tbody>
