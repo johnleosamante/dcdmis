@@ -84,6 +84,8 @@ if (isset($_POST['register-applicant'])) {
 
                 if (!$has_eligibility) {
                     $errors[] = 'At least one eligibility must be selected.';
+                } elseif (!empty($_POST['other_eligibility']) && empty(trim($_POST['other_eligibility_specify'] ?? ''))) {
+                    $errors[] = 'Please specify your other eligibility.';
                 }
 
                 if (applicantEmailExists($email)) {
