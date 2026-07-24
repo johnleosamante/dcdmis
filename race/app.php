@@ -47,7 +47,7 @@ if (isset($_POST['save-award'])) {
     if (isset($_FILES['file-upload']) && is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
         $temp = $_FILES['file-upload']['tmp_name'];
 
-        if ($_FILES['file-upload']['size'] > $fileUploadSizeLimit) {
+        if ($_FILES['file-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
             $message = 'The choosen file exceeds the upload file limit (20 MB). No changes have been made to award.';
             return;
         }
@@ -68,7 +68,11 @@ if (isset($_POST['save-award'])) {
 
         $filename = 'uploads/awards/' . $employeeId . '/' . $employeeId . '-' . date('YmdHis') . '.' . $ext;
 
-        move_uploaded_file($temp, '../' . $filename);
+        $targetDir = root() . '/uploads/awards/' . $employeeId;
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+        move_uploaded_file($temp, root() . '/' . $filename);
     }
 
     if (empty($filename)) {
@@ -115,7 +119,10 @@ if (isset($_POST['delete-award'])) {
 
     if ($deletedAward) {
         createSystemLog($stationId, $userId, 'Deleted employee award', $employeeId, clientIp());
-        unlink(root() . '/' . $filename);
+        $deleteFilePath = root() . '/' . $filename;
+        if (!empty($filename) && file_exists($deleteFilePath)) {
+            unlink($deleteFilePath);
+        }
         $message = 'Award has been deleted successfully.';
     } else {
         $message = 'No changes have been made to award.';
@@ -585,7 +592,7 @@ if (isset($_POST['finalize-winner'])) {
     }
 }
 
-if (isset($_POST['declare-winner']) || isset($_POST['revert-winner']) || isset($_POST['disqualify-nominee'])) {
+if (isset($_POST['revert-winner']) || isset($_POST['disqualify-nominee'])) {
     $nominee_id = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $showAlert = true;
     $success = false;
