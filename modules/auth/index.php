@@ -4,7 +4,7 @@ require_once('../../includes/function.php');
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/system-log.php');
 
-if (isset($_SESSION["{$prefix}userId"])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION["{$prefix}userId"])) {
     createSystemLog($stationId, $userId, 'Logged out', $userId, clientIp());
     delete('remember_tokens', '`employee_id` = ?', [$userId]);
     session_destroy();
