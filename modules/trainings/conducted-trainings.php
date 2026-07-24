@@ -77,7 +77,6 @@ messageAlert($showAlert, $message, $success);
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                                         <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['id']), 'View', 'fa-eye', 'View Training');
-                                        linkDropdownItem(customUri('hrtdms', 'Attendance', $training['id']), 'Attendance', 'fa-calendar-check', 'Attendance');
                                         linkDropdownItem(customUri('hrtdms', 'Add Training Participants', $training['id']), 'Add Participants', 'fa-user-plus', 'Add Participants');
                                         modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['id']), 'Edit', 'fa-edit', 'Edit Training') ?>
                                     </div>
