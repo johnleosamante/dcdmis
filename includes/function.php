@@ -57,12 +57,12 @@ function customUri($page, $view, $id = null, $domain = null)
 {
     $value = ($id !== null) ? '&id=' . encode($id) : '';
 
-    return uri($domain) . "/{$page}?&v=" . encode($view) . $value;
+    return uri($domain) . "/{$page}?v=" . encode($view) . $value;
 }
 
 function title($page = null)
 {
-    return $page === null ? SITE_TITLE : $page . ' | ' . SITE_TITLE;
+    return $page === null ? SITE_TITLE : "{$page} | " . SITE_TITLE;
 }
 
 function alias()
@@ -97,13 +97,7 @@ function region()
 
 function clientIp()
 {
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        return $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        return $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-        return $_SERVER['REMOTE_ADDR'];
-    }
+    return $_SERVER['REMOTE_ADDR'];
 }
 
 function redirect($url = null)
@@ -142,7 +136,7 @@ function isValidEmail($email, $domain = null)
         return preg_match("/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/", $email);
     }
 
-    return preg_match("/^[a-zA-Z0-9_.-]+@+" . $domain . "+$/", $email);
+    return preg_match("/^[a-zA-Z0-9_.-]+@" . preg_quote($domain, '/') . "$/", $email);
 }
 
 function setOptionSelected($reference, $value)
