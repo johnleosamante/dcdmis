@@ -183,7 +183,7 @@
                         ?>
                         <select class="form-control" id="religion" name="religion_id"
                             onchange="toggleReligionSpecify(this, 'religion-specify-group')">
-                            <option value="">Select Religion</option>
+                            <option value="">Select religion...</option>
                             <?php foreach ($religion_list as $r): ?>
                                 <option value="<?= $r['id'] ?>" <?= (string) $current_religion_id === (string) $r['id'] ? 'selected' : '' ?>>
                                     <?= e($r['name']) ?>
@@ -204,6 +204,11 @@
                         <label for="ethnic-group" class="small font-weight-bold mb-0">Ethnic Group</label>
                         <?php
                         $ethnic_list = ethnic_groups();
+                        $ethnic_by_category = [];
+                        foreach ($ethnic_list as $eg) {
+                            $cat_name = !empty($eg['category_name']) ? $eg['category_name'] : 'Others';
+                            $ethnic_by_category[$cat_name][] = $eg;
+                        }
                         $current_ethnic = $form_data['ethnic_group'] ?? '';
                         $specify_ethnic_value = $form_data['ethnic_group_specify'] ?? '';
                         $selected_ethnic_value = '';
@@ -227,10 +232,14 @@
                         ?>
                         <select class="form-control" id="ethnic-group" name="ethnic_group"
                             onchange="toggleEthnicGroupSpecify(this, 'ethnic-group-specify-group')">
-                            <option value="">Select Ethnic Group</option>
+                            <option value="">Select ethnic group...</option>
                             <option value="Not Applicable" <?= $selected_ethnic_value === 'Not Applicable' ? 'selected' : '' ?>>Not Applicable</option>
-                            <?php foreach ($ethnic_list as $eg): ?>
-                                <option value="<?= $eg['id'] ?>" <?= $selected_ethnic_value === (string) $eg['id'] ? 'selected' : '' ?>><?= e($eg['name']) ?></option>
+                            <?php foreach ($ethnic_by_category as $category_name => $groups): ?>
+                                <optgroup label="<?= e($category_name) ?>">
+                                    <?php foreach ($groups as $eg): ?>
+                                        <option value="<?= $eg['id'] ?>" <?= $selected_ethnic_value === (string) $eg['id'] ? 'selected' : '' ?>><?= e($eg['name']) ?></option>
+                                    <?php endforeach ?>
+                                </optgroup>
                             <?php endforeach ?>
                             <option value="Others" <?= $selected_ethnic_value === 'Others' ? 'selected' : '' ?>>Others
                             </option>
@@ -348,8 +357,19 @@
                 <div class="form-group">
                     <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="other_eligibility"
-                            name="other_eligibility" value="1" <?php echo (isset($form_data['other_eligibility']) && $form_data['other_eligibility']) ? 'checked' : ''; ?>>
+                            name="other_eligibility" value="1" <?php echo (isset($form_data['other_eligibility']) && $form_data['other_eligibility']) ? 'checked' : ''; ?>
+                            onchange="toggleOtherEligibility(this)">
                         <label class="custom-control-label" for="other_eligibility">Others</label>
+                    </div>
+                    <div id="other-eligibility-specify-group" class="mt-2"
+                        style="display: <?php echo (isset($form_data['other_eligibility']) && $form_data['other_eligibility']) ? 'block' : 'none'; ?>;">
+                        <label for="other-eligibility-specify" class="small font-weight-bold mb-0">Specify Other
+                            Eligibility
+                            <?= showAsterisk() ?></label>
+                        <input type="text" class="form-control" id="other-eligibility-specify"
+                            name="other_eligibility_specify" placeholder="Specify Eligibility"
+                            value="<?= isset($form_data['other_eligibility_specify']) ? e($form_data['other_eligibility_specify']) : '' ?>"
+                            <?php echo (isset($form_data['other_eligibility']) && $form_data['other_eligibility']) ? 'required' : ''; ?>>
                     </div>
                 </div>
             </div>
@@ -400,6 +420,19 @@
         const targetGroup = document.getElementById(targetId);
         const specifyInput = document.getElementById('ethnic-group-specify');
         if (selectElement.value === 'Others') {
+            targetGroup.style.display = 'block';
+            specifyInput.setAttribute('required', 'required');
+        } else {
+            targetGroup.style.display = 'none';
+            specifyInput.removeAttribute('required');
+            specifyInput.value = '';
+        }
+    }
+
+    function toggleOtherEligibility(checkboxElement) {
+        const targetGroup = document.getElementById('other-eligibility-specify-group');
+        const specifyInput = document.getElementById('other-eligibility-specify');
+        if (checkboxElement.checked) {
             targetGroup.style.display = 'block';
             specifyInput.setAttribute('required', 'required');
         } else {
@@ -460,6 +493,13 @@
             const ethnicSpecifyInput = document.getElementById('ethnic-group-specify');
             if (ethnicSelect && ethnicSelect.value === 'Others' && ethnicSpecifyInput) {
                 ethnicSpecifyInput.setAttribute('required', 'required');
+            }
+
+            // If other eligibility is checked, make specify field required
+            const otherEligibilityCheckbox = document.getElementById('other_eligibility');
+            const otherEligibilitySpecifyInput = document.getElementById('other-eligibility-specify');
+            if (otherEligibilityCheckbox && otherEligibilityCheckbox.checked && otherEligibilitySpecifyInput) {
+                otherEligibilitySpecifyInput.setAttribute('required', 'required');
             }
 
             // Remove required from employee email
