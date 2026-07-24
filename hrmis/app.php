@@ -148,6 +148,33 @@ if (isset($_POST['update-personal-information'])) {
 
         $affectedEmployee = updateEmployee(sanitize($_POST['lname']), sanitize($_POST['fname']), sanitize($_POST['mname']), sanitize($_POST['ext']), sanitize($_POST['dob']), sanitize($_POST['pob']), sanitize($_POST['sex']), sanitize($_POST['civil-status']), sanitize($_POST['civil-status-specify']), $religion_id, $specify_other_religion, $ethnic_group_id, $specify_other_ethnic_group, sanitize($_POST['citizenship']), sanitize($_POST['dual-citizenship']), $dualCitizenshipCountry, sanitize($_POST['rlot']), sanitize($_POST['rstreet']), sanitize($_POST['rsubdivision']), sanitize($_POST['rbarangay']), sanitize($_POST['rcity']), sanitize($_POST['rprovince']), sanitize($_POST['rzip']), sanitize($_POST['plot']), sanitize($_POST['pstreet']), sanitize($_POST['psubdivision']), sanitize($_POST['pbarangay']), sanitize($_POST['pcity']), sanitize($_POST['pprovince']), sanitize($_POST['pzip']), sanitize($_POST['height']), sanitize($_POST['weight']), sanitize($_POST['blood-type']), sanitize($_POST['umid']), sanitize($_POST['crn']), sanitize($_POST['bp']), sanitize($_POST['pagibig']), sanitize($_POST['philhealth']), sanitize($_POST['philsys']), sanitize($_POST['sss']), sanitize($_POST['telephone']), sanitize($_POST['mobile']), sanitize($_POST['email']), sanitize($_POST['tin']), sanitize($_POST['agency-id']), sanitize($_POST['prc-id']), $employeePhoto, $employeeId);
 
+        $existingOther = otherInformation($employeeId);
+        if ($ethnic_group_id) {
+            $all_ethnics = ethnic_groups();
+            $matched_is_indigenous = 0;
+            $matched_name = '';
+            foreach ($all_ethnics as $eg_item) {
+                if ((int)$eg_item['id'] === (int)$ethnic_group_id) {
+                    $matched_is_indigenous = !empty($eg_item['is_indigenous']) ? 1 : 0;
+                    $matched_name = $eg_item['name'];
+                    break;
+                }
+            }
+            if ($existingOther) {
+                update('other_informations', [
+                    'is_indigenous' => $matched_is_indigenous,
+                    'indigenous_group' => $matched_is_indigenous ? $matched_name : 'N/A'
+                ], '`employee_id` = ?', [$employeeId]);
+            }
+        } elseif ($specify_other_ethnic_group === 'Not Applicable' || $raw_ethnic === 'Others') {
+            if ($existingOther) {
+                update('other_informations', [
+                    'is_indigenous' => 0,
+                    'indigenous_group' => 'N/A'
+                ], '`employee_id` = ?', [$employeeId]);
+            }
+        }
+
         if ($affectedEmployee == false && !$stagedFile) {
             throw new Exception('No changes have been made to personal information.');
         }
@@ -698,8 +725,13 @@ if (isset($_POST['update-other-information'])) {
     $resignedDetails = $resigned ? sanitize($_POST['resigned-details']) : 'N/A';
     $immigrant = sanitize($_POST['immigrant']);
     $immigrantCountry = $immigrant ? sanitize($_POST['immigrant-country']) : null;
-    $isIndigenous = sanitize($_POST['is-indigenous']);
-    $indigenousSpecify = $isIndigenous ? sanitize($_POST['indigenous-specify']) : 'N/A';
+    $isIndigenous = sanitize($_POST['is-indigenous'] ?? '0');
+    $raw_indigenous_specify = $isIndigenous ? sanitize($_POST['indigenous-specify'] ?? '') : 'N/A';
+    if ($isIndigenous && ($raw_indigenous_specify === 'Others' || !empty($_POST['indigenous_group_specify']))) {
+        $indigenousSpecify = !empty($_POST['indigenous_group_specify']) ? sanitize($_POST['indigenous_group_specify']) : $raw_indigenous_specify;
+    } else {
+        $indigenousSpecify = $raw_indigenous_specify;
+    }
     $isDifferentlyAbled = sanitize($_POST['is-differently-abled']);
     $differentlyAbledSpecify = $isDifferentlyAbled ? sanitize($_POST['differently-abled-specify']) : 'N/A';
     $isSoloParent = sanitize($_POST['is-solo-parent']);
@@ -714,6 +746,36 @@ if (isset($_POST['update-other-information'])) {
         $affectedOtherInformation = !otherInformation($employeeId) ?
             createOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId) :
             updateOtherInformation($hasThirdDegree, $hasFourthDegree, $relatedDetails, $wasGuilty, $guiltyDetails, $wasCharged, $dateFiled, $caseStatus, $wasConvicted, $convictedDetails, $wasSeparated, $separatedDetails, $wasCandidate, $candidateDetails, $resigned, $resignedDetails, $immigrant, $immigrantCountry, $isIndigenous, $indigenousSpecify, $isDifferentlyAbled, $differentlyAbledSpecify, $isSoloParent, $soloParentSpecify, $employeeId);
+
+        if ($isIndigenous == 1) {
+            if ($raw_indigenous_specify === 'Others' || !empty($_POST['indigenous_group_specify'])) {
+                $custom_group_val = !empty($_POST['indigenous_group_specify']) ? sanitize($_POST['indigenous_group_specify']) : $indigenousSpecify;
+                update('employees', [
+                    'ethnic_group_id' => null,
+                    'specify_other_ethnic_group' => $custom_group_val
+                ], '`id` = ?', [$employeeId]);
+            } else {
+                $ethnic_groups_all = ethnic_groups();
+                $matched_ethnic_id = null;
+                foreach ($ethnic_groups_all as $eg_item) {
+                    if ($eg_item['name'] === $indigenousSpecify) {
+                        $matched_ethnic_id = $eg_item['id'];
+                        break;
+                    }
+                }
+                if ($matched_ethnic_id) {
+                    update('employees', [
+                        'ethnic_group_id' => $matched_ethnic_id,
+                        'specify_other_ethnic_group' => null
+                    ], '`id` = ?', [$employeeId]);
+                }
+            }
+        } else {
+            update('employees', [
+                'ethnic_group_id' => null,
+                'specify_other_ethnic_group' => 'Not Applicable'
+            ], '`id` = ?', [$employeeId]);
+        }
 
         if ($affectedOtherInformation === false) {
             throw new Exception('No changes have been made to other information.');
