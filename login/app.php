@@ -56,7 +56,7 @@ function setUserSession($user_id, $prefix)
 
 if (isset($_POST['login'])) {
     $email = sanitize($_POST['email']);
-    $password = sanitize($_POST['password']);
+    $password = $_POST['password'];
     $showAlert = true;
 
     if (empty($email) || empty($password)) {
@@ -116,6 +116,7 @@ if (isset($_POST['login'])) {
         ]);
     }
 
+    session_regenerate_id(true);
     setUserSession($account['id'], $prefix);
 
     $_SESSION["{$prefix}email"] = $account['email_address'];
