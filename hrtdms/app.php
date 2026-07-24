@@ -23,19 +23,37 @@ if (isset($_POST['save-training'])) {
     $showAlert = true;
     $rawId = isset($_POST['verifier']) ? decipher($_POST['verifier']) : null;
     $trainingId = sanitize($rawId);
+
+    $projectId = isset($_POST['project_id']) ? sanitize($_POST['project_id']) : null;
+    $programId = isset($_POST['program_id']) ? sanitize($_POST['program_id']) : null;
+
+    if (empty($programId) && !empty($projectId)) {
+        $projectRow = find("SELECT `program_id` FROM `projects` WHERE `project_id` = ? LIMIT 1", [$projectId]);
+        if ($projectRow && !empty($projectRow['program_id'])) {
+            $programId = $projectRow['program_id'];
+        }
+    }
+
+    if (empty($programId) && !empty($trainingId)) {
+        $existingTraining = training($trainingId);
+        if ($existingTraining && !empty($existingTraining['program_id'])) {
+            $programId = $existingTraining['program_id'];
+        }
+    }
+
     $data = [
-        'program_id' => sanitize($_POST['program_id']),
-        'project_id' => sanitize($_POST['project_id']),
-        'title' => sanitize($_POST['title']),
-        'from' => sanitize($_POST['from']),
-        'to' => sanitize($_POST['to']),
-        'hours' => (int) $_POST['hours'],
-        'type' => sanitize($_POST['type']),
-        'level' => sanitize($_POST['level']),
-        'sponsor' => sanitize($_POST['sponsor']),
-        'division' => sanitize($_POST['functional-division']),
-        'venue' => sanitize($_POST['venue']),
-        'dates' => sanitize($_POST['unconsecutive-dates']),
+        'program_id' => $programId,
+        'project_id' => $projectId,
+        'title' => sanitize($_POST['title'] ?? ''),
+        'from' => sanitize($_POST['from'] ?? ''),
+        'to' => sanitize($_POST['to'] ?? ''),
+        'hours' => (int) ($_POST['hours'] ?? 0),
+        'type' => sanitize($_POST['type'] ?? ''),
+        'level' => sanitize($_POST['level'] ?? ''),
+        'sponsor' => sanitize($_POST['sponsor'] ?? ''),
+        'division' => sanitize($_POST['functional-division'] ?? ''),
+        'venue' => sanitize($_POST['venue'] ?? ''),
+        'dates' => sanitize($_POST['unconsecutive-dates'] ?? ''),
         'hasCert' => isset($_POST['has-certificate']) ? '1' : '0',
     ];
     $sdsSection = section('SDS');
