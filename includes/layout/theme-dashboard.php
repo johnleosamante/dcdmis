@@ -24,7 +24,7 @@ require_once(root() . '/includes/layout/components.php');
     <link rel="stylesheet" href="<?= uri() ?>/assets/vendor/datatables-responsive/css/responsive.bootstrap4.min.css">
     <script>
         <?php $uri = (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST']; ?>
-        var SITE_URL = "<?= $uri ?>";
+        var SITE_URL = <?= json_encode($uri) ?>;
     </script>
 </head>
 
