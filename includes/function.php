@@ -43,7 +43,7 @@ function decode($string)
 
 function root()
 {
-    return $_SERVER['DOCUMENT_ROOT'];
+    return !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__);
 }
 
 function uri($domain = null)
