@@ -1,7 +1,7 @@
 <?php
 
 if (isset($_GET['v'])) {
-    $v = base64_decode($_GET['v']);
+    $v = decipher($_GET['v']);
 
     if ($v === 'Courses') {
         echo ' <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
