@@ -22,6 +22,36 @@ $isHrmis = $activeApp === 'hrmis';
 $isHrtdms = $activeApp === 'hrtdms';
 $isDmis = $activeApp === 'dmis';
 
+$allowedExports = [
+	'active-employees',
+	'applicant-diversity',
+	'applicants',
+	'comparative-assessment-results',
+	'demographics',
+	'disqualified-applicants',
+	'districts',
+	'document-log',
+	'employees-position',
+	'loyalty-award',
+	'plantilla-items',
+	'positions',
+	'publication-applicants-details',
+	'qualified-applicants',
+	'retirable-employees',
+	'school-transactions',
+	'schools',
+	'section-transactions',
+	'sections',
+	'step-increment',
+	'training-details',
+	'users',
+	'vacancies'
+];
+
+if (!in_array($request, $allowedExports, true)) {
+	redirect(uri() . '/login');
+}
+
 if (file_exists("$request.php")):
 	header("Content-Type: application/vnd.ms-excel");
 	header("Content-Disposition: attachment; Filename=$fileName");
