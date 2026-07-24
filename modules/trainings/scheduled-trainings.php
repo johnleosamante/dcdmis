@@ -75,6 +75,9 @@ messageAlert($showAlert, $message, $success);
                                         <?php dropdownEllipsis() ?>
                                         <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                                             <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['id']), 'View', 'fa-eye', 'View Training');
+                                            if (date('Y-m-d') >= date('Y-m-d', strtotime($training['start_date'])) && date('Y-m-d') <= date('Y-m-d', strtotime($training['end_date']))) {
+                                                linkDropdownItem(customUri('hrtdms', 'Attendance', $training['id']), 'Attendance', 'fa-calendar-check', 'Attendance');
+                                            }
                                             modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['id']), 'Edit', 'fa-edit', 'Edit Training') ?>
                                         </div>
                                     </div>
