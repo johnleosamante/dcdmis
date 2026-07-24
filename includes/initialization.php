@@ -105,6 +105,7 @@ if (empty($userId) && isset($_COOKIE["{$prefix}remember_token"])) {
                 $stationId = $stationIdVal;
                 $station = $stationName;
                 $code = $access;
+                session_regenerate_id(true);
                 $newToken = bin2hex(random_bytes(32));
                 $newTokenHash = hash('sha256', $newToken);
                 $newExpiry = date('Y-m-d H:i:s', time() + getSeconds(120));
