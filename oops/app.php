@@ -1,6 +1,10 @@
 <?php
 // oops/app.php
-$code = !isset($_GET['e']) ? http_response_code() : $_GET['e'];
+$code = !isset($_GET['e']) ? http_response_code() : (int) $_GET['e'];
+$validCodes = [403, 404, 500];
+if (!in_array($code, $validCodes, true)) {
+    $code = 500;
+}
 
 switch ($code) {
     case '403':
