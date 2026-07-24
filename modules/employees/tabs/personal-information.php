@@ -75,7 +75,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-9">
+                    <div class="col-lg-6">
                         <div class="form-group">
                             <label for="pob" class="mb-0">Place of Birth <?php showAsterisk($editMode) ?></label>
                             <input id="pob" name="pob" type="text" class="form-control"
@@ -84,9 +84,7 @@
                                 required>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label for="sex" class="mb-0">Sex <?php showAsterisk($editMode) ?></label>
@@ -95,21 +93,81 @@
                             <?php else: ?>
                                 <select id="sex" name="sex" class="form-control" <?= setActiveNavigation($editMode, 'title="Required field"') ?> required>
                                     <option value="Male" <?= setOptionSelected('Male', $employee['sex']) ?>>Male</option>
-                                    <option value="Female" <?= setOptionSelected('Female', $employee['sex']) ?>>Female
-                                    </option>
+                                    <option value="Female" <?= setOptionSelected('Female', $employee['sex']) ?>>Female</option>
                                 </select>
                             <?php endif ?>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-lg-3">
+                <?php
+                $is_civil_status_others = ($employee['civil_status'] === 'Others');
+
+                $religion_list = religions();
+                $current_religion_id = $employee['religion_id'] ?? null;
+                $specify_religion_value = $employee['specify_other_religion'] ?? '';
+
+                $is_religion_others = false;
+                $religion_display_name = '';
+
+                if (!empty($current_religion_id)) {
+                    foreach ($religion_list as $r) {
+                        if ((int)$r['id'] === (int)$current_religion_id) {
+                            $religion_display_name = $r['name'];
+                            break;
+                        }
+                    }
+                }
+
+                if (empty($religion_display_name)) {
+                    if (!empty($specify_religion_value) || (string)$current_religion_id === 'Others') {
+                        $is_religion_others = true;
+                        $religion_display_name = 'Others';
+                    }
+                }
+
+                $ethnic_list = ethnic_groups();
+                $ethnic_by_category = [];
+                foreach ($ethnic_list as $eg) {
+                    $cat_name = !empty($eg['category_name']) ? $eg['category_name'] : 'Others';
+                    $ethnic_by_category[$cat_name][] = $eg;
+                }
+
+                $current_ethnic_id = $employee['ethnic_group_id'] ?? null;
+                $specify_ethnic_value = $employee['specify_other_ethnic_group'] ?? '';
+                $selected_ethnic_value = '';
+                if (!empty($current_ethnic_id)) {
+                    $selected_ethnic_value = (string)$current_ethnic_id;
+                } elseif ($specify_ethnic_value === 'Not Applicable') {
+                    $selected_ethnic_value = 'Not Applicable';
+                    $specify_ethnic_value = '';
+                } elseif (!empty($specify_ethnic_value)) {
+                    $selected_ethnic_value = 'Others';
+                }
+
+                $display_ethnic = 'Not Specified';
+                if ($selected_ethnic_value === 'Not Applicable') {
+                    $display_ethnic = 'Not Applicable';
+                } elseif ($selected_ethnic_value === 'Others') {
+                    $display_ethnic = 'Others';
+                } elseif (!empty($current_ethnic_id)) {
+                    foreach ($ethnic_list as $eg) {
+                        if ((int)$eg['id'] === (int)$current_ethnic_id) {
+                            $display_ethnic = $eg['name'];
+                            break;
+                        }
+                    }
+                }
+                ?>
+                <div class="row">
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label for="civil-status" class="mb-0">Civil Status <?php showAsterisk($editMode) ?></label>
                             <?php if (!$editMode): ?>
                                 <input id="civil-status" type="text" class="form-control"
                                     value="<?= e($employee['civil_status']) ?>" readonly>
                             <?php else: ?>
-                                <select id="civil-status" name="civil-status" <?= setActiveNavigation($editMode, 'title="Required field"') ?> class="form-control" required>
+                                <select id="civil-status" name="civil-status" <?= setActiveNavigation($editMode, 'title="Required field"') ?> class="form-control" onchange="toggleCivilStatusSpecify(this, 'civil-status-specify-group')" required>
                                     <option value="Single" <?= setOptionSelected('Single', $employee['civil_status']) ?>>
                                         Single</option>
                                     <option value="Married" <?= setOptionSelected('Married', $employee['civil_status']) ?>>
@@ -122,50 +180,29 @@
                                 </select>
                             <?php endif ?>
                         </div>
+
+                        <?php if (!$editMode): ?>
+                            <?php if ($is_civil_status_others): ?>
+                                <div class="form-group">
+                                    <label for="civil-status-specify" class="mb-0 small text-secondary">Specify Civil Status</label>
+                                    <input id="civil-status-specify" type="text" class="form-control" value="<?= e($employee['specify_other_civil_status']) ?>" readonly>
+                                </div>
+                            <?php endif ?>
+                        <?php else: ?>
+                            <div id="civil-status-specify-group" class="form-group mt-2" style="display: <?= $is_civil_status_others ? 'block' : 'none' ?>;">
+                                <label for="civil-status-specify" class="mb-0 small text-secondary">Specify Civil Status</label>
+                                <input id="civil-status-specify" name="civil-status-specify" type="text" class="form-control" value="<?= e($employee['specify_other_civil_status']) ?>" <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?> <?= $is_civil_status_others ? 'required' : '' ?>>
+                            </div>
+                        <?php endif ?>
                     </div>
 
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <label for="civil-status-specify" class="mb-0">Specify, if Others</label>
-                            <input id="civil-status-specify" name="civil-status-specify"
-                                <?= setActiveNavigation($editMode, 'title="Leave blank if not applicable"') ?>
-                                type="text" class="form-control" value="<?= e($employee['specify_other_civil_status']) ?>"
-                                <?= setActiveNavigation(!$editMode, 'readonly') ?>>
-                        </div>
-                    </div>
-
-                    <?php
-                    $religion_list = religions();
-                    $current_religion_id = $employee['religion_id'] ?? null;
-                    $specify_religion_value = $employee['specify_other_religion'] ?? '';
-
-                    $is_religion_others = false;
-                    $religion_display_name = '';
-
-                    if (!empty($current_religion_id)) {
-                        foreach ($religion_list as $r) {
-                            if ((int)$r['id'] === (int)$current_religion_id) {
-                                $religion_display_name = $r['name'];
-                                break;
-                            }
-                        }
-                    }
-
-                    if (empty($religion_display_name)) {
-                        if (!empty($specify_religion_value) || (string)$current_religion_id === 'Others') {
-                            $is_religion_others = true;
-                            $religion_display_name = 'Others';
-                        }
-                    }
-                    ?>
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label for="religion" class="mb-0">Religion</label>
                             <?php if (!$editMode): ?>
                                 <input id="religion" type="text" class="form-control" value="<?= e($is_religion_others ? 'Others' : ($religion_display_name !== '' ? $religion_display_name : 'Not Specified')) ?>" readonly>
                             <?php else: ?>
                                 <select id="religion" name="religion_id" class="form-control" onchange="toggleReligionSpecify(this, 'religion-specify-group')">
-                                    <option value="">-- Select --</option>
                                     <?php foreach ($religion_list as $r): ?>
                                         <option value="<?= $r['id'] ?>" <?= (string)$current_religion_id === (string)$r['id'] ? 'selected' : '' ?>><?= e($r['name']) ?></option>
                                     <?php endforeach ?>
@@ -173,92 +210,56 @@
                                 </select>
                             <?php endif ?>
                         </div>
-                    </div>
 
-                    <?php if (!$editMode): ?>
-                        <?php if ($is_religion_others): ?>
-                            <div class="col-lg-12">
+                        <?php if (!$editMode): ?>
+                            <?php if ($is_religion_others): ?>
                                 <div class="form-group">
-                                    <label for="specify-other-religion" class="mb-0">Specify Religion</label>
+                                    <label for="specify-other-religion" class="mb-0 small text-secondary">Specify Religion</label>
                                     <input id="specify-other-religion" type="text" class="form-control" value="<?= e($specify_religion_value) ?>" readonly>
                                 </div>
-                            </div>
-                        <?php endif ?>
-                    <?php else: ?>
-                        <div class="col-lg-12" id="religion-specify-group" style="display: <?= $is_religion_others ? 'block' : 'none' ?>;">
-                            <div class="form-group">
-                                <label for="specify-other-religion" class="mb-0">Specify Religion</label>
+                            <?php endif ?>
+                        <?php else: ?>
+                            <div id="religion-specify-group" class="form-group mt-2" style="display: <?= $is_religion_others ? 'block' : 'none' ?>;">
+                                <label for="specify-other-religion" class="mb-0 small text-secondary">Specify Religion</label>
                                 <input id="specify-other-religion" name="specify_other_religion" type="text" class="form-control" value="<?= e($specify_religion_value) ?>" <?= $is_religion_others ? 'required' : '' ?>>
                             </div>
-                        </div>
-                    <?php endif ?>
-                </div>
+                        <?php endif ?>
+                    </div>
 
-                <?php
-                $ethnic_list = ethnic_groups();
-                $current_ethnic_id = $employee['ethnic_group_id'] ?? null;
-                $specify_ethnic_value = $employee['specify_other_ethnic_group'] ?? '';
-                $selected_ethnic_value = '';
-                if (!empty($current_ethnic_id)) {
-                    $selected_ethnic_value = (string)$current_ethnic_id;
-                } elseif ($specify_ethnic_value === 'Not Applicable') {
-                    $selected_ethnic_value = 'Not Applicable';
-                    $specify_ethnic_value = '';
-                } elseif (!empty($specify_ethnic_value)) {
-                    $selected_ethnic_value = 'Others';
-                }
-                ?>
-                <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label for="ethnic-group" class="mb-0">Ethnic Group</label>
                             <?php if (!$editMode): ?>
-                                <?php
-                                $display_ethnic = 'Not Specified';
-                                if ($selected_ethnic_value === 'Not Applicable') {
-                                    $display_ethnic = 'Not Applicable';
-                                } elseif ($selected_ethnic_value === 'Others') {
-                                    $display_ethnic = 'Others';
-                                } elseif (!empty($selected_ethnic_value)) {
-                                    foreach ($ethnic_list as $eg) {
-                                        if ((string)$eg['id'] === $selected_ethnic_value) {
-                                            $display_ethnic = $eg['name'];
-                                            break;
-                                        }
-                                    }
-                                }
-                                ?>
                                 <input id="ethnic-group" type="text" class="form-control" value="<?= e($display_ethnic) ?>" readonly>
                             <?php else: ?>
-                                <select id="ethnic-group" name="ethnic_group" class="form-control" onchange="toggleEthnicGroupSpecify(this, 'ethnic-group-specify-group')">
-                                    <option value="">-- Select Ethnic Group --</option>
-                                    <option value="Not Applicable" <?= $selected_ethnic_value === 'Not Applicable' ? 'selected' : '' ?>>Not Applicable</option>
-                                    <?php foreach ($ethnic_list as $eg): ?>
-                                        <option value="<?= $eg['id'] ?>" <?= $selected_ethnic_value === (string)$eg['id'] ? 'selected' : '' ?>><?= e($eg['name']) ?></option>
+                                <select id="ethnic-group" name="ethnic_group" class="form-control" onchange="toggleEthnicGroupSpecify(this, 'ethnic-group-specify-group'); syncEthnicToIndigenous(this);">
+                                    <option value="Not Applicable" <?= $selected_ethnic_value === 'Not Applicable' ? 'selected' : '' ?> data-is-indigenous="0" data-name="Not Applicable">Not Applicable</option>
+                                    <?php foreach ($ethnic_by_category as $category_name => $groups): ?>
+                                        <optgroup label="<?= e($category_name) ?>">
+                                            <?php foreach ($groups as $eg): ?>
+                                                <option value="<?= $eg['id'] ?>" <?= $selected_ethnic_value === (string)$eg['id'] ? 'selected' : '' ?> data-is-indigenous="<?= !empty($eg['is_indigenous']) ? '1' : '0' ?>" data-name="<?= e($eg['name']) ?>"><?= e($eg['name']) ?></option>
+                                            <?php endforeach ?>
+                                        </optgroup>
                                     <?php endforeach ?>
-                                    <option value="Others" <?= $selected_ethnic_value === 'Others' ? 'selected' : '' ?>>Others</option>
+                                    <option value="Others" <?= $selected_ethnic_value === 'Others' ? 'selected' : '' ?> data-is-indigenous="0" data-name="Others">Others</option>
                                 </select>
                             <?php endif ?>
                         </div>
-                    </div>
 
-                    <?php if (!$editMode): ?>
-                        <?php if ($selected_ethnic_value === 'Others'): ?>
-                            <div class="col-lg-12">
+                        <?php if (!$editMode): ?>
+                            <?php if ($selected_ethnic_value === 'Others'): ?>
                                 <div class="form-group">
-                                    <label for="ethnic-group-specify" class="mb-0">Specify Ethnic Group</label>
+                                    <label for="ethnic-group-specify" class="mb-0 small text-secondary">Specify Ethnic Group</label>
                                     <input id="ethnic-group-specify" type="text" class="form-control" value="<?= e($specify_ethnic_value) ?>" readonly>
                                 </div>
+                            <?php endif ?>
+                        <?php else: ?>
+                            <div id="ethnic-group-specify-group" class="form-group mt-2" style="display: <?= $selected_ethnic_value === 'Others' ? 'block' : 'none' ?>;">
+                                <label for="ethnic-group-specify" class="mb-0 small text-secondary">Specify Ethnic Group</label>
+                                <input id="ethnic-group-specify" name="ethnic_group_specify" type="text" class="form-control" value="<?= e($specify_ethnic_value) ?>" <?= $selected_ethnic_value === 'Others' ? 'required' : '' ?> oninput="syncEthnicSpecifyToIndigenous(this)">
                             </div>
                         <?php endif ?>
-                    <?php else: ?>
-                        <div class="col-lg-12" id="ethnic-group-specify-group" style="display: <?= $selected_ethnic_value === 'Others' ? 'block' : 'none' ?>;">
-                            <div class="form-group">
-                                <label for="ethnic-group-specify" class="mb-0">Specify Ethnic Group</label>
-                                <input id="ethnic-group-specify" name="ethnic_group_specify" type="text" class="form-control" value="<?= e($specify_ethnic_value) ?>" <?= $selected_ethnic_value === 'Others' ? 'required' : '' ?>>
-                            </div>
-                        </div>
-                    <?php endif ?>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -682,9 +683,9 @@
 </div>
 <?php if ($editMode): ?>
 <script>
-    function toggleReligionSpecify(selectElement, targetId) {
+    function toggleCivilStatusSpecify(selectElement, targetId) {
         const targetGroup = document.getElementById(targetId);
-        const specifyInput = document.getElementById('religion-specify');
+        const specifyInput = document.getElementById('civil-status-specify');
         if (selectElement.value === 'Others') {
             targetGroup.style.display = 'block';
             specifyInput.setAttribute('required', 'required');
@@ -695,9 +696,9 @@
         }
     }
 
-    function toggleEthnicGroupSpecify(selectElement, targetId) {
+    function toggleReligionSpecify(selectElement, targetId) {
         const targetGroup = document.getElementById(targetId);
-        const specifyInput = document.getElementById('ethnic-group-specify');
+        const specifyInput = document.getElementById('specify-other-religion');
         if (selectElement.value === 'Others') {
             targetGroup.style.display = 'block';
             specifyInput.setAttribute('required', 'required');
@@ -707,5 +708,86 @@
             specifyInput.value = '';
         }
     }
+
+    window.toggleEthnicGroupSpecify = function (selectElement, targetId) {
+        const targetGroup = document.getElementById(targetId);
+        const specifyInput = document.getElementById('ethnic-group-specify');
+        if (selectElement.value === 'Others') {
+            if (targetGroup) targetGroup.style.display = 'block';
+            if (specifyInput) specifyInput.setAttribute('required', 'required');
+        } else {
+            if (targetGroup) targetGroup.style.display = 'none';
+            if (specifyInput) {
+                specifyInput.removeAttribute('required');
+                specifyInput.value = '';
+            }
+        }
+    };
+
+    window.syncEthnicToIndigenous = function (selectElement) {
+        if (!selectElement) return;
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        if (!selectedOption) return;
+
+        const val = selectElement.value;
+        const isIndigenous = selectedOption.getAttribute('data-is-indigenous') === '1';
+        const ethnicName = selectedOption.getAttribute('data-name') || '';
+
+        const yesRadio = document.getElementById('is-indigenous-yes');
+        const noRadio = document.getElementById('is-indigenous-no');
+        const indigenousSelect = document.getElementById('indigenous-specify');
+        const detailsGroup = document.getElementById('indigenous-details-group');
+        const specifyGroup = document.getElementById('indigenous-group-specify-group');
+        const specifyInput = document.getElementById('indigenous-group-specify');
+        const ethnicSpecifyInput = document.getElementById('ethnic-group-specify');
+
+        if (val === 'Others') {
+            if (yesRadio) yesRadio.checked = true;
+            if (noRadio) noRadio.checked = false;
+            if (indigenousSelect) indigenousSelect.value = 'Others';
+            if (detailsGroup) detailsGroup.style.display = 'block';
+            if (specifyGroup) specifyGroup.style.display = 'block';
+            if (specifyInput) {
+                specifyInput.setAttribute('required', 'required');
+                if (ethnicSpecifyInput) {
+                    specifyInput.value = ethnicSpecifyInput.value;
+                }
+            }
+        } else if (isIndigenous) {
+            if (yesRadio) yesRadio.checked = true;
+            if (noRadio) noRadio.checked = false;
+            if (indigenousSelect) indigenousSelect.value = ethnicName;
+            if (detailsGroup) detailsGroup.style.display = 'block';
+            if (specifyGroup) specifyGroup.style.display = 'none';
+            if (specifyInput) {
+                specifyInput.removeAttribute('required');
+                specifyInput.value = '';
+            }
+        } else {
+            if (noRadio) noRadio.checked = true;
+            if (yesRadio) yesRadio.checked = false;
+            if (indigenousSelect) indigenousSelect.value = '';
+            if (detailsGroup) detailsGroup.style.display = 'none';
+            if (specifyGroup) specifyGroup.style.display = 'none';
+            if (specifyInput) {
+                specifyInput.removeAttribute('required');
+                specifyInput.value = '';
+            }
+        }
+    };
+
+    window.syncEthnicSpecifyToIndigenous = function (inputElement) {
+        const specifyInput = document.getElementById('indigenous-group-specify');
+        if (specifyInput && inputElement) {
+            specifyInput.value = inputElement.value;
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const ethnicSelect = document.getElementById('ethnic-group');
+        if (ethnicSelect) {
+            syncEthnicToIndigenous(ethnicSelect);
+        }
+    });
 </script>
 <?php endif ?>
