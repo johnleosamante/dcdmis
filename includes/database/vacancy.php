@@ -448,7 +448,8 @@ function prepareApplicantData(array $post)
         $eligibilities[] = 'Barangay Official Eligibility';
     }
     if (isset($post['other_eligibility']) && $post['other_eligibility']) {
-        $eligibilities[] = 'Others';
+        $other_spec = sanitize($post['other_eligibility_specify'] ?? null);
+        $eligibilities[] = !empty($other_spec) ? $other_spec : 'Others';
     }
 
     $raw_religion = sanitize($post['religion_id'] ?? null);
