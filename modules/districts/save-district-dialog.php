@@ -62,7 +62,7 @@ if ($district) {
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?= $_GET['id'] ?? null ?>">
+                <input type="hidden" name="verifier" value="<?= e($_GET['id'] ?? '') ?>">
                 <button class="btn btn-primary" name="save-district" type="submit">Continue</button>
                 <?php cancelModalButton() ?>
             </div>
