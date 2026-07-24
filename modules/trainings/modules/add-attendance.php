@@ -10,11 +10,18 @@ if (!$isHrtdms) {
 
 $trainingId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
 $training = training($trainingId);
+
+if (!$training) {
+    require_once(root() . '/modules/error/no-results-found.php');
+    return;
+}
+
+$trainingId = $training['id'];
 $participants = trainingParticipants($trainingId);
 $participantsCount = count($participants);
 
-$program = getProgramByID($training['program_id']);
-$project = getProjectByID($training['project_id']);
+$program = !empty($training['program_id']) ? getProgramByID($training['program_id']) : null;
+$project = !empty($training['project_id']) ? getProjectByID($training['project_id']) : null;
 
 //DATE TAB
 $dates = [];
@@ -23,14 +30,6 @@ $end = new DateTime($training['end_date']);
 
 for ($d = $start; $d <= $end; $d->modify('+1 day')) {
     $dates[] = $d->format('Y-m-d');
-}
-
-
-if ($training) {
-    $trainingId = $training['id'];
-} else {
-    require_once(root() . '/modules/error/no-results-found.php');
-    return;
 }
 
 messageAlert($showAlert, $message, $success);
