@@ -17,6 +17,7 @@ $notFound = true;
 $programs = getPrograms();
 $projects = getProjectList();
 $project_id = null;
+$program_id = null;
 
 if ($training) {
     $trainingId = $training['id'];
@@ -33,6 +34,7 @@ if ($training) {
     $generateCertificate = $training['has_certificate'] === 1;
     $modalTitle = 'Edit Training';
     $project_id = $training['project_id'];
+    $program_id = $training['program_id'] ?? null;
     $notFound = false;
 }
 ?>
@@ -43,6 +45,7 @@ if ($training) {
 
         <form action="" method="POST">
             <?= csrf_field(); ?>
+            <input type="hidden" name="program_id" id="program_id" value="<?= e($program_id) ?>">
             <div class="modal-body">
                 <?php if (!$notFound): ?>
                     <div class="form-group">
@@ -64,6 +67,16 @@ if ($training) {
                         <?php endforeach; ?>
                     </select>
                 </div>
+                <script>
+                    document.getElementById('project_id')?.addEventListener('change', function() {
+                        var selectedOption = this.options[this.selectedIndex];
+                        var progId = selectedOption ? selectedOption.getAttribute('data-program-id') : '';
+                        var progInput = document.getElementById('program_id');
+                        if (progInput) {
+                            progInput.value = progId || '';
+                        }
+                    });
+                </script>
 
 
                 <div class="form-group">
