@@ -228,12 +228,16 @@ function getProjectList()
 
 function getProgramByID($progID)
 {
-    $sql = "SELECT program_name FROM programs WHERE program_id = '$progID'";
-    return query($sql);
+    if (empty($progID)) {
+        return null;
+    }
+    return find("SELECT * FROM `programs` WHERE `program_id` = ? LIMIT 1", [$progID]);
 }
 
 function getProjectByID($projID)
 {
-    $sql = "SELECT project_name FROM projects WHERE project_id = '$projID'";
-    return query($sql);
+    if (empty($projID)) {
+        return null;
+    }
+    return find("SELECT * FROM `projects` WHERE `project_id` = ? LIMIT 1", [$projID]);
 }
