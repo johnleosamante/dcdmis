@@ -15,7 +15,7 @@ $modalTitle = 'Logout';
         </div>
 
         <div class="modal-footer">
-            <form action="<?= "{$baseUri}/modules/auth" ?>" method="POST">
+            <form action="<?= "{$baseUri}/modules/auth" ?>">
                 <?= csrf_field(); ?>
                 <button type="submit" class="btn btn-danger">Continue</button>
             </form>
