@@ -32,6 +32,13 @@ for ($d = $start; $d <= $end; $d->modify('+1 day')) {
     $dates[] = $d->format('Y-m-d');
 }
 
+if ($training) {
+    $trainingId = $training['id'];
+} else {
+    require_once(root() . '/modules/error/no-results-found.php');
+    return;
+}
+
 messageAlert($showAlert, $message, $success);
 ?>
 
@@ -168,6 +175,7 @@ messageAlert($showAlert, $message, $success);
             <?php endforeach ?>
         </ul>
 
+
         <!-- PROJECT AND ACTIVITIES -->
         <input type="hidden" id="training_id" value="<?php echo $trainingId ?>">
         <input type="hidden" id="url_view" value="<?php echo base64_decode($_GET['v']) ?>">
@@ -265,16 +273,11 @@ messageAlert($showAlert, $message, $success);
                                                     <i class="fas fa-trash"></i> Delete
                                                 </a>
                                             </div>
-
                                         </div>
                                     </td>
-
                                 </tr>
-
                             <?php endforeach; ?>
-
                         </tbody>
-
                         <tfoot>
                             <tr class="small">
                                 <th>Image</th>
