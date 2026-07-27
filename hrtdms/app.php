@@ -1,7 +1,7 @@
 <?php
 // hrtdms/app.php
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrtdms';
-$page = $appTitle = 'Human Resource Training &amp; Development Management System';
+$page = $appTitle = 'Human Resource Training and Development Management System';
 
 if (!isset($userId)) {
     redirect("{$baseUri}/login");
