@@ -6,16 +6,16 @@ if (isset($_GET['v'])) {
     if ($v === 'Courses') {
         echo ' <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
         echo '<script src="' . uri() . '/modules/courses/course.js" type="text/javascript"></script>';
-    } else if ($v === 'Activity') {
+    } elseif ($v === 'Activity') {
         echo ' <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
         echo '<script src="' . uri() . '/modules/lnd-activity/activity.js" type="text/javascript"></script>';
         echo '<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>';
-    } else if ($v === 'ProjectDetail') {
+    } elseif ($v === 'Project Detail') {
         echo '<script src="' . uri() . '/modules/lnd-activity/activity.js" type="text/javascript"></script>';
-    } else if ($v === 'Attendance') {
+    } elseif ($v === 'Attendance') {
         echo '<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>';
         echo '<script src="' . uri() . '/modules/trainings/modules/activity.js" type="text/javascript"></script>';
-    } else if ($v === 'Attendance Summary') {
+    } elseif ($v === 'Attendance Summary') {
         echo '<script src="' . uri() . '/assets/vendor/toastr/toastr.min.js" type="text/javascript"></script>';
         echo '<script src="' . uri() . '/modules/trainings/modules/activity.js" type="text/javascript"></script>';
 
@@ -31,11 +31,11 @@ if (isset($_GET['v'])) {
 
         // Print Button
         echo '<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>';
-    } else if ($v === 'Programs') {
+    } elseif ($v === 'Programs') {
         echo '<script src="' . uri() . '/modules/trainings/modules/program.js" type="text/javascript"></script>';
-    } else if ($v === 'Conducted Trainings') {
+    } elseif ($v === 'Conducted Trainings') {
         echo '<script src="' . uri() . '/modules/trainings/modules/program.js" type="text/javascript"></script>';
-    } else if ($v === 'Program Detail') {
+    } elseif ($v === 'Program Detail') {
         echo '<script src="' . uri() . '/assets/vendor/toastr/toastr.min.js" type="text/javascript"></script>';
         echo '<script src="' . uri() . '/modules/trainings/modules/program.js" type="text/javascript"></script>';
     }
