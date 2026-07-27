@@ -5,6 +5,18 @@ if (window.history.replaceState) {
 }
 
 $(document).ready(function () {
+	// Suppress DataTables warning alerts (e.g. column count mismatch)
+	$.fn.dataTableExt.sErrMode = 'throw';
+	$.fn.DataTable.ext.errMode = 'throw';
+	window.alert = (function (original) {
+		return function (msg) {
+			if (typeof msg === 'string' && msg.indexOf('DataTables warning') !== -1) {
+				return;
+			}
+			return original.call(window, msg);
+		};
+	})(window.alert);
+
 	let dtProps = {
 		responsive: true,
 		pagingType: "simple",
