@@ -63,9 +63,7 @@ require_once(root() . '/includes/layout/components.php');
     <?php
     scrollToTop();
     modal();
-    ?>
 
-    <?php
     $currentArea = ($url === 'Monitoring Tools') ? 'monitoring_tools' : $activeApp;
     $currentArea = ($url === 'System Overview') ? 'system_overview' : $currentArea;
     $needsAgreement = empty($_SESSION["{$prefix}data_privacy_agreed_{$currentArea}"]);
