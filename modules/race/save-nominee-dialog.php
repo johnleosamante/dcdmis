@@ -43,9 +43,11 @@ if ($awardIdDecrypted) {
 
         // School Award (Institution): always school
         $lowerAwardName = strtolower($awardName);
-        if (strpos($lowerAwardName, 'medium school') !== false ||
+        if (
+            strpos($lowerAwardName, 'medium school') !== false ||
             strpos($lowerAwardName, 'small school') !== false ||
-            strpos($lowerAwardName, 'large school') !== false) {
+            strpos($lowerAwardName, 'large school') !== false
+        ) {
             $isSchoolAward = true;
         }
     }
@@ -85,7 +87,8 @@ $typeSwitchParams = $_GET;
                 <div class="form-group mb-3">
                     <label class="mb-0 text-gray-800">Award Details</label>
                     <div class="font-weight-bold text-uppercase text-xs mt-1">
-                        <span class="text-primary"><?= e($categoryName) ?></span> &raquo; <span class="text-danger"><?= e($awardName) ?></span>
+                        <span class="text-primary"><?= e($categoryName) ?></span> &raquo; <span
+                            class="text-danger"><?= e($awardName) ?></span>
                     </div>
                 </div>
 
@@ -93,19 +96,22 @@ $typeSwitchParams = $_GET;
                     <div class="form-group mb-3">
                         <label class="mb-0">Nominee Type <?php showAsterisk() ?></label>
                         <div class="btn-group btn-group-toggle d-flex">
-                            <a href="#" onclick="loadData('<?= $baseUrl ?>?e=<?= urlencode($_GET['e'] ?? '') ?>&award_id=<?= urlencode($_GET['award_id'] ?? '') ?>&nominee_type=school'); return false;"
-                               class="btn btn-sm <?= $isSchoolNominee ? 'btn-primary' : 'btn-outline-primary' ?>">
+                            <a href="#"
+                                onclick="loadData('<?= $baseUrl ?>?e=<?= urlencode($_GET['e'] ?? '') ?>&award_id=<?= urlencode($_GET['award_id'] ?? '') ?>&nominee_type=school'); return false;"
+                                class="btn btn-sm <?= $isSchoolNominee ? 'btn-primary' : 'btn-outline-primary' ?>">
                                 <i class="fas fa-school fa-fw"></i> School
                             </a>
-                            <a href="#" onclick="loadData('<?= $baseUrl ?>?e=<?= urlencode($_GET['e'] ?? '') ?>&award_id=<?= urlencode($_GET['award_id'] ?? '') ?>&nominee_type=employee'); return false;"
-                               class="btn btn-sm <?= $isEmployeeNominee ? 'btn-primary' : 'btn-outline-primary' ?>">
+                            <a href="#"
+                                onclick="loadData('<?= $baseUrl ?>?e=<?= urlencode($_GET['e'] ?? '') ?>&award_id=<?= urlencode($_GET['award_id'] ?? '') ?>&nominee_type=employee'); return false;"
+                                class="btn btn-sm <?= $isEmployeeNominee ? 'btn-primary' : 'btn-outline-primary' ?>">
                                 <i class="fas fa-user fa-fw"></i> Employee
                             </a>
                         </div>
                     </div>
                     <div class="form-group mb-3">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="is-sdo" name="is_sdo" value="1" onchange="
+                            <input type="checkbox" class="custom-control-input" id="is-sdo" name="is_sdo" value="1"
+                                onchange="
                                 var lg = document.getElementById('level-group');
                                 if (lg) {
                                     lg.style.display = this.checked ? 'none' : '';
@@ -116,7 +122,8 @@ $typeSwitchParams = $_GET;
                                     }
                                 }
                             ">
-                            <label class="custom-control-label" for="is-sdo">This nominee belongs to the SDO (Schools Division Office)</label>
+                            <label class="custom-control-label" for="is-sdo">This nominee belongs to the SDO (Schools
+                                Division Office)</label>
                             <small class="text-muted d-block mt-1">If checked, no level selection is required.</small>
                         </div>
                     </div>
@@ -127,13 +134,15 @@ $typeSwitchParams = $_GET;
                     $mySchool = $isPrincipalUser ? schoolByHead($userId) : null;
                     $isDistSupervisor = isDistrictSupervisor($userId);
                     $myDistrict = $isDistSupervisor ? districtBySupervisor($userId) : null;
-                ?>
+                    ?>
                     <div class="form-group" id="school-group">
                         <label for="employee-id" class="mb-0">School <?php showAsterisk() ?></label>
                         <?php if ($isPrincipalUser): ?>
-                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> You can only nominate your own school.</small>
+                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> You can only nominate your
+                                own school.</small>
                         <?php elseif ($isDistSupervisor && $myDistrict): ?>
-                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> You can only nominate schools in your district (<?= e($myDistrict['name']) ?>).</small>
+                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> You can only nominate
+                                schools in your district (<?= e($myDistrict['name']) ?>).</small>
                         <?php endif; ?>
                         <select id="employee-id" name="employee-id" class="form-control" title="Select school..." required>
                             <option value="">Select School...</option>
@@ -217,28 +226,36 @@ $typeSwitchParams = $_GET;
 
                     usort($employees, function ($a, $b) {
                         $cmp = strcasecmp($a['last_name'] ?? '', $b['last_name'] ?? '');
-                        if ($cmp !== 0) return $cmp;
+                        if ($cmp !== 0)
+                            return $cmp;
                         $cmp = strcasecmp($a['first_name'] ?? '', $b['first_name'] ?? '');
-                        if ($cmp !== 0) return $cmp;
+                        if ($cmp !== 0)
+                            return $cmp;
                         return strcasecmp($a['middle_name'] ?? '', $b['middle_name'] ?? '');
                     });
-                ?>
+                    ?>
                     <div class="form-group" id="employee-group">
                         <label for="employee-id" class="mb-0">Select Employee <?php showAsterisk() ?></label>
                         <?php if ($isPrincipalUser): ?>
-                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> You can only nominate personnel under your school.</small>
+                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> You can only nominate
+                                personnel under your school.</small>
                         <?php elseif ($isDistSupervisor && $myDistrict): ?>
-                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> You can only nominate personnel in your district (<?= e($myDistrict['name']) ?>).</small>
+                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> You can only nominate
+                                personnel in your district (<?= e($myDistrict['name']) ?>).</small>
                         <?php elseif ($filterCategory !== null): ?>
-                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Showing <?= e($filterCategory) ?> personnel only.</small>
+                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Showing
+                                <?= e($filterCategory) ?> personnel only.</small>
                         <?php endif; ?>
                         <?php if ($includePrincipals): ?>
-                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Current school principals are included so former teachers now serving as principals can be nominated.</small>
+                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Current school principals
+                                are included so former teachers now serving as principals can be nominated.</small>
                         <?php endif; ?>
                         <?php if ($filterCategory === 'Teaching-Related'): ?>
-                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Guidance Counselors are included for Related Teaching awards.</small>
+                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Guidance Counselors are
+                                included for Related Teaching awards.</small>
                         <?php endif; ?>
-                        <select id="employee-id" name="employee-id" class="form-control" title="Select employee..." required>
+                        <select id="employee-id" name="employee-id" class="form-control" title="Select employee..."
+                            required>
                             <option value="">Select Employee...</option>
                             <?php foreach ($employees as $emp):
                                 $fullName = toName($emp['last_name'], $emp['first_name'], $emp['middle_name'], $emp['name_extension']);
@@ -246,7 +263,8 @@ $typeSwitchParams = $_GET;
                                 <option value="<?= e($emp['employee_id']) ?>">
                                     <?= e($fullName) ?> &mdash; <?= e($emp['official_title']) ?>
                                     <?php if (!empty($emp['school_name'])): ?>
-                                        &mdash; <?= e($emp['school_name']) ?><?php if (!empty($emp['school_alias'])): ?> (<?= e($emp['school_alias']) ?>)<?php endif; ?>
+                                        &mdash; <?= e($emp['school_name']) ?><?php if (!empty($emp['school_alias'])): ?>
+                                            (<?= e($emp['school_alias']) ?>)<?php endif; ?>
                                     <?php endif; ?>
                                 </option>
                             <?php endforeach; ?>
@@ -255,7 +273,7 @@ $typeSwitchParams = $_GET;
                 <?php endif; ?>
 
                 <?php
-                $needsLevel = isset($award['has_level']) && (int)$award['has_level'] === 1;
+                $needsLevel = isset($award['has_level']) && (int) $award['has_level'] === 1;
                 if ($needsLevel): ?>
                     <div class="form-group mt-3" id="level-group">
                         <label for="level" class="mb-0">Level <?php showAsterisk() ?></label>
@@ -263,7 +281,6 @@ $typeSwitchParams = $_GET;
                             <option value="">Select Level...</option>
                             <option value="Elementary">Elementary</option>
                             <option value="Secondary">Secondary</option>
-                            <option value="Integrated">Integrated</option>
                         </select>
                     </div>
                 <?php endif; ?>
