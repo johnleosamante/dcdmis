@@ -8,7 +8,7 @@ $countWinners = number_format(count(awardWinners()));
 $countRankAwards = number_format(count(awardsWithNominees()));
 
 messageAlert($showAlert, $message, $success);
-contentTitleWithModal('Dashboard', uri() . '/modules/race/nominate-select-schedule-dialog.php', 'Nominate', 'fa-user-plus');
+contentTitleWithModal('Dashboard', uri() . '/modules/race/nominate-dialog.php', 'Nominate', 'fa-user-plus');
 ?>
 
 <div class="row mt-4">
