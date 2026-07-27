@@ -727,6 +727,19 @@ function rankingCriteriaByAward($award_id)
     return is_array($results) ? $results : [];
 }
 
+function updateRankingCriterion($id, $name, $maxPoints)
+{
+    return update('ranking_criteria', [
+        'criterion_name' => $name,
+        'max_points' => $maxPoints
+    ], '`id` = ?', [$id]);
+}
+
+function deleteRankingCriterion($id)
+{
+    return delete('ranking_criteria', '`id` = ?', [$id]);
+}
+
 function rankingCriteriaLibrary()
 {
     $results = query("SELECT * FROM `ranking_criteria_library` ORDER BY `criterion_name` ASC");
