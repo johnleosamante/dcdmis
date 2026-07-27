@@ -250,7 +250,13 @@ if (isset($_POST['save-nominee'])) {
             }
         }
 
-        $level = isset($_POST['level']) && !empty($_POST['level']) ? sanitize($_POST['level']) : null;
+        $isSDO = isset($_POST['is_sdo']) ? true : false;
+        $level = null;
+        if ($isSDO) {
+            $level = 'SDO';
+        } else {
+            $level = isset($_POST['level']) && !empty($_POST['level']) ? sanitize($_POST['level']) : null;
+        }
         $affected = createNominee($schedule_id, $employee_id, $award_id, $nominee_type, $level, $userId);
         if ($affected) {
             $message = 'Nominee has been added successfully.';
@@ -531,6 +537,42 @@ if (isset($_POST['save-ranking-criteria'])) {
         createSystemLog($stationId, $userId, 'Saved ranking criteria', $id, clientIp());
     } else {
         $message = 'Invalid award ID.';
+    }
+}
+
+if (isset($_POST['update-criterion'])) {
+    $criterionId = isset($_POST['criterion_id']) ? sanitize($_POST['criterion_id']) : null;
+    $criterionName = isset($_POST['criterion_name']) ? trim(sanitize($_POST['criterion_name'])) : '';
+    $maxPoints = isset($_POST['max_points']) ? floatval($_POST['max_points']) : 0;
+    $showAlert = true;
+    $success = false;
+
+    if ($nominatorOnly) {
+        $message = 'You do not have permission to perform this action.';
+    } elseif ($criterionId && $criterionName !== '' && $maxPoints > 0) {
+        updateRankingCriterion($criterionId, $criterionName, $maxPoints);
+        $message = 'Criterion has been updated successfully.';
+        $success = true;
+        createSystemLog($stationId, $userId, 'Updated ranking criterion', $criterionId, clientIp());
+    } else {
+        $message = 'All fields are required.';
+    }
+}
+
+if (isset($_POST['delete-criterion'])) {
+    $criterionId = isset($_POST['criterion_id']) ? sanitize($_POST['criterion_id']) : null;
+    $showAlert = true;
+    $success = false;
+
+    if ($nominatorOnly) {
+        $message = 'You do not have permission to perform this action.';
+    } elseif ($criterionId) {
+        deleteRankingCriterion($criterionId);
+        $message = 'Criterion has been deleted successfully.';
+        $success = true;
+        createSystemLog($stationId, $userId, 'Deleted ranking criterion', $criterionId, clientIp());
+    } else {
+        $message = 'Invalid criterion ID.';
     }
 }
 

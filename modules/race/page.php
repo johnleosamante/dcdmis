@@ -97,7 +97,7 @@ messageAlert($showAlert, $message, $success);
             <div>
                 <?php if ($scheduleId): ?>
                     <?php if ($awardId): ?>
-                        <?php modalButtonSplit(uri() . '/modules/race/nominate-reminder-dialog.php?e=' . cipher($scheduleId) . '&award_id=' . cipher($awardId), 'Add Nominee', 'fa-plus', 'Add Nominee') ?>
+                        <?php modalButtonSplit(uri() . '/modules/race/nominate-dialog.php?step=reminder&e=' . cipher($scheduleId) . '&award_id=' . cipher($awardId), 'Add Nominee', 'fa-plus', 'Add Nominee') ?>
                         <a href="<?= $backToAwardsUrl ?>" class="btn btn-secondary btn-sm ml-2">
                             <i class="fas fa-arrow-left fa-fw"></i> Back to Awards
                         </a>
@@ -134,7 +134,7 @@ messageAlert($showAlert, $message, $success);
         <div class="card-header py-3">
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <div>
-                    <?php modalButtonSplit(uri() . '/modules/race/nominate-select-schedule-dialog.php', 'Nominate', 'fa-user-plus', 'Nominate') ?>
+                    <?php modalButtonSplit(uri() . '/modules/race/nominate-dialog.php?step=schedule', 'Nominate', 'fa-user-plus', 'Nominate') ?>
                 </div>
             </div>
             <?php
@@ -348,7 +348,7 @@ messageAlert($showAlert, $message, $success);
                                             <?php dropdownEllipsis() ?>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                                 <?php modalDropdownItem(uri() . '/modules/race/save-award-dialog.php?id=' . cipher($aw['id']), 'Edit Award', 'fa-edit', 'Edit Award'); ?>
-                                                <?php modalDropdownItem(uri() . '/modules/race/delete-award-dialog.php?id=' . cipher($aw['id']), 'Delete', 'fa-trash', 'Delete Award'); ?>
+                                                <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=award&id=' . cipher($aw['id']), 'Delete', 'fa-trash', 'Delete Award'); ?>
                                             </div>
                                         </div>
                                     </td>
@@ -444,7 +444,7 @@ messageAlert($showAlert, $message, $success);
                                                     <?php endif; ?>
 
                                                     <div class="dropdown-divider"></div>
-                                                    <?php modalDropdownItem(uri() . '/modules/race/delete-nominee-dialog.php?id=' . cipher($nom['id']), 'Delete', 'fa-trash', 'Delete Nominee'); ?>
+                                                    <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=nominee&id=' . cipher($nom['id']), 'Delete', 'fa-trash', 'Delete Nominee'); ?>
                                                 </div>
                                             </div>
                                         </td>
@@ -626,14 +626,14 @@ messageAlert($showAlert, $message, $success);
                                 <?php endif; ?>
                             </div>
                             <div class="d-flex flex-row align-items-center mt-2 mt-md-0">
-                                <?php modalButtonSplit(uri() . '/modules/race/save-ranking-criteria-dialog.php?id=' . cipher($rankAwardId), 'Set Criteria', 'fa-clipboard-list', 'Set Ranking Criteria') ?>
+                                <?php modalButtonSplit(uri() . '/modules/race/criteria-dialog.php?mode=edit-ranking&id=' . cipher($rankAwardId), 'Set Criteria', 'fa-clipboard-list', 'Set Ranking Criteria') ?>
                                 <?php if (!empty($rankSchedId)): ?>
                                     <?php if ($isFinalized): ?>
                                         <span class="badge badge-danger p-2 ml-2"><i class="fas fa-trophy"></i> Winner Declared</span>
                                     <?php elseif (empty($rankCriteria)): ?>
-                                        <?php modalButtonSplit(uri() . '/modules/race/no-criteria-dialog.php?award=' . cipher($rankAwardId), 'Save Rankings', 'fa-save', 'Save Rankings', 'warning') ?>
+                                        <?php modalButtonSplit(uri() . '/modules/race/notice-dialog.php?type=no-criteria&award=' . cipher($rankAwardId), 'Save Rankings', 'fa-save', 'Save Rankings', 'warning') ?>
                                     <?php elseif (!$hasScores): ?>
-                                        <?php modalButtonSplit(uri() . '/modules/race/no-rankings-dialog.php?award=' . cipher($rankAwardId) . '&sched=' . cipher($rankSchedId), 'Save Rankings', 'fa-save', 'Save Rankings', 'warning') ?>
+                                        <?php modalButtonSplit(uri() . '/modules/race/notice-dialog.php?type=no-rankings&award=' . cipher($rankAwardId) . '&sched=' . cipher($rankSchedId), 'Save Rankings', 'fa-save', 'Save Rankings', 'warning') ?>
                                     <?php elseif ($hasSavedRankings): ?>
                                         <?php modalButtonSplit(uri() . '/modules/race/finalize-winner-dialog.php?sched=' . cipher($rankSchedId) . '&award=' . cipher($rankAwardId) . ($rankLevel ? '&level=' . cipher($rankLevel) : ''), 'Declare Winner', 'fa-trophy', 'Finalize & Declare Winner') ?>
                                     <?php else: ?>
@@ -823,7 +823,7 @@ messageAlert($showAlert, $message, $success);
                                                             <?php endif; ?>
 
                                                             <div class="dropdown-divider"></div>
-                                                            <?php modalDropdownItem(uri() . '/modules/race/delete-nominee-dialog.php?id=' . cipher($nominee['id']), 'Delete', 'fa-trash', 'Delete Nominee'); ?>
+                                                            <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=nominee&id=' . cipher($nominee['id']), 'Delete', 'fa-trash', 'Delete Nominee'); ?>
                                                         <?php else: ?>
                                                             <span class="dropdown-item small text-muted disabled"><i class="fas fa-eye fa-fw mr-2"></i> View Only</span>
                                                         <?php endif; ?>
@@ -880,12 +880,12 @@ messageAlert($showAlert, $message, $success);
                                                         <a class="dropdown-item small" href="<?= $awardDetailsUrl ?>">
                                                             <i class="fas fa-users fa-fw mr-2 text-gray-400"></i> View Nominees
                                                         </a>
-                                                        <?php modalDropdownItem(uri() . '/modules/race/criteria-dialog.php?e=' . cipher($scheduleId) . '&award_id=' . cipher($aw['id']), 'View Criteria', 'fa-clipboard-list', 'View Criteria'); ?>
-                                                        <?php modalDropdownItem(uri() . '/modules/race/nominate-reminder-dialog.php?e=' . cipher($scheduleId) . '&award_id=' . cipher($aw['id']), 'Nominate', 'fa-plus', 'Add Nominee'); ?>
+                                                        <?php modalDropdownItem(uri() . '/modules/race/criteria-dialog.php?mode=view&e=' . cipher($scheduleId) . '&award_id=' . cipher($aw['id']), 'View Criteria', 'fa-clipboard-list', 'View Criteria'); ?>
+                                                        <?php modalDropdownItem(uri() . '/modules/race/nominate-dialog.php?step=reminder&e=' . cipher($scheduleId) . '&award_id=' . cipher($aw['id']), 'Nominate', 'fa-plus', 'Add Nominee'); ?>
                                                         <?php if (!$nominatorOnly): ?>
                                                             <div class="dropdown-divider"></div>
                                                             <?php modalDropdownItem(uri() . '/modules/race/save-award-dialog.php?e=' . cipher($scheduleId) . '&id=' . cipher($aw['id']), 'Edit', 'fa-edit', 'Edit Award'); ?>
-                                                            <?php modalDropdownItem(uri() . '/modules/race/delete-award-dialog.php?id=' . cipher($aw['id']), 'Delete', 'fa-trash', 'Delete Award'); ?>
+                                                            <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=award&id=' . cipher($aw['id']), 'Delete', 'fa-trash', 'Delete Award'); ?>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
@@ -952,7 +952,7 @@ messageAlert($showAlert, $message, $success);
                                                 <?php dropdownEllipsis() ?>
                                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                                     <?php modalDropdownItem(uri() . '/modules/race/save-schedule-dialog.php?id=' . cipher($sched['id']), 'Edit', 'fa-edit', 'Edit Schedule'); ?>
-                                                    <?php modalDropdownItem(uri() . '/modules/race/delete-schedule-dialog.php?id=' . cipher($sched['id']), 'Delete', 'fa-trash', 'Delete Schedule'); ?>
+                                                    <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=schedule&id=' . cipher($sched['id']), 'Delete', 'fa-trash', 'Delete Schedule'); ?>
                                                 </div>
                                             </div>
                                         </td>
