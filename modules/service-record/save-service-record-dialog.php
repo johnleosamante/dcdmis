@@ -124,7 +124,7 @@ if (isset($serviceRecordId)) {
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="sg-step" class="mb-0">Salary Grade &amp; Step Increment</label>
+                            <label for="sg-step" class="mb-0">Salary Grade and Step Increment</label>
                             <input id="sg-step" type="text" name="sg-step" class="form-control"
                                 title="Leave blank if not applicable" value="<?= e($sg) ?>">
                         </div>
