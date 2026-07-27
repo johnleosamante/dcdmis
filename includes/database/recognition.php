@@ -179,6 +179,11 @@ function recognitionCategory($category_id)
     return find("SELECT * FROM `recognition_categories` WHERE `id` = ? LIMIT 1", [$category_id]);
 }
 
+function createRecognitionCategory($name)
+{
+    return insert('recognition_categories', ['name' => $name]);
+}
+
 // recognition_awards
 function recognitionAwards($category_id = null)
 {
@@ -730,6 +735,19 @@ function rankingCriteriaByAward($award_id)
     $sql = "SELECT * FROM `ranking_criteria` WHERE `award_id` = ? ORDER BY `id` ASC";
     $results = query($sql, [$award_id]);
     return is_array($results) ? $results : [];
+}
+
+function updateRankingCriterion($id, $name, $maxPoints)
+{
+    return update('ranking_criteria', [
+        'criterion_name' => $name,
+        'max_points' => $maxPoints
+    ], '`id` = ?', [$id]);
+}
+
+function deleteRankingCriterion($id)
+{
+    return delete('ranking_criteria', '`id` = ?', [$id]);
 }
 
 function rankingCriteriaLibrary()

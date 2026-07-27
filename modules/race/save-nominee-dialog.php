@@ -103,6 +103,23 @@ $typeSwitchParams = $_GET;
                             </a>
                         </div>
                     </div>
+                    <div class="form-group mb-3">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="is-sdo" name="is_sdo" value="1" onchange="
+                                var lg = document.getElementById('level-group');
+                                if (lg) {
+                                    lg.style.display = this.checked ? 'none' : '';
+                                    var ls = lg.querySelector('select');
+                                    if (ls) {
+                                        ls.required = !this.checked;
+                                        if (this.checked) ls.value = '';
+                                    }
+                                }
+                            ">
+                            <label class="custom-control-label" for="is-sdo">This nominee belongs to the SDO (Schools Division Office)</label>
+                            <small class="text-muted d-block mt-1">If checked, no level selection is required.</small>
+                        </div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if ($isSchoolNominee):
