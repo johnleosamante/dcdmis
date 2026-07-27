@@ -20,7 +20,7 @@
                         <th class="align-middle" width="18%">Position Title</th>
                         <th class="align-middle" width="27%">Department / Agency / Office / Company</th>
                         <th class="align-middle" width="10%">Monthly Salary</th>
-                        <th class="align-middle" width="10%">Salary / Job / Pay Grade &amp; Step Increment</th>
+                        <th class="align-middle" width="10%">Salary / Job / Pay Grade and Step Increment</th>
                         <th class="align-middle" width="10%">Status of Appointment</th>
                         <th class="align-middle" width="10%">Government Service</th>
                         <?php if ($editMode): ?>
@@ -78,7 +78,7 @@
                         <th class="align-middle" width="18%">Position Title</th>
                         <th class="align-middle" width="27%">Department / Agency / Office / Company</th>
                         <th class="align-middle" width="10%">Monthly Salary</th>
-                        <th class="align-middle" width="10%">Salary / Job / Pay Grade &amp; Step Increment</th>
+                        <th class="align-middle" width="10%">Salary / Job / Pay Grade and Step Increment</th>
                         <th class="align-middle" width="10%">Status of Appointment</th>
                         <th class="align-middle" width="10%">Government Service</th>
                         <?php if ($editMode): ?>
