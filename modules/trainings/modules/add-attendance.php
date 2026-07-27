@@ -150,8 +150,10 @@ messageAlert($showAlert, $message, $success);
         for ($d = $start; $d <= $end; $d->modify('+1 day')) {
             $dates[] = $d->format('Y-m-d');
         }
-        ?>
 
+        $todayDate = date('Y-m-d');
+        $showAttendanceActionsToday = in_array($todayDate, $dates, true);
+        ?>
 
         <ul class="nav nav-tabs" id="attendanceTabs" role="tablist">
             <?php foreach ($dates as $i => $date): ?>
@@ -166,40 +168,42 @@ messageAlert($showAlert, $message, $success);
             <?php endforeach ?>
         </ul>
 
-
         <!-- PROJECT AND ACTIVITIES -->
         <input type="hidden" id="training_id" value="<?php echo $trainingId ?>">
         <input type="hidden" id="url_view" value="<?php echo base64_decode($_GET['v']) ?>">
         <input type="hidden" id="selected_date" value="">
 
         <!-- Activities List -->
-        <div class="mb-3 d-flex" style="margin-top: 15px;">
-            <input type="hidden" id="csrf_token" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-            <input type="text" id="qrInput" class="form-control me-2" style="width: 50%;"
-                placeholder="Scan ID or type employee name..." autofocus>
-            <button id="addAttendanceBtn" class="btn btn-primary ml-1 mr-3"><i class="fas fa-plus"></i> Add
-            </button>
+        <div class="my-3 d-flex <?= $showAttendanceActionsToday ? 'justify-content-between' : 'justify-content-end' ?>">
+            <?php if ($showAttendanceActionsToday): ?>
+                <div class="d-flex align-items-center flex-grow-1 me-3">
+                    <input type="hidden" id="csrf_token" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                    <input type="text" id="qrInput" class="form-control me-2 mr-1" style="width: 320px; max-width: 100%;"
+                        placeholder="Scan ID or type employee name..." autofocus>
+                    <button id="addAttendanceBtn" class="btn btn-primary"><i class="fas fa-plus"></i></button>
+                </div>
+            <?php endif; ?>
 
-            <button id="viewAttendanceSum" class="btn btn-info mr-1" title="View Attendees">
-                <i class="fas fa-list"></i>
-            </button>
+            <div class="ml-1 d-flex align-items-center">
+                <button id="viewAttendanceSum" class="btn btn-info mr-1" title="View Attendees">
+                    <i class="fas fa-list"></i>
+                </button>
 
-            <button id="generatePDF" class="btn btn-info mr-1" title="Generate PDF">
-                <i class="fas fa-file-pdf"></i>
-            </button>
+                <button id="generatePDF" class="btn btn-info mr-1" title="Generate PDF">
+                    <i class="fas fa-file-pdf"></i>
+                </button>
 
-            <a href="http://<?= $_SERVER['HTTP_HOST'] ?>/hrtdms/?v=<?= base64_encode('Attendance Summary') ?>&id=<?= base64_encode($training['id']) ?>"
-                target="_blank" class="btn btn-info" title="View Summary">
-                <i class="fas fa-chart-line"></i>
-
-            </a>
+                <a href="http://<?= $_SERVER['HTTP_HOST'] ?>/hrtdms/?v=<?= base64_encode('Attendance Summary') ?>&id=<?= base64_encode($training['id']) ?>"
+                    target="_blank" class="btn btn-info" title="View Summary">
+                    <i class="fas fa-chart-line"></i>
+                </a>
+            </div>
         </div>
 
-        <div class="tab-content mt-3" style="background-color: white; padding: 15px;">
+        <div class="tab-content mt-3 px-0 py-2">
             <?php foreach ($dates as $i => $date): ?>
                 <div class="tab-pane fade <?= $i == 0 ? 'show active' : '' ?>" id="day<?= $i ?>" role="tabpanel">
-                    <table class="table table-hover table-bordered table-striped text-center attendance-table" id="">
-
+                    <table class="table table-hover text-center attendance-table" id="">
                         <thead>
                             <tr>
                                 <th>Image</th>
@@ -213,7 +217,6 @@ messageAlert($showAlert, $message, $success);
                         </thead>
 
                         <tbody>
-
                             <?php
                             $trainingAttendanceArr = getTrainingAttendees($trainingId, $date);
 
@@ -272,6 +275,17 @@ messageAlert($showAlert, $message, $success);
 
                         </tbody>
 
+                        <tfoot>
+                            <tr class="small">
+                                <th>Image</th>
+                                <th>QR Code</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Control No</th>
+                                <th>Date Registered</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             <?php endforeach ?>
