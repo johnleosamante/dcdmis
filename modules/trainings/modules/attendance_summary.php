@@ -59,21 +59,15 @@ $employees = query("
         p.official_title,
         e.email_address,
         ta.is_mail
-
     FROM training_attendees ta
-
     INNER JOIN employees e
         ON e.id = ta.employee_id
-
     LEFT JOIN station_assignments sa
         ON sa.employee_id = e.id
-
     LEFT JOIN positions p
         ON p.id = sa.position_id
-
     WHERE ta.training_id = ?
-
-    GROUP BY ta.id
+    GROUP BY e.id
     ORDER BY fullname ASC
 ", [$trainingId]);
 
