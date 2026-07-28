@@ -11,7 +11,7 @@ sidebarMenuItem(customUri('pis', 'Payslips', $userId), 'Payslips', 'fa-money-che
 $isNonDivision = $stationId !== DIVISION_ID;
 
 if (!$isNonDivision) {
-    sidebarMenuItem(customUri('pis', 'Performance Evaluation', $userId), 'Performance Evaluation', 'fa-chart-line', isset($url) && str_contains($url, 'Performance Evaluation'));
+    sidebarMenuItem(customUri('pis', 'IPCRF', $userId), 'IPCRF', 'fa-chart-line', isset($url) && (str_contains($url, 'IPCRF') || str_contains($url, 'Performance') || str_contains($url, 'Phase') || str_contains($url, 'Objective') || str_contains($url, 'MOV')));
 }
 
 if ($isSchoolPortal || $isNonDivision) {

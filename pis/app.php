@@ -279,3 +279,949 @@ if (isset($_POST['cancel-transfer-request'])) {
         $message = $e->getMessage();
     }
 }
+
+// ========== IPCRF (Individual Performance Commitment and Review Form) ==========
+
+// Create IPCRF with KRAs and Objectives
+if (isset($_POST['create-ipcrf'])) {
+    $employeeId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $cycleId = (int) sanitize(decipher($_POST['cycle-verifier'] ?? null));
+    $validatorId = !empty($_POST['validator_id']) ? (int) sanitize($_POST['validator_id']) : null;
+    $approvingOfficerId = !empty($_POST['approving_officer_id']) ? (int) sanitize($_POST['approving_officer_id']) : null;
+    $positionTitle = sanitize($_POST['position_title'] ?? '');
+    $kraIds = $_POST['kra_id'] ?? [];
+    $kraTitles = $_POST['kra_title'] ?? [];
+    $showAlert = true;
+    $success = false;
+
+    try {
+        if (empty($employeeId) || empty($cycleId)) {
+            throw new Exception('Invalid request parameters.');
+        }
+
+        if (empty($kraTitles) || empty(array_filter($kraTitles))) {
+            throw new Exception('Please define at least one Key Result Area.');
+        }
+
+        if (pmIpcrfByEmployee($employeeId, $cycleId)) {
+            throw new Exception('You already have an IPCRF for this cycle.');
+        }
+
+        beginTransaction();
+
+        $ipcrfId = createPmIpcrf($cycleId, $employeeId, $validatorId, $positionTitle);
+        if (!$ipcrfId) {
+            throw new Exception('Failed to create IPCRF record.');
+        }
+
+        // Set approving officer if selected
+        if ($approvingOfficerId) {
+            updatePmIpcrfApprovingOfficer($ipcrfId, $approvingOfficerId);
+        }
+
+        // Process each KRA and its objectives
+        // KRA indices in form are 1-based (kraCount starts at 1)
+        $kraIndex = 0;
+        foreach ($kraIds as $i => $kraId) {
+            $kraIndex++;
+            $kraId = (int) sanitize($kraId);
+            $kraTitle = sanitize($kraTitles[$i] ?? '');
+            
+            // Allow custom KRAs (kra_id = 0) as long as title is provided
+            if (empty($kraTitle)) continue;
+
+            // Get objectives for this KRA - form uses 1-based kraCount
+            $objectives = $_POST["objective_{$kraIndex}"] ?? [];
+            $timelines = $_POST["timeline_{$kraIndex}"] ?? [];
+            $objWeights = $_POST["obj_weight_{$kraIndex}"] ?? [];
+            $performanceIndicators = $_POST["performance_indicator_{$kraIndex}"] ?? [];
+
+            foreach ($objectives as $j => $objective) {
+                $objective = sanitize($objective);
+                $timeline = sanitize($timelines[$j] ?? '');
+                $objWeight = (int) sanitize($objWeights[$j] ?? 0);
+                $performanceIndicator = sanitize($performanceIndicators[$j] ?? '');
+
+                if (empty($objective)) continue;
+
+                $result = createPmObjective($ipcrfId, $kraId, $kraTitle, 0, $objective, $timeline, $objWeight, $performanceIndicator, '', '', '', '', $j + 1);
+                if (!$result) {
+                    throw new Exception('Failed to create objective.');
+                }
+            }
+        }
+
+        // Assign validator if provided
+        if ($validatorId) {
+            $existingAssignment = pmValidator($validatorId, $employeeId, $cycleId);
+            if (!$existingAssignment) {
+                assignPmValidator($validatorId, $employeeId, $cycleId);
+            }
+        }
+
+        commit();
+
+        $success = true;
+        $message = 'IPCRF has been created successfully.';
+        createSystemLog($stationId, $userId, 'Created IPCRF', $employeeId, clientIp());
+
+        redirect(customUri('pis', 'IPCRF Details', $ipcrfId));
+
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
+
+// Save single objective
+if (isset($_POST['save-objective'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $kraId = (int) sanitize($_POST['kra_id'] ?? 0);
+    $kraTitle = sanitize($_POST['kra_title'] ?? '');
+    $objective = sanitize($_POST['objective'] ?? '');
+    $timeline = sanitize($_POST['timeline'] ?? '');
+    $weight = (int) sanitize($_POST['weight'] ?? 0);
+    $performanceIndicator = sanitize($_POST['performance_indicator'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        if (empty($ipcrfId) || empty($kraTitle) || empty($objective)) {
+            throw new Exception('Required fields are missing.');
+        }
+
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['employee_id'] !== $userId) {
+            throw new Exception('Invalid request.');
+        }
+
+        if ($ipcrf['status'] !== 'Draft' && $ipcrf['status'] !== 'Returned') {
+            throw new Exception('Cannot add objectives to a submitted IPCRF.');
+        }
+
+        $existingCount = count(pmObjectives($ipcrfId));
+        $result = createPmObjective($ipcrfId, $kraId, $kraTitle, 0, $objective, $timeline, $weight, $performanceIndicator, '', '', '', '', $existingCount + 1);
+
+        if (!$result) {
+            throw new Exception('Failed to save objective.');
+        }
+
+        $success = true;
+        $message = 'Objective has been added successfully.';
+        createSystemLog($stationId, $userId, 'Added IPCRF objective', $userId, clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Edit objective
+if (isset($_POST['edit-objective'])) {
+    $objectiveId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $kraId = (int) sanitize($_POST['kra_id'] ?? 0);
+    $kraTitle = sanitize($_POST['kra_title'] ?? '');
+    $objective = sanitize($_POST['objective'] ?? '');
+    $timeline = sanitize($_POST['timeline'] ?? '');
+    $weight = (int) sanitize($_POST['weight'] ?? 0);
+    $performanceIndicator = sanitize($_POST['performance_indicator'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        if (empty($objectiveId) || empty($kraTitle) || empty($objective)) {
+            throw new Exception('Required fields are missing.');
+        }
+
+        $obj = pmObjective($objectiveId);
+        if (!$obj) {
+            throw new Exception('Objective not found.');
+        }
+
+        $ipcrf = pmIpcrf((int) $obj['ipcrf_id']);
+        if (!$ipcrf || (int) $ipcrf['employee_id'] !== $userId) {
+            throw new Exception('Unauthorized.');
+        }
+
+        if ($ipcrf['status'] !== 'Draft' && $ipcrf['status'] !== 'Returned') {
+            throw new Exception('Cannot edit objectives from a submitted IPCRF.');
+        }
+
+        $result = updatePmObjective($objectiveId, $kraId, $kraTitle, $objective, $timeline, $weight, $performanceIndicator);
+        if (!$result) {
+            throw new Exception('Failed to update objective.');
+        }
+
+        $success = true;
+        $message = 'Objective has been updated successfully.';
+        createSystemLog($stationId, $userId, 'Edited IPCRF objective', $userId, clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Delete objective
+if (isset($_POST['delete-objective'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $objectiveId = (int) sanitize(decipher($_POST['objective-verifier'] ?? null));
+    $showAlert = true;
+    $success = false;
+
+    try {
+        if (empty($ipcrfId) || empty($objectiveId)) {
+            throw new Exception('Invalid request.');
+        }
+
+        $obj = pmObjective($objectiveId);
+        if (!$obj || (int) $obj['ipcrf_id'] !== $ipcrfId) {
+            throw new Exception('Objective not found.');
+        }
+
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['employee_id'] !== $userId) {
+            throw new Exception('Unauthorized.');
+        }
+
+        if ($ipcrf['status'] !== 'Draft' && $ipcrf['status'] !== 'Returned') {
+            throw new Exception('Cannot delete objectives from a submitted IPCRF.');
+        }
+
+        $result = deletePmObjective($objectiveId);
+        if (!$result) {
+            throw new Exception('Failed to delete objective.');
+        }
+
+        $success = true;
+        $message = 'Objective has been deleted.';
+        createSystemLog($stationId, $userId, 'Deleted IPCRF objective', $userId, clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Submit IPCRF for validation
+if (isset($_POST['submit-ipcrf'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $remarks = sanitize($_POST['ratee_remarks'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['employee_id'] !== $userId) {
+            throw new Exception('Invalid request.');
+        }
+
+        if ($ipcrf['status'] !== 'Draft' && $ipcrf['status'] !== 'Returned') {
+            throw new Exception('This IPCRF cannot be submitted.');
+        }
+
+        $objectives = pmObjectives($ipcrfId);
+        if (empty($objectives)) {
+            throw new Exception('Cannot submit an IPCRF without objectives.');
+        }
+
+        $result = updatePmIpcrfStatus($ipcrfId, 'Submitted', $remarks, 'ratee_remarks');
+        if ($result === false) {
+            throw new Exception('Failed to submit IPCRF.');
+        }
+
+        $success = true;
+        $message = 'IPCRF has been submitted for validation.';
+        createSystemLog($stationId, $userId, 'Submitted IPCRF for validation', $userId, clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Update Approving Officer
+if (isset($_POST['update-approving-officer'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $approvingOfficerId = (int) sanitize(decipher($_POST['approving_officer_id'] ?? null));
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['employee_id'] !== $userId) {
+            throw new Exception('Invalid request.');
+        }
+
+        $allowedStatuses = ['Draft', 'Returned', 'Submitted', 'Approved'];
+        if (!in_array($ipcrf['status'], $allowedStatuses)) {
+            throw new Exception('Approving authority can only be changed before validation.');
+        }
+
+        if (!$approvingOfficerId) {
+            throw new Exception('Please select an approving authority.');
+        }
+
+        updatePmIpcrfApprovingOfficer($ipcrfId, $approvingOfficerId);
+
+        $success = true;
+        $message = 'Approving authority has been updated.';
+        createSystemLog($stationId, $userId, 'Updated IPCRF approving authority', $userId, clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Save actual results and ratings (Phase 2)
+if (isset($_POST['save-actual-results'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $objIds = $_POST['obj_id'] ?? [];
+    $actualResults = $_POST['actual_result'] ?? [];
+    $ratingQs = $_POST['rating_q'] ?? [];
+    $ratingEs = $_POST['rating_e'] ?? [];
+    $ratingTs = $_POST['rating_t'] ?? [];
+    $averageRatings = $_POST['average_rating'] ?? [];
+    $scores = $_POST['score'] ?? [];
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['employee_id'] !== $userId) {
+            throw new Exception('Unauthorized.');
+        }
+
+        beginTransaction();
+
+        foreach ($objIds as $i => $encId) {
+            $objId = (int) sanitize(decipher($encId));
+            $obj = pmObjective($objId);
+            if (!$obj || (int) $obj['ipcrf_id'] !== $ipcrfId) {
+                throw new Exception('Invalid objective.');
+            }
+
+            $result = sanitize($actualResults[$i] ?? '');
+            $q = sanitize($ratingQs[$i] ?? '');
+            $e2 = sanitize($ratingEs[$i] ?? '');
+            $t = sanitize($ratingTs[$i] ?? '');
+            $avg = sanitize($averageRatings[$i] ?? '');
+            $score = sanitize($scores[$i] ?? '');
+
+            $qVal = $q !== '' ? (float) $q : null;
+            $eVal = $e2 !== '' ? (float) $e2 : null;
+            $tVal = $t !== '' ? (float) $t : null;
+
+            if ($avg !== '') {
+                $avgVal = (float) $avg;
+            } elseif ($qVal !== null && $eVal !== null && $tVal !== null) {
+                $avgVal = round(($qVal + $eVal + $tVal) / 3, 2);
+            } else {
+                $avgVal = null;
+            }
+
+            if ($score !== '') {
+                $scoreVal = (float) $score;
+            } elseif ($avgVal !== null && $obj['weight']) {
+                $scoreVal = round($avgVal * ((float) $obj['weight'] / 100), 2);
+            } else {
+                $scoreVal = null;
+            }
+
+            updatePmObjectivePhase2($objId, $result, $qVal, $eVal, $tVal, $avgVal, $scoreVal);
+        }
+
+        commit();
+
+        $success = true;
+        $message = 'Phase 2 updates have been saved successfully.';
+        createSystemLog($stationId, $userId, 'Updated IPCRF Phase 2 results', $userId, clientIp());
+
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
+
+// Save ratings (Validator)
+if (isset($_POST['save-ratings'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $validatorRemarks = sanitize($_POST['validator_remarks'] ?? '');
+    $objIds = $_POST['obj_id'] ?? [];
+    $ratingsQ = $_POST['rating_q'] ?? [];
+    $ratingsE = $_POST['rating_e'] ?? [];
+    $ratingsT = $_POST['rating_t'] ?? [];
+    $objRemarks = $_POST['obj_remarks'] ?? [];
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['validator_id'] !== $userId) {
+            throw new Exception('Unauthorized.');
+        }
+
+        beginTransaction();
+
+        foreach ($objIds as $i => $encId) {
+            $objId = (int) sanitize(decipher($encId));
+            $q = !empty($ratingsQ[$i]) ? (float) $ratingsQ[$i] : null;
+            $e2 = !empty($ratingsE[$i]) ? (float) $ratingsE[$i] : null;
+            $t = !empty($ratingsT[$i]) ? (float) $ratingsT[$i] : null;
+            $rem = sanitize($objRemarks[$i] ?? '');
+
+            if ($q !== null && $e2 !== null && $t !== null) {
+                updatePmObjectiveRating($objId, $q, $e2, $t, $rem);
+            }
+        }
+
+        if (!empty($validatorRemarks)) {
+            update('pm_ipcrf', ['validator_remarks' => $validatorRemarks], '`id` = ?', [$ipcrfId]);
+        }
+
+        commit();
+
+        $success = true;
+        $message = 'Ratings have been saved successfully.';
+        createSystemLog($stationId, $userId, 'Saved IPCRF ratings', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
+
+// Validate IPCRF
+if (isset($_POST['validate-ipcrf'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $validatorRemarks = sanitize($_POST['validator_remarks'] ?? '');
+    $objIds = $_POST['obj_id'] ?? [];
+    $ratingsQ = $_POST['rating_q'] ?? [];
+    $ratingsE = $_POST['rating_e'] ?? [];
+    $ratingsT = $_POST['rating_t'] ?? [];
+    $objRemarks = $_POST['obj_remarks'] ?? [];
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['validator_id'] !== $userId) {
+            throw new Exception('Unauthorized.');
+        }
+
+        if ($ipcrf['status'] !== 'Approved' && $ipcrf['status'] !== 'Submitted' && $ipcrf['status'] !== 'Validated') {
+            throw new Exception('This IPCRF cannot be validated.');
+        }
+
+        beginTransaction();
+
+        foreach ($objIds as $i => $encId) {
+            $objId = (int) sanitize(decipher($encId));
+            $q = !empty($ratingsQ[$i]) ? (float) $ratingsQ[$i] : null;
+            $e2 = !empty($ratingsE[$i]) ? (float) $ratingsE[$i] : null;
+            $t = !empty($ratingsT[$i]) ? (float) $ratingsT[$i] : null;
+            $rem = sanitize($objRemarks[$i] ?? '');
+
+            if ($q === null || $e2 === null || $t === null) {
+                throw new Exception('All objectives must be rated (Q, E, T) before validation.');
+            }
+
+            updatePmObjectiveRating($objId, $q, $e2, $t, $rem);
+        }
+
+        $finalRating = pmComputeFinalRating($ipcrfId);
+        $adjectival = pmAdjectivalRating($finalRating);
+
+        updatePmIpcrfFinalRating($ipcrfId, $finalRating, $adjectival);
+        updatePmIpcrfStatus($ipcrfId, 'Validated', $validatorRemarks, 'validator_remarks');
+        updatePmIpcrfPhase($ipcrfId, 3);
+
+        commit();
+
+        $success = true;
+        $message = "IPCRF has been validated. Final Rating: {$finalRating} ({$adjectival}).";
+        createSystemLog($stationId, $userId, 'Validated IPCRF', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
+
+// Return IPCRF to ratee
+if (isset($_POST['return-ipcrf'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $validatorRemarks = sanitize($_POST['validator_remarks'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['validator_id'] !== $userId) {
+            throw new Exception('Unauthorized.');
+        }
+
+        if (empty($validatorRemarks)) {
+            throw new Exception('Please enter your remarks before returning this IPCRF.');
+        }
+
+        $result = updatePmIpcrfStatus($ipcrfId, 'Returned', $validatorRemarks, 'validator_remarks');
+        if ($result === false) {
+            throw new Exception('Failed to return IPCRF.');
+        }
+
+        $success = true;
+        $message = 'IPCRF has been returned to the ratee for revision.';
+        createSystemLog($stationId, $userId, 'Returned IPCRF to ratee', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Approve IPCRF (Rater approves commitment or rating)
+if (isset($_POST['approve-ipcrf'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $validatorRemarks = sanitize($_POST['validator_remarks'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['validator_id'] !== $userId) {
+            throw new Exception('Unauthorized.');
+        }
+
+        $currentPhase = (int) $ipcrf['phase'];
+
+        // Phase 1: Approve commitment -> Phase 2
+        if ($currentPhase === 1) {
+            if ($ipcrf['status'] !== 'Submitted') {
+                throw new Exception('This IPCRF cannot be approved.');
+            }
+
+            beginTransaction();
+            updatePmIpcrfStatus($ipcrfId, 'Approved', $validatorRemarks, 'validator_remarks');
+            updatePmIpcrfPhase($ipcrfId, 2);
+            commit();
+
+            $success = true;
+            $message = 'IPCRF commitment has been approved and moved to Phase 2 (Monitoring).';
+            createSystemLog($stationId, $userId, 'Approved IPCRF commitment', $ipcrf['employee_id'], clientIp());
+        }
+        // Phase 3: Approve rating -> Phase 4
+        elseif ($currentPhase === 3) {
+            if ($ipcrf['status'] !== 'Validated' && $ipcrf['status'] !== 'Submitted') {
+                throw new Exception('This IPCRF rating cannot be approved.');
+            }
+
+            beginTransaction();
+            updatePmIpcrfStatus($ipcrfId, 'Completed', $validatorRemarks, 'validator_remarks');
+            updatePmIpcrfPhase($ipcrfId, 4);
+            commit();
+
+            $success = true;
+            $message = 'IPCRF rating has been approved and moved to Phase 4 (Rewarding and Development Planning).';
+            createSystemLog($stationId, $userId, 'Approved IPCRF rating', $ipcrf['employee_id'], clientIp());
+        }
+        else {
+            throw new Exception('This IPCRF cannot be approved at this phase.');
+        }
+
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
+
+// Upload MOV
+if (isset($_POST['upload-mov'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $objectiveId = (int) sanitize(decipher($_POST['objective_id'] ?? null));
+    $description = sanitize($_POST['description'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['employee_id'] !== $userId) {
+            throw new Exception('Unauthorized.');
+        }
+
+        if (!isset($_FILES['mov_file']) || $_FILES['mov_file']['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception('Please select a file to upload.');
+        }
+
+        $file = $_FILES['mov_file'];
+        $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/png'];
+        $maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (!in_array($file['type'], $allowedTypes)) {
+            throw new Exception('Invalid file type. Allowed: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG.');
+        }
+
+        if ($file['size'] > $maxSize) {
+            throw new Exception('File size exceeds 5MB limit.');
+        }
+
+        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $newFileName = 'mov_' . $ipcrfId . '_' . $objectiveId . '_' . time() . '.' . $ext;
+        $uploadDir = root() . '/uploads/mov/';
+
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        if (!move_uploaded_file($file['tmp_name'], $uploadDir . $newFileName)) {
+            throw new Exception('Failed to upload file.');
+        }
+
+        $result = createPmMov($objectiveId, $ipcrfId, $newFileName, $file['name'], $file['type'], $file['size'], $description, $userId);
+        if (!$result) {
+            unlink($uploadDir . $newFileName);
+            throw new Exception('Failed to save MOV record.');
+        }
+
+        $success = true;
+        $message = 'Means of Verification uploaded successfully.';
+        createSystemLog($stationId, $userId, 'Uploaded IPCRF MOV', $userId, clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Delete MOV
+if (isset($_POST['delete-mov'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $movId = (int) sanitize(decipher($_POST['mov-verifier'] ?? null));
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf || (int) $ipcrf['employee_id'] !== $userId) {
+            throw new Exception('Unauthorized.');
+        }
+
+        $mov = pmMov($movId);
+        if (!$mov || (int) $mov['ipcrf_id'] !== $ipcrfId) {
+            throw new Exception('MOV not found.');
+        }
+
+        $filePath = root() . '/uploads/mov/' . $mov['file_name'];
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        deletePmMov($movId);
+
+        $success = true;
+        $message = 'MOV has been deleted.';
+        createSystemLog($stationId, $userId, 'Deleted IPCRF MOV', $userId, clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Add Coaching Entry
+if (isset($_POST['add-coaching'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $objectiveId = (int) sanitize(decipher($_POST['objective_id'] ?? null));
+    $coachingDate = sanitize($_POST['coaching_date'] ?? '');
+    $incident = sanitize($_POST['incident'] ?? '');
+    $feedback = sanitize($_POST['feedback'] ?? '');
+    $actionAgreed = sanitize($_POST['action_agreed'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf) {
+            throw new Exception('IPCRF not found.');
+        }
+
+        $isOwner = ($userId === (int) $ipcrf['employee_id']);
+        $isValidator = ($userId === (int) $ipcrf['validator_id']);
+
+        if (!$isOwner && !$isValidator) {
+            throw new Exception('Unauthorized.');
+        }
+
+        if ($ipcrf['phase'] < 2) {
+            throw new Exception('Coaching entries can only be added during Phase 2.');
+        }
+
+        $obj = pmObjective($objectiveId);
+        if (!$obj || (int) $obj['ipcrf_id'] !== $ipcrfId) {
+            throw new Exception('Invalid objective selected.');
+        }
+
+        if (empty($coachingDate) || empty($incident) || empty($feedback) || empty($actionAgreed)) {
+            throw new Exception('All fields are required.');
+        }
+
+        createPmCoaching($ipcrfId, $objectiveId, $coachingDate, $incident, $feedback, $actionAgreed, null, null, $userId);
+
+        $success = true;
+        $message = 'Coaching entry has been added successfully.';
+        createSystemLog($stationId, $userId, 'Added IPCRF coaching entry', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Edit Coaching Entry
+if (isset($_POST['edit-coaching'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $coachingId = (int) sanitize(decipher($_POST['coaching_id'] ?? null));
+    $coachingDate = sanitize($_POST['coaching_date'] ?? '');
+    $incident = sanitize($_POST['incident'] ?? '');
+    $feedback = sanitize($_POST['feedback'] ?? '');
+    $actionAgreed = sanitize($_POST['action_agreed'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf) {
+            throw new Exception('IPCRF not found.');
+        }
+
+        $isOwner = ($userId === (int) $ipcrf['employee_id']);
+        $isValidator = ($userId === (int) $ipcrf['validator_id']);
+
+        if (!$isOwner && !$isValidator) {
+            throw new Exception('Unauthorized.');
+        }
+
+        $coaching = pmCoachingEntry($coachingId);
+        if (!$coaching || (int) $coaching['ipcrf_id'] !== $ipcrfId) {
+            throw new Exception('Coaching entry not found.');
+        }
+
+        if (empty($coachingDate) || empty($incident) || empty($feedback) || empty($actionAgreed)) {
+            throw new Exception('All fields are required.');
+        }
+
+        updatePmCoaching($coachingId, $coachingDate, $incident, $feedback, $actionAgreed);
+
+        $success = true;
+        $message = 'Coaching entry has been updated successfully.';
+        createSystemLog($stationId, $userId, 'Updated IPCRF coaching entry', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Delete Coaching Entry
+if (isset($_POST['delete-coaching'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $coachingId = (int) sanitize(decipher($_POST['coaching_id'] ?? null));
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf) {
+            throw new Exception('IPCRF not found.');
+        }
+
+        $isOwner = ($userId === (int) $ipcrf['employee_id']);
+        $isValidator = ($userId === (int) $ipcrf['validator_id']);
+
+        if (!$isOwner && !$isValidator) {
+            throw new Exception('Unauthorized.');
+        }
+
+        $coaching = pmCoachingEntry($coachingId);
+        if (!$coaching || (int) $coaching['ipcrf_id'] !== $ipcrfId) {
+            throw new Exception('Coaching entry not found.');
+        }
+
+        deletePmCoaching($coachingId);
+
+        $success = true;
+        $message = 'Coaching entry has been deleted.';
+        createSystemLog($stationId, $userId, 'Deleted IPCRF coaching entry', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Save Competency Ratings (Phase 4)
+if (isset($_POST['save-competencies'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $competencies = $_POST['competency'] ?? [];
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf) {
+            throw new Exception('IPCRF not found.');
+        }
+
+        $isOwner = ($userId === (int) $ipcrf['employee_id']);
+        $isValidator = ($userId === (int) $ipcrf['validator_id']);
+
+        if (!$isOwner && !$isValidator) {
+            throw new Exception('Unauthorized.');
+        }
+
+        if ($ipcrf['phase'] < 4) {
+            throw new Exception('Competency ratings can only be saved during Phase 4.');
+        }
+
+        beginTransaction();
+
+        foreach ($competencies as $category => $subcategories) {
+            foreach ($subcategories as $subKey => $items) {
+                foreach ($items as $num => $rating) {
+                    if (!empty($rating)) {
+                        $rating = (int) $rating;
+                        if ($rating < 1 || $rating > 5) {
+                            throw new Exception('Rating must be between 1 and 5.');
+                        }
+                        $competencyNumber = $subKey . '_' . $num;
+                        upsertPmCompetencyRating($ipcrfId, $category, $competencyNumber, $rating);
+                    }
+                }
+            }
+        }
+
+        commit();
+
+        $success = true;
+        $message = 'Competency ratings have been saved successfully.';
+        createSystemLog($stationId, $userId, 'Saved IPCRF competency ratings', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
+
+// Add Development Plan (Phase 4)
+if (isset($_POST['add-plan'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $strengths = sanitize($_POST['strengths'] ?? '');
+    $developmentNeeds = sanitize($_POST['development_needs'] ?? '');
+    $actionPlan = sanitize($_POST['action_plan'] ?? '');
+    $timeline = sanitize($_POST['timeline'] ?? '');
+    $resources = sanitize($_POST['resources'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf) {
+            throw new Exception('IPCRF not found.');
+        }
+
+        $isOwner = ($userId === (int) $ipcrf['employee_id']);
+        $isValidator = ($userId === (int) $ipcrf['validator_id']);
+
+        if (!$isOwner && !$isValidator) {
+            throw new Exception('Unauthorized.');
+        }
+
+        if ($ipcrf['phase'] < 4) {
+            throw new Exception('Development plans can only be added during Phase 4.');
+        }
+
+        if (empty($strengths) || empty($developmentNeeds) || empty($actionPlan) || empty($timeline) || empty($resources)) {
+            throw new Exception('All fields are required.');
+        }
+
+        createPmDevelopmentPlan($ipcrfId, $strengths, $developmentNeeds, $actionPlan, $timeline, $resources);
+
+        $success = true;
+        $message = 'Development plan has been added successfully.';
+        createSystemLog($stationId, $userId, 'Added IPCRF development plan', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Edit Development Plan (Phase 4)
+if (isset($_POST['edit-plan'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $planId = (int) sanitize(decipher($_POST['plan_id'] ?? null));
+    $strengths = sanitize($_POST['strengths'] ?? '');
+    $developmentNeeds = sanitize($_POST['development_needs'] ?? '');
+    $actionPlan = sanitize($_POST['action_plan'] ?? '');
+    $timeline = sanitize($_POST['timeline'] ?? '');
+    $resources = sanitize($_POST['resources'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf) {
+            throw new Exception('IPCRF not found.');
+        }
+
+        $isOwner = ($userId === (int) $ipcrf['employee_id']);
+        $isValidator = ($userId === (int) $ipcrf['validator_id']);
+
+        if (!$isOwner && !$isValidator) {
+            throw new Exception('Unauthorized.');
+        }
+
+        $plan = pmDevelopmentPlan($planId);
+        if (!$plan || (int) $plan['ipcrf_id'] !== $ipcrfId) {
+            throw new Exception('Development plan not found.');
+        }
+
+        if (empty($strengths) || empty($developmentNeeds) || empty($actionPlan) || empty($timeline) || empty($resources)) {
+            throw new Exception('All fields are required.');
+        }
+
+        updatePmDevelopmentPlan($planId, $strengths, $developmentNeeds, $actionPlan, $timeline, $resources);
+
+        $success = true;
+        $message = 'Development plan has been updated successfully.';
+        createSystemLog($stationId, $userId, 'Updated IPCRF development plan', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Delete Development Plan (Phase 4)
+if (isset($_POST['delete-plan'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $planId = (int) sanitize(decipher($_POST['plan_id'] ?? null));
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf) {
+            throw new Exception('IPCRF not found.');
+        }
+
+        $isOwner = ($userId === (int) $ipcrf['employee_id']);
+        $isValidator = ($userId === (int) $ipcrf['validator_id']);
+
+        if (!$isOwner && !$isValidator) {
+            throw new Exception('Unauthorized.');
+        }
+
+        $plan = pmDevelopmentPlan($planId);
+        if (!$plan || (int) $plan['ipcrf_id'] !== $ipcrfId) {
+            throw new Exception('Development plan not found.');
+        }
+
+        deletePmDevelopmentPlan($planId);
+
+        $success = true;
+        $message = 'Development plan has been deleted.';
+        createSystemLog($stationId, $userId, 'Deleted IPCRF development plan', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}

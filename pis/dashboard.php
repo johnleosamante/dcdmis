@@ -17,7 +17,7 @@ contentTitle('Dashboard');
         card('School Employees', customUri('pis', 'Employees'), 'fa-users', 'secondary');
     }
     
-    card('Performance Management', customUri('pis', 'Performance Management', $userId), 'fa-money-check', 'secondary');
+    card('IPCRF', customUri('pis', 'IPCRF', $userId), 'fa-money-check', 'secondary');
     card('Daily Time Record', customUri('pis', 'Daily Time Record', $userId), 'fa-money-check', 'dark');
     ?>
 </div>

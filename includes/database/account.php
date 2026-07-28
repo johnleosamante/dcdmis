@@ -67,6 +67,12 @@ function updateAccountPassword($employee_id, $password, $status = null)
     return update('credentials', $data, '`employee_id` = ?', [$employee_id]);
 }
 
+function credentialEmployeeId($employee_id)
+{
+    $cred = find("SELECT `employee_id` FROM `credentials` WHERE `employee_id` = ? LIMIT 1", [$employee_id]);
+    return $cred ? $cred['employee_id'] : null;
+}
+
 // user_permissions
 function userRole($employee_id, $access)
 {
