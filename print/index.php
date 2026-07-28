@@ -8,7 +8,7 @@ $footerLogos = root() . '/uploads/division/footer-logos.png';
 $country = 'Republic of the Philippines';
 $department = 'Department of Education';
 
-$page = $url = sanitize(decode($_GET['v']));
+$page = $url = isset($_GET['v']) ? sanitize(decode($_GET['v'])) : '';
 $file = $title = '';
 
 switch ($url) {

@@ -63,7 +63,7 @@ if ($training) {
             <?php if (!$notFound): ?>
                 <form action="" method="POST">
                     <?= csrf_field(); ?>
-                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?? null ?>">
+                    <input type="hidden" name="verifier" value="<?= e($_GET['id'] ?? '') ?>">
                     <?php if (isset($_GET['p'])): ?>
                         <input type="hidden" name="data-verifier" value="<?= e($_GET['p']) ?>">
                     <?php endif ?>

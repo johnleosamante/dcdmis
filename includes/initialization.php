@@ -31,7 +31,7 @@ ini_set('post_max_size', '25M');
 ini_set('memory_limit', '256M');
 ini_set('max_input_time', 300);
 ini_set('max_execution_time', 300);
-ini_set('display_errors', 0);
+ini_set('display_errors', !PRODUCTION_MODE);
 if (!empty(ERROR_LOG_FILE)) {
     ini_set('error_log', ERROR_LOG_FILE);
 }
@@ -105,6 +105,7 @@ if (empty($userId) && isset($_COOKIE["{$prefix}remember_token"])) {
                 $stationId = $stationIdVal;
                 $station = $stationName;
                 $code = $access;
+                session_regenerate_id(true);
                 $newToken = bin2hex(random_bytes(32));
                 $newTokenHash = hash('sha256', $newToken);
                 $newExpiry = date('Y-m-d H:i:s', time() + getSeconds(120));
@@ -149,7 +150,7 @@ if (function_exists('verify_csrf_token')) {
     verify_csrf_token();
 }
 
-$modules = ['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'monitoring_tools'];
+$modules = ['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'dtr', 'monitoring_tools', 'system_overview'];
 
 foreach ($modules as $area) {
     if (!isset($_SESSION["{$prefix}data_privacy_agreed_{$area}"])) {
@@ -164,3 +165,8 @@ if (isset($_POST['accept_data_privacy'])) {
     }
     redirect($_SERVER['REQUEST_URI']);
 }
+
+// Require database and backup logic to check and run daily backup
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/backup.php');
+checkAndRunDatabaseBackup();

@@ -71,7 +71,7 @@ function execute(string $sql, array $params = [])
         $stmt = $db->prepare($sql);
         return $stmt->execute($params);
     } catch (PDOException $e) {
-        error_log(sprintf("Database execution error: ", $e->getMessage()));
+        error_log(sprintf("Database execution error: %s", $e->getMessage()));
         return false;
     }
 }

@@ -396,4 +396,3 @@ $dompdf->stream(
     "attendance_report_" . date("Ymd", strtotime($date)) . ".pdf",
     ["Attachment" => false]
 );
-?>

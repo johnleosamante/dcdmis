@@ -103,6 +103,7 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Awards List':
         case 'Nominees List':
         case 'Winners Lookup':
+        case 'Ranking':
         case 'Awards and Recognitions':
             $file = 'race/page';
             break;
@@ -233,7 +234,7 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Talent Pool Diversity - Registration':
             $file = 'applicants/diversity/page';
             break;
-        case 'Performance Management':
+        case 'Performance Evaluation':
             $file = 'pm/page';
             break;
         case 'Create IPCRF':
@@ -250,6 +251,7 @@ if (!isset($url) || $url === 'dashboard') {
             break;
         case 'Daily Time Record':
             $file = 'dtr/page';
+            break;
         case 'System Overview':
             $file = 'overview/page';
             break;

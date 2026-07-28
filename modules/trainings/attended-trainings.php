@@ -85,12 +85,12 @@ if ($isHrmis) {
             <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="35%">Title of Learning &amp; Development Interventions /
+                        <th class="align-middle" width="35%">Title of Learning and Development Interventions /
                             Training Programs</th>
                         <th class="align-middle" width="5%">From</th>
                         <th class="align-middle" width="5%">To</th>
                         <th class="align-middle" width="5%">Number of Hours</th>
-                        <th class="align-middle" width="10%">Type of Learning &amp; Development</th>
+                        <th class="align-middle" width="10%">Type of Learning and Development</th>
                         <th class="align-middle" width="15%">Conducted / Sponsored by</th>
                         <th class="align-middle" width="20%">Venue</th>
                         <th class="align-middle" width="5%">Action</th>
@@ -128,12 +128,12 @@ if ($isHrmis) {
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="35%">Title of Learning &amp; Development Interventions /
+                        <th class="align-middle" width="35%">Title of Learning and Development Interventions /
                             Training Programs</th>
                         <th class="align-middle" width="5%">From</th>
                         <th class="align-middle" width="5%">To</th>
                         <th class="align-middle" width="5%">Number of Hours</th>
-                        <th class="align-middle" width="10%">Type of Learning &amp; Development</th>
+                        <th class="align-middle" width="10%">Type of Learning and Development</th>
                         <th class="align-middle" width="15%">Conducted / Sponsored by</th>
                         <th class="align-middle" width="20%">Venue</th>
                         <th class="align-middle" width="5%">Action</th>

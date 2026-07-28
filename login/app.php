@@ -46,7 +46,8 @@ function setUserSession($user_id, $prefix)
     $_SESSION["{$prefix}portal"] = $portal;
     $_SESSION["{$prefix}station"] = $stationName;
 
-    foreach (['hrmis', 'dts', 'pis', 'race', 'hrtdms', 'dmis', 'monitoring_tools'] as $area) {
+    global $modules;
+    foreach ($modules as $area) {
         $_SESSION["{$prefix}data_privacy_agreed_{$area}"] = false;
     }
 
@@ -55,7 +56,7 @@ function setUserSession($user_id, $prefix)
 
 if (isset($_POST['login'])) {
     $email = sanitize($_POST['email']);
-    $password = sanitize($_POST['password']);
+    $password = $_POST['password'];
     $showAlert = true;
 
     if (empty($email) || empty($password)) {
@@ -115,6 +116,7 @@ if (isset($_POST['login'])) {
         ]);
     }
 
+    session_regenerate_id(true);
     setUserSession($account['id'], $prefix);
 
     $_SESSION["{$prefix}email"] = $account['email_address'];

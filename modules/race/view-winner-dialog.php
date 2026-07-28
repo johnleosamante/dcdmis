@@ -1,6 +1,7 @@
 <?php
 // modules/race/view-winner-dialog.php
 require_once('access-check.php');
+require_once(root() . '/includes/database/recognition.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/string.php');
 
@@ -10,6 +11,10 @@ $winner = null;
 if ($winnerId) {
     $winner = nomineeDetails($winnerId);
 }
+
+$isAdmin = raceAccessLevel($userId) === 'admin';
+$isSchoolWinner = $winner && isset($winner['nominee_type']) && $winner['nominee_type'] === 'School';
+$canRevert = $isAdmin && $isSchoolWinner && $winner && strtolower($winner['status']) === 'awarded';
 ?>
 
 <div class="modal-dialog modal-lg">
@@ -93,6 +98,16 @@ if ($winnerId) {
         </div>
 
         <div class="modal-footer">
+            <?php if ($canRevert): ?>
+                <form action="" method="POST" class="mr-auto">
+                    <?= csrf_field(); ?>
+                    <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
+                    <button type="submit" name="revert-winner" class="btn btn-warning btn-sm"
+                            onclick="return confirm('Are you sure you want to revert this winner back to nominee?');">
+                        <i class="fas fa-undo fa-fw mr-1"></i> Revert Winner
+                    </button>
+                </form>
+            <?php endif; ?>
             <?php cancelModalButton() ?>
         </div>
     </div>

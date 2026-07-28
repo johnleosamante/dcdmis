@@ -15,7 +15,7 @@
             <table width="100%" class="table table-hover mb-0 text-center">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="45">Name &amp; Address of Organization</th>
+                        <th class="align-middle" width="45">Name and Address of Organization</th>
                         <th class="align-middle" width="5%">From</th>
                         <th class="align-middle" width="5%">To</th>
                         <th class="align-middle" width="10%">Number of Hours</th>
@@ -65,7 +65,7 @@
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="45">Name &amp; Address of Organization</th>
+                        <th class="align-middle" width="45">Name and Address of Organization</th>
                         <th class="align-middle" width="5%">From</th>
                         <th class="align-middle" width="5%">To</th>
                         <th class="align-middle" width="10%">Number of Hours</th>

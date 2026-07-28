@@ -137,7 +137,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <?php if ($isPis) : ?>
-                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
                 <li class="breadcrumb-item"><a
                         href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
                         Placement</a></li>
@@ -151,7 +151,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
 <div class="mb-4">
     <div class="d-flex flex-wrap align-items-center justify-content-start" style="gap: 6px;">
         <?php foreach ($demographicsConfig as $viewName => $info): ?>
-            <a href="<?= customUri('hrmis', $viewName) ?>"
+            <a href="<?= customUri($activeApp, $viewName) ?>"
                 class="btn btn-sm <?= $url === $viewName ? 'btn-primary' : 'btn-light border text-secondary' ?> d-flex align-items-center"
                 style="gap: 5px; font-weight: 500; border-radius: 20px; padding: 6px 14px; transition: all 0.2s;">
                 <i class="fas <?= $info['icon'] ?>"></i>
@@ -202,7 +202,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
             </div>
             <div class="card-body">
                 <div class="table-responsive font-weight-normal">
-                    <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
+                    <table class="table table-hover mb-0 text-center" id="data-table-previous" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th class="align-middle" width="5%">#</th>
@@ -451,7 +451,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                 </form>
 
                 <div class="table-responsive font-weight-normal">
-                    <table class="table table-hover mb-0 text-center" id="data-table-next" width="100%"
+                    <table class="table table-hover mb-0 text-center" id="data-table" width="100%"
                         cellspacing="0">
                         <thead>
                             <tr>

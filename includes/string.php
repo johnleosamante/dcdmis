@@ -78,7 +78,7 @@ function randomPassword(int $length): string
     $charLength = strlen($characters);
     $randomString = '';
     for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charLength - 1)];
+        $randomString .= $characters[random_int(0, $charLength - 1)];
     }
     return $randomString;
 }
@@ -96,7 +96,7 @@ function generateStrongRandomPassword(): string
 {
     $strongPassword = false;
     $randomPassword = '';
-    $length = rand(10, 12);
+    $length = random_int(10, 12);
     while (!$strongPassword) {
         $randomPassword = randomPassword($length);
         $strongPassword = checkPasswordStrength($randomPassword);

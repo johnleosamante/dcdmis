@@ -104,7 +104,7 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <?php if ($isPis): ?>
-                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
                 <li class="breadcrumb-item"><a
                         href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
                         Placement</a></li>

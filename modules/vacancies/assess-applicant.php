@@ -28,7 +28,10 @@ if ($applicationId) {
         $positionSG = $positionData ? (int) $positionData['salary_grade'] : 0;
         $positionCategory = $positionData ? $positionData['category'] : 'N/A';
 
-        if ($positionSG >= 1 && $positionSG <= 9) {
+        $isPrincipal = stripos($positionTitle, 'Principal') !== false;
+        if ($isPrincipal && $positionSG >= 17 && $positionSG <= 22) {
+            $sgLabel = 'SG 17-22 (School Administration Positions)';
+        } elseif ($positionSG >= 1 && $positionSG <= 9) {
             $sgLabel = stripos($positionCategory, 'general service') !== false
                 ? 'SG 1-9 (General Services)'
                 : 'SG 1-9 (Non-General Services)';
@@ -371,7 +374,7 @@ messageAlert($showAlert, $message, $success);
                         </div>
 
                         <div class="col-xl-6 col-md-12 col-sm-12">
-                            <h6 class="font-weight-bold text-gray-800 mb-3">Application &amp; L&amp;D</h6>
+                            <h6 class="font-weight-bold text-gray-800 mb-3">Application of L and D</h6>
                             <div class="form-group">
                                 <label for="application_of_education_score"
                                     class="font-weight-bold text-dark mb-0 d-flex justify-content-between">
@@ -382,12 +385,13 @@ messageAlert($showAlert, $message, $success);
                                 <input type="number" step="0.001" min="0" max="<?= $weights['application_edu'] ?>"
                                     data-max="<?= $weights['application_edu'] ?>" class="form-control score-input"
                                     id="application_of_education_score" name="application_of_education_score"
-                                    value="<?= e(number_format($score['application_of_education_score'] ?? 0, 3, '.', '')) ?>" required>
+                                    value="<?= e(number_format($score['application_of_education_score'] ?? 0, 3, '.', '')) ?>"
+                                    required>
                             </div>
                             <div class="form-group">
                                 <label for="application_of_ld_score"
                                     class="font-weight-bold text-dark mb-0 d-flex justify-content-between">
-                                    <span>Application of L&amp;D</span>
+                                    <span>Application of L and D</span>
                                     <span class="text-muted font-weight-normal small">Max:
                                         <strong><?= $weights['application_ld'] ?></strong></span>
                                 </label>
@@ -406,7 +410,7 @@ messageAlert($showAlert, $message, $success);
                                 <strong><?= $weights['potential'] ?></strong>.</small>
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <label for="potential_written_exam_raw" class="mb-0 small">Written Exam</label>
+                                    <label for="potential_written_exam_raw" class="mb-0 small">Written Test</label>
                                     <input type="number" step="0.001" min="0" max="<?= $weights['potential'] ?>"
                                         data-max="<?= $weights['potential'] ?>"
                                         class="form-control score-input potential-raw" id="potential_written_exam_raw"

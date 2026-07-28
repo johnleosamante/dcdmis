@@ -35,7 +35,7 @@ if (!isset($_GET['v']) || empty($_GET['v'])) {
 	<tbody>
 		<?php
 		$i = 1;
-		$rows = query("SELECT * FROM (SELECT p.`agency_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, p.`sex`, p.`birth_month`, p.`birth_day`, p.`birth_year`, YEAR(CURRENT_DATE) - CONVERT(p.`birth_year`, DECIMAL) AS year_age, p.`gsis_crn`, p.`gsis_bp`, p.`pagibig`, p.`philhealth`, p.`sss`, p.`tin`, p.`mobile_number`, p.`email_address`, pos.`official_title`, s.`name` AS school, p.`residence_street`, p.`residence_subdivision`, p.`residence_barangay`, p.`residence_city`, p.`residence_province` FROM `persons` AS p INNER JOIN `station_assignments` AS sa ON p.`id`=sa.`person_id` INNER JOIN `schools` AS s ON sa.`station_id`=s.`id` INNER JOIN `positions` AS pos ON sa.`position_id`=pos.`id` WHERE p.`status`='Active') AS retirables WHERE year_age >= 60 ORDER BY school, last_name;");
+		$rows = query("SELECT * FROM (SELECT p.`agency_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, p.`sex`, p.`birthdate`, YEAR(CURRENT_DATE) - YEAR(p.`birthdate`) AS year_age, p.`gsis_crn`, p.`gsis_bp`, p.`pagibig`, p.`philhealth`, p.`sss`, p.`tin`, p.`mobile_number`, p.`email_address`, pos.`official_title`, s.`name` AS school, p.`residence_street`, p.`residence_subdivision`, p.`residence_barangay`, p.`residence_city`, p.`residence_province` FROM `employees` AS p INNER JOIN `station_assignments` AS sa ON p.`id`=sa.`employee_id` INNER JOIN `schools` AS s ON sa.`station_id`=s.`id` INNER JOIN `positions` AS pos ON sa.`position_id`=pos.`id` WHERE p.`status`='Active') AS retirables WHERE year_age >= 60 ORDER BY school, last_name;");
 		foreach ($rows as $row): ?>
 			<tr>
 				<td><?= $i++ ?></td>
@@ -48,7 +48,6 @@ if (!isset($_GET['v']) || empty($_GET['v'])) {
 				<td><?= strtoupper($row['sex'])[0] ?></td>
 				<td><?= e($row['birthdate']) ?></td>
 				<td><?= getDateDifference($row['birthdate']) ?></td>
-				</td>
 				<td><?= strtoupper($row['official_title']) ?></td>
 				<td><?= e($row['gsis_crn']) ?></td>
 				<td><?= e($row['gsis_bp']) ?></td>

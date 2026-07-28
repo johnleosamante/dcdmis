@@ -24,7 +24,7 @@ require_once(root() . '/includes/layout/components.php');
     <link rel="stylesheet" href="<?= uri() ?>/assets/vendor/datatables-responsive/css/responsive.bootstrap4.min.css">
     <script>
         <?php $uri = (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST']; ?>
-        var SITE_URL = "<?= $uri ?>";
+        var SITE_URL = <?= json_encode($uri) ?>;
     </script>
 </head>
 
@@ -63,10 +63,9 @@ require_once(root() . '/includes/layout/components.php');
     <?php
     scrollToTop();
     modal();
-    ?>
 
-    <?php
     $currentArea = ($url === 'Monitoring Tools') ? 'monitoring_tools' : $activeApp;
+    $currentArea = ($url === 'System Overview') ? 'system_overview' : $currentArea;
     $needsAgreement = empty($_SESSION["{$prefix}data_privacy_agreed_{$currentArea}"]);
     ?>
 

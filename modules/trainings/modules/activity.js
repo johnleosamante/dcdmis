@@ -21,14 +21,13 @@ $(function () {
             timeOut: 3000
         };
     }
-    
+
     $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
 
         $($.fn.dataTable.tables(true))
-                .DataTable()
-                .columns.adjust()
-                .responsive.recalc();
-
+            .DataTable()
+            .columns.adjust()
+            .responsive.recalc();
     });
 
     //TAB
@@ -147,7 +146,7 @@ $(function () {
 
     var urlView = $('#url_view').val();
 
-    if (urlView === "Add Attendance") {
+    if (urlView === "Attendance") {
         var csrfToken = $('#csrf_token').val();
         $('#qrInput').autocomplete({
             source: function (request, response) {
@@ -307,9 +306,9 @@ function showAttendanceModal(type, title, name, qr, message = "") {
     }
 
     $('#attendanceModal')
-            .removeClass('modal-success modal-error modal-warning')
-            .addClass('modal-' + type)
-            .modal('show');
+        .removeClass('modal-success modal-error modal-warning')
+        .addClass('modal-' + type)
+        .modal('show');
 }
 
 $('#addAttendanceBtn').click(function () {
@@ -344,68 +343,50 @@ function sendBulkEmail() {
     $(".btnSendEmail").prop("disabled", true);
 
     $.post(
-            "queue_emails.php",
-            {
-                training_id: training_id
-            },
-            function (res) {
+        "queue_emails.php",
+        {
+            training_id: training_id
+        },
+        function (res) {
+            try {
+                let data = JSON.parse(res);
+                if (data.status === "success") {
+                    // Open progress window
+                    window.open(
+                        "progressemail.php?training_id=" + training_id,
+                        "_blank"
+                    );
 
-                try {
-
-                    let data = JSON.parse(res);
-
-                    if (data.status === "success") {
-
-                        // Open progress window
-                        window.open(
-                                "progressemail.php?training_id=" + training_id,
-                                "_blank"
-                                );
-
-                        // Start email worker (for XAMPP development)
-                        startWorker(training_id);
-
-                    } else {
-
-                        alert(data.message);
-
-                        // Re-enable button if queueing failed
-                        $(".btnSendEmail").prop("disabled", false);
-                    }
-
-                } catch (e) {
-
-                    console.log("Invalid JSON Response:");
-                    console.log(res);
-
-                    alert("Server returned an invalid response.");
-
-                    // Re-enable button on error
+                    // Start email worker (for XAMPP development)
+                    startWorker(training_id);
+                } else {
+                    alert(data.message);
+                    // Re-enable button if queueing failed
                     $(".btnSendEmail").prop("disabled", false);
                 }
+            } catch (e) {
+                console.log("Invalid JSON Response:");
+                console.log(res);
+                alert("Server returned an invalid response.");
+                // Re-enable button on error
+                $(".btnSendEmail").prop("disabled", false);
             }
+        }
     ).fail(function () {
-
         alert("Unable to connect to server.");
-
         // Re-enable button if AJAX fails
         $(".btnSendEmail").prop("disabled", false);
     });
-
 }
 
 
 function sendEmailSubmit(btn) {
-
     btn = $(btn);
-
     let attendanceId = btn.data("attendance-id");
     let employeeID = btn.data("employee-id");
     let email = btn.data("email");
     let trainingID = btn.data("training-id");
-
     btn.prop("disabled", true).text("SENDING...");
-
     $.ajax({
         url: SITE_URL + '/modules/trainings/modules/sendEmail.php',
         type: "POST",
@@ -422,12 +403,12 @@ function sendEmailSubmit(btn) {
             if (response.status === "success") {
                 btn.text("DONE");
                 btn.removeClass("btn-success")
-                        .addClass("btn-secondary");
+                    .addClass("btn-secondary");
                 btn.prop("disabled", true);
                 toastr.success("Email Successfully Sent.");
             } else {
                 btn.prop("disabled", false)
-                        .text("SEND");
+                    .text("SEND");
                 alert(response.message);
             }
         },
@@ -438,4 +419,3 @@ function sendEmailSubmit(btn) {
         }
     });
 }
- 

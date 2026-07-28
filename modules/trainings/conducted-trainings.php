@@ -23,7 +23,7 @@ messageAlert($showAlert, $message, $success);
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
             <?php if ($isPis): ?>
-                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'PRIME-HRM') ?>">PRIME-HRM</a></li>
+                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
                 <li class="breadcrumb-item"><a href="<?= customUri('pis', 'Learning and Development') ?>">Learning and
                         Development</a></li>
             <?php endif; ?>
@@ -77,7 +77,6 @@ messageAlert($showAlert, $message, $success);
                                     <?php dropdownEllipsis() ?>
                                     <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
                                         <?php linkDropdownItem(customUri('hrtdms', 'Training Details', $training['id']), 'View', 'fa-eye', 'View Training');
-                                        linkDropdownItem(customUri('hrtdms', 'Attendance', $training['id']), 'Attendance', 'fa-calendar-check', 'Attendance');
                                         linkDropdownItem(customUri('hrtdms', 'Add Training Participants', $training['id']), 'Add Participants', 'fa-user-plus', 'Add Participants');
                                         modalDropdownItem(uri() . '/modules/trainings/save-training-dialog.php?id=' . cipher($training['id']), 'Edit', 'fa-edit', 'Edit Training') ?>
                                     </div>

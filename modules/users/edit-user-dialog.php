@@ -140,7 +140,7 @@ if ($employee) {
 
             <div class="modal-footer">
                 <?php if ($hasUser): ?>
-                    <input type="hidden" name="verifier" value="<?= $_GET['id'] ?? null ?>">
+                    <input type="hidden" name="verifier" value="<?= e($_GET['id'] ?? '') ?>">
                     <input type="hidden" name="data-verifier" value="<?= cipher($depedEmail) ?>">
                     <button class="btn btn-primary" name="edit-user" type="submit">Continue</button>
                 <?php endif ?>

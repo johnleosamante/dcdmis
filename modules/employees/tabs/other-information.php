@@ -31,6 +31,45 @@ if ($information) {
     $isSoloParent = $information['is_solo_parent'];
     $soloParentSpecify = $information['solo_parent_id'];
 }
+
+$specify_other_indigenous_value = '';
+$is_indigenous_others = false;
+
+if (isset($employee['specify_other_ethnic_group']) && !empty($employee['specify_other_ethnic_group']) && $employee['specify_other_ethnic_group'] !== 'Not Applicable') {
+    $isIndigenous = '1';
+    $is_indigenous_others = true;
+    $specify_other_indigenous_value = $employee['specify_other_ethnic_group'];
+    $isIndigenousSpecify = 'Others';
+} elseif (isset($employee['ethnic_group_id']) && !empty($employee['ethnic_group_id'])) {
+    $ethnic_list_all = ethnic_groups();
+    foreach ($ethnic_list_all as $eg_item) {
+        if ((int)$eg_item['id'] === (int)$employee['ethnic_group_id']) {
+            if (!empty($eg_item['is_indigenous'])) {
+                $isIndigenous = '1';
+                $isIndigenousSpecify = $eg_item['name'];
+            } else {
+                $isIndigenous = '0';
+                $isIndigenousSpecify = '';
+            }
+            break;
+        }
+    }
+} elseif (isset($employee['specify_other_ethnic_group']) && $employee['specify_other_ethnic_group'] === 'Not Applicable') {
+    $isIndigenous = '0';
+    $isIndigenousSpecify = '';
+}
+
+if ($isIndigenous === '1' || $isIndigenous === 1) {
+    $indigenous_list_check = indigenous_groups();
+    $known_indigenous_names = array_column($indigenous_list_check, 'name');
+    if (!empty($isIndigenousSpecify) && !in_array($isIndigenousSpecify, $known_indigenous_names, true)) {
+        $is_indigenous_others = true;
+        if (empty($specify_other_indigenous_value) && $isIndigenousSpecify !== 'Others') {
+            $specify_other_indigenous_value = $isIndigenousSpecify;
+        }
+        $isIndigenousSpecify = 'Others';
+    }
+}
 ?>
 
 <div class="tab-pane fade<?= setActiveNavigation(isset($activeTab) && $activeTab === 'other-information', 'show active') ?>"
@@ -75,7 +114,7 @@ if ($information) {
                 </li>
             </ol>
 
-            <div class="form-group mb-0 pl-3">
+            <div class="form-group mb-0 pl-3" id="related-details-group">
                 <label for="related-details" class="m-0">If YES, give details:</label>
                 <input id="related-details" name="related-details" type="text" value="<?= e($relatedDetails) ?>"
                     class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
@@ -96,7 +135,7 @@ if ($information) {
                         echo !$editMode ? ' disabled' : '' ?>>
                         <label for="was-guilty-no" class="px-1">No</label>
 
-                        <div class="form-group">
+                        <div class="form-group" id="guilty-details-group">
                             <label for="guilty-details" class="m-0">If YES, give details:</label>
                             <input id="guilty-details" name="guilty-details" type="text" value="<?= e($guiltyDetails) ?>"
                                 class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
@@ -116,19 +155,21 @@ if ($information) {
                             echo !$editMode ? ' disabled' : '' ?>>
                         <label for="was-charged-no" class="px-1">No</label>
 
-                        <div class="mb-1">If YES, give details:</div>
+                        <div id="charged-details-group">
+                            <div class="mb-1">If YES, give details:</div>
 
-                        <div class="form-group mb-2">
-                            <label for="date-filed" class="m-0">Date Filed:</label>
-                            <input id="date-filed" name="date-filed" type="date"
-                                value="<?= $wasCharged ? $dateFiled : date('Y-m-d') ?>" class="form-control"
-                                title="Required field if YES" <?= !$editMode ? ' readonly' : '' ?>>
-                        </div>
+                            <div class="form-group mb-2">
+                                <label for="date-filed" class="m-0">Date Filed:</label>
+                                <input id="date-filed" name="date-filed" type="date"
+                                    value="<?= $wasCharged ? $dateFiled : date('Y-m-d') ?>" class="form-control"
+                                    title="Required field if YES" <?= !$editMode ? ' readonly' : '' ?>>
+                            </div>
 
-                        <div class="form-group mb-0">
-                            <label for="case-status" class="m-0">Status of Case/s:</label>
-                            <input id="case-status" name="case-status" type="text" value="<?= e($caseStatus) ?>"
-                                class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
+                            <div class="form-group mb-0">
+                                <label for="case-status" class="m-0">Status of Case/s:</label>
+                                <input id="case-status" name="case-status" type="text" value="<?= e($caseStatus) ?>"
+                                    class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -151,7 +192,7 @@ if ($information) {
                 echo !$editMode ? ' disabled' : '' ?>>
                 <label for="was-convicted-no" class="px-1">No</label>
 
-                <div class="form-group mb-0">
+                <div class="form-group mb-0" id="convicted-details-group">
                     <label for="convicted-details" class="mb-0">If YES, give details:</label>
                     <input id="convicted-details" name="convicted-details" type="text" value="<?= e($convictedDetails) ?>"
                         class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
@@ -176,7 +217,7 @@ if ($information) {
                 echo !$editMode ? ' disabled' : '' ?>>
                 <label for="was-separated-no" class="px-1">No</label>
 
-                <div class="form-group mb-0">
+                <div class="form-group mb-0" id="separated-details-group">
                     <label for="separated-details" class="mb-0">If YES, give details:</label>
                     <input id="separated-details" name="separated-details" type="text" value="<?= e($separatedDetails) ?>"
                         class="form-control" title="Leave blank if NO" <?= !$editMode ? ' readonly' : '' ?>>
@@ -200,7 +241,7 @@ if ($information) {
                             echo !$editMode ? ' disabled' : '' ?>>
                         <label for="was-candidate-no" class="px-1">No</label>
 
-                        <div class="form-group">
+                        <div class="form-group" id="candidate-details-group">
                             <label for="candidate-details" class="m-0">If YES, give details:</label>
                             <input id="candidate-details" name="candidate-details" type="text"
                                 value="<?= e($candidateDetails) ?>" class="form-control" title="Leave blank if NO"
@@ -220,7 +261,7 @@ if ($information) {
                         echo !$editMode ? ' disabled' : '' ?>>
                         <label for="resigned-no" class="px-1">No</label>
 
-                        <div class="form-group mb-0">
+                        <div class="form-group mb-0" id="resigned-details-group">
                             <label for="resigned-details" class="m-0">If YES, give details:</label>
                             <input id="resigned-details" name="resigned-details" type="text"
                                 value="<?= e($resignedDetails) ?>" class="form-control" title="Leave blank if NO"
@@ -245,7 +286,7 @@ if ($information) {
                 echo !$editMode ? ' disabled' : '' ?>>
                 <label for="immigrant-no" class="px-1">No</label>
 
-                <div class="form-group mb-0">
+                <div class="form-group mb-0" id="immigrant-details-group">
                     <label for="immigrant-country" class="m-0">If YES, give details (country):</label>
                     <?php if (!$editMode): ?>
                         <?php
@@ -256,11 +297,9 @@ if ($information) {
                         }
                         ?>
                         <input id="immigrant-country" name="immigrant-country" type="text"
-                            value="<?= e($immigrantCountryName) ?>" class="form-control" title="Leave N/A if NO" readonly>
+                            value="<?= e($immigrantCountryName) ?>" class="form-control" readonly>
                     <?php else: ?>
-                        <select class="form-control" id="immigrant-country" name="immigrant-country"
-                            title="Leave N/A if NO">
-                            <option value="">N/A</option>
+                        <select class="form-control" id="immigrant-country" name="immigrant-country">
                             <?php $countries = countries();
                             foreach ($countries as $country): ?>
                                 <option value="<?= e($country['id']) ?>" <?= setOptionSelected($country['id'], $immigrantCountry) ?>><?= e($country['name']) ?></option>
@@ -282,25 +321,50 @@ if ($information) {
                     <div class="my-1">
                         <input id="is-indigenous-yes" name="is-indigenous" type="radio" value="1"
                             <?= setActiveItem($isIndigenous, '1', 'checked');
-                            echo !$editMode ? ' disabled' : '' ?>>
+                            echo !$editMode ? ' disabled' : '' ?> onchange="updateOtherInfoToggles(); syncIndigenousToEthnic();">
                         <label for="is-indigenous-yes" class="px-1 mr-3">Yes</label>
 
                         <input id="is-indigenous-no" name="is-indigenous" type="radio" value="0"
                             <?= setActiveItem($isIndigenous, '0', 'checked');
-                            echo !$editMode ? ' disabled' : '' ?>>
+                            echo !$editMode ? ' disabled' : '' ?> onchange="updateOtherInfoToggles(); syncIndigenousToEthnic();">
                         <label for="is-indigenous-no" class="px-1">No</label>
 
-                        <div class="form-group mb-0">
+                        <div class="form-group mb-0" id="indigenous-details-group">
                             <label for="indigenous-specify" class="m-0">If YES, please specify:</label>
                             <?php if (!$editMode): ?>
                                 <input id="indigenous-specify" type="text" value="<?= e($isIndigenousSpecify) ?>" class="form-control" readonly>
+                                <?php if ($is_indigenous_others): ?>
+                                    <div class="form-group mt-2">
+                                        <label for="indigenous-group-specify" class="mb-0 small text-secondary">Specify Indigenous Group</label>
+                                        <input id="indigenous-group-specify" type="text" class="form-control" value="<?= e($specify_other_indigenous_value) ?>" readonly>
+                                    </div>
+                                <?php endif ?>
                             <?php else: ?>
-                                <select id="indigenous-specify" name="indigenous-specify" class="form-control">
+                                <?php
+                                $indigenous_list = indigenous_groups();
+                                $indigenous_by_category = [];
+                                foreach ($indigenous_list as $ig) {
+                                    $cat_name = !empty($ig['category_name']) ? $ig['category_name'] : 'Others';
+                                    $indigenous_by_category[$cat_name][] = $ig;
+                                }
+                                ?>
+                                <select id="indigenous-specify" name="indigenous-specify" class="form-control" onchange="toggleIndigenousGroupSpecify(this); syncIndigenousToEthnic();">
                                     <option value="">-- Select --</option>
-                                    <?php foreach (indigenous_groups() as $ig): ?>
-                                        <option value="<?= e($ig['name']) ?>" <?= setOptionSelected($ig['name'], $isIndigenousSpecify) ?>><?= e($ig['name']) ?></option>
+                                    <?php foreach ($indigenous_by_category as $category_name => $groups): ?>
+                                        <?php if (!empty($groups)): ?>
+                                            <optgroup label="<?= e($category_name) ?>">
+                                                <?php foreach ($groups as $ig): ?>
+                                                    <option value="<?= e($ig['name']) ?>" <?= setOptionSelected($ig['name'], $isIndigenousSpecify) ?>><?= e($ig['name']) ?></option>
+                                                <?php endforeach ?>
+                                            </optgroup>
+                                        <?php endif ?>
                                     <?php endforeach ?>
+                                    <option value="Others" <?= setOptionSelected('Others', $isIndigenousSpecify) ?>>Others</option>
                                 </select>
+                                <div id="indigenous-group-specify-group" class="form-group mt-2" style="display: <?= $is_indigenous_others ? 'block' : 'none' ?>;">
+                                    <label for="indigenous-group-specify" class="mb-0 small text-secondary">Specify Indigenous Group</label>
+                                    <input id="indigenous-group-specify" name="indigenous_group_specify" type="text" class="form-control" value="<?= e($specify_other_indigenous_value) ?>" <?= $is_indigenous_others ? 'required' : '' ?> oninput="syncIndigenousSpecifyToEthnic(this)">
+                                </div>
                             <?php endif ?>
                         </div>
                     </div>
@@ -317,7 +381,7 @@ if ($information) {
                             echo !$editMode ? ' disabled' : '' ?>>
                         <label for="is-differently-abled-no" class="px-1">No</label>
 
-                        <div class="form-group mb-0">
+                        <div class="form-group mb-0" id="differently-abled-details-group">
                             <label for="differently-abled-specify" class="m-0">If YES, please specify ID No:</label>
                             <input id="differently-abled-specify" name="differently-abled-specify" type="text"
                                 value="<?= e($isDifferentlyAbledSpecify) ?>" title="Leave blank if NO" class="form-control"
@@ -337,7 +401,7 @@ if ($information) {
                             echo !$editMode ? ' disabled' : '' ?>>
                         <label for="is-solo-parent-no" class="px-1">No</label>
 
-                        <div class="form-group mb-0">
+                        <div class="form-group mb-0" id="solo-parent-details-group">
                             <label for="solo-parent-specify" class="m-0">If YES, please specify ID No:</label>
                             <input id="solo-parent-specify" name="solo-parent-specify" type="text"
                                 value="<?= e($soloParentSpecify) ?>" class="form-control" title="Leave blank if NO"
@@ -357,3 +421,168 @@ if ($information) {
         </form>
     <?php endif ?>
 </div>
+
+<script>
+    (function () {
+        function toggleGroup(containerId, show) {
+            const group = document.getElementById(containerId);
+            if (group) {
+                group.style.display = show ? 'block' : 'none';
+            }
+        }
+
+        function getRadioValue(name) {
+            const checked = document.querySelector(`input[name="${name}"]:checked`);
+            return checked ? checked.value : '0';
+        }
+
+        function updateOtherInfoToggles() {
+            // 1. Consanguinity / Affinity details (shows if 3rd degree OR 4th degree is Yes)
+            const thirdDegree = getRadioValue('has-third-degree') === '1';
+            const fourthDegree = getRadioValue('has-fourth-degree') === '1';
+            toggleGroup('related-details-group', thirdDegree || fourthDegree);
+
+            // 2. Guilty of administrative offense
+            toggleGroup('guilty-details-group', getRadioValue('was-guilty') === '1');
+
+            // 3. Criminally charged
+            toggleGroup('charged-details-group', getRadioValue('was-charged') === '1');
+
+            // 4. Convicted of any crime
+            toggleGroup('convicted-details-group', getRadioValue('was-convicted') === '1');
+
+            // 5. Separated from service
+            toggleGroup('separated-details-group', getRadioValue('was-separated') === '1');
+
+            // 6. Candidate in election
+            toggleGroup('candidate-details-group', getRadioValue('was-candidate') === '1');
+
+            // 7. Resigned to campaign
+            toggleGroup('resigned-details-group', getRadioValue('resigned') === '1');
+
+            // 8. Immigrant status
+            toggleGroup('immigrant-details-group', getRadioValue('immigrant') === '1');
+
+            // 9. Indigenous group
+            toggleGroup('indigenous-details-group', getRadioValue('is-indigenous') === '1');
+
+            // 10. Differently abled
+            toggleGroup('differently-abled-details-group', getRadioValue('is-differently-abled') === '1');
+
+            // 11. Solo parent
+            toggleGroup('solo-parent-details-group', getRadioValue('is-solo-parent') === '1');
+        }
+
+        const radioNames = [
+            'has-third-degree',
+            'has-fourth-degree',
+            'was-guilty',
+            'was-charged',
+            'was-convicted',
+            'was-separated',
+            'was-candidate',
+            'resigned',
+            'immigrant',
+            'is-indigenous',
+            'is-differently-abled',
+            'is-solo-parent'
+        ];
+
+        radioNames.forEach(function (name) {
+            const radios = document.querySelectorAll(`input[name="${name}"]`);
+            radios.forEach(function (radio) {
+                radio.addEventListener('change', updateOtherInfoToggles);
+            });
+        });
+
+        // Initialize toggle states on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', updateOtherInfoToggles);
+        } else {
+            updateOtherInfoToggles();
+        }
+    })();
+
+    window.toggleIndigenousGroupSpecify = function (selectElement) {
+        const group = document.getElementById('indigenous-group-specify-group');
+        const specifyInput = document.getElementById('indigenous-group-specify');
+        if (selectElement && selectElement.value === 'Others') {
+            if (group) group.style.display = 'block';
+            if (specifyInput) specifyInput.setAttribute('required', 'required');
+        } else {
+            if (group) group.style.display = 'none';
+            if (specifyInput) {
+                specifyInput.removeAttribute('required');
+                specifyInput.value = '';
+            }
+        }
+    };
+
+    window.syncIndigenousToEthnic = function () {
+        const yesRadio = document.getElementById('is-indigenous-yes');
+        const isIndigenous = yesRadio && yesRadio.checked;
+        const indigenousSelect = document.getElementById('indigenous-specify');
+        const indigenousVal = indigenousSelect ? indigenousSelect.value : '';
+        const ethnicSelect = document.getElementById('ethnic-group');
+        const ethnicSpecifyGroup = document.getElementById('ethnic-group-specify-group');
+        const ethnicSpecifyInput = document.getElementById('ethnic-group-specify');
+        const indigenousSpecifyGroup = document.getElementById('indigenous-group-specify-group');
+        const indigenousSpecifyInput = document.getElementById('indigenous-group-specify');
+
+        if (!ethnicSelect) return;
+
+        if (!isIndigenous) {
+            ethnicSelect.value = 'Not Applicable';
+            if (ethnicSpecifyGroup) ethnicSpecifyGroup.style.display = 'none';
+            if (ethnicSpecifyInput) {
+                ethnicSpecifyInput.removeAttribute('required');
+                ethnicSpecifyInput.value = '';
+            }
+            if (indigenousSpecifyGroup) indigenousSpecifyGroup.style.display = 'none';
+            if (indigenousSpecifyInput) {
+                indigenousSpecifyInput.removeAttribute('required');
+                indigenousSpecifyInput.value = '';
+            }
+        } else if (indigenousVal === 'Others') {
+            ethnicSelect.value = 'Others';
+            if (ethnicSpecifyGroup) ethnicSpecifyGroup.style.display = 'block';
+            if (ethnicSpecifyInput) {
+                ethnicSpecifyInput.setAttribute('required', 'required');
+                if (indigenousSpecifyInput) {
+                    ethnicSpecifyInput.value = indigenousSpecifyInput.value;
+                }
+            }
+            if (indigenousSpecifyGroup) indigenousSpecifyGroup.style.display = 'block';
+            if (indigenousSpecifyInput) indigenousSpecifyInput.setAttribute('required', 'required');
+        } else if (indigenousVal !== '') {
+            let matchedOptionValue = null;
+            for (let i = 0; i < ethnicSelect.options.length; i++) {
+                const opt = ethnicSelect.options[i];
+                if (opt.getAttribute('data-name') === indigenousVal) {
+                    matchedOptionValue = opt.value;
+                    break;
+                }
+            }
+            if (matchedOptionValue !== null) {
+                ethnicSelect.value = matchedOptionValue;
+                if (ethnicSpecifyGroup) ethnicSpecifyGroup.style.display = 'none';
+                if (ethnicSpecifyInput) {
+                    ethnicSpecifyInput.removeAttribute('required');
+                    ethnicSpecifyInput.value = '';
+                }
+                if (indigenousSpecifyGroup) indigenousSpecifyGroup.style.display = 'none';
+                if (indigenousSpecifyInput) {
+                    indigenousSpecifyInput.removeAttribute('required');
+                    indigenousSpecifyInput.value = '';
+                }
+            }
+        }
+    };
+
+    window.syncIndigenousSpecifyToEthnic = function (inputElement) {
+        const ethnicSpecifyInput = document.getElementById('ethnic-group-specify');
+        if (ethnicSpecifyInput && inputElement) {
+            ethnicSpecifyInput.value = inputElement.value;
+        }
+    };
+</script>

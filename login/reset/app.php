@@ -26,6 +26,13 @@ if (isset($_POST['reset-password'])) {
         return;
     }
 
+    $clientIdentifier = clientIp();
+    if (!checkRateLimit($clientIdentifier, 3, 600)) {
+        $message = 'Too many reset attempts. Please try again later.';
+        $success = true;
+        return;
+    }
+
     $message = "If an account is associated with this email, you will receive instructions shortly.";
     $account = account($userEmail);
 

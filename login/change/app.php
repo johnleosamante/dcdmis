@@ -12,8 +12,8 @@ $password = $passwordConfirm = null;
 if (isset($_POST['change-password'])) {
     $showAlert = true;
     $success = false;
-    $password = sanitize($_POST['password']);
-    $passwordConfirm = sanitize($_POST['password-confirm']);
+    $password = $_POST['password'];
+    $passwordConfirm = $_POST['password-confirm'];
 
     if (empty($password) || empty($passwordConfirm)) {
         $message = 'All fields in asterisk (*) are required.';

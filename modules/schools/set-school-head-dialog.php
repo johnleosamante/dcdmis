@@ -46,7 +46,7 @@ if ($employee) {
             </div>
 
             <div class="modal-footer">
-                <input type="hidden" name="verifier" value="<?= $_GET['id'] ?? null ?>">
+                <input type="hidden" name="verifier" value="<?= e($_GET['id'] ?? '') ?>">
                 <input type="hidden" name="data-verifier" value="<?= $_GET['e'] ?? null ?>">
                 <button class="btn btn-primary" name="set-school-head" type="submit">Continue</button>
                 <?php cancelModalButton() ?>

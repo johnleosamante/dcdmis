@@ -104,8 +104,8 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false" title="<?= strtoupper($displayName) ?>">
                 <span class="mr-2 d-none d-md-inline">
-                    <div class="text-gray-600 small"><?= strtoupper($displayName) ?></div>
-                    <div class="text-xs text-gray-500"><?= strtoupper($position['official_title']) ?></div>
+                    <div class="text-gray-600 small"><?= e(strtoupper($displayName)) ?></div>
+                    <div class="text-xs text-gray-500"><?= e(strtoupper($position['official_title'] ?? '')) ?></div>
                 </span>
 
                 <span class="d-flex justify-content-center align-middle img-profile rounded-circle overflow-hidden">
@@ -170,7 +170,7 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
         <?php endif;
     endif ?>
 
-    <h2 class="h1 m-0 mt-4"><?= strtoupper($appTitle) ?></h2>
+    <h2 class="h1 m-0 mt-4"><?= e(strtoupper($appTitle)) ?></h2>
 
     <?php if ($hasPortal && !$isSchoolPortal && $isDts): ?>
         <h3 class="h4 m-0"><?= stationName($station) ?></h3>
