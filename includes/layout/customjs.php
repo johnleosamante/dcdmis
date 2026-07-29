@@ -8,16 +8,16 @@ if (isset($_GET['v'])) {
         echo '<script src="' . uri() . '/modules/courses/course.js" type="text/javascript"></script>';
     } elseif ($v === 'Activity') {
         echo ' <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
-        echo '<script src="' . uri() . '/modules/lnd-activity/activity.js?v=1.1" type="text/javascript"></script>';
+        echo '<script src="' . uri() . '/modules/lnd-activity/activity.js?v=1.2" type="text/javascript"></script>';
         echo '<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>';
     } elseif ($v === 'Project Detail') {
-        echo '<script src="' . uri() . '/modules/lnd-activity/activity.js?v=1.1" type="text/javascript"></script>';
+        echo '<script src="' . uri() . '/modules/lnd-activity/activity.js?v=1.2" type="text/javascript"></script>';
     } elseif ($v === 'Attendance') {
         echo '<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>';
-        echo '<script src="' . uri() . '/modules/trainings/modules/activity.js?v=1.1" type="text/javascript"></script>';
+        echo '<script src="' . uri() . '/modules/trainings/modules/activity.js?v=1.2" type="text/javascript"></script>';
     } elseif ($v === 'Attendance Summary') {
         echo '<script src="' . uri() . '/assets/vendor/toastr/toastr.min.js" type="text/javascript"></script>';
-        echo '<script src="' . uri() . '/modules/trainings/modules/activity.js?v=1.1" type="text/javascript"></script>';
+        echo '<script src="' . uri() . '/modules/trainings/modules/activity.js?v=1.2" type="text/javascript"></script>';
 
         // DataTables Buttons
         echo '<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>';
