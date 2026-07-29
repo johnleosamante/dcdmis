@@ -197,8 +197,11 @@ messageAlert($showAlert, $message, $success);
                     <i class="fas fa-list"></i>
                 </button>
 
-                <button id="generatePDF" class="btn btn-info mr-1" title="Generate PDF">
+                <button id="generatePDF" class="btn btn-info mr-1" title="Generate PDF per Day">
                     <i class="fas fa-file-pdf"></i>
+                </button>
+                <button id="generatePDFDays" class="btn btn-success mr-1" title="Generate PDF by Trainings">
+                    <i class="fas fa-file-export"></i>
                 </button>
 
                 <a href="http://<?= $_SERVER['HTTP_HOST'] ?>/hrtdms/?v=<?= base64_encode('Attendance Summary') ?>&id=<?= base64_encode($training['id']) ?>"
