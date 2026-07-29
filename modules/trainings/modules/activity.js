@@ -229,7 +229,12 @@ function deleteAttendanceTraining() {
             });
             $('#deleteAttendanceModal').modal('hide');
             $('#AttendanceT_id_hidden').val('');
-            alert('Attendance successfully removed!');
+           
+           $('#modalName').text('Employee Removed Successfully');
+$('#modalQR').text('The employee has been removed from the attendance list. This action has been completed successfully.');
+
+            $('#attendanceModal').modal('show');
+
         },
         error: function () {
             alert('Error: Could not connect to the server.');
