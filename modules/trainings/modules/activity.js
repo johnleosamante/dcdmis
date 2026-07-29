@@ -69,7 +69,19 @@ $(function () {
         window.open(url, "_blank");
 
     });
-    // GENERATE PDF CLOSE BUTTON
+    // GENERATE PDF BUTTON
+    $('#generatePDFDays').click(function (e) {
+
+        e.preventDefault();
+
+        var training_id = btoa($('#training_id').val());
+        var selected_date = btoa($('#selected_date').val());
+
+        var url = "generateAttendancePDFActivity.php?training_id=" + training_id + "&date=" + selected_date;
+
+        window.open(url, "_blank");
+
+    });
 
     // VIEW ATTENDANCE SUMMARY BUTTON
     $('#viewAttendanceSum').click(function (e) {
