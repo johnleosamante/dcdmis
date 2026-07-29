@@ -218,11 +218,10 @@ messageAlert($showAlert, $message, $success);
                         <thead>
                             <tr>
                                 <th>Image</th>
-                                <th>QR Code</th>
                                 <th>Name</th>
                                 <th>Position</th>
-                                <th>Control No</th>
-                                <th>Date Registered</th>
+                                <th>Station</th>
+                                <th>Time In</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -245,10 +244,6 @@ messageAlert($showAlert, $message, $success);
                                         <?php endif; ?>
                                     </td>
 
-                                    <td class="align-middle" style="color:#0572e7">
-                                        <?= $trainingAttendance['barcode'] ?>
-                                    </td>
-
                                     <td class="align-middle text-left">
                                         <b><?= strtoupper($trainingAttendance['fullname']) ?></b>
                                     </td>
@@ -258,11 +253,11 @@ messageAlert($showAlert, $message, $success);
                                     </td>
 
                                     <td class="align-middle">
-                                        <?= $trainingAttendance['control_no'] ?>
+                                        <?= $trainingAttendance['school_name'] ?>
                                     </td>
-
+                                    
                                     <td class="align-middle">
-                                        <?= date('M d, Y h:i A', strtotime($trainingAttendance['created_at'])) ?>
+                                        <?= date('h:i A', strtotime($trainingAttendance['created_at'])) ?>
                                     </td>
 
                                     <td class="align-middle">
@@ -287,7 +282,6 @@ messageAlert($showAlert, $message, $success);
                                 <th>QR Code</th>
                                 <th>Name</th>
                                 <th>Position</th>
-                                <th>Control No</th>
                                 <th>Date Registered</th>
                                 <th>Action</th>
                             </tr>

@@ -11,7 +11,7 @@ if (!$training_id || !$date) {
     echo json_encode([]);
     exit;
 }
-$mysqli = new mysqli(HOSTNAME, USER, '', DATABASE);
+$mysqli = new mysqli(HOSTNAME, USER, PASSWORD, DATABASE);
 
 if ($mysqli->connect_error) {
     echo json_encode([]);
@@ -30,6 +30,7 @@ $query = "
             e.last_name
         ) AS name,
         e.sex AS gender,
+        e.profile_picture,
         p.official_title AS position,
         ta.img_url,
         ta.time_in
