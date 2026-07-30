@@ -354,6 +354,8 @@ messageAlert($showAlert, $message, $success);
                                             <div class="dropdown no-arrow">
                                                 <?php dropdownEllipsis() ?>
                                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                                    <?php modalDropdownItem(uri() . '/modules/race/criteria-dialog.php?mode=edit-ranking&id=' . cipher($aw['id']), 'Set Criteria', 'fa-clipboard-list', 'Set Ranking Criteria'); ?>
+                                                    <div class="dropdown-divider"></div>
                                                     <?php modalDropdownItem(uri() . '/modules/race/save-award-dialog.php?id=' . cipher($aw['id']), 'Edit Award', 'fa-edit', 'Edit Award'); ?>
                                                     <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=award&id=' . cipher($aw['id']), 'Delete', 'fa-trash', 'Delete Award'); ?>
                                                 </div>
@@ -652,7 +654,7 @@ messageAlert($showAlert, $message, $success);
                                 <?php endif; ?>
                             </div>
                             <div class="d-flex flex-row align-items-center mt-2 mt-md-0">
-                                <?php modalButtonSplit(uri() . '/modules/race/criteria-dialog.php?mode=edit-ranking&id=' . cipher($rankAwardId), 'Set Criteria', 'fa-clipboard-list', 'Set Ranking Criteria') ?>
+                                <?php modalButtonSplit(uri() . '/modules/race/criteria-dialog.php?mode=view&id=' . cipher($rankAwardId), 'View Criteria', 'fa-clipboard-list', 'View Criteria') ?>
                                 <?php if (!empty($rankSchedId)): ?>
                                     <?php if ($isFinalized): ?>
                                         <span class="badge badge-danger p-2 ml-2"><i class="fas fa-trophy"></i> Winner Declared</span>

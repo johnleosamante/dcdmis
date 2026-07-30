@@ -22,6 +22,7 @@ function getTrainingAttendees($training_id, $date) {
                 ) AS fullname,
 
                 p.official_title,
+                s.name as school_name,
                 ta.control_no,
                 ta.created_at,
                 ta.img_url
@@ -34,6 +35,9 @@ function getTrainingAttendees($training_id, $date) {
             LEFT JOIN station_assignments sa
                 ON sa.employee_id = e.id
 
+            LEFT JOIN schools s
+                ON s.id = sa.station_id
+                
             LEFT JOIN positions p
                 ON p.id = sa.position_id
 

@@ -42,8 +42,18 @@
                     <label class="custom-control-label font-weight-bold" for="is_current_employee">I am a current
                         employee of the division</label>
                 </div>
-                <small class="form-text text-muted">Check this if you're already employed with us to simplify
+                <small class="pl-4 form-text text-muted">Check this if you're already employed with us to simplify
                     registration</small>
+            </div>
+
+            <div class="small">
+                <p>
+                    Already have an applicant ID? No need to register again. Proceed and apply to available
+                    <a href="<?= uri() . '/hrmis/apply' ?>" target="_blank">call for applications</a> instead.
+                </p>
+                <p>
+                    <a href="<?= uri() . '/hrmis/register/forgot' ?>" target="_blank">Forgot your applicant ID?</a>
+                </p>
             </div>
 
             <div id="employee-fields"
@@ -394,10 +404,6 @@
             <button name="register-applicant" type="submit" class="btn btn-primary btn-block mt-4">
                 Register as Applicant
             </button>
-
-            <div class="small text-center mt-3">
-                <a href=" <?= uri() . '/hrmis/apply' ?>" target="_blank">Already have an applicant ID?</a>
-            </div>
         </form>
     </div>
 </div>

@@ -200,7 +200,11 @@ $training_venue = $trainingResult['venue'] ?? 'N/A';
             border-radius: 50%;
             border: 4px solid #a0d5f9;
         }
-
+        
+        .female{
+            border: 4px solid #fecccc !important;
+        }
+        
         .info {
             flex: 1 1 70%;
             padding-left: 15px;
@@ -311,11 +315,11 @@ $training_venue = $trainingResult['venue'] ?? 'N/A';
                 <div class="region-title">
                     Venue: <strong><?= htmlspecialchars($training_venue) ?></strong>
                 </div>
-
-                <div class="meta">
-                    <div id="date-time"></div>
+                <br>
+                <div class="region-title">
+                    Date: <strong><?= date('M d, Y', strtotime($date)) ?></strong>
                 </div>
-
+ 
             </div>
 
             <!-- RIGHT LOGO + COUNT -->
@@ -421,23 +425,24 @@ $training_venue = $trainingResult['venue'] ?? 'N/A';
                     participants.forEach(p => {
 
                         const card = document.createElement('div');
-
+               
                         card.className = 'card';
 
                         const avatar = document.createElement('div');
                         avatar.className = 'avatar';
                         const img = document.createElement('img');
-                        //                                if (p.img_url) {
-                        //                                    // Attendance image always wins
-                        //                                    img.src = '../' + p.img_url;
-                        //                                } else {
-                        // Gender-based default only
-                        img.src = (p.gender === 'Male')
-                            ? '../assets/img/male.jpg'
-                            : '../assets/img/female.jpg';
-                        //                                }
+           
+//                        img.src = (p.gender === 'Male')
+//                            ? 
+//                            : '../assets/img/female.jpg';
+//                        img.src = '../' . p.profile_picture;
+                          
+                        img.src = '../' + p.profile_picture;
                         avatar.appendChild(img);
 
+                        if (p.gender === 'Female') {
+                            img.classList.add('female');
+                        }
                         // INFO
 
                         const info = document.createElement('div');

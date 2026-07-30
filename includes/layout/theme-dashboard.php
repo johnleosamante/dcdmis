@@ -172,7 +172,7 @@ require_once(root() . '/includes/layout/components.php');
         crossorigin="anonymous"></script>
     <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="<?= uri() ?>/assets/js/script.js?v=1.2.3"></script>
+    <script src="<?= uri() ?>/assets/js/script.js?v=1.3"></script>
     <?php require_once(root() . '/includes/layout/customjs.php') ?>
 
     <?php if ($needsAgreement): ?>

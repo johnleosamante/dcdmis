@@ -520,22 +520,26 @@ if (isset($_POST['save-ranking-criteria'])) {
         $criteria = [];
         $libraryIds = $_POST['library_criterion_id'] ?? [];
         $libraryPoints = $_POST['library_max_points'] ?? [];
+        $libraryDescriptions = $_POST['library_description'] ?? [];
         foreach ($libraryIds as $libraryId) {
             $libraryCriterion = rankingCriteriaLibraryById((int) $libraryId);
             if ($libraryCriterion) {
                 $criteria[] = [
                     'name' => $libraryCriterion['criterion_name'],
-                    'max_points' => $libraryPoints[$libraryId] ?? $libraryCriterion['default_max_points']
+                    'max_points' => $libraryPoints[$libraryId] ?? $libraryCriterion['default_max_points'],
+                    'description' => $libraryDescriptions[$libraryId] ?? ''
                 ];
             }
         }
 
         $names = $_POST['criterion_name'] ?? [];
         $maxPoints = $_POST['max_points'] ?? [];
+        $descriptions = $_POST['criterion_description'] ?? [];
         for ($i = 0; $i < count($names); $i++) {
             $criteria[] = [
                 'name' => $names[$i] ?? '',
-                'max_points' => $maxPoints[$i] ?? 0
+                'max_points' => $maxPoints[$i] ?? 0,
+                'description' => $descriptions[$i] ?? ''
             ];
         }
         saveRankingCriteria($id, $criteria);
@@ -551,13 +555,14 @@ if (isset($_POST['update-criterion'])) {
     $criterionId = isset($_POST['criterion_id']) ? sanitize($_POST['criterion_id']) : null;
     $criterionName = isset($_POST['criterion_name']) ? trim(sanitize($_POST['criterion_name'])) : '';
     $maxPoints = isset($_POST['max_points']) ? floatval($_POST['max_points']) : 0;
+    $criterionDescription = isset($_POST['criterion_description']) ? trim($_POST['criterion_description']) : '';
     $showAlert = true;
     $success = false;
 
     if ($nominatorOnly) {
         $message = 'You do not have permission to perform this action.';
     } elseif ($criterionId && $criterionName !== '' && $maxPoints > 0) {
-        updateRankingCriterion($criterionId, $criterionName, $maxPoints);
+        updateRankingCriterion($criterionId, $criterionName, $maxPoints, $criterionDescription);
         $message = 'Criterion has been updated successfully.';
         $success = true;
         createSystemLog($stationId, $userId, 'Updated ranking criterion', $criterionId, clientIp());
@@ -596,9 +601,6 @@ if (isset($_POST['save-ranking-score'])) {
             $criterion_id = (int) $criterion_id;
             $points = floatval($points);
             saveRankingScore($nominee_id, $criterion_id, $points, $userId);
-        }
-        if (isset($_POST['validated'])) {
-            query("UPDATE `awards_categories_nominees` SET `validated` = ? WHERE `id` = ?", [sanitize($_POST['validated']), $nominee_id]);
         }
         $message = 'Ranking score has been saved successfully.';
         $success = true;

@@ -69,7 +69,19 @@ $(function () {
         window.open(url, "_blank");
 
     });
-    // GENERATE PDF CLOSE BUTTON
+    // GENERATE PDF BUTTON
+    $('#generatePDFDays').click(function (e) {
+
+        e.preventDefault();
+
+        var training_id = btoa($('#training_id').val());
+        var selected_date = btoa($('#selected_date').val());
+
+        var url = "generateAttendancePDFActivity.php?training_id=" + training_id + "&date=" + selected_date;
+
+        window.open(url, "_blank");
+
+    });
 
     // VIEW ATTENDANCE SUMMARY BUTTON
     $('#viewAttendanceSum').click(function (e) {
@@ -217,7 +229,12 @@ function deleteAttendanceTraining() {
             });
             $('#deleteAttendanceModal').modal('hide');
             $('#AttendanceT_id_hidden').val('');
-            alert('Attendance successfully removed!');
+           
+           $('#modalName').text('Employee Removed Successfully');
+$('#modalQR').text('The employee has been removed from the attendance list. This action has been completed successfully.');
+
+            $('#attendanceModal').modal('show');
+
         },
         error: function () {
             alert('Error: Could not connect to the server.');

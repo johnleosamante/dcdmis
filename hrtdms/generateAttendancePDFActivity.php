@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../assets/vendor/dompdf/autoload.inc.php';
 require_once('../includes/config.php');
 
@@ -36,7 +37,9 @@ if ($mysqli->connect_error) {
 $trainingQuery = "
     SELECT 
         title,
-        venue
+        venue,
+        start_date,
+        end_date
     FROM trainings
     WHERE id = ?
 ";
@@ -44,9 +47,23 @@ $trainingQuery = "
 $stmtTraining = $mysqli->prepare($trainingQuery);
 $stmtTraining->bind_param("s", $training_id);
 $stmtTraining->execute();
+
 $trainingResult = $stmtTraining->get_result()->fetch_assoc();
+
 $training_title = $trainingResult['title'] ?? 'N/A';
 $training_venue = $trainingResult['venue'] ?? 'N/A';
+$start_date = $trainingResult['start_date'] ?? '';
+$end_date = $trainingResult['end_date'] ?? '';
+
+$dates = [];
+
+$current = strtotime($start_date);
+$end = strtotime($end_date);
+
+while ($current <= $end) {
+    $dates[] = date('Y-m-d', $current);
+    $current = strtotime('+1 day', $current);
+}
 
 // FETCH ATTENDEES
 $query = "
@@ -54,6 +71,7 @@ $query = "
         ta.employee_id,
         ta.time_in,
         ta.date_in,
+
         CONCAT(
             UPPER(e.last_name), ', ',
             e.first_name, ' ',
@@ -64,34 +82,46 @@ $query = "
                 ''
             )
         ) AS name,
+
         e.sex,
         e.email_address,
         e.mobile_number,
         e.prc,
         e.tin,
         e.agency_id,
+
         p.official_title,
         p.id as abbreviation
+
     FROM training_attendees ta
+
     JOIN employees e 
         ON ta.employee_id = e.id
+
     LEFT JOIN station_assignments sa 
         ON sa.employee_id = e.id
+
     LEFT JOIN positions p 
         ON p.id = sa.position_id
+
     WHERE ta.training_id = ?
-      AND ta.date_in = ?
+
     ORDER BY e.last_name ASC
 ";
 
 $stmt = $mysqli->prepare($query);
-$stmt->bind_param("ss", $training_id, $date);
+
+$stmt->bind_param("s", $training_id);
+
 $stmt->execute();
+
 $result = $stmt->get_result();
 
 // PDF HTML
 $html = '
+
 <style>
+
 body {
     font-family: "Bookman Old Style", Bookman;
     font-size: 12px;
@@ -182,6 +212,7 @@ tbody td {
 .center {
     text-align: center;
 }
+
 </style>
 
 <div class="header" style="margin-top:-30px !important;">
@@ -193,26 +224,35 @@ tbody td {
 </div>
 
 <div class="content">
+
     <div class="meta">
+
         <a>Title of Training:</a> 
         <span class="training-title">
             <b>' . htmlspecialchars($training_title) . '</b>
         </span>
         <br>
+
         <a>Venue:</a> 
         <b>' . htmlspecialchars($training_venue) . '</b>
         <br>
-        <a>Date:</a> 
-        <b>' . date("F d, Y", strtotime($date)) . '</b>
+
+       <a>Date:</a> 
+        <b>' . date("F d, Y", strtotime($start_date)) . ' - ' . date("F d, Y", strtotime($end_date)) . '</b>
     </div>
+
     <h1 style="text-align:center;">
         ATTENDANCE SHEET
     </h1>
-   <div class="privacy"> <i><b><u>Data Privacy Notice:</u></b> The Department of Education complies with the Data Privacy Act of 2012 and is committed in protecting your privacy. During this activity, we will collect personal information for the purpose of documentation and verification of attendance. Information collected as well as pictures taken during the activity will be stored for as long as necessary, but they will not be shared with any third parties without your consent or any legal basis. By signing this attendance sheet, you are consenting to the collection, use, and retention of your personal information.</i></div>
+
+   <div class="privacy"> <i><b><u>Data Privacy Notice:</u></b> The Department of Education complies with the Data Privacy Act of 2012 and is committed in protecting your privacy. During this activity, we will collect personal information for the purpose of documentation and verification of attendance. Information collected as well as pictures taken during the activity will be stored for as long as necessary, but they will not be shared with any third parties without your consent or any legal basis. By signing this attendance sheet, you are consenting to the collection, use, and retention of your personal information.</i> </div>
+
     <br>
 
     <table>
+
         <thead>
+
             <tr>
                 <th rowspan="2" width="5%">NO.</th>
                 <th rowspan="2" width="20%">NAME</th>
@@ -226,97 +266,202 @@ tbody td {
                 <th rowspan="2" width="10%">
                     MOBILE NO.
                 </th>
-                <th colspan="2" width="12%">
-                    TIME IN/OUT
-                </th>
-                <th rowspan="2" width="10%">
-                    SIGNATURE
-                </th>
-                <th rowspan="2" width="10%">
-                    PRC LICENSE NO.
-                </th>
-                <th rowspan="2" width="10%">
-                    TIN NO.
-                </th>
-                <th rowspan="2" width="15%">
-                    EMPLOYEE ID
-                </th>
-            </tr>
+                
+            ';
+            foreach ($dates as $d) {
 
-            <tr>
-                <th>AM</th>
-                <th>PM</th>
-            </tr>
-        </thead>
+                $html .= '
 
-        <tbody>
+                    <th colspan="2">
+                        ' . date("M d", strtotime($d)) . '
+                    </th>
+
+                ';
+
+            }
+            $html .= '
+
+                    <th rowspan="2" width="10%">
+                        SIGNATURE
+                    </th>
+
+                    <th rowspan="2" width="10%">
+                        PRC LICENSE NO.
+                    </th>
+
+                    <th rowspan="2" width="10%">
+                        TIN NO.
+                    </th>
+
+                    <th rowspan="2" width="15%">
+                        EMPLOYEE ID
+                    </th>
+
+                </tr>
+
+                <tr>
+
+        ';     
+        foreach ($dates as $d) {
+
+            $html .= '
+
+                <th>IN</th>
+                <th>OUT</th>
+
+            ';
+
+        }
+        $html .= '
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
 ';
 
 $counter = 1;
 
+$counter = 1;
+
 if ($result->num_rows > 0) {
+
+    // Store employees and attendance
+    $employees = [];
+    $attendance = [];
+
     while ($row = $result->fetch_assoc()) {
-        $time_in = !empty($row['time_in']) ? date("h:i", strtotime($row['time_in'])) : '-';
+
+        $employee_id = $row['employee_id'];
+        $attendance_date = $row['date_in'];
+
+        // Save employee information only once
+        if (!isset($employees[$employee_id])) {
+            $employees[$employee_id] = $row;
+        }
+
+        // Save attendance for the corresponding date
+        $attendance[$employee_id][$attendance_date] = !empty($row['time_in'])
+            ? date("h:i", strtotime($row['time_in']))
+            : "-";
+    }
+
+    // Print one row per employee
+    foreach ($employees as $employee_id => $row) {
+
         $html .= '
 
         <tr>
+
             <td class="center">
                 ' . $counter++ . '
             </td>
+
             <td>
                 ' . htmlspecialchars(strtoupper($row['name'])) . '
             </td>
+
             <td class="center">
                 ' . htmlspecialchars($row['sex'] ?? '') . '
             </td>
+
             <td>
                 ' . htmlspecialchars(strtoupper($row['abbreviation'] ?? '')) . '
             </td>
+
             <td>
                 ' . htmlspecialchars($row['email_address'] ?? '') . '
             </td>
+
             <td class="center">
                 ' . htmlspecialchars($row['mobile_number'] ?? '') . '
             </td>
-            <td class="center">
-                ' . $time_in . '
-            </td>
-            <td class="center">5:00</td>
+
+        ';
+
+        // Dynamic attendance columns
+        foreach ($dates as $d) {
+
+            $time_in = $attendance[$employee_id][$d] ?? '-';
+
+            $html .= '
+
+                <td class="center">
+                    ' . $time_in . '
+                </td>
+
+                <td class="center">
+                    ' . ($time_in != '-' ? '5:00' : '-') . '
+                </td>
+
+            ';
+        }
+
+        $html .= '
+
             <td></td>
+
             <td>
                 ' . htmlspecialchars($row['prc'] ?? '') . '
             </td>
+
             <td>
                 ' . htmlspecialchars($row['tin'] ?? '') . '
             </td>
+
             <td>
                 ' . htmlspecialchars($row['agency_id'] ?? '') . '
             </td>
-        </tr>';
+
+        </tr>
+
+        ';
     }
+
 } else {
+
+    // Calculate dynamic colspan
+    $dynamicColspan = 6 + (count($dates) * 2) + 4;
+
     $html .= '
+
     <tr>
-        <td colspan="12" class="center">
+
+        <td colspan="' . $dynamicColspan . '" class="center">
             No attendance records found.
         </td>
-    </tr>';
+
+    </tr>
+
+    ';
 }
 
 $html .= '
+
         </tbody>
+
     </table>
-</div>';
+
+</div>
+
+';
 
 // GENERATE PDF
 $dompdf = new Dompdf();
+
 $dompdf->set_option('isRemoteEnabled', true);
+
 $dompdf->setPaper('folio', 'landscape');
+
 $dompdf->loadHtml($html);
+
 $dompdf->render();
 
 // PAGE NUMBER
 $canvas = $dompdf->getCanvas();
+
 $font = $dompdf->getFontMetrics()->get_font("Helvetica", "normal");
 
 $canvas->page_text(
