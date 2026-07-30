@@ -67,16 +67,52 @@ messageAlert($showAlert, $message, $success);
             <i class="fas fa-calendar-alt mr-2"></i>
             <div>
                 <strong>Active Rating Period:</strong> <?= e($activeCycle['title']) ?> (<?= e($activeCycle['school_year']) ?>)
-                <span class="ml-2 text-muted">|</span>
-                <span class="ml-2"><?= date('M d, Y', strtotime($activeCycle['date_start'])) ?> - <?= date('M d, Y', strtotime($activeCycle['date_end'])) ?></span>
             </div>
         </div>
     </div>
 <?php else: ?>
-    <div class="alert alert-warning d-flex align-items-center small p-2 mt-3">
-        <i class="fas fa-exclamation-circle mr-2"></i>
-        <div>No active rating period. Please contact your administrator to set up a rating period.</div>
+    <div class="alert alert-warning d-flex align-items-center justify-content-between small p-2 mt-3">
+        <div>
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            No active rating period. Please create a rating period to proceed.
+        </div>
+        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#createCycleModal">
+            <i class="fas fa-plus mr-1"></i> Create Rating Period
+        </button>
     </div>
+<?php endif; ?>
+
+<!-- Create Rating Period Modal -->
+<?php if (!$activeCycle): ?>
+<div class="modal fade" id="createCycleModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="" method="POST" class="modal-content">
+            <?= csrf_field() ?>
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-bold"><i class="fas fa-calendar-alt mr-1"></i> Create Rating Period</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="font-weight-bold small">Title <?php showAsterisk() ?></label>
+                    <input type="text" name="cycle_title" class="form-control form-control-sm" placeholder="e.g. RPMS 2025-2026" required>
+                </div>
+                <div class="form-group">
+                    <label class="font-weight-bold small">School Year <?php showAsterisk() ?></label>
+                    <input type="text" name="cycle_school_year" class="form-control form-control-sm" placeholder="e.g. 2025-2026" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                <button type="submit" name="create-rating-period" class="btn btn-primary btn-sm">
+                    <i class="fas fa-save mr-1"></i> Create Period
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 <?php endif; ?>
 
 <!-- Quick Stats Cards -->
@@ -140,11 +176,6 @@ messageAlert($showAlert, $message, $success);
             <div class="text-center py-4">
                 <i class="fas fa-folder-open fa-3x text-gray-300 mb-3"></i>
                 <p class="text-muted mb-0">No IPCRF records found.</p>
-                <?php if ($activeCycle): ?>
-                    <a href="<?= customUri('pis', 'Create IPCRF', $employeeId) ?>" class="btn btn-primary btn-sm mt-3">
-                        <i class="fas fa-plus fa-sm mr-1"></i> Create Your First IPCRF
-                    </a>
-                <?php endif; ?>
             </div>
         <?php else: ?>
             <div class="table-responsive">

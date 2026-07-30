@@ -11,6 +11,12 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
         <i class="fa fa-bars"></i>
     </button>
 
+    <?php if ($isPis): ?>
+        <a href="javascript:history.back()" class="btn btn-secondary btn-sm d-none d-md-inline-block ml-3">
+            <i class="fas fa-arrow-left mr-1"></i> Back to previous
+        </a>
+    <?php endif; ?>
+
     <?php if ($isDts || $isHrmis || $isHrtdms): ?>
         <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-0 my-2 my-md-0 mw-100 navbar-search" method="POST"
             action="">

@@ -282,6 +282,43 @@ if (isset($_POST['cancel-transfer-request'])) {
 
 // ========== IPCRF (Individual Performance Commitment and Review Form) ==========
 
+// Create Rating Period (for ratee when no active cycle)
+if (isset($_POST['create-rating-period'])) {
+    $cycleTitle = sanitize($_POST['cycle_title'] ?? '');
+    $cycleSchoolYear = sanitize($_POST['cycle_school_year'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        if (empty($cycleTitle) || empty($cycleSchoolYear)) {
+            throw new Exception('Title and School Year are required.');
+        }
+
+        // Derive start and end dates from school year (e.g. 2025-2026)
+        $cycleDateStart = date('Y') . '-06-01';
+        $cycleDateEnd = ((int) date('Y') + 1) . '-03-31';
+
+        $years = explode('-', $cycleSchoolYear);
+        if (count($years) === 2 && is_numeric($years[0]) && is_numeric($years[1])) {
+            $startYear = (int) $years[0];
+            $endYear = (int) $years[1];
+            if ($endYear === $startYear + 1) {
+                $cycleDateStart = $startYear . '-06-01';
+                $cycleDateEnd = $endYear . '-03-31';
+            }
+        }
+
+        createPmCycle($cycleTitle, $cycleSchoolYear, $cycleDateStart, $cycleDateEnd, $userId);
+
+        $success = true;
+        $message = 'Rating period has been created successfully.';
+        createSystemLog($stationId, $userId, 'Created IPCRF rating period', null, clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
 // Create IPCRF with KRAs and Objectives
 if (isset($_POST['create-ipcrf'])) {
     $employeeId = (int) sanitize(decipher($_POST['verifier'] ?? null));
@@ -289,6 +326,7 @@ if (isset($_POST['create-ipcrf'])) {
     $validatorId = !empty($_POST['validator_id']) ? (int) sanitize($_POST['validator_id']) : null;
     $approvingOfficerId = !empty($_POST['approving_officer_id']) ? (int) sanitize($_POST['approving_officer_id']) : null;
     $positionTitle = sanitize($_POST['position_title'] ?? '');
+    $reviewPeriod = sanitize($_POST['review_period'] ?? '');
     $kraIds = $_POST['kra_id'] ?? [];
     $kraTitles = $_POST['kra_title'] ?? [];
     $showAlert = true;
@@ -297,6 +335,10 @@ if (isset($_POST['create-ipcrf'])) {
     try {
         if (empty($employeeId) || empty($cycleId)) {
             throw new Exception('Invalid request parameters.');
+        }
+
+        if (empty($reviewPeriod)) {
+            throw new Exception('Review Period is required.');
         }
 
         if (empty($kraTitles) || empty(array_filter($kraTitles))) {
@@ -309,7 +351,7 @@ if (isset($_POST['create-ipcrf'])) {
 
         beginTransaction();
 
-        $ipcrfId = createPmIpcrf($cycleId, $employeeId, $validatorId, $positionTitle);
+        $ipcrfId = createPmIpcrf($cycleId, $employeeId, $validatorId, $positionTitle, $reviewPeriod);
         if (!$ipcrfId) {
             throw new Exception('Failed to create IPCRF record.');
         }
@@ -730,12 +772,12 @@ if (isset($_POST['validate-ipcrf'])) {
 
         updatePmIpcrfFinalRating($ipcrfId, $finalRating, $adjectival);
         updatePmIpcrfStatus($ipcrfId, 'Validated', $validatorRemarks, 'validator_remarks');
-        updatePmIpcrfPhase($ipcrfId, 3);
+        updatePmIpcrfPhase($ipcrfId, 4);
 
         commit();
 
         $success = true;
-        $message = "IPCRF has been validated. Final Rating: {$finalRating} ({$adjectival}).";
+        $message = "IPCRF has been validated and is now in Phase 4. Final Rating: {$finalRating} ({$adjectival}).";
         createSystemLog($stationId, $userId, 'Validated IPCRF', $ipcrf['employee_id'], clientIp());
 
     } catch (Exception $e) {
@@ -850,14 +892,14 @@ if (isset($_POST['upload-mov'])) {
 
         $file = $_FILES['mov_file'];
         $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/png'];
-        $maxSize = 5 * 1024 * 1024; // 5MB
+        $maxSize = 30 * 1024 * 1024; // 30MB
 
         if (!in_array($file['type'], $allowedTypes)) {
             throw new Exception('Invalid file type. Allowed: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG.');
         }
 
         if ($file['size'] > $maxSize) {
-            throw new Exception('File size exceeds 5MB limit.');
+            throw new Exception('File size exceeds 30MB limit.');
         }
 
         $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
@@ -938,15 +980,14 @@ if (isset($_POST['add-coaching'])) {
             throw new Exception('IPCRF not found.');
         }
 
-        $isOwner = ($userId === (int) $ipcrf['employee_id']);
         $isValidator = ($userId === (int) $ipcrf['validator_id']);
 
-        if (!$isOwner && !$isValidator) {
-            throw new Exception('Unauthorized.');
+        if (!$isValidator) {
+            throw new Exception('Unauthorized. Only the rater can add coaching entries.');
         }
 
         if ($ipcrf['phase'] < 2) {
-            throw new Exception('Coaching entries can only be added during Phase 2.');
+            throw new Exception('Coaching entries can only be added starting Phase 2.');
         }
 
         $obj = pmObjective($objectiveId);
@@ -1220,6 +1261,91 @@ if (isset($_POST['delete-plan'])) {
         $success = true;
         $message = 'Development plan has been deleted.';
         createSystemLog($stationId, $userId, 'Deleted IPCRF development plan', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Add Recalibration Entry (Phases 2 & 3)
+if (isset($_POST['add-recalibration'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $ipcrfContent = sanitize($_POST['ipcrf_content'] ?? '');
+    $proposedAmendment = sanitize($_POST['proposed_amendment'] ?? '');
+    $justification = sanitize($_POST['justification'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf) {
+            throw new Exception('IPCRF not found.');
+        }
+
+        $isOwner = ($userId === (int) $ipcrf['employee_id']);
+
+        if (!$isOwner) {
+            throw new Exception('Unauthorized.');
+        }
+
+        if ($ipcrf['phase'] < 2 || $ipcrf['phase'] > 3) {
+            throw new Exception('Recalibration is only allowed in Phase 2 and Phase 3.');
+        }
+
+        if (empty($ipcrfContent) || empty($proposedAmendment) || empty($justification)) {
+            throw new Exception('All fields are required.');
+        }
+
+        createPmRecalibration($ipcrfId, $ipcrfContent, $proposedAmendment, $justification, $userId);
+
+        $success = true;
+        $message = 'Recalibration entry has been added.';
+        createSystemLog($stationId, $userId, 'Added IPCRF recalibration entry', $ipcrf['employee_id'], clientIp());
+
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+
+// Update Rater Remarks on Recalibration Entry
+if (isset($_POST['update-recalibration-rater'])) {
+    $ipcrfId = (int) sanitize(decipher($_POST['verifier'] ?? null));
+    $recalibrationId = (int) sanitize(decipher($_POST['recalibration_id'] ?? null));
+    $raterStatus = sanitize($_POST['rater_status'] ?? 'Pending');
+    $raterRemarks = sanitize($_POST['rater_remarks'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    try {
+        $ipcrf = pmIpcrf($ipcrfId);
+        if (!$ipcrf) {
+            throw new Exception('IPCRF not found.');
+        }
+
+        $isValidator = ($userId === (int) $ipcrf['validator_id']);
+
+        if (!$isValidator) {
+            throw new Exception('Unauthorized.');
+        }
+
+        if ($ipcrf['phase'] < 2 || $ipcrf['phase'] > 3) {
+            throw new Exception('Recalibration is only allowed in Phase 2 and Phase 3.');
+        }
+
+        $entry = pmRecalibration($recalibrationId);
+        if (!$entry || (int) $entry['ipcrf_id'] !== $ipcrfId) {
+            throw new Exception('Recalibration entry not found.');
+        }
+
+        if (!in_array($raterStatus, ['Pending', 'Approved', 'Disapproved'])) {
+            throw new Exception('Invalid rater status.');
+        }
+
+        updatePmRecalibrationRater($recalibrationId, $raterStatus, $raterRemarks);
+
+        $success = true;
+        $message = 'Rater remarks have been updated.';
+        createSystemLog($stationId, $userId, 'Updated IPCRF recalibration rater remarks', $ipcrf['employee_id'], clientIp());
 
     } catch (Exception $e) {
         $message = $e->getMessage();
