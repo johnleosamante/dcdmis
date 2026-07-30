@@ -627,10 +627,11 @@ function rankingCriteriaByAward($award_id)
     return is_array($results) ? $results : [];
 }
 
-function updateRankingCriterion($id, $name, $maxPoints)
+function updateRankingCriterion($id, $name, $maxPoints, $description = '')
 {
     return update('ranking_criteria', [
         'criterion_name' => $name,
+        'description' => $description,
         'max_points' => $maxPoints
     ], '`id` = ?', [$id]);
 }
@@ -668,6 +669,7 @@ function saveRankingCriteria($award_id, $criteria)
     foreach ($criteria as $item) {
         $name = trim($item['name'] ?? '');
         $max = floatval($item['max_points'] ?? 0);
+        $description = trim($item['description'] ?? '');
         $nameKey = strtolower($name);
 
         if ($name === '' || $max <= 0 || isset($savedNames[$nameKey])) {
@@ -676,11 +678,12 @@ function saveRankingCriteria($award_id, $criteria)
 
         $savedNames[$nameKey] = true;
         if (isset($existingByName[$nameKey])) {
-            update('ranking_criteria', ['max_points' => $max], '`id` = ?', [$existingByName[$nameKey]['id']]);
+            update('ranking_criteria', ['max_points' => $max, 'description' => $description], '`id` = ?', [$existingByName[$nameKey]['id']]);
         } else {
             insert('ranking_criteria', [
                 'award_id' => $award_id,
                 'criterion_name' => $name,
+                'description' => $description,
                 'max_points' => $max
             ]);
         }
