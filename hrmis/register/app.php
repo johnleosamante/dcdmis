@@ -119,6 +119,8 @@ if (isset($_POST['register-applicant'])) {
         beginTransaction();
         $isRegistered = false;
 
+        $registrationDetails = [];
+
         try {
             if (!empty($employee_id)) {
                 $employee = employee($employee_id);
@@ -138,6 +140,7 @@ if (isset($_POST['register-applicant'])) {
                     'name_extension' => $employee['name_extension'],
                     'sex' => $employee['sex'],
                 ];
+                $registrationDetails = $employee;
             } else {
                 $applicant_data = prepareApplicantData($_POST);
 
@@ -154,6 +157,7 @@ if (isset($_POST['register-applicant'])) {
                     'name_extension' => $applicant_data['name_extension'] ?? null,
                     'sex' => $applicant_data['sex'] ?? '',
                 ];
+                $registrationDetails = $applicant_data;
             }
 
             if (createApplicantCode($data['id'], $data['code']) === false) {
@@ -171,20 +175,128 @@ if (isset($_POST['register-applicant'])) {
         if ($isRegistered) {
             $applicant_code = $data['code'];
             $applicant_name = toName($data['last_name'], $data['first_name'], $data['middle_name'], $data['name_extension'], true);
-            $title = strtolower($data['sex'] ?? '') === 'Male' ? 'Mr. ' : 'Ms. ';
+            $title = strtolower($data['sex'] ?? '') === 'male' ? 'Mr. ' : 'Ms. ';
 
             $_SESSION['success'] = true;
             $_SESSION['applicant_code'] = $applicant_code;
             $_SESSION['applicant_email'] = $email;
 
+            $applicantType = !empty($employee_id) ? 'Current Division Employee' : 'New Applicant';
+            $employeePosText = '';
+            if (!empty($employee_id)) {
+                $updateNoticeText = "\nNote: If any of your information listed above is incorrect or not updated, please approach your school Administrative Officer II or the Personnel Section for updating.\n";
+                require_once(root() . '/includes/database/position.php');
+                $empPos = position($employee_id);
+                if ($empPos) {
+                    $posTitle = $empPos['official_title'] ?? '';
+                    $stName = $empPos['station'] ?? '';
+                    if ($posTitle || $stName) {
+                        $employeePosText = "\nCurrent Position: " . ($posTitle ?: 'N/A') . "\nStation / School: " . ($stName ?: 'N/A');
+                    }
+                }
+            } else {
+                $updateNoticeText = "\nNote: If any of your information listed above is incorrect or needs updating, please approach the Personnel Section for updating.\n";
+            }
+
+            $lastNameText = !empty($registrationDetails['last_name']) ? $registrationDetails['last_name'] : ($data['last_name'] ?? 'N/A');
+            $firstNameText = !empty($registrationDetails['first_name']) ? $registrationDetails['first_name'] : ($data['first_name'] ?? 'N/A');
+            $middleNameText = !empty($registrationDetails['middle_name']) ? $registrationDetails['middle_name'] : 'N/A';
+            $nameExtensionText = !empty($registrationDetails['name_extension']) ? $registrationDetails['name_extension'] : 'N/A';
+
+            $sexText = !empty($registrationDetails['sex']) ? ucfirst($registrationDetails['sex']) : 'N/A';
+
+            $rawBirthdate = $registrationDetails['birthdate'] ?? $registrationDetails['birth_date'] ?? '';
+            $birthdateText = ($rawBirthdate && strtotime($rawBirthdate)) ? date('F j, Y', strtotime($rawBirthdate)) : ($rawBirthdate ?: 'N/A');
+
+            $civilStatusText = !empty($registrationDetails['civil_status']) ? ucfirst($registrationDetails['civil_status']) : 'N/A';
+
+            $religionText = 'N/A';
+            if (!empty($registrationDetails['specify_other_religion'])) {
+                $religionText = $registrationDetails['specify_other_religion'];
+            } elseif (!empty($registrationDetails['religion_id'])) {
+                $rel = religion($registrationDetails['religion_id']);
+                if ($rel && !empty($rel['name'])) {
+                    $religionText = $rel['name'];
+                }
+            }
+
+            $ethnicText = 'N/A';
+            if (!empty($registrationDetails['specify_other_ethnic_group'])) {
+                $ethnicText = $registrationDetails['specify_other_ethnic_group'];
+            } elseif (!empty($registrationDetails['ethnic_group_id'])) {
+                $eg = find("SELECT `name` FROM `ethnic_groups` WHERE `id` = ? LIMIT 1", [$registrationDetails['ethnic_group_id']]);
+                if ($eg && !empty($eg['name'])) {
+                    $ethnicText = $eg['name'];
+                }
+            }
+
+            $pwdText = (!empty($registrationDetails['with_disability']) || !empty($registrationDetails['is_pwd'])) ? 'Yes' : 'No';
+
+            $emailText = $registrationDetails['email_address'] ?? $registrationDetails['email'] ?? $email;
+            $mobileText = $registrationDetails['mobile_number'] ?? $registrationDetails['mobile'] ?? 'N/A';
+
+            $addressParts = array_filter([
+                $registrationDetails['lot'] ?? null,
+                $registrationDetails['street'] ?? null,
+                $registrationDetails['subdivision'] ?? null,
+                $registrationDetails['barangay'] ?? null,
+                $registrationDetails['city'] ?? null,
+                $registrationDetails['province'] ?? null,
+                $registrationDetails['zip'] ?? null,
+            ]);
+            $addressText = !empty($addressParts) ? implode(', ', $addressParts) : 'N/A';
+
+            $educationText = $registrationDetails['undergraduate'] ?? $registrationDetails['education'] ?? 'N/A';
+            $graduateStudiesText = !empty($registrationDetails['graduate_studies']) ? $registrationDetails['graduate_studies'] : 'None';
+
+            $eligibilitiesList = [];
+            if (!empty($registrationDetails['eligibilities'])) {
+                if (is_array($registrationDetails['eligibilities'])) {
+                    $eligibilitiesList = $registrationDetails['eligibilities'];
+                } elseif (is_string($registrationDetails['eligibilities'])) {
+                    $decoded = json_decode($registrationDetails['eligibilities'], true);
+                    if (is_array($decoded)) {
+                        $eligibilitiesList = $decoded;
+                    }
+                }
+            }
+            $eligibilitiesText = !empty($eligibilitiesList) ? implode(', ', $eligibilitiesList) : 'None';
+
             $emailBody = <<<EOT
-Hello, {$title} {$applicant_name}!
+Hello, {$title}{$applicant_name}!
 
 Your applicant registration was successful.
 
 Applicant ID: {$applicant_code}
 
-Please retain your 18-digit applicant ID for reference and use for applications for available vacancies.
+REGISTRATION DETAILS:
+----------------------------------------
+Applicant Type: {$applicantType}{$employeePosText}
+
+Personal Details:
+Last Name: {$lastNameText}
+First Name: {$firstNameText}
+Middle Name: {$middleNameText}
+Name Extension: {$nameExtensionText}
+Sex: {$sexText}
+Birth Date: {$birthdateText}
+Civil Status: {$civilStatusText}
+Religion: {$religionText}
+Ethnic Group: {$ethnicText}
+Person with Disability (PWD): {$pwdText}
+
+Contact & Address:
+Email Address: {$emailText}
+Mobile Number: {$mobileText}
+Address: {$addressText}
+
+Education & Eligibilities:
+Education: {$educationText}
+Graduate Studies: {$graduateStudiesText}
+Eligibilities: {$eligibilitiesText}
+----------------------------------------
+{$updateNoticeText}
+Please retain your 18-digit applicant ID for reference and use for available call for applications.
 
 Download the checklist of requirements from the link below:
 
@@ -198,7 +310,7 @@ Thank you.
 EOT;
 
             $targetDeliveryEmail = PRODUCTION_MODE ? $email : DEVELOPER_EMAIL;
-            $subject = "Applicant Registration Success";
+            $subject = "Applicant Registration Confirmation";
             if (!sendMail($targetDeliveryEmail, $subject, $emailBody)) {
                 error_log("Failed to send registration success email to: {$email} (Routed to: {$targetDeliveryEmail})");
             }
