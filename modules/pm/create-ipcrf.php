@@ -100,9 +100,9 @@ messageAlert($showAlert, $message, $success);
                     </div>
                     <div class="col-md-6">
                         <div class="form-group mb-2">
-                            <label class="font-weight-bold small">Review Period</label>
-                            <input type="text" class="form-control form-control-sm bg-white" 
-                                value="<?= e($activeCycle['school_year']) ?>" readonly>
+                            <label class="font-weight-bold small">Review Period <?php showAsterisk() ?></label>
+                            <input type="text" name="review_period" class="form-control form-control-sm" 
+                                value="<?= e($activeCycle['school_year']) ?>" required>
                         </div>
                     </div>
                 </div>
@@ -117,16 +117,16 @@ messageAlert($showAlert, $message, $success);
                         <div class="form-group mb-0">
                             <label class="font-weight-bold small">Rating Period</label>
                             <input type="text" class="form-control form-control-sm bg-white" 
-                                value="<?= date('F j, Y', strtotime($activeCycle['date_start'])) ?> to <?= date('F j, Y', strtotime($activeCycle['date_end'])) ?>" readonly>
+                                value="<?= e($activeCycle['school_year']) ?>" readonly>
                         </div>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <div class="form-group mb-0">
-                            <label class="font-weight-bold small">Approving Authority <?php showAsterisk() ?></label>
-                            <select name="approving_officer_id" class="form-control form-control-sm" required>
-                                <option value="">-- Select Approving Authority --</option>
+                            <label class="font-weight-bold small">Approving Authority</label>
+                            <select name="approving_officer_id" class="form-control form-control-sm">
+                                <option value="">-- Select later after data entry --</option>
                                 <?php foreach ($sectionHeads as $sh): ?>
                                     <?php if ($sh['employee_id'] != $employeeId): ?>
                                         <option value="<?= e($sh['employee_id']) ?>">

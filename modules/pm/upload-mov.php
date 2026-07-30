@@ -80,7 +80,7 @@ messageAlert($showAlert, $message, $success);
                             <label class="custom-file-label" for="mov-file">Choose file...</label>
                         </div>
                         <small class="form-text text-muted">
-                            Allowed: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Max: 5MB)
+                            Allowed: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Max: 30MB)
                         </small>
                     </div>
 

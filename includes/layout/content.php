@@ -261,6 +261,12 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Coaching Form':
             $file = 'pm/coaching-form';
             break;
+        case 'Recalibration Form':
+            $file = 'pm/recalibration-form';
+            break;
+        case 'Print IPCRF':
+            $file = 'pm/print-ipcrf-nt';
+            break;
         case 'Upload MOV':
             $file = 'pm/upload-mov';
             break;
