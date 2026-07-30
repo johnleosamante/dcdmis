@@ -142,18 +142,36 @@ if (isset($_POST['submit-application'])) {
 
             $applicantType = $isInternalEmployee ? 'Current Division Employee' : 'New Applicant';
             $employeePosText = '';
+            $updateNoticeText = "\nNote: If any of your information listed above is incorrect or not up to date, please approach the Schools Division Office Personnel Section for updating.\n";
+
             if ($isInternalEmployee) {
-                $updateNoticeText = "\nNote: If any of your information listed above is incorrect or not updated, please approach your school Administrative Officer II or the Personnel Section for updating.\n";
+                require_once(root() . '/includes/database/school.php');
                 $empPos = position($applicationId);
+                $isDivisionBased = false;
+
                 if ($empPos) {
                     $posTitle = $empPos['official_title'] ?? '';
                     $stName = $empPos['station'] ?? '';
                     if ($posTitle || $stName) {
                         $employeePosText = "\nCurrent Position: " . ($posTitle ?: 'N/A') . "\nStation / School: " . ($stName ?: 'N/A');
                     }
+
+                    $stId = (string) ($empPos['station_id'] ?? '');
+                    if ($stId === '143' || strtoupper($stId) === 'SDO') {
+                        $isDivisionBased = true;
+                    } else if (!empty($stId)) {
+                        $stSchool = schoolById($stId);
+                        if ($stSchool && (($stSchool['alias'] ?? '') === 'SDO' || ($stSchool['district_id'] ?? '') === 'SDO' || strtolower($stSchool['category'] ?? '') === 'office')) {
+                            $isDivisionBased = true;
+                        }
+                    }
+                } else {
+                    $isDivisionBased = true;
                 }
-            } else {
-                $updateNoticeText = "\nNote: If any of your information listed above is incorrect or needs updating, please approach the Personnel Section for updating.\n";
+
+                if (!$isDivisionBased) {
+                    $updateNoticeText = "\nNote: If any of your information listed above is incorrect or not up to date, please approach your School Administrative Officer II or the Schools Division Office Personnel Section for updating.\n";
+                }
             }
 
             $lastNameText = !empty($applicantData['last_name']) ? $applicantData['last_name'] : 'N/A';
