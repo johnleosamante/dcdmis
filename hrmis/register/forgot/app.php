@@ -50,8 +50,6 @@ if (isset($_POST['recover-applicant-id'])) {
         return;
     }
 
-    $targetDeliveryEmail = PRODUCTION_MODE ? $userEmail : DEVELOPER_EMAIL;
-
     $applicantName = toName($applicantData['last_name'], $applicantData['first_name'], $applicantData['middle_name'], $applicantData['name_extension'], true);
     $title = strtolower($applicantData['sex'] ?? '') === 'male' ? 'Mr. ' : 'Ms. ';
 
@@ -151,8 +149,7 @@ if (isset($_POST['recover-applicant-id'])) {
         }
     }
     $eligibilitiesText = !empty($eligibilitiesList) ? implode(', ', $eligibilitiesList) : 'None';
-
-    $subject = "Applicant ID Recovery";
+    $callUrl = uri() . '/hrmis/apply';
 
     $emailBody = <<<EOT
 Hello, {$title}{$applicantName}!
@@ -190,6 +187,9 @@ Eligibilities: {$eligibilitiesText}
 {$updateNoticeText}
 Please retain your 18-digit applicant ID for reference and use for available call for applications.
 
+Call for Applications:
+{$callUrl}
+
 Download the checklist of requirements from the link below:
 
 https://drive.google.com/file/d/1-t8G_AMDZAVoME4e-i47ZDqXn1gOrLHO
@@ -200,6 +200,9 @@ Thank you.
 
 ***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****
 EOT;
+
+    $targetDeliveryEmail = PRODUCTION_MODE ? $userEmail : DEVELOPER_EMAIL;
+    $subject = "Applicant ID Recovery Request";
 
     if (!sendMail($targetDeliveryEmail, $subject, $emailBody)) {
         $success = false;

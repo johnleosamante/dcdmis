@@ -237,6 +237,7 @@ if (isset($_POST['submit-application'])) {
                 }
             }
             $eligibilitiesText = !empty($eligibilitiesList) ? implode(', ', $eligibilitiesList) : 'None';
+            $callUrl = uri() . '/hrmis/apply';
 
             $emailBody = <<<EOT
 Hello, {$title}{$applicantName}!
@@ -272,7 +273,12 @@ Graduate Studies: {$graduateStudiesText}
 Eligibilities: {$eligibilitiesText}
 ----------------------------------------
 {$updateNoticeText}
-Please retain your Applicant ID ({$applicationCode}) for reference and download the checklist of requirements from the link below:
+Please retain your Applicant ID ({$applicationCode}) for reference and use for available call for applications.
+
+Call for Applications:
+{$callUrl}
+
+Download the checklist of requirements from the link below:
 
 https://drive.google.com/file/d/1-t8G_AMDZAVoME4e-i47ZDqXn1gOrLHO
 
