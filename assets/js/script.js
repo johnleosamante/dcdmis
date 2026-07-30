@@ -85,6 +85,24 @@ const loadData = (href, id = "modal") => {
 	xmlhttp.send();
 };
 
+const updateLiveTotal = () => {
+	const inputs = document.querySelectorAll(".score-input");
+	let total = 0;
+	for (let i = 0; i < inputs.length; i++) {
+		const v = parseFloat(inputs[i].value);
+		if (!isNaN(v)) total += v;
+	}
+	const display = document.getElementById("total-score-display");
+	if (display) display.textContent = total.toFixed(2);
+};
+
+const clampScore = (el, max) => {
+	let v = parseFloat(el.value);
+	if (isNaN(v)) return;
+	if (v < 0) el.value = 0;
+	else if (v > max) el.value = max;
+};
+
 const generateRandomPassword = (length) => {
 	const chars =
 		"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*?";

@@ -34,6 +34,7 @@ if ($mode === 'view'):
                                 <tr>
                                     <th class="text-center" style="width:60px;">#</th>
                                     <th>Criterion</th>
+                                    <th>Description</th>
                                     <th class="text-center" style="width:140px;">Max Points</th>
                                 </tr>
                             </thead>
@@ -42,7 +43,8 @@ if ($mode === 'view'):
                                 foreach ($criteria as $cr): ?>
                                     <tr>
                                         <td class="text-center align-middle"><?= $i++ ?></td>
-                                        <td class="align-middle"><?= e($cr['criterion_name']) ?></td>
+                                        <td class="align-middle font-weight-bold"><?= e($cr['criterion_name']) ?></td>
+                                        <td class="align-middle small text-muted"><?= nl2br(e($cr['description'] ?? '')) ?></td>
                                         <td class="text-center align-middle font-weight-bold">
                                             <?= e(number_format($cr['max_points'], 2)) ?>
                                         </td>
@@ -51,7 +53,7 @@ if ($mode === 'view'):
                             </tbody>
                             <tfoot>
                                 <tr class="table-active font-weight-bold">
-                                    <td colspan="2" class="text-right">Total Maximum Points:</td>
+                                    <td colspan="3" class="text-right">Total Maximum Points:</td>
                                     <td class="text-center"><?= e(number_format($totalMax, 2)) ?></td>
                                 </tr>
                             </tfoot>
@@ -232,6 +234,7 @@ elseif ($mode === 'edit-ranking'):
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Criterion</th>
+                                            <th>Description</th>
                                             <th class="text-center" style="width:140px;">Max Points</th>
                                             <th class="text-center" style="width:120px;">Action</th>
                                         </tr>
@@ -243,6 +246,10 @@ elseif ($mode === 'edit-ranking'):
                                                     <span class="criterion-display"><?= e($cr['criterion_name']) ?></span>
                                                     <input type="text" class="form-control form-control-sm criterion-edit d-none"
                                                         value="<?= e($cr['criterion_name']) ?>">
+                                                </td>
+                                                <td class="align-middle">
+                                                    <span class="criterion-desc-display small text-muted"><?= nl2br(e($cr['description'] ?? '')) ?></span>
+                                                    <textarea class="form-control form-control-sm criterion-desc-edit d-none" rows="3"><?= e($cr['description'] ?? '') ?></textarea>
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <span
@@ -256,8 +263,10 @@ elseif ($mode === 'edit-ranking'):
                                                         onclick="
                                                         var row=this.closest('tr');
                                                         row.querySelector('.criterion-display').classList.add('d-none');
+                                                        row.querySelector('.criterion-desc-display').classList.add('d-none');
                                                         row.querySelector('.criterion-points-display').classList.add('d-none');
                                                         row.querySelector('.criterion-edit').classList.remove('d-none');
+                                                        row.querySelector('.criterion-desc-edit').classList.remove('d-none');
                                                         row.querySelector('.criterion-points-edit').classList.remove('d-none');
                                                         this.classList.add('d-none');
                                                         row.querySelector('.criterion-save-btn').classList.remove('d-none');
@@ -268,10 +277,16 @@ elseif ($mode === 'edit-ranking'):
                                                         var id='<?= e($cr['id']) ?>';
                                                         var name=row.querySelector('.criterion-edit').value;
                                                         var pts=row.querySelector('.criterion-points-edit').value;
+                                                        var desc=row.querySelector('.criterion-desc-edit').value;
                                                         var f=document.createElement('form');
                                                         f.method='POST';
                                                         f.action='';
                                                         f.innerHTML='<input type=&quot;hidden&quot; name=&quot;csrf_token&quot; value=&quot;<?= csrf_token() ?>&quot;><input type=&quot;hidden&quot; name=&quot;update-criterion&quot; value=&quot;1&quot;><input type=&quot;hidden&quot; name=&quot;criterion_id&quot; value=&quot;'+id+'&quot;><input type=&quot;hidden&quot; name=&quot;criterion_name&quot; value=&quot;'+name+'&quot;><input type=&quot;hidden&quot; name=&quot;max_points&quot; value=&quot;'+pts+'&quot;>';
+                                                        var ta=document.createElement('textarea');
+                                                        ta.name='criterion_description';
+                                                        ta.value=desc;
+                                                        ta.style.display='none';
+                                                        f.appendChild(ta);
                                                         document.body.appendChild(f);
                                                         f.submit();
                                                     "><i class="fas fa-check"></i></button>
@@ -304,6 +319,7 @@ elseif ($mode === 'edit-ranking'):
                                         <tr>
                                             <th class="text-center" style="width:80px;">Use</th>
                                             <th>Criterion</th>
+                                            <th>Description</th>
                                             <th class="text-center" style="width:180px;">Maximum Points</th>
                                         </tr>
                                     </thead>
@@ -319,6 +335,11 @@ elseif ($mode === 'edit-ranking'):
                                                 </td>
                                                 <td class="align-middle font-weight-bold text-dark">
                                                     <?= e($libraryCriterion['criterion_name']) ?>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <textarea class="form-control form-control-sm" rows="2"
+                                                        name="library_description[<?= e($libraryCriterion['id']) ?>]"
+                                                        placeholder="Optional description / sub-items"><?= e($awardCriterion['description'] ?? '') ?></textarea>
                                                 </td>
                                                 <td class="align-middle">
                                                     <input type="number" class="form-control form-control-sm text-center"
@@ -341,7 +362,9 @@ elseif ($mode === 'edit-ranking'):
                             <button type="button" class="btn btn-sm btn-success" onclick="
                                 var list=document.getElementById('criteria-list');
                                 var div=document.createElement('div');
-                                div.className='form-row align-items-end mb-2 criteria-row';
+                                div.className='mb-2 criteria-row border rounded p-2';
+                                var row1=document.createElement('div');
+                                row1.className='form-row align-items-end';
                                 var col1=document.createElement('div');
                                 col1.className='col';
                                 col1.innerHTML='<label class=&quot;small text-muted mb-1&quot;>Criterion Name</label><input type=&quot;text&quot; class=&quot;form-control&quot; name=&quot;criterion_name[]&quot; placeholder=&quot;e.g. Teaching Effectiveness&quot; required>';
@@ -357,31 +380,43 @@ elseif ($mode === 'edit-ranking'):
                                 btn.onclick=function(){this.closest('.criteria-row').remove();};
                                 btn.innerHTML='<i class=&quot;fas fa-trash-alt&quot;></i>';
                                 col3.appendChild(btn);
-                                div.appendChild(col1);
-                                div.appendChild(col2);
-                                div.appendChild(col3);
+                                row1.appendChild(col1);
+                                row1.appendChild(col2);
+                                row1.appendChild(col3);
+                                div.appendChild(row1);
+                                var row2=document.createElement('div');
+                                row2.className='mt-2';
+                                row2.innerHTML='<label class=&quot;small text-muted mb-1&quot;>Description / Sub-items</label><textarea class=&quot;form-control form-control-sm&quot; name=&quot;criterion_description[]&quot; rows=&quot;2&quot; placeholder=&quot;Optional description or sub-items&quot;></textarea>';
+                                div.appendChild(row2);
                                 list.appendChild(div);
                             "><i class="fas fa-plus fa-fw"></i> Add Criterion</button>
                         </div>
                         <div class="card-body" id="criteria-list">
                             <?php if (!empty($customCriteria)): ?>
                                 <?php foreach ($customCriteria as $cr): ?>
-                                    <div class="form-row align-items-end mb-2 criteria-row">
-                                        <div class="col">
-                                            <label class="small text-muted mb-1">Criterion Name</label>
-                                            <input type="text" class="form-control" name="criterion_name[]"
-                                                value="<?= e($cr['criterion_name']) ?>" placeholder="e.g. Teaching Effectiveness"
-                                                required>
+                                    <div class="mb-2 criteria-row border rounded p-2">
+                                        <div class="form-row align-items-end">
+                                            <div class="col">
+                                                <label class="small text-muted mb-1">Criterion Name</label>
+                                                <input type="text" class="form-control" name="criterion_name[]"
+                                                    value="<?= e($cr['criterion_name']) ?>" placeholder="e.g. Teaching Effectiveness"
+                                                    required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="small text-muted mb-1">Maximum Points</label>
+                                                <input type="number" class="form-control" name="max_points[]"
+                                                    value="<?= e($cr['max_points']) ?>" min="0" step="any" required>
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="button" class="btn btn-outline-danger"
+                                                    onclick="this.closest('.criteria-row').remove();" title="Remove criterion"><i
+                                                        class="fas fa-trash-alt"></i></button>
+                                            </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label class="small text-muted mb-1">Maximum Points</label>
-                                            <input type="number" class="form-control" name="max_points[]"
-                                                value="<?= e($cr['max_points']) ?>" min="0" step="any" required>
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="button" class="btn btn-outline-danger"
-                                                onclick="this.closest('.criteria-row').remove();" title="Remove criterion"><i
-                                                    class="fas fa-trash-alt"></i></button>
+                                        <div class="mt-2">
+                                            <label class="small text-muted mb-1">Description / Sub-items</label>
+                                            <textarea class="form-control form-control-sm" name="criterion_description[]"
+                                                rows="2" placeholder="Optional description or sub-items"><?= e($cr['description'] ?? '') ?></textarea>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
