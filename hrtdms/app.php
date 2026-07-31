@@ -135,7 +135,7 @@ You can also go to the DepEd Dipolog City Division Training Repository ($reposit
 
 Thank you.
 
-***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****"
+***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****
 EOT;
 
                     sendMail($employeeEmail, $title, $emailMessage);
