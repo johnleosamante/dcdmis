@@ -1,6 +1,6 @@
 <?php
 // hrmis/apply/app.php
-$appTitle = $page = 'Online Application Form';
+$appTitle = $page = 'Online Application';
 $enableScripts = true;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && empty($_FILES)) {
