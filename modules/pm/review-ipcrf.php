@@ -107,7 +107,7 @@ messageAlert($showAlert, $message, $success);
                     </tr>
                     <tr>
                         <td class="font-weight-bold">Review Period:</td>
-                        <td><?= e($ipcrf['school_year']) ?></td>
+                        <td><?= e($ipcrf['review_period'] ?? $ipcrf['school_year']) ?></td>
                     </tr>
                     <tr>
                         <td class="font-weight-bold">Division:</td>
@@ -131,7 +131,7 @@ messageAlert($showAlert, $message, $success);
                     </tr>
                     <tr>
                         <td class="font-weight-bold">Rating Period:</td>
-                        <td><?= date('F j, Y', strtotime($ipcrf['date_start'])) ?> to <?= date('F j, Y', strtotime($ipcrf['date_end'])) ?></td>
+                        <td><?= e($ipcrf['school_year']) ?></td>
                     </tr>
                 </table>
             </div>
@@ -273,6 +273,7 @@ messageAlert($showAlert, $message, $success);
                 <table class="table table-sm table-hover mb-0">
                     <thead class="bg-light">
                         <tr class="small">
+                            <th>KRA</th>
                             <th>Objective</th>
                             <th>File</th>
                             <th>Description</th>
@@ -283,6 +284,7 @@ messageAlert($showAlert, $message, $success);
                     <tbody>
                         <?php foreach ($movList as $mov): ?>
                             <tr class="small">
+                                <td><?= e($mov['kra_title']) ?></td>
                                 <td><?= e(substr($mov['objective'], 0, 50)) ?>...</td>
                                 <td>
                                     <i class="fas fa-file mr-1"></i>
@@ -329,12 +331,18 @@ messageAlert($showAlert, $message, $success);
                     <a href="<?= customUri('pis', 'Coaching Form', $ipcrfId) ?>" class="btn btn-info">
                         <i class="fas fa-clipboard-list mr-1"></i> Coaching Form
                     </a>
+                    <a href="<?= customUri('pis', 'Recalibration Form', $ipcrfId) ?>" class="btn btn-info">
+                        <i class="fas fa-balance-scale mr-1"></i> Recalibration Form
+                    </a>
                 <?php endif; ?>
                 <?php if ((int) $ipcrf['phase'] >= 4): ?>
                     <a href="<?= customUri('pis', 'Phase 4', $ipcrfId) ?>" class="btn btn-success">
                         <i class="fas fa-award mr-1"></i> Development Planning
                     </a>
                 <?php endif; ?>
+                <a href="<?= customUri('pis', 'Print IPCRF', $ipcrfId) ?>" target="_blank" class="btn btn-dark">
+                    <i class="fas fa-print mr-1"></i> Print IPCRF
+                </a>
             </div>
             
             <?php if ($canApprove || $canRate): ?>

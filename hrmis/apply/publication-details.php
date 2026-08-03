@@ -68,8 +68,16 @@ if ($code) {
                         </div>
                         <input type="text" class="form-control" id="applicant-id" name="applicant_id"
                             placeholder="Enter your 18-digit applicant ID..." required>
-                        <div class="small text-left mt-1">
-                            <a href=" <?= uri() . '/hrmis/register' ?>" target="_blank">Don't have an applicant ID yet?</a>
+                        <div
+                            class="small mt-2 d-flex flex-column flex-sm-row justify-content-between align-items-center text-center">
+                            <div class="mb-2 mb-sm-0">
+                                <a href="<?= uri() . '/hrmis/register' ?>" target="_blank">Don't have an applicant ID
+                                    yet?</a>
+                            </div>
+                            <div>
+                                <a href="<?= uri() . '/hrmis/register/forgot' ?>" target="_blank">Forgot your applicant
+                                    ID?</a>
+                            </div>
                         </div>
                     </div>
 

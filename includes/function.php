@@ -158,7 +158,8 @@ function getDateDifference($date)
 
 function e($string)
 {
-    return htmlspecialchars((string) $string, ENT_QUOTES, 'UTF-8');
+    $string = (string) $string;
+    return str_replace(['<', '>'], ['&lt;', '&gt;'], $string);
 }
 
 function csrf_token()

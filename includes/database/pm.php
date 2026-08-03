@@ -19,14 +19,15 @@ function pmCycle($id)
     return find("SELECT * FROM `pm_cycles` WHERE `id` = ?", [$id]);
 }
 
-function createPmCycle($title, $schoolYear, $dateStart, $dateEnd, $createdBy)
+function createPmCycle($title, $schoolYear, $dateStart, $dateEnd, $createdBy, $status = 'Active')
 {
     return insert('pm_cycles', [
         'title' => $title,
         'school_year' => $schoolYear,
         'date_start' => $dateStart,
         'date_end' => $dateEnd,
-        'created_by' => $createdBy
+        'created_by' => $createdBy,
+        'status' => $status
     ]);
 }
 
@@ -349,13 +350,14 @@ function pmAllIpcrf($cycleId = null, $status = null)
     return query($sql, $params) ?: [];
 }
 
-function createPmIpcrf($cycleId, $employeeId, $validatorId = null, $positionTitle = null)
+function createPmIpcrf($cycleId, $employeeId, $validatorId = null, $positionTitle = null, $reviewPeriod = null)
 {
     return insert('pm_ipcrf', [
         'cycle_id' => $cycleId,
         'employee_id' => $employeeId,
         'validator_id' => $validatorId,
         'position_title' => $positionTitle,
+        'review_period' => $reviewPeriod,
         'status' => 'Draft',
         'phase' => 1
     ]);
@@ -858,4 +860,54 @@ function pmCountRatees($validatorId, $cycleId)
         [$validatorId, $cycleId]
     );
     return $result ? (int)$result['count'] : 0;
+}
+
+// ========== RECALIBRATION (Phases 2 & 3) ==========
+
+function pmRecalibrations($ipcrfId)
+{
+    return query(
+        "SELECT * FROM `pm_recalibrations` WHERE `ipcrf_id` = ? ORDER BY `created_at` ASC",
+        [$ipcrfId]
+    ) ?: [];
+}
+
+function pmRecalibration($id)
+{
+    return find("SELECT * FROM `pm_recalibrations` WHERE `id` = ?", [$id]);
+}
+
+function createPmRecalibration($ipcrfId, $ipcrfContent, $proposedAmendment, $justification, $createdBy)
+{
+    return insert('pm_recalibrations', [
+        'ipcrf_id' => $ipcrfId,
+        'ipcrf_content' => $ipcrfContent,
+        'proposed_amendment' => $proposedAmendment,
+        'justification' => $justification,
+        'rater_status' => 'Pending',
+        'rater_remarks' => '',
+        'created_by' => $createdBy
+    ]);
+}
+
+function updatePmRecalibration($id, $ipcrfContent, $proposedAmendment, $justification)
+{
+    return update('pm_recalibrations', [
+        'ipcrf_content' => $ipcrfContent,
+        'proposed_amendment' => $proposedAmendment,
+        'justification' => $justification
+    ], '`id` = ?', [$id]);
+}
+
+function updatePmRecalibrationRater($id, $raterStatus, $raterRemarks)
+{
+    return update('pm_recalibrations', [
+        'rater_status' => $raterStatus,
+        'rater_remarks' => $raterRemarks
+    ], '`id` = ?', [$id]);
+}
+
+function deletePmRecalibration($id)
+{
+    return delete('pm_recalibrations', '`id` = ?', [$id]);
 }

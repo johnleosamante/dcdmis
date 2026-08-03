@@ -47,8 +47,25 @@
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label for="ext" class="mb-0">Name Extension</label>
-                            <input id="ext" name="ext" type="text" class="form-control" maxlength="5"
-                                <?= setActiveNavigation($editMode, 'title="Example: Jr., Sr., III (Leave blank if not applicable)"') ?> value="<?= e($employee['name_extension']) ?>" <?= setActiveNavigation(!$editMode, 'readonly') ?>>
+                            <?php if (!$editMode): ?>
+                                <input id="ext" type="text" class="form-control text-uppercase" value="<?= toHandleNull($employee['name_extension'], 'N/A') ?>" readonly>
+                            <?php else: ?>
+                                <select id="ext" name="ext" class="form-control">
+                                    <?php $name_extension = isset($employee['name_extension']) ? strtolower($employee['name_extension']) : ''; ?>
+                                    <option value="" <?= setOptionSelected('', $name_extension) ?>>Not Applicable</option>
+                                    <option value="jr." <?= setOptionSelected('jr.', $name_extension) ?>>JR.</option>
+                                    <option value="sr." <?= setOptionSelected('sr.', $name_extension) ?>>SR.</option>
+                                    <option value="ii" <?= setOptionSelected('ii', $name_extension) ?>>II</option>
+                                    <option value="iii" <?= setOptionSelected('iii', $name_extension) ?>>III</option>
+                                    <option value="iv" <?= setOptionSelected('iv', $name_extension) ?>>IV</option>
+                                    <option value="v" <?= setOptionSelected('v', $name_extension) ?>>V</option>
+                                    <option value="vi" <?= setOptionSelected('vi', $name_extension) ?>>VI</option>
+                                    <option value="vii" <?= setOptionSelected('vii', $name_extension) ?>>VII</option>
+                                    <option value="viii" <?= setOptionSelected('viii', $name_extension) ?>>VIII</option>
+                                    <option value="ix" <?= setOptionSelected('ix', $name_extension) ?>>IX</option>
+                                    <option value="x" <?= setOptionSelected('x', $name_extension) ?>>X</option>
+                                </select>
+                            <?php endif ?>
                         </div>
                     </div>
                 </div>

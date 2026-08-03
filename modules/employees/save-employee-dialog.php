@@ -39,8 +39,20 @@ require_once(root() . '/includes/layout/components.php');
                     <div class="col-4">
                         <div class="form-group">
                             <label for="ext" class="mb-0">Extension</label>
-                            <input id="ext" name="ext" class="form-control" placeholder="ex. JR., SR., III"
-                                title="ex. JR., SR., III, Leave blank if not applicable" type="text">
+                            <select class="form-control" id="ext" name="ext">
+                                <option value="">N/A</option>
+                                <option value="jr.">JR.</option>
+                                <option value="sr.">SR.</option>
+                                <option value="ii">II</option>
+                                <option value="iii">III</option>
+                                <option value="iv">IV</option>
+                                <option value="v">V</option>
+                                <option value="vi">VI</option>
+                                <option value="vii">VII</option>
+                                <option value="viii">VIII</option>
+                                <option value="ix">IX</option>
+                                <option value="x">X</option>
+                            </select>
                         </div>
                     </div>
                 </div>

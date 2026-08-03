@@ -42,8 +42,18 @@
                     <label class="custom-control-label font-weight-bold" for="is_current_employee">I am a current
                         employee of the division</label>
                 </div>
-                <small class="form-text text-muted">Check this if you're already employed with us to simplify
+                <small class="pl-4 form-text text-muted">Check this if you're already employed with us to simplify
                     registration</small>
+            </div>
+
+            <div class="small">
+                <p>
+                    Already have an applicant ID? No need to register again. Proceed and apply to available
+                    <a href="<?= uri() . '/hrmis/apply' ?>" target="_blank">call for applications</a> instead.
+                </p>
+                <p>
+                    <a href="<?= uri() . '/hrmis/register/forgot' ?>" target="_blank">Forgot your applicant ID?</a>
+                </p>
             </div>
 
             <div id="employee-fields"
@@ -71,9 +81,21 @@
 
                     <div class="form-group col-lg-3 col-md-3 col-sm-4 col-xs-12">
                         <label for="name-extension" class="small font-weight-bold mb-0">Name Extension</label>
-                        <input type="text" class="form-control" id="name-extension" name="name_extension"
-                            placeholder="Name Extension" maxlength="5"
-                            value="<?= isset($form_data['name_extension']) ? e($form_data['name_extension']) : '' ?>">
+                        <select class="form-control" id="name-extension" name="name_extension">
+                            <?php $name_extension = isset($form_data['name_extension']) ? strtolower($form_data['name_extension']) : ''; ?>
+                            <option value="" <?= !isset($name_extension) ? 'selected' : ''; ?>>Not Applicable</option>
+                            <option value="jr." <?= (isset($name_extension) && $name_extension === 'jr.') ? 'selected' : ''; ?>>JR.</option>
+                            <option value="sr." <?= (isset($name_extension) && $name_extension === 'sr.') ? 'selected' : ''; ?>>SR.</option>
+                            <option value="ii" <?= (isset($name_extension) && $name_extension === 'ii') ? 'selected' : ''; ?>>II</option>
+                            <option value="iii" <?= (isset($name_extension) && $name_extension === 'iii') ? 'selected' : ''; ?>>III</option>
+                            <option value="iv" <?= (isset($name_extension) && $name_extension === 'iv') ? 'selected' : ''; ?>>IV</option>
+                            <option value="v" <?= (isset($name_extension) && $name_extension === 'v') ? 'selected' : ''; ?>>V</option>
+                            <option value="vi" <?= (isset($name_extension) && $name_extension === 'vi') ? 'selected' : ''; ?>>VI</option>
+                            <option value="vii" <?= (isset($name_extension) && $name_extension === 'vii') ? 'selected' : ''; ?>>VII</option>
+                            <option value="viii" <?= (isset($name_extension) && $name_extension === 'viii') ? 'selected' : ''; ?>>VIII</option>
+                            <option value="ix" <?= (isset($name_extension) && $name_extension === 'ix') ? 'selected' : ''; ?>>IX</option>
+                            <option value="x" <?= (isset($name_extension) && $name_extension === 'x') ? 'selected' : ''; ?>>X</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-row">
@@ -394,10 +416,6 @@
             <button name="register-applicant" type="submit" class="btn btn-primary btn-block mt-4">
                 Register as Applicant
             </button>
-
-            <div class="small text-center mt-3">
-                <a href=" <?= uri() . '/hrmis/apply' ?>" target="_blank">Already have an applicant ID?</a>
-            </div>
         </form>
     </div>
 </div>

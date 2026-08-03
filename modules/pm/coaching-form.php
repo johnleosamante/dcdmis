@@ -21,7 +21,7 @@ if (!$isOwner && !$isValidator) {
     return;
 }
 
-// Phase 2 is for monitoring and coaching
+// Coaching is available starting Phase 2 through Phase 4
 if ($ipcrf['phase'] < 2) {
     redirect(customUri('pis', 'IPCRF Details', $ipcrfId));
 }
@@ -94,7 +94,7 @@ messageAlert($showAlert, $message, $success);
                 <table class="table table-sm table-borderless mb-0">
                     <tr>
                         <td class="font-weight-bold" width="35%">Rating Period:</td>
-                        <td><?= date('F j, Y', strtotime($ipcrf['date_start'])) ?> - <?= date('F j, Y', strtotime($ipcrf['date_end'])) ?></td>
+                        <td><?= e($ipcrf['review_period'] ?? $ipcrf['school_year']) ?></td>
                     </tr>
                     <tr>
                         <td class="font-weight-bold">Rater:</td>
@@ -160,7 +160,7 @@ messageAlert($showAlert, $message, $success);
                                 <td class="align-middle"><?= nl2br(e($entry['feedback'])) ?></td>
                                 <td class="align-middle"><?= nl2br(e($entry['action_agreed'])) ?></td>
                                 <td class="align-middle text-center">
-                                    <?php if ($isValidator): ?>
+                                    <?php if ($isOwner || $isValidator): ?>
                                         <button type="button" class="btn btn-sm btn-outline-primary mb-1" 
                                             data-toggle="modal" data-target="#editCoachingModal<?= $entry['id'] ?>" title="Edit">
                                             <i class="fas fa-edit fa-sm"></i>
