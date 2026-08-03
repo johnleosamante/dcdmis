@@ -658,6 +658,9 @@ messageAlert($showAlert, $message, $success);
                                 <?php if (!empty($rankSchedId)): ?>
                                     <?php if ($isFinalized): ?>
                                         <span class="badge badge-danger p-2 ml-2"><i class="fas fa-trophy"></i> Winner Declared</span>
+                                        <?php if (!$nominatorOnly): ?>
+                                            <?php modalButtonSplit(uri() . '/modules/race/revert-winner-dialog.php?sched=' . cipher($rankSchedId) . '&award=' . cipher($rankAwardId) . ($rankLevel ? '&level=' . cipher($rankLevel) : ''), 'Revert Winner', 'fa-undo', 'Revert Winner', 'warning') ?>
+                                        <?php endif; ?>
                                     <?php elseif (empty($rankCriteria)): ?>
                                         <?php modalButtonSplit(uri() . '/modules/race/notice-dialog.php?type=no-criteria&award=' . cipher($rankAwardId), 'Save Rankings', 'fa-save', 'Save Rankings', 'warning') ?>
                                     <?php elseif (!$hasScores): ?>
