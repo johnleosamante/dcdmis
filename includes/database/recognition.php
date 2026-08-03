@@ -1092,3 +1092,30 @@ function declareWinnerFromRankings($schedule_id, $award_id, $ranked_by = null, $
     promoteMasterTeacherWinnerToUlirangGuro($schedule_id, $award_id, $ranked_by);
     return $winner['nominee_id'];
 }
+
+function revertWinner($schedule_id, $award_id, $level = null)
+{
+    if ($level) {
+        query("UPDATE `rankings` AS r
+               INNER JOIN `awards_categories_nominees` AS n ON r.`nominee_id` = n.`id`
+               SET r.`status` = 'Ranked'
+               WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`level` = ?",
+            [$schedule_id, $award_id, $level]
+        );
+        query("UPDATE `awards_categories_nominees` AS n
+               INNER JOIN `rankings` AS r ON n.`id` = r.`nominee_id`
+               SET n.`status` = 'Nominated'
+               WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`level` = ? AND n.`status` = 'Awarded'",
+            [$schedule_id, $award_id, $level]
+        );
+    } else {
+        query("UPDATE `rankings` SET `status` = 'Ranked' WHERE `schedule_id` = ? AND `award_id` = ?", [$schedule_id, $award_id]);
+        query("UPDATE `awards_categories_nominees` AS n
+               INNER JOIN `rankings` AS r ON n.`id` = r.`nominee_id`
+               SET n.`status` = 'Nominated'
+               WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`status` = 'Awarded'",
+            [$schedule_id, $award_id]
+        );
+    }
+    return true;
+}
