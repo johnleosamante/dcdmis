@@ -60,24 +60,13 @@ $stmt = $mysqli->prepare("
     WHERE id = ?
 ");
 
-$stmt->bind_param("i", $trainingID);
+$stmt->bind_param("s", $trainingID);
 $stmt->execute();
 $training = $stmt->get_result()->fetch_assoc();
 $title = $training['title'] ?? 'Training';
+
 $certificate = 'https://depeddipolog.com/print/?&v=' . urlencode(base64_encode("Certificate of Participation")) . '&id=' . urlencode(base64_encode($trainingID)) . '&p=' . urlencode(base64_encode($employeeID));
 $appearance = 'https://depeddipolog.com/print/?&v=' . urlencode(base64_encode("Certificate of Appearance")) . '&id=' . urlencode(base64_encode($trainingID)) . '&p=' . urlencode(base64_encode($employeeID));
-
-$stmt = $mysqli->prepare("
-    SELECT title
-    FROM trainings
-    WHERE id = ?
-");
-
-$stmt->bind_param("i", $trainingID);
-$stmt->execute();
-$training = $stmt->get_result()->fetch_assoc();
-
-$title = $training['title'] ?? 'Training';
 
 // SEND EMAIL
 $mail = new PHPMailer(true);
