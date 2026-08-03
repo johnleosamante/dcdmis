@@ -152,27 +152,58 @@ function archivedEmployees($activeStatuses = ['Active', 'Registered'])
 
 function employeeSearch($text)
 {
-    $searchTerm = "%{$text}%";
-    $params = [
-        $text,
-        $searchTerm,
-        $searchTerm,
-        $searchTerm,
-        $text,
-        $text,
-        $text,
-        $text,
-        $text,
-        $text
+    $text = trim($text);
+    if ($text === '') {
+        return [];
+    }
+
+    $whereClauses = [];
+    $params = [];
+    $idFields = [
+        'p.id',
+        'p.agency_id',
+        'p.gsis_crn',
+        'p.pagibig',
+        'p.philhealth',
+        'p.sss',
+        'p.tin'
     ];
-    $sql = "SELECT p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,
+
+    $idConditions = [];
+    foreach ($idFields as $field) {
+        $idConditions[] = "{$field} = ?";
+        $params[] = $text;
+    }
+
+    $whereClauses[] = '(' . implode(' OR ', $idConditions) . ')';
+    $cleanText = str_replace([',', '.'], ' ', $text);
+    $terms = preg_split('/\s+/', $cleanText, -1, PREG_SPLIT_NO_EMPTY);
+
+    if (!empty($terms)) {
+        $nameConditions = [];
+
+        foreach ($terms as $term) {
+            $nameConditions[] = "(
+                p.first_name LIKE ? 
+                OR p.middle_name LIKE ? 
+                OR p.last_name LIKE ? 
+                OR p.name_extension LIKE ?
+            )";
+
+            $wildcard = "%{$term}%";
+            array_push($params, $wildcard, $wildcard, $wildcard, $wildcard);
+        }
+
+        $whereClauses[] = '(' . implode(' AND ', $nameConditions) . ')';
+    }
+
+    $sql = "SELECT 
+                p.`id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,
                 p.`sex`, p.`birthdate`, p.`agency_id`, 
                 s.`position_id`, s.`station_id`, p.`profile_picture`, p.`status` 
             FROM `employees` AS p 
             INNER JOIN `station_assignments` AS s ON p.`id` = s.`employee_id` 
-            WHERE p.`id` = ? OR p.`last_name` LIKE ? OR p.`first_name` LIKE ? 
-                OR p.`middle_name` LIKE ? OR p.`gsis_crn` = ? OR p.`pagibig` = ? 
-                OR p.`philhealth` = ? OR p.`sss` = ? OR p.`tin` = ? OR p.`agency_id` = ? 
+            WHERE " . implode(' OR ', $whereClauses) . "
             ORDER BY p.`last_name` ASC, p.`first_name` ASC, p.`middle_name` ASC";
     $results = query($sql, $params);
     return is_array($results) ? $results : [];
