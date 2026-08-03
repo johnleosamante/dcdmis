@@ -71,18 +71,20 @@ $query = "
         ta.employee_id,
         ta.time_in,
         ta.date_in,
-
         CONCAT(
             UPPER(e.last_name), ', ',
-            e.first_name, ' ',
+            e.first_name,
             IF(
-                e.middle_name IS NOT NULL 
-                AND e.middle_name != '',
-                CONCAT(LEFT(e.middle_name,1), '.'),
+                e.name_extension IS NOT NULL AND e.name_extension != '',
+                CONCAT(' ', e.name_extension),
+                ''
+            ),
+            IF(
+                e.middle_name IS NOT NULL AND e.middle_name != '',
+                CONCAT(' ', LEFT(e.middle_name, 1), '.'),
                 ''
             )
         ) AS name,
-
         e.sex,
         e.email_address,
         e.mobile_number,
@@ -268,9 +270,9 @@ tbody td {
                 </th>
                 
             ';
-            foreach ($dates as $d) {
+foreach ($dates as $d) {
 
-                $html .= '
+    $html .= '
 
                     <th colspan="2">
                         ' . date("M d", strtotime($d)) . '
@@ -278,8 +280,8 @@ tbody td {
 
                 ';
 
-            }
-            $html .= '
+}
+$html .= '
 
                     <th rowspan="2" width="10%">
                         SIGNATURE
@@ -301,18 +303,18 @@ tbody td {
 
                 <tr>
 
-        ';     
-        foreach ($dates as $d) {
+        ';
+foreach ($dates as $d) {
 
-            $html .= '
+    $html .= '
 
                 <th>IN</th>
                 <th>OUT</th>
 
             ';
 
-        }
-        $html .= '
+}
+$html .= '
 
         </tr>
 
