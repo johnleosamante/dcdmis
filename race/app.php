@@ -660,6 +660,25 @@ if (isset($_POST['finalize-winner'])) {
     }
 }
 
+if (isset($_POST['revert-winner-ranking'])) {
+    $schedule_id = isset($_POST['rank_schedule_id']) ? sanitize($_POST['rank_schedule_id']) : null;
+    $award_id = isset($_POST['rank_award_id']) ? sanitize($_POST['rank_award_id']) : null;
+    $level = isset($_POST['rank_level']) ? sanitize($_POST['rank_level']) : null;
+    $showAlert = true;
+    $success = false;
+
+    if ($nominatorOnly) {
+        $message = 'You do not have permission to perform this action.';
+    } elseif ($schedule_id && $award_id) {
+        revertWinner($schedule_id, $award_id, $level ?: null);
+        $message = 'Winner has been reverted successfully. Ranking is now open again.' . ($level ? ' (' . $level . ')' : '');
+        $success = true;
+        createSystemLog($stationId, $userId, 'Reverted winner' . ($level ? ' (' . $level . ')' : ''), $award_id, clientIp());
+    } else {
+        $message = 'Schedule and award are required to revert winner.';
+    }
+}
+
 if (isset($_POST['revert-winner']) || isset($_POST['disqualify-nominee'])) {
     $nominee_id = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $showAlert = true;
