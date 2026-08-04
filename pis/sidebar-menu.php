@@ -21,10 +21,10 @@ if ($isSchoolPortal || $isNonDivision) {
 $schoolInfo = schoolByHead($userId);
 if ($schoolInfo) {
     sidebarDivider();
-    sidebarMenuItem(customUri('pis', 'Employees'), 'School Employees', 'fa-users', isset($url) && ($url === 'Employees' || $url === 'Active Employees'));
+    sidebarMenuItem(customUri('pis', 'School Employees'), 'School Employees', 'fa-users', isset($url) && ($url === 'Employees' || $url === 'Active Employees' || $url === 'School Employees'));
 }
 
-$showMonitoringTools = dtsUser($userId) && station($userId)['station_id'] === DIVISION_ID;
+$showMonitoringTools = (dtsUser($userId) && station($userId)['station_id'] === DIVISION_ID) || (bool) $schoolInfo;
 
 if ($showMonitoringTools) {
     sidebarDivider();
