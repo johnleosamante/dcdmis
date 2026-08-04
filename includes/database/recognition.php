@@ -254,6 +254,57 @@ function activePrincipalEmployees($stationId = null, $districtId = null)
     return is_array($results) ? $results : [];
 }
 
+function activeHeadTeacherEmployees($stationId = null, $districtId = null)
+{
+    $sql = "SELECT p.`id` AS `employee_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,
+                pos.`official_title`, pos.`category` AS `position_category`,
+                sch.`name` AS `school_name`, sch.`alias` AS `school_alias`
+            FROM `employees` AS p
+            INNER JOIN (
+                SELECT sa1.employee_id, sa1.station_id, sa1.position_id
+                FROM station_assignments sa1
+                WHERE sa1.created_at = (
+                    SELECT MAX(sa2.created_at) FROM station_assignments sa2 WHERE sa2.employee_id = sa1.employee_id
+                )
+            ) AS s ON p.`id` = s.`employee_id`
+            INNER JOIN `positions` AS pos ON s.`position_id` = pos.`id`
+            INNER JOIN `schools` AS sch ON s.`station_id` = sch.`id`
+            WHERE LOWER(pos.`official_title`) LIKE '%head teacher%' AND p.`status` = 'Active'";
+    $params = [];
+    if ($stationId !== null) {
+        $sql .= " AND s.`station_id` = ?";
+        $params[] = $stationId;
+    }
+    if ($districtId !== null) {
+        $sql .= " AND sch.`district_id` = ?";
+        $params[] = $districtId;
+    }
+    $sql .= " ORDER BY p.`last_name` ASC, p.`first_name` ASC";
+    $results = query($sql, $params);
+    return is_array($results) ? $results : [];
+}
+
+function activeSupervisorEmployees()
+{
+    $sql = "SELECT p.`id` AS `employee_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,
+                pos.`official_title`, pos.`category` AS `position_category`,
+                sch.`name` AS `school_name`, sch.`alias` AS `school_alias`
+            FROM `employees` AS p
+            INNER JOIN (
+                SELECT sa1.employee_id, sa1.station_id, sa1.position_id
+                FROM station_assignments sa1
+                WHERE sa1.created_at = (
+                    SELECT MAX(sa2.created_at) FROM station_assignments sa2 WHERE sa2.employee_id = sa1.employee_id
+                )
+            ) AS s ON p.`id` = s.`employee_id`
+            INNER JOIN `positions` AS pos ON s.`position_id` = pos.`id`
+            LEFT JOIN `schools` AS sch ON s.`station_id` = sch.`id`
+            WHERE pos.`id` IN ('EPSVR', 'PSDS') AND p.`status` = 'Active'
+            ORDER BY p.`last_name` ASC, p.`first_name` ASC";
+    $results = query($sql);
+    return is_array($results) ? $results : [];
+}
+
 function activeGuidanceCounselorEmployees($stationId = null, $districtId = null)
 {
     $sql = "SELECT p.`id` AS `employee_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,

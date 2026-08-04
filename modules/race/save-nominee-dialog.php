@@ -29,7 +29,7 @@ if ($awardIdDecrypted) {
             $categoryName = $category['name'];
             $catMap = [
                 'Teaching Personnel' => 'Teaching',
-                'School Administration Personnel (Individual)' => 'Teaching-Related',
+                'School Administration Personnel (Individual)' => 'School Administration',
                 'Related-Teaching Personnel (Individual)' => 'Teaching-Related',
                 'Non-Teaching Personnel (Individual)' => 'Non-Teaching',
             ];
@@ -39,6 +39,12 @@ if ($awardIdDecrypted) {
         // Program Implementation: nominee can be either School or Employee
         if ($categoryName === 'Program Implementation') {
             $isProgramImplementation = true;
+        }
+
+        // Supervisor awards: only EPS and PSDS positions
+        $isSupervisorAward = stripos($awardName, 'supervisor') !== false;
+        if ($isSupervisorAward) {
+            $filterCategory = 'Supervisor';
         }
 
         // School Award (Institution): always school
@@ -173,7 +179,9 @@ $typeSwitchParams = $_GET;
                     $mySchool = $isPrincipalUser ? schoolByHead($userId) : null;
                     $isDistSupervisor = isDistrictSupervisor($userId);
                     $myDistrict = $isDistSupervisor ? districtBySupervisor($userId) : null;
-                    if ($isPrincipalUser && $mySchool) {
+                    if ($filterCategory === 'School Administration' || $filterCategory === 'Supervisor') {
+                        $employees = [];
+                    } elseif ($isPrincipalUser && $mySchool) {
                         $employees = activeEmployeesWithPosition($mySchool['id'], $filterCategory);
                     } elseif ($isDistSupervisor && $myDistrict) {
                         $employees = activeEmployeesInDistrict($myDistrict['id'], $filterCategory);
@@ -203,7 +211,30 @@ $typeSwitchParams = $_GET;
                         $employees = array_values($combined);
                     }
 
-                    if ($filterCategory === 'Teaching-Related') {
+                    if ($filterCategory === 'School Administration') {
+                        if ($isPrincipalUser && $mySchool) {
+                            $employees = activePrincipalEmployees($mySchool['id']);
+                            $headTeachers = activeHeadTeacherEmployees($mySchool['id']);
+                        } elseif ($isDistSupervisor && $myDistrict) {
+                            $employees = activePrincipalEmployees(null, $myDistrict['id']);
+                            $headTeachers = activeHeadTeacherEmployees(null, $myDistrict['id']);
+                        } else {
+                            $employees = activePrincipalEmployees();
+                            $headTeachers = activeHeadTeacherEmployees();
+                        }
+                        $combined = [];
+                        foreach ($employees as $p) {
+                            $combined[$p['employee_id']] = $p;
+                        }
+                        foreach ($headTeachers as $ht) {
+                            if (!isset($combined[$ht['employee_id']])) {
+                                $combined[$ht['employee_id']] = $ht;
+                            }
+                        }
+                        $employees = array_values($combined);
+                    } elseif ($filterCategory === 'Supervisor') {
+                        $employees = activeSupervisorEmployees();
+                    } elseif ($filterCategory === 'Teaching-Related') {
                         if ($isPrincipalUser && $mySchool) {
                             $guidanceCounselors = activeGuidanceCounselorEmployees($mySchool['id']);
                         } elseif ($isDistSupervisor && $myDistrict) {
@@ -250,9 +281,13 @@ $typeSwitchParams = $_GET;
                             <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Current school principals
                                 are included so former teachers now serving as principals can be nominated.</small>
                         <?php endif; ?>
-                        <?php if ($filterCategory === 'Teaching-Related'): ?>
-                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Guidance Counselors are
-                                included for Related Teaching awards.</small>
+                        <?php if ($filterCategory === 'School Administration'): ?>
+                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Showing School Heads
+                                (Principals and Head Teachers) only.</small>
+                        <?php endif; ?>
+                        <?php if ($filterCategory === 'Supervisor'): ?>
+                            <small class="text-info d-block mb-1"><i class="fas fa-info-circle"></i> Showing Supervisors
+                                (Education Program Supervisors and Public Schools District Supervisors) only.</small>
                         <?php endif; ?>
                         <select id="employee-id" name="employee-id" class="form-control" title="Select employee..."
                             required>
