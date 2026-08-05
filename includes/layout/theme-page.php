@@ -58,6 +58,7 @@ require_once(root() . '/includes/layout/components.php');
     <?php endif ?>
 
     <script src="<?= uri() ?>/assets/js/script.js?v=1.3"></script>
+    <script src="<?= uri() ?>/assets/js/csrf-heartbeat.js"></script>
 </body>
 
 </html>
