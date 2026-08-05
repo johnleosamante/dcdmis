@@ -244,7 +244,7 @@ $('#modalQR').text('The employee has been removed from the attendance list. This
 
 
 //activity add function
-function saveAttendance(employee_id) {
+function saveAttendance(employee_id, status) {
 
     var activeDate = $('#attendanceTabs .nav-link.active').data('date');
     var trainingId = $('#training_id').val();
@@ -259,10 +259,12 @@ function saveAttendance(employee_id) {
             training_id: trainingId,
             employee_id: employee_id,
             date_in: activeDate,
+            status : status,
             csrf_token: csrfToken,
         },
         success: function (res) {
 
+            console.log(res);
             $('#modalName').text('');
             $('#modalQR').text('');
 
@@ -299,9 +301,10 @@ function saveAttendance(employee_id) {
 
 //When Using Barcode Scanner
 $('#qrInput').keypress(function (e) {
+    var status = 1;// status is 1 as actual attendance
     if (e.which == 13) { // Enter key
         e.preventDefault();
-        saveAttendance($(this).val().trim());
+        saveAttendance($(this).val().trim(), status);
     }
 });
 
@@ -330,6 +333,8 @@ function showAttendanceModal(type, title, name, qr, message = "") {
 
 $('#addAttendanceBtn').click(function () {
 
+    $('#processParticipantBtn').remove();
+    var status = 1;// status is 1 as actual attendance
     var qrCode = $('#qrInput').val().trim();
 
     if (qrCode === '') {
@@ -342,9 +347,64 @@ $('#addAttendanceBtn').click(function () {
 
     }
 
-    saveAttendance(qrCode);
+    saveAttendance(qrCode, status);
 });
 
+$('#showAddModalInfo').click(function () {
+
+    var qrCode = $('#qrInput').val().trim();
+
+    if (qrCode === '') {
+
+        $('#qrInput').focus();
+
+        $('#modalName').text('No Employee Selected');
+
+        $('#modalQR').html(`
+            Please search and select an employee before proceeding.
+        `);
+
+        $('#attendanceModal').modal('show');
+        return;
+
+    }
+
+    $('#modalName').text('Include Participant?');
+
+    $('#modalQR').html(`
+        This employee will be <strong>included in the official participant list</strong> and will appear in the
+        <strong>printed attendance sheet</strong>.<br><br>
+
+        <span class="text-danger">
+            <i class="fas fa-exclamation-triangle"></i>
+            This employee <strong>will not receive a Certificate of Appearance (COA)</strong> or
+            <strong>Certificate of Participation (COP)</strong> unless marked as <strong>Attended</strong>.
+        </span><br><br>
+
+        Do you want to continue?
+    `);
+
+    // Remove existing button if already appended
+    $('#processParticipantBtn').remove();
+
+    // Append confirmation button
+    $('.modal-footer').prepend(`
+        <button id="processParticipantBtn" class="btn btn-warning" onclick="processParticipantBtn()">
+            <i class="fas fa-user-plus"></i> Include Participant
+        </button>
+    `);
+
+    $('#attendanceModal').modal('show');
+
+});
+
+function processParticipantBtn(){
+
+    var qrCode = $('#qrInput').val().trim();
+    var status = 0;// status is partial attendance
+    
+    saveAttendance(qrCode, status);
+}
 
 function sendBulkEmail() {
 

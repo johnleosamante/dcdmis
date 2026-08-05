@@ -54,6 +54,7 @@ if (isset($_POST['saveTrainingAttendance'])) {
     $training_id = $_POST['training_id'] ?? null;
     $employee_id = $_POST['employee_id'] ?? null;
     $date_in = $_POST['date_in'] ?? null;
+    $status = $_POST['status'] ?? null;
 
     if (!$training_id || !$employee_id) {
         echo json_encode([
@@ -102,7 +103,8 @@ if (isset($_POST['saveTrainingAttendance'])) {
         'training_id' => $training_id,
         'employee_id' => $employee_id,
         'time_in' => date('Y-m-d H:i:s'),
-        'date_in' => $date_in
+        'date_in' => $date_in,
+        'status' => $status,
     ]);
 
     if (!$attendanceId) {

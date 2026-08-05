@@ -188,7 +188,8 @@ messageAlert($showAlert, $message, $success);
                     <input type="hidden" id="csrf_token" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                     <input type="text" id="qrInput" class="form-control me-2 mr-1" style="width: 320px; max-width: 100%;"
                         placeholder="Scan ID or type employee name..." autofocus>
-                    <button id="addAttendanceBtn" class="btn btn-primary"><i class="fas fa-plus"></i></button>
+                    <button id="addAttendanceBtn" class="btn btn-primary me-2 mr-1"><i class="fas fa-user-plus"></i></button>
+                    <button id="showAddModalInfo" class="btn btn-warning"><i class="fas fa-user-secret"></i></button>
                 </div>
             <?php endif; ?>
 
