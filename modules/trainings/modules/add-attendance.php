@@ -42,7 +42,6 @@ if ($training) {
 messageAlert($showAlert, $message, $success);
 ?>
 
-
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
@@ -145,8 +144,6 @@ messageAlert($showAlert, $message, $success);
                     <td class="text-uppercase"><?= count($participants) ?></td>
                 </tr>
             </table>
-
-
         </div>
 
         <?php
@@ -175,7 +172,6 @@ messageAlert($showAlert, $message, $success);
             <?php endforeach ?>
         </ul>
 
-
         <!-- PROJECT AND ACTIVITIES -->
         <input type="hidden" id="training_id" value="<?php echo $trainingId ?>">
         <input type="hidden" id="url_view" value="<?php echo base64_decode($_GET['v']) ?>">
@@ -185,10 +181,11 @@ messageAlert($showAlert, $message, $success);
         <div class="my-3 d-flex <?= $showAttendanceActionsToday ? 'justify-content-between' : 'justify-content-end' ?>">
             <?php if ($showAttendanceActionsToday): ?>
                 <div class="d-flex align-items-center flex-grow-1 me-3">
-                    <input type="hidden" id="csrf_token" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                    <input type="hidden" id="csrf_token" name="csrf_token" value="<?= csrf_token() ?>">
                     <input type="text" id="qrInput" class="form-control me-2 mr-1" style="width: 320px; max-width: 100%;"
                         placeholder="Scan ID or type employee name..." autofocus>
-                    <button id="addAttendanceBtn" class="btn btn-primary me-2 mr-1"><i class="fas fa-user-plus"></i></button>
+                    <button id="addAttendanceBtn" class="btn btn-primary me-2 mr-1"><i
+                            class="fas fa-user-plus"></i></button>
                     <button id="showAddModalInfo" class="btn btn-warning"><i class="fas fa-user-secret"></i></button>
                 </div>
             <?php endif; ?>
@@ -230,12 +227,9 @@ messageAlert($showAlert, $message, $success);
                         <tbody>
                             <?php
                             $trainingAttendanceArr = getTrainingAttendees($trainingId, $date);
-
                             foreach ($trainingAttendanceArr as $trainingAttendance):
                                 ?>
-
                                 <tr id="employeeAttendanceID<?= $trainingAttendance['id'] ?>">
-
                                     <td>
                                         <?php if (!empty($trainingAttendance['img_url'])): ?>
                                             <i class="fas fa-image text-primary view-img" style="cursor:pointer;"
@@ -256,7 +250,7 @@ messageAlert($showAlert, $message, $success);
                                     <td class="align-middle">
                                         <?= $trainingAttendance['school_name'] ?>
                                     </td>
-                                    
+
                                     <td class="align-middle">
                                         <?= date('h:i A', strtotime($trainingAttendance['created_at'])) ?>
                                     </td>
@@ -305,7 +299,6 @@ messageAlert($showAlert, $message, $success);
         padding: 5px 0;
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
         z-index: 9999;
-
     }
 
     /* each item */
@@ -327,7 +320,6 @@ messageAlert($showAlert, $message, $success);
 <div class="modal fade" id="attendanceModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-
             <div class="modal-header">
                 <h5 class="modal-title">Attendance Verification</h5>
             </div>
@@ -340,11 +332,9 @@ messageAlert($showAlert, $message, $success);
             <div class="modal-footer">
                 <button class="btn btn-dark" data-dismiss="modal">Close</button>
             </div>
-
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" id="deleteAttendanceModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
