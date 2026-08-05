@@ -37,9 +37,9 @@ foreach ($competencyRatings as $cr) {
 
 $rateePositionTitle = $ipcrf['position_title'] ?: ($positionData['official_title'] ?? '');
 $isHead = stripos($rateePositionTitle, 'head') !== false ||
-          stripos($rateePositionTitle, 'principal') !== false ||
-          stripos($rateePositionTitle, 'supervisor') !== false ||
-          stripos($rateePositionTitle, 'chief') !== false;
+    stripos($rateePositionTitle, 'principal') !== false ||
+    stripos($rateePositionTitle, 'supervisor') !== false ||
+    stripos($rateePositionTitle, 'chief') !== false;
 
 $coreBehavioralCompetencies = [
     'self_management' => [
@@ -180,23 +180,57 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
         size: landscape;
         margin: 10mm;
     }
+
     @media print {
-        body * { visibility: hidden; }
-        #print-area, #print-area * { visibility: visible; }
-        #print-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
-        .no-print { display: none !important; }
-        .btn, .navbar, #accordionSidebar, .topbar { display: none !important; }
+        body * {
+            visibility: hidden;
+        }
+
+        #print-area,
+        #print-area * {
+            visibility: visible;
+        }
+
+        #print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+
+        .btn,
+        .navbar,
+        #accordionSidebar,
+        .topbar {
+            display: none !important;
+        }
     }
-    .ipcrf-table, .ipcrf-table th, .ipcrf-table td {
+
+    .ipcrf-table,
+    .ipcrf-table th,
+    .ipcrf-table td {
         border: 1px solid #000;
         border-collapse: collapse;
     }
-    .ipcrf-table th, .ipcrf-table td {
+
+    .ipcrf-table th,
+    .ipcrf-table td {
         padding: 3px 5px;
         font-size: 10px;
         vertical-align: top;
     }
-    .ipcrf-table th { text-align: center; font-weight: bold; }
+
+    .ipcrf-table th {
+        text-align: center;
+        font-weight: bold;
+    }
+
     .section-title {
         text-align: center;
         font-weight: bold;
@@ -205,21 +239,86 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
         margin: 8px 0 0;
         font-size: 11px;
     }
-    .print-header td { border: none; padding: 2px 4px; font-size: 11px; }
-    .text-xs { font-size: 9px; }
-    .text-center { text-align: center; }
-    .text-right { text-align: right; }
-    .signature-line { border-top: 1px solid #000; margin-top: 25px; padding-top: 2px; font-size: 10px; }
-    .competency-col { width: 50%; vertical-align: top; padding: 3px; }
-    .competency-sub { font-weight: bold; margin-bottom: 2px; }
-    .competency-desc { margin-bottom: 2px; padding-left: 12px; }
-    .competency-desc::before { content: attr(data-num); position: absolute; left: 0; }
-    .competency-row { display: table; width: 100%; }
-    .competency-text { display: table-cell; width: 92%; padding-right: 4px; }
-    .competency-rating { display: table-cell; width: 8%; text-align: center; font-weight: bold; }
-    .page-break { page-break-before: always; }
-    .competency-table { width: 100%; border-collapse: collapse; }
-    .competency-table td { border: 1px solid #000; vertical-align: top; padding: 3px; }
+
+    .print-header td {
+        border: none;
+        padding: 2px 4px;
+        font-size: 11px;
+    }
+
+    .text-xs {
+        font-size: 9px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .signature-line {
+        border-top: 1px solid #000;
+        margin-top: 25px;
+        padding-top: 2px;
+        font-size: 10px;
+    }
+
+    .competency-col {
+        width: 50%;
+        vertical-align: top;
+        padding: 3px;
+    }
+
+    .competency-sub {
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+
+    .competency-desc {
+        margin-bottom: 2px;
+        padding-left: 12px;
+    }
+
+    .competency-desc::before {
+        content: attr(data-num);
+        position: absolute;
+        left: 0;
+    }
+
+    .competency-row {
+        display: table;
+        width: 100%;
+    }
+
+    .competency-text {
+        display: table-cell;
+        width: 92%;
+        padding-right: 4px;
+    }
+
+    .competency-rating {
+        display: table-cell;
+        width: 8%;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    .competency-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .competency-table td {
+        border: 1px solid #000;
+        vertical-align: top;
+        padding: 3px;
+    }
 </style>
 
 <div id="print-area" class="container-fluid mt-3">
@@ -239,16 +338,24 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
 
     <table class="print-header" width="100%">
         <tr>
-            <td width="70%"><strong>Name:</strong> <?= e(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])) ?></td>
-            <td width="30%"><strong>Name of Rater:</strong> <?= $validator ? e(toName($validator['last_name'], $validator['first_name'], $validator['middle_name'], $validator['name_extension'])) : '________________' ?></td>
+            <td width="70%"><strong>Name:</strong>
+                <?= strtoupper(e(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true))) ?>
+            </td>
+            <td width="30%"><strong>Name of Rater:</strong>
+                <?= $validator ? strtoupper(e(toName($validator['last_name'], $validator['first_name'], $validator['middle_name'], $validator['name_extension'], true))) : '________________' ?>
+            </td>
         </tr>
         <tr>
             <td><strong>Position:</strong> <?= e($positionTitle) ?></td>
-            <td><strong>Position:</strong> <?= $validator ? e(position($validator['id'])['official_title'] ?? '') : '________________' ?></td>
+            <td><strong>Position:</strong>
+                <?= $validator ? e(position($validator['id'])['official_title'] ?? '') : '________________' ?>
+            </td>
         </tr>
         <tr>
             <td><strong>Review Period:</strong> <?= e($ipcrf['review_period'] ?? $ipcrf['school_year']) ?></td>
-            <td><strong>Review Date:</strong> <?= $ipcrf['validated_at'] ? date('F j, Y', strtotime($ipcrf['validated_at'])) : '________________' ?></td>
+            <td><strong>Review Date:</strong>
+                <?= $ipcrf['validated_at'] ? date('F j, Y', strtotime($ipcrf['validated_at'])) : '________________' ?>
+            </td>
         </tr>
         <tr>
             <td><strong>Division:</strong> Dipolog City</td>
@@ -265,7 +372,8 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
                 <th rowspan="2" width="15%">Objectives</th>
                 <th rowspan="2" width="10%">Timeline</th>
                 <th rowspan="2" width="6%">Weight per KRA</th>
-                <th colspan="5" width="32%">Performance Indicator<br><span class="text-xs">(5-Outstanding, 4-Very Satisfactory, 3-Satisfactory, 2-Unsatisfactory, 1-Poor)</span></th>
+                <th colspan="5" width="32%">Performance Indicator<br><span class="text-xs">(5-Outstanding, 4-Very
+                        Satisfactory, 3-Satisfactory, 2-Unsatisfactory, 1-Poor)</span></th>
                 <th rowspan="2" width="6%">Actual Results</th>
                 <th rowspan="2" width="3%">Q</th>
                 <th rowspan="2" width="3%">E</th>
@@ -282,16 +390,19 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
             </tr>
         </thead>
         <tbody>
-            <?php if (!empty($objectives)): $i = 1; $totalScore = 0; ?>
-                <?php foreach ($objectives as $obj): 
+            <?php if (!empty($objectives)):
+                $i = 1;
+                $totalScore = 0; ?>
+                <?php foreach ($objectives as $obj):
                     $q = $obj['rating_q'] ?? null;
                     $e = $obj['rating_e'] ?? null;
                     $t = $obj['rating_t'] ?? null;
                     $ave = $obj['average'] ?? ($q !== null && $e !== null && $t !== null ? round(($q + $e + $t) / 3, 2) : null);
                     $score = $obj['score'] ?? ($ave !== null && !empty($obj['weight']) ? round($ave * ($obj['weight'] / 100), 4) : null);
-                    if ($score !== null) $totalScore += $score;
+                    if ($score !== null)
+                        $totalScore += $score;
                     $perfInd = !empty($obj['performance_indicators']) ? $obj['performance_indicators'] : $obj['performance_indicator'];
-                ?>
+                    ?>
                     <tr>
                         <td><?= e($obj['kra_title']) ?></td>
                         <td><?= e($obj['objective']) ?></td>
@@ -309,11 +420,14 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
                 <tr>
                     <td colspan="14" class="text-right font-weight-bold">Total</td>
                     <td class="text-center font-weight-bold">
-                        <?= e($ipcrf['adjectival_rating'] ?? 'N/A') ?> <?= number_format($ipcrf['final_rating'] ?? $totalScore, 2) ?>
+                        <?= e($ipcrf['adjectival_rating'] ?? 'N/A') ?>
+                        <?= number_format($ipcrf['final_rating'] ?? $totalScore, 2) ?>
                     </td>
                 </tr>
             <?php else: ?>
-                <tr><td colspan="15" class="text-center">No objectives found.</td></tr>
+                <tr>
+                    <td colspan="15" class="text-center">No objectives found.</td>
+                </tr>
             <?php endif; ?>
         </tbody>
     </table>
@@ -322,15 +436,15 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
         <tr>
             <td width="33%" class="text-center">
                 <div class="signature-line">Ratee</div>
-                <small><?= e(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])) ?><br><?= e($positionTitle) ?></small>
+                <small><?= strtoupper(e(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true))) ?><br><?= e($positionTitle) ?></small>
             </td>
             <td width="33%" class="text-center">
                 <div class="signature-line">Rater</div>
-                <small><?= $validator ? e(toName($validator['last_name'], $validator['first_name'], $validator['middle_name'], $validator['name_extension'])) : '' ?><br><?= $validator ? e(position($validator['id'])['official_title'] ?? '') : '' ?></small>
+                <small><?= $validator ? strtoupper(e(toName($validator['last_name'], $validator['first_name'], $validator['middle_name'], $validator['name_extension'], true))) : '' ?><br><?= $validator ? e(position($validator['id'])['official_title'] ?? '') : '' ?></small>
             </td>
             <td width="33%" class="text-center">
                 <div class="signature-line">Approved by:</div>
-                <small><?= $approvingOfficer ? e(toName($approvingOfficer['last_name'], $approvingOfficer['first_name'], $approvingOfficer['middle_name'], $approvingOfficer['name_extension'])) : '' ?><br><?= $approvingOfficer ? e(position($approvingOfficer['id'])['official_title'] ?? '') : '' ?></small>
+                <small><?= $approvingOfficer ? strtoupper(e(toName($approvingOfficer['last_name'], $approvingOfficer['first_name'], $approvingOfficer['middle_name'], $approvingOfficer['name_extension'], true))) : '' ?><br><?= $approvingOfficer ? e(position($approvingOfficer['id'])['official_title'] ?? '') : '' ?></small>
             </td>
         </tr>
     </table>
@@ -351,11 +465,16 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
     </table>
 
     <p class="text-xs mt-2 mb-1"><strong>Employee-Superior Agreement</strong></p>
-    <p class="text-xs mb-1">This signature below confirms that the employee and his/her superior have agreed to the contents of the performance as captured in this form.</p>
+    <p class="text-xs mb-1">This signature below confirms that the employee and his/her superior have agreed to the
+        contents of the performance as captured in this form.</p>
     <table class="ipcrf-table" width="100%">
         <tr>
-            <th width="50%">Name of Employee: <?= e(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])) ?></th>
-            <th width="50%">Name of Superior: <?= $validator ? e(toName($validator['last_name'], $validator['first_name'], $validator['middle_name'], $validator['name_extension'])) : '' ?></th>
+            <th width="50%">Name of Employee:
+                <?= strtoupper(e(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true))) ?>
+            </th>
+            <th width="50%">Name of Superior:
+                <?= $validator ? strtoupper(e(toName($validator['last_name'], $validator['first_name'], $validator['middle_name'], $validator['name_extension'], true))) : '' ?>
+            </th>
         </tr>
         <tr>
             <td>Signature: ________________________________</td>
@@ -390,7 +509,9 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
-                <tr><td colspan="5" class="text-center">No development plan recorded.</td></tr>
+                <tr>
+                    <td colspan="5" class="text-center">No development plan recorded.</td>
+                </tr>
             <?php endif; ?>
         </tbody>
     </table>
@@ -401,10 +522,13 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
         <tr>
             <td class="competency-col" style="border: 1px solid #000; vertical-align: top; padding: 3px;">
                 <?php foreach (['self_management', 'professionalism_ethics', 'result_focus'] as $key): ?>
-                    <?php $competency = $coreBehavioralCompetencies[$key]; $category = 'core_behavioral'; ?>
+                    <?php $competency = $coreBehavioralCompetencies[$key];
+                    $category = 'core_behavioral'; ?>
                     <table class="ipcrf-table" width="100%" style="margin-bottom: 4px;">
                         <thead>
-                            <tr><th class="text-left" colspan="3"><?= e($competency['title']) ?></th></tr>
+                            <tr>
+                                <th class="text-left" colspan="3"><?= e($competency['title']) ?></th>
+                            </tr>
                             <tr>
                                 <th width="6%">#</th>
                                 <th>Indicator</th>
@@ -412,7 +536,8 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($competency['items'] as $num => $desc): $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
+                            <?php foreach ($competency['items'] as $num => $desc):
+                                $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
                                 <tr>
                                     <td class="text-center"><?= $num ?></td>
                                     <td class="text-xs"><?= e($desc) ?></td>
@@ -425,10 +550,13 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
             </td>
             <td class="competency-col" style="border: 1px solid #000; vertical-align: top; padding: 3px;">
                 <?php foreach (['teamwork', 'service_orientation', 'innovation'] as $key): ?>
-                    <?php $competency = $coreBehavioralCompetencies[$key]; $category = 'core_behavioral'; ?>
+                    <?php $competency = $coreBehavioralCompetencies[$key];
+                    $category = 'core_behavioral'; ?>
                     <table class="ipcrf-table" width="100%" style="margin-bottom: 4px;">
                         <thead>
-                            <tr><th class="text-left" colspan="3"><?= e($competency['title']) ?></th></tr>
+                            <tr>
+                                <th class="text-left" colspan="3"><?= e($competency['title']) ?></th>
+                            </tr>
                             <tr>
                                 <th width="6%">#</th>
                                 <th>Indicator</th>
@@ -436,7 +564,8 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($competency['items'] as $num => $desc): $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
+                            <?php foreach ($competency['items'] as $num => $desc):
+                                $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
                                 <tr>
                                     <td class="text-center"><?= $num ?></td>
                                     <td class="text-xs"><?= e($desc) ?></td>
@@ -456,10 +585,13 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
         <tr>
             <td class="competency-col" style="border: 1px solid #000; vertical-align: top; padding: 3px;">
                 <?php foreach (['oral_communication'] as $key): ?>
-                    <?php $competency = $coreSkills[$key]; $category = 'core_skills'; ?>
+                    <?php $competency = $coreSkills[$key];
+                    $category = 'core_skills'; ?>
                     <table class="ipcrf-table" width="100%" style="margin-bottom: 4px;">
                         <thead>
-                            <tr><th class="text-left" colspan="3"><?= e($competency['title']) ?></th></tr>
+                            <tr>
+                                <th class="text-left" colspan="3"><?= e($competency['title']) ?></th>
+                            </tr>
                             <tr>
                                 <th width="6%">#</th>
                                 <th>Indicator</th>
@@ -467,7 +599,8 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($competency['items'] as $num => $desc): $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
+                            <?php foreach ($competency['items'] as $num => $desc):
+                                $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
                                 <tr>
                                     <td class="text-center"><?= $num ?></td>
                                     <td class="text-xs"><?= e($desc) ?></td>
@@ -480,10 +613,13 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
             </td>
             <td class="competency-col" style="border: 1px solid #000; vertical-align: top; padding: 3px;">
                 <?php foreach (['written_communication', 'computer_ict'] as $key): ?>
-                    <?php $competency = $coreSkills[$key]; $category = 'core_skills'; ?>
+                    <?php $competency = $coreSkills[$key];
+                    $category = 'core_skills'; ?>
                     <table class="ipcrf-table" width="100%" style="margin-bottom: 4px;">
                         <thead>
-                            <tr><th class="text-left" colspan="3"><?= e($competency['title']) ?></th></tr>
+                            <tr>
+                                <th class="text-left" colspan="3"><?= e($competency['title']) ?></th>
+                            </tr>
                             <tr>
                                 <th width="6%">#</th>
                                 <th>Indicator</th>
@@ -491,7 +627,8 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($competency['items'] as $num => $desc): $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
+                            <?php foreach ($competency['items'] as $num => $desc):
+                                $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
                                 <tr>
                                     <td class="text-center"><?= $num ?></td>
                                     <td class="text-xs"><?= e($desc) ?></td>
@@ -511,10 +648,13 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
             <tr>
                 <td class="competency-col" style="border: 1px solid #000; vertical-align: top; padding: 3px;">
                     <?php foreach (['leading_people', 'people_performance'] as $key): ?>
-                        <?php $competency = $leadershipCompetencies[$key]; $category = 'leadership'; ?>
+                        <?php $competency = $leadershipCompetencies[$key];
+                        $category = 'leadership'; ?>
                         <table class="ipcrf-table" width="100%" style="margin-bottom: 4px;">
                             <thead>
-                                <tr><th class="text-left" colspan="3"><?= e($competency['title']) ?></th></tr>
+                                <tr>
+                                    <th class="text-left" colspan="3"><?= e($competency['title']) ?></th>
+                                </tr>
                                 <tr>
                                     <th width="6%">#</th>
                                     <th>Indicator</th>
@@ -522,7 +662,8 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($competency['items'] as $num => $desc): $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
+                                <?php foreach ($competency['items'] as $num => $desc):
+                                    $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
                                     <tr>
                                         <td class="text-center"><?= $num ?></td>
                                         <td class="text-xs"><?= e($desc) ?></td>
@@ -535,10 +676,13 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
                 </td>
                 <td class="competency-col" style="border: 1px solid #000; vertical-align: top; padding: 3px;">
                     <?php foreach (['people_development'] as $key): ?>
-                        <?php $competency = $leadershipCompetencies[$key]; $category = 'leadership'; ?>
+                        <?php $competency = $leadershipCompetencies[$key];
+                        $category = 'leadership'; ?>
                         <table class="ipcrf-table" width="100%" style="margin-bottom: 4px;">
                             <thead>
-                                <tr><th class="text-left" colspan="3"><?= e($competency['title']) ?></th></tr>
+                                <tr>
+                                    <th class="text-left" colspan="3"><?= e($competency['title']) ?></th>
+                                </tr>
                                 <tr>
                                     <th width="6%">#</th>
                                     <th>Indicator</th>
@@ -546,7 +690,8 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($competency['items'] as $num => $desc): $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
+                                <?php foreach ($competency['items'] as $num => $desc):
+                                    $rating = $competencyIndex[$category][$key . '_' . $num] ?? '-'; ?>
                                     <tr>
                                         <td class="text-center"><?= $num ?></td>
                                         <td class="text-xs"><?= e($desc) ?></td>
@@ -574,9 +719,13 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
     <table class="ipcrf-table" width="100%" style="margin-top: 10px;">
         <tr>
             <th class="text-right" width="20%">Core Behavioral Competencies</th>
-            <td class="text-center font-weight-bold" width="12%"><?= $coreBehavioralAvg ? number_format($coreBehavioralAvg, 2) : '-' ?></td>
+            <td class="text-center font-weight-bold" width="12%">
+                <?= $coreBehavioralAvg ? number_format($coreBehavioralAvg, 2) : '-' ?>
+            </td>
             <th class="text-right" width="20%"><?= e($secondLabel) ?></th>
-            <td class="text-center font-weight-bold" width="12%"><?= $secondValue ? number_format($secondValue, 2) : '-' ?></td>
+            <td class="text-center font-weight-bold" width="12%">
+                <?= $secondValue ? number_format($secondValue, 2) : '-' ?>
+            </td>
         </tr>
         <tr>
             <th class="text-right" colspan="2">Overall Rating</th>
@@ -584,21 +733,22 @@ $leadershipAvg = pmCompetencyCategoryAverage($ipcrfId, 'leadership');
         </tr>
     </table>
 
-    <p class="text-xs mt-1">5 - Role Model; 4 - Consistently Demonstrates; 3 - Most of the Time Demonstrates; 2 - Sometimes Demonstrates; 1 - Rarely Demonstrates</p>
+    <p class="text-xs mt-1">5 - Role Model; 4 - Consistently Demonstrates; 3 - Most of the Time Demonstrates; 2 -
+        Sometimes Demonstrates; 1 - Rarely Demonstrates</p>
 
     <table width="100%" style="margin-top: 20px;">
         <tr>
             <td width="33%" class="text-center">
                 <div class="signature-line">Rater</div>
-                <small><?= $validator ? e(toName($validator['last_name'], $validator['first_name'], $validator['middle_name'], $validator['name_extension'])) : '' ?></small>
+                <small><?= $validator ? strtoupper(e(toName($validator['last_name'], $validator['first_name'], $validator['middle_name'], $validator['name_extension'], true))) : '' ?></small>
             </td>
             <td width="33%" class="text-center">
                 <div class="signature-line">Ratee</div>
-                <small><?= e(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])) ?></small>
+                <small><?= strtoupper(e(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'], true))) ?></small>
             </td>
             <td width="33%" class="text-center">
                 <div class="signature-line">Approving Officer</div>
-                <small><?= $approvingOfficer ? e(toName($approvingOfficer['last_name'], $approvingOfficer['first_name'], $approvingOfficer['middle_name'], $approvingOfficer['name_extension'])) : '' ?></small>
+                <small><?= $approvingOfficer ? strtoupper(e(toName($approvingOfficer['last_name'], $approvingOfficer['first_name'], $approvingOfficer['middle_name'], $approvingOfficer['name_extension'], true))) : '' ?></small>
             </td>
         </tr>
     </table>
