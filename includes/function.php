@@ -182,9 +182,28 @@ function csrf_field()
 function verify_csrf_token()
 {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
+        $submittedToken = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+        $sessionToken = $_SESSION['csrf_token'] ?? '';
+
+        if (empty($submittedToken) || !hash_equals($sessionToken, $submittedToken)) {
             header('HTTP/1.1 403 Forbidden');
-            die('CSRF token validation failed.');
+
+            $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false);
+
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'CSRF_EXPIRED',
+                    'message' => 'CSRF token validation failed or session expired. Please try again.',
+                    'csrf_token' => csrf_token()
+                ]);
+                exit();
+            } else {
+                header('Location: ' . uri() . '/oops?e=403&reason=csrf');
+                exit();
+            }
         }
     }
 }
