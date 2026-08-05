@@ -19,8 +19,9 @@
                         <label id="image-upload-label" class="custom-file-label" for="image-upload">Choose file</label>
                     </div>
 
-                    <span class="small text-secondary">The recommended picture size is 1:1 ratio and minimum of 400 pixels
+                    <span class="small text-secondary d-block">The recommended picture size is 1:1 ratio and minimum of 400 pixels
                         width and height.</span>
+                    <small class="form-text text-muted mt-1">Max file upload size: <?= UPLOAD_MAX_FILESIZE ?>B</small>
 
                     <?php profilePhotoUpload('image-upload', 'employee-photo', 'image-upload-label', uri(), '/assets/img/nopreview.png') ?>
                 <?php endif ?>

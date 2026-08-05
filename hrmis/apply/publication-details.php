@@ -177,7 +177,7 @@ if ($code) {
                                 of requirements</a> for your application.</p>
                         <input class="form-control-file" type="file" name="application-file" accept=".pdf">
                         <small class="form-text text-muted">Max file upload size:
-                            <?= ini_get('upload_max_filesize') ?>B</small>
+                            <?= UPLOAD_MAX_FILESIZE ?>B</small>
                     </div>
 
                     <button name="submit-application" type="submit" class="btn btn-primary btn-block mt-2">

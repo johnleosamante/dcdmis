@@ -29,6 +29,7 @@ $picture = employee($userId)['profile_picture'];
                         accept="image/png, image/jpeg">
                     <label id="image-upload-label" class="custom-file-label" for="image-upload">Choose file</label>
                 </div>
+                <small class="form-text text-muted mt-1">Max file upload size: <?= UPLOAD_MAX_FILESIZE ?>B</small>
 
                 <?php profilePhotoUpload('image-upload', 'employee-photo', 'image-upload-label', uri(), '/assets/img/nopreview.png') ?>
             </div>

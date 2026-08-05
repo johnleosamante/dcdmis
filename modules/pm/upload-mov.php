@@ -55,38 +55,42 @@ messageAlert($showAlert, $message, $success);
                         <label class="font-weight-bold">Select Objective <?php showAsterisk() ?></label>
                         <select name="objective_id" class="form-control" required>
                             <option value="">-- Select Objective --</option>
-                            <?php 
+                            <?php
                             $currentKra = '';
-                            foreach ($objectives as $obj): 
+                            foreach ($objectives as $obj):
                                 if ($currentKra !== $obj['kra_title']):
-                                    if ($currentKra !== '') echo '</optgroup>';
+                                    if ($currentKra !== '')
+                                        echo '</optgroup>';
                                     $currentKra = $obj['kra_title'];
                                     echo '<optgroup label="' . e($currentKra) . '">';
                                 endif;
-                            ?>
+                                ?>
                                 <option value="<?= cipher($obj['id']) ?>">
-                                    <?= e(substr($obj['objective'], 0, 80)) ?><?= strlen($obj['objective']) > 80 ? '...' : '' ?>
+                                    <?= e(substr($obj['objective'], 0, 80)) ?>
+                                    <?= strlen($obj['objective']) > 80 ? '...' : '' ?>
                                 </option>
                             <?php endforeach; ?>
-                            <?php if ($currentKra !== '') echo '</optgroup>'; ?>
+                            <?php if ($currentKra !== '')
+                                echo '</optgroup>'; ?>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">File <?php showAsterisk() ?></label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="mov-file" name="mov_file" required 
+                            <input type="file" class="custom-file-input" id="mov-file" name="mov_file" required
                                 accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
                             <label class="custom-file-label" for="mov-file">Choose file...</label>
                         </div>
                         <small class="form-text text-muted">
-                            Allowed: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Max: 30MB)
+                            .doc/docx, .xls/xlsx, .ppt/pptx, .jpg/jpeg, .png, .pdf (Max file upload size:
+                            <?= UPLOAD_MAX_FILESIZE ?>B)
                         </small>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Description</label>
-                        <textarea name="description" class="form-control" rows="2" 
+                        <textarea name="description" class="form-control" rows="2"
                             placeholder="Brief description of this document..."></textarea>
                     </div>
 
@@ -143,7 +147,7 @@ messageAlert($showAlert, $message, $success);
                                         </td>
                                         <td><?= date('M d, Y', strtotime($mov['created_at'])) ?></td>
                                         <td>
-                                            <a href="<?= uri() ?>/uploads/mov/<?= e($mov['file_name']) ?>" target="_blank" 
+                                            <a href="<?= uri() ?>/uploads/mov/<?= e($mov['file_name']) ?>" target="_blank"
                                                 class="btn btn-sm btn-outline-info" title="View">
                                                 <i class="fas fa-eye fa-sm"></i>
                                             </a>
@@ -151,7 +155,7 @@ messageAlert($showAlert, $message, $success);
                                                 <?= csrf_field() ?>
                                                 <input type="hidden" name="verifier" value="<?= cipher($ipcrfId) ?>">
                                                 <input type="hidden" name="mov-verifier" value="<?= cipher($mov['id']) ?>">
-                                                <button type="submit" name="delete-mov" class="btn btn-sm btn-outline-danger" 
+                                                <button type="submit" name="delete-mov" class="btn btn-sm btn-outline-danger"
                                                     title="Delete" onclick="return confirm('Delete this document?')">
                                                     <i class="fas fa-trash fa-sm"></i>
                                                 </button>
@@ -169,8 +173,8 @@ messageAlert($showAlert, $message, $success);
 </div>
 
 <script>
-document.getElementById('mov-file').addEventListener('change', function(e) {
-    var fileName = e.target.files[0] ? e.target.files[0].name : 'Choose file...';
-    e.target.nextElementSibling.textContent = fileName;
-});
+    document.getElementById('mov-file').addEventListener('change', function (e) {
+        var fileName = e.target.files[0] ? e.target.files[0].name : 'Choose file...';
+        e.target.nextElementSibling.textContent = fileName;
+    });
 </script>

@@ -892,14 +892,14 @@ if (isset($_POST['upload-mov'])) {
 
         $file = $_FILES['mov_file'];
         $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/png'];
-        $maxSize = 30 * 1024 * 1024; // 30MB
+        $maxSize = FILE_UPLOAD_SIZE_LIMIT;
 
         if (!in_array($file['type'], $allowedTypes)) {
             throw new Exception('Invalid file type. Allowed: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG.');
         }
 
         if ($file['size'] > $maxSize) {
-            throw new Exception('File size exceeds 30MB limit.');
+            throw new Exception('File size exceeds ' . UPLOAD_MAX_FILESIZE . 'B limit.');
         }
 
         $ext = pathinfo($file['name'], PATHINFO_EXTENSION);

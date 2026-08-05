@@ -202,7 +202,7 @@ messageAlert($showAlert, $message, $success);
                         } ?>
 
                         <input id="file-upload" name="file-upload[]" type="file" multiple class="w-100" accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/*, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                        <div class="small mt-1 text-muted">(.doc/docx, .xls/xlsx, .ppt/pptx, .jpg/jpeg, .png, .gif, .pdf)</div>
+                        <div class="small mt-1 text-muted">Allowed: .doc/docx, .xls/xlsx, .ppt/pptx, .jpg/jpeg, .png, .gif, .pdf (Max file upload size: <?= UPLOAD_MAX_FILESIZE ?>B)</div>
                         
                     </td>
                 </tr>

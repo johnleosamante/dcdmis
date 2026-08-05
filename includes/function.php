@@ -246,7 +246,7 @@ function sanitizeFilename(string $filename): string
 
 function uploadMaxBytes()
 {
-    $val = trim(ini_get('upload_max_filesize'));
+    $val = trim(defined('UPLOAD_MAX_FILESIZE') ? UPLOAD_MAX_FILESIZE : ini_get('upload_max_filesize'));
     $last = strtolower($val[strlen($val) - 1]);
     $val = (int) $val;
     switch ($last) {
@@ -283,7 +283,8 @@ function stageUploadedFile(array $file_data, array $allowed_MIME_map, string $ta
     }
 
     if ($file_data['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-        throw new Exception("The chosen file size exceeds the strict system limit configuration.");
+        $limitStr = defined('UPLOAD_MAX_FILESIZE') ? UPLOAD_MAX_FILESIZE . 'B' : 'the system limit';
+        throw new Exception("The chosen file size exceeds the maximum allowed upload limit of " . $limitStr . ".");
     }
 
     try {

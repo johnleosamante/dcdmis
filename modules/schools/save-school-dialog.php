@@ -120,6 +120,7 @@ if ($school) {
                     <label for="logo-upload" class="mb-0">School Logo</label>
                     <input id="logo-upload" name="logo-upload" type="file" class="w-100"
                         accept="image/jpeg, image/png, image/jpg">
+                    <small class="form-text text-muted">Max file upload size: <?= UPLOAD_MAX_FILESIZE ?>B</small>
                 </div>
 
                 <?php requiredLegend(0) ?>

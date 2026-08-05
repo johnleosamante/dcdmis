@@ -26,7 +26,10 @@ if (!headers_sent()) {
 }
 
 date_default_timezone_set("Asia/Manila");
-ini_set('upload_max_filesize', '20M');
+if (!defined('UPLOAD_MAX_FILESIZE')) {
+    define('UPLOAD_MAX_FILESIZE', '20M');
+}
+ini_set('upload_max_filesize', UPLOAD_MAX_FILESIZE);
 ini_set('post_max_size', '25M');
 ini_set('memory_limit', '256M');
 ini_set('max_input_time', 300);
@@ -36,7 +39,9 @@ if (!empty(ERROR_LOG_FILE)) {
     ini_set('error_log', ERROR_LOG_FILE);
 }
 ini_set('log_errors', 1);
-define('FILE_UPLOAD_SIZE_LIMIT', uploadMaxBytes());
+if (!defined('FILE_UPLOAD_SIZE_LIMIT')) {
+    define('FILE_UPLOAD_SIZE_LIMIT', uploadMaxBytes());
+}
 
 const HOME = 'pis';
 $prefix = alias() . '_';

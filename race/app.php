@@ -48,7 +48,7 @@ if (isset($_POST['save-award'])) {
         $temp = $_FILES['file-upload']['tmp_name'];
 
         if ($_FILES['file-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-            $message = 'The choosen file exceeds the upload file limit (20 MB). No changes have been made to award.';
+            $message = 'The choosen file exceeds the upload file limit (' . UPLOAD_MAX_FILESIZE . 'B). No changes have been made to award.';
             return;
         }
 
