@@ -18,11 +18,12 @@ function getTrainingAttendees($training_id, $date)
             )
         ) AS fullname,
 
-        p.official_title,
-        s.name AS school_name,
-        ta.control_no,
-        ta.created_at,
-        ta.img_url
+                p.official_title,
+                s.name as school_name,
+                ta.control_no,
+                ta.created_at,
+                ta.img_url,
+                ta.status
 
     FROM training_attendees ta
 

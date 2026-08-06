@@ -240,7 +240,7 @@ messageAlert($showAlert, $message, $success);
                                         <?php endif; ?>
                                     </td>
 
-                                    <td class="align-middle text-left">
+                                   <td class="align-middle text-left <?= ($trainingAttendance['status'] == 0) ? 'text-warning' : '' ?>">
                                         <b><?= strtoupper($trainingAttendance['fullname']) ?></b>
                                     </td>
 
@@ -302,6 +302,10 @@ messageAlert($showAlert, $message, $success);
         padding: 5px 0;
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
         z-index: 9999;
+    }
+    .ui-helper-hidden-accessible {
+        position: absolute !important;
+        left: -9999px !important;
     }
 
     /* each item */

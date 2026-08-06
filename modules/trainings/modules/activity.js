@@ -175,7 +175,7 @@ $(function () {
                 $('#qrInput').val(ui.item.employee_id);
                 return false;
             }
-        });
+        });        
     }
 });
 
@@ -241,6 +241,7 @@ function saveAttendance(employee_id, status) {
             csrf_token: csrfToken,
         },
         success: function (res) {
+
             $('#modalName').text('');
             $('#modalQR').text('');
 
@@ -419,12 +420,19 @@ function sendBulkEmail() {
 }
 
 function sendEmailSubmit(btn) {
+
     btn = $(btn);
+
     let attendanceId = btn.data("attendance-id");
     let employeeID = btn.data("employee-id");
     let email = btn.data("email");
     let trainingID = btn.data("training-id");
-    btn.prop("disabled", true).text("SENDING...");
+
+    // Disable ALL email buttons
+    $('.btn-send-email').prop("disabled", true);
+
+    btn.text("SENDING...");
+
     $.ajax({
         url: SITE_URL + '/modules/trainings/modules/sendEmail.php',
         type: "POST",
@@ -433,26 +441,43 @@ function sendEmailSubmit(btn) {
             attendance_id: attendanceId,
             email: email,
             trainingID: trainingID,
-            employeeID: employeeID,
-
+            employeeID: employeeID
         },
+
         success: function (response) {
             if (response.status === "success") {
-                btn.text("DONE");
-                btn.removeClass("btn-success")
+
+                btn.text("DONE")
+                    .removeClass("btn-success")
                     .addClass("btn-secondary");
-                btn.prop("disabled", true);
+
                 toastr.success("Email Successfully Sent.");
+
             } else {
+
                 btn.prop("disabled", false)
                     .text("SEND");
-                alert(response.message);
+
+                toastr.error(response.message);
+
             }
+
+            // Enable all except completed buttons
+            $('.btn-send-email').not('.btn-secondary').prop("disabled", false);
+
         },
 
         error: function () {
-            btn.prop("disabled", false).text("SEND");
-            alert("Server error");
+
+            btn.prop("disabled", false)
+                .text("SEND");
+
+            $('.btn-send-email').not('.btn-secondary').prop("disabled", false);
+
+            toastr.error("Server Error.");
+
         }
+
     });
+
 }
