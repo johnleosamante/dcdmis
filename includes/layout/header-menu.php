@@ -17,7 +17,7 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
             <?= csrf_field(); ?>
             <div class="input-group">
                 <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search"
-                    name="primary-search-text" autofocus required>
+                    name="primary-search-text" <?= $isDts ? 'autofocus' : '' ?> required>
 
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit" name="primary-search-button">
