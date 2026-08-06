@@ -178,19 +178,20 @@ messageAlert($showAlert, $message, $success);
         <input type="hidden" id="selected_date" value="">
 
         <!-- Activities List -->
-        <div class="my-3 d-flex <?= $showAttendanceActionsToday ? 'justify-content-between' : 'justify-content-end' ?>">
+        <div
+            class="my-3 d-flex flex-column flex-md-row <?= $showAttendanceActionsToday ? 'justify-content-between align-items-md-center' : 'justify-content-end align-items-end' ?> gap-2">
             <?php if ($showAttendanceActionsToday): ?>
-                <div class="d-flex align-items-center flex-grow-1 me-3">
+                <div class="d-flex align-items-center flex-grow-1 mb-2 mb-md-0 me-md-3">
                     <input type="hidden" id="csrf_token" name="csrf_token" value="<?= csrf_token() ?>">
-                    <input type="text" id="qrInput" class="form-control me-2 mr-1" style="width: 320px; max-width: 100%;"
+                    <input type="text" id="qrInput" class="form-control me-2 mr-1" style="width: 100%; max-width: 320px;"
                         placeholder="Scan ID or type employee name..." autofocus>
                     <button id="addAttendanceBtn" class="btn btn-primary me-2 mr-1"><i
                             class="fas fa-user-plus"></i></button>
-                    <button id="showAddModalInfo" class="btn btn-warning"><i class="fas fa-user-secret"></i></button>
+                    <button id="showAddModalInfo" class="btn btn-warning mr-1"><i class="fas fa-user-secret"></i></button>
                 </div>
             <?php endif; ?>
 
-            <div class="ml-1 d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-end">
                 <button id="viewAttendanceSum" class="btn btn-info mr-1" title="View Attendees">
                     <i class="fas fa-list"></i>
                 </button>
@@ -229,8 +230,8 @@ messageAlert($showAlert, $message, $success);
                             $trainingAttendanceArr = getTrainingAttendees($trainingId, $date);
                             foreach ($trainingAttendanceArr as $trainingAttendance):
                                 ?>
-                                <tr id="employeeAttendanceID<?= $trainingAttendance['id'] ?>">
-                                    <td>
+                                <tr id="employeeAttendanceID<?= $trainingAttendance['id'] ?>" class="text-uppercase">
+                                    <td class="align-middle">
                                         <?php if (!empty($trainingAttendance['img_url'])): ?>
                                             <i class="fas fa-image text-primary view-img" style="cursor:pointer;"
                                                 data-img="<?= $trainingAttendance['img_url'] ?>" title="View Image"></i>
@@ -287,13 +288,15 @@ messageAlert($showAlert, $message, $success);
         </div>
     </div>
 </div>
-<!--Custom STYLE-->
+
 <style>
     .ui-autocomplete {
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 8px;
         max-height: 250px;
+        width: 100%;
+        max-width: 325px;
         overflow-y: auto;
         overflow-x: hidden;
         padding: 5px 0;
@@ -307,13 +310,13 @@ messageAlert($showAlert, $message, $success);
         font-size: 14px;
         cursor: pointer;
         transition: 0.2s;
+        text-transform: uppercase;
     }
 
     /* hover effect */
     .ui-menu-item-wrapper:hover {
         background: #007bff;
         color: #fff;
-        border-radius: 6px;
     }
 </style>
 
