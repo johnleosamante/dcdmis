@@ -132,7 +132,7 @@ $trainings = getTrainingByProjects($projectId);
     <div class="modal-dialog modal-md">
         <form method="POST" action="#">
             <div class="modal-content">
-                <input type="hidden" id="csrf_token" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                <input type="hidden" id="csrf_token" name="csrf_token" value="<?= csrf_token() ?>">
 
                 <input type="hidden" id="program_id" value="<?= $programId ?>">
                 <input type="hidden" id="project_id">

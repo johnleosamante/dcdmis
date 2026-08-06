@@ -117,7 +117,7 @@ $programs = getProgramslist();
     <div class="modal-dialog modal-md">
         <form method="POST" action="#">
             <div class="modal-content">
-                <input type="hidden" id="csrf_token" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                <input type="hidden" id="csrf_token" name="csrf_token" value="<?= csrf_token() ?>">
                 <input type="hidden" id="program_id">
                 <input type="hidden" id="program_action" value="add">
                 <div class="modal-header">

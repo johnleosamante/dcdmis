@@ -1,7 +1,4 @@
-
-
 $(function () {
-
     $('.attendance-table').DataTable({
         pageLength: 25,
         lengthMenu: [5, 10, 25, 50, 100],
@@ -12,7 +9,6 @@ $(function () {
     });
 
     if (typeof toastr !== 'undefined') {
-
         toastr.options = {
             closeButton: true,
             progressBar: true,
@@ -23,7 +19,6 @@ $(function () {
     }
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
-
         $($.fn.dataTable.tables(true))
             .DataTable()
             .columns.adjust()
@@ -90,7 +85,6 @@ $(function () {
 
         var training_id = btoa($('#training_id').val());
         var selected_date = btoa($('#selected_date').val())
-
         var url = "viewActualAttendance.php?training_id=" + training_id + "&date=" + selected_date;
 
         window.open(url, "_blank");
@@ -162,7 +156,6 @@ $(function () {
         var csrfToken = $('#csrf_token').val();
         $('#qrInput').autocomplete({
             source: function (request, response) {
-
                 $.ajax({
                     url: SITE_URL + '/modules/trainings/modules/action.php',
                     type: 'POST',
@@ -176,38 +169,26 @@ $(function () {
                         response(data);
                     }
                 });
-
             },
-
             minLength: 3,
-
             select: function (event, ui) {
                 $('#qrInput').val(ui.item.employee_id);
                 return false;
             }
-
-        });
-        
+        });        
     }
-
 });
 
 function generateAttendancePDF(event) {
     event.preventDefault(); // stops page reload
-
     const activityId = 14; // or dynamic value
-
     const date = new Date().toISOString().split('T')[0];
-
     const url = `samplePDF.php?activity_id=${activityId}&date=${date}`;
-
     window.open(url, '_blank');
 }
 
-
 function showDeleteAttendance(trainingID) {
     $('#AttendanceT_id_hidden').val(trainingID);
-
     $('#deleteAttendanceModal').modal('show');
 }
 
@@ -229,12 +210,11 @@ function deleteAttendanceTraining() {
             });
             $('#deleteAttendanceModal').modal('hide');
             $('#AttendanceT_id_hidden').val('');
-           
-           $('#modalName').text('Employee Removed Successfully');
-$('#modalQR').text('The employee has been removed from the attendance list. This action has been completed successfully.');
+
+            $('#modalName').text('Employee Removed Successfully');
+            $('#modalQR').text('The employee has been removed from the attendance list. This action has been completed successfully.');
 
             $('#attendanceModal').modal('show');
-
         },
         error: function () {
             alert('Error: Could not connect to the server.');
@@ -242,10 +222,8 @@ $('#modalQR').text('The employee has been removed from the attendance list. This
     });
 }
 
-
 //activity add function
 function saveAttendance(employee_id, status) {
-
     var activeDate = $('#attendanceTabs .nav-link.active').data('date');
     var trainingId = $('#training_id').val();
     var csrfToken = $('#csrf_token').val();
@@ -259,7 +237,7 @@ function saveAttendance(employee_id, status) {
             training_id: trainingId,
             employee_id: employee_id,
             date_in: activeDate,
-            status : status,
+            status: status,
             csrf_token: csrfToken,
         },
         success: function (res) {
@@ -279,9 +257,8 @@ function saveAttendance(employee_id, status) {
                 $('#attendanceModal').on('hidden.bs.modal', function () {
                     location.reload();
                 });
-
             } else {
-                $('#modalName').text("Opps!");
+                $('#modalName').text("Oops!");
                 $('#modalQR').text('Employee Already attended this training.');
 
                 $('#attendanceModal').modal('show');
@@ -289,10 +266,8 @@ function saveAttendance(employee_id, status) {
         },
 
         error: function (xhr) {
-
             $('#modalName').text("Sorry! Unable to Record Attendance");
             $('#modalQR').text(xhr.responseText);
-
             $('#attendanceModal').modal('show');
         }
     });
@@ -307,17 +282,12 @@ $('#qrInput').keypress(function (e) {
     }
 });
 
-//When Search using Name
-
-
-
 function showAttendanceModal(type, title, name, qr, message = "") {
 
     $('#modal-title').text(title);
     $('#modalName').text(name);
     $('#modalQR').text(qr);
 
-    // optional extra message (for errors)
     if (message !== "") {
         $('#modalMessage').text(message).show();
     } else {
@@ -339,18 +309,16 @@ $('#addAttendanceBtn').click(function () {
     if (qrCode === '') {
         $('#qrInput').focus();
 
-        $('#modalName').text("Opps! Please scan the barcode or search employee name.");
+        $('#modalName').text("Oops! Please scan the barcode or search employee name.");
 
         $('#attendanceModal').modal('show');
         return; // stop execution
-
     }
 
     saveAttendance(qrCode, status);
 });
 
 $('#showAddModalInfo').click(function () {
-
     var qrCode = $('#qrInput').val().trim();
 
     if (qrCode === '') {
@@ -365,7 +333,6 @@ $('#showAddModalInfo').click(function () {
 
         $('#attendanceModal').modal('show');
         return;
-
     }
 
     $('#modalName').text('Include Participant?');
@@ -394,19 +361,16 @@ $('#showAddModalInfo').click(function () {
     `);
 
     $('#attendanceModal').modal('show');
-
 });
 
-function processParticipantBtn(){
-
+function processParticipantBtn() {
     var qrCode = $('#qrInput').val().trim();
     var status = 0;// status is partial attendance
-    
+
     saveAttendance(qrCode, status);
 }
 
 function sendBulkEmail() {
-
     let training_id = $("#training_id").val();
 
     // Validate Training ID
@@ -455,7 +419,6 @@ function sendBulkEmail() {
     });
 }
 
-
 function sendEmailSubmit(btn) {
 
     btn = $(btn);
@@ -482,7 +445,6 @@ function sendEmailSubmit(btn) {
         },
 
         success: function (response) {
-
             if (response.status === "success") {
 
                 btn.text("DONE")

@@ -28,6 +28,30 @@ if (isset($_POST['submit-application'])) {
             throw new Exception('Invalid call for application link.');
         }
 
+        $pub = publication($publicationId);
+        if (!$pub) {
+            throw new Exception('Call for application not found.');
+        }
+
+        $today = date('Y-m-d');
+        $closeDate = date('Y-m-d', strtotime($pub['close_date']));
+        $openDate = date('Y-m-d', strtotime($pub['open_date']));
+        $currentTime = time();
+        $deadline5pm = strtotime($closeDate . ' 17:00:00');
+
+        if ($pub['status'] !== 'open') {
+            throw new Exception('This call for application is currently closed.');
+        }
+        if (strtotime($closeDate) < strtotime($today)) {
+            throw new Exception('The application period for this call for application has ended.');
+        }
+        if ($today === $closeDate && $currentTime >= $deadline5pm) {
+            throw new Exception('The application period for this call for application ended at 5:00 PM today. Submissions are no longer accepted.');
+        }
+        if (strtotime($openDate) > strtotime($today)) {
+            throw new Exception('The application period for this call for application has not started yet.');
+        }
+
         $applicationId = applicantId($applicationCode);
 
         if (!$applicationId) {
@@ -127,7 +151,7 @@ if (isset($_POST['submit-application'])) {
             $applicantName = strtoupper(toName($applicantData['last_name'], $applicantData['first_name'], $applicantData['middle_name'], $applicantData['name_extension'], true));
             $title = strtoupper(strtolower($applicantData['sex'] ?? '') === 'male' ? 'Mr. ' : 'Ms. ');
 
-            $pub = publication($publicationId);
+            $pub = $pub ?: publication($publicationId);
             $pubTitle = $pub ? $pub['title'] : 'Vacancy Call for Application';
             $pubCode = $pub ? $pub['code'] : '';
 
