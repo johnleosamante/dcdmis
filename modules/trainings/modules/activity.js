@@ -257,7 +257,7 @@ function saveAttendance(employee_id, status) {
                     location.reload();
                 });
             } else {
-                $('#modalName').text("Opps!");
+                $('#modalName').text("Oops!");
                 $('#modalQR').text('Employee Already attended this training.');
 
                 $('#attendanceModal').modal('show');
@@ -308,7 +308,7 @@ $('#addAttendanceBtn').click(function () {
     if (qrCode === '') {
         $('#qrInput').focus();
 
-        $('#modalName').text("Opps! Please scan the barcode or search employee name.");
+        $('#modalName').text("Oops! Please scan the barcode or search employee name.");
 
         $('#attendanceModal').modal('show');
         return; // stop execution
@@ -417,7 +417,6 @@ function sendBulkEmail() {
         $(".btnSendEmail").prop("disabled", false);
     });
 }
-
 
 function sendEmailSubmit(btn) {
     btn = $(btn);
