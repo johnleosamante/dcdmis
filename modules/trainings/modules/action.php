@@ -25,7 +25,8 @@ function getTrainingAttendees($training_id, $date) {
                 s.name as school_name,
                 ta.control_no,
                 ta.created_at,
-                ta.img_url
+                ta.img_url,
+                ta.status
 
             FROM training_attendees ta
 
