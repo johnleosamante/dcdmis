@@ -58,7 +58,8 @@ $employees = query("
         ) AS fullname,
         p.official_title,
         e.email_address,
-        ta.is_mail
+        ta.is_mail,
+        ta.status
     FROM training_attendees ta
     INNER JOIN employees e
         ON e.id = ta.employee_id
@@ -67,6 +68,7 @@ $employees = query("
     LEFT JOIN positions p
         ON p.id = sa.position_id
     WHERE ta.training_id = ?
+    AND ta.status = 1
     GROUP BY e.id
     ORDER BY fullname ASC
 ", [$trainingId]);
@@ -298,14 +300,13 @@ $completionRate = $totalPossible > 0 ? round(($totalPresent / $totalPossible) * 
                         <td class="text-start text-primary">
                             <button
                                 onclick="sendEmailSubmit(this)"
-                                class="btn btn-sm <?= ($emp['is_mail'] == 1) ? 'btn-secondary' : 'btn-success' ?>"
+                                class="btn btn-sm btn-send-email <?= ($emp['is_mail'] == 1) ? 'btn-secondary' : 'btn-success' ?>"
                                 data-attendance-id="<?= $emp['attendance_id'] ?>"
                                 data-employee-id="<?= $emp['id'] ?>"
                                 data-training-id="<?= $trainingId ?>"
-                                data-email="<?= htmlspecialchars($emp['email_address']) ?>"
-                                <?= ($emp['is_mail'] == 1) ? 'disabled' : '' ?>>
+                                data-email="<?= htmlspecialchars($emp['email_address']) ?>">
 
-                                <?= ($emp['is_mail'] == 1) ? "DONE" : "SEND" ?>
+                                <?= ($emp['is_mail'] == 1) ? "RESEND" : "SEND" ?>
                             </button>
                         </td>
                     </tr>
