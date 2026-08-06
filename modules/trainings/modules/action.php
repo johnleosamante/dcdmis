@@ -1,50 +1,47 @@
-
-
 <?php
 
 require_once __DIR__ . '/../../../includes/function.php';
 require_once(root() . '/includes/database/database.php');
 
-function getTrainingAttendees($training_id, $date) {
+function getTrainingAttendees($training_id, $date)
+{
     $sql = "SELECT 
-                ta.id,
-                e.id AS barcode,
+        ta.id,
+        e.id AS barcode,
 
-                CONCAT(
-                    e.first_name, ' ',
-                    IF(
-                        e.middle_name IS NOT NULL 
-                        AND e.middle_name != '',
-                        CONCAT(LEFT(e.middle_name, 1), '. '),
-                        ''
-                    ),
-                    e.last_name
-                ) AS fullname,
+        TRIM(
+            CONCAT_WS(' ',
+                e.first_name,
+                NULLIF(CASE WHEN CHAR_LENGTH(TRIM(e.middle_name)) > 0 THEN CONCAT(LEFT(TRIM(e.middle_name), 1), '.') END, ''),
+                e.last_name,
+                NULLIF(TRIM(e.name_extension), '')
+            )
+        ) AS fullname,
 
-                p.official_title,
-                s.name as school_name,
-                ta.control_no,
-                ta.created_at,
-                ta.img_url
+        p.official_title,
+        s.name AS school_name,
+        ta.control_no,
+        ta.created_at,
+        ta.img_url
 
-            FROM training_attendees ta
+    FROM training_attendees ta
 
-            LEFT JOIN employees e
-                ON e.id = ta.employee_id
+    LEFT JOIN employees e
+        ON e.id = ta.employee_id
 
-            LEFT JOIN station_assignments sa
-                ON sa.employee_id = e.id
+    LEFT JOIN station_assignments sa
+        ON sa.employee_id = e.id
 
-            LEFT JOIN schools s
-                ON s.id = sa.station_id
-                
-            LEFT JOIN positions p
-                ON p.id = sa.position_id
+    LEFT JOIN schools s
+        ON s.id = sa.station_id
+        
+    LEFT JOIN positions p
+        ON p.id = sa.position_id
 
-            WHERE ta.training_id = ?
-              AND DATE(ta.date_in) = ?
+    WHERE ta.training_id = ?
+    AND DATE(ta.date_in) = ?
 
-            ORDER BY ta.created_at ASC";
+    ORDER BY ta.created_at ASC;";
 
     return query($sql, [$training_id, $date]);
 }
@@ -65,10 +62,18 @@ if (isset($_POST['saveTrainingAttendance'])) {
     }
 
     $emp = find("
-        SELECT id,
-               CONCAT(first_name, ' ', middle_name, ' ', last_name) AS full_name
+        SELECT 
+            id,
+            TRIM(
+                CONCAT_WS(' ',
+                    first_name,
+                    NULLIF(CASE WHEN CHAR_LENGTH(TRIM(middle_name)) > 0 THEN CONCAT(LEFT(TRIM(middle_name), 1), '.') END, ''),
+                    last_name,
+                    NULLIF(TRIM(name_extension), '')
+                )
+            ) AS full_name
         FROM employees
-        WHERE id = ?
+        WHERE id = ?;
     ", [$employee_id]);
 
     if (!$emp) {
@@ -125,18 +130,28 @@ if (isset($_POST['saveTrainingAttendance'])) {
 
 
 if (isset($_POST['searchEmployeeName']) && $_POST['searchEmployeeName'] === 'true') {
-
     $search = trim($_POST['search'] ?? '');
-
     $db = connection();
-
     $stmt = $db->prepare("
-        SELECT
+        SELECT 
             id,
-            CONCAT(first_name, ' ', middle_name, ' ', last_name) AS fullname
+            TRIM(
+                CONCAT_WS(' ',
+                    first_name,
+                    NULLIF(CASE WHEN CHAR_LENGTH(TRIM(middle_name)) > 0 THEN CONCAT(LEFT(TRIM(middle_name), 1), '.') END, ''),
+                    last_name,
+                    NULLIF(TRIM(name_extension), '')
+                )
+            ) AS fullname
         FROM employees
-        WHERE CONCAT(first_name, ' ', middle_name, ' ', last_name) LIKE ?
-        LIMIT 10
+        WHERE 
+            CONCAT_WS(' ',
+                first_name,
+                NULLIF(CASE WHEN CHAR_LENGTH(TRIM(middle_name)) > 0 THEN CONCAT(LEFT(TRIM(middle_name), 1), '.') END, ''),
+                last_name,
+                NULLIF(TRIM(name_extension), '')
+            ) LIKE ?
+        LIMIT 10;
     ");
 
     $stmt->execute(["%{$search}%"]);
@@ -146,7 +161,6 @@ if (isset($_POST['searchEmployeeName']) && $_POST['searchEmployeeName'] === 'tru
     $data = [];
 
     foreach ($employees as $row) {
-
         $data[] = [
             'label' => $row['fullname'] . ' (' . $row['id'] . ')',
             'value' => $row['fullname'],
@@ -163,7 +177,6 @@ if (isset($_POST['deleteEmployeeAttendance'])) {
     $id = $_POST['id'] ?? null;
 
     if (empty($id)) {
-
         echo json_encode([
             'status' => 'error',
             'message' => 'Invalid attendance ID.'
@@ -173,19 +186,17 @@ if (isset($_POST['deleteEmployeeAttendance'])) {
     }
 
     $deleted = delete(
-            'training_attendees',
-            'id = ?',
-            [$id]
+        'training_attendees',
+        'id = ?',
+        [$id]
     );
 
     if ($deleted !== false) {
-
         echo json_encode([
             'status' => 'success',
             'message' => 'Attendance deleted successfully.'
         ]);
     } else {
-
         echo json_encode([
             'status' => 'error',
             'message' => 'Failed to delete attendance.'
@@ -196,7 +207,8 @@ if (isset($_POST['deleteEmployeeAttendance'])) {
 }
 
 //PROGRAM
-function getProgramslist() {
+function getProgramslist()
+{
     $sql = "SELECT 
                 program_id,
                 program_code,
@@ -211,7 +223,6 @@ function getProgramslist() {
 }
 
 if (isset($_POST['saveProgram'])) {
-
     $program_id = trim($_POST['program_id'] ?? '');
     $program_code = trim($_POST['program_code'] ?? '');
     $program_name = trim($_POST['program_name'] ?? '');
@@ -227,16 +238,15 @@ if (isset($_POST['saveProgram'])) {
 
     // UPDATE
     if (!empty($program_id)) {
-
         $updated = update(
-                'programs',
-                [
-                    'program_code' => $program_code,
-                    'program_name' => $program_name,
-                    'description' => $description
-                ],
-                'program_id = ?',
-                [$program_id]
+            'programs',
+            [
+                'program_code' => $program_code,
+                'program_name' => $program_name,
+                'description' => $description
+            ],
+            'program_id = ?',
+            [$program_id]
         );
 
         if ($updated === false) {
@@ -279,7 +289,6 @@ if (isset($_POST['saveProgram'])) {
 }
 
 if (isset($_POST['deleteProgram'])) {
-
     $program_id = (int) ($_POST['program_id'] ?? 0);
 
     if ($program_id <= 0) {
@@ -291,9 +300,9 @@ if (isset($_POST['deleteProgram'])) {
     }
 
     $deleted = delete(
-            'programs',
-            'program_id = ?',
-            [$program_id]
+        'programs',
+        'program_id = ?',
+        [$program_id]
     );
 
     if ($deleted === false) {
@@ -312,25 +321,28 @@ if (isset($_POST['deleteProgram'])) {
 }
 
 //Program Details / Projects
-function getProgram($programid) {
+function getProgram($programid)
+{
     return find("SELECT * FROM `programs` WHERE `program_id` = ? LIMIT 1", [$programid]);
 }
 
 //Project Details
-function getProjectDetail($projectid) {
+function getProjectDetail($projectid)
+{
     return find("SELECT * FROM `projects` WHERE `project_id` = ? LIMIT 1", [$projectid]);
 }
 
-function getProjects($programId) {
+function getProjects($programId)
+{
     $sql = "SELECT *
             FROM projects
             WHERE program_id = ?
             ORDER BY project_name ASC";
-
     return query($sql, [$programId]);
 }
 
-function getTrainingByProjects($projectId) {
+function getTrainingByProjects($projectId)
+{
     $sql = "SELECT *
             FROM trainings
             WHERE project_id = ?
@@ -340,7 +352,6 @@ function getTrainingByProjects($projectId) {
 }
 
 if (isset($_POST['saveProject'])) {
-
     $project_id = trim($_POST['project_id'] ?? '');
     $program_id = trim($_POST['program_id'] ?? '');
     $project_code = trim($_POST['project_code'] ?? '');
@@ -370,17 +381,17 @@ if (isset($_POST['saveProject'])) {
     if (!empty($project_id)) {
 
         $updated = update(
-                'projects',
-                [
-                    'program_id' => $program_id,
-                    'project_code' => $project_code,
-                    'project_name' => $project_name,
-                    'description' => $description,
-                    'start_date' => $start_date,
-                    'end_date' => $end_date
-                ],
-                'project_id = ?',
-                [$project_id]
+            'projects',
+            [
+                'program_id' => $program_id,
+                'project_code' => $project_code,
+                'project_name' => $project_name,
+                'description' => $description,
+                'start_date' => $start_date,
+                'end_date' => $end_date
+            ],
+            'project_id = ?',
+            [$project_id]
         );
 
         if ($updated === false) {
@@ -426,7 +437,6 @@ if (isset($_POST['saveProject'])) {
 }
 
 if (isset($_POST['deleteProject'])) {
-
     $project_id = (int) ($_POST['project_id'] ?? 0);
 
     if ($project_id <= 0) {
@@ -438,9 +448,9 @@ if (isset($_POST['deleteProject'])) {
     }
 
     $deleted = delete(
-            'projects',
-            'project_id = ?',
-            [$project_id]
+        'projects',
+        'project_id = ?',
+        [$project_id]
     );
 
     if ($deleted === false) {
@@ -458,12 +468,7 @@ if (isset($_POST['deleteProject'])) {
     exit;
 }
 
-
 if (isset($_POST['sendEmailByAttendance'])) {
-    
+
 
 }
-
-
-
-?>
