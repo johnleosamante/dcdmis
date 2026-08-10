@@ -105,7 +105,8 @@ messageAlert($showAlert, $message, $success);
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-0">
                             Total Applications</div>
                         <div class="h4 mb-0 font-weight-bold text-gray-800">
-                            <a href="<?= customUri('hrmis', 'Applicants List', $publicationId) ?>" class="text-dark">
+                            <a href="<?= customUri('hrmis', 'Call for Application Applicants', $publicationId) ?>"
+                                class="text-dark">
                                 <?= countApplicationsByPublication($publicationId) ?>
                             </a>
                         </div>
@@ -147,7 +148,7 @@ messageAlert($showAlert, $message, $success);
 <?php
 $positionChartData = applicantsCountByPosition($publicationId);
 foreach ($positionChartData as &$item) {
-    $item['link'] = customUri('hrmis', 'Applicants List', $publicationId) . '&position_id=' . encode($item['position_id']);
+    $item['link'] = customUri('hrmis', 'Call for Application Applicants', $publicationId) . '&position_id=' . encode($item['position_id']);
 }
 unset($item);
 
@@ -159,12 +160,12 @@ $employmentChartData = [
     [
         'name' => 'Internal',
         'count' => $employedCount,
-        'link' => customUri('hrmis', 'Applicants List', $publicationId) . '&status=internal'
+        'link' => customUri('hrmis', 'Call for Application Applicants', $publicationId) . '&status=internal'
     ],
     [
         'name' => 'External',
         'count' => $notEmployedCount,
-        'link' => customUri('hrmis', 'Applicants List', $publicationId) . '&status=external'
+        'link' => customUri('hrmis', 'Call for Application Applicants', $publicationId) . '&status=external'
     ]
 ];
 ?>
