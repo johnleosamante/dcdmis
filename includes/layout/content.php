@@ -189,8 +189,19 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Call for Application Details':
             $file = 'vacancies/publication-details';
             break;
-        case 'Applicants List':
+        case 'Call for Application Applicants':
             $file = 'vacancies/applicants';
+            break;
+        case 'Applicants':
+        case 'External Applicants':
+            $file = 'applicants/page';
+            break;
+        case 'Applicant Information':
+        case 'External Applicant Information':
+            $file = 'applicants/applicant-information';
+            break;
+        case 'Edit External Applicant':
+            $file = 'applicants/edit-applicant';
             break;
         case 'Qualified Applicants':
             $file = 'vacancies/qualified-applicants';
@@ -246,7 +257,7 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Add Objective':
             $file = 'pm/add-objective';
             break;
-                case 'Edit Objective':
+        case 'Edit Objective':
             $file = 'pm/edit-objective';
             break;
         case 'Review IPCRF':
