@@ -33,10 +33,10 @@ if ($isHrmis && ($isPersonnel || $isICT)) {
     sidebarMenuItem(customUri('hrmis', 'Vacancies'), 'Vacancies', 'fa-user-times', isset($url) && str_contains($url, 'Vacancies'), $countVacancy);
 }
 
-sidebarMenuItem(customUri('hrmis', 'Call for Applications'), 'Call for Applications', 'fa-bullhorn', isset($url) && str_contains($url, 'Call for Applications'), $countPublications);
+sidebarMenuItem(customUri('hrmis', 'Call for Applications'), 'Call for Applications', 'fa-bullhorn', isset($url) && str_contains($url, 'Call for Application'), $countPublications);
 
 if ($isHrmis && ($isPersonnel || $isICT)) {
-    sidebarMenuItem(customUri('hrmis', 'Applicants'), 'Applicants', 'fa-users', isset($url) && str_contains($url, 'Applicants'), $countApplicants);
+    sidebarMenuItem(customUri('hrmis', 'Applicants'), 'Applicants', 'fa-users', isset($url) && str_contains($url, 'Applicants') && !str_contains($url, 'Call for Application'), $countApplicants);
     if ($isHrmis && ($isPersonnel || $isICT)) {
         sidebarDivider();
         sidebarMenuItem(customUri('hrmis', 'Transfer Requests'), 'Transfer Requests', 'fa-exchange-alt', isset($url) && str_contains($url, 'Transfer'), $countPendingTransfers);
