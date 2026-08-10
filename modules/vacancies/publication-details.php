@@ -214,7 +214,7 @@ $employmentChartData = [
 
 <script src="<?= uri() ?>/assets/vendor/chart.js/Chart.min.js"></script>
 <script src="<?= uri() ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
-<script src="<?= uri() ?>/assets/js/chart-custom.js?v=1.3"></script>
+<script src="<?= uri() ?>/assets/js/chart-custom.js?v=<?= VERSION ?>"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
