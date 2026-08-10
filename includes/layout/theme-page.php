@@ -57,8 +57,8 @@ require_once(root() . '/includes/layout/components.php');
         <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <?php endif ?>
 
-    <script src="<?= uri() ?>/assets/js/script.js?v=1.3"></script>
-    <script src="<?= uri() ?>/assets/js/csrf-heartbeat.js"></script>
+    <script src="<?= uri() ?>/assets/js/script.js?v=<?= VERSION ?>"></script>
+    <script src="<?= uri() ?>/assets/js/csrf-heartbeat.js?v=<?= VERSION ?>"></script>
 </body>
 
 </html>
