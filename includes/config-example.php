@@ -1,5 +1,6 @@
 <?php
 // include/config.php
+const VERSION = '1.0.0';
 const HOSTNAME = 'localhost';
 const USER = 'user';
 const PASSWORD = 'password';
