@@ -154,7 +154,7 @@ if (isset($_POST['update-personal-information'])) {
             $matched_is_indigenous = 0;
             $matched_name = '';
             foreach ($all_ethnics as $eg_item) {
-                if ((int)$eg_item['id'] === (int)$ethnic_group_id) {
+                if ((int) $eg_item['id'] === (int) $ethnic_group_id) {
                     $matched_is_indigenous = !empty($eg_item['is_indigenous']) ? 1 : 0;
                     $matched_name = $eg_item['name'];
                     break;
@@ -2333,5 +2333,64 @@ if (isset($_POST['disapprove-transfer-request'])) {
         rollBack();
         $success = false;
         $message = $e->getMessage();
+    }
+}
+
+if (isset($_POST['update-applicant'])) {
+    $showAlert = true;
+    $success = false;
+    $applicantId = sanitize(decipher($_POST['verifier'] ?? ''));
+
+    if (empty($applicantId)) {
+        $message = 'Invalid applicant selected.';
+    } else {
+        $existingApplicant = applicant($applicantId);
+        if (!$existingApplicant) {
+            $message = 'Applicant record not found.';
+        } else {
+            $data = prepareApplicantData($_POST);
+            unset($data['id']);
+
+            if (!empty($data['email_address']) && $data['email_address'] !== $existingApplicant['email_address']) {
+                if (applicantEmailExists($data['email_address'])) {
+                    $message = 'The email address provided is already registered by another applicant.';
+                }
+            }
+
+            if (!empty($data['mobile_number']) && $data['mobile_number'] !== $existingApplicant['mobile_number']) {
+                if (applicantMobileExists($data['mobile_number'])) {
+                    $message = 'The mobile number provided is already registered by another applicant.';
+                }
+            }
+
+            if (empty($message)) {
+                if (updateExternalApplicant($applicantId, $data) !== false) {
+                    createSystemLog($stationId, $userId, 'Updated external applicant details', $applicantId, clientIp());
+                    $success = true;
+                    $message = 'External applicant information has been updated successfully.';
+                } else {
+                    $message = 'Failed to update external applicant details or no changes were made.';
+                }
+            }
+        }
+    }
+}
+
+if (isset($_POST['delete-applicant'])) {
+    $showAlert = true;
+    $success = false;
+    $applicantId = sanitize(decipher($_POST['verifier'] ?? ''));
+
+    if (empty($applicantId)) {
+        $message = 'Invalid applicant selected for removal.';
+    } else {
+        $result = deleteExternalApplicant($applicantId);
+        if ($result['success']) {
+            createSystemLog($stationId, $userId, 'Removed external applicant', $applicantId, clientIp());
+            $success = true;
+            $message = $result['message'];
+        } else {
+            $message = $result['message'];
+        }
     }
 }
