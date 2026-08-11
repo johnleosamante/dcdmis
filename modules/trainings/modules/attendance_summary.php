@@ -37,12 +37,16 @@ $employees = query("
         CONCAT(
             e.first_name, ' ',
             IF(
-                e.middle_name IS NOT NULL
-                AND e.middle_name <> '',
-                CONCAT(LEFT(e.middle_name,1), '. '),
+                e.middle_name IS NOT NULL AND e.middle_name != '',
+                CONCAT(' ', LEFT(e.middle_name, 1), '.'),
                 ''
             ),
-            e.last_name
+            UPPER(e.last_name), ' ',
+            IF(
+                e.name_extension IS NOT NULL AND e.name_extension != '',
+                CONCAT(' ', e.name_extension),
+                ''
+            )
         ) AS fullname,
         p.official_title,
         e.email_address,
@@ -101,15 +105,14 @@ $completionRate = $totalPossible > 0 ? round(($totalPresent / $totalPossible) * 
 
 <div class="row g-3">
     <div class="col-lg-8">
-        <div class="card border-0 shadow-sm h-100"
-             style="background-color:#f6f4f1;">
+        <div class="card border-0 shadow-sm h-100" style="background-color:#f6f4f1;">
             <div class="card-body">
                 <div class="text-center">
                     <!-- DATE RANGE -->
                     <div class="d-flex align-items-center justify-content-center mb-3">
                         <div style="width:60px;height:2px;background:#4f46e5;"></div>
                         <span class="mx-3 text-uppercase fw-semibold"
-                              style="letter-spacing:1px;color:#4f46e5;font-size:13px;">
+                            style="letter-spacing:1px;color:#4f46e5;font-size:13px;">
                             <?= empty($training['unconsecutive_date']) ? toDateRange($training['start_date'], $training['end_date']) : toHandleEncoding($training['unconsecutive_date']) ?>
                         </span>
 
@@ -142,8 +145,7 @@ $completionRate = $totalPossible > 0 ? round(($totalPresent / $totalPossible) * 
     <div class="col-lg-4">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-                <h6 class="text-uppercase text-muted mb-3"
-                    style="font-size:12px; letter-spacing:1px;">
+                <h6 class="text-uppercase text-muted mb-3" style="font-size:12px; letter-spacing:1px;">
                     Attendance Summary
                 </h6>
 
@@ -179,9 +181,7 @@ $completionRate = $totalPossible > 0 ? round(($totalPresent / $totalPossible) * 
 <div class="tab-content mt-3 bg-white p-3">
     <div class="tab-pane fade show active">
         <input type="hidden" id="csrf_token" name="csrf_token" value="<?= csrf_token() ?>">
-        <table
-            class="table table-bordered table-hover table-striped text-center"
-            id="attendanceSummaryTable">
+        <table class="table table-bordered table-hover table-striped text-center" id="attendanceSummaryTable">
             <thead class="table-light">
                 <tr>
                     <th>No.</th>
@@ -226,11 +226,9 @@ $completionRate = $totalPossible > 0 ? round(($totalPresent / $totalPossible) * 
 
                         <?php endforeach; ?>
                         <td class="text-start text-primary">
-                            <button
-                                onclick="sendEmailSubmit(this)"
+                            <button onclick="sendEmailSubmit(this)"
                                 class="btn btn-sm btn-send-email <?= ($emp['is_mail'] == 1) ? 'btn-secondary' : 'btn-success' ?>"
-                                data-attendance-id="<?= $emp['attendance_id'] ?>"
-                                data-employee-id="<?= $emp['id'] ?>"
+                                data-attendance-id="<?= $emp['attendance_id'] ?>" data-employee-id="<?= $emp['id'] ?>"
                                 data-training-id="<?= $trainingId ?>"
                                 data-email="<?= htmlspecialchars($emp['email_address']) ?>">
 
@@ -244,8 +242,7 @@ $completionRate = $totalPossible > 0 ? round(($totalPresent / $totalPossible) * 
     </div>
 </div>
 
-<div id="loadingOverlay"
-     style="
+<div id="loadingOverlay" style="
      display:none;
      position:fixed;
      top:0; left:0;
