@@ -1,13 +1,7 @@
 <?php
 // public/includes/database/backup.php
-
-/**
- * Main entrance function triggered on page load.
- * Performs database backup checks and execution.
- */
 function checkAndRunDatabaseBackup(): void
 {
-    // 1. Only run for GET requests with HTML accept headers (actual visitor page load)
     $isPageLoad = ($_SERVER['REQUEST_METHOD'] === 'GET' && strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'text/html') !== false);
     if (!$isPageLoad) {
         return;
@@ -16,18 +10,15 @@ function checkAndRunDatabaseBackup(): void
     $prefix = alias() . '_';
     $today = date('Y-m-d');
 
-    // 2. Performance optimization: skip DB query if checked in current session today
     if (isset($_SESSION[$prefix . 'backup_checked_today']) && $_SESSION[$prefix . 'backup_checked_today'] === $today) {
         return;
     }
 
-    // 3. Check if backup for today has already run successfully
     $log = find("SELECT * FROM `backup_logs` WHERE `backup_date` = ? LIMIT 1", [$today]);
 
     $shouldBackup = false;
 
     if ($log === false) {
-        // Insert entry with 'Pending' status. Unique index on backup_date prevents concurrent inserts
         $inserted = insert('backup_logs', [
             'backup_date' => $today,
             'status' => 'Pending'
@@ -37,17 +28,14 @@ function checkAndRunDatabaseBackup(): void
         }
     } else {
         if ($log['status'] === 'Success') {
-            // Already backed up successfully today, save in session
-            $_SESSION[$prefix . 'backup_checked_today'] = $today;
+            $_SESSION["{$prefix}backup_checked_today"] = $today;
             return;
         } elseif ($log['status'] === 'Failed') {
-            // Previously failed, attempt retry by updating status to Pending
             $updated = update('backup_logs', ['status' => 'Pending', 'error_message' => null], '`backup_date` = ? AND `status` = ?', [$today, 'Failed']);
             if ($updated > 0) {
                 $shouldBackup = true;
             }
         } elseif ($log['status'] === 'Pending') {
-            // Check for timeout / crashed process (older than 15 minutes)
             $lastUpdated = strtotime($log['updated_at'] ?? $log['created_at']);
             if (time() - $lastUpdated > 900) {
                 $updated = update('backup_logs', ['status' => 'Pending', 'error_message' => 'Pending timeout retry'], '`backup_date` = ? AND `status` = ?', [$today, 'Pending']);
@@ -63,26 +51,18 @@ function checkAndRunDatabaseBackup(): void
     }
 }
 
-/**
- * Executes the database backup and updates the log.
- */
 function runDatabaseBackup(string $today): void
 {
     $prefix = alias() . '_';
-
-    // Resolve backup directory
     $backupDir = defined('BACKUP_DIR') ? BACKUP_DIR : dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'backups';
-
-    // Auto-create directory and secure it
     if (!is_dir($backupDir)) {
         if (!mkdir($backupDir, 0755, true) && !is_dir($backupDir)) {
-            $errorMsg = "Failed to create backup directory: " . $backupDir;
+            $errorMsg = "Failed to create backup directory: {$backupDir}";
             update('backup_logs', ['status' => 'Failed', 'error_message' => $errorMsg], '`backup_date` = ?', [$today]);
             return;
         }
     }
 
-    // Secure the folder if it's accessible from the web
     secureBackupDirectory($backupDir);
 
     $fileName = 'backup_' . DATABASE . '_' . date('Ymd_His') . '.sql';
@@ -91,7 +71,6 @@ function runDatabaseBackup(string $today): void
     $success = false;
     $errorMsg = '';
 
-    // Method 1: Try using mysqldump if path is defined
     $mysqldumpPath = defined('MYSQLDUMP_PATH') ? MYSQLDUMP_PATH : null;
     if ($mysqldumpPath && file_exists($mysqldumpPath)) {
         $success = runMysqldump($mysqldumpPath, $filePath, $errorMsg);
@@ -99,14 +78,13 @@ function runDatabaseBackup(string $today): void
         $errorMsg = "mysqldump executable not configured or not found. ";
     }
 
-    // Method 2: Fallback to PHP streaming dumper
     if (!$success) {
         $phpStartMsg = "Falling back to pure PHP backup logic... ";
         $phpSuccess = runPHPBackup($filePath, $phpErrorMsg);
         if ($phpSuccess) {
             $success = true;
         } else {
-            $errorMsg .= $phpStartMsg . $phpErrorMsg;
+            $errorMsg .= "{$phpStartMsg}{$phpErrorMsg}";
         }
     }
 
@@ -120,9 +98,8 @@ function runDatabaseBackup(string $today): void
             'error_message' => null
         ], '`backup_date` = ?', [$today]);
 
-        $_SESSION[$prefix . 'backup_checked_today'] = $today;
+        $_SESSION["{$prefix}backup_checked_today"] = $today;
     } else {
-        // Clean up partial file if exists
         if (file_exists($filePath)) {
             @unlink($filePath);
         }
@@ -133,15 +110,12 @@ function runDatabaseBackup(string $today): void
     }
 }
 
-/**
- * Runs backup using mysqldump executable.
- */
 function runMysqldump(string $path, string $filePath, string &$errorMsg): bool
 {
     $descriptorspec = [
-        0 => ["pipe", "r"], // stdin
-        1 => ["file", $filePath, "w"], // stdout to file
-        2 => ["pipe", "w"] // stderr
+        0 => ["pipe", "r"],
+        1 => ["file", $filePath, "w"],
+        2 => ["pipe", "w"]
     ];
 
     $cmd = [
@@ -176,16 +150,13 @@ function runMysqldump(string $path, string $filePath, string &$errorMsg): bool
     return false;
 }
 
-/**
- * Runs backup using pure PHP streaming.
- */
 function runPHPBackup(string $filePath, ?string &$errorMsg = null): bool
 {
     try {
         $db = connection();
         $handle = fopen($filePath, 'w');
         if (!$handle) {
-            throw new Exception("Cannot open file: " . $filePath);
+            throw new Exception("Cannot open file: {$filePath}");
         }
 
         fwrite($handle, "-- Pure PHP Database Dump\n");
@@ -233,9 +204,6 @@ function runPHPBackup(string $filePath, ?string &$errorMsg = null): bool
     }
 }
 
-/**
- * Writes a chunk of rows as a single multi-row INSERT statement to avoid overhead.
- */
 function writeInsertChunkToFile($handle, string $table, array $rows, PDO $db): void
 {
     $keys = array_map(function ($k) {
@@ -257,9 +225,6 @@ function writeInsertChunkToFile($handle, string $table, array $rows, PDO $db): v
     fwrite($handle, $sqlHeader . implode(",\n", $valueGroups) . ";\n");
 }
 
-/**
- * Secures the backup folder by placing .htaccess and web.config request blocking configurations.
- */
 function secureBackupDirectory(string $backupDir): void
 {
     // .htaccess
