@@ -190,7 +190,7 @@ $colspan = ($type === 'list') ? 6 : ($isBreakdown ? 5 : ($hasGenderBreakdown ? 5
                     <td><?= e($district) ?></td>
                 </tr>
             <?php endforeach; ?>
-            
+
             <tr style="font-weight: bold;">
                 <td colspan="5" style="text-align: right;">Total Employees</td>
                 <td><?= count($rows) ?></td>
@@ -210,7 +210,7 @@ $colspan = ($type === 'list') ? 6 : ($isBreakdown ? 5 : ($hasGenderBreakdown ? 5
                     <td><?= e($category) ?></td>
                 </tr>
             <?php endforeach; ?>
-            
+
             <tr style="font-weight: bold;">
                 <td colspan="4" style="text-align: right;">Total Employees</td>
                 <td><?= count($rows) ?></td>
@@ -220,16 +220,16 @@ $colspan = ($type === 'list') ? 6 : ($isBreakdown ? 5 : ($hasGenderBreakdown ? 5
             $totalFemale = 0;
             $grandTotal = 0;
 
-            foreach ($rows as $row): 
+            foreach ($rows as $row):
                 $name = $row['name'] ?? 'Not Specified';
-                $male = isset($row['male']) ? (int)$row['male'] : 0;
-                $female = isset($row['female']) ? (int)$row['female'] : 0;
-                $total = isset($row['total']) ? (int)$row['total'] : (isset($row['count']) ? (int)$row['count'] : 0);
+                $male = isset($row['male']) ? (int) $row['male'] : 0;
+                $female = isset($row['female']) ? (int) $row['female'] : 0;
+                $total = isset($row['total']) ? (int) $row['total'] : (isset($row['count']) ? (int) $row['count'] : 0);
 
                 $totalMale += $male;
                 $totalFemale += $female;
                 $grandTotal += $total;
-            ?>
+                ?>
                 <tr>
                     <td><?= $i++ ?></td>
                     <td><?= e($name) ?></td>
@@ -240,7 +240,7 @@ $colspan = ($type === 'list') ? 6 : ($isBreakdown ? 5 : ($hasGenderBreakdown ? 5
                     <td><?= $total ?></td>
                 </tr>
             <?php endforeach; ?>
-            
+
             <tr style="font-weight: bold;">
                 <td colspan="2" style="text-align: right;">Grand Total</td>
                 <?php if ($hasGenderBreakdown): ?>
@@ -250,7 +250,7 @@ $colspan = ($type === 'list') ? 6 : ($isBreakdown ? 5 : ($hasGenderBreakdown ? 5
                 <td><?= $grandTotal ?></td>
             </tr>
         <?php endif; ?>
-        
+
         <tr>
             <td colspan="<?= $colspan ?>" style="font-style: italic;">
                 <?= 'Data as of ' . date("F j, Y, g:i a") ?>
