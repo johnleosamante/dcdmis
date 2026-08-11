@@ -154,18 +154,6 @@ function incomingDocuments($station_id, $from_date, $to_date, $limit = 1000)
     return is_array($results) ? $results : [];
 }
 
-function countIncomingDocuments($station_id)
-{
-    $sql = "SELECT COUNT(DISTINCT document_transaction_id) AS `count` 
-            FROM `document_transaction_logs` 
-            WHERE received_from IS NOT NULL
-                AND forwarded_to = ?
-                AND status_id NOT IN (10, 11)
-                AND is_new = 1";
-    $result = find($sql, [$station_id]);
-    return (int) ($result['count'] ?? 0);
-}
-
 function isIncomingDocument($document_transaction_id, $station_id): bool
 {
     $sql = "SELECT 1 FROM `document_transaction_logs` 
@@ -199,18 +187,6 @@ function pendingDocuments($station_id, $from_date, $to_date, $limit = 1000)
             ORDER BY l.created_at DESC LIMIT ?";
     $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
     return is_array($results) ? $results : [];
-}
-
-function countPendingDocuments($station_id)
-{
-    $sql = "SELECT COUNT(DISTINCT document_transaction_id) AS `count` 
-            FROM `document_transaction_logs`
-            WHERE received_from = ?
-                AND forwarded_to IS NULL
-                AND status_id NOT IN (10, 11)
-                AND is_new = 1";
-    $result = find($sql, [$station_id]);
-    return (int) ($result['count'] ?? 0);
 }
 
 function isPendingDocument($document_transaction_id, $station_id): bool
@@ -281,19 +257,6 @@ function ongoingDocuments($station_id, $from_date, $to_date, $limit = 1000)
             ORDER BY l.created_at DESC LIMIT ?";
     $results = query($sql, [$station_id, $from_date, $to_date, $limit]);
     return is_array($results) ? $results : [];
-}
-
-function countOngoingDocuments($station_id)
-{
-    $sql = "SELECT COUNT(DISTINCT t.id) AS `count` 
-            FROM `document_transactions` AS t
-            INNER JOIN `document_transaction_logs` AS l ON t.id = l.document_transaction_id 
-            WHERE t.created_from = ?
-                AND l.forwarded_to IS NOT NULL
-                AND l.status_id NOT IN (10, 11)
-                AND l.is_new = 1";
-    $result = find($sql, [$station_id]);
-    return (int) ($result['count'] ?? 0);
 }
 
 function completedDocuments($station_id, $from_date, $to_date, $limit = 1000)
@@ -488,11 +451,6 @@ function documentLogAttachments($transaction_log_id)
     );
 }
 
-function documentLogAttachment($attachment_id)
-{
-    return find("SELECT `id`, `file_name`, `file_extension` FROM `document_transaction_log_attachments` WHERE `id` = ?", [$attachment_id]);
-}
-
 function createDocumentLogAttachment($transaction_log_id, $file_name, $file_extension)
 {
     $data = [
@@ -619,55 +577,43 @@ function detailedStationTransactionCounts($station_id, $from_date = null, $to_da
     execute("SET @anchor = ?", [$anchor_date]);
 
     $sql = "SELECT 
-    -- 1. BASE TOTAL COUNTS
     COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 THEN l.document_transaction_id END) AS incoming,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS pending,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN l.document_transaction_id END) AS outgoing,
     COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 THEN t.id END) AS ongoing,
-    
-    -- 2. INCOMING LAPSED BREAKDOWN (MUTUALLY EXCLUSIVE)
     COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 4 AND 6 THEN l.document_transaction_id END) AS inc_3,
     COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 7 AND 13 THEN l.document_transaction_id END) AS inc_7,
     COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 14 AND 29 THEN l.document_transaction_id END) AS inc_14,
     COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 30 AND 59 THEN l.document_transaction_id END) AS inc_30,
     COUNT(DISTINCT CASE WHEN l.received_from IS NOT NULL AND l.forwarded_to = ? AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) >= 60 THEN l.document_transaction_id END) AS inc_60,
-
-    -- 3. PENDING LAPSED BREAKDOWN (MUTUALLY EXCLUSIVE)
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 4 AND 6 THEN l.document_transaction_id END) AS pen_3,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 7 AND 13 THEN l.document_transaction_id END) AS pen_7,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 14 AND 29 THEN l.document_transaction_id END) AS pen_14,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 30 AND 59 THEN l.document_transaction_id END) AS pen_30,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) >= 60 THEN l.document_transaction_id END) AS pen_60,
-
-    -- 4. OUTGOING LAPSED BREAKDOWN (MUTUALLY EXCLUSIVE)
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 4 AND 6 THEN l.document_transaction_id END) AS out_3,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 7 AND 13 THEN l.document_transaction_id END) AS out_7,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 14 AND 29 THEN l.document_transaction_id END) AS out_14,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) BETWEEN 30 AND 59 THEN l.document_transaction_id END) AS out_30,
     COUNT(DISTINCT CASE WHEN l.received_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, l.created_at) >= 60 THEN l.document_transaction_id END) AS out_60,
-
-    -- 5. ONGOING LAPSED BREAKDOWN (MUTUALLY EXCLUSIVE)
     COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 4 AND 6 THEN t.id END) AS ong_3,
     COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 7 AND 13 THEN t.id END) AS ong_7,
     COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 14 AND 29 THEN t.id END) AS ong_14,
     COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) BETWEEN 30 AND 59 THEN t.id END) AS ong_30,
     COUNT(DISTINCT CASE WHEN t.created_from = ? AND l.forwarded_to IS NOT NULL AND l.is_new = 1 AND DATEDIFF(@anchor, t.created_at) >= 60 THEN t.id END) AS ong_60
-    
     FROM `document_transaction_logs` AS l
     LEFT JOIN `document_transactions` AS t 
         ON l.document_transaction_id = t.id
     WHERE l.status_id NOT IN (10, 11)";
 
-    // FIXED: Changed array_fill counts from 6 to 5 for the breakdown sections
     $params = array_merge(
-        array_fill(0, 4, $station_id),  // Base Totals (4 references)
-        array_fill(0, 5, $station_id),  // Incoming (5 references)
-        array_fill(0, 5, $station_id),  // Pending (5 references)
-        array_fill(0, 5, $station_id),  // Outgoing (5 references)
-        array_fill(0, 5, $station_id)   // Ongoing (5 references)
+        array_fill(0, 4, $station_id),
+        array_fill(0, 5, $station_id),
+        array_fill(0, 5, $station_id),
+        array_fill(0, 5, $station_id),
+        array_fill(0, 5, $station_id)
     );
 
-    // Optional Master Date Range filters
     if (!empty($from_date)) {
         $sql .= " AND l.created_at >= ?";
         $params[] = $from_date;
@@ -678,14 +624,11 @@ function detailedStationTransactionCounts($station_id, $from_date = null, $to_da
     }
 
     $result = find($sql, $params);
-
-    // Cast properties neatly to integers
     $output = [];
     foreach (['incoming', 'pending', 'outgoing', 'ongoing'] as $key) {
         $output[$key] = (int) ($result[$key] ?? 0);
     }
 
-    // Group sub-intervals cleanly into a manageable array
     $intervals = [3, 7, 14, 30, 60];
     foreach (['inc' => 'incoming_lapsed', 'pen' => 'pending_lapsed', 'out' => 'outgoing_lapsed', 'ong' => 'ongoing_lapsed'] as $prefix => $group) {
         $output[$group] = []; // Initialize array group cleanly
