@@ -420,33 +420,6 @@ function scheduleAwards($schedule_id)
     return is_array($results) ? $results : [];
 }
 
-function nomineesBySchedule($schedule_id)
-{
-    $sql = "SELECT n.`id`, n.`status`, n.`created_at`, n.`nominee_type`, n.`nominee_id`, n.`level`, n.`nominated_by`,
-                   e.`first_name`, e.`middle_name`, e.`last_name`, e.`name_extension`,
-                   pos.`official_title` AS `position`,
-                   cat.`name` AS `category_name`,
-                   aw.`name` AS `award_name`,
-                   sch.`name` AS `school_name`, sch.`alias` AS `school_alias`,
-                   nom_e.`first_name` AS `nominator_first`, nom_e.`last_name` AS `nominator_last`,
-                   nom_pos.`official_title` AS `nominator_position`, nom_sch.`name` AS `nominator_school`
-            FROM `awards_categories_nominees` AS n
-            LEFT JOIN `employees` AS e ON n.`nominee_id` = e.`id`
-            LEFT JOIN `station_assignments` AS sa ON e.`id` = sa.`employee_id`
-            LEFT JOIN `positions` AS pos ON sa.`position_id` = pos.`id`
-            LEFT JOIN `schools` AS sch ON n.`nominee_id` COLLATE utf8mb4_general_ci = sch.`id` COLLATE utf8mb4_general_ci
-            LEFT JOIN `recognition_awards` AS aw ON n.`award_id` = aw.`id`
-            LEFT JOIN `recognition_categories` AS cat ON aw.`category_id` = cat.`id`
-            LEFT JOIN `employees` AS nom_e ON n.`nominated_by` = nom_e.`id`
-            LEFT JOIN `station_assignments` AS nom_sa ON nom_e.`id` = nom_sa.`employee_id`
-            LEFT JOIN `positions` AS nom_pos ON nom_sa.`position_id` = nom_pos.`id`
-            LEFT JOIN `schools` AS nom_sch ON nom_sch.`head_id` = nom_e.`id`
-            WHERE n.`schedule_id` = ?
-            ORDER BY COALESCE(e.`last_name`, sch.`name`) ASC, e.`first_name` ASC";
-    $results = query($sql, [$schedule_id]);
-    return is_array($results) ? $results : [];
-}
-
 function createNominee($schedule_id, $employee_id, $award_id, $nominee_type = 'Employee', $level = null, $nominated_by = null)
 {
     $data = [
@@ -902,23 +875,6 @@ function getRankingsByScheduleAndAward($schedule_id, $award_id, $level = null)
     $sql .= " ORDER BY r.`rank_position` ASC";
     $results = query($sql, $params);
     return is_array($results) ? $results : [];
-}
-
-function getRankingByNominee($nominee_id)
-{
-    return find("SELECT * FROM `rankings` WHERE `nominee_id` = ? LIMIT 1", [$nominee_id]);
-}
-
-function deleteRankingsByScheduleAndAward($schedule_id, $award_id, $level = null)
-{
-    if ($level) {
-        return query("DELETE r FROM `rankings` AS r
-                      INNER JOIN `awards_categories_nominees` AS n ON r.`nominee_id` = n.`id`
-                      WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`level` = ?",
-            [$schedule_id, $award_id, $level]
-        );
-    }
-    return delete('rankings', '`schedule_id` = ? AND `award_id` = ?', [$schedule_id, $award_id]);
 }
 
 function finalizeRankings($schedule_id, $award_id, $level = null)
