@@ -15,7 +15,7 @@
             <table width="100%" class="table table-hover mb-0 text-center">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="100%">Special Skills &amp; Hobbies</th>
+                        <th class="align-middle" width="100%">Special Skills and Hobbies</th>
                         <?php if ($editMode): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
@@ -54,7 +54,7 @@
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="100%">Special Skills &amp; Hobbies</th>
+                        <th class="align-middle" width="100%">Special Skills and Hobbies</th>
                         <?php if ($editMode): ?>
                             <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>

@@ -374,7 +374,7 @@ messageAlert($showAlert, $message, $success);
                         </div>
 
                         <div class="col-xl-6 col-md-12 col-sm-12">
-                            <h6 class="font-weight-bold text-gray-800 mb-3">Application &amp; L&amp;D</h6>
+                            <h6 class="font-weight-bold text-gray-800 mb-3">Application of L and D</h6>
                             <div class="form-group">
                                 <label for="application_of_education_score"
                                     class="font-weight-bold text-dark mb-0 d-flex justify-content-between">
@@ -391,7 +391,7 @@ messageAlert($showAlert, $message, $success);
                             <div class="form-group">
                                 <label for="application_of_ld_score"
                                     class="font-weight-bold text-dark mb-0 d-flex justify-content-between">
-                                    <span>Application of L&amp;D</span>
+                                    <span>Application of L and D</span>
                                     <span class="text-muted font-weight-normal small">Max:
                                         <strong><?= $weights['application_ld'] ?></strong></span>
                                 </label>

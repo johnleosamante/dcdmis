@@ -163,7 +163,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
 
 <script src="<?= uri() ?>/assets/vendor/chart.js/Chart.min.js"></script>
 <script src="<?= uri() ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
-<script src="<?= uri() ?>/assets/js/chart-custom.js?v=1.3"></script>
+<script src="<?= uri() ?>/assets/js/chart-custom.js?v=<?= VERSION ?>"></script>
 
 <div class="row">
     <!-- Visual Chart Card -->

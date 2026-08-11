@@ -35,6 +35,7 @@ if (isset($payslipId)) {
                 <div class="form-group">
                     <input id="file-upload" name="file-upload" type="file" class="w-100"
                         title="Upload 201 file (pdf)..." accept="application/pdf">
+                    <small class="form-text text-muted">Max file upload size: <?= UPLOAD_MAX_FILESIZE ?>B</small>
                 </div>
 
                 <div class="form-group">

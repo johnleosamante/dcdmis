@@ -15,7 +15,7 @@ function messageAlert($show, $message, $success = true, $align = 'left')
             class="alert alert-<?= $success ? 'success' : 'danger' ?> text-<?= e($align) ?> p-2 d-flex align-items-start small">
             <i class="fa fas fa-<?= $success ? 'info' : 'exclamation' ?>-circle mt-1 mr-1"></i>
             <div>
-                <?= e($message) ?>
+                <?= $message ?>
             </div>
         </div>
     <?php endif;
@@ -131,7 +131,8 @@ function cardMini($title, $link, $icon, $color = 'primary', $newTab = false)
 
                     <div class="col">
                         <div class="font-weight-bold text-uppercase mb-1">
-                            <a class="text-<?= e($color) ?>" href="<?= e($link) ?>" target="<?= $newTab ? '_blank' : '_self' ?>">
+                            <a class="text-<?= e($color) ?>" href="<?= e($link) ?>"
+                                target="<?= $newTab ? '_blank' : '_self' ?>">
                                 <?= e($title) ?>
                             </a>
                         </div>

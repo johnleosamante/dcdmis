@@ -49,14 +49,14 @@ foreach ($items as $item) {
             <li class="breadcrumb-item">
                 <a href="<?= customUri('hrmis', 'Call for Application Details', $publicationId) ?>"><?= e($code) ?></a>
             </li>
-            <li class="breadcrumb-item active">List of Applicants</li>
+            <li class="breadcrumb-item active">Applicants</li>
         </ol>
     </nav>
 </div>
 
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithLink('Applicants List', customUri('hrmis', 'Call for Application Details', $publicationId), 'Back', 'fa-arrow-circle-left') ?>
+        <?php contentTitleWithLink('Applicants', customUri('hrmis', 'Call for Application Details', $publicationId), 'Back', 'fa-arrow-circle-left') ?>
     </div>
 
     <div class="card-body">
@@ -97,7 +97,8 @@ foreach ($items as $item) {
                         Type</label>
                     <select id="filter-status" name="status" class="form-control">
                         <option value="all" <?= ($selectedStatus === 'all') ? 'selected' : '' ?>>All</option>
-                        <option value="internal" <?= ($selectedStatus === 'internal') ? 'selected' : '' ?>>Internal
+                        <option value="internal" <?= ($selectedStatus === 'internal') ? 'selected' : '' ?>><i class=""></i>
+                            Internal
                         </option>
                         <option value="external" <?= ($selectedStatus === 'external') ? 'selected' : '' ?>>External
                         </option>

@@ -25,7 +25,7 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <?php if ($isPis): ?>
+            <?php if (isset($showOverview)): ?>
                 <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
                 <li class="breadcrumb-item"><a
                         href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and

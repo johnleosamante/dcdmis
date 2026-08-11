@@ -57,14 +57,6 @@ function vacantItem($plantilla_item_id)
     return $result > 0;
 }
 
-function publicationCodes($vacancy_id)
-{
-    $sql = "SELECT vp.`code` FROM `vacancy_publication_items` AS vpi 
-            INNER JOIN `vacancy_publications` AS vp ON vpi.`publication_id` = vp.`id` 
-            WHERE `vpi`.`vacancy_id` = ?;";
-    return query($sql, [$vacancy_id]);
-}
-
 // vacancies
 function deleteVacancy($vacancy_id)
 {
@@ -175,7 +167,8 @@ function publicationByCode($code)
 
 function activePublications()
 {
-    $sql = "SELECT * FROM `vacancy_publications` WHERE `status` = 'open' AND `close_date` >= CURDATE() 
+    $sql = "SELECT * FROM `vacancy_publications` WHERE `status` = 'open' 
+            AND (`close_date` > CURDATE() OR (`close_date` = CURDATE() AND CURRENT_TIME() < '17:00:00')) 
             ORDER BY `close_date` DESC";
     return query($sql);
 }
@@ -285,14 +278,6 @@ function applicantsForReviewByPublication($publicationId)
             ORDER BY va.created_at DESC";
 
     return query($sql, [$publicationId]);
-}
-
-function applicationsByVacancy($vacancyId)
-{
-    $sql = "SELECT * FROM `vacancy_applications` 
-            WHERE `vacancy_id` = ? 
-            ORDER BY `submitted_on` DESC";
-    return query($sql, [$vacancyId]);
 }
 
 function countApplicationsByPublication($publicationId)
@@ -473,6 +458,12 @@ function prepareApplicantData(array $post)
         $ethnic_group_id = !empty($raw_ethnic) ? (int) $raw_ethnic : null;
     }
 
+    $raw_civil_status = sanitize($post['civil_status'] ?? null);
+    $civil_status = $raw_civil_status;
+    if ($raw_civil_status === 'Others' && !empty($post['specify_other_civil_status'])) {
+        $civil_status = sanitize($post['specify_other_civil_status']);
+    }
+
     $data = [
         'id' => $applicant_code,
         'last_name' => sanitize($post['last_name'] ?? null),
@@ -481,7 +472,7 @@ function prepareApplicantData(array $post)
         'name_extension' => sanitize($post['name_extension'] ?? null),
         'birthdate' => sanitize($post['birth_date'] ?? null),
         'sex' => sanitize($post['sex'] ?? null),
-        'civil_status' => sanitize($post['civil_status'] ?? null),
+        'civil_status' => $civil_status,
         'religion_id' => $religion_id,
         'specify_other_religion' => $specify_other_religion,
         'ethnic_group_id' => $ethnic_group_id,
@@ -901,4 +892,153 @@ function getApplicantDemographicGroup($row, $exportId)
         default:
             return 'Other';
     }
+}
+
+function externalApplicantsList()
+{
+    $sql = "SELECT a.`id`, a.`last_name`, a.`first_name`, a.`middle_name`, a.`name_extension`, 
+                a.`sex`, a.`birthdate`, a.`civil_status`,
+                a.`religion_id`, a.`specify_other_religion`, a.`ethnic_group_id`, a.`specify_other_ethnic_group`,
+                COALESCE(NULLIF(TRIM(r.`name`), ''), NULLIF(TRIM(a.`specify_other_religion`), ''), 'Not Specified') AS `religion`,
+                COALESCE(NULLIF(TRIM(eg.`name`), ''), NULLIF(TRIM(a.`specify_other_ethnic_group`), ''), 'Not Specified') AS `ethnic_group`,
+                a.`lot`, a.`street`, a.`subdivision`, a.`barangay`, a.`city`, a.`province`, a.`zip`,
+                a.`email_address`, a.`mobile_number`, a.`with_disability`, a.`undergraduate`, a.`graduate_studies`,
+                a.`eligibilities`, a.`created_at`,
+                COUNT(va.`id`) AS `application_count`
+            FROM `applicants` AS a
+            LEFT JOIN `employees` AS e ON a.`id` = e.`id`
+            LEFT JOIN `religion` AS r ON a.`religion_id` = r.`id`
+            LEFT JOIN `ethnic_groups` AS eg ON a.`ethnic_group_id` = eg.`id`
+            LEFT JOIN `vacancy_applications` AS va ON a.`id` = va.`application_code_id`
+            WHERE e.`id` IS NULL
+            GROUP BY a.`id`
+            ORDER BY a.`last_name` ASC, a.`first_name` ASC";
+    $results = query($sql);
+    return is_array($results) ? $results : [];
+}
+
+function updateExternalApplicant($id, array $data)
+{
+    $allowed = [
+        'last_name',
+        'first_name',
+        'middle_name',
+        'name_extension',
+        'birthdate',
+        'sex',
+        'civil_status',
+        'religion_id',
+        'specify_other_religion',
+        'ethnic_group_id',
+        'specify_other_ethnic_group',
+        'lot',
+        'street',
+        'subdivision',
+        'barangay',
+        'city',
+        'province',
+        'zip',
+        'with_disability',
+        'email_address',
+        'mobile_number',
+        'undergraduate',
+        'graduate_studies',
+        'eligibilities'
+    ];
+    $updateData = [];
+    foreach ($allowed as $field) {
+        if (array_key_exists($field, $data)) {
+            $updateData[$field] = $data[$field];
+        }
+    }
+    if (empty($updateData)) {
+        return false;
+    }
+    return update('applicants', $updateData, '`id` = ?', [$id]);
+}
+
+function deleteExternalApplicant($id)
+{
+    $hasApps = find("SELECT COUNT(`id`) AS `total` FROM `vacancy_applications` WHERE `application_code_id` = ?", [$id]);
+    if ($hasApps && (int) $hasApps['total'] > 0) {
+        return ['success' => false, 'message' => 'Cannot remove external applicant because they have submitted job applications.'];
+    }
+
+    beginTransaction();
+    try {
+        delete('vacancy_application_attachments', '`application_code_id` = ?', [$id]);
+        delete('application_codes', '`id` = ?', [$id]);
+        delete('applicants', '`id` = ?', [$id]);
+        commit();
+        return ['success' => true, 'message' => 'External applicant removed successfully.'];
+    } catch (Exception $e) {
+        rollBack();
+        return ['success' => false, 'message' => 'Failed to remove external applicant: ' . $e->getMessage()];
+    }
+}
+
+function applicantApplications($applicant_id)
+{
+    $sql = "SELECT va.id, va.created_at, va.status, va.district,
+                   p.official_title, p.category AS position_group, p.salary_grade,
+                   vp.title AS publication_title, va.publication_id
+            FROM vacancy_applications AS va
+            INNER JOIN positions AS p ON va.position_id = p.id
+            LEFT JOIN vacancy_publications AS vp ON va.publication_id = vp.id
+            WHERE va.application_code_id = ?
+            ORDER BY va.created_at DESC";
+    return query($sql, [$applicant_id]) ?: [];
+}
+
+function countAllRegisteredApplicants()
+{
+    $sql = "SELECT COUNT(DISTINCT ac.id) AS `total`
+            FROM application_codes AS ac
+            LEFT JOIN employees AS e ON ac.id = e.id
+            LEFT JOIN applicants AS a ON ac.id = a.id
+            WHERE (e.last_name IS NOT NULL AND e.last_name <> '') 
+               OR (a.last_name IS NOT NULL AND a.last_name <> '')";
+    $res = find($sql);
+    return $res ? (int) $res['total'] : 0;
+}
+
+function allApplicantsList($typeFilter = 'all')
+{
+    $where = "";
+    if ($typeFilter === 'internal') {
+        $where = " AND e.id IS NOT NULL ";
+    } elseif ($typeFilter === 'external') {
+        $where = " AND e.id IS NULL ";
+    }
+
+    $sql = "SELECT 
+                ac.id,
+                ac.code,
+                IF(e.id IS NOT NULL, 1, 0) AS is_employed,
+                COALESCE(NULLIF(TRIM(e.last_name), ''), NULLIF(TRIM(a.last_name), '')) AS last_name,
+                COALESCE(NULLIF(TRIM(e.first_name), ''), NULLIF(TRIM(a.first_name), '')) AS first_name,
+                COALESCE(NULLIF(TRIM(e.middle_name), ''), NULLIF(TRIM(a.middle_name), '')) AS middle_name,
+                COALESCE(NULLIF(TRIM(e.name_extension), ''), NULLIF(TRIM(a.name_extension), '')) AS name_extension,
+                COALESCE(NULLIF(TRIM(e.sex), ''), NULLIF(TRIM(a.sex), '')) AS sex,
+                COALESCE(e.birthdate, a.birthdate) AS birthdate,
+                COALESCE(NULLIF(TRIM(e.civil_status), ''), NULLIF(TRIM(a.civil_status), '')) AS civil_status,
+                COALESCE(NULLIF(TRIM(e.email_address), ''), NULLIF(TRIM(a.email_address), '')) AS email_address,
+                COALESCE(NULLIF(TRIM(e.mobile_number), ''), NULLIF(TRIM(a.mobile_number), '')) AS mobile_number,
+                a.undergraduate,
+                a.graduate_studies,
+                a.eligibilities,
+                a.lot, a.street, a.subdivision, a.barangay, a.city, a.province, a.zip,
+                a.with_disability,
+                ac.created_at,
+                COUNT(va.id) AS application_count
+            FROM application_codes AS ac
+            LEFT JOIN employees AS e ON ac.id = e.id
+            LEFT JOIN applicants AS a ON ac.id = a.id
+            LEFT JOIN vacancy_applications AS va ON ac.id = va.application_code_id
+            WHERE ((e.last_name IS NOT NULL AND e.last_name <> '') OR (a.last_name IS NOT NULL AND a.last_name <> ''))
+            {$where}
+            GROUP BY ac.id
+            ORDER BY last_name ASC, first_name ASC";
+    $results = query($sql);
+    return is_array($results) ? $results : [];
 }

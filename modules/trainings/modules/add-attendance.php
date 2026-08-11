@@ -32,9 +32,15 @@ for ($d = $start; $d <= $end; $d->modify('+1 day')) {
     $dates[] = $d->format('Y-m-d');
 }
 
+if ($training) {
+    $trainingId = $training['id'];
+} else {
+    require_once(root() . '/modules/error/no-results-found.php');
+    return;
+}
+
 messageAlert($showAlert, $message, $success);
 ?>
-
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
     <nav class="d-flex align-items-center flex-row m-0">
@@ -138,8 +144,6 @@ messageAlert($showAlert, $message, $success);
                     <td class="text-uppercase"><?= count($participants) ?></td>
                 </tr>
             </table>
-
-
         </div>
 
         <?php
@@ -150,8 +154,10 @@ messageAlert($showAlert, $message, $success);
         for ($d = $start; $d <= $end; $d->modify('+1 day')) {
             $dates[] = $d->format('Y-m-d');
         }
-        ?>
 
+        $todayDate = date('Y-m-d');
+        $showAttendanceActionsToday = in_array($todayDate, $dates, true);
+        ?>
 
         <ul class="nav nav-tabs" id="attendanceTabs" role="tablist">
             <?php foreach ($dates as $i => $date): ?>
@@ -166,63 +172,66 @@ messageAlert($showAlert, $message, $success);
             <?php endforeach ?>
         </ul>
 
-
         <!-- PROJECT AND ACTIVITIES -->
         <input type="hidden" id="training_id" value="<?php echo $trainingId ?>">
         <input type="hidden" id="url_view" value="<?php echo base64_decode($_GET['v']) ?>">
         <input type="hidden" id="selected_date" value="">
 
         <!-- Activities List -->
-        <div class="mb-3 d-flex" style="margin-top: 15px;">
-            <input type="hidden" id="csrf_token" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-            <input type="text" id="qrInput" class="form-control me-2" style="width: 50%;"
-                placeholder="Scan ID or type employee name..." autofocus>
-            <button id="addAttendanceBtn" class="btn btn-primary ml-1 mr-3"><i class="fas fa-plus"></i> Add
-            </button>
+        <div
+            class="my-3 d-flex flex-column flex-md-row <?= $showAttendanceActionsToday ? 'justify-content-between align-items-md-center' : 'justify-content-end align-items-end' ?> gap-2">
+            <?php if ($showAttendanceActionsToday): ?>
+                <div class="d-flex align-items-center flex-grow-1 mb-2 mb-md-0 me-md-3">
+                    <input type="hidden" id="csrf_token" name="csrf_token" value="<?= csrf_token() ?>">
+                    <input type="text" id="qrInput" class="form-control me-2 mr-1" style="width: 100%; max-width: 320px;"
+                        placeholder="Scan ID or type employee name..." autofocus>
+                    <button id="addAttendanceBtn" class="btn btn-primary me-2 mr-1"><i
+                            class="fas fa-user-plus"></i></button>
+                    <button id="showAddModalInfo" class="btn btn-warning mr-1"><i class="fas fa-user-secret"></i></button>
+                </div>
+            <?php endif; ?>
 
-            <button id="viewAttendanceSum" class="btn btn-info mr-1" title="View Attendees">
-                <i class="fas fa-list"></i>
-            </button>
+            <div class="d-flex align-items-center justify-content-end">
+                <button id="viewAttendanceSum" class="btn btn-info mr-1" title="View Attendees">
+                    <i class="fas fa-list"></i>
+                </button>
 
-            <button id="generatePDF" class="btn btn-info mr-1" title="Generate PDF">
-                <i class="fas fa-file-pdf"></i>
-            </button>
+                <button id="generatePDF" class="btn btn-info mr-1" title="Generate PDF per Day">
+                    <i class="fas fa-file-pdf"></i>
+                </button>
+                <button id="generatePDFDays" class="btn btn-success mr-1" title="Generate PDF by Trainings">
+                    <i class="fas fa-file-export"></i>
+                </button>
 
-            <a href="http://<?= $_SERVER['HTTP_HOST'] ?>/hrtdms/?v=<?= base64_encode('Attendance Summary') ?>&id=<?= base64_encode($training['id']) ?>"
-                target="_blank" class="btn btn-info" title="View Summary">
-                <i class="fas fa-chart-line"></i>
-
-            </a>
+                <a href="http://<?= $_SERVER['HTTP_HOST'] ?>/hrtdms/?v=<?= base64_encode('Attendance Summary') ?>&id=<?= base64_encode($training['id']) ?>"
+                    target="_blank" class="btn btn-info" title="View Summary">
+                    <i class="fas fa-chart-line"></i>
+                </a>
+            </div>
         </div>
 
-        <div class="tab-content mt-3" style="background-color: white; padding: 15px;">
+        <div class="tab-content mt-3 px-0 py-2">
             <?php foreach ($dates as $i => $date): ?>
                 <div class="tab-pane fade <?= $i == 0 ? 'show active' : '' ?>" id="day<?= $i ?>" role="tabpanel">
-                    <table class="table table-hover table-bordered table-striped text-center attendance-table" id="">
-
+                    <table class="table table-hover text-center attendance-table" id="">
                         <thead>
                             <tr>
                                 <th>Image</th>
-                                <th>QR Code</th>
                                 <th>Name</th>
                                 <th>Position</th>
-                                <th>Control No</th>
-                                <th>Date Registered</th>
+                                <th>Station</th>
+                                <th>Time In</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
-
                             <?php
                             $trainingAttendanceArr = getTrainingAttendees($trainingId, $date);
-
                             foreach ($trainingAttendanceArr as $trainingAttendance):
                                 ?>
-
-                                <tr id="employeeAttendanceID<?= $trainingAttendance['id'] ?>">
-
-                                    <td>
+                                <tr id="employeeAttendanceID<?= $trainingAttendance['id'] ?>" class="text-uppercase">
+                                    <td class="align-middle">
                                         <?php if (!empty($trainingAttendance['img_url'])): ?>
                                             <i class="fas fa-image text-primary view-img" style="cursor:pointer;"
                                                 data-img="<?= $trainingAttendance['img_url'] ?>" title="View Image"></i>
@@ -231,11 +240,7 @@ messageAlert($showAlert, $message, $success);
                                         <?php endif; ?>
                                     </td>
 
-                                    <td class="align-middle" style="color:#0572e7">
-                                        <?= $trainingAttendance['barcode'] ?>
-                                    </td>
-
-                                    <td class="align-middle text-left">
+                                   <td class="align-middle text-left <?= ($trainingAttendance['status'] == 0) ? 'text-warning' : '' ?>">
                                         <b><?= strtoupper($trainingAttendance['fullname']) ?></b>
                                     </td>
 
@@ -244,11 +249,11 @@ messageAlert($showAlert, $message, $success);
                                     </td>
 
                                     <td class="align-middle">
-                                        <?= $trainingAttendance['control_no'] ?>
+                                        <?= $trainingAttendance['school_name'] ?>
                                     </td>
 
                                     <td class="align-middle">
-                                        <?= date('M d, Y h:i A', strtotime($trainingAttendance['created_at'])) ?>
+                                        <?= date('h:i A', strtotime($trainingAttendance['created_at'])) ?>
                                     </td>
 
                                     <td class="align-middle">
@@ -262,35 +267,45 @@ messageAlert($showAlert, $message, $success);
                                                     <i class="fas fa-trash"></i> Delete
                                                 </a>
                                             </div>
-
                                         </div>
                                     </td>
-
                                 </tr>
-
                             <?php endforeach; ?>
-
                         </tbody>
-
+                        <tfoot>
+                            <tr class="small">
+                                <th>Image</th>
+                                <th>QR Code</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Date Registered</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             <?php endforeach ?>
         </div>
     </div>
 </div>
-<!--Custom STYLE-->
+
 <style>
     .ui-autocomplete {
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 8px;
         max-height: 250px;
+        width: 100%;
+        max-width: 325px;
         overflow-y: auto;
         overflow-x: hidden;
         padding: 5px 0;
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
         z-index: 9999;
-
+    }
+    .ui-helper-hidden-accessible {
+        position: absolute !important;
+        left: -9999px !important;
     }
 
     /* each item */
@@ -299,20 +314,19 @@ messageAlert($showAlert, $message, $success);
         font-size: 14px;
         cursor: pointer;
         transition: 0.2s;
+        text-transform: uppercase;
     }
 
     /* hover effect */
     .ui-menu-item-wrapper:hover {
         background: #007bff;
         color: #fff;
-        border-radius: 6px;
     }
 </style>
 
 <div class="modal fade" id="attendanceModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-
             <div class="modal-header">
                 <h5 class="modal-title">Attendance Verification</h5>
             </div>
@@ -325,11 +339,9 @@ messageAlert($showAlert, $message, $success);
             <div class="modal-footer">
                 <button class="btn btn-dark" data-dismiss="modal">Close</button>
             </div>
-
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" id="deleteAttendanceModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">

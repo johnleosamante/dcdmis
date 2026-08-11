@@ -57,8 +57,9 @@ if ($positionId) {
                         <option value="">Select category...</option>
                         <option value="Teaching" <?= setOptionSelected('Teaching', $category) ?>>Teaching
                         </option>
-                        <option value="Teaching-Related" <?= setOptionSelected('Teaching-Related', $category) ?>>
+                        <option value="Related-Teaching" <?= setOptionSelected('Related-Teaching', $category) ?>>
                             Teaching-Related</option>
+                        <option value="School Administration" <?= setOptionSelected('School Administration', $category) ?>>School Administration</option>
                         <option value="Non-Teaching" <?= setOptionSelected('Non-Teaching', $category) ?>>
                             Non-Teaching</option>
                     </select>

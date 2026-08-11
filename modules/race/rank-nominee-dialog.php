@@ -43,7 +43,6 @@ if ($nominee['nominee_type'] === 'School') {
 }
 $totalScore = totalScoreByNominee($nomineeId);
 $isAdmin = raceAccessLevel($userId) === 'admin';
-$currentValidated = $nominee['validated'] ?? null;
 ?>
 
 <div class="modal-dialog modal-lg">
@@ -77,13 +76,20 @@ $currentValidated = $nominee['validated'] ?? null;
                         <tbody>
                             <?php foreach ($criteria as $cr): ?>
                                 <tr>
-                                    <td><?= e($cr['criterion_name']) ?></td>
+                                    <td>
+                                        <div class="font-weight-bold"><?= e($cr['criterion_name']) ?></div>
+                                        <?php if (!empty($cr['description'])): ?>
+                                            <div class="small text-muted mt-1"><?= nl2br(e($cr['description'])) ?></div>
+                                        <?php endif; ?>
+                                    </td>
                                     <td class="text-center font-weight-bold"><?= e($cr['max_points']) ?></td>
                                     <td class="text-center">
-                                        <input type="number" class="form-control form-control-sm text-center"
+                                        <input type="number" class="form-control form-control-sm text-center score-input"
                                                name="score[<?= e($cr['id']) ?>]"
                                                value="<?= e($scoreMap[$cr['id']] ?? 0) ?>"
-                                               min="0" max="<?= e($cr['max_points']) ?>" step="any" required>
+                                               min="0" max="<?= e($cr['max_points']) ?>" step="any" required
+                                               oninput="clampScore(this, <?= e($cr['max_points']) ?>); updateLiveTotal()"
+                                               onchange="clampScore(this, <?= e($cr['max_points']) ?>); updateLiveTotal()">
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -97,24 +103,6 @@ $currentValidated = $nominee['validated'] ?? null;
                     </table>
                     <small class="text-muted">Points cannot exceed the maximum for each criterion.</small>
 
-                    <?php if ($isAdmin): ?>
-                        <hr>
-                        <div class="form-check mb-2">
-                            <input type="checkbox" class="form-check-input" id="toggle-validated" <?= $currentValidated ? 'checked' : '' ?> onchange="document.getElementById('validated-row').style.display = this.checked ? '' : 'none';">
-                            <label class="form-check-label small font-weight-bold" for="toggle-validated">Set Validation Status</label>
-                        </div>
-                        <div id="validated-row" class="form-row align-items-center" style="display: <?= $currentValidated ? '' : 'none' ?>;">
-                            <div class="col-auto">
-                                <label class="small text-muted mb-0">Validated:</label>
-                            </div>
-                            <div class="col">
-                                <select name="validated" class="form-control form-control-sm">
-                                    <option value="Yes" <?= $currentValidated === 'Yes' ? 'selected' : '' ?>>Yes</option>
-                                    <option value="No" <?= $currentValidated === 'No' ? 'selected' : '' ?>>No</option>
-                                </select>
-                            </div>
-                        </div>
-                    <?php endif; ?>
                 <?php endif; ?>
             </div>
 

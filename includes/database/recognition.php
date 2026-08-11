@@ -1,114 +1,4 @@
 <?php
-// Self-healing database check to ensure required columns exist
-try {
-    $columnsStatus = query("SHOW COLUMNS FROM `awards_categories_nominees` LIKE 'status'");
-    if (empty($columnsStatus)) {
-        query("ALTER TABLE `awards_categories_nominees` ADD COLUMN `status` VARCHAR(50) NOT NULL DEFAULT 'Nominated'");
-    }
-    $columnsType = query("SHOW COLUMNS FROM `awards_categories_nominees` LIKE 'nominee_type'");
-    if (empty($columnsType)) {
-        query("ALTER TABLE `awards_categories_nominees` ADD COLUMN `nominee_type` VARCHAR(50) NOT NULL DEFAULT 'Employee'");
-    }
-    $columnsLevel = query("SHOW COLUMNS FROM `awards_categories_nominees` LIKE 'level'");
-    if (empty($columnsLevel)) {
-        query("ALTER TABLE `awards_categories_nominees` ADD COLUMN `level` VARCHAR(50) NULL AFTER `nominee_type`");
-    }
-    $colNominatedBy = query("SHOW COLUMNS FROM `awards_categories_nominees` LIKE 'nominated_by'");
-    if (empty($colNominatedBy)) {
-        query("ALTER TABLE `awards_categories_nominees` ADD COLUMN `nominated_by` VARCHAR(20) NULL AFTER `level`");
-    }
-    $colNomStart = query("SHOW COLUMNS FROM `award_schedule` LIKE 'nomination_start'");
-    if (empty($colNomStart)) {
-        query("ALTER TABLE `award_schedule` ADD COLUMN `nomination_start` DATE DEFAULT NULL AFTER `venue`");
-    }
-    $colNomDeadline = query("SHOW COLUMNS FROM `award_schedule` LIKE 'nomination_deadline'");
-    if (empty($colNomDeadline)) {
-        query("ALTER TABLE `award_schedule` ADD COLUMN `nomination_deadline` DATE DEFAULT NULL AFTER `nomination_start`");
-    }
-    $colCriteria = query("SHOW COLUMNS FROM `recognition_awards` LIKE 'criteria'");
-    if (empty($colCriteria)) {
-        query("ALTER TABLE `recognition_awards` ADD COLUMN `criteria` TEXT NULL AFTER `has_level`");
-    }
-    // schedule_awards linking table
-    $tableExists = query("SHOW TABLES LIKE 'schedule_awards'");
-    if (empty($tableExists)) {
-        query("CREATE TABLE `schedule_awards` (
-            `id` INT AUTO_INCREMENT PRIMARY KEY,
-            `schedule_id` INT NOT NULL,
-            `award_id` INT NOT NULL,
-            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            UNIQUE KEY `schedule_award_unique` (`schedule_id`, `award_id`)
-        )");
-    }
-    // Always sync: ensure existing schedule-award pairs from nominees are in schedule_awards
-    query("INSERT IGNORE INTO `schedule_awards` (`schedule_id`, `award_id`)
-           SELECT DISTINCT `schedule_id`, `award_id`
-           FROM `awards_categories_nominees`
-           WHERE `schedule_id` IS NOT NULL AND `award_id` IS NOT NULL");
-    // Self-healing: create ranking_criteria table if not exists
-    $rankingCriteriaExists = query("SHOW TABLES LIKE 'ranking_criteria'");
-    if (empty($rankingCriteriaExists)) {
-        query("CREATE TABLE `ranking_criteria` (
-            `id` INT AUTO_INCREMENT PRIMARY KEY,
-            `award_id` INT NOT NULL,
-            `criterion_name` VARCHAR(255) NOT NULL,
-            `max_points` DECIMAL(10,2) NOT NULL DEFAULT 0,
-            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            INDEX `award_id` (`award_id`)
-        )");
-    }
-    // Self-healing: create reusable ranking criteria library if not exists
-    $rankingCriteriaLibraryExists = query("SHOW TABLES LIKE 'ranking_criteria_library'");
-    if (empty($rankingCriteriaLibraryExists)) {
-        query("CREATE TABLE `ranking_criteria_library` (
-            `id` INT AUTO_INCREMENT PRIMARY KEY,
-            `criterion_name` VARCHAR(255) NOT NULL,
-            `default_max_points` DECIMAL(10,2) NOT NULL DEFAULT 10,
-            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            UNIQUE KEY `criterion_name_unique` (`criterion_name`)
-        )");
-    }
-    query("INSERT IGNORE INTO `ranking_criteria_library` (`criterion_name`, `default_max_points`)
-           SELECT DISTINCT `criterion_name`, `max_points` FROM `ranking_criteria`");
-    // Self-healing: create ranking_scores table if not exists
-    $rankingScoresExists = query("SHOW TABLES LIKE 'ranking_scores'");
-    if (empty($rankingScoresExists)) {
-        query("CREATE TABLE `ranking_scores` (
-            `id` INT AUTO_INCREMENT PRIMARY KEY,
-            `nominee_id` INT NOT NULL,
-            `criterion_id` INT NOT NULL,
-            `points` DECIMAL(10,2) NOT NULL DEFAULT 0,
-            `ranked_by` VARCHAR(20) NULL,
-            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            UNIQUE KEY `nominee_criterion_unique` (`nominee_id`, `criterion_id`),
-            INDEX `nominee_id` (`nominee_id`),
-            INDEX `criterion_id` (`criterion_id`)
-        )");
-    }
-    // Self-healing: create rankings table if not exists
-    $rankingsExists = query("SHOW TABLES LIKE 'rankings'");
-    if (empty($rankingsExists)) {
-        query("CREATE TABLE `rankings` (
-            `id` INT AUTO_INCREMENT PRIMARY KEY,
-            `schedule_id` INT NOT NULL,
-            `award_id` INT NOT NULL,
-            `nominee_id` INT NOT NULL,
-            `total_score` DECIMAL(10,2) NOT NULL DEFAULT 0,
-            `rank_position` INT NOT NULL DEFAULT 0,
-            `status` VARCHAR(50) NOT NULL DEFAULT 'Ranked',
-            `ranked_by` VARCHAR(20) NULL,
-            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            UNIQUE KEY `schedule_award_nominee_unique` (`schedule_id`, `award_id`, `nominee_id`),
-            INDEX `schedule_id` (`schedule_id`),
-            INDEX `award_id` (`award_id`),
-            INDEX `nominee_id` (`nominee_id`)
-        )");
-    }
-} catch (Exception $e) {
-    // Fail silently in case of any restriction
-}
-
 // recognitions
 function recognitions($employee_id)
 {
@@ -177,6 +67,11 @@ function recognitionCategories()
 function recognitionCategory($category_id)
 {
     return find("SELECT * FROM `recognition_categories` WHERE `id` = ? LIMIT 1", [$category_id]);
+}
+
+function createRecognitionCategory($name)
+{
+    return insert('recognition_categories', ['name' => $name]);
 }
 
 // recognition_awards
@@ -359,6 +254,57 @@ function activePrincipalEmployees($stationId = null, $districtId = null)
     return is_array($results) ? $results : [];
 }
 
+function activeHeadTeacherEmployees($stationId = null, $districtId = null)
+{
+    $sql = "SELECT p.`id` AS `employee_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,
+                pos.`official_title`, pos.`category` AS `position_category`,
+                sch.`name` AS `school_name`, sch.`alias` AS `school_alias`
+            FROM `employees` AS p
+            INNER JOIN (
+                SELECT sa1.employee_id, sa1.station_id, sa1.position_id
+                FROM station_assignments sa1
+                WHERE sa1.created_at = (
+                    SELECT MAX(sa2.created_at) FROM station_assignments sa2 WHERE sa2.employee_id = sa1.employee_id
+                )
+            ) AS s ON p.`id` = s.`employee_id`
+            INNER JOIN `positions` AS pos ON s.`position_id` = pos.`id`
+            INNER JOIN `schools` AS sch ON s.`station_id` = sch.`id`
+            WHERE LOWER(pos.`official_title`) LIKE '%head teacher%' AND p.`status` = 'Active'";
+    $params = [];
+    if ($stationId !== null) {
+        $sql .= " AND s.`station_id` = ?";
+        $params[] = $stationId;
+    }
+    if ($districtId !== null) {
+        $sql .= " AND sch.`district_id` = ?";
+        $params[] = $districtId;
+    }
+    $sql .= " ORDER BY p.`last_name` ASC, p.`first_name` ASC";
+    $results = query($sql, $params);
+    return is_array($results) ? $results : [];
+}
+
+function activeSupervisorEmployees()
+{
+    $sql = "SELECT p.`id` AS `employee_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,
+                pos.`official_title`, pos.`category` AS `position_category`,
+                sch.`name` AS `school_name`, sch.`alias` AS `school_alias`
+            FROM `employees` AS p
+            INNER JOIN (
+                SELECT sa1.employee_id, sa1.station_id, sa1.position_id
+                FROM station_assignments sa1
+                WHERE sa1.created_at = (
+                    SELECT MAX(sa2.created_at) FROM station_assignments sa2 WHERE sa2.employee_id = sa1.employee_id
+                )
+            ) AS s ON p.`id` = s.`employee_id`
+            INNER JOIN `positions` AS pos ON s.`position_id` = pos.`id`
+            LEFT JOIN `schools` AS sch ON s.`station_id` = sch.`id`
+            WHERE pos.`id` IN ('EPSVR', 'PSDS') AND p.`status` = 'Active'
+            ORDER BY p.`last_name` ASC, p.`first_name` ASC";
+    $results = query($sql);
+    return is_array($results) ? $results : [];
+}
+
 function activeGuidanceCounselorEmployees($stationId = null, $districtId = null)
 {
     $sql = "SELECT p.`id` AS `employee_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,
@@ -471,33 +417,6 @@ function scheduleAwards($schedule_id)
             INNER JOIN `recognition_categories` AS c ON a.`category_id` = c.`id`
             ORDER BY a.`created_at` DESC, a.`name` ASC";
     $results = query($sql);
-    return is_array($results) ? $results : [];
-}
-
-function nomineesBySchedule($schedule_id)
-{
-    $sql = "SELECT n.`id`, n.`status`, n.`created_at`, n.`nominee_type`, n.`nominee_id`, n.`level`, n.`nominated_by`,
-                   e.`first_name`, e.`middle_name`, e.`last_name`, e.`name_extension`,
-                   pos.`official_title` AS `position`,
-                   cat.`name` AS `category_name`,
-                   aw.`name` AS `award_name`,
-                   sch.`name` AS `school_name`, sch.`alias` AS `school_alias`,
-                   nom_e.`first_name` AS `nominator_first`, nom_e.`last_name` AS `nominator_last`,
-                   nom_pos.`official_title` AS `nominator_position`, nom_sch.`name` AS `nominator_school`
-            FROM `awards_categories_nominees` AS n
-            LEFT JOIN `employees` AS e ON n.`nominee_id` = e.`id`
-            LEFT JOIN `station_assignments` AS sa ON e.`id` = sa.`employee_id`
-            LEFT JOIN `positions` AS pos ON sa.`position_id` = pos.`id`
-            LEFT JOIN `schools` AS sch ON n.`nominee_id` COLLATE utf8mb4_general_ci = sch.`id` COLLATE utf8mb4_general_ci
-            LEFT JOIN `recognition_awards` AS aw ON n.`award_id` = aw.`id`
-            LEFT JOIN `recognition_categories` AS cat ON aw.`category_id` = cat.`id`
-            LEFT JOIN `employees` AS nom_e ON n.`nominated_by` = nom_e.`id`
-            LEFT JOIN `station_assignments` AS nom_sa ON nom_e.`id` = nom_sa.`employee_id`
-            LEFT JOIN `positions` AS nom_pos ON nom_sa.`position_id` = nom_pos.`id`
-            LEFT JOIN `schools` AS nom_sch ON nom_sch.`head_id` = nom_e.`id`
-            WHERE n.`schedule_id` = ?
-            ORDER BY COALESCE(e.`last_name`, sch.`name`) ASC, e.`first_name` ASC";
-    $results = query($sql, [$schedule_id]);
     return is_array($results) ? $results : [];
 }
 
@@ -732,6 +651,20 @@ function rankingCriteriaByAward($award_id)
     return is_array($results) ? $results : [];
 }
 
+function updateRankingCriterion($id, $name, $maxPoints, $description = '')
+{
+    return update('ranking_criteria', [
+        'criterion_name' => $name,
+        'description' => $description,
+        'max_points' => $maxPoints
+    ], '`id` = ?', [$id]);
+}
+
+function deleteRankingCriterion($id)
+{
+    return delete('ranking_criteria', '`id` = ?', [$id]);
+}
+
 function rankingCriteriaLibrary()
 {
     $results = query("SELECT * FROM `ranking_criteria_library` ORDER BY `criterion_name` ASC");
@@ -760,6 +693,7 @@ function saveRankingCriteria($award_id, $criteria)
     foreach ($criteria as $item) {
         $name = trim($item['name'] ?? '');
         $max = floatval($item['max_points'] ?? 0);
+        $description = trim($item['description'] ?? '');
         $nameKey = strtolower($name);
 
         if ($name === '' || $max <= 0 || isset($savedNames[$nameKey])) {
@@ -768,11 +702,12 @@ function saveRankingCriteria($award_id, $criteria)
 
         $savedNames[$nameKey] = true;
         if (isset($existingByName[$nameKey])) {
-            update('ranking_criteria', ['max_points' => $max], '`id` = ?', [$existingByName[$nameKey]['id']]);
+            update('ranking_criteria', ['max_points' => $max, 'description' => $description], '`id` = ?', [$existingByName[$nameKey]['id']]);
         } else {
             insert('ranking_criteria', [
                 'award_id' => $award_id,
                 'criterion_name' => $name,
+                'description' => $description,
                 'max_points' => $max
             ]);
         }
@@ -940,23 +875,6 @@ function getRankingsByScheduleAndAward($schedule_id, $award_id, $level = null)
     $sql .= " ORDER BY r.`rank_position` ASC";
     $results = query($sql, $params);
     return is_array($results) ? $results : [];
-}
-
-function getRankingByNominee($nominee_id)
-{
-    return find("SELECT * FROM `rankings` WHERE `nominee_id` = ? LIMIT 1", [$nominee_id]);
-}
-
-function deleteRankingsByScheduleAndAward($schedule_id, $award_id, $level = null)
-{
-    if ($level) {
-        return query("DELETE r FROM `rankings` AS r
-                      INNER JOIN `awards_categories_nominees` AS n ON r.`nominee_id` = n.`id`
-                      WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`level` = ?",
-            [$schedule_id, $award_id, $level]
-        );
-    }
-    return delete('rankings', '`schedule_id` = ? AND `award_id` = ?', [$schedule_id, $award_id]);
 }
 
 function finalizeRankings($schedule_id, $award_id, $level = null)
@@ -1180,4 +1098,31 @@ function declareWinnerFromRankings($schedule_id, $award_id, $ranked_by = null, $
     finalizeRankings($schedule_id, $award_id, $level);
     promoteMasterTeacherWinnerToUlirangGuro($schedule_id, $award_id, $ranked_by);
     return $winner['nominee_id'];
+}
+
+function revertWinner($schedule_id, $award_id, $level = null)
+{
+    if ($level) {
+        query("UPDATE `rankings` AS r
+               INNER JOIN `awards_categories_nominees` AS n ON r.`nominee_id` = n.`id`
+               SET r.`status` = 'Ranked'
+               WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`level` = ?",
+            [$schedule_id, $award_id, $level]
+        );
+        query("UPDATE `awards_categories_nominees` AS n
+               INNER JOIN `rankings` AS r ON n.`id` = r.`nominee_id`
+               SET n.`status` = 'Nominated'
+               WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`level` = ? AND n.`status` = 'Awarded'",
+            [$schedule_id, $award_id, $level]
+        );
+    } else {
+        query("UPDATE `rankings` SET `status` = 'Ranked' WHERE `schedule_id` = ? AND `award_id` = ?", [$schedule_id, $award_id]);
+        query("UPDATE `awards_categories_nominees` AS n
+               INNER JOIN `rankings` AS r ON n.`id` = r.`nominee_id`
+               SET n.`status` = 'Nominated'
+               WHERE r.`schedule_id` = ? AND r.`award_id` = ? AND n.`status` = 'Awarded'",
+            [$schedule_id, $award_id]
+        );
+    }
+    return true;
 }

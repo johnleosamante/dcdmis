@@ -103,7 +103,7 @@ if ($currStation) {
                             <label class="custom-file-label" for="attachment">Choose file...</label>
                         </div>
                         <small class="form-text text-muted">Max file upload size:
-                            <?= ini_get('upload_max_filesize') ?>B
+                            <?= UPLOAD_MAX_FILESIZE ?>B
                         </small>
                     </div>
 

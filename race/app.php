@@ -48,7 +48,7 @@ if (isset($_POST['save-award'])) {
         $temp = $_FILES['file-upload']['tmp_name'];
 
         if ($_FILES['file-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-            $message = 'The choosen file exceeds the upload file limit (20 MB). No changes have been made to award.';
+            $message = 'The choosen file exceeds the upload file limit (' . UPLOAD_MAX_FILESIZE . 'B). No changes have been made to award.';
             return;
         }
 
@@ -257,7 +257,13 @@ if (isset($_POST['save-nominee'])) {
             }
         }
 
-        $level = isset($_POST['level']) && !empty($_POST['level']) ? sanitize($_POST['level']) : null;
+        $isSDO = isset($_POST['is_sdo']) ? true : false;
+        $level = null;
+        if ($isSDO) {
+            $level = 'SDO';
+        } else {
+            $level = isset($_POST['level']) && !empty($_POST['level']) ? sanitize($_POST['level']) : null;
+        }
         $affected = createNominee($schedule_id, $employee_id, $award_id, $nominee_type, $level, $userId);
         if ($affected) {
             $message = 'Nominee has been added successfully.';
@@ -394,6 +400,30 @@ if (isset($_POST['declare-winner'])) {
     }
 }
 
+if (isset($_POST['save-recognition-category'])) {
+    $category_name = sanitize($_POST['category_name'] ?? '');
+    $showAlert = true;
+    $success = false;
+
+    if ($category_name) {
+        $existing = find("SELECT `id` FROM `recognition_categories` WHERE LOWER(`name`) = LOWER(?) LIMIT 1", [$category_name]);
+        if ($existing) {
+            $message = 'A category with this name already exists.';
+        } else {
+            $affected = createRecognitionCategory($category_name);
+            if ($affected) {
+                $message = 'Category has been added successfully.';
+                $success = true;
+                createSystemLog($stationId, $userId, 'Added recognition category', $affected, clientIp());
+            } else {
+                $message = 'Failed to add category. Please try again.';
+            }
+        }
+    } else {
+        $message = 'Category name is required.';
+    }
+}
+
 if (isset($_POST['save-recognition-award'])) {
     $category_id = sanitize($_POST['category_id'] ?? '');
     $award_name = sanitize($_POST['award_name'] ?? '');
@@ -490,22 +520,26 @@ if (isset($_POST['save-ranking-criteria'])) {
         $criteria = [];
         $libraryIds = $_POST['library_criterion_id'] ?? [];
         $libraryPoints = $_POST['library_max_points'] ?? [];
+        $libraryDescriptions = $_POST['library_description'] ?? [];
         foreach ($libraryIds as $libraryId) {
             $libraryCriterion = rankingCriteriaLibraryById((int) $libraryId);
             if ($libraryCriterion) {
                 $criteria[] = [
                     'name' => $libraryCriterion['criterion_name'],
-                    'max_points' => $libraryPoints[$libraryId] ?? $libraryCriterion['default_max_points']
+                    'max_points' => $libraryPoints[$libraryId] ?? $libraryCriterion['default_max_points'],
+                    'description' => $libraryDescriptions[$libraryId] ?? ''
                 ];
             }
         }
 
         $names = $_POST['criterion_name'] ?? [];
         $maxPoints = $_POST['max_points'] ?? [];
+        $descriptions = $_POST['criterion_description'] ?? [];
         for ($i = 0; $i < count($names); $i++) {
             $criteria[] = [
                 'name' => $names[$i] ?? '',
-                'max_points' => $maxPoints[$i] ?? 0
+                'max_points' => $maxPoints[$i] ?? 0,
+                'description' => $descriptions[$i] ?? ''
             ];
         }
         saveRankingCriteria($id, $criteria);
@@ -514,6 +548,43 @@ if (isset($_POST['save-ranking-criteria'])) {
         createSystemLog($stationId, $userId, 'Saved ranking criteria', $id, clientIp());
     } else {
         $message = 'Invalid award ID.';
+    }
+}
+
+if (isset($_POST['update-criterion'])) {
+    $criterionId = isset($_POST['criterion_id']) ? sanitize($_POST['criterion_id']) : null;
+    $criterionName = isset($_POST['criterion_name']) ? trim(sanitize($_POST['criterion_name'])) : '';
+    $maxPoints = isset($_POST['max_points']) ? floatval($_POST['max_points']) : 0;
+    $criterionDescription = isset($_POST['criterion_description']) ? trim($_POST['criterion_description']) : '';
+    $showAlert = true;
+    $success = false;
+
+    if ($nominatorOnly) {
+        $message = 'You do not have permission to perform this action.';
+    } elseif ($criterionId && $criterionName !== '' && $maxPoints > 0) {
+        updateRankingCriterion($criterionId, $criterionName, $maxPoints, $criterionDescription);
+        $message = 'Criterion has been updated successfully.';
+        $success = true;
+        createSystemLog($stationId, $userId, 'Updated ranking criterion', $criterionId, clientIp());
+    } else {
+        $message = 'All fields are required.';
+    }
+}
+
+if (isset($_POST['delete-criterion'])) {
+    $criterionId = isset($_POST['criterion_id']) ? sanitize($_POST['criterion_id']) : null;
+    $showAlert = true;
+    $success = false;
+
+    if ($nominatorOnly) {
+        $message = 'You do not have permission to perform this action.';
+    } elseif ($criterionId) {
+        deleteRankingCriterion($criterionId);
+        $message = 'Criterion has been deleted successfully.';
+        $success = true;
+        createSystemLog($stationId, $userId, 'Deleted ranking criterion', $criterionId, clientIp());
+    } else {
+        $message = 'Invalid criterion ID.';
     }
 }
 
@@ -530,9 +601,6 @@ if (isset($_POST['save-ranking-score'])) {
             $criterion_id = (int) $criterion_id;
             $points = floatval($points);
             saveRankingScore($nominee_id, $criterion_id, $points, $userId);
-        }
-        if (isset($_POST['validated'])) {
-            query("UPDATE `awards_categories_nominees` SET `validated` = ? WHERE `id` = ?", [sanitize($_POST['validated']), $nominee_id]);
         }
         $message = 'Ranking score has been saved successfully.';
         $success = true;
@@ -589,6 +657,25 @@ if (isset($_POST['finalize-winner'])) {
         }
     } else {
         $message = 'Schedule and award are required to finalize winner.';
+    }
+}
+
+if (isset($_POST['revert-winner-ranking'])) {
+    $schedule_id = isset($_POST['rank_schedule_id']) ? sanitize($_POST['rank_schedule_id']) : null;
+    $award_id = isset($_POST['rank_award_id']) ? sanitize($_POST['rank_award_id']) : null;
+    $level = isset($_POST['rank_level']) ? sanitize($_POST['rank_level']) : null;
+    $showAlert = true;
+    $success = false;
+
+    if ($nominatorOnly) {
+        $message = 'You do not have permission to perform this action.';
+    } elseif ($schedule_id && $award_id) {
+        revertWinner($schedule_id, $award_id, $level ?: null);
+        $message = 'Winner has been reverted successfully. Ranking is now open again.' . ($level ? ' (' . $level . ')' : '');
+        $success = true;
+        createSystemLog($stationId, $userId, 'Reverted winner' . ($level ? ' (' . $level . ')' : ''), $award_id, clientIp());
+    } else {
+        $message = 'Schedule and award are required to revert winner.';
     }
 }
 

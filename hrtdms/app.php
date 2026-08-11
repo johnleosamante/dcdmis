@@ -1,7 +1,7 @@
 <?php
 // hrtdms/app.php
 $activeApp = $_SESSION[alias() . '_activeApp'] = 'hrtdms';
-$page = $appTitle = 'Human Resource Training &amp; Development Management System';
+$page = $appTitle = 'Human Resource Training and Development Management System';
 
 if (!isset($userId)) {
     redirect("{$baseUri}/login");
@@ -135,7 +135,7 @@ You can also go to the DepEd Dipolog City Division Training Repository ($reposit
 
 Thank you.
 
-***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****"
+***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****
 EOT;
 
                     sendMail($employeeEmail, $title, $emailMessage);

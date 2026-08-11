@@ -1,17 +1,29 @@
 <?php
 $error = $publication = $vacancies = null;
+$isDeadlineToday = false;
 
 if ($code) {
     $publication = publicationByCode($code);
 
     if ($publication) {
+        $today = date('Y-m-d');
+        $closeDate = date('Y-m-d', strtotime($publication['close_date']));
+        $openDate = date('Y-m-d', strtotime($publication['open_date']));
+        $currentTime = time();
+        $deadline5pm = strtotime($closeDate . ' 17:00:00');
+
         if ($publication['status'] !== 'open') {
             $error = 'This call for application is currently closed.';
-        } elseif (strtotime($publication['close_date']) < strtotime(date('Y-m-d'))) {
+        } elseif (strtotime($closeDate) < strtotime($today)) {
             $error = 'The application period for this call for application has ended.';
-        } elseif (strtotime($publication['open_date']) > strtotime(date('Y-m-d'))) {
+        } elseif ($today === $closeDate && $currentTime >= $deadline5pm) {
+            $error = 'The application period for this call for application ended at 5:00 PM today. Submissions are no longer accepted.';
+        } elseif (strtotime($openDate) > strtotime($today)) {
             $error = 'The application period for this call for application has not started yet.';
         } else {
+            if ($today === $closeDate) {
+                $isDeadlineToday = true;
+            }
             $vacancies = publicationItems($publication['id']);
         }
     } else {
@@ -52,6 +64,13 @@ if ($code) {
                 <a href="<?= uri() . '/hrmis/apply' ?>" class="btn btn-secondary">Go to Call for Applications</a>
             </div>
         <?php else: ?>
+            <?php if ($isDeadlineToday): ?>
+                <div class="alert alert-warning text-center font-weight-bold mb-4">
+                    <i class="fas fa-clock mr-1"></i>
+                    Notice: Receiving of application will end at 5:00 PM today and will no longer accept applications.
+                </div>
+            <?php endif ?>
+
             <form class="user" action="" method="POST" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="publication_id" value="<?= cipher($publication['id']) ?>">
@@ -68,8 +87,16 @@ if ($code) {
                         </div>
                         <input type="text" class="form-control" id="applicant-id" name="applicant_id"
                             placeholder="Enter your 18-digit applicant ID..." required>
-                        <div class="small text-left mt-1">
-                            <a href=" <?= uri() . '/hrmis/register' ?>" target="_blank">Don't have an applicant ID yet?</a>
+                        <div
+                            class="small mt-2 d-flex flex-column flex-sm-row justify-content-between align-items-center text-center">
+                            <div class="mb-2 mb-sm-0">
+                                <a href="<?= uri() . '/hrmis/register' ?>" target="_blank">Don't have an applicant ID
+                                    yet?</a>
+                            </div>
+                            <div>
+                                <a href="<?= uri() . '/hrmis/register/forgot' ?>" target="_blank">Forgot your applicant
+                                    ID?</a>
+                            </div>
                         </div>
                     </div>
 
@@ -169,7 +196,7 @@ if ($code) {
                                 of requirements</a> for your application.</p>
                         <input class="form-control-file" type="file" name="application-file" accept=".pdf">
                         <small class="form-text text-muted">Max file upload size:
-                            <?= ini_get('upload_max_filesize') ?>B</small>
+                            <?= UPLOAD_MAX_FILESIZE ?>B</small>
                     </div>
 
                     <button name="submit-application" type="submit" class="btn btn-primary btn-block mt-2">

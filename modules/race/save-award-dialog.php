@@ -20,7 +20,7 @@ if ($awardId) {
     if ($award) {
         $category_id = $award['category_id'];
         $award_name = $award['name'];
-        $has_level = (int)$award['has_level'];
+        $has_level = (int) $award['has_level'];
     }
     $buttonName = 'edit-recognition-award';
     $buttonLabel = 'Update Award';
@@ -41,7 +41,8 @@ if ($awardId) {
                     <input type="hidden" name="verifier" value="<?= e($_GET['id']) ?>">
                 <?php endif; ?>
                 <div class="form-group mb-3">
-                    <label for="category_id" class="mb-1 text-dark small font-weight-bold text-uppercase">Award Category <?php showAsterisk() ?></label>
+                    <label for="category_id" class="mb-1 text-dark small font-weight-bold text-uppercase">Award Category
+                        <?php showAsterisk() ?></label>
                     <select id="category_id" name="category_id" class="form-control" required>
                         <option value="">Select Category...</option>
                         <?php
@@ -55,14 +56,17 @@ if ($awardId) {
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="award_name" class="mb-1 text-dark small font-weight-bold text-uppercase">Award Name <?php showAsterisk() ?></label>
-                    <input type="text" id="award_name" name="award_name" class="form-control" placeholder="Enter award name..." value="<?= e($award_name) ?>" required>
+                    <label for="award_name" class="mb-1 text-dark small font-weight-bold text-uppercase">Award Name
+                        <?php showAsterisk() ?></label>
+                    <input type="text" id="award_name" name="award_name" class="form-control"
+                        placeholder="Enter award name..." value="<?= e($award_name) ?>" required>
                 </div>
 
                 <div class="form-group mb-3">
                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="has_level" name="has_level" value="1" <?= $has_level ? 'checked' : '' ?>>
-                        <label class="custom-control-label" for="has_level">Has Level (Elementary / Secondary / Integrated)</label>
+                        <input type="checkbox" class="custom-control-input" id="has_level" name="has_level" value="1"
+                            <?= $has_level ? 'checked' : '' ?>>
+                        <label class="custom-control-label" for="has_level">Has Level (Elementary / Secondary)</label>
                     </div>
                 </div>
 
@@ -70,7 +74,8 @@ if ($awardId) {
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-primary" name="<?= e($buttonName) ?>" type="submit"><?= e($buttonLabel) ?></button>
+                <button class="btn btn-primary" name="<?= e($buttonName) ?>"
+                    type="submit"><?= e($buttonLabel) ?></button>
                 <?php cancelModalButton() ?>
             </div>
         </form>

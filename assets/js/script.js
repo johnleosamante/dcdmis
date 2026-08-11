@@ -5,6 +5,18 @@ if (window.history.replaceState) {
 }
 
 $(document).ready(function () {
+	// Suppress DataTables warning alerts (e.g. column count mismatch)
+	$.fn.dataTableExt.sErrMode = 'throw';
+	$.fn.DataTable.ext.errMode = 'throw';
+	window.alert = (function (original) {
+		return function (msg) {
+			if (typeof msg === 'string' && msg.indexOf('DataTables warning') !== -1) {
+				return;
+			}
+			return original.call(window, msg);
+		};
+	})(window.alert);
+
 	let dtProps = {
 		responsive: true,
 		pagingType: "simple",
@@ -71,6 +83,24 @@ const loadData = (href, id = "modal") => {
 
 	xmlhttp.open("GET", href);
 	xmlhttp.send();
+};
+
+const updateLiveTotal = () => {
+	const inputs = document.querySelectorAll(".score-input");
+	let total = 0;
+	for (let i = 0; i < inputs.length; i++) {
+		const v = parseFloat(inputs[i].value);
+		if (!isNaN(v)) total += v;
+	}
+	const display = document.getElementById("total-score-display");
+	if (display) display.textContent = total.toFixed(2);
+};
+
+const clampScore = (el, max) => {
+	let v = parseFloat(el.value);
+	if (isNaN(v)) return;
+	if (v < 0) el.value = 0;
+	else if (v > max) el.value = max;
 };
 
 const generateRandomPassword = (length) => {

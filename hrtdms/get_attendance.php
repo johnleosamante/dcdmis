@@ -11,25 +11,30 @@ if (!$training_id || !$date) {
     echo json_encode([]);
     exit;
 }
-$mysqli = new mysqli(HOSTNAME, USER, '', DATABASE);
+$mysqli = new mysqli(HOSTNAME, USER, PASSWORD, DATABASE);
 
 if ($mysqli->connect_error) {
     echo json_encode([]);
     exit;
 }
 $query = "
-    SELECT 
+    SELECT
         CONCAT(
-            e.first_name, ' ',
+            UPPER(e.last_name), ', ',
+            e.first_name,
             IF(
-                e.middle_name IS NOT NULL 
-                AND e.middle_name != '',
-                CONCAT(LEFT(e.middle_name,1), '. '),
+                e.name_extension IS NOT NULL AND e.name_extension != '',
+                CONCAT(' ', e.name_extension),
                 ''
             ),
-            e.last_name
+            IF(
+                e.middle_name IS NOT NULL AND e.middle_name != '',
+                CONCAT(' ', LEFT(e.middle_name, 1), '.'),
+                ''
+            )
         ) AS name,
         e.sex AS gender,
+        e.profile_picture,
         p.official_title AS position,
         ta.img_url,
         ta.time_in

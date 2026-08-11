@@ -217,17 +217,11 @@ function deleteDistrict($id)
     return delete('districts', '`id` = ?', [$id]);
 }
 
-function schoolByHead($headId)
+function schoolByHead($headId, $exemptId = null)
 {
-    return find("SELECT * FROM `schools` WHERE `head_id` = ? LIMIT 1", [$headId]);
-}
-
-function isSchoolHeadOfEmployee($headId, $employeeId)
-{
-    $school = schoolByHead($headId);
-    if (!$school) {
-        return false;
+    if ($exemptId !== null) {
+        return find("SELECT * FROM `schools` WHERE `head_id` = ? AND `id` != ? LIMIT 1", [$headId, $exemptId]);
     }
-    $empStation = station($employeeId);
-    return $empStation && $empStation['station_id'] === $school['id'];
+
+    return find("SELECT * FROM `schools` WHERE `head_id` = ? LIMIT 1", [$headId]);
 }

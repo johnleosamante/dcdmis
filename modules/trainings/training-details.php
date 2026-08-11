@@ -44,7 +44,9 @@ messageAlert($showAlert, $message, $success);
     <div class="card-body">
         <div class="d-sm-flex align-items-center flex-row-reverse mb-2">
             <div class="d-inline-block">
-                <?php linkButtonSplit(customUri('export', 'training-details', $training['id']), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
+                <?php
+                linkButtonSplit(customUri('hrtdms', 'Attendance', $training['id']), 'Attendance', 'fa-calendar-check', 'View Attendance', 'info');
+                linkButtonSplit(customUri('export', 'training-details', $training['id']), 'Export', 'fa-file-excel', 'Export as Excel file', 'success'); ?>
             </div>
         </div>
 

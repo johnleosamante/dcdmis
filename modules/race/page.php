@@ -97,7 +97,7 @@ messageAlert($showAlert, $message, $success);
             <div>
                 <?php if ($scheduleId): ?>
                     <?php if ($awardId): ?>
-                        <?php modalButtonSplit(uri() . '/modules/race/nominate-reminder-dialog.php?e=' . cipher($scheduleId) . '&award_id=' . cipher($awardId), 'Add Nominee', 'fa-plus', 'Add Nominee') ?>
+                        <?php modalButtonSplit(uri() . '/modules/race/nominate-dialog.php?step=reminder&e=' . cipher($scheduleId) . '&award_id=' . cipher($awardId), 'Add Nominee', 'fa-plus', 'Add Nominee') ?>
                         <a href="<?= $backToAwardsUrl ?>" class="btn btn-secondary btn-sm ml-2">
                             <i class="fas fa-arrow-left fa-fw"></i> Back to Awards
                         </a>
@@ -124,8 +124,9 @@ messageAlert($showAlert, $message, $success);
     <?php elseif ($view === 'awards'): ?>
         <?php if (!$nominatorOnly): ?>
             <div class="card-header py-3 d-flex align-items-center justify-content-between">
-                <div>
+                <div class="d-flex align-items-center">
                     <?php modalButtonSplit(uri() . '/modules/race/save-award-dialog.php', 'Add Award', 'fa-plus', 'Add Award') ?>
+                    <?php modalButtonSplit(uri() . '/modules/race/save-category-dialog.php', 'Add Category', 'fa-folder-plus', 'Add Category') ?>
                 </div>
             </div>
         <?php endif; ?>
@@ -133,7 +134,7 @@ messageAlert($showAlert, $message, $success);
         <div class="card-header py-3">
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <div>
-                    <?php modalButtonSplit(uri() . '/modules/race/nominate-select-schedule-dialog.php', 'Nominate', 'fa-user-plus', 'Nominate') ?>
+                    <?php modalButtonSplit(uri() . '/modules/race/nominate-dialog.php?step=schedule', 'Nominate', 'fa-user-plus', 'Nominate') ?>
                 </div>
             </div>
             <?php
@@ -180,7 +181,8 @@ messageAlert($showAlert, $message, $success);
                         <option value="">All Levels</option>
                         <option value="Elementary" <?= setOptionSelected('Elementary', $nomFilterLevel) ?>>Elementary
                         </option>
-                        <option value="Secondary" <?= setOptionSelected('Secondary', $nomFilterLevel) ?>>Secondary</option>
+                        <option value="Secondary" <?= setOptionSelected('Secondary', $nomFilterLevel) ?>>Secondary
+                        </option>
                     </select>
                 </div>
 
@@ -247,8 +249,6 @@ messageAlert($showAlert, $message, $success);
                             Elementary</option>
                         <option value="Secondary" <?= setOptionSelected('Secondary', $_GET['winner_level'] ?? '') ?>>
                             Secondary</option>
-                        <option value="Integrated" <?= setOptionSelected('Integrated', $_GET['winner_level'] ?? '') ?>>
-                            Integrated</option>
                     </select>
                 </div>
 
@@ -315,8 +315,6 @@ messageAlert($showAlert, $message, $success);
                         </option>
                         <option value="Secondary" <?= setOptionSelected('Secondary', $selectedRankLevel) ?>>Secondary
                         </option>
-                        <option value="Integrated" <?= setOptionSelected('Integrated', $selectedRankLevel) ?>>Integrated
-                        </option>
                     </select>
                 </div>
                 <div class="col-md-2 mb-2 mb-md-0">
@@ -347,24 +345,28 @@ messageAlert($showAlert, $message, $success);
                         if (!empty($awards)):
                             foreach ($awards as $aw): ?>
                                 <tr>
-                                    <td class="align-middle text-center font-weight-bold text-uppercase"><?= e($aw['name']) ?></td>
-                                    <td class="align-middle text-center small text-uppercase"><?= e($aw['category_name']) ?></td>
+                                    <td class="align-middle text-center font-weight-bold text-uppercase"><?= e($aw['name']) ?>
+                                    </td>
+                                    <td class="align-middle text-center small text-uppercase"><?= e($aw['category_name']) ?>
+                                    </td>
                                     <?php if (!$nominatorOnly): ?>
                                         <td class="align-middle">
                                             <div class="dropdown no-arrow">
                                                 <?php dropdownEllipsis() ?>
                                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                                    <?php modalDropdownItem(uri() . '/modules/race/criteria-dialog.php?mode=edit-ranking&id=' . cipher($aw['id']), 'Set Criteria', 'fa-clipboard-list', 'Set Ranking Criteria'); ?>
+                                                    <div class="dropdown-divider"></div>
                                                     <?php modalDropdownItem(uri() . '/modules/race/save-award-dialog.php?id=' . cipher($aw['id']), 'Edit Award', 'fa-edit', 'Edit Award'); ?>
-                                                    <?php modalDropdownItem(uri() . '/modules/race/delete-award-dialog.php?id=' . cipher($aw['id']), 'Delete', 'fa-trash', 'Delete Award'); ?>
+                                                    <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=award&id=' . cipher($aw['id']), 'Delete', 'fa-trash', 'Delete Award'); ?>
                                                 </div>
-                                            </div>
                                         </td>
                                     <?php endif; ?>
                                 </tr>
                             <?php endforeach;
                         else: ?>
                             <tr>
-                                <td colspan="<?= $nominatorOnly ? '2' : '3' ?>" class="text-center py-4">No awards found.</td>
+                                <td colspan="<?= $nominatorOnly ? '2' : '3' ?>" class="text-center py-4">No awards found.
+                                </td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -421,7 +423,8 @@ messageAlert($showAlert, $message, $success);
                                                 <div class="text-muted small"><?= e($nom['position']) ?></div>
                                             <?php else: ?>
                                                 <div><strong>Nominee ID: <?= e($nom['nominee_id']) ?></strong></div>
-                                                <div class="text-danger small"><i class="fas fa-exclamation-triangle"></i> Employee Record
+                                                <div class="text-danger small"><i class="fas fa-exclamation-triangle"></i> Employee
+                                                    Record
                                                     Missing</div>
                                             <?php endif; ?>
                                         <?php endif; ?>
@@ -444,7 +447,8 @@ messageAlert($showAlert, $message, $success);
                                         <div><strong><?= e($nom['award_name']) ?></strong></div>
                                         <div class="text-muted small"><?= e($nom['category_name']) ?></div>
                                     </td>
-                                    <td class="align-middle small text-uppercase font-weight-bold"><?= e($nom['schedule_title']) ?>
+                                    <td class="align-middle small text-uppercase font-weight-bold">
+                                        <?= e($nom['schedule_title']) ?>
                                     </td>
                                     <?php if (!$nominatorOnly): ?>
                                         <td class="align-middle">
@@ -460,7 +464,7 @@ messageAlert($showAlert, $message, $success);
                                                     <?php endif; ?>
 
                                                     <div class="dropdown-divider"></div>
-                                                    <?php modalDropdownItem(uri() . '/modules/race/delete-nominee-dialog.php?id=' . cipher($nom['id']), 'Delete', 'fa-trash', 'Delete Nominee'); ?>
+                                                    <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=nominee&id=' . cipher($nom['id']), 'Delete', 'fa-trash', 'Delete Nominee'); ?>
                                                 </div>
                                             </div>
                                         </td>
@@ -469,7 +473,8 @@ messageAlert($showAlert, $message, $success);
                             <?php endforeach;
                         else: ?>
                             <tr>
-                                <td colspan="<?= $nominatorOnly ? '5' : '6' ?>" class="text-center py-4">No nominees found.</td>
+                                <td colspan="<?= $nominatorOnly ? '5' : '6' ?>" class="text-center py-4">No nominees found.
+                                </td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -545,7 +550,8 @@ messageAlert($showAlert, $message, $success);
                                     <i class="fas fa-info-circle"></i>
                                 </div>
                                 <h6>No winner has been declared for this selection yet.</h6>
-                                <p class="small">Go to <strong>Schedule &rarr; Choose Event &rarr; Select Award</strong> to declare a
+                                <p class="small">Go to <strong>Schedule &rarr; Choose Event &rarr; Select Award</strong> to declare
+                                    a
                                     nominee as the winner.</p>
                             </div>
                         <?php endif; ?>
@@ -566,46 +572,46 @@ messageAlert($showAlert, $message, $success);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($allWinners)):
-                            $winnerNum = 0;
-                            foreach ($allWinners as $w):
-                                $winnerNum++;
-                                if (isset($w['nominee_type']) && $w['nominee_type'] === 'School'):
-                                    $winnerName = $w['school_name'] ?: 'Unknown School';
-                                    $winnerSub = $w['school_alias'] ?: '';
-                                elseif ($w['last_name'] !== null):
-                                    $winnerName = toName($w['last_name'], $w['first_name'], $w['middle_name'], $w['name_extension']);
-                                    $winnerSub = $w['position'] ?? '';
-                                else:
-                                    $winnerName = 'ID: ' . $w['nominee_id'];
-                                    $winnerSub = 'Record Missing';
-                                endif;
-                                $winnerDialogUrl = uri() . '/modules/race/view-winner-dialog.php?id=' . cipher($w['id']);
-                                ?>
-                                <tr style="cursor: pointer;" data-toggle="modal" data-target="#modal"
-                                    onclick="loadData('<?= $winnerDialogUrl ?>')">
-                                    <td class="align-middle"><?= $winnerNum ?></td>
-                                    <td class="align-middle text-center">
-                                        <div class="font-weight-bold text-primary"><?= e($winnerName) ?></div>
-                                        <?php if ($winnerSub): ?>
-                                            <small class="text-muted"><?= e($winnerSub) ?></small>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="align-middle text-center"><?= e($w['award_name']) ?></td>
-                                    <td class="align-middle">
-                                        <span class="badge badge-danger px-2 py-1"><?= e($w['category_name']) ?></span>
-                                    </td>
-                                    <td class="align-middle">
-                                        <?php if (!empty($w['level'])): ?>
-                                            <span class="badge badge-secondary px-2 py-1"><?= e($w['level']) ?></span>
-                                        <?php else: ?>
-                                            <span class="text-muted">—</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="align-middle"><?= e($w['schedule_title']) ?></td>
-                                </tr>
-                            <?php endforeach;
-                        else: ?>
+                        <?php
+                        $winnerNum = 0;
+                        foreach ($allWinners as $w):
+                            $winnerNum++;
+                            if (isset($w['nominee_type']) && $w['nominee_type'] === 'School'):
+                                $winnerName = $w['school_name'] ?: 'Unknown School';
+                                $winnerSub = $w['school_alias'] ?: '';
+                            elseif ($w['last_name'] !== null):
+                                $winnerName = toName($w['last_name'], $w['first_name'], $w['middle_name'], $w['name_extension']);
+                                $winnerSub = $w['position'] ?? '';
+                            else:
+                                $winnerName = 'ID: ' . $w['nominee_id'];
+                                $winnerSub = 'Record Missing';
+                            endif;
+                            $winnerDialogUrl = uri() . '/modules/race/view-winner-dialog.php?id=' . cipher($w['id']);
+                            ?>
+                            <tr style="cursor: pointer;" data-toggle="modal" data-target="#modal"
+                                onclick="loadData('<?= $winnerDialogUrl ?>')">
+                                <td class="align-middle"><?= $winnerNum ?></td>
+                                <td class="align-middle text-center">
+                                    <div class="font-weight-bold text-primary"><?= e($winnerName) ?></div>
+                                    <?php if ($winnerSub): ?>
+                                        <small class="text-muted"><?= e($winnerSub) ?></small>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="align-middle text-center"><?= e($w['award_name']) ?></td>
+                                <td class="align-middle">
+                                    <span class="badge badge-danger px-2 py-1"><?= e($w['category_name']) ?></span>
+                                </td>
+                                <td class="align-middle">
+                                    <?php if (!empty($w['level'])): ?>
+                                        <span class="badge badge-secondary px-2 py-1"><?= e($w['level']) ?></span>
+                                    <?php else: ?>
+                                        <span class="text-muted">—</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="align-middle"><?= e($w['schedule_title']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <?php if (empty($allWinners)): ?>
                             <tr>
                                 <td colspan="6" class="text-center py-4">No winners declared yet.</td>
                             </tr>
@@ -648,14 +654,17 @@ messageAlert($showAlert, $message, $success);
                                 <?php endif; ?>
                             </div>
                             <div class="d-flex flex-row align-items-center mt-2 mt-md-0">
-                                <?php modalButtonSplit(uri() . '/modules/race/save-ranking-criteria-dialog.php?id=' . cipher($rankAwardId), 'Set Criteria', 'fa-clipboard-list', 'Set Ranking Criteria') ?>
+                                <?php modalButtonSplit(uri() . '/modules/race/criteria-dialog.php?mode=view&id=' . cipher($rankAwardId), 'View Criteria', 'fa-clipboard-list', 'View Criteria') ?>
                                 <?php if (!empty($rankSchedId)): ?>
                                     <?php if ($isFinalized): ?>
                                         <span class="badge badge-danger p-2 ml-2"><i class="fas fa-trophy"></i> Winner Declared</span>
+                                        <?php if (!$nominatorOnly): ?>
+                                            <?php modalButtonSplit(uri() . '/modules/race/revert-winner-dialog.php?sched=' . cipher($rankSchedId) . '&award=' . cipher($rankAwardId) . ($rankLevel ? '&level=' . cipher($rankLevel) : ''), 'Revert Winner', 'fa-undo', 'Revert Winner', 'warning') ?>
+                                        <?php endif; ?>
                                     <?php elseif (empty($rankCriteria)): ?>
-                                        <?php modalButtonSplit(uri() . '/modules/race/no-criteria-dialog.php?award=' . cipher($rankAwardId), 'Save Rankings', 'fa-save', 'Save Rankings', 'warning') ?>
+                                        <?php modalButtonSplit(uri() . '/modules/race/notice-dialog.php?type=no-criteria&award=' . cipher($rankAwardId), 'Save Rankings', 'fa-save', 'Save Rankings', 'warning') ?>
                                     <?php elseif (!$hasScores): ?>
-                                        <?php modalButtonSplit(uri() . '/modules/race/no-rankings-dialog.php?award=' . cipher($rankAwardId) . '&sched=' . cipher($rankSchedId), 'Save Rankings', 'fa-save', 'Save Rankings', 'warning') ?>
+                                        <?php modalButtonSplit(uri() . '/modules/race/notice-dialog.php?type=no-rankings&award=' . cipher($rankAwardId) . '&sched=' . cipher($rankSchedId), 'Save Rankings', 'fa-save', 'Save Rankings', 'warning') ?>
                                     <?php elseif ($hasSavedRankings): ?>
                                         <?php modalButtonSplit(uri() . '/modules/race/finalize-winner-dialog.php?sched=' . cipher($rankSchedId) . '&award=' . cipher($rankAwardId) . ($rankLevel ? '&level=' . cipher($rankLevel) : ''), 'Declare Winner', 'fa-trophy', 'Finalize & Declare Winner') ?>
                                     <?php else: ?>
@@ -730,7 +739,8 @@ messageAlert($showAlert, $message, $success);
                                                     </div>
                                                 <?php else: ?>
                                                     <div><strong>Nominee ID: <?= e($rn['nominee_id']) ?></strong></div>
-                                                    <div class="text-danger small"><i class="fas fa-exclamation-triangle"></i> Employee record
+                                                    <div class="text-danger small"><i class="fas fa-exclamation-triangle"></i> Employee
+                                                        record
                                                         missing</div>
                                                 <?php endif; ?>
                                             <?php endif; ?>
@@ -831,7 +841,8 @@ messageAlert($showAlert, $message, $success);
                                                         <div class="text-muted small"><?= e($nominee['position']) ?></div>
                                                     <?php else: ?>
                                                         <div><strong>Nominee ID: <?= e($nominee['nominee_id']) ?></strong></div>
-                                                        <div class="text-danger small"><i class="fas fa-exclamation-triangle"></i> Employee Record
+                                                        <div class="text-danger small"><i class="fas fa-exclamation-triangle"></i> Employee
+                                                            Record
                                                             Missing</div>
                                                     <?php endif; ?>
                                                 <?php endif; ?>
@@ -866,7 +877,7 @@ messageAlert($showAlert, $message, $success);
                                                             <?php endif; ?>
 
                                                             <div class="dropdown-divider"></div>
-                                                            <?php modalDropdownItem(uri() . '/modules/race/delete-nominee-dialog.php?id=' . cipher($nominee['id']), 'Delete', 'fa-trash', 'Delete Nominee'); ?>
+                                                            <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=nominee&id=' . cipher($nominee['id']), 'Delete', 'fa-trash', 'Delete Nominee'); ?>
                                                         <?php else: ?>
                                                             <span class="dropdown-item small text-muted disabled"><i
                                                                     class="fas fa-eye fa-fw mr-2"></i> View Only</span>
@@ -913,7 +924,8 @@ messageAlert($showAlert, $message, $success);
                                                     <?= e($aw['name']) ?>
                                                 </a>
                                             </td>
-                                            <td class="align-middle text-center small text-uppercase"><?= e($aw['category_name']) ?></td>
+                                            <td class="align-middle text-center small text-uppercase"><?= e($aw['category_name']) ?>
+                                            </td>
                                             <td class="align-middle">
                                                 <span class="badge badge-pill badge-info font-weight-bold px-2 py-1"><?= $count ?></span>
                                             </td>
@@ -924,12 +936,12 @@ messageAlert($showAlert, $message, $success);
                                                         <a class="dropdown-item small" href="<?= $awardDetailsUrl ?>">
                                                             <i class="fas fa-users fa-fw mr-2 text-gray-400"></i> View Nominees
                                                         </a>
-                                                        <?php modalDropdownItem(uri() . '/modules/race/criteria-dialog.php?e=' . cipher($scheduleId) . '&award_id=' . cipher($aw['id']), 'View Criteria', 'fa-clipboard-list', 'View Criteria'); ?>
-                                                        <?php modalDropdownItem(uri() . '/modules/race/nominate-reminder-dialog.php?e=' . cipher($scheduleId) . '&award_id=' . cipher($aw['id']), 'Nominate', 'fa-plus', 'Add Nominee'); ?>
+                                                        <?php modalDropdownItem(uri() . '/modules/race/criteria-dialog.php?mode=view&e=' . cipher($scheduleId) . '&award_id=' . cipher($aw['id']), 'View Criteria', 'fa-clipboard-list', 'View Criteria'); ?>
+                                                        <?php modalDropdownItem(uri() . '/modules/race/nominate-dialog.php?step=reminder&e=' . cipher($scheduleId) . '&award_id=' . cipher($aw['id']), 'Nominate', 'fa-plus', 'Add Nominee'); ?>
                                                         <?php if (!$nominatorOnly): ?>
                                                             <div class="dropdown-divider"></div>
                                                             <?php modalDropdownItem(uri() . '/modules/race/save-award-dialog.php?e=' . cipher($scheduleId) . '&id=' . cipher($aw['id']), 'Edit', 'fa-edit', 'Edit Award'); ?>
-                                                            <?php modalDropdownItem(uri() . '/modules/race/delete-award-dialog.php?id=' . cipher($aw['id']), 'Delete', 'fa-trash', 'Delete Award'); ?>
+                                                            <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=award&id=' . cipher($aw['id']), 'Delete', 'fa-trash', 'Delete Award'); ?>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
@@ -997,7 +1009,7 @@ messageAlert($showAlert, $message, $success);
                                                 <?php dropdownEllipsis() ?>
                                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                                     <?php modalDropdownItem(uri() . '/modules/race/save-schedule-dialog.php?id=' . cipher($sched['id']), 'Edit', 'fa-edit', 'Edit Schedule'); ?>
-                                                    <?php modalDropdownItem(uri() . '/modules/race/delete-schedule-dialog.php?id=' . cipher($sched['id']), 'Delete', 'fa-trash', 'Delete Schedule'); ?>
+                                                    <?php modalDropdownItem(uri() . '/modules/race/delete-dialog.php?type=schedule&id=' . cipher($sched['id']), 'Delete', 'fa-trash', 'Delete Schedule'); ?>
                                                 </div>
                                             </div>
                                         </td>

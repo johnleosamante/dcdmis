@@ -192,8 +192,19 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Call for Application Details':
             $file = 'vacancies/publication-details';
             break;
-        case 'Applicants List':
+        case 'Call for Application Applicants':
             $file = 'vacancies/applicants';
+            break;
+        case 'Applicants':
+        case 'External Applicants':
+            $file = 'applicants/page';
+            break;
+        case 'Applicant Information':
+        case 'External Applicant Information':
+            $file = 'applicants/applicant-information';
+            break;
+        case 'Edit External Applicant':
+            $file = 'applicants/edit-applicant';
             break;
         case 'Qualified Applicants':
             $file = 'vacancies/qualified-applicants';
@@ -237,8 +248,51 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Talent Pool Diversity - Registration':
             $file = 'applicants/diversity/page';
             break;
-        case 'Performance Evaluation':
+        case 'IPCRF':
             $file = 'pm/page';
+            break;
+        case 'Create IPCRF':
+            $file = 'pm/create-ipcrf';
+            break;
+        case 'IPCRF Details':
+            $file = 'pm/ipcrf-details';
+            break;
+        case 'Add Objective':
+            $file = 'pm/add-objective';
+            break;
+        case 'Edit Objective':
+            $file = 'pm/edit-objective';
+            break;
+        case 'Review IPCRF':
+            $file = 'pm/review-ipcrf';
+            break;
+        case 'Phase 2':
+            $file = 'pm/phase2';
+            break;
+        case 'Phase 4':
+            $file = 'pm/phase4';
+            break;
+        case 'Coaching Form':
+            $file = 'pm/coaching-form';
+            break;
+        case 'Recalibration Form':
+            $file = 'pm/recalibration-form';
+            break;
+        case 'Print IPCRF':
+            $file = 'pm/print-ipcrf-nt';
+            break;
+        case 'Upload MOV':
+            $file = 'pm/upload-mov';
+            break;
+        case 'Rating Periods':
+        case 'RPMS Cycles':
+            $file = 'pm/admin-cycles';
+            break;
+        case 'Key Result Areas':
+            $file = 'pm/admin-kra';
+            break;
+        case 'Raters Management':
+            $file = 'pm/admin-raters';
             break;
         case 'Daily Time Record':
             $file = 'dtr/page';

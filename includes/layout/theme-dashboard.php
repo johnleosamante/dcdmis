@@ -63,9 +63,7 @@ require_once(root() . '/includes/layout/components.php');
     <?php
     scrollToTop();
     modal();
-    ?>
 
-    <?php
     $currentArea = ($url === 'Monitoring Tools') ? 'monitoring_tools' : $activeApp;
     $currentArea = ($url === 'System Overview') ? 'system_overview' : $currentArea;
     $needsAgreement = empty($_SESSION["{$prefix}data_privacy_agreed_{$currentArea}"]);
@@ -174,7 +172,8 @@ require_once(root() . '/includes/layout/components.php');
         crossorigin="anonymous"></script>
     <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="<?= uri() ?>/assets/vendor/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="<?= uri() ?>/assets/js/script.js?v=1.2.3"></script>
+    <script src="<?= uri() ?>/assets/js/script.js?v=<?= VERSION ?>"></script>
+    <script src="<?= uri() ?>/assets/js/csrf-heartbeat.js?v=<?= VERSION ?>"></script>
     <?php require_once(root() . '/includes/layout/customjs.php') ?>
 
     <?php if ($needsAgreement): ?>

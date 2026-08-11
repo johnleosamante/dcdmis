@@ -26,6 +26,7 @@ $allowedExports = [
 	'active-employees',
 	'applicant-diversity',
 	'applicants',
+	'external-applicants',
 	'comparative-assessment-results',
 	'demographics',
 	'disqualified-applicants',

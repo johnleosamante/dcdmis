@@ -11,19 +11,27 @@ contentTitle('Dashboard');
     card('201 Files', customUri('pis', '201 Files', $userId), 'fa-folder-open', 'info');
     card('Trainings', customUri('pis', 'Trainings', $userId), 'fa-chalkboard-teacher', 'warning');
     card('Payslip', customUri('pis', 'Payslip', $userId), 'fa-money-check', 'danger');
-    
-    $schoolInfo = schoolByHead($userId);
-    if ($schoolInfo) {
-        card('School Employees', customUri('pis', 'Employees'), 'fa-users', 'secondary');
+    if (!$isNonDivision) {
+        card('IPCRF', customUri('pis', 'IPCRF', $userId), 'fa-chart-line', 'secondary');
     }
-    
-    card('Performance Management', customUri('pis', 'Performance Management', $userId), 'fa-money-check', 'secondary');
-    card('Daily Time Record', customUri('pis', 'Daily Time Record', $userId), 'fa-money-check', 'dark');
     ?>
 </div>
 
-<?php
-if (!$isNonDivision && ($showMonitoringTools || $showOverview)): ?>
+<?php if ($isNonDivision || $schoolInfo): ?>
+    <hr class="mt-0">
+    <div class="row mt-4">
+        <?php
+        if ($isNonDivision) {
+            card('Request Transfer', customUri('pis', 'Request Transfer'), 'fa-exchange-alt', 'primary');
+        }
+        if ($schoolInfo) {
+            card('School Employees', customUri('pis', 'School Employees'), 'fa-users', $isNonDivision ? 'success' : 'primary');
+        }
+        ?>
+    </div>
+<?php endif; ?>
+
+<?php if ($showMonitoringTools || $showOverview): ?>
     <hr class="mt-0">
     <div class="row mt-4">
         <?php
@@ -34,16 +42,4 @@ if (!$isNonDivision && ($showMonitoringTools || $showOverview)): ?>
             card('System Overview', customUri('pis', 'System Overview'), 'fa-network-wired', $showMonitoringTools ? 'success' : 'primary');
         } ?>
     </div>
-<?php endif;
-
-$schoolInfo = schoolByHead($userId);
-if ($schoolInfo): ?>
-    <hr class="mt-0">
-    <div class="row mt-4">
-        <?php
-        card('School Employees', customUri('pis', 'School Employees'), 'fa-users', 'primary');
-        if ($isSchoolPortal || $isNonDivision) {
-            card('Request Transfer', customUri('pis', 'Request Transfer'), 'fa-exchange-alt', 'success');
-        } ?>
-    </div>
-<?php endif;
+<?php endif; ?>

@@ -1,7 +1,4 @@
-
-
 $(function () {
-
     $('.attendance-table').DataTable({
         pageLength: 25,
         lengthMenu: [5, 10, 25, 50, 100],
@@ -12,7 +9,6 @@ $(function () {
     });
 
     if (typeof toastr !== 'undefined') {
-
         toastr.options = {
             closeButton: true,
             progressBar: true,
@@ -21,14 +17,12 @@ $(function () {
             timeOut: 3000
         };
     }
-    
+
     $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
-
         $($.fn.dataTable.tables(true))
-                .DataTable()
-                .columns.adjust()
-                .responsive.recalc();
-
+            .DataTable()
+            .columns.adjust()
+            .responsive.recalc();
     });
 
     //TAB
@@ -70,7 +64,19 @@ $(function () {
         window.open(url, "_blank");
 
     });
-    // GENERATE PDF CLOSE BUTTON
+    // GENERATE PDF BUTTON
+    $('#generatePDFDays').click(function (e) {
+
+        e.preventDefault();
+
+        var training_id = btoa($('#training_id').val());
+        var selected_date = btoa($('#selected_date').val());
+
+        var url = "generateAttendancePDFActivity.php?training_id=" + training_id + "&date=" + selected_date;
+
+        window.open(url, "_blank");
+
+    });
 
     // VIEW ATTENDANCE SUMMARY BUTTON
     $('#viewAttendanceSum').click(function (e) {
@@ -79,7 +85,6 @@ $(function () {
 
         var training_id = btoa($('#training_id').val());
         var selected_date = btoa($('#selected_date').val())
-
         var url = "viewActualAttendance.php?training_id=" + training_id + "&date=" + selected_date;
 
         window.open(url, "_blank");
@@ -147,11 +152,10 @@ $(function () {
 
     var urlView = $('#url_view').val();
 
-    if (urlView === "Add Attendance") {
+    if (urlView === "Attendance") {
         var csrfToken = $('#csrf_token').val();
         $('#qrInput').autocomplete({
             source: function (request, response) {
-
                 $.ajax({
                     url: SITE_URL + '/modules/trainings/modules/action.php',
                     type: 'POST',
@@ -165,38 +169,26 @@ $(function () {
                         response(data);
                     }
                 });
-
             },
-
             minLength: 3,
-
             select: function (event, ui) {
                 $('#qrInput').val(ui.item.employee_id);
                 return false;
             }
-
-        });
-
+        });        
     }
-
 });
 
 function generateAttendancePDF(event) {
     event.preventDefault(); // stops page reload
-
     const activityId = 14; // or dynamic value
-
     const date = new Date().toISOString().split('T')[0];
-
     const url = `samplePDF.php?activity_id=${activityId}&date=${date}`;
-
     window.open(url, '_blank');
 }
 
-
 function showDeleteAttendance(trainingID) {
     $('#AttendanceT_id_hidden').val(trainingID);
-
     $('#deleteAttendanceModal').modal('show');
 }
 
@@ -218,7 +210,11 @@ function deleteAttendanceTraining() {
             });
             $('#deleteAttendanceModal').modal('hide');
             $('#AttendanceT_id_hidden').val('');
-            alert('Attendance successfully removed!');
+
+            $('#modalName').text('Employee Removed Successfully');
+            $('#modalQR').text('The employee has been removed from the attendance list. This action has been completed successfully.');
+
+            $('#attendanceModal').modal('show');
         },
         error: function () {
             alert('Error: Could not connect to the server.');
@@ -226,10 +222,8 @@ function deleteAttendanceTraining() {
     });
 }
 
-
 //activity add function
-function saveAttendance(employee_id) {
-
+function saveAttendance(employee_id, status) {
     var activeDate = $('#attendanceTabs .nav-link.active').data('date');
     var trainingId = $('#training_id').val();
     var csrfToken = $('#csrf_token').val();
@@ -243,6 +237,7 @@ function saveAttendance(employee_id) {
             training_id: trainingId,
             employee_id: employee_id,
             date_in: activeDate,
+            status: status,
             csrf_token: csrfToken,
         },
         success: function (res) {
@@ -262,9 +257,8 @@ function saveAttendance(employee_id) {
                 $('#attendanceModal').on('hidden.bs.modal', function () {
                     location.reload();
                 });
-
             } else {
-                $('#modalName').text("Opps!");
+                $('#modalName').text("Oops!");
                 $('#modalQR').text('Employee Already attended this training.');
 
                 $('#attendanceModal').modal('show');
@@ -272,10 +266,8 @@ function saveAttendance(employee_id) {
         },
 
         error: function (xhr) {
-
             $('#modalName').text("Sorry! Unable to Record Attendance");
             $('#modalQR').text(xhr.responseText);
-
             $('#attendanceModal').modal('show');
         }
     });
@@ -283,15 +275,12 @@ function saveAttendance(employee_id) {
 
 //When Using Barcode Scanner
 $('#qrInput').keypress(function (e) {
+    var status = 1;// status is 1 as actual attendance
     if (e.which == 13) { // Enter key
         e.preventDefault();
-        saveAttendance($(this).val().trim());
+        saveAttendance($(this).val().trim(), status);
     }
 });
-
-//When Search using Name
-
-
 
 function showAttendanceModal(type, title, name, qr, message = "") {
 
@@ -299,7 +288,6 @@ function showAttendanceModal(type, title, name, qr, message = "") {
     $('#modalName').text(name);
     $('#modalQR').text(qr);
 
-    // optional extra message (for errors)
     if (message !== "") {
         $('#modalMessage').text(message).show();
     } else {
@@ -307,31 +295,82 @@ function showAttendanceModal(type, title, name, qr, message = "") {
     }
 
     $('#attendanceModal')
-            .removeClass('modal-success modal-error modal-warning')
-            .addClass('modal-' + type)
-            .modal('show');
+        .removeClass('modal-success modal-error modal-warning')
+        .addClass('modal-' + type)
+        .modal('show');
 }
 
 $('#addAttendanceBtn').click(function () {
 
+    $('#processParticipantBtn').remove();
+    var status = 1;// status is 1 as actual attendance
     var qrCode = $('#qrInput').val().trim();
 
     if (qrCode === '') {
         $('#qrInput').focus();
 
-        $('#modalName').text("Opps! Please scan the barcode or search employee name.");
+        $('#modalName').text("Oops! Please scan the barcode or search employee name.");
 
         $('#attendanceModal').modal('show');
         return; // stop execution
-
     }
 
-    saveAttendance(qrCode);
+    saveAttendance(qrCode, status);
 });
 
+$('#showAddModalInfo').click(function () {
+    var qrCode = $('#qrInput').val().trim();
+
+    if (qrCode === '') {
+
+        $('#qrInput').focus();
+
+        $('#modalName').text('No Employee Selected');
+
+        $('#modalQR').html(`
+            Please search and select an employee before proceeding.
+        `);
+
+        $('#attendanceModal').modal('show');
+        return;
+    }
+
+    $('#modalName').text('Include Participant?');
+
+    $('#modalQR').html(`
+        This employee will be <strong>included in the official participant list</strong> and will appear in the
+        <strong>printed attendance sheet</strong>.<br><br>
+
+        <span class="text-danger">
+            <i class="fas fa-exclamation-triangle"></i>
+            This employee <strong>will not receive a Certificate of Appearance (COA)</strong> or
+            <strong>Certificate of Participation (COP)</strong> unless marked as <strong>Attended</strong>.
+        </span><br><br>
+
+        Do you want to continue?
+    `);
+
+    // Remove existing button if already appended
+    $('#processParticipantBtn').remove();
+
+    // Append confirmation button
+    $('.modal-footer').prepend(`
+        <button id="processParticipantBtn" class="btn btn-warning" onclick="processParticipantBtn()">
+            <i class="fas fa-user-plus"></i> Include Participant
+        </button>
+    `);
+
+    $('#attendanceModal').modal('show');
+});
+
+function processParticipantBtn() {
+    var qrCode = $('#qrInput').val().trim();
+    var status = 0;// status is partial attendance
+
+    saveAttendance(qrCode, status);
+}
 
 function sendBulkEmail() {
-
     let training_id = $("#training_id").val();
 
     // Validate Training ID
@@ -344,56 +383,41 @@ function sendBulkEmail() {
     $(".btnSendEmail").prop("disabled", true);
 
     $.post(
-            "queue_emails.php",
-            {
-                training_id: training_id
-            },
-            function (res) {
+        "queue_emails.php",
+        {
+            training_id: training_id
+        },
+        function (res) {
+            try {
+                let data = JSON.parse(res);
+                if (data.status === "success") {
+                    // Open progress window
+                    window.open(
+                        "progressemail.php?training_id=" + training_id,
+                        "_blank"
+                    );
 
-                try {
-
-                    let data = JSON.parse(res);
-
-                    if (data.status === "success") {
-
-                        // Open progress window
-                        window.open(
-                                "progressemail.php?training_id=" + training_id,
-                                "_blank"
-                                );
-
-                        // Start email worker (for XAMPP development)
-                        startWorker(training_id);
-
-                    } else {
-
-                        alert(data.message);
-
-                        // Re-enable button if queueing failed
-                        $(".btnSendEmail").prop("disabled", false);
-                    }
-
-                } catch (e) {
-
-                    console.log("Invalid JSON Response:");
-                    console.log(res);
-
-                    alert("Server returned an invalid response.");
-
-                    // Re-enable button on error
+                    // Start email worker (for XAMPP development)
+                    startWorker(training_id);
+                } else {
+                    alert(data.message);
+                    // Re-enable button if queueing failed
                     $(".btnSendEmail").prop("disabled", false);
                 }
+            } catch (e) {
+                console.log("Invalid JSON Response:");
+                console.log(res);
+                alert("Server returned an invalid response.");
+                // Re-enable button on error
+                $(".btnSendEmail").prop("disabled", false);
             }
+        }
     ).fail(function () {
-
         alert("Unable to connect to server.");
-
         // Re-enable button if AJAX fails
         $(".btnSendEmail").prop("disabled", false);
     });
-
 }
-
 
 function sendEmailSubmit(btn) {
 
@@ -404,7 +428,10 @@ function sendEmailSubmit(btn) {
     let email = btn.data("email");
     let trainingID = btn.data("training-id");
 
-    btn.prop("disabled", true).text("SENDING...");
+    // Disable ALL email buttons
+    $('.btn-send-email').prop("disabled", true);
+
+    btn.text("SENDING...");
 
     $.ajax({
         url: SITE_URL + '/modules/trainings/modules/sendEmail.php',
@@ -414,28 +441,43 @@ function sendEmailSubmit(btn) {
             attendance_id: attendanceId,
             email: email,
             trainingID: trainingID,
-            employeeID: employeeID,
-
+            employeeID: employeeID
         },
-        success: function (response) {
 
+        success: function (response) {
             if (response.status === "success") {
-                btn.text("DONE");
-                btn.removeClass("btn-success")
-                        .addClass("btn-secondary");
-                btn.prop("disabled", true);
+
+                btn.text("DONE")
+                    .removeClass("btn-success")
+                    .addClass("btn-secondary");
+
                 toastr.success("Email Successfully Sent.");
+
             } else {
+
                 btn.prop("disabled", false)
-                        .text("SEND");
-                alert(response.message);
+                    .text("SEND");
+
+                toastr.error(response.message);
+
             }
+
+            // Enable all except completed buttons
+            $('.btn-send-email').not('.btn-secondary').prop("disabled", false);
+
         },
 
         error: function () {
-            btn.prop("disabled", false).text("SEND");
-            alert("Server error");
+
+            btn.prop("disabled", false)
+                .text("SEND");
+
+            $('.btn-send-email').not('.btn-secondary').prop("disabled", false);
+
+            toastr.error("Server Error.");
+
         }
+
     });
+
 }
- 

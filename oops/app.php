@@ -10,6 +10,9 @@ switch ($code) {
     case '403':
         $file = '403';
         $error = 'Access Denied';
+        if (isset($_GET['reason']) && $_GET['reason'] === 'csrf') {
+            $csrfError = 'Security Token Validation Failed. Your session may have timed out due to inactivity, or the request token was invalid. Please return to the form and try again.';
+        }
         break;
     case '404':
         $file = '404';

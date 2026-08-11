@@ -14,33 +14,62 @@ if ($mysqli->connect_error) {
 $employees = [];
 
 if (!empty($_GET['search'])) {
+    $rawSearch = trim($_GET['search']);
+    // Split input into words (ignores extra spaces)
+    $terms = preg_split('/\s+/', $rawSearch);
 
-    $search = '%' . trim($_GET['search']) . '%';
+    $whereClauses = ["status = 'Active'"];
+    $params = [];
+    $types = '';
 
-    $sql = "
-        SELECT
-            id,
-            first_name,
-            middle_name,
-            last_name
-        FROM employees
-        WHERE
-            (first_name LIKE ?
-            OR middle_name LIKE ?
-            OR last_name LIKE ?
-            OR CONCAT(first_name, ' ', middle_name, ' ', last_name) LIKE ? OR CONCAT(first_name, ' ', last_name) LIKE ?) AND status='Active'
-        ORDER BY last_name ASC, first_name ASC
-        LIMIT 10
-    ";
+    foreach ($terms as $term) {
+        // Strip out trailing commas or periods from user input (e.g., "Dela Cruz," -> "Dela Cruz")
+        $cleanTerm = trim($term, ',.');
+        if ($cleanTerm === '')
+            continue;
 
-    $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("sssss", $search, $search, $search, $search, $search);
-    $stmt->execute();
+        $wildcard = '%' . $cleanTerm . '%';
 
-    $result = $stmt->get_result();
+        // Each word must match at least ONE of the name fields
+        $whereClauses[] = "(first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ? OR name_extension LIKE ?)";
 
-    while ($row = $result->fetch_assoc()) {
-        $employees[] = $row;
+        // Push parameter 4 times per word
+        array_push($params, $wildcard, $wildcard, $wildcard, $wildcard);
+        $types .= 'ssss';
+    }
+
+    if (count($params) > 0) {
+        $sql = "
+            SELECT
+                id,
+                CONCAT(
+                    first_name, ' ',
+                    IF(
+                        middle_name IS NOT NULL AND middle_name != '',
+                        CONCAT(' ', LEFT(middle_name, 1), '. '),
+                        ''
+                    ),
+                    UPPER(last_name), ' ',
+                    IF(
+                        name_extension IS NOT NULL AND name_extension != '',
+                        CONCAT(' ', name_extension),
+                        ''
+                    )
+                ) AS name
+            FROM employees
+            WHERE " . implode(" AND ", $whereClauses) . "
+            ORDER BY last_name ASC, first_name ASC
+            LIMIT 10
+        ";
+
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $employees[] = $row;
+        }
     }
 }
 
@@ -54,9 +83,20 @@ if (!empty($_GET['employee_id'])) {
     $sql = "
         SELECT
             id,
-            first_name,
-            middle_name,
-            last_name
+            CONCAT(
+                first_name, ' ',
+                IF(
+                    middle_name IS NOT NULL AND middle_name != '',
+                    CONCAT(' ', LEFT(middle_name, 1), '. '),
+                    ''
+                ),
+                UPPER(last_name), ' ',
+                IF(
+                    name_extension IS NOT NULL AND name_extension != '',
+                    CONCAT(' ', name_extension),
+                    ''
+                )
+            ) AS name
         FROM employees
         WHERE id = ?
         LIMIT 1
@@ -92,6 +132,8 @@ if (!empty($_GET['employee_id'])) {
             position: relative;
             min-height: 100vh;
             background: #f4f6f9;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Background Image Layer */
@@ -115,6 +157,8 @@ if (!empty($_GET['employee_id'])) {
         .container {
             max-width: 500px;
             margin: auto;
+            width: 100%;
+            flex: 1;
         }
 
         .card {
@@ -260,56 +304,30 @@ if (!empty($_GET['employee_id'])) {
 
         <!-- RESULTS -->
         <?php if (!empty($employees)): ?>
-
             <div class="card">
-
                 <h3>Search Results</h3>
 
                 <?php foreach ($employees as $employee): ?>
-
                     <a class="employee-item"
                         href="?search=<?= urlencode($_GET['search'] ?? '') ?>&employee_id=<?= $employee['id'] ?>">
-
                         <div class="employee-name">
-                            <?=
-                                htmlspecialchars(trim(
-                                    $employee['first_name'] . ' ' .
-                                    $employee['middle_name'] . ' ' .
-                                    $employee['last_name']
-                                ))
-                                ?>
+                            <?= strtoupper(htmlspecialchars(trim($employee['name']))) ?>
                         </div>
-
                     </a>
-
                 <?php endforeach; ?>
-
             </div>
-
         <?php endif; ?>
 
         <!-- BARCODE -->
         <?php if ($selectedEmployee): ?>
-
             <div class="card barcode-card" id="barcodeCard">
-
                 <div class="employee-header">
-                    <h2>
-                        <?=
-                            htmlspecialchars(trim(
-                                $selectedEmployee['first_name'] . ' ' .
-                                $selectedEmployee['middle_name'] . ' ' .
-                                $selectedEmployee['last_name']
-                            ))
-                            ?>
-                    </h2>
+                    <h2><?= strtoupper(htmlspecialchars(trim($selectedEmployee['name']))) ?></h2>
 
                     <p>Employee Barcode</p>
                 </div>
 
                 <svg id="barcode"></svg>
-
-
             </div>
 
             <button class="btn btn-success" onclick="downloadBarcode()">
@@ -349,12 +367,13 @@ if (!empty($_GET['employee_id'])) {
 
     </div>
 
+    <footer class="app-footer">
+        <p style="margin:0;">
+            Copyright © Department of Education<br>
+            Schools Division of Dipolog City <?= date('Y') ?>
+        </p>
+    </footer>
+
 </body>
-<footer class="app-footer">
-    <p style="margin:0;">
-        Copyright © Department of Education<br>
-        Schools Division of Dipolog City <?= date('Y') ?>
-    </p>
-</footer>
 
 </html>

@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/../assets/vendor/dompdf/autoload.inc.php';
 require_once('../includes/config.php');
 
@@ -45,9 +44,7 @@ $trainingQuery = "
 $stmtTraining = $mysqli->prepare($trainingQuery);
 $stmtTraining->bind_param("s", $training_id);
 $stmtTraining->execute();
-
 $trainingResult = $stmtTraining->get_result()->fetch_assoc();
-
 $training_title = $trainingResult['title'] ?? 'N/A';
 $training_venue = $trainingResult['venue'] ?? 'N/A';
 
@@ -57,58 +54,48 @@ $query = "
         ta.employee_id,
         ta.time_in,
         ta.date_in,
-
         CONCAT(
             UPPER(e.last_name), ', ',
-            e.first_name, ' ',
+            e.first_name,
             IF(
-                e.middle_name IS NOT NULL 
-                AND e.middle_name != '',
-                CONCAT(LEFT(e.middle_name,1), '.'),
+                e.name_extension IS NOT NULL AND e.name_extension != '',
+                CONCAT(' ', e.name_extension),
+                ''
+            ),
+            IF(
+                e.middle_name IS NOT NULL AND e.middle_name != '',
+                CONCAT(' ', LEFT(e.middle_name, 1), '.'),
                 ''
             )
         ) AS name,
-
         e.sex,
         e.email_address,
         e.mobile_number,
         e.prc,
         e.tin,
         e.agency_id,
-
         p.official_title,
         p.id as abbreviation
-
     FROM training_attendees ta
-
     JOIN employees e 
         ON ta.employee_id = e.id
-
     LEFT JOIN station_assignments sa 
         ON sa.employee_id = e.id
-
     LEFT JOIN positions p 
         ON p.id = sa.position_id
-
     WHERE ta.training_id = ?
       AND ta.date_in = ?
-
     ORDER BY e.last_name ASC
 ";
 
 $stmt = $mysqli->prepare($query);
-
 $stmt->bind_param("ss", $training_id, $date);
-
 $stmt->execute();
-
 $result = $stmt->get_result();
 
 // PDF HTML
 $html = '
-
 <style>
-
 body {
     font-family: "Bookman Old Style", Bookman;
     font-size: 12px;
@@ -199,7 +186,6 @@ tbody td {
 .center {
     text-align: center;
 }
-
 </style>
 
 <div class="header" style="margin-top:-30px !important;">
@@ -211,36 +197,26 @@ tbody td {
 </div>
 
 <div class="content">
-
     <div class="meta">
-
         <a>Title of Training:</a> 
         <span class="training-title">
             <b>' . htmlspecialchars($training_title) . '</b>
         </span>
         <br>
-
         <a>Venue:</a> 
         <b>' . htmlspecialchars($training_venue) . '</b>
         <br>
-
         <a>Date:</a> 
         <b>' . date("F d, Y", strtotime($date)) . '</b>
-
     </div>
-
     <h1 style="text-align:center;">
         ATTENDANCE SHEET
     </h1>
-
-   <div class="privacy"> <i><b><u>Data Privacy Notice:</u></b> The Department of Education complies with the Data Privacy Act of 2012 and is committed in protecting your privacy. During this activity, we will collect personal information for the purpose of documentation and verification of attendance. Information collected as well as pictures taken during the activity will be stored for as long as necessary, but they will not be shared with any third parties without your consent or any legal basis. By signing this attendance sheet, you are consenting to the collection, use, and retention of your personal information.</i> </div>
-
+   <div class="privacy"> <i><b><u>Data Privacy Notice:</u></b> The Department of Education complies with the Data Privacy Act of 2012 and is committed in protecting your privacy. During this activity, we will collect personal information for the purpose of documentation and verification of attendance. Information collected as well as pictures taken during the activity will be stored for as long as necessary, but they will not be shared with any third parties without your consent or any legal basis. By signing this attendance sheet, you are consenting to the collection, use, and retention of your personal information.</i></div>
     <br>
 
     <table>
-
         <thead>
-
             <tr>
                 <th rowspan="2" width="5%">NO.</th>
                 <th rowspan="2" width="20%">NAME</th>
@@ -267,7 +243,7 @@ tbody td {
                     TIN NO.
                 </th>
                 <th rowspan="2" width="15%">
-                    SCHOOL ID
+                    EMPLOYEE ID
                 </th>
             </tr>
 
@@ -275,112 +251,76 @@ tbody td {
                 <th>AM</th>
                 <th>PM</th>
             </tr>
-
         </thead>
 
         <tbody>
-
 ';
 
 $counter = 1;
 
 if ($result->num_rows > 0) {
-
     while ($row = $result->fetch_assoc()) {
-
         $time_in = !empty($row['time_in']) ? date("h:i", strtotime($row['time_in'])) : '-';
-
         $html .= '
 
         <tr>
-
             <td class="center">
                 ' . $counter++ . '
             </td>
-
             <td>
                 ' . htmlspecialchars(strtoupper($row['name'])) . '
             </td>
-
             <td class="center">
                 ' . htmlspecialchars($row['sex'] ?? '') . '
             </td>
-
             <td>
                 ' . htmlspecialchars(strtoupper($row['abbreviation'] ?? '')) . '
             </td>
-
             <td>
                 ' . htmlspecialchars($row['email_address'] ?? '') . '
             </td>
-
             <td class="center">
                 ' . htmlspecialchars($row['mobile_number'] ?? '') . '
             </td>
-
             <td class="center">
                 ' . $time_in . '
             </td>
-
             <td class="center">5:00</td>
-
             <td></td>
-
             <td>
                 ' . htmlspecialchars($row['prc'] ?? '') . '
             </td>
-
             <td>
                 ' . htmlspecialchars($row['tin'] ?? '') . '
             </td>
-
             <td>
                 ' . htmlspecialchars($row['agency_id'] ?? '') . '
             </td>
-
-        </tr>
-
-        ';
+        </tr>';
     }
 } else {
-
     $html .= '
-
     <tr>
-
         <td colspan="12" class="center">
             No attendance records found.
         </td>
-
-    </tr>
-
-    ';
+    </tr>';
 }
 
 $html .= '
-
         </tbody>
-
     </table>
-
-</div>
-
-';
+</div>';
 
 // GENERATE PDF
 $dompdf = new Dompdf();
-
 $dompdf->set_option('isRemoteEnabled', true);
-
 $dompdf->setPaper('folio', 'landscape');
-
 $dompdf->loadHtml($html);
-
 $dompdf->render();
 
 // PAGE NUMBER
 $canvas = $dompdf->getCanvas();
-
 $font = $dompdf->getFontMetrics()->get_font("Helvetica", "normal");
 
 $canvas->page_text(
@@ -396,4 +336,3 @@ $dompdf->stream(
     "attendance_report_" . date("Ymd", strtotime($date)) . ".pdf",
     ["Attachment" => false]
 );
-?>

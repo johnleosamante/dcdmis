@@ -89,9 +89,11 @@ function trainingParticipants($training_id, $employee_id = null)
                 p.`sex`, p.`birthdate`, p.`agency_id`, s.`position_id`, 
                 s.`station_id`, p.`profile_picture`, p.`email_address`, p.`status` 
             FROM `employees` AS p
-            INNER JOIN `station_assignments` AS s ON p.`id` = s.`employee_id` 
             INNER JOIN `training_attendees` AS tp ON p.`id` = tp.`employee_id` 
-            WHERE tp.`training_id` = ? {$filter} ORDER BY p.`last_name` ASC";
+            LEFT JOIN `station_assignments` AS s ON p.`id` = s.`employee_id` 
+            WHERE tp.`training_id` = ? {$filter} 
+            GROUP BY p.`id` 
+            ORDER BY p.`last_name` ASC, p.`first_name` ASC";
     $results = query($sql, $params);
     return is_array($results) ? $results : [];
 }

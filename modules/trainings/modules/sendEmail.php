@@ -1,11 +1,10 @@
 <?php
-
 session_start();
 require_once('../../../includes/config.php');
 
 header('Content-Type: application/json');
 
-$mysqli = new mysqli(HOSTNAME, USER, '', DATABASE);
+$mysqli = new mysqli(HOSTNAME, USER, PASSWORD, DATABASE);
 
 if ($mysqli->connect_error) {
     echo json_encode([
@@ -61,34 +60,18 @@ $stmt = $mysqli->prepare("
     WHERE id = ?
 ");
 
-$stmt->bind_param("i", $trainingID);
+$stmt->bind_param("s", $trainingID);
 $stmt->execute();
 $training = $stmt->get_result()->fetch_assoc();
-
 $title = $training['title'] ?? 'Training';
-
 
 $certificate = 'https://depeddipolog.com/print/?&v=' . urlencode(base64_encode("Certificate of Participation")) . '&id=' . urlencode(base64_encode($trainingID)) . '&p=' . urlencode(base64_encode($employeeID));
-
 $appearance = 'https://depeddipolog.com/print/?&v=' . urlencode(base64_encode("Certificate of Appearance")) . '&id=' . urlencode(base64_encode($trainingID)) . '&p=' . urlencode(base64_encode($employeeID));
-
-$stmt = $mysqli->prepare("
-    SELECT title
-    FROM trainings
-    WHERE id = ?
-");
-
-$stmt->bind_param("i", $trainingID);
-$stmt->execute();
-$training = $stmt->get_result()->fetch_assoc();
-
-$title = $training['title'] ?? 'Training';
 
 // SEND EMAIL
 $mail = new PHPMailer(true);
 
 try {
-
     $mail->isSMTP();
     $mail->Host = SMTP_HOST;
     $mail->SMTPAuth = true;
@@ -97,20 +80,31 @@ try {
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = SMTP_PORT;
 
-    $mail->setFrom('yvicronill@gmail.com', 'DepEd System');
+    $mail->setFrom(SITE_AUTHOR_EMAIL, SITE_AUTHOR);
+    $email = PRODUCTION_MODE ? $email : DEVELOPER_EMAIL;
     $mail->addAddress($email);
 
     $mail->isHTML(false);
-    $mail->Subject = 'Training Attendance Report';
+    $mail->Subject = $title;
 
-    $mail->Body = "Good day $employeeName!\n\n
-Congratulations you have successfully completed $title\n
-Get your certificates by clicking the links below.\n\n
-Certificate of Appearance: $appearance\n\n
-Certificate of Participation: $certificate\n\n
-If nothing happens when you click the link, copy the links above and paste to your web browser instead.\n\n
-You can also go to the DepEd Dipolog City Division Training Repository ($repositoryUrl) to view your trainings. Thank you.\n\n\n
-***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****";
+    $mail->Body = <<<EOT
+Hello, {$employeeName}
+
+Congratulations you have successfully completed {$title}
+
+Get your certificates by clicking the links below.
+
+Certificate of Appearance: {$appearance}
+Certificate of Participation: {$certificate}
+
+If nothing happens when you click the link, copy the links above and paste to your web browser search bar instead.
+
+You can also go to the DepEd Dipolog City Division Training Repository ($repositoryUrl) to view your trainings.
+
+Thank you.
+
+***** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY. *****
+EOT;
 
     $mail->send();
 
@@ -129,7 +123,6 @@ You can also go to the DepEd Dipolog City Division Training Repository ($reposit
         "message" => "Email sent successfully"
     ]);
 } catch (Exception $e) {
-
     echo json_encode([
         "status" => "error",
         "message" => $mail->ErrorInfo

@@ -43,7 +43,7 @@ function decode($string)
 
 function root()
 {
-    return $_SERVER['DOCUMENT_ROOT'];
+    return !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__);
 }
 
 function uri($domain = null)
@@ -158,7 +158,8 @@ function getDateDifference($date)
 
 function e($string)
 {
-    return htmlspecialchars((string) $string, ENT_QUOTES, 'UTF-8');
+    $string = (string) $string;
+    return str_replace(['<', '>'], ['&lt;', '&gt;'], $string);
 }
 
 function csrf_token()
@@ -181,27 +182,30 @@ function csrf_field()
 function verify_csrf_token()
 {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
+        $submittedToken = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+        $sessionToken = $_SESSION['csrf_token'] ?? '';
+
+        if (empty($submittedToken) || !hash_equals($sessionToken, $submittedToken)) {
             header('HTTP/1.1 403 Forbidden');
-            die('CSRF token validation failed.');
+
+            $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false);
+
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'CSRF_EXPIRED',
+                    'message' => 'CSRF token validation failed or session expired. Please try again.',
+                    'csrf_token' => csrf_token()
+                ]);
+                exit();
+            } else {
+                header('Location: ' . uri() . '/oops?e=403&reason=csrf');
+                exit();
+            }
         }
     }
-}
-
-function validateFileMimeType(string $filePath, array $allowedMimes): bool
-{
-    if (!file_exists($filePath)) {
-        return false;
-    }
-
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
-    $mimeType = $finfo->file($filePath);
-
-    if ($mimeType === false) {
-        return false;
-    }
-
-    return in_array($mimeType, $allowedMimes, true);
 }
 
 function getFileExtension(string $filename): string
@@ -209,24 +213,9 @@ function getFileExtension(string $filename): string
     return strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 }
 
-function validateFileExtension(string $filename, array $allowedExtensions): bool
-{
-    $ext = getFileExtension($filename);
-    return in_array($ext, $allowedExtensions, true);
-}
-
-function sanitizeFilename(string $filename): string
-{
-    $filename = basename($filename);
-    $filename = str_replace("\0", '', $filename);
-    $filename = preg_replace('/[^a-zA-Z0-9._-]/', '', $filename);
-    $filename = preg_replace('/\.{2,}/', '.', $filename);
-    return $filename;
-}
-
 function uploadMaxBytes()
 {
-    $val = trim(ini_get('upload_max_filesize'));
+    $val = trim(defined('UPLOAD_MAX_FILESIZE') ? UPLOAD_MAX_FILESIZE : ini_get('upload_max_filesize'));
     $last = strtolower($val[strlen($val) - 1]);
     $val = (int) $val;
     switch ($last) {
@@ -263,7 +252,8 @@ function stageUploadedFile(array $file_data, array $allowed_MIME_map, string $ta
     }
 
     if ($file_data['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-        throw new Exception("The chosen file size exceeds the strict system limit configuration.");
+        $limitStr = defined('UPLOAD_MAX_FILESIZE') ? UPLOAD_MAX_FILESIZE . 'B' : 'the system limit';
+        throw new Exception("The chosen file size exceeds the maximum allowed upload limit of {$limitStr}.");
     }
 
     try {

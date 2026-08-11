@@ -9,12 +9,12 @@
             <table width="100%" class="table table-hover mb-0 text-center">
                 <thead>
                     <tr>
-                        <th class="align-middle" width="45%">Title of Learning &amp; Development Interventions /
+                        <th class="align-middle" width="45%">Title of Learning and Development Interventions /
                             Training Programs</th>
                         <th class="align-middle" width="5%">From</th>
                         <th class="align-middle" width="5%">To</th>
                         <th class="align-middle" width="5%">Number of Hours</th>
-                        <th class="align-middle" width="10%">Type of Learning &amp; Development</th>
+                        <th class="align-middle" width="10%">Type of Learning and Development</th>
                         <th class="align-middle" width="30%">Conducted / Sponsored by</th>
                     </tr>
                 </thead>
@@ -43,12 +43,12 @@
 
                 <tfoot>
                     <tr>
-                        <th class="align-middle" width="45%">Title of Learning &amp; Development Interventions /
+                        <th class="align-middle" width="45%">Title of Learning and Development Interventions /
                             Training Programs</th>
                         <th class="align-middle" width="5%">From</th>
                         <th class="align-middle" width="5%">To</th>
                         <th class="align-middle" width="5%">Number of Hours</th>
-                        <th class="align-middle" width="10%">Type of Learning &amp; Development</th>
+                        <th class="align-middle" width="10%">Type of Learning and Development</th>
                         <th class="align-middle" width="30%">Conducted / Sponsored by</th>
                     </tr>
                 </tfoot>
