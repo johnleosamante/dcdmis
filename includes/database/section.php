@@ -54,11 +54,6 @@ function employeeSection($employee_id)
     return find($sql, [$employee_id]);
 }
 
-function sectionsExcept($section_id)
-{
-    return query("SELECT * FROM `sections` WHERE `id` <> ? ORDER BY `name` ASC", [$section_id]);
-}
-
 // employees, user_permissions, sections
 function sectionEmployeeCount($id)
 {
