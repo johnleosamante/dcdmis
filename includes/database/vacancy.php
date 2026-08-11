@@ -57,14 +57,6 @@ function vacantItem($plantilla_item_id)
     return $result > 0;
 }
 
-function publicationCodes($vacancy_id)
-{
-    $sql = "SELECT vp.`code` FROM `vacancy_publication_items` AS vpi 
-            INNER JOIN `vacancy_publications` AS vp ON vpi.`publication_id` = vp.`id` 
-            WHERE `vpi`.`vacancy_id` = ?;";
-    return query($sql, [$vacancy_id]);
-}
-
 // vacancies
 function deleteVacancy($vacancy_id)
 {
@@ -286,14 +278,6 @@ function applicantsForReviewByPublication($publicationId)
             ORDER BY va.created_at DESC";
 
     return query($sql, [$publicationId]);
-}
-
-function applicationsByVacancy($vacancyId)
-{
-    $sql = "SELECT * FROM `vacancy_applications` 
-            WHERE `vacancy_id` = ? 
-            ORDER BY `submitted_on` DESC";
-    return query($sql, [$vacancyId]);
 }
 
 function countApplicationsByPublication($publicationId)
@@ -908,16 +892,6 @@ function getApplicantDemographicGroup($row, $exportId)
         default:
             return 'Other';
     }
-}
-
-function countExternalApplicants()
-{
-    $sql = "SELECT COUNT(a.`id`) AS `total`
-            FROM `applicants` AS a
-            LEFT JOIN `employees` AS e ON a.`id` = e.`id`
-            WHERE e.`id` IS NULL";
-    $res = find($sql);
-    return $res ? (int) $res['total'] : 0;
 }
 
 function externalApplicantsList()
