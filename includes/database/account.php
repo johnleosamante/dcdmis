@@ -2,15 +2,24 @@
 // employees
 function account($email_address)
 {
-    return find(
-        "SELECT e.`id`, e.`email_address`, c.`status` FROM `employees` AS e
+    $regular = find(
+        "SELECT e.`id`, e.`email_address`, c.`status`, 'regular' AS `emp_category` FROM `employees` AS e
         INNER JOIN `credentials` AS c ON c.`employee_id` = e.`id`
         WHERE e.`status`='Active' AND e.`email_address` = ? LIMIT 1",
         [$email_address]
     );
+    if ($regular) {
+        return $regular;
+    }
+    return find(
+        "SELECT n.`id`, n.`email_address`, c.`status`, n.`employment_type` AS `emp_category` FROM `non_regular_employees` AS n
+        INNER JOIN `credentials` AS c ON c.`employee_id` = n.`id`
+        WHERE n.`status` = 'Active' AND n.`is_active` = 1 AND (n.`end_date` IS NULL OR n.`end_date` >= CURDATE()) AND n.`email_address` = ? LIMIT 1",
+        [$email_address]
+    );
 }
 
-function verifyAccountPassword(int $employee_id, string $plainPassword): array|bool
+function verifyAccountPassword(int|string $employee_id, string $plainPassword): array|bool
 {
     $credentials = find(
         "SELECT `employee_id`, `password`, `status` FROM `credentials` 

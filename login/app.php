@@ -64,8 +64,8 @@ if (isset($_POST['login'])) {
         return;
     }
 
-    if (!isValidEmail($email, 'deped.gov.ph')) {
-        $message = 'Please use your DepEd Email Address.';
+    if (!isValidEmail($email)) {
+        $message = 'Please enter a valid email address.';
         return;
     }
 

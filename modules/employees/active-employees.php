@@ -40,6 +40,8 @@ messageAlert($showAlert, $message, $success);
     <?php if ($isHrmis): ?>
         <div class="d-inline-block">
             <?php modalButtonSplit(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus') ?>
+            <?php modalButtonSplit(uri() . '/modules/employees/save-non-regular-employee-dialog.php', 'Add Non-Regular Employee', 'fa-id-badge', '', 'info') ?>
+            <?php linkButtonSplit(customUri($activeApp, 'Non-Regular Employees'), 'Non-Regular Staff', 'fa-users-cog', 'View Contract of Service, Job Order & Casual employees', 'secondary') ?>
         </div>
     <?php endif ?>
 </div>

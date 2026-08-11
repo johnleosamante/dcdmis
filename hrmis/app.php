@@ -94,6 +94,96 @@ if (isset($_POST['add-employee'])) {
     }
 }
 
+if (isset($_POST['add-non-regular-employee'])) {
+    $success = false;
+    $employeeId = generateID();
+    $employmentType = sanitize($_POST['employment_type']);
+    $lname = sanitize($_POST['lname']);
+    $fname = sanitize($_POST['fname']);
+    $mname = sanitize($_POST['mname']);
+    $ext = sanitize($_POST['ext']);
+    $sex = sanitize($_POST['sex']);
+    $bdate = sanitize($_POST['bdate']);
+    $ePositionId = sanitize($_POST['position']);
+    $eStationId = sanitize($_POST['station']);
+    $email = sanitize($_POST['email']);
+    $mobile = sanitize($_POST['mobile']);
+    $image = 'assets/img/user.png';
+    $status = sanitize($_POST['status']);
+    $isActive = ($status === 'Active') ? 1 : 0;
+    $startDate = !empty($_POST['start_date']) ? sanitize($_POST['start_date']) : null;
+    $endDate = !empty($_POST['end_date']) ? sanitize($_POST['end_date']) : null;
+    $crn = sanitize($_POST['gsis_id']);
+    $bp = sanitize($_POST['gsis_bp']);
+    $pagibig = sanitize($_POST['pagibig']);
+    $philhealth = sanitize($_POST['philhealth']);
+    $tin = sanitize($_POST['tin']);
+    $agencyId = sanitize($_POST['agency_id']);
+    $showAlert = true;
+    $employee = toName($lname, $fname, $mname, $ext, true);
+    $today = date('Y-m-d');
+
+    if (!isValidEmail($email)) {
+        $message = 'The Email Address you entered is invalid!';
+        return;
+    }
+
+    $name = employeeName($lname, $fname, $mname, $ext);
+
+    if ($name) {
+        $message = 'Employee [' . strtoupper($employee) . '] already exists!';
+        return;
+    }
+
+    beginTransaction();
+
+    try {
+        if (createNonRegularEmployee($employeeId, $employmentType, $lname, $fname, $mname, $ext, $sex, $bdate, $email, $mobile, $image, $status, $crn, $bp, $pagibig, $philhealth, $tin, $agencyId, $isActive, $startDate, $endDate) === false) {
+            throw new Exception('Failed to save non-regular employee information.');
+        }
+
+        if (createStation($today, $eStationId, $ePositionId, $employeeId) === false) {
+            throw new Exception('Failed to assign station.');
+        }
+
+        $posData = positions($ePositionId);
+        $posTitle = $posData ? $posData['official_title'] : 'Non-Regular Staff';
+        $stationInfo = schoolById($eStationId);
+        $stationName = $stationInfo['name'] ?? '';
+
+        createExperience(
+            $startDate ?: $today,
+            $endDate,
+            $isActive ? '1' : '0',
+            $posTitle,
+            null,
+            $employmentType,
+            '1',
+            null,
+            null,
+            $stationName,
+            null,
+            '0',
+            null,
+            null,
+            $employeeId
+        );
+
+        if (createAccount($employeeId, hashPassword(generateStrongRandomPassword())) === false) {
+            throw new Exception('Failed to create user account.');
+        }
+
+        createSystemLog($stationId, $userId, 'Registered ' . $employmentType . ' employee', $employeeId, clientIp());
+        commit();
+
+        $message = $employmentType . ' employee [' . strtoupper($employee) . '] was saved successfully into non_regular_employees table.';
+        $success = true;
+    } catch (Exception $e) {
+        rollBack();
+        $message = $e->getMessage();
+    }
+}
+
 if (isset($_POST['update-personal-information'])) {
     $success = false;
     $employeeId = sanitize(decipher($_POST['verifier']));
@@ -1595,10 +1685,52 @@ if (isset($_POST['fill-vacancy'])) {
         $stationInfo = schoolById($stationId);
         $stationName = $stationInfo['name'] ?? '';
 
-        // 2. Check if selected applicant is already an employee or not
-        $isEmployee = employee($applicantId) !== false;
+        // 2. Check applicant category: regular employee, non-regular employee, or outside applicant
+        $isRegularEmployee = find("SELECT `id` FROM `employees` WHERE `id` = ? LIMIT 1", [$applicantId]) !== false;
+        $nonRegular = nonRegularEmployee($applicantId);
 
-        if (!$isEmployee) {
+        if ($nonRegular) {
+            // Non-regular employee (COS / JO / Casual) selected to fill plantilla item: Migrate data to employees table
+            $nonRegCols = query("DESCRIBE `non_regular_employees`");
+            $empCols = query("DESCRIBE `employees`");
+            if (!$nonRegCols || !$empCols) {
+                throw new Exception('Failed to retrieve database schema during non-regular employee migration.');
+            }
+
+            $nonRegColNames = array_column($nonRegCols, 'Field');
+            $empColNames = array_column($empCols, 'Field');
+            $commonCols = array_intersect($nonRegColNames, $empColNames);
+
+            $employeeData = [];
+            foreach ($commonCols as $col) {
+                if (!in_array($col, ['employment_type', 'created_at', 'updated_at'], true)) {
+                    $employeeData[$col] = $nonRegular[$col];
+                }
+            }
+            $employeeData['status'] = 'Active';
+
+            // Insert into employees table
+            $insertRes = insert('employees', $employeeData);
+            if ($insertRes === false) {
+                throw new Exception('Failed to migrate non-regular employee to employees table.');
+            }
+
+            // Remove from non_regular_employees table
+            if (delete('non_regular_employees', '`id` = ?', [$applicantId]) === false) {
+                throw new Exception('Failed to remove non-regular employee record.');
+            }
+
+            // Ensure family background, other information, and identification exist
+            if (!find("SELECT `id` FROM `family_backgrounds` WHERE `employee_id` = ? LIMIT 1", [$applicantId])) {
+                createFamily('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', $applicantId);
+            }
+            if (!find("SELECT `id` FROM `other_informations` WHERE `employee_id` = ? LIMIT 1", [$applicantId])) {
+                createOtherInformation(0, 0, null, 0, null, 0, null, null, 0, null, 0, null, 0, null, 0, null, 0, null, 0, null, 0, null, 0, null, $applicantId);
+            }
+            if (!find("SELECT `id` FROM `valid_ids` WHERE `employee_id` = ? LIMIT 1", [$applicantId])) {
+                createIdentification(null, '', '', $effectivityDate, $applicantId);
+            }
+        } elseif (!$isRegularEmployee) {
             // Fetch applicant details
             $applicant = find("SELECT * FROM `applicants` WHERE `id` = ? LIMIT 1", [$applicantId]);
             if (!$applicant) {
@@ -1656,7 +1788,7 @@ if (isset($_POST['fill-vacancy'])) {
                 throw new Exception('Failed to delete applicant record.');
             }
         } else {
-            // Already an employee: activate
+            // Already a regular employee: activate
             updateEmployeeStatus('Active', $applicantId);
         }
 

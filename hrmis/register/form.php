@@ -39,11 +39,9 @@
                 <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="is_current_employee"
                         name="is_current_employee" value="1" <?php echo (isset($form_data['is_current_employee']) && $form_data['is_current_employee']) ? 'checked' : ''; ?> onchange="toggleEmployeeFields()">
-                    <label class="custom-control-label font-weight-bold" for="is_current_employee">I am a current
-                        employee of the division</label>
+                    <label class="custom-control-label font-weight-bold" for="is_current_employee">I am an active employee of the division (Regular, COS, JO, Casual, or Substitute Teacher)</label>
                 </div>
-                <small class="pl-4 form-text text-muted">Check this if you're already employed with us to simplify
-                    registration</small>
+                <small class="form-text text-muted">Check this if you are an active employee with us to simplify registration without supplying additional information</small>
             </div>
 
             <div class="small">
