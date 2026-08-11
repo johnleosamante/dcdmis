@@ -87,7 +87,7 @@ if (!empty($_GET['employee_id'])) {
                 first_name, ' ',
                 IF(
                     middle_name IS NOT NULL AND middle_name != '',
-                    CONCAT(' ', LEFT(middle_name, 1), '.'),
+                    CONCAT(' ', LEFT(middle_name, 1), '. '),
                     ''
                 ),
                 UPPER(last_name), ' ',
