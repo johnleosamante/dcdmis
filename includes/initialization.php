@@ -10,7 +10,9 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
     ini_set('session.cookie_secure', 1);
 }
 
-session_start();
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
 
 if (!headers_sent()) {
     header('Content-Type: text/html; charset=utf-8');
@@ -26,6 +28,7 @@ if (!headers_sent()) {
 }
 
 date_default_timezone_set("Asia/Manila");
+
 if (!defined('UPLOAD_MAX_FILESIZE')) {
     define('UPLOAD_MAX_FILESIZE', '20M');
 }
@@ -34,18 +37,29 @@ ini_set('post_max_size', '25M');
 ini_set('memory_limit', '256M');
 ini_set('max_input_time', 300);
 ini_set('max_execution_time', 300);
-ini_set('display_errors', !PRODUCTION_MODE);
-if (!empty(ERROR_LOG_FILE)) {
+
+$displayErrors = (defined('PRODUCTION_MODE') && PRODUCTION_MODE) ? 0 : 1;
+ini_set('display_errors', $displayErrors);
+
+if (defined('ERROR_LOG_FILE') && !empty(ERROR_LOG_FILE)) {
     ini_set('error_log', ERROR_LOG_FILE);
 }
+
 ini_set('log_errors', 1);
+
 if (!defined('FILE_UPLOAD_SIZE_LIMIT')) {
-    define('FILE_UPLOAD_SIZE_LIMIT', uploadMaxBytes());
+    if (function_exists('uploadMaxBytes')) {
+        define('FILE_UPLOAD_SIZE_LIMIT', uploadMaxBytes());
+    } else {
+        $iniUpload = ini_get('upload_max_filesize') ?: UPLOAD_MAX_FILESIZE;
+        define('FILE_UPLOAD_SIZE_LIMIT', $iniUpload);
+    }
 }
 
 const HOME = 'pis';
 $prefix = alias() . '_';
 $baseUri = uri();
+$cookieDomain = parse_url($baseUri, PHP_URL_HOST) ?: ($_SERVER['HTTP_HOST'] ?? DOMAIN);
 $enableScripts = false;
 $showAlert = false;
 $message = null;
@@ -120,10 +134,10 @@ if (empty($userId) && isset($_COOKIE["{$prefix}remember_token"])) {
                     'expires_at' => $newExpiry
                 ], '`employee_id` = ? AND `token_hash` = ?', [$cookieEmployeeId, $tokenHash]);
 
-                setcookie("{$prefix}remember_token", $cookieEmployeeId . '|' . $newToken, [
+                setcookie("{$prefix}remember_token", "{$cookieEmployeeId}|{$newToken}", [
                     'expires' => time() + getSeconds(120),
                     'path' => '/',
-                    'domain' => parse_url(uri(), PHP_URL_HOST),
+                    'domain' => $cookieDomain,
                     'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
                     'httponly' => true,
                     'samesite' => 'Lax'
@@ -134,7 +148,7 @@ if (empty($userId) && isset($_COOKIE["{$prefix}remember_token"])) {
             setcookie("{$prefix}remember_token", '', [
                 'expires' => time() - 3600,
                 'path' => '/',
-                'domain' => parse_url(uri(), PHP_URL_HOST),
+                'domain' => $cookieDomain,
                 'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
                 'httponly' => true,
                 'samesite' => 'Lax'
@@ -171,7 +185,6 @@ if (isset($_POST['accept_data_privacy'])) {
     redirect($_SERVER['REQUEST_URI']);
 }
 
-// Require database and backup logic to check and run daily backup
 require_once(root() . '/includes/database/database.php');
 require_once(root() . '/includes/database/backup.php');
 checkAndRunDatabaseBackup();
