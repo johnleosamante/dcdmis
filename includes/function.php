@@ -208,40 +208,9 @@ function verify_csrf_token()
     }
 }
 
-function validateFileMimeType(string $filePath, array $allowedMimes): bool
-{
-    if (!file_exists($filePath)) {
-        return false;
-    }
-
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
-    $mimeType = $finfo->file($filePath);
-
-    if ($mimeType === false) {
-        return false;
-    }
-
-    return in_array($mimeType, $allowedMimes, true);
-}
-
 function getFileExtension(string $filename): string
 {
     return strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-}
-
-function validateFileExtension(string $filename, array $allowedExtensions): bool
-{
-    $ext = getFileExtension($filename);
-    return in_array($ext, $allowedExtensions, true);
-}
-
-function sanitizeFilename(string $filename): string
-{
-    $filename = basename($filename);
-    $filename = str_replace("\0", '', $filename);
-    $filename = preg_replace('/[^a-zA-Z0-9._-]/', '', $filename);
-    $filename = preg_replace('/\.{2,}/', '.', $filename);
-    return $filename;
 }
 
 function uploadMaxBytes()
@@ -284,7 +253,7 @@ function stageUploadedFile(array $file_data, array $allowed_MIME_map, string $ta
 
     if ($file_data['size'] > FILE_UPLOAD_SIZE_LIMIT) {
         $limitStr = defined('UPLOAD_MAX_FILESIZE') ? UPLOAD_MAX_FILESIZE . 'B' : 'the system limit';
-        throw new Exception("The chosen file size exceeds the maximum allowed upload limit of " . $limitStr . ".");
+        throw new Exception("The chosen file size exceeds the maximum allowed upload limit of {$limitStr}.");
     }
 
     try {
