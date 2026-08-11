@@ -14,11 +14,6 @@ function pmActiveCycle()
     return find("SELECT * FROM `pm_cycles` WHERE `status` = 'Active' ORDER BY `date_start` DESC LIMIT 1");
 }
 
-function pmCycle($id)
-{
-    return find("SELECT * FROM `pm_cycles` WHERE `id` = ?", [$id]);
-}
-
 function createPmCycle($title, $schoolYear, $dateStart, $dateEnd, $createdBy, $status = 'Active')
 {
     return insert('pm_cycles', [
@@ -31,33 +26,6 @@ function createPmCycle($title, $schoolYear, $dateStart, $dateEnd, $createdBy, $s
     ]);
 }
 
-function updatePmCycle($title, $schoolYear, $dateStart, $dateEnd, $status, $id)
-{
-    return update('pm_cycles', [
-        'title' => $title,
-        'school_year' => $schoolYear,
-        'date_start' => $dateStart,
-        'date_end' => $dateEnd,
-        'status' => $status
-    ], '`id` = ?', [$id]);
-}
-
-function activatePmCycle($cycleId)
-{
-    // Deactivate all cycles first
-    update('pm_cycles', ['status' => 'Inactive'], '`status` = ?', ['Active']);
-    // Activate the specified cycle
-    if ($cycleId > 0) {
-        return update('pm_cycles', ['status' => 'Active'], '`id` = ?', [$cycleId]);
-    }
-    return true;
-}
-
-function deletePmCycle($id)
-{
-    return delete('pm_cycles', '`id` = ?', [$id]);
-}
-
 // ========== KRA (Key Result Areas) ==========
 
 function pmKras($activeOnly = true)
@@ -68,81 +36,6 @@ function pmKras($activeOnly = true)
     }
     $sql .= " ORDER BY `sort_order` ASC";
     return query($sql) ?: [];
-}
-
-function pmKra($id)
-{
-    return find("SELECT * FROM `pm_kra` WHERE `id` = ?", [$id]);
-}
-
-function createPmKra($title, $description, $weight, $sortOrder, $createdBy)
-{
-    return insert('pm_kra', [
-        'title' => $title,
-        'description' => $description,
-        'weight' => $weight,
-        'sort_order' => $sortOrder,
-        'created_by' => $createdBy
-    ]);
-}
-
-function updatePmKra($id, $title, $description, $weight, $sortOrder, $isActive)
-{
-    return update('pm_kra', [
-        'title' => $title,
-        'description' => $description,
-        'weight' => $weight,
-        'sort_order' => $sortOrder,
-        'is_active' => $isActive
-    ], '`id` = ?', [$id]);
-}
-
-function deletePmKra($id)
-{
-    return delete('pm_kra', '`id` = ?', [$id]);
-}
-
-// ========== KRA ASSIGNMENTS ==========
-
-function pmKraAssignments($employeeId, $cycleId)
-{
-    return query(
-        "SELECT ka.*, k.title, k.description 
-        FROM `pm_kra_assignments` ka
-        JOIN `pm_kra` k ON k.id = ka.kra_id
-        WHERE ka.employee_id = ? AND ka.cycle_id = ?
-        ORDER BY k.sort_order ASC",
-        [$employeeId, $cycleId]
-    ) ?: [];
-}
-
-function pmKraAssignment($kraId, $employeeId, $cycleId)
-{
-    return find(
-        "SELECT * FROM `pm_kra_assignments` WHERE `kra_id` = ? AND `employee_id` = ? AND `cycle_id` = ?",
-        [$kraId, $employeeId, $cycleId]
-    );
-}
-
-function assignPmKra($kraId, $employeeId, $cycleId, $weight, $assignedBy)
-{
-    return insert('pm_kra_assignments', [
-        'kra_id' => $kraId,
-        'employee_id' => $employeeId,
-        'cycle_id' => $cycleId,
-        'weight' => $weight,
-        'assigned_by' => $assignedBy
-    ]);
-}
-
-function updatePmKraAssignment($id, $weight)
-{
-    return update('pm_kra_assignments', ['weight' => $weight], '`id` = ?', [$id]);
-}
-
-function removePmKraAssignment($kraId, $employeeId, $cycleId)
-{
-    return delete('pm_kra_assignments', '`kra_id` = ? AND `employee_id` = ? AND `cycle_id` = ?', [$kraId, $employeeId, $cycleId]);
 }
 
 // ========== VALIDATORS (Rater/Ratee Assignments) ==========
@@ -183,19 +76,6 @@ function pmValidatorOf($rateeId, $cycleId)
     );
 }
 
-function pmRatees($validatorId, $cycleId)
-{
-    return query(
-        "SELECT v.*, CONCAT(e.last_name, ', ', e.first_name, ' ', COALESCE(e.middle_name, '')) AS ratee_name,
-                e.id AS employee_id
-        FROM `pm_validators` v
-        JOIN `employees` e ON e.id = v.ratee_id
-        WHERE v.validator_id = ? AND v.cycle_id = ?
-        ORDER BY e.last_name ASC",
-        [$validatorId, $cycleId]
-    ) ?: [];
-}
-
 function assignPmValidator($validatorId, $rateeId, $cycleId)
 {
     return insert('pm_validators', [
@@ -203,11 +83,6 @@ function assignPmValidator($validatorId, $rateeId, $cycleId)
         'ratee_id' => $rateeId,
         'cycle_id' => $cycleId
     ]);
-}
-
-function removePmValidator($validatorId, $rateeId, $cycleId)
-{
-    return delete('pm_validators', '`validator_id` = ? AND `ratee_id` = ? AND `cycle_id` = ?', [$validatorId, $rateeId, $cycleId]);
 }
 
 // ========== TOP MANAGEMENT ==========
@@ -230,32 +105,24 @@ function pmTopManagementRecord($employeeId)
     return find("SELECT * FROM `pm_top_management` WHERE `employee_id` = ?", [$employeeId]);
 }
 
-function addPmTopManagement($employeeId, $positionTitle)
-{
-    return insert('pm_top_management', [
-        'employee_id' => $employeeId,
-        'position_title' => $positionTitle
-    ]);
-}
-
-function updatePmTopManagement($id, $positionTitle, $isActive)
-{
-    return update('pm_top_management', [
-        'position_title' => $positionTitle,
-        'is_active' => $isActive
-    ], '`id` = ?', [$id]);
-}
-
-function removePmTopManagement($id)
-{
-    return delete('pm_top_management', '`id` = ?', [$id]);
-}
-
 // Section Heads / Raters from the sections table
 function pmSectionHeads()
 {
     $sql = "SELECT e.id AS employee_id,
-            CONCAT(e.last_name, ', ', e.first_name, ' ', COALESCE(e.middle_name, '')) AS name,
+            CONCAT(
+                e.first_name, ' ',
+                IF(
+                    e.middle_name IS NOT NULL AND e.middle_name != '',
+                    CONCAT(' ', LEFT(e.middle_name, 1), '. '),
+                    ''
+                ),
+                UPPER(e.last_name), ' ',
+                IF(
+                    e.name_extension IS NOT NULL AND e.name_extension != '',
+                    CONCAT(' ', e.name_extension),
+                    ''
+                )
+            ) AS `name`,
             COALESCE(MAX(p.official_title), CONCAT('Head of ', MIN(s.name))) AS position_title,
             e.email_address
             FROM `sections` s
@@ -325,31 +192,6 @@ function pmIpcrfByValidator($validatorId, $cycleId = null)
     return query($sql, $params) ?: [];
 }
 
-function pmAllIpcrf($cycleId = null, $status = null)
-{
-    $sql = "SELECT i.*, c.title AS cycle_title, c.school_year,
-            CONCAT(e.last_name, ', ', e.first_name, ' ', COALESCE(e.middle_name, '')) AS ratee_name,
-            CONCAT(v.last_name, ', ', v.first_name, ' ', COALESCE(v.middle_name, '')) AS validator_name
-            FROM `pm_ipcrf` i
-            JOIN `pm_cycles` c ON c.id = i.cycle_id
-            JOIN `employees` e ON e.id = i.employee_id
-            LEFT JOIN `employees` v ON v.id = i.validator_id
-            WHERE 1=1";
-    $params = [];
-
-    if ($cycleId) {
-        $sql .= " AND i.cycle_id = ?";
-        $params[] = $cycleId;
-    }
-    if ($status) {
-        $sql .= " AND i.status = ?";
-        $params[] = $status;
-    }
-
-    $sql .= " ORDER BY e.last_name ASC";
-    return query($sql, $params) ?: [];
-}
-
 function createPmIpcrf($cycleId, $employeeId, $validatorId = null, $positionTitle = null, $reviewPeriod = null)
 {
     return insert('pm_ipcrf', [
@@ -397,19 +239,9 @@ function updatePmIpcrfFinalRating($id, $finalRating, $adjectivalRating)
     ], '`id` = ?', [$id]);
 }
 
-function updatePmIpcrfValidator($id, $validatorId)
-{
-    return update('pm_ipcrf', ['validator_id' => $validatorId], '`id` = ?', [$id]);
-}
-
 function updatePmIpcrfApprovingOfficer($id, $approvingOfficerId)
 {
     return update('pm_ipcrf', ['approving_officer_id' => $approvingOfficerId], '`id` = ?', [$id]);
-}
-
-function deletePmIpcrf($id)
-{
-    return delete('pm_ipcrf', '`id` = ?', [$id]);
 }
 
 // ========== OBJECTIVES ==========
@@ -419,14 +251,6 @@ function pmObjectives($ipcrfId)
     return query(
         "SELECT * FROM `pm_objectives` WHERE `ipcrf_id` = ? ORDER BY `kra_id` ASC, `sort_order` ASC",
         [$ipcrfId]
-    ) ?: [];
-}
-
-function pmObjectivesByKra($ipcrfId, $kraId)
-{
-    return query(
-        "SELECT * FROM `pm_objectives` WHERE `ipcrf_id` = ? AND `kra_id` = ? ORDER BY `sort_order` ASC",
-        [$ipcrfId, $kraId]
     ) ?: [];
 }
 
@@ -460,11 +284,6 @@ function updatePmObjective($id, $kraId, $kraTitle, $objective, $timeline, $weigh
         'weight' => $weight,
         'performance_indicator' => $performanceIndicator
     ], '`id` = ?', [$id]);
-}
-
-function updatePmObjectiveResult($id, $actualResult)
-{
-    return update('pm_objectives', ['actual_result' => $actualResult], '`id` = ?', [$id]);
 }
 
 function updatePmObjectivePhase2($id, $actualResult, $ratingQ, $ratingE, $ratingT, $averageRating, $score)
@@ -506,52 +325,17 @@ function pmAdjustmentRequests($ipcrfId, $status = null)
             JOIN `pm_objectives` o ON o.id = ar.objective_id
             WHERE ar.ipcrf_id = ?";
     $params = [$ipcrfId];
-    
+
     if ($status) {
         $sql .= " AND ar.status = ?";
         $params[] = $status;
     }
-    
+
     $sql .= " ORDER BY ar.created_at DESC";
     return query($sql, $params) ?: [];
 }
 
-function pmAdjustmentRequest($id)
-{
-    return find("SELECT * FROM `pm_adjustment_requests` WHERE `id` = ?", [$id]);
-}
-
-function createPmAdjustmentRequest($objectiveId, $ipcrfId, $requestedBy, $requestType, $reason, $proposedChanges = null)
-{
-    return insert('pm_adjustment_requests', [
-        'objective_id' => $objectiveId,
-        'ipcrf_id' => $ipcrfId,
-        'requested_by' => $requestedBy,
-        'request_type' => $requestType,
-        'reason' => $reason,
-        'proposed_changes' => $proposedChanges
-    ]);
-}
-
-function reviewPmAdjustmentRequest($id, $status, $reviewedBy, $remarks = null)
-{
-    return update('pm_adjustment_requests', [
-        'status' => $status,
-        'reviewed_by' => $reviewedBy,
-        'reviewer_remarks' => $remarks,
-        'reviewed_at' => date('Y-m-d H:i:s')
-    ], '`id` = ?', [$id]);
-}
-
-// ========== MEANS OF VERIFICATION (MOV) ==========
-
-function pmMovList($objectiveId)
-{
-    return query(
-        "SELECT * FROM `pm_mov` WHERE `objective_id` = ? ORDER BY `created_at` DESC",
-        [$objectiveId]
-    ) ?: [];
-}
+// ========== MEANS OF VERIFICATION (MOV) =========
 
 function pmMovByIpcrf($ipcrfId)
 {
@@ -648,11 +432,6 @@ function pmCompetencyRatings($ipcrfId)
     ) ?: [];
 }
 
-function pmCompetencyRating($id)
-{
-    return find("SELECT * FROM `pm_competency_ratings` WHERE `id` = ?", [$id]);
-}
-
 function createPmCompetencyRating($ipcrfId, $category, $competencyNumber, $rating)
 {
     return insert('pm_competency_ratings', [
@@ -663,18 +442,13 @@ function createPmCompetencyRating($ipcrfId, $category, $competencyNumber, $ratin
     ]);
 }
 
-function updatePmCompetencyRating($id, $rating)
-{
-    return update('pm_competency_ratings', ['rating' => $rating], '`id` = ?', [$id]);
-}
-
 function upsertPmCompetencyRating($ipcrfId, $category, $competencyNumber, $rating)
 {
     $existing = find(
         "SELECT id FROM `pm_competency_ratings` WHERE `ipcrf_id` = ? AND `category` = ? AND `competency_number` = ?",
         [$ipcrfId, $category, $competencyNumber]
     );
-    
+
     if ($existing) {
         return update('pm_competency_ratings', ['rating' => $rating], '`id` = ?', [$existing['id']]);
     } else {
@@ -734,29 +508,35 @@ function deletePmDevelopmentPlan($id)
     return delete('pm_development_plans', '`id` = ?', [$id]);
 }
 
-// ========== UTILITY FUNCTIONS ==========
-
 function pmAdjectivalRating($rating)
 {
     if ($rating >= 10) {
-        if ($rating >= 90) return 'Outstanding';
-        if ($rating >= 80) return 'Very Satisfactory';
-        if ($rating >= 70) return 'Satisfactory';
-        if ($rating >= 60) return 'Unsatisfactory';
+        if ($rating >= 90)
+            return 'Outstanding';
+        if ($rating >= 80)
+            return 'Very Satisfactory';
+        if ($rating >= 70)
+            return 'Satisfactory';
+        if ($rating >= 60)
+            return 'Unsatisfactory';
         return 'Poor';
     }
 
-    if ($rating >= 4.500) return 'Outstanding';
-    if ($rating >= 3.500) return 'Very Satisfactory';
-    if ($rating >= 2.500) return 'Satisfactory';
-    if ($rating >= 1.500) return 'Unsatisfactory';
+    if ($rating >= 4.500)
+        return 'Outstanding';
+    if ($rating >= 3.500)
+        return 'Very Satisfactory';
+    if ($rating >= 2.500)
+        return 'Satisfactory';
+    if ($rating >= 1.500)
+        return 'Unsatisfactory';
     return 'Poor';
 }
 
 function pmComputeFinalRating($ipcrfId)
 {
     $objectives = pmObjectives($ipcrfId);
-    
+
     if (empty($objectives)) {
         return null;
     }
@@ -831,37 +611,6 @@ function pmStatusBadge($status)
     return "<span class=\"badge badge-{$color} px-2 py-1\">{$status}</span>";
 }
 
-function pmRatingDescription($rating)
-{
-    $descriptions = [
-        5 => 'Outstanding',
-        4 => 'Very Satisfactory',
-        3 => 'Satisfactory',
-        2 => 'Unsatisfactory',
-        1 => 'Poor'
-    ];
-    return $descriptions[$rating] ?? '';
-}
-
-// Count functions for dashboard
-function pmCountIpcrfByStatus($cycleId, $status)
-{
-    $result = find(
-        "SELECT COUNT(*) as count FROM `pm_ipcrf` WHERE `cycle_id` = ? AND `status` = ?",
-        [$cycleId, $status]
-    );
-    return $result ? (int)$result['count'] : 0;
-}
-
-function pmCountRatees($validatorId, $cycleId)
-{
-    $result = find(
-        "SELECT COUNT(*) as count FROM `pm_validators` WHERE `validator_id` = ? AND `cycle_id` = ?",
-        [$validatorId, $cycleId]
-    );
-    return $result ? (int)$result['count'] : 0;
-}
-
 // ========== RECALIBRATION (Phases 2 & 3) ==========
 
 function pmRecalibrations($ipcrfId)
@@ -890,24 +639,10 @@ function createPmRecalibration($ipcrfId, $ipcrfContent, $proposedAmendment, $jus
     ]);
 }
 
-function updatePmRecalibration($id, $ipcrfContent, $proposedAmendment, $justification)
-{
-    return update('pm_recalibrations', [
-        'ipcrf_content' => $ipcrfContent,
-        'proposed_amendment' => $proposedAmendment,
-        'justification' => $justification
-    ], '`id` = ?', [$id]);
-}
-
 function updatePmRecalibrationRater($id, $raterStatus, $raterRemarks)
 {
     return update('pm_recalibrations', [
         'rater_status' => $raterStatus,
         'rater_remarks' => $raterRemarks
     ], '`id` = ?', [$id]);
-}
-
-function deletePmRecalibration($id)
-{
-    return delete('pm_recalibrations', '`id` = ?', [$id]);
 }
