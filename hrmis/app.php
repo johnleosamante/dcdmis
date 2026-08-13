@@ -110,9 +110,9 @@ if (isset($_POST['add-non-regular-employee'])) {
     $mobile = sanitize($_POST['mobile']);
     $image = 'assets/img/user.png';
     $status = sanitize($_POST['status']);
-    $isActive = ($status === 'Active') ? 1 : 0;
     $startDate = !empty($_POST['start_date']) ? sanitize($_POST['start_date']) : null;
     $endDate = !empty($_POST['end_date']) ? sanitize($_POST['end_date']) : null;
+    $fundSource = !empty($_POST['fund_source']) ? sanitize($_POST['fund_source']) : '';
     $crn = sanitize($_POST['gsis_id']);
     $bp = sanitize($_POST['gsis_bp']);
     $pagibig = sanitize($_POST['pagibig']);
@@ -138,7 +138,7 @@ if (isset($_POST['add-non-regular-employee'])) {
     beginTransaction();
 
     try {
-        if (createNonRegularEmployee($employeeId, $employmentType, $lname, $fname, $mname, $ext, $sex, $bdate, $email, $mobile, $image, $status, $crn, $bp, $pagibig, $philhealth, $tin, $agencyId, $isActive, $startDate, $endDate) === false) {
+        if (createNonRegularEmployee($employeeId, $employmentType, $lname, $fname, $mname, $ext, $sex, $bdate, $email, $mobile, $image, $status, $crn, $bp, $pagibig, $philhealth, $tin, $agencyId, $startDate, $endDate, $fundSource) === false) {
             throw new Exception('Failed to save non-regular employee information.');
         }
 
@@ -154,7 +154,7 @@ if (isset($_POST['add-non-regular-employee'])) {
         createExperience(
             $startDate ?: $today,
             $endDate,
-            $isActive ? '1' : '0',
+            ($status === 'Active') ? '1' : '0',
             $posTitle,
             null,
             $employmentType,
@@ -173,10 +173,10 @@ if (isset($_POST['add-non-regular-employee'])) {
             throw new Exception('Failed to create user account.');
         }
 
-        createSystemLog($stationId, $userId, 'Registered ' . $employmentType . ' employee', $employeeId, clientIp());
+        createSystemLog($stationId, $userId, "Registered {$employmentType} employee", $employeeId, clientIp());
         commit();
 
-        $message = $employmentType . ' employee [' . strtoupper($employee) . '] was saved successfully into non_regular_employees table.';
+        $message = "{$employmentType} employee [" . strtoupper($employee) . "] was saved successfully.";
         $success = true;
     } catch (Exception $e) {
         rollBack();
