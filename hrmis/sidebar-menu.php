@@ -10,15 +10,14 @@ $districtCount = number_format(countDistricts());
 $schoolCount = number_format(countSchools());
 $sectionCount = number_format(countSections());
 $countPendingTransfers = number_format(countPendingTransferRequests());
-$countApplicants = number_format(countAllRegisteredApplicants());
 
 sidebarHeading('Employees');
 sidebarModalItem(uri() . '/modules/employees/save-employee-dialog.php', 'Add Employee', 'fa-user-plus');
 sidebarMenuItem(customUri('hrmis', 'Active Employees'), 'Active', 'fa-user-check', isset($url) && str_contains($url, 'Active'), $countActive);
 sidebarMenuItem(customUri('hrmis', 'Retirable Employees'), 'Retirable', 'fa-user-clock', isset($url) && str_contains($url, 'Retirable'), $countRetirable);
 sidebarMenuItem(customUri('hrmis', 'Celebrant Employees'), 'Celebrants', 'fa-birthday-cake', isset($url) && str_contains($url, 'Celebrant'));
+sidebarMenuItem(customUri('hrmis', 'Non-Regular Employees'), 'Non-Regular', 'fa-users-cog', isset($url) && str_contains($url, 'Non-Regular Employees'));
 sidebarMenuItem(customUri('hrmis', 'Archived Employees'), 'Archived', 'fa-archive', isset($url) && str_contains($url, 'Archived'));
-
 sidebarDivider();
 sidebarMenuItem(customUri('hrmis', 'Districts'), 'Districts', 'fa-map-marked-alt', isset($url) && str_contains($url, 'District'), $districtCount);
 sidebarMenuItem(customUri('hrmis', 'Schools'), 'Schools', 'fa-school', isset($url) && str_contains($url, 'School'), $schoolCount);
@@ -36,7 +35,7 @@ if ($isHrmis && ($isPersonnel || $isICT)) {
 sidebarMenuItem(customUri('hrmis', 'Call for Applications'), 'Call for Applications', 'fa-bullhorn', isset($url) && str_contains($url, 'Call for Application'), $countPublications);
 
 if ($isHrmis && ($isPersonnel || $isICT)) {
-    sidebarMenuItem(customUri('hrmis', 'Applicants'), 'Applicants', 'fa-users', isset($url) && str_contains($url, 'Applicants') && !str_contains($url, 'Call for Application'), $countApplicants);
+    sidebarMenuItem(customUri('hrmis', 'Applicants'), 'Applicants', 'fa-users', isset($url) && str_contains($url, 'Applicants') && !str_contains($url, 'Call for Application'));
     if ($isHrmis && ($isPersonnel || $isICT)) {
         sidebarDivider();
         sidebarMenuItem(customUri('hrmis', 'Transfer Requests'), 'Transfer Requests', 'fa-exchange-alt', isset($url) && str_contains($url, 'Transfer'), $countPendingTransfers);
