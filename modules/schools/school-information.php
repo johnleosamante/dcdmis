@@ -55,7 +55,7 @@ if ($school) {
         if ($activeApp === 'dmis') {
             contentTitleWithModal("$titlePrefix: " . strtoupper($schoolName), uri() . '/modules/schools/save-school-dialog.php?id=' . cipher($schoolId) . '&e=' . cipher($alias), 'Edit', 'fa-edit');
         } elseif ($activeApp === 'hrmis') {
-            contentTitleWithModal("$titlePrefix: " . strtoupper($schoolName), uri() . '/modules/employees/save-employee-dialog.php?s=' . cipher($schoolId), 'Add Employee', 'fa-user-plus');
+            contentTitleWithModal("$titlePrefix: " . strtoupper($schoolName), uri() . '/modules/employees/save-employee-dialog.php?s=' . cipher($schoolId), 'Add', 'fa-user-plus');
         } else {
             contentTitleWithLink("$titlePrefix: " . strtoupper($schoolName), $backLink);
         } ?>
@@ -140,13 +140,15 @@ if ($school) {
             </div>
         </div>
 
-        <?php if ($isHrmis) { ?>
-            <div class="d-sm-flex align-items-center flex-row-reverse my-2">
-                <div class="d-inline-block">
-                    <?php linkButtonSplit(customUri('export', 'active-employees', $schoolId), 'Export', 'fa-file-excel', 'Export as Excel file', 'success') ?>
-                </div>
+        <div class="d-sm-flex align-items-center flex-row-reverse my-2">
+            <div class="d-inline-block">
+                <?php
+                linkButtonSplit(customUri('export', 'active-employees', $schoolId), 'Export', 'fa-file-excel', 'Export as Excel file', 'success');
+                if ($isHrmis) {
+                    linkButtonSplit(customUri($activeApp, 'Non-Regular Employees', $schoolId), 'Non-Regular Staff', 'fa-users-cog', 'View Contract of Service, Job Order & Casual employees', 'info');
+                } ?>
             </div>
-        <?php } ?>
+        </div>
 
         <div class="table-responsive mt-3">
             <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
