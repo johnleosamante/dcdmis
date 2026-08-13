@@ -14,7 +14,7 @@ function account($email_address)
     return find(
         "SELECT n.`id`, n.`email_address`, c.`status`, n.`employment_type` AS `emp_category` FROM `non_regular_employees` AS n
         INNER JOIN `credentials` AS c ON c.`employee_id` = n.`id`
-        WHERE n.`status` = 'Active' AND n.`is_active` = 1 AND (n.`end_date` IS NULL OR n.`end_date` >= CURDATE()) AND n.`email_address` = ? LIMIT 1",
+        WHERE n.`status` = 'Active' AND (n.`end_date` IS NULL OR n.`end_date` >= CURDATE()) AND n.`email_address` = ? LIMIT 1",
         [$email_address]
     );
 }
