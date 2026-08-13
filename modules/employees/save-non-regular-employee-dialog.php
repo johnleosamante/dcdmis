@@ -10,7 +10,7 @@ require_once(root() . '/includes/layout/components.php');
 
 <div class="modal-dialog">
     <div class="modal-content">
-        <?php modalHeader('Add Non-Regular Employee (COS / JO / Casual / Substitute)') ?>
+        <?php modalHeader('Add Non-Regular Employee') ?>
 
         <form action="" method="POST">
             <?= csrf_field(); ?>
@@ -51,8 +51,20 @@ require_once(root() . '/includes/layout/components.php');
                     <div class="col-4">
                         <div class="form-group">
                             <label for="ext" class="mb-0">Extension</label>
-                            <input id="ext" name="ext" class="form-control" placeholder="ex. JR., SR., III"
-                                title="ex. JR., SR., III, Leave blank if not applicable" type="text">
+                            <select class="form-control" id="ext" name="ext">
+                                <option value="">N/A</option>
+                                <option value="jr.">JR.</option>
+                                <option value="sr.">SR.</option>
+                                <option value="ii">II</option>
+                                <option value="iii">III</option>
+                                <option value="iv">IV</option>
+                                <option value="v">V</option>
+                                <option value="vi">VI</option>
+                                <option value="vii">VII</option>
+                                <option value="viii">VIII</option>
+                                <option value="ix">IX</option>
+                                <option value="x">X</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -115,17 +127,40 @@ require_once(root() . '/includes/layout/components.php');
                     <select id="station" name="station" class="form-control" title="Select station..." required>
                         <option value="">Select station...</option>
                         <?php
+                        $currentStation = '';
+                        if (!empty($_GET['s'])) {
+                            $decodedS = sanitize(decode($_GET['s']));
+                            $currentStation = !empty($decodedS) ? $decodedS : sanitize(decipher($_GET['s']));
+                        } elseif (!empty($_GET['station'])) {
+                            $currentStation = sanitize($_GET['station']);
+                        } elseif (!empty($_GET['school_id'])) {
+                            $currentStation = sanitize($_GET['school_id']);
+                        }
+
                         $districts = districts();
                         foreach ($districts as $district): ?>
                             <optgroup label="<?= e($district['name']) ?>">
                                 <?php
-                                $currentStation = isset($_GET['s']) ? sanitize(decode($_GET['s'])) : '';
                                 $schools = schoolsByDistrict($district['id']);
                                 foreach ($schools as $school): ?>
                                     <option value="<?= e($school['id']) ?>" <?= setOptionSelected($school['id'], $currentStation) ?>><?= e($school['name']) ?></option>
                                 <?php endforeach ?>
                             </optgroup>
                         <?php endforeach ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fund_source" class="mb-0">Fund Source <?php showAsterisk() ?></label>
+                    <select id="fund_source" name="fund_source" class="form-control" title="Select fund source..."
+                        required>
+                        <option value="">Select fund source...</option>
+                        <option value="Division Funds">Division Funds</option>
+                        <option value="School MOOE">School MOOE</option>
+                        <option value="LGU / SEF Funds">Local Government Unit (LGU / SEF)</option>
+                        <option value="National / Central Office Funds">National / Central Office Funds</option>
+                        <option value="PTA / Donated Funds">PTA / Donated Funds</option>
+                        <option value="Others">Others</option>
                     </select>
                 </div>
 
@@ -144,13 +179,15 @@ require_once(root() . '/includes/layout/components.php');
                     <div class="col-6">
                         <div class="form-group">
                             <label for="start_date" class="mb-0">Start Date of Service</label>
-                            <input type="date" id="start_date" name="start_date" class="form-control" title="Set start date of contract/service...">
+                            <input type="date" id="start_date" name="start_date" class="form-control"
+                                title="Set start date of contract/service...">
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group">
                             <label for="end_date" class="mb-0">End Date of Service</label>
-                            <input type="date" id="end_date" name="end_date" class="form-control" title="Set end date of contract/service...">
+                            <input type="date" id="end_date" name="end_date" class="form-control"
+                                title="Set end date of contract/service...">
                         </div>
                     </div>
                 </div>
@@ -213,8 +250,7 @@ require_once(root() . '/includes/layout/components.php');
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-primary" name="add-non-regular-employee" type="submit">Save Non-Regular
-                    Employee</button>
+                <button class="btn btn-primary" name="add-non-regular-employee" type="submit">Continue</button>
                 <?php cancelModalButton() ?>
             </div>
         </form>
