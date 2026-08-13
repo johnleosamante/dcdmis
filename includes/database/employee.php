@@ -788,7 +788,7 @@ function getEmployeeDemographicGroup($row, $exportId)
 }
 
 // non_regular_employees
-function createNonRegularEmployee($employee_id, $employment_type, $last_name, $first_name, $middle_name, $name_extension, $sex, $birthdate, $email_address, $mobile_number, $profile_picture, $status, $gsis_crn = '', $gsis_bp = '', $pagibig = '', $philhealth = '', $tin = '', $agency_id = '', $is_active = 1, $start_date = null, $end_date = null)
+function createNonRegularEmployee($employee_id, $employment_type, $last_name, $first_name, $middle_name, $name_extension, $sex, $birthdate, $email_address, $mobile_number, $profile_picture, $status, $gsis_crn = '', $gsis_bp = '', $pagibig = '', $philhealth = '', $tin = '', $agency_id = '', $start_date = null, $end_date = null, $fund_source = '')
 {
     $data = [
         'id' => $employee_id,
@@ -803,9 +803,9 @@ function createNonRegularEmployee($employee_id, $employment_type, $last_name, $f
         'mobile_number' => $mobile_number,
         'profile_picture' => $profile_picture,
         'status' => $status,
-        'is_active' => $is_active,
         'start_date' => $start_date ?: null,
         'end_date' => $end_date ?: null,
+        'fund_source' => $fund_source,
         'gsis_crn' => $gsis_crn,
         'gsis_bp' => $gsis_bp,
         'pagibig' => $pagibig,
@@ -842,7 +842,7 @@ function nonRegularEmployees($employment_type = null, $station_id = null)
     $whereClause = !empty($whereConditions) ? "WHERE " . implode(" AND ", $whereConditions) : "";
 
     $sql = "SELECT p.`id`, p.`employment_type`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`, 
-                   p.`sex`, p.`birthdate`, p.`email_address`, p.`mobile_number`, p.`start_date`, p.`end_date`, p.`is_active`, s.`position_id`, s.`station_id`, 
+                   p.`sex`, p.`birthdate`, p.`email_address`, p.`mobile_number`, p.`start_date`, p.`end_date`, p.`fund_source`, s.`position_id`, s.`station_id`, 
                    p.`profile_picture`, p.`status`
             FROM `non_regular_employees` AS p
             LEFT JOIN `station_assignments` AS s ON p.`id` = s.`employee_id` {$whereClause} 
