@@ -40,11 +40,11 @@ if ($employee) {
         $dtsUserStation = $dts['access'];
     }
 
-    $hrmisUser = (bool) isStationUser($employeeId, 'hrmis');
-    $dmisUser = (bool) isStationUser($employeeId, 'dmis');
-    $hrtdmsUser = (bool) isStationUser($employeeId, 'hrtdms');
-    $raceUser = (bool) isStationUser($employeeId, 'race');
-    $dtrUser = (bool) isStationUser($employeeId, 'dtr');
+    $hrmisUser = (bool) userRole($employeeId, 'hrmis');
+    $dmisUser = (bool) userRole($employeeId, 'dmis');
+    $hrtdmsUser = (bool) userRole($employeeId, 'hrtdms');
+    $raceUser = (bool) userRole($employeeId, 'race');
+    $dtrUser = (bool) userRole($employeeId, 'dtr');
 }
 ?>
 
