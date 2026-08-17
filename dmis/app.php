@@ -281,7 +281,7 @@ if (isset($_POST['edit-user'])) {
 
 		foreach ($systems as $systemCode => $isEnabled) {
 			if ($isEnabled) {
-				if (!isStationUser($employeeId, $systemCode)) {
+				if (!userRole($employeeId, $systemCode)) {
 					if (createUserRole($employeeId, $systemCode) === false) {
 						throw new Exception("Failed to enable system role {$systemCode}.");
 					}
