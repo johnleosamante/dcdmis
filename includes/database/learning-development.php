@@ -1,12 +1,5 @@
 <?php
 // trainings
-function trainings()
-{
-    $sql = "SELECT * FROM `trainings` ORDER BY `start_date` DESC, `end_date` DESC";
-    $results = query($sql);
-    return is_array($results) ? $results : [];
-}
-
 function training($training_id)
 {
     return find("SELECT * FROM `trainings` WHERE `id` = ? LIMIT 1", [$training_id]);
