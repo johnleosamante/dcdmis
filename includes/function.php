@@ -208,25 +208,10 @@ function verify_csrf_token()
     }
 }
 
-function getFileExtension(string $filename): string
-{
-    return strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-}
-
 function uploadMaxBytes()
 {
-    $val = trim(defined('UPLOAD_MAX_FILESIZE') ? UPLOAD_MAX_FILESIZE : ini_get('upload_max_filesize'));
-    $last = strtolower($val[strlen($val) - 1]);
-    $val = (int) $val;
-    switch ($last) {
-        case 'g':
-            $val *= 1024;
-        case 'm':
-            $val *= 1024;
-        case 'k':
-            $val *= 1024;
-    }
-    return $val;
+    $val = defined('UPLOAD_MAX_FILESIZE') ? UPLOAD_MAX_FILESIZE : ini_get('upload_max_filesize');
+    return parseSizeToBytes($val);
 }
 
 function parseSizeToBytes($size_string)
