@@ -30,7 +30,7 @@ if ($awardIdDecrypted) {
             $catMap = [
                 'Teaching Personnel' => 'Teaching',
                 'School Administration Personnel (Individual)' => 'School Administration',
-                'Related-Teaching Personnel (Individual)' => 'Teaching-Related',
+                'Related-Teaching Personnel (Individual)' => 'Related-Teaching',
                 'Non-Teaching Personnel (Individual)' => 'Non-Teaching',
             ];
             $filterCategory = $catMap[$categoryName] ?? null;
@@ -234,7 +234,7 @@ $typeSwitchParams = $_GET;
                         $employees = array_values($combined);
                     } elseif ($filterCategory === 'Supervisor') {
                         $employees = activeSupervisorEmployees();
-                    } elseif ($filterCategory === 'Teaching-Related') {
+                    } elseif ($filterCategory === 'Related-Teaching') {
                         if ($isPrincipalUser && $mySchool) {
                             $guidanceCounselors = activeGuidanceCounselorEmployees($mySchool['id']);
                         } elseif ($isDistSupervisor && $myDistrict) {
