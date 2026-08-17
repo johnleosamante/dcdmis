@@ -22,7 +22,7 @@ $exportConfig = [
     ],
     'category-gender' => [
         'title' => 'Employee Categories by Gender Demographics',
-        'db_function' => 'demographicsCategoryGender',
+        'db_function' => 'employeeGenderCategory',
         'headers' => ['Category', 'Male', 'Female', 'Total'],
     ],
     'position' => [
