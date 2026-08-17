@@ -121,23 +121,23 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                     linkDropdownItem(uri() . '/dts', 'Tracking', 'fa-exchange-alt', 'Document Tracking System');
                 }
 
-                if (isStationUser($userId, 'hrmis')) {
+                if (userRole($userId, 'hrmis')) {
                     linkDropdownItem(uri() . '/hrmis', 'HR Management', 'fa-users', 'Human Resource Management Information System');
                 }
 
-                if (isStationUser($userId, 'hrtdms')) {
+                if (userRole($userId, 'hrtdms')) {
                     linkDropdownItem(uri() . '/hrtdms', 'HR Trainings', 'fa-chalkboard-teacher', 'Human Resource Training and Development Management System');
                 }
 
-                if (isStationUser($userId, 'race')) {
+                if (userRole($userId, 'race')) {
                     linkDropdownItem(uri() . '/race', 'Rewards and Recognitions', 'fa-trophy', 'Rewards and Recognitions');
                 }
 
-                if (isStationUser($userId, 'dtr')) {
+                if (userRole($userId, 'dtr')) {
                     linkDropdownItem(uri() . '/dtr', 'Daily Time Record', 'fa-clock', 'Daily Time Records');
                 }
 
-                if (isStationUser($userId, 'dmis')) {
+                if (userRole($userId, 'dmis')) {
                     linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-industry', 'Division Management Information System');
                 }
                 ?>
