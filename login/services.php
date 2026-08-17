@@ -29,7 +29,8 @@
                         </div>
 
                         <div class="card-body">
-                            Monitor individual details of teaching, teaching-related and non-teaching employees of the
+                            Monitor individual details of teaching, related-teaching, school administration and
+                            non-teaching employees of the
                             schools division.
                         </div>
                     </div>
