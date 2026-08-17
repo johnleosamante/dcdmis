@@ -64,7 +64,7 @@ foreach ($allApplicants as $appItem) {
                             $empPos = position($row['id']);
                             $posText = $empPos['official_title'] ?? 'Division Employee';
                             $stationText = $empPos['station'] ?? '';
-                            $profileLink = customUri('hrmis', 'Employee Information', $row['id']);
+                            $profileLink = customUri('hrmis', 'Applicant Information', $row['id']);
                         } else {
                             $address = implode(', ', array_filter([$row['barangay'], $row['city'], $row['province']]));
                             $profileLink = customUri('hrmis', 'Applicant Information', $row['id']);
@@ -77,7 +77,7 @@ foreach ($allApplicants as $appItem) {
                                 </div>
                                 <div class="text-muted">
                                     <span class="badge badge-secondary">
-                                        <?= e($row['id']) ?>
+                                        <?= e($row['code'] ?? $row['id']) ?>
                                     </span>
                                 </div>
                                 <div>
@@ -112,7 +112,8 @@ foreach ($allApplicants as $appItem) {
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php
                                         if ($isEmployed) {
-                                            linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'View', 'fa-id-badge', 'View Employee Profile');
+                                            linkDropdownItem(customUri('hrmis', 'Applicant Information', $row['id']), 'View', 'fa-file-alt', 'View Call for Application Submissions');
+                                            linkDropdownItem(customUri('hrmis', 'Employee Information', $row['id']), 'Profile', 'fa-id-badge', 'View Employee Profile');
                                         } else {
                                             linkDropdownItem(customUri('hrmis', 'Applicant Information', $row['id']), 'View', 'fa-eye', 'View Applicant Details');
                                             linkDropdownItem(customUri('hrmis', 'Edit External Applicant', $row['id']), 'Edit', 'fa-edit', 'Edit External Applicant');
