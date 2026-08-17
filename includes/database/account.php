@@ -81,7 +81,7 @@ function userRole($employee_id, $access)
 {
     return find(
         "SELECT `employee_id` FROM `user_permissions` 
-        WHERE `employee_id` = ? AND `access` = ? LIMIT 1",
+        WHERE `employee_id` = ? AND `access` = ?",
         [$employee_id, $access]
     );
 }
@@ -92,15 +92,6 @@ function dtsUser($employee_id)
         "SELECT * FROM `user_permissions` 
         WHERE `employee_id` = ? AND `link` <> ''",
         [$employee_id]
-    );
-}
-
-function isStationUser($employee_id, $access)
-{
-    return find(
-        "SELECT `employee_id` FROM `user_permissions` 
-        WHERE `employee_id` = ? AND `access` = ?",
-        [$employee_id, $access]
     );
 }
 
