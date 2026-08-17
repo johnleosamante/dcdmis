@@ -158,9 +158,9 @@ function activeEmployeesWithPosition($stationId = null, $category = null)
         $params[] = $stationId;
     }
     if ($category !== null && $category !== '') {
-        if ($category === 'Teaching-Related') {
+        if ($category === 'Related-Teaching') {
             $conditions[] = "(pos.`category` = ? OR pos.`category` = ? OR pos.`id` IN ('PDO1', 'PDO2'))";
-            $params[] = 'Teaching-Related';
+            $params[] = 'Related-Teaching';
             $params[] = 'Teaching';
         } else {
             $conditions[] = "pos.`category` = ?";
@@ -210,9 +210,9 @@ function activeEmployeesInDistrict($districtId, $category = null)
             WHERE sch.`district_id` = ?";
     $params = [$districtId];
     if ($category !== null && $category !== '') {
-        if ($category === 'Teaching-Related') {
+        if ($category === 'Related-Teaching') {
             $sql .= " AND (pos.`category` = ? OR pos.`category` = ? OR pos.`id` IN ('PDO1', 'PDO2'))";
-            $params[] = 'Teaching-Related';
+            $params[] = 'Related-Teaching';
             $params[] = 'Teaching';
         } else {
             $sql .= " AND pos.`category` = ?";
