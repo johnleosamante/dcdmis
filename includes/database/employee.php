@@ -286,7 +286,7 @@ function employeeCategory()
 
 function employeeGenderCategory()
 {
-    $sql = "SELECT `pos`.`category` AS `name`, 
+    $sql = "SELECT pos.`category` AS `name`, 
                 SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS `male`, 
                 SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS `female`,
                 COUNT(p.`id`) AS `total`
@@ -475,11 +475,6 @@ function demographicsCategory()
             GROUP BY pos.`category` 
             ORDER BY pos.`category` ASC";
     return query($sql);
-}
-
-function demographicsCategoryGender()
-{
-    return employeeGenderCategory();
 }
 
 function demographicsPosition()
@@ -851,14 +846,3 @@ function nonRegularEmployees($employment_type = null, $station_id = null)
     return is_array($results) ? $results : [];
 }
 
-function countNonRegularEmployees($employment_type = null)
-{
-    $params = [];
-    $whereClause = "";
-    if ($employment_type !== null && $employment_type !== '') {
-        $whereClause = "WHERE `employment_type` = ?";
-        $params[] = $employment_type;
-    }
-    $result = find("SELECT COUNT(*) AS `count` FROM `non_regular_employees` {$whereClause}", $params);
-    return (int) ($result['count'] ?? 0);
-}
