@@ -60,11 +60,13 @@ function schoolEmployeeCount($school_id = null)
     }
     $sql = "SELECT s.`id`, 
                 SUM(CASE WHEN pos.`category` = 'Teaching' AND p.`sex` = 'Male' THEN 1 ELSE 0 END) AS tmale, 
-                SUM(CASE WHEN pos.`category` = 'Teaching-Related' AND p.`sex` = 'Male' THEN 1 ELSE 0 END) AS trmale, 
+                SUM(CASE WHEN pos.`category` = 'Related-Teaching' AND p.`sex` = 'Male' THEN 1 ELSE 0 END) AS trmale, 
+                SUM(CASE WHEN pos.`category` = 'School Administration' AND p.`sex` = 'Male' THEN 1 ELSE 0 END) AS samale, 
                 SUM(CASE WHEN pos.`category` = 'Non-Teaching' AND p.`sex` = 'Male' THEN 1 ELSE 0 END) AS ntmale, 
                 SUM(CASE WHEN p.`sex` = 'Male' THEN 1 ELSE 0 END) AS male, 
                 SUM(CASE WHEN pos.`category` = 'Teaching' AND p.`sex` = 'Female' THEN 1 ELSE 0 END) AS tfemale, 
-                SUM(CASE WHEN pos.`category` = 'Teaching-Related' AND p.`sex` = 'Female' THEN 1 ELSE 0 END) AS trfemale, 
+                SUM(CASE WHEN pos.`category` = 'Related-Teaching' AND p.`sex` = 'Female' THEN 1 ELSE 0 END) AS trfemale, 
+                SUM(CASE WHEN pos.`category` = 'School Administration' AND p.`sex` = 'Female' THEN 1 ELSE 0 END) AS safemale, 
                 SUM(CASE WHEN pos.`category` = 'Non-Teaching' AND p.`sex` = 'Female' THEN 1 ELSE 0 END) AS ntfemale, 
                 SUM(CASE WHEN p.`sex` = 'Female' THEN 1 ELSE 0 END) AS female, 
                 COUNT(p.`id`) AS total 
