@@ -11,6 +11,8 @@ messageAlert($showAlert, $message, $success);
 $publication = null;
 $selectedVacancyIds = [];
 $isEdit = false;
+$publicationId = null;
+$publicationCode = null;
 
 if (isset($_GET['id'])) {
     $pubId = sanitize(decipher($_GET['id']));
@@ -18,6 +20,8 @@ if (isset($_GET['id'])) {
         $publication = publication($pubId);
         if ($publication) {
             $isEdit = true;
+            $publicationId = $publication['id'];
+            $publicationCode = $publication['code'];
             $items = publicationItems($pubId);
             foreach ($items as $item) {
                 $selectedVacancyIds[] = $item['vacancy_id'];
@@ -37,6 +41,12 @@ $btnText = ($isEdit ? 'Update' : 'Save') . ' Call for Application';
             <li class="breadcrumb-item"><a href="<?= "$baseUri/$activeApp" ?>">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Call for Applications') ?>">Call for
                     Applications</a></li>
+            <?php if ($isEdit && $publicationCode): ?>
+                <li class="breadcrumb-item"><a
+                        href="<?= customUri('hrmis', 'Call for Application Details', $publicationId) ?>">
+                        <?= e($publicationCode) ?>
+                    </a></li>
+            <?php endif; ?>
             <li class="breadcrumb-item active"><?= e($currentBreadCrumb) ?></li>
         </ol>
     </nav>
@@ -101,7 +111,8 @@ $btnText = ($isEdit ? 'Update' : 'Save') . ' Call for Application';
                                 Draft (Not yet accepting applications)</option>
                             <option value="open" <?= ($isEdit && $publication['status'] == 'open') ? 'selected' : (($isEdit) ? '' : 'selected') ?>>Open (Accepting applications)</option>
                             <option value="closed" <?= ($isEdit && $publication['status'] == 'closed') ? 'selected' : ($canCloseInfo['can_close'] ? '' : 'disabled') ?>>
-                                Closed <?= (!$canCloseInfo['can_close'] && (!$isEdit || $publication['status'] !== 'closed')) ? ' (Requirements incomplete)' : '' ?>
+                                Closed
+                                <?= (!$canCloseInfo['can_close'] && (!$isEdit || $publication['status'] !== 'closed')) ? ' (Requirements incomplete)' : '' ?>
                             </option>
                         </select>
                         <?php if (!$canCloseInfo['can_close'] && ($isEdit && $publication['status'] !== 'closed')): ?>
@@ -162,15 +173,22 @@ $btnText = ($isEdit ? 'Update' : 'Save') . ' Call for Application';
                         foreach ($result as $row):
                             $isChecked = in_array($row['id'], $selectedVacancyIds) ? 'checked' : '';
                             $isPublished = !$isEdit && isVacancyPublished($row['id']);
-                            $isDisabled = $isPublished ? 'disabled' : '';
+                            $isFilled = ($row['status'] ?? 'open') === 'filled';
+                            $isDisabled = ($isPublished || $isFilled) ? 'disabled' : '';
                             ?>
-                            <tr class="text-uppercase <?= $isPublished ? 'table-secondary' : '' ?>">
+                            <tr class="text-uppercase <?= ($isPublished || $isFilled) ? 'table-secondary' : '' ?>">
                                 <td class="align-middle">
+                                    <?php if ($isFilled && $isChecked): ?>
+                                        <input type="hidden" name="vacancy_ids[]" value="<?= e($row['id']) ?>">
+                                    <?php endif; ?>
                                     <input type="checkbox" class="vacancy-checkbox" name="vacancy_ids[]"
                                         value="<?= e($row['id']) ?>" <?= e($isChecked) ?>     <?= e($isDisabled) ?>>
                                 </td>
                                 <td class="align-middle">
                                     <?= e(positions($row['position_id'])['official_title']) ?>
+                                    <?php if ($isFilled): ?>
+                                        <span class="badge badge-success py-1 px-2 ml-1">FILLED</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="align-middle"><?= toHandleNull($row['item_number'], 'N/A') ?></td>
                                 <td class="align-middle">
