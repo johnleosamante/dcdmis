@@ -187,9 +187,9 @@ messageAlert($showAlert, $message, $success);
                         ?>
 
                         <div class="d-flex justify-content-between align-items-center mb-3 flex-column flex-sm-row">
-                            <h6 class="font-weight-bold text-gray-800 my-1">Rank List</h6>
                             <?php if ($hasAssessed): ?>
-                                <?php linkButtonSplit(uri() . '/export?v=' . encode('comparative-assessment-results') . '&id=' . encode($publicationId) . '&pos=' . encode($posId), 'Export Position Results', 'fa-download', 'Export Comparative Assessment Results for ' . e($pos['official_title']), 'success'); ?>
+                                <h6 class="font-weight-bold text-gray-800 my-1">Rank List</h6>
+                                <?php linkButtonSplit(uri() . '/export?v=' . encode('comparative-assessment-results') . '&id=' . encode($publicationId) . '&pos=' . encode($posId), 'Export', 'fa-download', 'Export Comparative Assessment Results for ' . e($pos['official_title']), 'success'); ?>
                             <?php endif; ?>
                         </div>
 
