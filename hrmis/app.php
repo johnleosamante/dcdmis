@@ -2000,6 +2000,12 @@ if (isset($_POST['save-publication'])) {
 
     try {
         if (!empty($publicationId)) {
+            $existingFilled = query("SELECT vpi.vacancy_id FROM vacancy_publication_items AS vpi INNER JOIN vacancies AS v ON vpi.vacancy_id = v.id WHERE vpi.publication_id = ? AND v.status = 'filled'", [$publicationId]);
+            if (!empty($existingFilled)) {
+                $filledIds = array_column($existingFilled, 'vacancy_id');
+                $vacancyIds = array_unique(array_merge($vacancyIds, $filledIds));
+            }
+
             if (clearPublicationItems($publicationId) === false) {
                 throw new Exception('Failed to clear call for application vacancy items.');
             }
