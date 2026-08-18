@@ -209,10 +209,15 @@ function deletePublication($vacancy_publication_id)
     return delete('vacancy_publications', '`id` = ?', [$vacancy_publication_id]);
 }
 
-function countPublications()
+function countPublications($status = 'open')
 {
-    $sql = "SELECT COUNT(`id`) AS `total` FROM `vacancy_publications`";
-    $result = find($sql);
+    if ($status === null || $status === 'all') {
+        $sql = "SELECT COUNT(`id`) AS `total` FROM `vacancy_publications`";
+        $result = find($sql);
+    } else {
+        $sql = "SELECT COUNT(`id`) AS `total` FROM `vacancy_publications` WHERE `status` = ?";
+        $result = find($sql, [$status]);
+    }
     return $result ? (int) $result['total'] : 0;
 }
 
@@ -220,13 +225,110 @@ function countPublications()
 function publicationItems($publication_id)
 {
     $sql = "SELECT vpi.`id`, vpi.`vacancy_id`, pi.`position_id`, p.`official_title`, pi.`item_number`, p.`salary_grade`,
-                pi.`station_id`, v.`date_vacated`, v.`reason`, v.`status` 
+                pi.`station_id`, v.`date_vacated`, v.`reason`, v.`status`, v.`plantilla_item_id`, v.`vacated_by_id` 
             FROM `vacancy_publication_items` AS vpi 
             INNER JOIN `vacancies` AS v ON vpi.`vacancy_id` = v.`id` 
             INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id` 
             INNER JOIN `positions` AS p ON pi.`position_id` = p.`id` 
             WHERE vpi.`publication_id` = ? ORDER BY p.`official_title` ASC";
     return query($sql, [$publication_id]);
+}
+
+function isVacancyReadded($plantilla_item_id)
+{
+    $sql = "SELECT COUNT(v.`id`) AS `total`
+            FROM `vacancies` AS v
+            WHERE v.`plantilla_item_id` = ? AND v.`status` = 'open'
+            AND v.`id` NOT IN (SELECT `vacancy_id` FROM `vacancy_publication_items`)";
+    $result = find($sql, [$plantilla_item_id]);
+    return $result && (int) $result['total'] > 0;
+}
+
+function readdVacancyToVacancies($publication_id, $vacancy_id)
+{
+    $pub = publication($publication_id);
+    if (!$pub || $pub['status'] !== 'closed') {
+        return ['success' => false, 'message' => 'Call for application must be closed to re-add vacant positions.'];
+    }
+
+    $sql = "SELECT v.`id`, v.`plantilla_item_id`, v.`vacated_by_id`, v.`date_vacated`, v.`reason`, v.`status`,
+                   pi.`position_id`, pi.`item_number`, p.`official_title`
+            FROM `vacancy_publication_items` AS vpi
+            INNER JOIN `vacancies` AS v ON vpi.`vacancy_id` = v.`id`
+            INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id`
+            INNER JOIN `positions` AS p ON pi.`position_id` = p.`id`
+            WHERE vpi.`publication_id` = ? AND vpi.`vacancy_id` = ? LIMIT 1";
+    $item = find($sql, [$publication_id, $vacancy_id]);
+
+    if (!$item) {
+        return ['success' => false, 'message' => 'Vacancy item not found in this call for application.'];
+    }
+
+    if ($item['status'] === 'filled') {
+        return ['success' => false, 'message' => 'Filled positions cannot be re-added as vacant.'];
+    }
+
+    $qualifiedCount = countQualifiedApplicants($publication_id, $item['position_id']);
+    if ($qualifiedCount > 0) {
+        return ['success' => false, 'message' => 'Positions with qualified applicants cannot be re-added.'];
+    }
+
+    if (isVacancyReadded($item['plantilla_item_id'])) {
+        return ['success' => false, 'message' => 'This position has already been re-added to vacant plantilla positions.'];
+    }
+
+    $newVacancyId = createVacancy($item['plantilla_item_id'], 'open', $item['vacated_by_id'], $item['date_vacated'], $item['reason']);
+    if ($newVacancyId) {
+        return [
+            'success' => true,
+            'message' => "Position [{$item['official_title']}] (Item {$item['item_number']}) has been successfully re-added to vacant plantilla positions.",
+            'item_number' => $item['item_number'],
+            'position_title' => $item['official_title']
+        ];
+    }
+
+    return ['success' => false, 'message' => 'Failed to re-add vacancy item.'];
+}
+
+function readdUnfilledVacanciesFromPublication($publication_id)
+{
+    $pub = publication($publication_id);
+    if (!$pub || $pub['status'] !== 'closed') {
+        return ['success' => false, 'message' => 'Call for application must be closed to re-add vacant positions.'];
+    }
+
+    $items = publicationItems($publication_id);
+    $readdedCount = 0;
+
+    foreach ($items as $item) {
+        if ($item['status'] === 'filled') {
+            continue;
+        }
+
+        $qualifiedCount = countQualifiedApplicants($publication_id, $item['position_id']);
+        if ($qualifiedCount > 0) {
+            continue;
+        }
+
+        if (isVacancyReadded($item['plantilla_item_id'])) {
+            continue;
+        }
+
+        $newId = createVacancy($item['plantilla_item_id'], 'open', $item['vacated_by_id'] ?? null, $item['date_vacated'] ?? date('Y-m-d'), $item['reason'] ?? 'reopened');
+        if ($newId) {
+            $readdedCount++;
+        }
+    }
+
+    if ($readdedCount > 0) {
+        return [
+            'success' => true,
+            'message' => "Successfully re-added {$readdedCount} vacant plantilla position(s) back to vacancies for future Call for Applications.",
+            'count' => $readdedCount
+        ];
+    }
+
+    return ['success' => false, 'message' => 'No eligible vacant positions were available to re-add (either already re-added, filled, or have qualified applicants).'];
 }
 
 // vacancy_publication_items
@@ -727,7 +829,6 @@ function applicantDiversityReligion()
     return query($sql);
 }
 
-
 function applicantDiversityEthnic()
 {
     $sql = "SELECT 
@@ -981,7 +1082,7 @@ function applicantApplications($applicant_id)
 {
     $sql = "SELECT va.id, va.created_at, va.status, va.district,
                    p.official_title, p.category AS position_group, p.salary_grade,
-                   vp.title AS publication_title, va.publication_id
+                   vp.title AS publication_title, vp.code AS publication_code, va.publication_id
             FROM vacancy_applications AS va
             INNER JOIN positions AS p ON va.position_id = p.id
             LEFT JOIN vacancy_publications AS vp ON va.publication_id = vp.id
@@ -990,17 +1091,7 @@ function applicantApplications($applicant_id)
     return query($sql, [$applicant_id]) ?: [];
 }
 
-function countAllRegisteredApplicants()
-{
-    $sql = "SELECT COUNT(DISTINCT ac.id) AS `total`
-            FROM application_codes AS ac
-            LEFT JOIN employees AS e ON ac.id = e.id
-            LEFT JOIN applicants AS a ON ac.id = a.id
-            WHERE (e.last_name IS NOT NULL AND e.last_name <> '') 
-               OR (a.last_name IS NOT NULL AND a.last_name <> '')";
-    $res = find($sql);
-    return $res ? (int) $res['total'] : 0;
-}
+
 
 function allApplicantsList($typeFilter = 'all')
 {
@@ -1041,4 +1132,43 @@ function allApplicantsList($typeFilter = 'all')
             ORDER BY last_name ASC, first_name ASC";
     $results = query($sql);
     return is_array($results) ? $results : [];
+}
+
+function canClosePublication($publication_id)
+{
+    $forReviewApps = applicantsForReviewByPublication($publication_id);
+    if (!empty($forReviewApps) && count($forReviewApps) > 0) {
+        $count = count($forReviewApps);
+        return [
+            'can_close' => false,
+            'reason' => "Cannot close call for application because there " . ($count === 1 ? "is 1 application" : "are {$count} applications") . " still pending initial screening."
+        ];
+    }
+
+    $items = publicationItems($publication_id);
+    $unassessedPositions = [];
+
+    foreach ($items as $item) {
+        $positionId = $item['position_id'];
+        $qualifiedCount = countQualifiedApplicants($publication_id, $positionId);
+        $assessedCount = countAssessedQualifiedApplicants($publication_id, $positionId);
+
+        if ($qualifiedCount > 0 && $qualifiedCount !== $assessedCount) {
+            $unassessedPositions[] = $item['official_title'];
+        }
+    }
+
+    if (!empty($unassessedPositions)) {
+        $unassessedPositions = array_unique($unassessedPositions);
+        $posList = implode(', ', $unassessedPositions);
+        return [
+            'can_close' => false,
+            'reason' => "Cannot close call for application because there are qualified applicants who have not been assessed for the following position(s): {$posList}."
+        ];
+    }
+
+    return [
+        'can_close' => true,
+        'reason' => null
+    ];
 }
