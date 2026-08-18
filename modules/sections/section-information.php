@@ -74,6 +74,8 @@ $personnel = count($query);
             </table>
         </div>
 
+        <?php require(root() . '/includes/employee-filter-bar.php'); ?>
+
         <div class="table-responsive">
             <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
                 <thead>
@@ -106,7 +108,8 @@ $personnel = count($query);
                         $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
                         $photo = file_exists(root() . '/' . $row['profile_picture']) ? "{$baseUri}/" . $row['profile_picture'] : "{$baseUri}/assets/img/user.png";
                         ?>
-                        <tr class="text-uppercase">
+                        <tr class="text-uppercase" data-gender="<?= e($row['sex']) ?>"
+                            data-position-id="<?= e($row['position_id']) ?>" data-station-id="<?= e($row['station_id']) ?>">
                             <td class="align-middle">
                                 <div class="image-container">
                                     <span
