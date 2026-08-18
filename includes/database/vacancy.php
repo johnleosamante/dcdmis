@@ -119,14 +119,13 @@ function vacantItemsForUpdate($publication_id, $position_id = null)
     }
     $sql = "SELECT v.`id`, pi.`position_id`, p.`official_title`, p.`category`, 
                 p.`salary_grade`, pi.`station_id`, pi.`item_number`, v.`vacated_by_id`, 
-                v.`date_vacated`, v.`reason`, v.`created_at`
+                v.`date_vacated`, v.`reason`, v.`created_at`, v.`status`
             FROM `vacancies` AS v 
             INNER JOIN `plantilla_items` AS pi ON v.`plantilla_item_id` = pi.`id`
             INNER JOIN `positions` AS p ON pi.`position_id` = p.`id` 
-            WHERE v.`status` = 'open' 
-            AND (
+            WHERE (
                 v.`id` IN (SELECT `vacancy_id` FROM `vacancy_publication_items` WHERE `publication_id` = ?)
-                OR v.`id` NOT IN (SELECT `vacancy_id` FROM `vacancy_publication_items`)
+                OR (v.`status` = 'open' AND v.`id` NOT IN (SELECT `vacancy_id` FROM `vacancy_publication_items`))
             )
             {$filter} ORDER BY p.`official_title` ASC";
     return query($sql, $params);
