@@ -90,12 +90,25 @@ $btnText = ($isEdit ? 'Update' : 'Save') . ' Call for Application';
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="pub-status" class="font-weight-bold">Status</label>
+                        <?php
+                        $canCloseInfo = ['can_close' => true, 'reason' => null];
+                        if ($isEdit && $publication) {
+                            $canCloseInfo = canClosePublication($publication['id']);
+                        }
+                        ?>
                         <select id="pub-status" name="pub_status" class="form-control">
                             <option value="draft" <?= ($isEdit && $publication['status'] == 'draft') ? 'selected' : '' ?>>
                                 Draft (Not yet accepting applications)</option>
                             <option value="open" <?= ($isEdit && $publication['status'] == 'open') ? 'selected' : (($isEdit) ? '' : 'selected') ?>>Open (Accepting applications)</option>
-                            <option value="closed" <?= ($isEdit && $publication['status'] == 'closed') ? 'selected' : '' ?>>Closed</option>
+                            <option value="closed" <?= ($isEdit && $publication['status'] == 'closed') ? 'selected' : ($canCloseInfo['can_close'] ? '' : 'disabled') ?>>
+                                Closed <?= (!$canCloseInfo['can_close'] && (!$isEdit || $publication['status'] !== 'closed')) ? ' (Requirements incomplete)' : '' ?>
+                            </option>
                         </select>
+                        <?php if (!$canCloseInfo['can_close'] && ($isEdit && $publication['status'] !== 'closed')): ?>
+                            <small class="text-danger font-weight-bold mt-1 d-block">
+                                <i class="fas fa-exclamation-triangle mr-1"></i> <?= e($canCloseInfo['reason']) ?>
+                            </small>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
