@@ -23,8 +23,7 @@ $vacancyId = $_GET['vacancy_id'] ?? null;
                 <?= csrf_field(); ?>
                 <input type="hidden" name="verifier" value="<?= e($pubId) ?>">
                 <input type="hidden" name="data-verifier" value="<?= e($vacancyId) ?>">
-                <button type="submit" class="btn btn-primary" name="readd-vacancy"><i
-                        class="fas fa-plus-circle mr-1"></i> Yes, Continue</button>
+                <button type="submit" class="btn btn-primary" name="readd-vacancy">Yes, Continue</button>
                 <?php cancelModalButton() ?>
             </form>
         </div>
