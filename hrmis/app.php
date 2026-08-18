@@ -1988,6 +1988,14 @@ if (isset($_POST['save-publication'])) {
         return;
     }
 
+    if ($pubStatus === 'closed' && !empty($publicationId)) {
+        $canClose = canClosePublication($publicationId);
+        if (!$canClose['can_close']) {
+            $message = $canClose['reason'];
+            return;
+        }
+    }
+
     beginTransaction();
 
     try {
@@ -2028,6 +2036,57 @@ if (isset($_POST['save-publication'])) {
     } catch (Exception $e) {
         rollBack();
         $message = $e->getMessage();
+    }
+}
+
+if (isset($_POST['readd-vacancy'])) {
+    $publicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $vacancyId = sanitize(decipher($_POST['data-verifier'] ?? null));
+    $showAlert = true;
+    $success = false;
+
+    if (empty($publicationId) || empty($vacancyId)) {
+        $message = 'Invalid request parameters.';
+    } else {
+        beginTransaction();
+        try {
+            $res = readdVacancyToVacancies($publicationId, $vacancyId);
+            if (!$res['success']) {
+                throw new Exception($res['message']);
+            }
+            createSystemLog($stationId, $userId, 'Re-added vacancy to plantilla vacancies', "Publication ID: {$publicationId}, Vacancy ID: {$vacancyId}", clientIp());
+            commit();
+            $success = true;
+            $message = $res['message'];
+        } catch (Exception $e) {
+            rollBack();
+            $message = $e->getMessage();
+        }
+    }
+}
+
+if (isset($_POST['readd-all-vacancies'])) {
+    $publicationId = sanitize(decipher($_POST['verifier'] ?? null));
+    $showAlert = true;
+    $success = false;
+
+    if (empty($publicationId)) {
+        $message = 'Invalid call for application selected.';
+    } else {
+        beginTransaction();
+        try {
+            $res = readdUnfilledVacanciesFromPublication($publicationId);
+            if (!$res['success']) {
+                throw new Exception($res['message']);
+            }
+            createSystemLog($stationId, $userId, 'Re-added all unfilled vacancies from closed publication', "Publication ID: {$publicationId}, Readded count: {$res['count']}", clientIp());
+            commit();
+            $success = true;
+            $message = $res['message'];
+        } catch (Exception $e) {
+            rollBack();
+            $message = $e->getMessage();
+        }
     }
 }
 
