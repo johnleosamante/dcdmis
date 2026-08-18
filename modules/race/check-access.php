@@ -18,8 +18,7 @@ if (!function_exists('position')) {
     require_once(root() . '/includes/database/position.php');
 }
 $userPosition = position($userId);
-$userPositionId = $userPosition['position_id'] ?? null;
-$isAllowedHigherPosition = ($activeApp === 'pis') && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+$isAllowedHigherPosition = ($activeApp === 'pis') && (in_array($userPositionId, $allowedMonitoringPositions ?? [], true) || !empty($isICT));
 
 if (!$userId || (raceAccessLevel($userId) === 'none' && !$isAllowedHigherPosition)) {
     echo json_encode(['access' => false]);
