@@ -8,36 +8,83 @@ if (!$isHrmis || (!$isPersonnel && !$isICT)) {
 messageAlert($showAlert, $message, $success);
 
 $applicantId = isset($_GET['id']) ? sanitize(decode($_GET['id'])) : null;
-
-// Check if applicant is an internal employee
-if ($applicantId && employee($applicantId)) {
-    redirect(customUri('hrmis', 'Employee Information', $applicantId));
-    exit;
-}
-
-$applicant = $applicantId ? applicant($applicantId) : null;
+$employeeData = $applicantId ? employee($applicantId) : null;
+$isInternal = !empty($employeeData);
+$extApplicant = $applicantId ? applicant($applicantId) : null;
+$applicant = $isInternal ? ($extApplicant ? array_merge($extApplicant, $employeeData) : $employeeData) : $extApplicant;
 
 if (!$applicant) {
     echo '<div class="alert alert-danger shadow"><i class="fas fa-exclamation-triangle mr-2"></i> Applicant record not found.</div>';
     return;
 }
 
-$fullName = toName($applicant['last_name'], $applicant['first_name'], $applicant['middle_name'], $applicant['name_extension'], true);
+$fullName = toName($applicant['last_name'] ?? '', $applicant['first_name'] ?? '', $applicant['middle_name'] ?? '', $applicant['name_extension'] ?? '', true);
 $age = !empty($applicant['birthdate']) && $applicant['birthdate'] !== '0000-00-00' ? date_diff(date_create($applicant['birthdate']), date_create('today'))->y : 'N/A';
-$fullAddress = implode(', ', array_filter([$applicant['lot'], $applicant['street'], $applicant['subdivision'], $applicant['barangay'], $applicant['city'], $applicant['province'], $applicant['zip']]));
-
-// Fetch religion name & ethnic group name
+$fullAddress = implode(', ', array_filter([$applicant['lot'] ?? '', $applicant['street'] ?? '', $applicant['subdivision'] ?? '', $applicant['barangay'] ?? '', $applicant['city'] ?? '', $applicant['province'] ?? '', $applicant['zip'] ?? '']));
 $religionName = !empty($applicant['religion_id']) ? (religion($applicant['religion_id'])['name'] ?? 'Not Specified') : (!empty($applicant['specify_other_religion']) ? $applicant['specify_other_religion'] : 'Not Specified');
-$ethnicName = !empty($applicant['ethnic_group_id']) ? ($applicant['specify_other_ethnic_group'] ?: 'Ethnic Group') : (!empty($applicant['specify_other_ethnic_group']) ? $applicant['specify_other_ethnic_group'] : 'Not Specified');
 
-// Parse eligibilities
+if (!empty($applicant['ethnic_group_id'])) {
+    $egObj = find("SELECT `name` FROM `ethnic_groups` WHERE `id` = ? LIMIT 1", [$applicant['ethnic_group_id']]);
+    $ethnicName = $egObj ? $egObj['name'] : (!empty($applicant['specify_other_ethnic_group']) ? $applicant['specify_other_ethnic_group'] : 'Not Specified');
+} else {
+    $ethnicName = !empty($applicant['specify_other_ethnic_group']) ? $applicant['specify_other_ethnic_group'] : 'Not Specified';
+}
+
+$undergraduate = $applicant['undergraduate'] ?? '';
+$graduateStudies = $applicant['graduate_studies'] ?? '';
 $eligibilities = !empty($applicant['eligibilities']) ? json_decode($applicant['eligibilities'], true) : [];
+
 if (!is_array($eligibilities)) {
     $eligibilities = [];
 }
 
-// Applications list
+if ($isInternal) {
+    if (!function_exists('educationalBackgrounds')) {
+        require_once(root() . '/includes/database/education.php');
+    }
+    if (!function_exists('eligibilities')) {
+        require_once(root() . '/includes/database/eligibility.php');
+    }
+
+    $empEdbs = educationalBackgrounds($applicantId);
+    if (!empty($empEdbs)) {
+        $undergradList = [];
+        $gradList = [];
+        foreach ($empEdbs as $ed) {
+            $lvl = strtolower($ed['level'] ?? '');
+            $courseStr = !empty($ed['course']) ? $ed['course'] : (!empty($ed['school']) ? $ed['school'] : '');
+            if ($courseStr !== '') {
+                if (strpos($lvl, 'college') !== false) {
+                    $undergradList[] = html_entity_decode($courseStr, ENT_QUOTES);
+                } elseif (strpos($lvl, 'graduate') !== false) {
+                    $gradList[] = html_entity_decode($courseStr, ENT_QUOTES);
+                }
+            }
+        }
+        if (!empty($undergradList)) {
+            $undergraduate = implode(', ', array_unique($undergradList));
+        }
+        if (!empty($gradList)) {
+            $graduateStudies = implode(', ', array_unique($gradList));
+        }
+    }
+
+    $empEligs = eligibilities($applicantId);
+    if (!empty($empEligs)) {
+        $eligList = [];
+        foreach ($empEligs as $el) {
+            if (!empty($el['title'])) {
+                $eligList[] = html_entity_decode($el['title'], ENT_QUOTES);
+            }
+        }
+        if (!empty($eligList)) {
+            $eligibilities = array_values(array_unique($eligList));
+        }
+    }
+}
+
 $applications = applicantApplications($applicantId);
+$applicantCode = applicantCode($applicantId) ?: $applicantId;
 ?>
 
 <div class="d-flex align-items-center justify-content-between flex-row mt-2 mb-3">
@@ -55,46 +102,56 @@ $applications = applicantApplications($applicantId);
 </div>
 
 <div class="row">
-    <div class="col-lg-4 col-md-5 mb-4">
+    <div class="col-lg-4 col-md-5">
         <div class="card border-left-primary shadow mb-4">
             <div class="card-body text-center">
                 <div class="mb-3">
-                    <img class="img-profile rounded-circle shadow-sm" src="<?= uri() ?>/assets/img/user.png" width="110"
-                        height="110" alt="Applicant Photo">
+                    <?php $photo = ($isInternal && !empty($applicant['profile_picture']) && file_exists(root() . '/' . $applicant['profile_picture'])) ? uri() . '/' . $applicant['profile_picture'] : uri() . '/assets/img/user.png'; ?>
+                    <img class="img-profile rounded-circle shadow-sm" src="<?= e($photo) ?>" width="110" height="110"
+                        alt="Applicant Photo">
                 </div>
                 <h5 class="font-weight-bold text-dark text-uppercase mb-0"><?= e($fullName) ?></h5>
                 <div class="font-weight-bold text-center">
-                    <span class="badge badge-primary">
-                        <?= e($applicant['id']) ?>
+                    <span class="badge badge-secondary">
+                        <?= e($applicantCode) ?>
                     </span>
                 </div>
-                <p class="badge badge-secondary px-2 py-1 mb-3"><i class="fas fa-globe"></i> External</p>
+                <?php if ($isInternal): ?>
+                    <p class="badge badge-primary px-2 py-1 mb-3"><i class="fas fa-building mr-1"></i> Internal</p>
+                <?php else: ?>
+                    <p class="badge badge-success px-2 py-1 mb-3"><i class="fas fa-globe mr-1"></i> External</p>
+                <?php endif; ?>
 
                 <div class="text-left border-top border-bottom py-2 my-2">
                     <p class="small text-muted mb-1 text-lowercase">
-                        <i class="fas fa-envelope mr-2 text-primary"></i> <?= e($applicant['email_address']) ?>
+                        <i class="fas fa-envelope mr-2 text-primary"></i> <?= e($applicant['email_address'] ?? 'N/A') ?>
                     </p>
                     <p class="small text-muted mb-1">
-                        <i class="fas fa-phone mr-2 text-primary"></i> <?= e($applicant['mobile_number']) ?>
+                        <i class="fas fa-phone mr-2 text-primary"></i> <?= e($applicant['mobile_number'] ?? 'N/A') ?>
                     </p>
                     <p class="small text-muted mb-1 text-capitalize">
-                        <i class="fas fa-venus-mars mr-2 text-primary"></i> <?= e($applicant['sex']) ?>
+                        <i class="fas fa-venus-mars mr-2 text-primary"></i> <?= e($applicant['sex'] ?? 'N/A') ?>
                     </p>
                     <p class="small text-muted mb-1">
-                        <i class="fas fa-birthday-cake mr-2 text-primary"></i> <?= "{$age} years old" ?>
+                        <i class="fas fa-birthday-cake mr-2 text-primary"></i>
+                        <?= $age !== 'N/A' ? "{$age} years old" : 'N/A' ?>
                     </p>
                     <p class="small text-muted mb-0 text-capitalize">
                         <i class="fas fa-heart mr-2 text-primary"></i>
-                        <?= e($applicant['civil_status']) ?>
+                        <?= e($applicant['civil_status'] ?? 'N/A') ?>
                     </p>
                 </div>
 
-                <div class="d-flex justify-content-center">
-                    <?php linkButtonSplit(customUri('hrmis', 'Edit External Applicant', $applicant['id']), 'Edit', 'fa-edit', 'Edit Applicant Information', 'primary') ?>
-                    <?php if (count($applications) === 0): ?>
-                        <div class="ml-2">
-                            <?php modalButtonSplit(uri() . '/modules/applicants/delete-applicant-dialog.php?id=' . cipher($applicant['id']), 'Remove', 'fa-trash', 'Remove External Applicant', 'danger') ?>
-                        </div>
+                <div class="d-flex justify-content-center mb-n1">
+                    <?php if ($isInternal): ?>
+                        <?php linkButtonSplit(customUri('hrmis', 'Employee Information', $applicantId), 'Edit', 'fa-edit', 'View / Edit Employee Information', 'primary') ?>
+                    <?php else: ?>
+                        <?php linkButtonSplit(customUri('hrmis', 'Edit External Applicant', $applicantId), 'Edit', 'fa-edit', 'Edit Applicant Information', 'primary') ?>
+                        <?php if (count($applications) === 0): ?>
+                            <div class="ml-2">
+                                <?php modalButtonSplit(uri() . '/modules/applicants/delete-applicant-dialog.php?id=' . cipher($applicantId), 'Remove', 'fa-trash', 'Remove External Applicant', 'danger') ?>
+                            </div>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
@@ -102,18 +159,15 @@ $applications = applicantApplications($applicantId);
     </div>
 
     <div class="col-lg-8 col-md-7">
-        <!-- Personal Details Card -->
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold"><i class="fas fa-user mr-1"></i> Personal & Demographic
-                    Information</h6>
+                <h6 class="m-0 font-weight-bold">Personal Information</h6>
             </div>
             <div class="card-body">
                 <div class="row mb-2">
                     <div class="col-sm-4 font-weight-bold text-secondary">Date of Birth:</div>
                     <div class="col-sm-8">
-                        <?= !empty($applicant['birthdate']) ? date('F j, Y', strtotime($applicant['birthdate'])) : 'N/A' ?>
-                        (Age: <?= $age ?>)
+                        <?= !empty($applicant['birthdate']) && $applicant['birthdate'] !== '0000-00-00' ? date('F j, Y', strtotime($applicant['birthdate'])) : 'N/A' ?>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -136,25 +190,27 @@ $applications = applicantApplications($applicantId);
                 </div>
                 <div class="row mb-0">
                     <div class="col-sm-4 font-weight-bold text-secondary">Residential Address:</div>
-                    <div class="col-sm-8"><?= e($fullAddress) ?></div>
+                    <div class="col-sm-8"><?= !empty($fullAddress) ? e($fullAddress) : 'Not Specified' ?></div>
                 </div>
             </div>
         </div>
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold"><i class="fas fa-graduation-cap mr-1"></i> Education &
+                <h6 class="m-0 font-weight-bold">Education &
                     Eligibilities</h6>
             </div>
             <div class="card-body">
                 <div class="row mb-2">
                     <div class="col-sm-4 font-weight-bold text-secondary">Undergraduate:</div>
-                    <div class="col-sm-8"><?= e($applicant['undergraduate']) ?></div>
+                    <div class="col-sm-8">
+                        <?= !empty($undergraduate) ? e($undergraduate) : 'Not Specified' ?>
+                    </div>
                 </div>
-                <?php if (!empty($applicant['graduate_studies'])): ?>
+                <?php if (!empty($graduateStudies)): ?>
                     <div class="row mb-2">
                         <div class="col-sm-4 font-weight-bold text-secondary">Graduate Studies:</div>
-                        <div class="col-sm-8"><?= e($applicant['graduate_studies']) ?></div>
+                        <div class="col-sm-8"><?= e($graduateStudies) ?></div>
                     </div>
                 <?php endif; ?>
                 <div class="row mb-0">
@@ -178,24 +234,22 @@ $applications = applicantApplications($applicantId);
 
 <div class="row">
     <div class="col">
-        <div class="card shadow mb-4">
+        <div class="card border-left-info shadow mb-4">
             <div class="card-header py-3 d-flex align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold"><i class="fas fa-briefcase mr-1"></i> Application Submission
-                    History</h6>
-                <span class="badge badge-info">
-                    <?php $appCount = count($applications);
-                    echo $appCount . ' Application' . ($appCount > 1 ? 's' : ''); ?>
-                </span>
+                <h6 class="m-0 font-weight-bold">Application Submission
+                    History <span class="badge badge-info">
+                        <?= count($applications) ?>
+                    </span></h6>
             </div>
             <div class="card-body">
                 <?php if (!empty($applications)): ?>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover mb-0" width="100%" cellspacing="0">
+                        <table class="table mb-0" width="100%" cellspacing="0">
                             <thead>
-                                <tr class="bg-light">
+                                <tr>
                                     <th class="align-middle">Position Title</th>
                                     <th class="align-middle">Call for Application</th>
-                                    <th class="align-middle text-center">Applied Date</th>
+                                    <th class="align-middle text-center">Date Applied</th>
                                     <th class="align-middle text-center">Status</th>
                                     <th class="align-middle text-center">Attachment</th>
                                 </tr>
@@ -216,7 +270,16 @@ $applications = applicantApplications($applicantId);
                                             <?= e($app['official_title']) ?>
                                         </td>
                                         <td class="align-middle small">
-                                            <?= e($app['publication_title'] ?: 'Publication #' . $app['publication_id']) ?>
+                                            <?php
+                                            $pubTitle = $app['publication_title'] ?: ('Publication #' . $app['publication_id']);
+                                            $pubUri = customUri('hrmis', 'Call for Application Details', $app['publication_id']);
+                                            ?>
+                                            <a href="<?= e($pubUri) ?>">
+                                                <?= e($pubTitle) ?>
+                                                <?php if (!empty($app['publication_code'])): ?>
+                                                    (<?= e($app['publication_code']) ?>)
+                                                <?php endif; ?>
+                                            </a>
                                         </td>
                                         <td class="align-middle text-center small">
                                             <?= toDateTime($app['created_at']) ?>
@@ -239,11 +302,20 @@ $applications = applicantApplications($applicantId);
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
+                            <tfoot>
+                                <tr class="small">
+                                    <th class="align-middle">Position Title</th>
+                                    <th class="align-middle">Call for Application</th>
+                                    <th class="align-middle text-center">Date Applied</th>
+                                    <th class="align-middle text-center">Status</th>
+                                    <th class="align-middle text-center">Attachment</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 <?php else: ?>
                     <p class="text-muted text-center my-3"><i class="fas fa-info-circle mr-1"></i> No job applications have
-                        been submitted by this external applicant yet.</p>
+                        been submitted by this <?= $isInternal ? 'internal' : 'external' ?> applicant yet.</p>
                 <?php endif; ?>
             </div>
         </div>
