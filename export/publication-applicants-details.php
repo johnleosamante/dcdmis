@@ -6,6 +6,8 @@ if (!isset($_GET['v']) || empty($_GET['v'])) {
 }
 
 require_once(root() . '/includes/database/employee.php');
+require_once(root() . '/includes/database/religion.php');
+require_once(root() . '/includes/database/ethnic-group.php');
 require_once(root() . '/includes/database/vacancy.php');
 require_once(root() . '/includes/database/education.php');
 require_once(root() . '/includes/database/eligibility.php');
