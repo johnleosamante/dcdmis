@@ -325,8 +325,25 @@ $employmentChartData = [
 </div>
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
+    <div class="card-header py-3 d-sm-flex align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold">Included Vacancies</h6>
+        <?php
+        $isClosed = ($publication['status'] === 'closed');
+        $items = publicationItems($publicationId);
+        $hasEligibleToReadd = false;
+        if ($isClosed && $isHrmis && ($isPersonnel || $isICT)) {
+            foreach ($items as $chkItem) {
+                if ($chkItem['status'] !== 'filled' && countQualifiedApplicants($publicationId, $chkItem['position_id']) === 0 && !isVacancyReadded($chkItem['plantilla_item_id'])) {
+                    $hasEligibleToReadd = true;
+                    break;
+                }
+            }
+        }
+        if ($hasEligibleToReadd): ?>
+            <div>
+                <?php modalButtonSplit(uri() . '/modules/vacancies/readd-all-vacancies-dialog.php?id=' . cipher($publicationId), 'Re-add Unfilled Items to Vacancies', 'fa-redo', 'Re-add all unfilled positions with no qualified applicants to vacant plantilla positions', 'primary'); ?>
+            </div>
+        <?php endif; ?>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -336,14 +353,13 @@ $employmentChartData = [
                         <th class="align-middle" width="30%">Position / Salary Grade</th>
                         <th class="align-middle" width="20%">Item Number</th>
                         <th class="align-middle" width="35%">Station</th>
-                        <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
-                            <th class="align-middle" width="15%">Status</th>
+                        <?php if ($isHrmis && ($isPersonnel || $isICT)): ?>
+                            <th class="align-middle" width="15%">Status / Action</th>
                         <?php endif ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $items = publicationItems($publicationId);
                     foreach ($items as $item): ?>
                         <tr class="text-uppercase">
                             <td class="align-middle">
@@ -354,18 +370,36 @@ $employmentChartData = [
                                 <?php $school = schoolById($item['station_id']);
                                 echo $school ? $school['name'] : 'N/A'; ?>
                             </td>
-                            <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
+                            <?php if ($isHrmis && ($isPersonnel || $isICT)): ?>
                                 <td class="align-middle text-capitalize">
                                     <?php if ($item['status'] === 'filled') { ?>
                                         <span class="badge badge-success py-1 px-2 text-uppercase small">Filled</span>
-                                    <?php } elseif (countQualifiedApplicants($publicationId, $item['position_id']) === 0) { ?>
-                                        <span class="badge badge-secondary py-1 px-2 text-uppercase small">No Qualified
-                                            Applicants</span>
-                                    <?php } elseif (countQualifiedApplicants($publicationId, $item['position_id']) !== countAssessedQualifiedApplicants($publicationId, $item['position_id'])) { ?>
-                                        <span class="badge badge-secondary py-1 px-2 text-uppercase small">Pending Assessment</span>
-                                    <?php } else {
-                                        modalButtonSplit(uri() . '/modules/vacancies/fill-vacancy-dialog.php?id=' . cipher($item['vacancy_id']), 'Fill Position', 'fa-user-plus', 'Fill Position Item');
-                                    } ?>
+                                    <?php } elseif ($publication['status'] === 'open') { ?>
+                                        <?php if (countQualifiedApplicants($publicationId, $item['position_id']) === 0) { ?>
+                                            <span class="badge badge-secondary py-1 px-2 text-uppercase small">No Qualified
+                                                Applicants</span>
+                                        <?php } elseif (countQualifiedApplicants($publicationId, $item['position_id']) !== countAssessedQualifiedApplicants($publicationId, $item['position_id'])) { ?>
+                                            <span class="badge badge-secondary py-1 px-2 text-uppercase small">Pending Assessment</span>
+                                        <?php } else {
+                                            modalButtonSplit(uri() . '/modules/vacancies/fill-vacancy-dialog.php?id=' . cipher($item['vacancy_id']), 'Fill Position', 'fa-user-plus', 'Fill Position Item');
+                                        } ?>
+                                    <?php } elseif ($publication['status'] === 'closed') { ?>
+                                        <?php
+                                        $qualifiedCount = countQualifiedApplicants($publicationId, $item['position_id']);
+                                        $alreadyReadded = isVacancyReadded($item['plantilla_item_id']);
+                                        if ($qualifiedCount > 0) { ?>
+                                            <span class="badge badge-info py-1 px-2 text-uppercase small">Has Qualified
+                                                Applicants</span>
+                                        <?php } elseif ($alreadyReadded) { ?>
+                                            <span class="badge badge-primary py-1 px-2 text-uppercase small"
+                                                title="Item already re-added to vacant positions">Vacant</span>
+                                        <?php } else {
+                                            modalButtonSplit(uri() . '/modules/vacancies/readd-vacancy-dialog.php?pub_id=' . cipher($publicationId) . '&vacancy_id=' . cipher($item['vacancy_id']), 'Re-add to Vacancies', 'fa-plus-circle', 'Re-add this vacant plantilla item to vacancies for new Call for Applications', 'primary');
+                                        } ?>
+                                    <?php } else { ?>
+                                        <span
+                                            class="badge badge-secondary py-1 px-2 text-uppercase small"><?= e($publication['status']) ?></span>
+                                    <?php } ?>
                                 </td>
                             <?php endif ?>
                         </tr>
@@ -376,8 +410,8 @@ $employmentChartData = [
                         <th class="align-middle" width="30%">Position / Salary Grade</th>
                         <th class="align-middle" width="20%">Item Number</th>
                         <th class="align-middle" width="35%">Station</th>
-                        <?php if ($isHrmis && ($isPersonnel || $isICT) && $publication['status'] === 'open'): ?>
-                            <th class="align-middle" width="15%">Status</th>
+                        <?php if ($isHrmis && ($isPersonnel || $isICT)): ?>
+                            <th class="align-middle" width="15%">Status / Action</th>
                         <?php endif ?>
                     </tr>
                 </tfoot>
