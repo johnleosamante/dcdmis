@@ -1,6 +1,6 @@
 <?php
 // public/api/csrf-token.php
-require_once __DIR__ . '/../includes/initialization.php';
+require_once __DIR__ . '/../includes/function.php';
 
 header('Content-Type: application/json');
 header('Cache-Control: no-cache, no-store, must-revalidate');
