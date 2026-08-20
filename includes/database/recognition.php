@@ -159,21 +159,12 @@ function activeEmployeesWithPosition($stationId = null, $category = null)
     }
     if ($category !== null && $category !== '') {
         // if ($category === 'Related-Teaching') {
-        //     $conditions[] = "(pos.`category` = ? OR pos.`category` = ? OR pos.`id` IN ('PDO1', 'PDO2'))";
+        //     $conditions[] = "(pos.`category` = ? OR pos.`id` IN ('PDO1', 'PDO2'))";
         //     $params[] = 'Related-Teaching';
-        //     $params[] = 'Teaching';
         // } else {
-        //     $conditions[] = "pos.`category` = ?";
-        //     $params[] = $category;
-        // }
-
-        if ($category === 'Related-Teaching') {
-            $conditions[] = "pos.`category` = ?";
-            $params[] = 'Related-Teaching';
-        } else {
             $conditions[] = "pos.`category` = ?";
             $params[] = $category;
-        }
+        // }
     }
     if (!empty($conditions)) {
         $sql .= " WHERE " . implode(' AND ', $conditions);
@@ -313,7 +304,7 @@ function activeSupervisorEmployees()
     return is_array($results) ? $results : [];
 }
 
-function activeGuidanceCounselorEmployees($stationId = null, $districtId = null)
+function activeRelatedTeachingEmployees($stationId = null, $districtId = null)
 {
     $sql = "SELECT p.`id` AS `employee_id`, p.`last_name`, p.`first_name`, p.`middle_name`, p.`name_extension`,
                 pos.`official_title`, pos.`category` AS `position_category`,
