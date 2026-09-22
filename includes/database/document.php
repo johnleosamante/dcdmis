@@ -29,16 +29,16 @@ function documentTypes(bool $for_school = false): array
         $params[] = 1;
     }
     $whereClause = implode(" AND ", $where);
-    $sql = "SELECT `id`, `name` FROM `document_types` WHERE $whereClause ORDER BY `name` ASC";
+    $sql = "SELECT `id`, `name`, `description`, `for_school` FROM `document_types` WHERE $whereClause ORDER BY `name` ASC";
     $result = query($sql, $params);
     return is_array($result) ? $result : [];
 }
 
-function documentType(int $document_type_id): string
+function documentType(?int $document_type_id): array
 {
-    $sql = "SELECT `name` FROM `document_types` WHERE `id` = ? LIMIT 1";
+    $sql = "SELECT `name`, `description`, `for_school` FROM `document_types` WHERE `id` = ? LIMIT 1";
     $result = find($sql, [$document_type_id]);
-    return $result['name'] ?? '';
+    return is_array($result) ? $result : [];
 }
 
 function document($document_transaction_id)
@@ -379,7 +379,7 @@ function documentLog($document_transaction_id)
             FROM `document_transactions` AS t 
             INNER JOIN `document_transaction_logs` AS l ON t.id = l.document_transaction_id 
             WHERE t.id = ? 
-            ORDER BY l.created_at DESC 
+            ORDER BY l.created_at DESC, l.id DESC 
             LIMIT 1";
     return find($sql, [$document_transaction_id]);
 }
@@ -396,7 +396,7 @@ function documentLogs($document_transaction_id)
                 created_at
             FROM `document_transaction_logs` 
             WHERE `document_transaction_id` = ? 
-            ORDER BY `created_at` DESC";
+            ORDER BY `created_at` DESC, `id` DESC";
     $results = query($sql, [$document_transaction_id]);
     return is_array($results) ? $results : [];
 }
@@ -419,7 +419,7 @@ function updateDocumentLog($document_transaction_id, $processor_id, $received_fr
 {
     $latest = find(
         "SELECT `id` FROM `document_transaction_logs` WHERE `document_transaction_id` = ? 
-        ORDER BY `created_at` DESC LIMIT 1",
+        ORDER BY `created_at` DESC, `id` DESC LIMIT 1",
         [$document_transaction_id]
     );
     if (!$latest) {
