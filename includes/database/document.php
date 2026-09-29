@@ -41,6 +41,94 @@ function documentType(?int $document_type_id): array
     return is_array($result) ? $result : [];
 }
 
+function createDocumentType($name, $description, $for_school)
+{
+    $data = [
+        'name' => $name,
+        'description' => $description,
+        'for_school' => $for_school,
+    ];
+    return insert('document_types', $data);
+}
+
+function updateDocumentType($name, $description, $for_school, $id)
+{
+    $data = [
+        'name' => $name,
+        'description' => $description,
+        'for_school' => $for_school,
+    ];
+    return update('document_types', $data, '`id` = ?', [$id]);
+}
+
+function deleteDocumentType($id)
+{
+    return delete('document_types', '`id` = ?', [$id]);
+}
+
+function documentTypeStationSteps($document_type_id)
+{
+    $sql = "SELECT * FROM `document_type_station_steps` WHERE `document_type_id` = ?";
+    $result = query($sql, [$document_type_id]);
+    return is_array($result) ? $result : [];
+}
+
+function documentTypeStationStep($document_type_station_step_id)
+{
+    $sql = "SELECT * FROM `document_type_station_steps` WHERE `id` = ? LIMIT 1";
+    $result = find($sql, [$document_type_station_step_id]);
+    return is_array($result) ? $result : [];
+}
+
+function createDocumentTypeStationStep()
+{
+
+}
+
+function updateDocumentTypeStationStep()
+{
+
+}
+
+function deleteDocumentTypeStationStep($document_type_station_step_id)
+{
+    return delete('document_type_station_steps', '`id` = >', [$document_type_station_step_id]);
+}
+
+function documentTypeStationStepRequirements($document_type_id, $document_type_station_step_id = null)
+{
+    $sql = "SELECT 
+                r.id,
+                t.id AS `type_id`,
+                t.name AS `document_type`,
+                s.id AS `step_id`,
+                s.step_number,
+                s.destination_id,
+                s.description AS `step_description`,
+                s.note AS `step_note`,
+                s.ideal_processing_time AS `ideal_time`,
+                r.description AS `requirement_name`,
+                r.is_mandatory 
+            FROM `document_type_station_step_requirements` AS r 
+            INNER JOIN `document_type_station_steps` AS s 
+                ON r.document_type_station_step_id = s.id 
+            INNER JOIN `document_types` AS t 
+                ON s.document_type_id = t.id
+            WHERE t.id = ?";
+
+    $params = [$document_type_id];
+
+    if (!empty($document_type_station_step_id)) {
+        $sql .= " AND s.id = ?";
+        $params[] = $document_type_station_step_id;
+    }
+
+    $sql .= " ORDER BY s.step_number ASC, r.id ASC";
+    $result = query($sql, $params);
+
+    return is_array($result) ? $result : [];
+}
+
 function document($document_transaction_id)
 {
     $sql = "SELECT t.id, t.document_type_id, t.description, t.created_from, t.head_id, t.created_at, l.status_id FROM `document_transactions` AS t 
