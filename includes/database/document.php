@@ -80,19 +80,35 @@ function documentTypeStationStep($document_type_station_step_id)
     return is_array($result) ? $result : [];
 }
 
-function createDocumentTypeStationStep()
+function createDocumentTypeStationStep($document_type_id, $step_number, $destination_id, $description, $note, $ideal_proceessing_time)
 {
-
+    $data = [
+        'document_type_id' => $document_type_id,
+        'step_number' => $step_number,
+        'destination_id' => $destination_id,
+        'description' => $description,
+        'note' => $note,
+        'ideal_processing_time' => $ideal_proceessing_time
+    ];
+    return insert('document_type_station_steps', $data);
 }
 
-function updateDocumentTypeStationStep()
+function updateDocumentTypeStationStep($document_type_id, $step_number, $destination_id, $description, $note, $ideal_processing_time, $id)
 {
-
+    $data = [
+        'document_type_id' => $document_type_id,
+        'step_number' => $step_number,
+        'destination_id' => $destination_id,
+        'description' => $description,
+        'note' => $note,
+        'ideal_processing_time' => $ideal_processing_time
+    ];
+    return update('document_type_station_steps', $data, '`id` = ?', [$id]);
 }
 
 function deleteDocumentTypeStationStep($document_type_station_step_id)
 {
-    return delete('document_type_station_steps', '`id` = >', [$document_type_station_step_id]);
+    return delete('document_type_station_steps', '`id` = ?', [$document_type_station_step_id]);
 }
 
 function documentTypeStationStepRequirements($document_type_id, $document_type_station_step_id = null)
@@ -127,6 +143,11 @@ function documentTypeStationStepRequirements($document_type_id, $document_type_s
     $result = query($sql, $params);
 
     return is_array($result) ? $result : [];
+}
+
+function deleteDocumentTypeStationStepRequirements($document_type_station_step_id)
+{
+    return delete('document_type_station_step_requirements', '`document_type_station_step_id` = ?', [$document_type_station_step_id]);
 }
 
 function document($document_transaction_id)
