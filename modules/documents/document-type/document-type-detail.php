@@ -83,11 +83,16 @@ $hasSteps = !empty($steps);
                                 <div class="font-weight-bold text-dark uppercase">
                                     <?= stationName($step['destination_id']) ?>
                                 </div>
-                                <div class="text-left d-flex align-items-center">
-                                    <span class="badge badge-primary mr-2">
-                                        Step <?= $step['step_number'] ?>
-                                    </span>
-                                    <span class="text-muted small">
+                                <div class="text-left d-flex">
+                                    <div>
+                                        <div class="badge badge-primary px-1 mt-1 mr-2">
+                                            <span class="uppercase">Step</span>
+                                            <div class="font-weight-bold h6 mt-1 mb-0">
+                                                <?= $step['step_number'] ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-muted">
                                         <div>
                                             <?= $step['description'] ?>
                                         </div>
@@ -98,19 +103,19 @@ $hasSteps = !empty($steps);
                                         <?php endif;
                                         $step_items = count($req);
                                         ?>
-                                    </span>
-                                </div>
-                                <div>
-                                    <?php if (!empty($step['ideal_processing_time'])): ?>
-                                        <span class="badge badge-secondary mr-1" title="Ideal Processing Time">
-                                            <i class="far fa-clock mr-1"></i>
-                                            <?= e($step['ideal_processing_time']) ?>
-                                        </span>
-                                    <?php endif; ?>
-                                    <span class="badge badge-info">
-                                        <i class="fas fa-file-alt mr-1"></i>
-                                        <?= "{$step_items} item" . ($step_items > 1 ? 's' : '') ?>
-                                    </span>
+                                        <div>
+                                            <?php if (!empty($step['ideal_processing_time'])): ?>
+                                                <span class="badge badge-secondary mr-1" title="Ideal Processing Time">
+                                                    <i class="far fa-clock mr-1"></i>
+                                                    <?= e($step['ideal_processing_time']) ?>
+                                                </span>
+                                            <?php endif; ?>
+                                            <span class="badge badge-info">
+                                                <i class="fas fa-file-alt mr-1"></i>
+                                                <?= "{$step_items} item" . ($step_items > 1 ? 's' : '') ?>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="dropdown no-arrow">
@@ -125,36 +130,49 @@ $hasSteps = !empty($steps);
                         </div>
                         <div class="card-body p-0">
                             <?php
-                            $req = documentTypeStationStepRequirements($documentTypeId, $step['id']);
-                            if (empty($req)): ?>
-                                <div class="text-center pt-4 pb-3 text-muted">
+                            $requirements = documentTypeStationStepRequirements($documentTypeId, $step['id']);
+                            if (empty($requirements)): ?>
+                                <div class="text-center pt-4 text-muted">
                                     <i class="fas fa-plus fa-2x mb-1 text-gray-300"></i>
                                     <p class="mb-1">No step requirement set.</p>
-                                    <?php modalButtonSplit("{$baseUri}/modules/documents/document-type/save-document-type-station-step-requirement-dialog.php?s=" . cipher($step['id']), 'Add Requirement', 'fa-plus', 'Add requirement') ?>
                                 </div>
                             <?php else: ?>
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-striped mb-0 text-xs">
+                                    <table class="table table-hover border-bottom table-striped mb-0">
                                         <thead class="bg-gray-100 text-uppercase">
-                                            <tr>
+                                            <tr class="small">
                                                 <th class="align-middle text-center" width="5%">#</th>
                                                 <th class="align-middle" width="80%">Checklist Requirement Item</th>
                                                 <th class="align-middle text-center" width="5%">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($step['items'] as $itemIdx => $item): ?>
+                                            <?php
+                                            $count = 1;
+                                            foreach ($requirements as $req): ?>
                                                 <tr>
-                                                    <td class="align-middle text-center text-muted"><?= $itemIdx + 1 ?></td>
-                                                    <td class="align-middle font-weight-bold text-dark">
-                                                        <div><?= e($item['requirement_name']) ?></div>
+                                                    <td class="align-middle text-center text-muted"><?= $count++ ?></td>
+                                                    <td class="align-middle text-dark">
+                                                        <div>
+                                                            <?= e($req['requirement_description']) ?>
+                                                            <?php if (!empty($req['is_mandatory'])): ?>
+                                                                <span class="badge badge-danger text-uppercase text-xs ml-2">
+                                                                    Required
+                                                                </span>
+                                                            <?php endif ?>
+                                                        </div>
+                                                        <?php if (!empty($req['note'])): ?>
+                                                            <div class="text-danger small">
+                                                                <?= e($req['note']) ?>
+                                                            </div>
+                                                        <?php endif ?>
                                                     </td>
                                                     <td class="align-middle text-center">
                                                         <div class="dropdown no-arrow">
                                                             <?php dropdownEllipsis() ?>
                                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                                                <?php modalDropdownItem(uri() . '/modules/documents/document-type/save-document-type-station-step-dialog.php?id=' . cipher($step['step_id']), 'Edit', 'fa-edit', 'Edit Step');
-                                                                modalDropdownItem(uri() . '/modules/documents/document-type/delete-document-type-station-step-dialog.php?id=' . cipher($step['step_id']), 'Delete', 'fa-trash', 'Delete Step'); ?>
+                                                                <?php modalDropdownItem(uri() . '/modules/documents/document-type/save-document-type-station-step-requirement-dialog.php?id=' . cipher($req['id']) . '&s=' . cipher($step['id']), 'Edit', 'fa-edit', 'Edit Requirement');
+                                                                modalDropdownItem(uri() . '/modules/documents/document-type/delete-document-type-station-step-requirement-dialog.php?id=' . cipher($req['id']), 'Delete', 'fa-trash', 'Delete Requirement'); ?>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -164,6 +182,9 @@ $hasSteps = !empty($steps);
                                     </table>
                                 </div>
                             <?php endif; ?>
+                            <div class="text-center py-2">
+                                <?php modalButtonSplit("{$baseUri}/modules/documents/document-type/save-document-type-station-step-requirement-dialog.php?s=" . cipher($step['id']), 'Add Requirement', 'fa-plus', 'Add requirement') ?>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach ?>

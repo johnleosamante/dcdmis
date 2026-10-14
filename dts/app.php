@@ -596,26 +596,6 @@ if (isset($_POST['delete-document-type'])) {
 	createSystemLog($stationId, $userId, 'Deleted document type', $target, clientIp());
 }
 
-if (isset($_POST['delete-document-type-station-step'])) {
-	$documentTypeStepId = sanitize(decipher($_POST['verifier']));
-	$showAlert = true;
-	$documentTypeStationStep = documentTypeStationStep($documentTypeStepId);
-	$target = $documentTypeStationStep ? $documentTypeStationStep['description'] : 'Document Type Station Step';
-
-	$affectedDocumentTypStationStepRequirements = deleteDocumentTypeStationStepRequirements($documentTypeStepId);
-	$affectedDocumentTypeStationStep = deleteDocumentTypeStationStep($documentTypeStepId);
-
-	if (!$affectedDocumentTypeStationStep) {
-		$message = 'No changes have made to document type station step.';
-		return;
-	}
-
-	$message = 'Document type station step has been deleted successfully.';
-	$success = true;
-
-	createSystemLog($stationId, $userId, 'Delete document type station step and requirements', $documentTypeStepId, clientIp());
-}
-
 if (isset($_POST['save-document-type-station-step'])) {
 	$documentTypeStepId = sanitize(decipher($_POST['verifier']));
 	$documentTypeId = sanitize(decipher($_POST['data-verifier']));
@@ -653,6 +633,72 @@ if (isset($_POST['save-document-type-station-step'])) {
 	$success = true;
 
 	createSystemLog($stationId, $userId, $logMessage, $documentTypeStepId, clientIp());
+}
+
+if (isset($_POST['delete-document-type-station-step'])) {
+	$documentTypeStepId = sanitize(decipher($_POST['verifier']));
+	$showAlert = true;
+	$documentTypeStationStep = documentTypeStationStep($documentTypeStepId);
+	$target = $documentTypeStationStep ? $documentTypeStationStep['description'] : 'Document Type Station Step';
+
+	$affectedDocumentTypStationStepRequirements = deleteDocumentTypeStationStepRequirements($documentTypeStepId);
+	$affectedDocumentTypeStationStep = deleteDocumentTypeStationStep($documentTypeStepId);
+
+	if (!$affectedDocumentTypeStationStep) {
+		$message = 'No changes have made to document type station step.';
+		return;
+	}
+
+	$message = 'Document type station step has been deleted successfully.';
+	$success = true;
+
+	createSystemLog($stationId, $userId, 'Delete document type station step and requirements', $documentTypeStepId, clientIp());
+}
+
+if (isset($_POST['save-document-type-station-step-requirement'])) {
+	$documentTypeStepRequirementId = sanitize(decipher($_POST['verifier']));
+	$documentTypeStepId = sanitize(decipher($_POST['data-verifier']));
+	$description = sanitize($_POST['description']);
+	$note = sanitize($_POST['note']);
+	$isMandatory = isset($_POST['is-mandatory']) ? '1' : '0';
+	$showAlert = true;
+
+	if (!documentTypeStationStepRequirement($documentTypeStepRequirementId)) {
+		$affectedRequirement = createDocumentTypeStationStepRequirement($documentTypeStepId, $description, $note, $isMandatory);
+		$status = 'saved';
+		$logMessage = 'Added document type station step requirement';
+	} else {
+		$affectedRequirement = updateDocumentTypeStationStepRequirement($description, $note, $isMandatory, $documentTypeStepRequirementId);
+		$status = 'updated';
+		$logMessage = 'Updated document type station step requirement';
+	}
+
+	if (!$affectedRequirement) {
+		$message = 'No changes have been made to document type station step.';
+		return;
+	}
+
+	$message = "Document type has been {$status} successfully.";
+	$success = true;
+
+	createSystemLog($stationId, $userId, $logMessage, $documentTypeStepRequirementId, clientIp());
+}
+
+if (isset($_POST['delete-document-type-station-step-requirement'])) {
+	$documentTypeStepRequirementId = sanitize(decipher($_POST['verifier']));
+	$showAlert = true;
+	$requirement = documentTypeStationStepRequirement($documentTypeStepRequirementId);
+	$affectedDocumentTypStationStepRequirements = deleteDocumentTypeStationStepRequirement($documentTypeStepRequirementId);
+
+	if (!$affectedDocumentTypStationStepRequirements) {
+		$message = 'No changes have made to document type station step requirements.';
+		return;
+	}
+
+	$message = 'Document type station step requirement has been deleted successfully.';
+	$success = true;
+
+	createSystemLog($stationId, $userId, 'Delete document type station step requirement', $documentTypeStepRequirementId, clientIp());
 }
 
 $from = isset($_GET['from']) ? sanitize($_GET['from']) : date('Y') . '-01-01';

@@ -19,8 +19,8 @@ if ($documentTypeStep) {
     $modalTitle = ($documentTypeStepId === $copiedId ? 'Copy' : 'Edit') . '  Document Type Station Step';
     $stepNumber = $documentTypeStep['step_number'];
     $destinationId = $documentTypeStep['destination_id'];
-    $description = $documentTypeStep['description'];
-    $note = $documentTypeStep['note'];
+    $description = $documentTypeStep['step_description'];
+    $note = $documentTypeStep['step_note'];
     $idealProcessingTime = $documentTypeStep['ideal_processing_time'];
 } else {
     $stepNumber = count(documentTypeStationSteps($documentTypeId)) + 1;
