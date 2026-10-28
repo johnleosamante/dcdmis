@@ -181,8 +181,6 @@ if ($code) {
                     </div>
 
                     <div>
-                        <label for="pertinent-documents" class="font-weight-bold mb-0">Optional Document Upload (PDF
-                            only)</label>
                         <p class="form-text text-muted small mb-2">Review the <a
                                 href="https://www.deped.gov.ph/wp-content/uploads/DO_s2023_007.pdf" target="_blank">DepEd
                                 Order
