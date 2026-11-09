@@ -72,6 +72,8 @@ if ($training) {
         </table>
     </div>
 
+    <?php messageAlert($showAlert, $message, $success); ?>
+
     <div class="table-responsive mt-2">
         <table class="table table-hover mb-0 text-center" id="data-table" width="100%" cellspacing="0">
             <thead>
@@ -80,7 +82,7 @@ if ($training) {
                     <th class="align-middle" width="35%">Name</th>
                     <th class="align-middle" width="20%">Position</th>
                     <th class="align-middle" width="25%">Station</th>
-                    <th class="align-middle" width="5%">Action</th>
+                    <th class="align-middle" width="5%"></th>
                 </tr>
             </thead>
 
@@ -109,11 +111,9 @@ if ($training) {
                             <div class="dropdown no-arrow">
                                 <?php dropdownEllipsis() ?>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                                    <?php
-                                    if ($training['has_certificate']):
-                                        linkDropdownItem(customUri('print', 'Certificate of Participation', $training['id']) . '&p=' . encode($row['id']), 'Certificate', 'fa-certificate', 'View Certificate of Participation', true) ?>
-                                    <?php endif;
-                                    linkDropdownItem(customUri('print', 'Certificate of Appearance', $training['id']) . '&p=' . encode($row['id']), 'Appearance', 'fa-stamp', 'View Certificate of Appearance', true) ?>
+                                    <?php if ($training['has_certificate']):
+                                        modalDropDownItem(uri() . '/hrtdms/repository/confirm-send-email-dialog.php?tid=' . cipher($training['id']) . '&pid=' . cipher($row['id']), 'Email', 'fa-envelope', 'Email Participant Certificate') ?>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </td>
@@ -127,9 +127,11 @@ if ($training) {
                     <th class="align-middle" width="35%">Name</th>
                     <th class="align-middle" width="20%">Position</th>
                     <th class="align-middle" width="25%">Station</th>
-                    <th class="align-middle" width="5%">Action</th>
+                    <th class="align-middle" width="5%"></th>
                 </tr>
             </tfoot>
         </table>
     </div>
 </div>
+
+<?php modal() ?>

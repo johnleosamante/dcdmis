@@ -7,5 +7,6 @@ require_once(root() . '/includes/database/learning-development.php');
 require_once(root() . '/includes/database/position.php');
 require_once(root() . '/includes/database/section.php');
 require_once(root() . '/includes/database/school.php');
+require_once(root() . '/includes/email.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/layout/theme-page.php');
