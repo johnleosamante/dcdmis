@@ -13,6 +13,8 @@ contentTitle('Dashboard');
     card('Payslips', customUri('pis', 'Payslips', $userId), 'fa-money-check', 'danger');
     if (!$isNonDivision) {
         card('IPCRF', customUri('pis', 'IPCRF', $userId), 'fa-chart-line', 'secondary');
+        card('Purchase Requests', customUri('pis', 'Purchase Requests'), 'fa-shopping-cart', 'primary');
+        card('Booking & Schedule', customuri('bsa', 'Booking & Schedule'), 'fa-calendar-check', 'success');
     }
     ?>
 </div>
@@ -21,12 +23,7 @@ contentTitle('Dashboard');
     <hr class="mt-0">
     <div class="row mt-4">
         <?php
-        if ($isNonDivision) {
-            card('Request Transfer', customUri('pis', 'Request Transfer'), 'fa-exchange-alt', 'primary');
-        }
-        if ($schoolInfo) {
-            card('School Employees', customUri('pis', 'School Employees'), 'fa-users', $isNonDivision ? 'success' : 'primary');
-        }
+        card('Request Transfer', customUri('pis', 'Request Transfer'), 'fa-exchange-alt', 'primary');
         ?>
     </div>
 <?php endif; ?>
@@ -36,10 +33,15 @@ contentTitle('Dashboard');
     <div class="row mt-4">
         <?php
         if ($showMonitoringTools) {
-            card('Monitoring Tools', customUri('pis', 'Monitoring Tools'), 'fa-binoculars', 'primary');
+            if ($isNonDivision) {
+                if ($schoolInfo) {
+                    card('School Employees', customUri('pis', 'School Employees'), 'fa-users', 'success');
+                }
+            }
+            card('Monitoring Tools', customUri('pis', 'Monitoring Tools'), 'fa-binoculars', 'info');
         }
         if ($showOverview) {
-            card('System Overview', customUri('pis', 'System Overview'), 'fa-network-wired', $showMonitoringTools ? 'success' : 'primary');
+            card('System Overview', customUri('pis', 'System Overview'), 'fa-network-wired', 'danger');
         } ?>
     </div>
 <?php endif; ?>
