@@ -1,5 +1,5 @@
 <?php
-// hrmis/sidebar-menu.php
+// pis/sidebar-menu.php
 $isNonDivision = $stationId !== DIVISION_ID;
 $schoolInfo = schoolByHead($userId, DIVISION_ID);
 
@@ -10,8 +10,9 @@ sidebarMenuItem(customUri('pis', 'Service Record', $userId), 'Service Record', '
 sidebarMenuItem(customUri('pis', '201 Files', $userId), '201 Files', 'fa-folder-open', isset($url) && str_contains($url, '201 Files'));
 sidebarMenuItem(customUri('pis', 'Trainings', $userId), 'Trainings', 'fa-chalkboard-teacher', isset($url) && str_contains($url, 'Trainings'));
 sidebarMenuItem(customUri('pis', 'Payslips', $userId), 'Payslips', 'fa-money-check', isset($url) && str_contains($url, 'Payslips'));
-sidebarMenuItem(customUri('pis', 'Purchase Requests'), 'Purchase Requests', 'fa-shopping-cart', isset($url) && str_contains($url, 'Purchase Request'));
+
 if (!$isNonDivision) {
+    sidebarMenuItem(customUri('pis', 'Purchase Requests'), 'Purchase Requests', 'fa-shopping-cart', isset($url) && str_contains($url, 'Purchase Request'));
     sidebarMenuItem(customUri('pis', 'IPCRF', $userId), 'IPCRF', 'fa-chart-line', isset($url) && (str_contains($url, 'IPCRF') || str_contains($url, 'Performance') || str_contains($url, 'Phase') || str_contains($url, 'Objective') || str_contains($url, 'MOV')));
 }
 
@@ -22,12 +23,19 @@ if ($isNonDivision || $schoolInfo) {
     }
     if ($schoolInfo) {
         sidebarMenuItem(customUri('pis', 'School Employees'), 'School Employees', 'fa-users', isset($url) && ($url === 'Employees' || $url === 'Active Employees' || $url === 'School Employees'));
+        sidebarMenuItem(customUri('pis', 'My Submissions'), 'My Submissions', 'fa-paper-plane', isset($url) && str_contains($url, 'My Submissions'));
     }
 }
 
 $showMonitoringTools = (dtsUser($userId) && station($userId)['station_id'] === DIVISION_ID) || (bool) $schoolInfo;
 $userPositionId = position($userId)['position_id'];
 $showOverview = in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT;
+$showCfsManagement = in_array($userPositionId, ['ASDS', 'SDS'], true) || $isICT;
+
+if ($showCfsManagement && !$isNonDivision) {
+    sidebarDivider();
+    sidebarMenuItem(customUri('pis', 'Call for Submissions'), 'Call for Submissions', 'fa-inbox', isset($url) && (str_contains($url, 'Call for Submission') || str_contains($url, 'Call for Submissions')));
+}
 
 if ($showMonitoringTools || $showOverview) {
     sidebarDivider();
@@ -46,5 +54,7 @@ if ($showMonitoringTools || $showOverview) {
     }
 }
 
-sidebarDivider();
-sidebarMenuItem(uri() . '/bsa/?v=' . encode('Booking & Schedule'), 'Booking & Schedule', 'fa-calendar-check', false);
+if (!$isNonDivision) {
+    sidebarDivider();
+    sidebarMenuItem(uri() . '/bsa/?v=' . encode('Booking & Schedule'), 'Booking & Schedule', 'fa-calendar-check', false);
+}
