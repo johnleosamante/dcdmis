@@ -28,5 +28,6 @@ require_once(root() . '/includes/database/201-file.php');
 require_once(root() . '/includes/database/system-log.php');
 require_once(root() . '/includes/database/transfer-request.php');
 require_once(root() . '/includes/database/pm.php');
+require_once(root() . '/includes/database/call-for-submission.php');
 require_once(root() . '/includes/layout/components.php');
 require_once(root() . '/includes/layout/theme-dashboard.php');

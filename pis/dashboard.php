@@ -32,8 +32,13 @@ contentTitle('Dashboard');
     <hr class="mt-0">
     <div class="row mt-4">
         <?php
+        if ($showCfsManagement && !$isNonDivision) {
+            card('Call for Submissions', customUri('pis', 'Call for Submissions'), 'fa-inbox', 'primary');
+        }
+
         if ($showMonitoringTools) {
             if ($isNonDivision) {
+                card('My Submissions', customUri('pis', 'My Submissions'), 'fa-paper-plane', 'primary');
                 if ($schoolInfo) {
                     card('School Employees', customUri('pis', 'School Employees'), 'fa-users', 'success');
                 }

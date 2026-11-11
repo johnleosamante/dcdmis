@@ -32,6 +32,10 @@ $showCfsManagement = in_array($userPositionId, ['ASDS', 'SDS'], true) || $isICT;
 if ($showMonitoringTools || $showOverview) {
     sidebarDivider();
 
+    if ($showCfsManagement && !$isNonDivision) {
+        sidebarMenuItem(customUri('pis', 'Call for Submissions'), 'Call for Submissions', 'fa-inbox', isset($url) && (str_contains($url, 'Call for Submission') || str_contains($url, 'Call for Submissions')));
+    }
+
     if ($showMonitoringTools) {
         if ($isNonDivision) {
             sidebarMenuItem(customUri('pis', 'My Submissions'), 'My Submissions', 'fa-paper-plane', isset($url) && str_contains($url, 'My Submissions'));
