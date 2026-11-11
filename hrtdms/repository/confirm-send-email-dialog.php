@@ -14,8 +14,8 @@ $message = 'Are you sure you want to continue and email certificate to this trai
 $training = trainingParticipants($trainingId, $participantId);
 
 if (!$training) {
-    $title = 'Email Error';
-    $message = 'Sorry we can not continue sending to this participant. Please refresh the page and try again.';
+    $title = 'Training Participant Not Found';
+    $message = 'Sorry we can not find the participant you selected. Please refresh the page and try again.';
 }
 ?>
 
