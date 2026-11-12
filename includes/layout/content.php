@@ -300,6 +300,15 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Monitoring Tools':
             $file = 'tools/index';
             break;
+        case 'Call for Submissions':
+            $file = 'call-for-submission/page';
+            break;
+        case 'Call for Submission Details':
+            $file = 'call-for-submission/details';
+            break;
+        case 'My Submissions':
+            $file = 'call-for-submission/school-page';
+            break;
         case 'Workforce Diversity - Gender':
         case 'Workforce Diversity - Category':
         case 'Workforce Diversity - Category by Gender':
@@ -396,7 +405,7 @@ if (!isset($url) || $url === 'dashboard') {
 
     require_once(
         str_starts_with($file, '/') || preg_match('/^[A-Za-z]:[\\\\\/]/', $file)
-            ? $file
-            : root() . "/modules/{$file}.php"
+        ? $file
+        : root() . "/modules/{$file}.php"
     );
 }
