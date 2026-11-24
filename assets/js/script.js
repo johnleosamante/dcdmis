@@ -5,17 +5,16 @@ if (window.history.replaceState) {
 }
 
 $(document).ready(function () {
-	// Suppress DataTables warning alerts (e.g. column count mismatch)
-	$.fn.dataTableExt.sErrMode = 'throw';
-	$.fn.DataTable.ext.errMode = 'throw';
-	window.alert = (function (original) {
-		return function (msg) {
-			if (typeof msg === 'string' && msg.indexOf('DataTables warning') !== -1) {
-				return;
+	if ($.fn.dataTableExt) {
+		$.fn.dataTableExt.sErrMode = 'none';
+	}
+	if ($.fn.DataTable && $.fn.DataTable.ext) {
+		$.fn.DataTable.ext.errMode = function (settings, helpPage, message) {
+			if (window.console && console.warn) {
+				console.warn(message);
 			}
-			return original.call(window, msg);
 		};
-	})(window.alert);
+	}
 
 	let dtProps = {
 		responsive: true,
@@ -187,7 +186,7 @@ const checkFieldValidity = (elementId, condition) => {
 		element.classList.remove("border-danger");
 	} else {
 		element.classList.add("border-danger");
-		element.classList.add("border-success");
+		element.classList.remove("border-success");
 	}
 };
 
