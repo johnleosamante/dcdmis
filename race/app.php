@@ -16,119 +16,16 @@ if (isset($_SESSION['race_flash_message'])) {
 }
 
 if (!isset($userId)) {
-	redirect(uri() . '/login');
+    redirect(uri() . '/login');
 }
 
 $raceAccess = raceAccessLevel($userId);
 
 if ($raceAccess === 'none') {
-	redirect(uri());
+    redirect(uri());
 }
 
 $nominatorOnly = ($raceAccess === 'nominator');
-
-if (isset($_POST['save-award'])) {
-    $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-    $awardId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
-    $status = sanitize($_POST['status'] ?? '');
-    $awardName = sanitize($_POST['award-name'] ?? '');
-    $level = sanitize($_POST['level'] ?? '');
-    $nominee = sanitize($_POST['nominee'] ?? '');
-    $position = sanitize($_POST['position'] ?? '');
-    $schoolOffice = sanitize($_POST['school-office'] ?? '');
-    $awardYear = sanitize($_POST['award-year'] ?? '');
-    $description = sanitize($_POST['description'] ?? '');
-    $filename = isset($_POST['file-verifier']) ? sanitize(decipher($_POST['file-verifier'])) : null;
-    $ext = $logMessage = '';
-    $message = 'No changes have been made to award.';
-    $showAlert = true;
-    $success = false;
-
-    if (isset($_FILES['file-upload']) && is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
-        $temp = $_FILES['file-upload']['tmp_name'];
-
-        if ($_FILES['file-upload']['size'] > FILE_UPLOAD_SIZE_LIMIT) {
-            $message = 'The choosen file exceeds the upload file limit (' . UPLOAD_MAX_FILESIZE . 'B). No changes have been made to award.';
-            return;
-        }
-
-        $mimeType = mime_content_type($temp);
-        $allowedFileTypes = ['application/pdf', 'image/png', 'image/jpeg'];
-
-        if (!in_array($mimeType, $allowedFileTypes)) {
-            $message = 'The choosen file is not an acceptable file (pdf, png, jpeg). No changes have been made to award.';
-            return;
-        }
-
-        $ext = pathinfo($_FILES['file-upload']['name'], PATHINFO_EXTENSION);
-
-        if (!empty($filename) && file_exists(root() . '/' . $filename)) {
-            unlink(root() . '/' . $filename);
-        }
-
-        $filename = 'uploads/awards/' . $employeeId . '/' . $employeeId . '-' . date('YmdHis') . '.' . $ext;
-
-        $targetDir = root() . '/uploads/awards/' . $employeeId;
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir, 0755, true);
-        }
-        move_uploaded_file($temp, root() . '/' . $filename);
-    }
-
-    if (empty($filename)) {
-        $message = 'No changes have been made to award.';
-        $success = false;
-        return;
-    } else {
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-    }
-
-    if (award($employeeId, $awardId) === 0) {
-        $affectedAward = createAward($status, $awardName, $level, $nominee, $position, $schoolOffice, $awardYear, $description, $filename, $ext, $employeeId);
-
-        $logMessage = 'Added award';
-        $message = 'Award has been added successfully.';
-    } else {
-        $affectedAward = updateAward($status, $awardName, $level, $nominee, $position, $schoolOffice, $awardYear, $description, $filename, $ext, $employeeId, $awardId);
-
-        $logMessage = 'Updated award';
-        $message = 'Award has been updated successfully.';
-    }
-
-    if (!$affectedAward) {
-        $message = 'No changes have been made to award.';
-        return;
-    }
-
-    createSystemLog($stationId, $userId, $logMessage, $employeeId, clientIp());
-    $success = true;
-}
-
-if (isset($_POST['delete-award'])) {
-    $employeeId = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
-    $awardId = isset($_POST['data-verifier']) ? sanitize(decipher($_POST['data-verifier'])) : null;
-    $showAlert = true;
-    $filename = null;
-    $file = award($employeeId, $awardId);
-		$deletedAward = false;
-
-    if ($file > 0) {
-        $filename = $file['filename'];
-        $deletedAward = deleteAward($employeeId, $awardId);
-    }
-
-    if ($deletedAward) {
-        createSystemLog($stationId, $userId, 'Deleted employee award', $employeeId, clientIp());
-        $deleteFilePath = root() . '/' . $filename;
-        if (!empty($filename) && file_exists($deleteFilePath)) {
-            unlink($deleteFilePath);
-        }
-        $message = 'Award has been deleted successfully.';
-    } else {
-        $message = 'No changes have been made to award.';
-        $success = false;
-    }
-}
 
 if (isset($_POST['save-schedule'])) {
     $id = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
@@ -137,7 +34,7 @@ if (isset($_POST['save-schedule'])) {
     $venue = sanitize($_POST['venue'] ?? '');
     $nominationStart = !empty($_POST['nomination_start']) ? sanitize($_POST['nomination_start']) : null;
     $nominationDeadline = !empty($_POST['nomination_deadline']) ? sanitize($_POST['nomination_deadline']) : null;
-    
+
     $showAlert = true;
     $success = false;
 
@@ -184,7 +81,7 @@ if (isset($_POST['delete-schedule'])) {
 if (isset($_POST['save-nominee'])) {
     $schedule_id = isset($_POST['verifier']) ? sanitize(decipher($_POST['verifier'])) : null;
     $employee_id = isset($_POST['employee-id']) ? sanitize($_POST['employee-id']) : null;
-    
+
     // Support fallback to GET params if category/award are not posted (simplified modal layout)
     $award_id = isset($_POST['award']) && !empty($_POST['award']) ? sanitize($_POST['award']) : (isset($_GET['award_id']) ? sanitize(decipher($_GET['award_id'])) : null);
 
@@ -202,9 +99,11 @@ if (isset($_POST['save-nominee'])) {
         $award = recognitionAward($award_id);
         if ($award) {
             $lowerAwardName = strtolower($award['name']);
-            if (strpos($lowerAwardName, 'medium school') !== false || 
-                strpos($lowerAwardName, 'small school') !== false || 
-                strpos($lowerAwardName, 'large school') !== false) {
+            if (
+                strpos($lowerAwardName, 'medium school') !== false ||
+                strpos($lowerAwardName, 'small school') !== false ||
+                strpos($lowerAwardName, 'large school') !== false
+            ) {
                 $nominee_type = 'School';
             }
 
@@ -331,7 +230,7 @@ if (isset($_POST['edit-nominee'])) {
                 'nominee_type' => $nomineeType,
                 'nominee_id' => $nomineeRefId
             ];
-            if ((int)$award['has_level'] === 1) {
+            if ((int) $award['has_level'] === 1) {
                 if (!$level) {
                     $message = 'Level is required for this award.';
                 } else {
@@ -429,10 +328,10 @@ if (isset($_POST['save-recognition-award'])) {
     $award_name = sanitize($_POST['award_name'] ?? '');
     $has_level = isset($_POST['has_level']) ? 1 : 0;
     $schedule_id = isset($_POST['schedule_id']) ? sanitize($_POST['schedule_id']) : null;
-    
+
     $showAlert = true;
     $success = false;
-    
+
     if ($category_id && $award_name) {
         $affected = createRecognitionAward($category_id, $award_name, $has_level);
         if ($affected) {
@@ -720,5 +619,3 @@ if (isset($_POST['revert-winner']) || isset($_POST['disqualify-nominee'])) {
         }
     }
 }
-
-?>

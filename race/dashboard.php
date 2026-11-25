@@ -195,8 +195,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/race/nominate-dialog.php', 
                                                     <td class="align-middle"><?= e($ta['sex']) ?></td>
                                                     <td class="align-middle small"><?= e(raceGenerationLabel($ta['birthdate'])) ?></td>
                                                     <td class="align-middle small text-uppercase"><?= e($ta['school_name'] ?: '—') ?></td>
-                                                    <td class="align-middle">
-                                                        <span class="badge badge-pill badge-success font-weight-bold px-2 py-1">
+                                                    <td class="align-middle"><span class="badge badge-pill badge-success font-weight-bold px-2 py-1">
                                                             <?= e($ta['award_count']) ?>
                                                         </span>
                                                     </td>
@@ -219,7 +218,7 @@ contentTitleWithModal('Dashboard', uri() . '/modules/race/nominate-dialog.php', 
 
     <script src="<?= uri() ?>/assets/vendor/chart.js/Chart.min.js"></script>
     <script src="<?= uri() ?>/assets/vendor/chart.js/chartjs-plugin-datalabels.min.js"></script>
-    <script src="<?= uri() ?>/assets/js/chart-custom.js?v=1.3"></script>
+    <script src="<?= uri() ?>/assets/js/chart-custom.js?v=<?= VERSION ?>"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
