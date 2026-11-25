@@ -37,20 +37,13 @@ if (!function_exists('bsaUserPositionId')) {
 
 if (!function_exists('bsaBookingApproverIds')) {
     /**
-     * Employee IDs allowed to open Booking Approvals as the Facility Coordinator
-     * (Administrative Aide VI), in addition to any Administrative Officer V.
-     *
-     * EDIT THE DEFAULT LIST HERE, or add a comma-separated employee-id list to
-     * the `bsa_settings` row with key `booking_approver_ids` (no code change).
+     * Optional DB-configured approver employee IDs from `bsa_settings` (`booking_approver_ids`).
      *
      * @return string[]
      */
     function bsaBookingApproverIds(): array
     {
-        // Facility Coordinator(s) — Administrative Aide VI.
-        $ids = [
-            '20260105113222', // Leslie Erang Egason — Facility Coordinator (Personnel Section)
-        ];
+        $ids = [];
 
         try {
             if (function_exists('find')) {
@@ -66,7 +59,7 @@ if (!function_exists('bsaBookingApproverIds')) {
                 }
             }
         } catch (Throwable $e) {
-            // bsa_settings may not exist yet — fall back to the default list.
+            // bsa_settings may not exist yet.
         }
 
         return array_values(array_unique($ids));
@@ -77,8 +70,11 @@ if (!function_exists('canAccessBookingApprovals')) {
     /**
      * Whether the given account may use Booking Approvals (view + decide).
      *
-     * Allowed when the account is an Administrative Officer V (DTC Manager),
-     * OR its employee id is in the Facility Coordinator allowlist.
+     * Allowed via DB checks when the account:
+     *   - holds the `bsa` role in `user_permissions`, OR
+     *   - is the Administrative Section (ADM) head or Admin AO5 (`ADOF5` + `ADM`), OR
+     *   - is an Administrative Aide VI (`ADA6`) assigned to `ADM` (Facility Coordinator), OR
+     *   - is listed in `bsa_settings` (`booking_approver_ids`).
      */
     function canAccessBookingApprovals($employee_id): bool
     {
@@ -87,8 +83,36 @@ if (!function_exists('canAccessBookingApprovals')) {
             return false;
         }
 
-        if (bsaUserPositionId($id) === 'ADOF5') {
-            return true;
+        $empId = (int) $id;
+
+        if (function_exists('find')) {
+            // 1. Explicit BSA role in user_permissions
+            $hasBsaRole = find(
+                "SELECT `employee_id` FROM `user_permissions` WHERE `employee_id` = ? AND LOWER(`access`) = 'bsa' LIMIT 1",
+                [$empId]
+            );
+            if ($hasBsaRole) {
+                return true;
+            }
+
+            // 2. Administrative Section (ADM) head (Admin AO5 / DTC Manager)
+            $isAdmHead = find(
+                "SELECT `id` FROM `sections` WHERE `id` = 'ADM' AND `head_id` = ? LIMIT 1",
+                [$empId]
+            );
+            if ($isAdmHead) {
+                return true;
+            }
+
+            // 3. ADM section member with position ADOF5 (Admin AO5) or ADA6 (Facility Coordinator)
+            $hasAdmPermission = find(
+                "SELECT `employee_id` FROM `user_permissions` WHERE `employee_id` = ? AND `access` = 'ADM' LIMIT 1",
+                [$empId]
+            );
+            $positionId = strtoupper(bsaUserPositionId($empId));
+            if ($hasAdmPermission && in_array($positionId, ['ADOF5', 'ADA6'], true)) {
+                return true;
+            }
         }
 
         return in_array($id, bsaBookingApproverIds(), true);
@@ -108,7 +132,7 @@ if (!function_exists('denyBsaApprovalAccess')) {
             header('Content-Type: application/json');
             echo json_encode([
                 'success' => false,
-                'error'   => 'FORBIDDEN',
+                'error' => 'FORBIDDEN',
                 'message' => 'You do not have permission to use Booking Approvals.',
             ]);
             exit;
