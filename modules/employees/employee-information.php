@@ -1,6 +1,6 @@
 <?php
 // modules/employees/employee-information.php
-if (!$isPis && !$isHrmis) {
+if (!$isPis && !$isHrmis && !$isHrmSuite) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -17,16 +17,16 @@ if ($schoolInfo && $employeeId > 0) {
 }
 
 $userPositionId = null;
-if ($isPis) {
+if ($isPis || $isHrmSuite) {
     if (!function_exists('position')) {
         require_once(root() . '/includes/database/position.php');
     }
     $userPosition = position($userId);
     $userPositionId = $userPosition['position_id'] ?? null;
 }
-$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+$isAllowedHigherPosition = $isHrmSuite && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
 
-if ($isPis && $userId !== $employeeId && !$isHeadOfThisEmployee && !$isAllowedHigherPosition) {
+if (($isPis || $isHrmSuite) && $userId !== $employeeId && !$isHeadOfThisEmployee && !$isAllowedHigherPosition) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
@@ -70,15 +70,15 @@ $employeePhoto = '';
 <div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
         <?php
-        if (!$isPis) {
+        if ($isHrmis) {
             if (!$editMode) {
-                contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), customUri('hrmis', 'Edit Employee Information', $employeeId), 'Edit', 'fa-edit');
+                contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), customUri($activeApp, 'Edit Employee Information', $employeeId), 'Edit', 'fa-edit');
             } else {
                 $employeePhoto = file_exists(root() . '/' . $employee['profile_picture']) ? uri() . '/' . $employee['profile_picture'] : uri() . '/assets/img/user.png';
-                contentTitleWithLink('Update Employee Information : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), customUri('hrmis', 'Employee Information', $employeeId));
+                contentTitleWithLink('Update Employee Information : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), customUri($activeApp, 'Employee Information', $employeeId));
             }
         } else {
-            contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/pis');
+            contentTitleWithLink('Employee Information : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/' . $activeApp);
         }
 
         progressBar(pdsProgress($employeeId));
