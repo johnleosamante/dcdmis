@@ -68,7 +68,7 @@ messageAlert($showAlert, $message, $success);
                                 <?php if (empty($row['station_id'])) {
                                     echo '<span class="text-muted">N/A</span>';
                                 } else {
-                                    $school = fetchAssoc(schoolById($row['station_id']));
+                                    $school = schoolById($row['station_id']);
                                     if ($school) {
                                         linkItem(customUri($activeApp, 'School Information', $row['station_id']), $school['name']);
                                     } else {
@@ -78,11 +78,11 @@ messageAlert($showAlert, $message, $success);
                             </td>
                             <td class="align-middle">
                                 <?php if (!empty($row['filled_by'])) {
-                                    $filledBy = fetchAssoc(employee($row['filled_by']));
+                                    $filledBy = employee($row['filled_by']);
                                     if ($filledBy) {
-                                        $employeeName = toName($filledBy['lname'], $filledBy['fname'], $filledBy['mname'], $filledBy['ext'], true);
+                                        $employeeName = toName($filledBy['last_name'], $filledBy['first_name'], $filledBy['middle_name'], $filledBy['name_extension'], true);
                                         if ($isHrmis) {
-                                            linkItem(customUri('hrmis', 'Employee Information', $row['filled_by']), $employeeName);
+                                            linkItem(customUri($activeApp, 'Employee Information', $row['filled_by']), $employeeName);
                                         } else {
                                             modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['filled_by']), $employeeName);
                                         }

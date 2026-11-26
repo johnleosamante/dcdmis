@@ -1,7 +1,7 @@
 <?php
 // modules/vacancies/publications.php
 $userPositionId = null;
-if ($isPis) {
+if ($isHrmSuite) {
     if (!function_exists('position')) {
         require_once(root() . '/includes/database/position.php');
     }
@@ -10,7 +10,7 @@ if ($isPis) {
 
     require_once(root() . '/includes/database/vacancy.php');
 }
-$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+$isAllowedHigherPosition = $isHrmSuite && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
 
 if (!$isHrmis && !$isAllowedHigherPosition) {
     require_once root() . '/modules/error/403.php';
@@ -24,10 +24,9 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <?php if ($isPis): ?>
-                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
+            <?php if ($isHrmSuite): ?>
                 <li class="breadcrumb-item"><a
-                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        href="<?= customUri('hrmsuite', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
                         Placement</a></li>
             <?php endif ?>
             <li class="breadcrumb-item active">Call for Applications</li>
@@ -82,9 +81,9 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle"><?= toLongDate($row['close_date']) ?></td>
                             <td class="align-middle">
                                 <?php if ($row['status'] === 'open'): ?>
-                                    <span class="badge badge-success badge-pill">Open</span>
+                                    <?php statusBadge('Open', 'success') ?>
                                 <?php else: ?>
-                                    <span class="badge badge-secondary badge-pill"><?= $row['status'] ?></span>
+                                    <?php statusBadge($row['status'], 'secondary') ?>
                                 <?php endif; ?>
                             </td>
                             <?php if ($isHrmis && ($isICT || $isPersonnel)): ?>

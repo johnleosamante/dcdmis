@@ -1,7 +1,7 @@
 <?php
 // modules/vacancies/page.php
 $userPositionId = null;
-if ($isPis) {
+if ($isHrmSuite) {
     if (!function_exists('position')) {
         require_once(root() . '/includes/database/position.php');
     }
@@ -10,7 +10,7 @@ if ($isPis) {
 
     require_once(root() . '/includes/database/vacancy.php');
 }
-$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+$isAllowedHigherPosition = $isHrmSuite && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
 
 if (!$isHrmis && !$isAllowedHigherPosition) {
     require_once root() . '/modules/error/403.php';
@@ -26,10 +26,9 @@ $query = vacantItems();
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
-            <?php if ($isPis): ?>
-                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
+            <?php if ($isHrmSuite): ?>
                 <li class="breadcrumb-item"><a
-                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        href="<?= customUri('hrmsuite', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
                         Placement</a></li>
             <?php endif ?>
             <li class="breadcrumb-item active">Vacancies</li>

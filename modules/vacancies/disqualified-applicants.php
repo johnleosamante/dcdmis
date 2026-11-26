@@ -1,24 +1,32 @@
 <?php
 // modules/vacancies/disqualified-applicants.php
 
-if (!$isHrmis) {
+$userPositionId = null;
+if ($isHrmSuite) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+
+    require_once(root() . '/includes/database/vacancy.php');
+}
+$isAllowedHigherPosition = $isHrmSuite && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if (!$isHrmis && !$isAllowedHigherPosition) {
     require_once root() . '/modules/error/403.php';
     return;
 }
 
 $publicationId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$code = $title = null;
+$publication = $publicationId ? publication($publicationId) : false;
 
-if ($publicationId) {
-    $publication = publication($publicationId);
-    if (count($publication) > 0) {
-        $code = $publication['code'];
-        $title = $publication['title'];
-    }
-} else {
+if (!$publication) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
+$code = $publication['code'];
+$title = $publication['title'];
 
 messageAlert($showAlert, $message, $success);
 
@@ -32,11 +40,16 @@ $disqualifiedApps = array_filter($apps, function ($app) {
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('hrmis', 'Call for Applications') ?>">Call for
-                    Application</a>
+            <?php if ($isHrmSuite): ?>
+                <li class="breadcrumb-item"><a
+                        href="<?= customUri('hrmsuite', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        Placement</a></li>
+            <?php endif ?>
+            <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Call for Applications') ?>">Call for
+                    Applications</a>
             </li>
             <li class="breadcrumb-item"><a
-                    href="<?= customUri('hrmis', 'Call for Application Details', $publicationId) ?>">
+                    href="<?= customUri($activeApp, 'Call for Application Details', $publicationId) ?>">
                     <?= e($code) ?>
                 </a></li>
             <li class="breadcrumb-item active">Disqualified Applicants</li>
@@ -46,7 +59,7 @@ $disqualifiedApps = array_filter($apps, function ($app) {
 
 <div class="card border-left-danger shadow mb-4">
     <div class="card-header py-3">
-        <?php contentTitleWithLink('Disqualified Applicants', customUri('hrmis', 'Call for Application Details', $publicationId), 'Back', 'fa-arrow-circle-left') ?>
+        <?php contentTitleWithLink('Disqualified Applicants', customUri($activeApp, 'Call for Application Details', $publicationId), 'Back', 'fa-arrow-circle-left') ?>
     </div>
 
     <div class="card-body">
@@ -57,11 +70,12 @@ $disqualifiedApps = array_filter($apps, function ($app) {
     </div>
 </div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex justify-content-between align-items-center">
-        <h6 class="m-0 font-weight-bold">Disqualified Applicants</h6>
+<div class="card border-left-danger shadow mb-4">
+    <div class="card-header py-3">
         <?php if (count($disqualifiedApps) > 0) {
-            linkButtonSplit(uri() . '/export?v=' . encode('disqualified-applicants') . '&id=' . encode($publicationId), 'Export', 'fa-download', 'Export Disqualified Applicants', 'success');
+            contentTitleWithLink('Disqualified Applicants', uri() . '/export?v=' . encode('disqualified-applicants') . '&id=' . encode($publicationId), 'Export', 'fa-download', 'success');
+        } else {
+            contentTitle('Disqualified Applicants');
         } ?>
     </div>
     <div class="card-body">

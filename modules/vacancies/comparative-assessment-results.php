@@ -7,18 +7,14 @@ if (!$isHrmis) {
 }
 
 $publicationId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$code = $title = null;
+$publication = $publicationId ? publication($publicationId) : false;
 
-if ($publicationId) {
-    $publication = publication($publicationId);
-    if (count($publication) > 0) {
-        $code = $publication['code'];
-        $title = $publication['title'];
-    }
-} else {
+if (!$publication) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
+$code = $publication['code'];
+$title = $publication['title'];
 
 // Fetch unique positions in this publication and determine their categories
 $pubItems = publicationItems($publicationId);
@@ -115,9 +111,9 @@ messageAlert($showAlert, $message, $success);
     </div>
 </div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3 bg-light">
-        <h6 class="m-0 font-weight-bold">Positions Comparative Assessment</h6>
+<div class="card border-left-primary shadow mb-4">
+    <div class="card-header py-3">
+        <?php contentTitle('Positions Comparative Assessment') ?>
     </div>
     <div class="card-body">
         <?php if (count($positions) > 0): ?>

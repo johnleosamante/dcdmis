@@ -97,8 +97,7 @@ messageAlert($showAlert, $message, $success);
     <div class="col-12">
         <div class="card shadow mb-4 border-left-primary">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Call for Application Details
-                </h6>
+                <?php contentTitle('Call for Application Details') ?>
             </div>
             <div class="card-body">
                 <h5 class="font-weight-bold text-gray-800 mb-1">
@@ -114,9 +113,7 @@ messageAlert($showAlert, $message, $success);
                 <?php endif ?>
 
                 <div class="text-gray-800 m-0">
-                    <span class="badge badge-primary text-capitalize">
-                        <?= e($publication['status']) ?>
-                    </span>
+                    <?php statusBadge($publication['status'], 'primary') ?>
                 </div>
                 <div class="small text-gray-800">
                     <?= toLongDate($publication['open_date']) ?> to
@@ -133,7 +130,7 @@ messageAlert($showAlert, $message, $success);
             <div class="col-12">
                 <div class="card shadow mb-4 border-left-info">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-info">Applicant Info</h6>
+                        <?php contentTitle('Applicant Info') ?>
                     </div>
                     <div class="card-body">
                         <h5 class="text-uppercase font-weight-bold text-gray-800 mb-1">
@@ -156,8 +153,7 @@ messageAlert($showAlert, $message, $success);
             <div class="col-12">
                 <div class="card shadow mb-4 border-left-success">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-success">Position Applied
-                        </h6>
+                        <?php contentTitle('Position Applied') ?>
                     </div>
                     <div class="card-body">
                         <h5 class="text-uppercase font-weight-bold text-gray-800 mb-1">
@@ -209,7 +205,7 @@ messageAlert($showAlert, $message, $success);
             <div class="col-12">
                 <div class="card shadow mb-4 border-left-warning">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-warning">Criteria and Point System</h6>
+                        <?php contentTitle('Criteria and Point System') ?>
                     </div>
                     <div class="card-body p-0">
                         <div class="px-3 pt-2 pb-1">
@@ -330,9 +326,9 @@ messageAlert($showAlert, $message, $success);
     </div>
 
     <div class="col-xl-8 col-lg-7 col-md-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold text-primary">Applicant Assessment</h6>
+        <div class="card border-left-primary shadow mb-4">
+            <div class="card-header py-3">
+                <?php contentTitle('Applicant Assessment') ?>
             </div>
             <div class="card-body">
                 <form method="POST">

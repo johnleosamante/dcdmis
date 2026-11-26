@@ -1,24 +1,32 @@
 <?php
 // modules/vacancies/applicants.php
 
-if (!$isHrmis) {
+$userPositionId = null;
+if ($isHrmSuite) {
+    if (!function_exists('position')) {
+        require_once(root() . '/includes/database/position.php');
+    }
+    $userPosition = position($userId);
+    $userPositionId = $userPosition['position_id'] ?? null;
+
+    require_once(root() . '/includes/database/vacancy.php');
+}
+$isAllowedHigherPosition = $isHrmSuite && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+
+if (!$isHrmis && !$isAllowedHigherPosition) {
     require_once root() . '/modules/error/403.php';
     return;
 }
 
 $publicationId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$code = $title = null;
+$publication = $publicationId ? publication($publicationId) : false;
 
-if ($publicationId) {
-    $publication = publication($publicationId);
-    if (count($publication) > 0) {
-        $code = $publication['code'];
-        $title = $publication['title'];
-    }
-} else {
+if (!$publication) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
+$code = $publication['code'];
+$title = $publication['title'];
 
 messageAlert($showAlert, $message, $success);
 

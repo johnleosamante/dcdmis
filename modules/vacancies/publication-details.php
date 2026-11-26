@@ -2,7 +2,7 @@
 // modules/vacancies/publication-details.php
 
 $userPositionId = null;
-if ($isPis) {
+if ($isHrmSuite) {
     if (!function_exists('position')) {
         require_once(root() . '/includes/database/position.php');
     }
@@ -11,7 +11,7 @@ if ($isPis) {
 
     require_once(root() . '/includes/database/vacancy.php');
 }
-$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+$isAllowedHigherPosition = $isHrmSuite && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
 
 if (!$isHrmis && !$isAllowedHigherPosition) {
     require_once root() . '/modules/error/403.php';
@@ -19,19 +19,16 @@ if (!$isHrmis && !$isAllowedHigherPosition) {
 }
 
 $publicationId = isset($_GET['id']) ? sanitize(decipher($_GET['id'])) : null;
-$code = $title = $description = null;
+$publication = $publicationId ? publication($publicationId) : false;
 
-if ($publicationId) {
-    $publication = publication($publicationId);
-    if (count($publication) > 0) {
-        $code = $publication['code'];
-        $title = $publication['title'];
-        $description = $publication['description'];
-    }
-} else {
+if (!$publication) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
+
+$code = $publication['code'];
+$title = $publication['title'];
+$description = $publication['description'];
 
 messageAlert($showAlert, $message, $success);
 ?>
@@ -40,10 +37,9 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <?php if ($isPis): ?>
-                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
+            <?php if ($isHrmSuite): ?>
                 <li class="breadcrumb-item"><a
-                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        href="<?= customUri('hrmsuite', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
                         Placement</a></li>
             <?php endif ?>
             <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Call for Applications') ?>">Call for
@@ -82,7 +78,7 @@ messageAlert($showAlert, $message, $success);
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             Status</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            <?= ucfirst($publication['status']) ?>
+                            <?= e(ucfirst($publication['status'])) ?>
                         </div>
                         <div class="small text-muted mt-2">
                             <?= toLongDate($publication['open_date']) ?> -
@@ -105,7 +101,7 @@ messageAlert($showAlert, $message, $success);
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-0">
                             Total Applications</div>
                         <div class="h4 mb-0 font-weight-bold text-gray-800">
-                            <a href="<?= customUri('hrmis', 'Call for Application Applicants', $publicationId) ?>"
+                            <a href="<?= customUri($activeApp, 'Call for Application Applicants', $publicationId) ?>"
                                 class="text-dark">
                                 <?= countApplicationsByPublication($publicationId) ?>
                             </a>
@@ -148,7 +144,7 @@ messageAlert($showAlert, $message, $success);
 <?php
 $positionChartData = applicantsCountByPosition($publicationId);
 foreach ($positionChartData as &$item) {
-    $item['link'] = customUri('hrmis', 'Call for Application Applicants', $publicationId) . '&position_id=' . encode($item['position_id']);
+    $item['link'] = customUri($activeApp, 'Call for Application Applicants', $publicationId) . '&position_id=' . encode($item['position_id']);
 }
 unset($item);
 
@@ -160,21 +156,21 @@ $employmentChartData = [
     [
         'name' => 'Internal',
         'count' => $employedCount,
-        'link' => customUri('hrmis', 'Call for Application Applicants', $publicationId) . '&status=internal'
+        'link' => customUri($activeApp, 'Call for Application Applicants', $publicationId) . '&status=internal'
     ],
     [
         'name' => 'External',
         'count' => $notEmployedCount,
-        'link' => customUri('hrmis', 'Call for Application Applicants', $publicationId) . '&status=external'
+        'link' => customUri($activeApp, 'Call for Application Applicants', $publicationId) . '&status=external'
     ]
 ];
 ?>
 
 <div class="row">
     <div class="col-xl-8 col-lg-7 mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Applicants by Position</h6>
+        <div class="card border-left-primary shadow">
+            <div class="card-header py-3">
+                <?php contentTitle('Applicants by Position') ?>
             </div>
             <div class="card-body">
                 <?php if (count($positionChartData) > 0): ?>
@@ -192,18 +188,18 @@ $employmentChartData = [
     </div>
 
     <div class="col-xl-4 col-lg-5 mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Applicant Type</h6>
+        <div class="card border-left-primary shadow">
+            <div class="card-header py-3">
+                <?php contentTitle('Applicant Type') ?>
             </div>
             <div class="card-body">
                 <?php if ($employedCount > 0 || $notEmployedCount > 0): ?>
-                    <div class="chart-pie pt-4 pb-2" style="position: relative; height: 300px;">
+                    <div class="chart-bar pt-4 pb-2" style="position: relative; height: 300px;">
                         <canvas id="employment-status-chart"></canvas>
                     </div>
                 <?php else: ?>
                     <div class="text-center py-5">
-                        <i class="fas fa-chart-pie fa-3x text-gray-300 mb-3"></i>
+                        <i class="fas fa-chart-bar fa-3x text-gray-300 mb-3"></i>
                         <p class="text-muted mb-0">No applicant data available.</p>
                     </div>
                 <?php endif; ?>
@@ -232,16 +228,13 @@ $employmentChartData = [
     });
 </script>
 
-<div class="card shadow mb-4">
+<div class="card border-left-primary shadow mb-4">
     <div class="card-header py-3">
-        <div class="d-sm-flex align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold">Applications for Initial Screening</h6>
-            <div>
-                <?php linkButtonSplit(customUri('hrmis', 'Qualified Applicants', $publicationId), 'Qualified', 'fa-thumbs-up', 'View Qualified Applicants', 'success');
-                linkButtonSplit(customUri('hrmis', 'Disqualified Applicants', $publicationId), 'Disqualified', 'fa-thumbs-down', 'View Disqualified Applicants', 'danger');
-                linkButtonSplit(uri() . '/export?v=' . encode('publication-applicants-details') . '&id=' . encode($publicationId), 'Export Details', 'fa-file-excel', 'Export Applicant Details', 'info'); ?>
-            </div>
-        </div>
+        <?php contentTitleWithActions('Applications for Initial Screening', function () use ($activeApp, $publicationId) {
+            linkButtonSplit(customUri($activeApp, 'Qualified Applicants', $publicationId), 'Qualified', 'fa-thumbs-up', 'View Qualified Applicants', 'success');
+            linkButtonSplit(customUri($activeApp, 'Disqualified Applicants', $publicationId), 'Disqualified', 'fa-thumbs-down', 'View Disqualified Applicants', 'danger');
+            linkButtonSplit(uri() . '/export?v=' . encode('publication-applicants-details') . '&id=' . encode($publicationId), 'Export Details', 'fa-file-excel', 'Export Applicant Details', 'info');
+        }); ?>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -270,7 +263,7 @@ $employmentChartData = [
                                 $applicantId = $app['application_code_id'] ?? applicantId($app['application_code']);
                                 $applicantNameStr = applicantName($app['application_code']);
                                 if ($applicantId): ?>
-                                    <a href="<?= e(customUri('hrmis', 'Applicant Information', $applicantId)) ?>"><?= e($applicantNameStr) ?></a>
+                                    <a href="<?= e(customUri($activeApp, 'Applicant Information', $applicantId)) ?>"><?= e($applicantNameStr) ?></a>
                                 <?php else: ?>
                                     <?= e($applicantNameStr) ?>
                                 <?php endif; ?>
@@ -324,16 +317,14 @@ $employmentChartData = [
                             <th width="5%" class="align-middle">Action</th>
                         <?php endif ?>
                     </tr>
-                    </tr>
                 </tfoot>
             </table>
         </div>
     </div>
 </div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3 d-sm-flex align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold">Included Vacancies</h6>
+<div class="card border-left-primary shadow mb-4">
+    <div class="card-header py-3">
         <?php
         $isClosed = ($publication['status'] === 'closed');
         $items = publicationItems($publicationId);
@@ -346,11 +337,12 @@ $employmentChartData = [
                 }
             }
         }
-        if ($hasEligibleToReadd): ?>
-            <div>
-                <?php modalButtonSplit(uri() . '/modules/vacancies/readd-all-vacancies-dialog.php?id=' . cipher($publicationId), 'Re-add Unfilled Items to Vacancies', 'fa-redo', 'Re-add all unfilled positions with no qualified applicants to vacant plantilla positions', 'primary'); ?>
-            </div>
-        <?php endif; ?>
+        if ($hasEligibleToReadd) {
+            contentTitleWithModal('Included Vacancies', uri() . '/modules/vacancies/readd-all-vacancies-dialog.php?id=' . cipher($publicationId), 'Re-add Unfilled Items to Vacancies', 'fa-redo', 'primary');
+        } else {
+            contentTitle('Included Vacancies');
+        }
+        ?>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -375,38 +367,33 @@ $employmentChartData = [
                             <td class="align-middle"><?= e($item['item_number']) ?></td>
                             <td class="align-middle">
                                 <?php $school = schoolById($item['station_id']);
-                                echo $school ? $school['name'] : 'N/A'; ?>
+                                echo $school ? e($school['name']) : 'N/A'; ?>
                             </td>
                             <?php if ($isHrmis && ($isPersonnel || $isICT)): ?>
                                 <td class="align-middle text-capitalize">
-                                    <?php if ($item['status'] === 'filled') { ?>
-                                        <span class="badge badge-success py-1 px-2 text-uppercase small">Filled</span>
-                                    <?php } elseif ($publication['status'] === 'open') { ?>
-                                        <?php if (countQualifiedApplicants($publicationId, $item['position_id']) === 0) { ?>
-                                            <span class="badge badge-secondary py-1 px-2 text-uppercase small">No Qualified
-                                                Applicants</span>
-                                        <?php } elseif (countQualifiedApplicants($publicationId, $item['position_id']) !== countAssessedQualifiedApplicants($publicationId, $item['position_id'])) { ?>
-                                            <span class="badge badge-secondary py-1 px-2 text-uppercase small">Pending Assessment</span>
-                                        <?php } else {
+                                    <?php if ($item['status'] === 'filled') {
+                                        statusBadge('Filled', 'success');
+                                    } elseif ($publication['status'] === 'open') {
+                                        if (countQualifiedApplicants($publicationId, $item['position_id']) === 0) {
+                                            statusBadge('No Qualified Applicants', 'secondary');
+                                        } elseif (countQualifiedApplicants($publicationId, $item['position_id']) !== countAssessedQualifiedApplicants($publicationId, $item['position_id'])) {
+                                            statusBadge('Pending Assessment', 'secondary');
+                                        } else {
                                             modalButtonSplit(uri() . '/modules/vacancies/fill-vacancy-dialog.php?id=' . cipher($item['vacancy_id']), 'Fill Position', 'fa-user-plus', 'Fill Position Item');
-                                        } ?>
-                                    <?php } elseif ($publication['status'] === 'closed') { ?>
-                                        <?php
+                                        }
+                                    } elseif ($publication['status'] === 'closed') {
                                         $qualifiedCount = countQualifiedApplicants($publicationId, $item['position_id']);
                                         $alreadyReadded = isVacancyReadded($item['plantilla_item_id']);
-                                        if ($qualifiedCount > 0) { ?>
-                                            <span class="badge badge-info py-1 px-2 text-uppercase small">Has Qualified
-                                                Applicants</span>
-                                        <?php } elseif ($alreadyReadded) { ?>
-                                            <span class="badge badge-primary py-1 px-2 text-uppercase small"
-                                                title="Item already re-added to vacant positions">Vacant</span>
-                                        <?php } else {
+                                        if ($qualifiedCount > 0) {
+                                            statusBadge('Has Qualified Applicants', 'info');
+                                        } elseif ($alreadyReadded) {
+                                            statusBadge('Vacant', 'primary');
+                                        } else {
                                             modalButtonSplit(uri() . '/modules/vacancies/readd-vacancy-dialog.php?pub_id=' . cipher($publicationId) . '&vacancy_id=' . cipher($item['vacancy_id']), 'Re-add to Vacancies', 'fa-plus-circle', 'Re-add this vacant plantilla item to vacancies for new Call for Applications', 'primary');
-                                        } ?>
-                                    <?php } else { ?>
-                                        <span
-                                            class="badge badge-secondary py-1 px-2 text-uppercase small"><?= e($publication['status']) ?></span>
-                                    <?php } ?>
+                                        }
+                                    } else {
+                                        statusBadge($publication['status'], 'secondary');
+                                    } ?>
                                 </td>
                             <?php endif ?>
                         </tr>
