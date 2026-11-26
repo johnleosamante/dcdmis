@@ -1,6 +1,6 @@
 <?php
 // modules/applicants/diversity/page.php
-if ($isPis) {
+if ($isHrmSuite) {
     $userPositionId = position($userId)['position_id'];
     $showPrimeHrm = in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT;
 
@@ -103,13 +103,12 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <?php if ($isPis): ?>
-                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
+            <?php if ($isHrmSuite): ?>
                 <li class="breadcrumb-item"><a
-                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        href="<?= customUri('hrmsuite', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
                         Placement</a></li>
             <?php endif; ?>
-            <li class="breadcrumb-item"><a href="<?= customUri('pis', 'Talent Pool Diversity - Gender') ?>">Talent
+            <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Talent Pool Diversity - Gender') ?>">Talent
                     Pool Diversity</a></li>
             <li class="breadcrumb-item active"><?= e($config['title']) ?></li>
         </ol>
@@ -137,11 +136,9 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
     <!-- Visual Chart Card -->
     <?php $isUndergraduateCourse = $config['title'] === 'Undergraduate Courses'; ?>
     <div class="col-xl-<?= $isUndergraduateCourse ? '12' : '5' ?> col-lg-12 mb-4">
-        <div class="card shadow <?= $isUndergraduateCourse ? 'h-100' : '' ?>">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-dark text-uppercase">
-                    <?= e($config['title']) ?> Chart
-                </h6>
+        <div class="card border-left-primary shadow <?= $isUndergraduateCourse ? 'h-100' : '' ?>">
+            <div class="card-header py-3">
+                <?php contentTitle($config['title'] . ' Chart') ?>
             </div>
             <div class="card-body">
                 <?php
@@ -157,17 +154,9 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
 
     <!-- Data Table Card -->
     <div class="col-xl-<?= $isUndergraduateCourse ? '12' : '7' ?> col-lg-12 mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-bottom">
-                <h6 class="m-0 font-weight-bold text-uppercase text-dark">
-                    <?= e($config['title']) ?> Summary
-                </h6>
-                <div class="dropdown no-arrow">
-                    <?php dropdownEllipsis() ?>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('export', 'applicant-diversity', $config['export_id']), 'Export', 'fa-file-excel') ?>
-                    </div>
-                </div>
+        <div class="card border-left-primary shadow">
+            <div class="card-header py-3">
+                <?php contentTitleWithLink($config['title'] . ' Summary', customUri('export', 'applicant-diversity', $config['export_id']), 'Export', 'fa-file-excel', 'success') ?>
             </div>
             <div class="card-body">
                 <div class="table-responsive font-weight-normal">
@@ -211,13 +200,14 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
                         </tbody>
                         <tfoot>
                             <tr class="font-weight-bold text-dark text-uppercase">
-                                <td colspan="2" class="text-right align-middle">Grand Total</td>
+                                <th class="align-middle"></th>
+                                <th class="text-right align-middle">Grand Total</th>
                                 <?php if ($hasGenderBreakdown): ?>
-                                    <td class="align-middle text-mars"><?= number_format($totalMale) ?></td>
-                                    <td class="align-middle text-venus"><?= number_format($totalFemale) ?></td>
+                                    <th class="align-middle text-mars"><?= number_format($totalMale) ?></th>
+                                    <th class="align-middle text-venus"><?= number_format($totalFemale) ?></th>
                                 <?php endif; ?>
-                                <td class="align-middle text-dark font-weight-bold"><?= number_format($grandTotal) ?>
-                                </td>
+                                <th class="align-middle text-dark font-weight-bold"><?= number_format($grandTotal) ?>
+                                </th>
                             </tr>
                         </tfoot>
                     </table>
@@ -229,12 +219,10 @@ $selectedSex = isset($_GET['sex']) ? sanitize($_GET['sex']) : 'all';
 
 <div class="row mb-0">
     <div class="col-12">
-        <div class="card shadow" id="diversity-breakdown">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-bottom">
-                <h6 class="m-0 font-weight-bold text-dark text-uppercase">
-                    <?= e($config['title']) ?> Breakdown
-                </h6>
-                <div class="d-inline-block">
+        <div class="card border-left-primary shadow" id="diversity-breakdown">
+            <div class="card-header py-3">
+                <?php contentTitle($config['title'] . ' Breakdown') ?>
+                <div class="d-none">
                     <?php
                     $exportUrl = customUri('export', 'applicant-diversity', 'list') . '&demo=' . encode($config['export_id']);
                     if ($selectedGroup !== 'all') {
