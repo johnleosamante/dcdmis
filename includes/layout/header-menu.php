@@ -102,10 +102,11 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
 
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false" title="<?= strtoupper($displayName) ?>">
+                aria-haspopup="true" aria-expanded="false" title="<?= e(strtoupper($displayName)) ?>">
                 <span class="mr-2 d-none d-md-inline">
-                    <div class="text-gray-600 small"><?= e(strtoupper($displayName)) ?></div>
-                    <div class="text-xs text-gray-500"><?= e(strtoupper($position['official_title'] ?? '')) ?></div>
+                    <span class="d-block text-gray-600 small"><?= e(strtoupper($displayName)) ?></span>
+                    <span
+                        class="d-block text-xs text-gray-500"><?= e(strtoupper($position['official_title'] ?? '')) ?></span>
                 </span>
 
                 <span class="d-flex justify-content-center align-middle img-profile rounded-circle overflow-hidden">
@@ -137,15 +138,22 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
                     linkDropdownItem(uri() . '/dtr', 'Daily Time Record', 'fa-clock', 'Daily Time Records');
                 }
 
-                if (userRole($userId, 'ims')) {
-                    require_once(root() . '/ims/helpers.php');
-                    if (imsCanAccessAll()) {
-                        linkDropdownItem(uri() . '/ims', 'Inventory Management', 'fa-box', 'Inventory Management System');
-                    }
+                require_once(root() . '/ims/helpers.php');
+                if (imsCanAccessAll()) {
+                    linkDropdownItem(uri() . '/ims', 'Inventory Management', 'fa-box', 'Inventory Management System');
                 }
 
                 if (userRole($userId, 'dmis')) {
                     linkDropdownItem(uri() . '/dmis', 'Division Management', 'fa-industry', 'Division Management Information System');
+                }
+
+                require_once(root() . '/includes/database/call-for-submission.php');
+                if (canManageCallForSubmissions($userId, $stationId, $code) || (bool) schoolByHead($userId, DIVISION_ID)) {
+                    linkDropdownItem(uri() . '/primedx', 'PRIME-DX', 'fa-inbox', 'PRIME-DX Call for Submissions');
+                }
+
+                if (in_array($position['position_id'] ?? null, $allowedMonitoringPositions, true) || $isICT) {
+                    linkDropdownItem(uri() . '/hrmsuite', 'HRM Suite', 'fa-network-wired', 'HRM Suite System Overview');
                 }
                 ?>
 
@@ -159,8 +167,7 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
 
                 <div class="dropdown-divider"></div>
 
-                <?php //dd($baseUri);
-                modalDropdownItem(uri() . '/modules/auth/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout') ?>
+                <?php modalDropdownItem(uri() . '/modules/auth/logout-dialog.php', 'Logout', 'fa-sign-out-alt', 'Logout') ?>
             </div>
         </li>
     </ul>
@@ -180,6 +187,6 @@ $displayPhoto = file_exists(root() . '/' . $user['profile_picture']) ? uri() . '
     <h2 class="h1 m-0 mt-4"><?= e(strtoupper($appTitle)) ?></h2>
 
     <?php if ($hasPortal && !$isSchoolPortal && $isDts): ?>
-        <h3 class="h4 m-0"><?= stationName($station) ?></h3>
+        <h3 class="h4 m-0"><?= e(stationName($station)) ?></h3>
     <?php endif ?>
 </div>
