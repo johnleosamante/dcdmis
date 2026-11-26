@@ -143,7 +143,7 @@ $hasSteps = !empty($steps);
                                             <tr class="small">
                                                 <th class="align-middle text-center" width="5%">#</th>
                                                 <th class="align-middle" width="80%">Checklist Requirement Item</th>
-                                                <th class="align-middle text-center" width="5%">Actions</th>
+                                                <th class="align-middle text-center" width="5%">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
