@@ -36,15 +36,6 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Edit Document':
             $file = 'documents/edit-document';
             break;
-        case 'Receive Document':
-            $file = 'documents/receive-document';
-            break;
-        case 'Forward Document':
-            $file = 'documents/forward-document';
-            break;
-        case 'Approve Document':
-            $file = 'documents/approve-document';
-            break;
         case 'Transactions':
             $file = 'documents/transactions';
             break;
@@ -196,6 +187,9 @@ if (!isset($url) || $url === 'dashboard') {
         case 'Conducted Trainings':
             $file = 'trainings/conducted-trainings';
             break;
+        case 'Trained Employees':
+            $file = 'trainings/trained-employees';
+            break;
         case 'Training Details':
             $file = 'trainings/training-details';
             break;
@@ -305,6 +299,15 @@ if (!isset($url) || $url === 'dashboard') {
             break;
         case 'Call for Submission Details':
             $file = 'call-for-submission/details';
+            break;
+        case 'School Submission Details':
+        case 'School Submission':
+        case 'Submission Details':
+            $file = 'call-for-submission/school-submission';
+            break;
+        case 'Submission Project Details':
+        case 'Project Details':
+            $file = 'call-for-submission/project-details';
             break;
         case 'My Submissions':
             $file = 'call-for-submission/school-page';
