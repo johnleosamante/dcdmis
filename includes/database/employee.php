@@ -848,16 +848,46 @@ function nonRegularEmployees($employment_type = null, $station_id = null)
 
 function employeeStepIncrement()
 {
-    $sql = "SELECT e.`id`, e.`lname`, e.`fname`, e.`mname`, e.`ext`, e.`picture`, e.`sex`,
+    $sql = "SELECT e.`id`, e.`last_name`, e.`first_name`, e.`middle_name`, e.`name_extension`,
+                   e.`profile_picture`, e.`sex`,
                    sa.`position_id` AS `position`, sa.`station_id` AS `station`,
-                   pos.`salary_grade` AS `sg`,
+                   pos.`official_title` AS `position_title`, pos.`salary_grade` AS `sg`,
+                   s.`name` AS `station_name`,
                    COALESCE(si.`step`, 1) AS `step`,
                    COALESCE(si.`last_step_date`, sa.`assignment_date`, '2020-01-01') AS `last_step_date`
             FROM `employees` AS e
             INNER JOIN `station_assignments` AS sa ON sa.`employee_id` = e.`id`
             INNER JOIN `positions` AS pos ON pos.`id` = sa.`position_id`
+            LEFT JOIN `schools` AS s ON s.`id` = sa.`station_id`
             LEFT JOIN `step_increments` AS si ON si.`employee_id` = e.`id`
             WHERE e.`status` = 'Active'
-            ORDER BY e.`lname` ASC, e.`fname` ASC";
-    return query($sql);
+            GROUP BY e.`id`
+            ORDER BY e.`last_name` ASC, e.`first_name` ASC";
+    $results = query($sql);
+    return is_array($results) ? $results : [];
+}
+
+function employeeLoyaltyAward()
+{
+    $sql = "SELECT e.`id`, e.`last_name`, e.`first_name`, e.`middle_name`, e.`name_extension`,
+                   e.`profile_picture`, e.`sex`,
+                   sa.`position_id` AS `position`, sa.`station_id` AS `station`,
+                   pos.`official_title` AS `position_title`,
+                   s.`name` AS `station_name`,
+                   sa.`assignment_date` AS `original_appointment`,
+                   TIMESTAMPDIFF(YEAR, sa.`assignment_date`, CURDATE()) AS `years_active`,
+                   la.`date_last_awarded` AS `last_awarded_on`
+            FROM `employees` AS e
+            INNER JOIN `station_assignments` AS sa ON sa.`employee_id` = e.`id`
+            INNER JOIN `positions` AS pos ON pos.`id` = sa.`position_id`
+            LEFT JOIN `schools` AS s ON s.`id` = sa.`station_id`
+            LEFT JOIN `loyalty_awards` AS la ON la.`employee_id` = e.`id`
+            WHERE e.`status` = 'Active'
+              AND sa.`assignment_date` IS NOT NULL
+              AND TIMESTAMPDIFF(YEAR, sa.`assignment_date`, CURDATE()) >= 10
+              AND (la.`date_last_awarded` IS NULL OR TIMESTAMPDIFF(YEAR, la.`date_last_awarded`, CURDATE()) >= 5)
+            GROUP BY e.`id`
+            ORDER BY e.`last_name` ASC, e.`first_name` ASC";
+    $results = query($sql);
+    return is_array($results) ? $results : [];
 }
