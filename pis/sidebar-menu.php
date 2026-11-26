@@ -2,6 +2,7 @@
 // pis/sidebar-menu.php
 $isNonDivision = $stationId !== DIVISION_ID;
 $schoolInfo = schoolByHead($userId, DIVISION_ID);
+$isSchoolHead = (bool) $schoolInfo;
 
 sidebarDivider();
 
@@ -17,42 +18,46 @@ if (!$isNonDivision) {
     sidebarMenuItem(customUri('bsa', 'Booking & Schedule'), 'Booking & Schedule', 'fa-calendar-check');
 }
 
-if ($isNonDivision || $schoolInfo) {
+if ($isNonDivision) {
     sidebarDivider();
-    if ($isNonDivision) {
-        sidebarMenuItem(customUri('pis', 'Request Transfer'), 'Request Transfer', 'fa-exchange-alt', isset($url) && str_contains($url, 'Request Transfer'));
-    }
+    sidebarMenuItem(customUri('pis', 'Request Transfer'), 'Request Transfer', 'fa-exchange-alt', isset($url) && str_contains($url, 'Request Transfer'));
 }
 
-$showMonitoringTools = (dtsUser($userId) && station($userId)['station_id'] === DIVISION_ID) || (bool) $schoolInfo;
-$userPositionId = position($userId)['position_id'];
+$showMonitoringTools = (dtsUser($userId) && (station($userId)['station_id'] ?? null) === DIVISION_ID) || $isSchoolHead;
+$userPositionId = position($userId)['position_id'] ?? null;
 $showOverview = in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT;
-$showCfsManagement = in_array($userPositionId, ['ASDS', 'SDS'], true) || $isICT;
+$showCfsManagement = canManageCallForSubmissions($userId, $stationId, $code);
 
-if ($showMonitoringTools || $showOverview) {
+if ($showMonitoringTools || $showOverview || $showCfsManagement) {
     sidebarDivider();
 
-    if ($showCfsManagement && !$isNonDivision) {
-        sidebarMenuItem(customUri('pis', 'Call for Submissions'), 'Call for Submissions', 'fa-inbox', isset($url) && (str_contains($url, 'Call for Submission') || str_contains($url, 'Call for Submissions')));
+    if ($showCfsManagement) {
+        sidebarMenuItem(
+            customUri('primedx', 'Call for Submissions'),
+            'Call for Submissions',
+            'fa-inbox'
+        );
+    }
+
+    if ($isSchoolHead) {
+        sidebarMenuItem(
+            customUri('primedx', 'My Submissions'),
+            'My Submissions',
+            'fa-paper-plane'
+        );
+        sidebarMenuItem(
+            customUri('pis', 'School Employees'),
+            'School Employees',
+            'fa-users',
+            isset($url) && ($url === 'Employees' || $url === 'Active Employees' || $url === 'School Employees')
+        );
     }
 
     if ($showMonitoringTools) {
-        if ($isNonDivision) {
-            sidebarMenuItem(customUri('pis', 'My Submissions'), 'My Submissions', 'fa-paper-plane', isset($url) && str_contains($url, 'My Submissions'));
-            if ($schoolInfo) {
-                sidebarMenuItem(customUri('pis', 'School Employees'), 'School Employees', 'fa-users', isset($url) && ($url === 'Employees' || $url === 'Active Employees' || $url === 'School Employees'));
-            }
-        }
         sidebarMenuItem(customUri('pis', 'Monitoring Tools'), 'Monitoring Tools', 'fa-binoculars', isset($url) && str_contains($url, 'Monitoring Tools'));
     }
-    if ($showOverview) {
-        $primeHrmPillars = [
-            'Recruitment, Selection and Placement',
-            'Learning and Development',
-            'Performance Management',
-            'Rewards and Recognition'
-        ];
 
-        sidebarMenuItem(customUri('pis', 'System Overview'), 'System Overview', 'fa-network-wired', isset($url) && (str_contains($url, 'System Overview') || in_array($url, $primeHrmPillars, true)));
+    if ($showOverview) {
+        sidebarMenuItem(uri() . '/hrmsuite', 'HRM Suite', 'fa-network-wired');
     }
 }

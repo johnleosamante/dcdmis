@@ -11,10 +11,6 @@ if (isset($_SESSION["{$prefix}change_password"])) {
     redirect("{$baseUri}/login/change");
 }
 
-if (isset($_POST['primary-search-button'])) {
-    redirect(customUri('pis', 'Search', sanitize($_POST['primary-search-text'])));
-}
-
 if (isset($_POST['update-identification'])) {
     $card = sanitize($_POST['card-type']);
     $number = sanitize($_POST['card-number']);
@@ -891,32 +887,27 @@ if (isset($_POST['upload-mov'])) {
         }
 
         $file = $_FILES['mov_file'];
-        $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/png'];
-        $maxSize = FILE_UPLOAD_SIZE_LIMIT;
+        $allowedMimeMap = [
+            'application/pdf' => 'pdf',
+            'application/msword' => 'doc',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+            'application/vnd.ms-excel' => 'xls',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png'
+        ];
 
-        if (!in_array($file['type'], $allowedTypes)) {
-            throw new Exception('Invalid file type. Allowed: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG.');
-        }
+        $stagedFile = stageUploadedFile($file, $allowedMimeMap, root() . '/uploads/mov', "MOV_{$ipcrfId}_{$objectiveId}");
+        commitStagedFile($stagedFile);
 
-        if ($file['size'] > $maxSize) {
-            throw new Exception('File size exceeds ' . UPLOAD_MAX_FILESIZE . 'B limit.');
-        }
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $detectedMime = $finfo->file($stagedFile['full_path']) ?: ($file['type'] ?? 'application/octet-stream');
 
-        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $newFileName = 'mov_' . $ipcrfId . '_' . $objectiveId . '_' . time() . '.' . $ext;
-        $uploadDir = root() . '/uploads/mov/';
-
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
-        }
-
-        if (!move_uploaded_file($file['tmp_name'], $uploadDir . $newFileName)) {
-            throw new Exception('Failed to upload file.');
-        }
-
-        $result = createPmMov($objectiveId, $ipcrfId, $newFileName, $file['name'], $file['type'], $file['size'], $description, $userId);
+        $result = createPmMov($objectiveId, $ipcrfId, $stagedFile['secure_name'], $file['name'], $detectedMime, $file['size'], $description, $userId);
         if (!$result) {
-            unlink($uploadDir . $newFileName);
+            if (file_exists($stagedFile['full_path'])) {
+                unlink($stagedFile['full_path']);
+            }
             throw new Exception('Failed to save MOV record.');
         }
 

@@ -1,5 +1,5 @@
 <?php
-// pis/page.php
+// pis/dashboard.php
 messageAlert($showAlert, $message, $success);
 contentTitle('Dashboard');
 ?>
@@ -19,7 +19,7 @@ contentTitle('Dashboard');
     ?>
 </div>
 
-<?php if ($isNonDivision || $schoolInfo): ?>
+<?php if ($isNonDivision): ?>
     <hr class="mt-0">
     <div class="row mt-4">
         <?php
@@ -28,25 +28,24 @@ contentTitle('Dashboard');
     </div>
 <?php endif; ?>
 
-<?php if ($showMonitoringTools || $showOverview): ?>
+<?php if ($showMonitoringTools || $showOverview || $showCfsManagement): ?>
     <hr class="mt-0">
     <div class="row mt-4">
         <?php
-        if ($showCfsManagement && !$isNonDivision) {
-            card('Call for Submissions', customUri('pis', 'Call for Submissions'), 'fa-inbox', 'primary');
+        if ($showCfsManagement) {
+            card('Call for Submissions', customUri('primedx', 'Call for Submissions'), 'fa-inbox', 'primary');
+        }
+
+        if ($isSchoolHead) {
+            card('My Submissions', customUri('primedx', 'My Submissions'), 'fa-paper-plane', 'primary');
+            card('School Employees', customUri('pis', 'School Employees'), 'fa-users', 'success');
         }
 
         if ($showMonitoringTools) {
-            if ($isNonDivision) {
-                card('My Submissions', customUri('pis', 'My Submissions'), 'fa-paper-plane', 'primary');
-                if ($schoolInfo) {
-                    card('School Employees', customUri('pis', 'School Employees'), 'fa-users', 'success');
-                }
-            }
             card('Monitoring Tools', customUri('pis', 'Monitoring Tools'), 'fa-binoculars', 'info');
         }
         if ($showOverview) {
-            card('System Overview', customUri('pis', 'System Overview'), 'fa-network-wired', 'danger');
+            card('HRM Suite', uri() . '/hrmsuite', 'fa-network-wired', 'danger');
         } ?>
     </div>
 <?php endif; ?>
