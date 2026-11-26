@@ -39,10 +39,8 @@ if ($currStation) {
 <div class="row">
     <div class="col-xl-4 col-lg-5 col-md-12 mb-4">
         <div class="card border-left-primary shadow h-100">
-            <div class="card-header py-3 bg-white">
-                <h6 class="m-0 font-weight-bold text-primary">
-                    <i class="fas fa-exchange-alt mr-2"></i>Request Transfer of Assignment
-                </h6>
+            <div class="card-header py-3">
+                <?php contentTitle('Request Transfer of Assignment') ?>
             </div>
             <div class="card-body">
                 <form action="" method="POST" enctype="multipart/form-data">
@@ -120,10 +118,8 @@ if ($currStation) {
 
     <div class="col-xl-8 col-lg-7 col-md-12 mb-4">
         <div class="card border-left-secondary shadow h-100">
-            <div class="card-header py-3 bg-white">
-                <h6 class="m-0 font-weight-bold text-secondary">
-                    <i class="fas fa-history mr-2"></i>History of Transfer of Assignment
-                </h6>
+            <div class="card-header py-3">
+                <?php contentTitle('History of Transfer of Assignment') ?>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
