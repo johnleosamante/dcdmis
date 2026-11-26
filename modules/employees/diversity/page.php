@@ -1,6 +1,6 @@
 <?php
 // modules/employees/diversity/page.php
-if ($isPis) {
+if ($isHrmSuite) {
     $userPositionId = position($userId)['position_id'];
     $showPrimeHrm = in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT;
 
@@ -136,13 +136,12 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <?php if ($isPis) : ?>
-                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
+            <?php if ($isHrmSuite) : ?>
                 <li class="breadcrumb-item"><a
-                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        href="<?= customUri('hrmsuite', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
                         Placement</a></li>
             <?php endif; ?>
-            <li class="breadcrumb-item"><a href="<?= customUri('pis', 'Workforce Diversity - Gender') ?>">Workforce Diversity</a></li>
+            <li class="breadcrumb-item"><a href="<?= customUri($activeApp, 'Workforce Diversity - Gender') ?>">Workforce Diversity</a></li>
             <li class="breadcrumb-item active"><?= e($config['title']) ?></li>
         </ol>
     </nav>
@@ -168,11 +167,9 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
 <div class="row">
     <!-- Visual Chart Card -->
     <div class="col-xl-5 col-lg-12 mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-dark text-uppercase">
-                    <?= e($config['title']) ?> Chart
-                </h6>
+        <div class="card border-left-primary shadow">
+            <div class="card-header py-3">
+                <?php contentTitle($config['title'] . ' Chart') ?>
             </div>
             <div class="card-body">
                 <?php
@@ -188,17 +185,9 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
 
     <!-- Data Table Card -->
     <div class="col-xl-7 col-lg-12 mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-bottom">
-                <h6 class="m-0 font-weight-bold text-uppercase text-dark">
-                    <?= e($config['title']) ?> Summary
-                </h6>
-                <div class="dropdown no-arrow">
-                    <?php dropdownEllipsis() ?>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                        <?php linkDropdownItem(customUri('export', 'demographics', $config['export_id']), 'Export', 'fa-file-excel') ?>
-                    </div>
-                </div>
+        <div class="card border-left-primary shadow">
+            <div class="card-header py-3">
+                <?php contentTitleWithLink($config['title'] . ' Summary', customUri('export', 'demographics', $config['export_id']), 'Export', 'fa-file-excel', 'success') ?>
             </div>
             <div class="card-body">
                 <div class="table-responsive font-weight-normal">
@@ -242,13 +231,14 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                         </tbody>
                         <tfoot>
                             <tr class="font-weight-bold text-dark text-uppercase">
-                                <td colspan="2" class="text-right align-middle">Grand Total</td>
+                                <th class="align-middle"></th>
+                                <th class="text-right align-middle">Grand Total</th>
                                 <?php if ($hasGenderBreakdown): ?>
-                                    <td class="align-middle text-mars"><?= number_format($totalMale) ?></td>
-                                    <td class="align-middle text-venus"><?= number_format($totalFemale) ?></td>
+                                    <th class="align-middle text-mars"><?= number_format($totalMale) ?></th>
+                                    <th class="align-middle text-venus"><?= number_format($totalFemale) ?></th>
                                 <?php endif; ?>
-                                <td class="align-middle text-dark font-weight-bold"><?= number_format($grandTotal) ?>
-                                </td>
+                                <th class="align-middle text-dark font-weight-bold"><?= number_format($grandTotal) ?>
+                                </th>
                             </tr>
                         </tfoot>
                     </table>
@@ -260,13 +250,10 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
 
 <div class="row mb-0">
     <div class="col-12">
-        <div class="card shadow" id="demographics-breakdown">
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-bottom">
-                <h6 class="m-0 font-weight-bold text-dark text-uppercase">
-                    <?= e($config['title']) ?> Breakdown
-                </h6>
-                <div class="d-inline-block">
+        <div class="card border-left-primary shadow" id="demographics-breakdown">
+            <div class="card-header py-3">
+                <?php contentTitle($config['title'] . ' Breakdown') ?>
+                <div class="d-none">
                     <?php
                     // Generate export url dynamically in PHP based on active parameters
                     $exportUrl = customUri('export', 'demographics', 'list') . '&demo=' . encode($config['export_id']);
@@ -481,7 +468,7 @@ $selectedSchool = isset($_GET['school']) ? sanitize($_GET['school']) : 'all';
                                         </div>
                                     </td>
                                     <td class="align-middle text-left text-dark">
-                                        <div><?= linkItem(customUri('hrmis', 'Employee Information', $empRow['id']), $employeeName); ?></div>
+                                        <div><?= linkItem(customUri($activeApp, 'Employee Information', $empRow['id']), $employeeName); ?></div>
                                         <div class="small"><?= e($pos) ?></div>
                                     </td>
                                     <td class="align-middle text-left">
