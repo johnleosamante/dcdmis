@@ -23,13 +23,19 @@ function messageAlert($show, $message, $success = true, $align = 'left')
 
 function message($text, $color = 'info', $icon = 'info-circle', $marginBottom = 0, $marginTop = 0)
 { ?>
-    <div class="alert alert-<?= $color ?> p-2 d-flex align-items-start small mb-<?= $marginBottom ?> mt-<?= $marginTop ?>">
-        <i class="fa fas fa-<?= $icon ?> mt-1 mr-1"></i>
+    <div
+        class="alert alert-<?= e($color) ?> p-2 d-flex align-items-start small mb-<?= e($marginBottom) ?> mt-<?= e($marginTop) ?>">
+        <i class="fa fas fa-<?= e($icon) ?> mt-1 mr-1"></i>
         <div>
             <?= $text ?>
         </div>
     </div> <?php
 }
+
+function statusBadge($text, $color = 'secondary', $pill = true)
+{ ?>
+    <span class="badge badge-<?= e($color) ?><?= $pill ? ' badge-pill' : '' ?> text-uppercase"><?= e($text) ?></span>
+<?php }
 
 function roundPill($text, $bgColor = 'primary', $textColor = 'light')
 {
@@ -97,12 +103,13 @@ function card($title, $link, $icon, $color = 'primary', $counter = null, $newFea
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="font-weight-bold text-<?= e($color) ?> text-uppercase mb-1">
-                            <?= $title;
+                            <?= e($title);
                             if ($newFeature) {
                                 newFeatureMark();
                             } ?>
                         </div>
-                        <div class="h3 mb-0 font-weight-bold text-gray-800"><?= $counter !== null ? $counter : '&nbsp;' ?>
+                        <div class="h3 mb-0 font-weight-bold text-gray-800">
+                            <?= $counter !== null ? e($counter) : '&nbsp;' ?>
                         </div>
                     </div>
 
@@ -145,7 +152,7 @@ function cardMini($title, $link, $icon, $color = 'primary', $newTab = false)
 
 function cardMiniModal($title, $link, $icon, $color = 'primary')
 { ?>
-    <div class="col-xl-2 col-md-4 mb-4">
+    <div class="col-xl-2 col-lg-3 col-md-4 mb-4">
         <div class="card border-left-<?= e($color) ?> shadow h-100">
             <div class="card-body">
                 <div class="row">
@@ -223,6 +230,14 @@ function contentTitleWithModal($title, $link, $text, $icon, $color = 'primary')
     </div>
 <?php }
 
+function contentTitleWithActions($title, callable $renderActions)
+{ ?>
+    <div class="d-sm-flex align-items-center justify-content-between flex-wrap">
+        <h3 class="h3 mb-0 text-gray-800"><?= e($title) ?></h3>
+        <div><?php $renderActions(); ?></div>
+    </div>
+<?php }
+
 function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = null, $newFeature = false)
 { ?>
     <li class="nav-item <?= $condition ? ' active' : '' ?>">
@@ -230,7 +245,7 @@ function sidebarMenuItem($link, $title, $icon, $condition = false, $counter = nu
             <div class="menu-item">
                 <i class="fas fa-fw <?= e($icon) ?>"></i>
                 <span>
-                    <?= $title;
+                    <?= e($title);
                     if ($newFeature) {
                         newFeatureMark();
                     } ?>
@@ -251,7 +266,7 @@ function sidebarModalItem($link, $title, $icon, $counter = null, $newFeature = f
             <div class="menu-item">
                 <i class="fas fa-fw <?= e($icon) ?>"></i>
                 <span>
-                    <?= $title;
+                    <?= e($title);
                     if ($newFeature) {
                         newFeatureMark();
                     } ?>
@@ -305,7 +320,7 @@ function linkDropdownItem($link, $text, $icon, $title = '', $newTab = false, $ne
 { ?>
     <a href="<?= e($link) ?>" class="dropdown-item" title="<?= e($title) ?>" target="<?= $newTab ? '_blank' : '_self' ?>">
         <i class="fas <?= e($icon) ?> fa-sm fa-fw mr-1"></i>
-        <?= $text;
+        <?= e($text);
         if ($newFeature) {
             newFeatureMark();
         } ?>
@@ -317,7 +332,7 @@ function downloadLinkDropdownItem($link, $text, $icon, $title, $fileName, $newTa
     <a href="<?= e($link) ?>" class="dropdown-item" download="<?= e($fileName) ?>" title="<?= e($title) ?>"
         target="<?= $newTab ? '_blank' : '_self' ?>">
         <i class="fas <?= e($icon) ?> fa-sm fa-fw mr-1"></i>
-        <?= $text;
+        <?= e($text);
         if ($newFeature) {
             newFeatureMark();
         } ?>
@@ -326,9 +341,9 @@ function downloadLinkDropdownItem($link, $text, $icon, $title, $fileName, $newTa
 
 function previewLinkDropdownItem($link, $text, $icon, $title, $newFeature = false)
 { ?>
-    <a href="<?= e($link) ?>" class="dropdown-item" title="<?= e($title) ?>" target="_new">
+    <a href="<?= e($link) ?>" class="dropdown-item" title="<?= e($title) ?>" target="_blank" rel="noopener noreferrer">
         <i class="fas <?= e($icon) ?> fa-sm fa-fw mr-1"></i>
-        <?= $text;
+        <?= e($text);
         if ($newFeature) {
             newFeatureMark();
         } ?>
@@ -340,7 +355,7 @@ function modalDropdownItem($link, $text, $icon, $title = '', $newFeature = false
     <a href="#" data-toggle="modal" data-target="#modal" class="dropdown-item" title="<?= e($title) ?>"
         onclick="loadData('<?= e($link) ?>')">
         <i class="fas <?= e($icon) ?> fa-sm fa-fw mr-1"></i>
-        <?= $text;
+        <?= e($text);
         if ($newFeature) {
             newFeatureMark();
         } ?>
@@ -388,7 +403,7 @@ function modalConfirmDelete($message, $title = 'Delete', $buttonName = 'Delete',
 
 function cancelModalButton()
 { ?>
-    <button id="cancel-modal-button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    <button id="cancel-modal-button" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 <?php }
 
 function missingAlert($text, $icon = 'fa-times-circle', $color = 'text-danger')
