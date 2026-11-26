@@ -433,6 +433,8 @@ function sendEmailSubmit(btn) {
 
     btn.text("SENDING...");
 
+    let csrfToken = $('#csrf_token').val();
+
     $.ajax({
         url: SITE_URL + '/modules/trainings/modules/sendEmail.php',
         type: "POST",
@@ -441,7 +443,8 @@ function sendEmailSubmit(btn) {
             attendance_id: attendanceId,
             email: email,
             trainingID: trainingID,
-            employeeID: employeeID
+            employeeID: employeeID,
+            csrf_token: csrfToken
         },
 
         success: function (response) {
