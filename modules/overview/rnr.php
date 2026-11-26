@@ -1,14 +1,14 @@
 <?php
 // modules/overview/rnr.php
 $userPositionId = null;
-if ($isPis) {
+if ($isHrmSuite) {
     if (!function_exists('position')) {
         require_once(root() . '/includes/database/position.php');
     }
     $userPosition = position($userId);
     $userPositionId = $userPosition['position_id'] ?? null;
 }
-$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+$isAllowedHigherPosition = $isHrmSuite && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
 
 if (!$isAllowedHigherPosition) {
     require_once(root() . '/modules/error/403.php');
@@ -25,7 +25,6 @@ $countWinners = number_format(count(awardWinners()));
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
             <li class="breadcrumb-item active">Rewards and Recognition</li>
         </ol>
     </nav>
@@ -33,9 +32,9 @@ $countWinners = number_format(count(awardWinners()));
 
 <div class="row mt-4">
     <?php
-    card('Schedule', customUri('pis', 'Event Schedules'), 'fa-calendar-plus', 'primary', $countSchedules);
-    card('Nominees', customUri('pis', 'Nominees List'), 'fa-user', 'warning', $countNominees);
-    card('Awards', customUri('pis', 'Awards List'), 'fa-award', 'danger', $countAwards);
-    card('Winners', customUri('pis', 'Winners Lookup'), 'fa-trophy', 'success', $countWinners);
+    card('Schedule', customUri('hrmsuite', 'Event Schedules'), 'fa-calendar-plus', 'primary', $countSchedules);
+    card('Nominees', customUri('hrmsuite', 'Nominees List'), 'fa-user', 'warning', $countNominees);
+    card('Awards', customUri('hrmsuite', 'Awards List'), 'fa-award', 'danger', $countAwards);
+    card('Winners', customUri('hrmsuite', 'Winners Lookup'), 'fa-trophy', 'success', $countWinners);
     ?>
 </div>

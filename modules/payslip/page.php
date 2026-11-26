@@ -69,7 +69,7 @@ if (!is_dir($uploadDirectory)) {
                             <td class="align-middle text-capitalize">
                                 <div class="dropdown no-arrow">
                                     <?php dropdownEllipsis() ?>
-                                    <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                         <?php
                                         if ($payslipExists) {
                                             previewLinkDropdownItem(uri() . '/' . $payslip['file_name'], 'Preview', 'fa-eye', 'Preview ' . $payslip['description']);

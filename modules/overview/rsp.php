@@ -1,6 +1,6 @@
 <?php
 // modules/overview/rsp.php
-if (!$isPis) {
+if (!$isHrmSuite) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -17,7 +17,6 @@ $countPublications = number_format(countPublications());
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= "{$baseUri}/{$activeApp}" ?>">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
             <li class="breadcrumb-item active">Recruitment, Selection and Placement</li>
         </ol>
     </nav>
@@ -25,13 +24,13 @@ $countPublications = number_format(countPublications());
 
 <div class="row mt-4">
     <?php
-    card('Talent Pool', customUri('pis', 'Talent Pool Diversity - Gender'), 'fa-chart-bar');
-    card('Workforce', customUri('pis', 'Workforce Diversity - Gender'), 'fa-chart-pie', 'success');
-    card('Active Employees', customUri('pis', 'Active Employees'), 'fa-user-check', 'info', $countActive);
-    card('Retirable Employees', customUri('pis', 'Retirable Employees'), 'fa-user-clock', 'warning', $countRetirable);
-    card('Vacancies', customUri('pis', 'Vacancies'), 'fa-user-times', 'danger', $countVacancy);
-    card('Call for Applications', customUri('pis', 'Call for Applications'), 'fa-bullhorn', 'secondary', $countPublications);
-    card('Positions', customUri('pis', 'Positions'), 'fa-user-tie', 'primary');
-    card('Plantilla Items', customUri('pis', 'Plantilla Items'), 'fa-list', 'success');
+    card('Talent Pool', customUri('hrmsuite', 'Talent Pool Diversity - Gender'), 'fa-chart-bar');
+    card('Workforce', customUri('hrmsuite', 'Workforce Diversity - Gender'), 'fa-chart-pie', 'success');
+    card('Active Employees', customUri('hrmsuite', 'Active Employees'), 'fa-user-check', 'info', $countActive);
+    card('Retirable Employees', customUri('hrmsuite', 'Retirable Employees'), 'fa-user-clock', 'warning', $countRetirable);
+    card('Vacancies', customUri('hrmsuite', 'Vacancies'), 'fa-user-times', 'danger', $countVacancy);
+    card('Call for Applications', customUri('hrmsuite', 'Call for Applications'), 'fa-bullhorn', 'secondary', $countPublications);
+    card('Positions', customUri('hrmsuite', 'Positions'), 'fa-user-tie', 'primary');
+    card('Plantilla Items', customUri('hrmsuite', 'Plantilla Items'), 'fa-list', 'success');
     ?>
 </div>

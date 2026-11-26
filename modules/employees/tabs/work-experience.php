@@ -24,7 +24,7 @@
                         <th class="align-middle" width="10%">Status of Appointment</th>
                         <th class="align-middle" width="10%">Government Service</th>
                         <?php if ($editMode): ?>
-                            <th class="align-middle" width="5%">Actions</th>
+                            <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
                 </thead>
@@ -82,7 +82,7 @@
                         <th class="align-middle" width="10%">Status of Appointment</th>
                         <th class="align-middle" width="10%">Government Service</th>
                         <?php if ($editMode): ?>
-                            <th class="align-middle" width="5%">Actions</th>
+                            <th class="align-middle" width="5%">Action</th>
                         <?php endif ?>
                     </tr>
                 </tfoot>
