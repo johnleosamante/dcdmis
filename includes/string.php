@@ -13,7 +13,8 @@ function toString(?string $string, ?string $prefix = null, ?string $suffix = nul
 
 function toName(string $last_name, string $first_name, ?string $middle_name = null, ?string $extension = null, $fname_first = false, $middle_initial = true): string
 {
-    if (strlen($middle_name) > 0 && $middle_name !== ' ' && strtoupper($middle_name) !== 'n/a') {
+    $middle_name = trim((string) ($middle_name ?? ''));
+    if ($middle_name !== '' && strtoupper($middle_name) !== 'N/A') {
         $suffix = $middle_initial ? '.' : '';
         $middle_name = toString($middle_name, ' ', $suffix, $middle_initial);
     } else {
@@ -85,11 +86,14 @@ function randomPassword(int $length): string
 
 function checkPasswordStrength(string $password): bool
 {
+    if (strlen($password) < 10) {
+        return false;
+    }
     $hasUppercase = preg_match('/[A-Z]/', $password);
     $hasLowercase = preg_match('/[a-z]/', $password);
     $hasNumber = preg_match('/\d/', $password);
     $hasSpecialCharacter = preg_match('/[^a-zA-Z\d]/', $password);
-    return $hasUppercase && $hasLowercase && $hasNumber && $hasSpecialCharacter;
+    return (bool) ($hasUppercase && $hasLowercase && $hasNumber && $hasSpecialCharacter);
 }
 
 function generateStrongRandomPassword(): string
@@ -134,9 +138,9 @@ function toOrdinal(int $number): string
 
 function toTruncate(string $text, int $length = 200): string
 {
-    $text = htmlspecialchars(trim($text), ENT_QUOTES);
-    if (mb_strlen($text) > $length) {
-        return mb_substr($text, 0, $length) . '...';
+    $text = trim($text);
+    if (mb_strlen($text, 'UTF-8') > $length) {
+        $text = mb_substr($text, 0, $length, 'UTF-8') . '...';
     }
-    return $text;
+    return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
 }
