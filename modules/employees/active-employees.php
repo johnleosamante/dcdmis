@@ -4,16 +4,16 @@ $schoolInfo = schoolByHead($userId);
 $isSchoolHead = !empty($schoolInfo);
 
 $userPositionId = null;
-if ($isPis) {
+if ($isHrmSuite) {
     if (!function_exists('position')) {
         require_once(root() . '/includes/database/position.php');
     }
     $userPosition = position($userId);
     $userPositionId = $userPosition['position_id'] ?? null;
 }
-$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+$isAllowedHigherPosition = $isHrmSuite && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
 
-if (!$isHrmis && !$isHrtdms && !$isDmis && !($isPis && ($isSchoolHead || $isAllowedHigherPosition))) {
+if (!$isHrmis && !$isHrtdms && !$isDmis && !($isPis && $isSchoolHead) && !$isAllowedHigherPosition) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -25,14 +25,13 @@ messageAlert($showAlert, $message, $success);
     <nav class="d-flex align-items-center flex-row m-0">
         <ol class="breadcrumb m-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="<?= uri() . '/' . $activeApp ?>">Dashboard</a></li>
-            <?php if (isset($showOverview)): ?>
-                <li class="breadcrumb-item"><a href="<?= customUri('pis', 'System Overview') ?>">System Overview</a></li>
+            <?php if ($isHrmSuite): ?>
                 <li class="breadcrumb-item"><a
-                        href="<?= customUri('pis', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
+                        href="<?= customUri('hrmsuite', 'Recruitment, Selection and Placement') ?>">Recruitment, Selection and
                         Placement</a></li>
             <?php endif ?>
             <li class="breadcrumb-item active">
-                <?= ($isPis && $isSchoolHead) ? 'School Employees' : ($isHrmis || $isPis ? 'Active Employees' : 'Employees') ?>
+                <?= ($isPis && $isSchoolHead) ? 'School Employees' : ($isHrmis || $isHrmSuite ? 'Active Employees' : 'Employees') ?>
             </li>
         </ol>
     </nav>
@@ -113,8 +112,10 @@ messageAlert($showAlert, $message, $success);
                                     linkItem(customUri('hrmis', 'Employee Information', $row['id']), $employeeName);
                                 } elseif ($isDmis) {
                                     modalItem(uri() . '/modules/users/edit-user-dialog.php?id=' . cipher($row['id']), $employeeName);
-                                } elseif ($isPis && ($isSchoolHead || $isAllowedHigherPosition)) {
+                                } elseif ($isPis && $isSchoolHead) {
                                     linkItem(customUri('pis', 'Employee Information', $row['id']), $employeeName);
+                                } elseif ($isAllowedHigherPosition) {
+                                    linkItem(customUri('hrmsuite', 'Employee Information', $row['id']), $employeeName);
                                 } else {
                                     modalItem(uri() . '/modules/users/user-info-dialog.php?id=' . cipher($row['id']), $employeeName);
                                 } ?>
@@ -128,7 +129,7 @@ messageAlert($showAlert, $message, $success);
                             <td class="align-middle"><?= positions($row['position_id'])['official_title'] ?></td>
                             <td class="align-middle">
                                 <?php
-                                if ($isPis) {
+                                if ($isPis || $isHrmSuite) {
                                     echo e(schoolById($row['station_id'])['name']);
                                 } else {
                                     linkItem(customUri($activeApp, 'School Information', $row['station_id']), schoolById($row['station_id'])['name']);
