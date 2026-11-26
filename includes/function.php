@@ -122,7 +122,7 @@ function getSeconds($hours = 1)
 
 function setActiveItem($reference, $value, $class = 'active')
 {
-    return strtolower($reference) === strtolower($value) ? " {$class}" : '';
+    return strtolower((string) $reference) === strtolower((string) $value) ? " {$class}" : '';
 }
 
 function setActiveNavigation($condition, $class = 'active')
@@ -141,7 +141,7 @@ function isValidEmail($email, $domain = null)
 
 function setOptionSelected($reference, $value)
 {
-    return strtolower($reference) === strtolower($value) ? ' selected' : '';
+    return strtolower((string) $reference) === strtolower((string) $value) ? ' selected' : '';
 }
 
 function setItemChecked($condition)
@@ -158,8 +158,7 @@ function getDateDifference($date)
 
 function e($string)
 {
-    $string = (string) $string;
-    return str_replace(['<', '>'], ['&lt;', '&gt;'], $string);
+    return htmlspecialchars((string) $string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
 }
 
 function csrf_token()
