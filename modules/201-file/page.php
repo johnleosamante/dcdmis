@@ -1,6 +1,6 @@
 <?php
 // modules/201-file/page.php
-if (!$isPis && !$isHrmis) {
+if (!$isPis && !$isHrmis && !$isHrmSuite) {
     require_once(root() . '/modules/error/403.php');
     return;
 }
@@ -17,16 +17,16 @@ if ($schoolInfo && $employeeId > 0) {
 }
 
 $userPositionId = null;
-if ($isPis) {
+if ($isPis || $isHrmSuite) {
     if (!function_exists('position')) {
         require_once(root() . '/includes/database/position.php');
     }
     $userPosition = position($userId);
     $userPositionId = $userPosition['position_id'] ?? null;
 }
-$isAllowedHigherPosition = $isPis && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
+$isAllowedHigherPosition = $isHrmSuite && (in_array($userPositionId, $allowedMonitoringPositions, true) || $isICT);
 
-if ($isPis && $userId !== $employeeId && !$isHeadOfThisEmployee && !$isAllowedHigherPosition) {
+if (($isPis || $isHrmSuite) && $userId !== $employeeId && !$isHeadOfThisEmployee && !$isAllowedHigherPosition) {
     require_once(root() . '/modules/error/no-results-found.php');
     return;
 }
@@ -69,7 +69,7 @@ if (!is_dir($uploadDirectory)) {
         <?php if ($isHrmis) {
             contentTitleWithModal('201 Files : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/modules/201-file/save-201-file-dialog.php?e=' . cipher($employeeId), 'Add', 'fa-plus');
         } else {
-            contentTitleWithLink('201 Files : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/pis');
+            contentTitleWithLink('201 Files : ' . strtoupper(toName($employee['last_name'], $employee['first_name'], $employee['middle_name'], $employee['name_extension'])), uri() . '/' . $activeApp);
         } ?>
     </div>
 
@@ -103,7 +103,7 @@ if (!is_dir($uploadDirectory)) {
                                 <?php if ($showActions): ?>
                                     <div class="dropdown no-arrow">
                                         <?php dropdownEllipsis() ?>
-                                        <div class="dropdown-menu dropdown-menu-righ shadow animated--fade-in">
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
                                             <?php
                                             if ($fileExists) {
                                                 previewLinkDropdownItem(uri() . '/' . $row['file_name'], 'Preview', 'fa-eye', 'Preview ' . $row['description']);
