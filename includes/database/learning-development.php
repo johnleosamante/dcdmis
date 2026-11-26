@@ -155,8 +155,15 @@ function trainingSponsor($training_sponsor_id)
 }
 
 // trainings, training_attendees, training_types, training_levels
-function attendedTrainings($employee_id)
+function attendedTrainings($employee_id, $year = null)
 {
+    $params = [$employee_id];
+    $yearClause = '';
+    if ($year !== null && $year !== '' && is_numeric($year)) {
+        $yearClause = ' AND YEAR(t.`end_date`) = ?';
+        $params[] = (int) $year;
+    }
+
     $sql = "SELECT t.`id`, t.`title`, t.`start_date`, t.`end_date`, ts.`name` AS `training_sponsor`, t.`sponsored_by`, 
                 t.`venue`, tt.`name` AS `training_type`, t.`number_of_hours`, t.`unconsecutive_dates`, t.`signatory_id`, 
                 t.`has_certificate`, tp.`employee_id` 
@@ -164,9 +171,11 @@ function attendedTrainings($employee_id)
             INNER JOIN `training_attendees` AS tp ON t.`id` = tp.`training_id` 
             INNER JOIN `training_types` AS tt ON t.`training_type_id` = tt.`id` 
             INNER JOIN `training_levels` AS ts ON t.`training_level_id` = ts.`id` 
-            WHERE tp.`employee_id` = ? ORDER BY t.`end_date` DESC";
+            WHERE tp.`employee_id` = ?{$yearClause}
+            GROUP BY t.`id`
+            ORDER BY t.`end_date` DESC";
 
-    $results = query($sql, [$employee_id]);
+    $results = query($sql, $params);
     return is_array($results) ? $results : [];
 }
 
@@ -213,7 +222,7 @@ function trainedEmployeesForYear($year = null)
 {
     $params = [];
     $where = "WHERE t.`end_date` IS NOT NULL";
-    if ($year !== null && $year !== '' && strtolower((string)$year) !== 'all') {
+    if ($year !== null && $year !== '' && strtolower((string) $year) !== 'all') {
         $where .= " AND YEAR(t.`end_date`) = ?";
         $params[] = (int) $year;
     }
