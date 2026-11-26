@@ -12,6 +12,9 @@ $isDmis = $activeApp === 'dmis';
 $isRace = $activeApp === 'race';
 $isDtr = $activeApp === 'dtr';
 $isIms = $activeApp === 'ims';
+$isBsa = $activeApp === 'bsa';
+$isPrimedx = $activeApp === 'primedx';
+$isHrmSuite = $activeApp === 'hrmsuite';
 
 require_once(root() . '/includes/layout/components.php');
 ?>
@@ -117,14 +120,13 @@ require_once(root() . '/includes/layout/components.php');
                             </p>
 
                             <h6 class="font-weight-bold mb-1">5. Prohibited Acts</h6>
-                            <p class="small text-secondary mb-1">You shall not:
+                            <p class="small text-secondary mb-1">You shall not:</p>
                             <ul class="small text-secondary mb-3">
                                 <li>Access data beyond your authorized level or function;</li>
                                 <li>Use personal data for unauthorized purposes;</li>
                                 <li>Copy, download, or extract data without proper authorization;</li>
                                 <li>Share access credentials or allow unauthorized use of your account.</li>
                             </ul>
-                            </p>
 
                             <h6 class="font-weight-bold mb-1">6. Monitoring and Security</h6>
                             <p class="small text-secondary mb-3">All user activities within the system may be monitored and
