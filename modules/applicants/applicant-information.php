@@ -159,9 +159,9 @@ $applicantCode = applicantCode($applicantId) ?: $applicantId;
     </div>
 
     <div class="col-lg-8 col-md-7">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold">Personal Information</h6>
+        <div class="card border-left-primary shadow mb-4">
+            <div class="card-header py-3">
+                <?php contentTitle('Personal Information') ?>
             </div>
             <div class="card-body">
                 <div class="row mb-2">
@@ -182,9 +182,9 @@ $applicantCode = applicantCode($applicantId) ?: $applicantId;
                     <div class="col-sm-4 font-weight-bold text-secondary">Disability Status:</div>
                     <div class="col-sm-8">
                         <?php if (!empty($applicant['with_disability'])): ?>
-                            <span class="badge badge-warning">Person with Disability (PWD)</span>
+                            <?php statusBadge('Person with Disability (PWD)', 'warning') ?>
                         <?php else: ?>
-                            <span class="badge badge-light border">Non-PWD</span>
+                            <?php statusBadge('Non-PWD', 'secondary') ?>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -195,10 +195,9 @@ $applicantCode = applicantCode($applicantId) ?: $applicantId;
             </div>
         </div>
 
-        <div class="card shadow mb-4">
+        <div class="card border-left-primary shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold">Education &
-                    Eligibilities</h6>
+                <?php contentTitle('Education & Eligibilities') ?>
             </div>
             <div class="card-body">
                 <div class="row mb-2">
@@ -235,11 +234,8 @@ $applicantCode = applicantCode($applicantId) ?: $applicantId;
 <div class="row">
     <div class="col">
         <div class="card border-left-info shadow mb-4">
-            <div class="card-header py-3 d-flex align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold">Application Submission
-                    History <span class="badge badge-info">
-                        <?= count($applications) ?>
-                    </span></h6>
+            <div class="card-header py-3">
+                <?php contentTitle('Application Submission History (' . count($applications) . ')') ?>
             </div>
             <div class="card-body">
                 <?php if (!empty($applications)): ?>
