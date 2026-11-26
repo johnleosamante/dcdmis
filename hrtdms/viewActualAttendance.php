@@ -1,7 +1,7 @@
-<!DOCTYPE html>
-
 <?php
-require_once('../includes/config.php');
+require_once __DIR__ . '/../includes/function.php';
+require_once(root() . '/includes/database/database.php');
+
 // GET VALUES FROM URL
 $training_id = isset($_GET['training_id']) ? base64_decode($_GET['training_id']) : '';
 $date = isset($_GET['date']) ? base64_decode($_GET['date']) : '';
@@ -10,31 +10,16 @@ if (!$training_id || !$date) {
     die("Invalid request.");
 }
 
-// DATABASE CONNECTION
-$mysqli = new mysqli(HOSTNAME, USER, PASSWORD, DATABASE);
-
-if ($mysqli->connect_error) {
-    die("Database connection failed: " . $mysqli->connect_error);
-}
-
 // FETCH TRAINING DETAILS
-$trainingQuery = "
-    SELECT 
-        title,
-        venue
-    FROM trainings
-    WHERE id = ?
-";
-
-$stmtTraining = $mysqli->prepare($trainingQuery);
-$stmtTraining->bind_param("s", $training_id);
-$stmtTraining->execute();
-
-$trainingResult = $stmtTraining->get_result()->fetch_assoc();
+$trainingResult = find(
+    "SELECT title, venue FROM trainings WHERE id = ? LIMIT 1",
+    [$training_id]
+);
 
 $training_title = $trainingResult['title'] ?? 'N/A';
 $training_venue = $trainingResult['venue'] ?? 'N/A';
 ?>
+<!DOCTYPE html>
 
 <html>
 
@@ -378,8 +363,11 @@ $training_venue = $trainingResult['venue'] ?? 'N/A';
                 hour12: true
             });
 
-            document.getElementById('date-time').innerHTML =
-                `Current Date & Time: <strong>${dateStr} | ${timeStr}</strong>`;
+            const dateTimeEl = document.getElementById('date-time');
+            if (dateTimeEl) {
+                dateTimeEl.innerHTML =
+                    `Current Date & Time: <strong>${dateStr} | ${timeStr}</strong>`;
+            }
         }
 
         updateDateTime();

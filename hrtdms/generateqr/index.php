@@ -1,12 +1,6 @@
-<!DOCTYPE html>
 <?php
-require_once('../../includes/config.php');
-
-$mysqli = new mysqli(HOSTNAME, USER, PASSWORD, DATABASE);
-
-if ($mysqli->connect_error) {
-    die("Database connection failed: " . $mysqli->connect_error);
-}
+require_once __DIR__ . '/../../includes/function.php';
+require_once(root() . '/includes/database/database.php');
 
 /**
  * SEARCH EMPLOYEES
@@ -20,7 +14,6 @@ if (!empty($_GET['search'])) {
 
     $whereClauses = ["status = 'Active'"];
     $params = [];
-    $types = '';
 
     foreach ($terms as $term) {
         // Strip out trailing commas or periods from user input (e.g., "Dela Cruz," -> "Dela Cruz")
@@ -35,7 +28,6 @@ if (!empty($_GET['search'])) {
 
         // Push parameter 4 times per word
         array_push($params, $wildcard, $wildcard, $wildcard, $wildcard);
-        $types .= 'ssss';
     }
 
     if (count($params) > 0) {
@@ -62,14 +54,8 @@ if (!empty($_GET['search'])) {
             LIMIT 10
         ";
 
-        $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param($types, ...$params);
-        $stmt->execute();
-
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $employees[] = $row;
-        }
+        $rows = query($sql, $params);
+        $employees = is_array($rows) ? $rows : [];
     }
 }
 
@@ -79,7 +65,6 @@ if (!empty($_GET['search'])) {
 $selectedEmployee = null;
 
 if (!empty($_GET['employee_id'])) {
-
     $sql = "
         SELECT
             id,
@@ -102,14 +87,11 @@ if (!empty($_GET['employee_id'])) {
         LIMIT 1
     ";
 
-    $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("i", $_GET['employee_id']);
-    $stmt->execute();
-
-    $result = $stmt->get_result();
-    $selectedEmployee = $result->fetch_assoc();
+    $found = find($sql, [(int) $_GET['employee_id']]);
+    $selectedEmployee = $found ?: null;
 }
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -118,7 +100,7 @@ if (!empty($_GET['employee_id'])) {
 
     <title>DepEd Barcode Portal</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="<?= uri() ?>/assets/vendor/fontawesome-free/css/all.min.css">
 
     <style>
         * {

@@ -1,22 +1,20 @@
 <?php
 
+require_once __DIR__ . '/../includes/function.php';
+require_once(root() . '/includes/database/database.php');
+require_once(root() . '/includes/database/account.php');
 require_once __DIR__ . '/../assets/vendor/dompdf/autoload.inc.php';
-require_once('../includes/config.php');
 
 use Dompdf\Dompdf;
 
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
-$host = $_SERVER['HTTP_HOST'];
-
-// BASE URL
-$baseURL = $protocol . "://" . $host . "/depeddipolog.test/";
+if (empty($userId) || !userRole($userId, 'hrtdms')) {
+    http_response_code(403);
+    exit('Access denied.');
+}
 
 // HEADER / FOOTER
-$headerURL = $baseURL . "/../assets/img/sdoheader.png";
-$footerURL = $baseURL . "/../assets/img/sdofooter.png";
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+$headerURL = uri() . "/assets/img/sdoheader.png";
+$footerURL = uri() . "/assets/img/sdofooter.png";
 
 // GET VALUES
 $training_id = isset($_GET['training_id']) ? base64_decode($_GET['training_id']) : '';
@@ -26,29 +24,11 @@ if (!$training_id || !$date) {
     die("Invalid request.");
 }
 
-// DATABASE
-$mysqli = new mysqli(HOSTNAME, USER, PASSWORD, DATABASE);
-
-if ($mysqli->connect_error) {
-    die("Database connection failed: " . $mysqli->connect_error);
-}
-
 // FETCH TRAINING DETAILS
-$trainingQuery = "
-    SELECT 
-        title,
-        venue,
-        start_date,
-        end_date
-    FROM trainings
-    WHERE id = ?
-";
-
-$stmtTraining = $mysqli->prepare($trainingQuery);
-$stmtTraining->bind_param("s", $training_id);
-$stmtTraining->execute();
-
-$trainingResult = $stmtTraining->get_result()->fetch_assoc();
+$trainingResult = find(
+    "SELECT title, venue, start_date, end_date FROM trainings WHERE id = ? LIMIT 1",
+    [$training_id]
+);
 
 $training_title = $trainingResult['title'] ?? 'N/A';
 $training_venue = $trainingResult['venue'] ?? 'N/A';
@@ -60,13 +40,13 @@ $dates = [];
 $current = strtotime($start_date);
 $end = strtotime($end_date);
 
-while ($current <= $end) {
+while ($current && $end && $current <= $end) {
     $dates[] = date('Y-m-d', $current);
     $current = strtotime('+1 day', $current);
 }
 
 // FETCH ATTENDEES
-$query = "
+$sql = "
     SELECT 
         ta.employee_id,
         ta.time_in,
@@ -111,13 +91,8 @@ $query = "
     ORDER BY e.last_name ASC
 ";
 
-$stmt = $mysqli->prepare($query);
-
-$stmt->bind_param("s", $training_id);
-
-$stmt->execute();
-
-$result = $stmt->get_result();
+$attendees = query($sql, [$training_id]);
+$attendees = is_array($attendees) ? $attendees : [];
 
 // PDF HTML
 $html = '
@@ -328,13 +303,13 @@ $counter = 1;
 
 $counter = 1;
 
-if ($result->num_rows > 0) {
+if (count($attendees) > 0) {
 
     // Store employees and attendance
     $employees = [];
     $attendance = [];
 
-    while ($row = $result->fetch_assoc()) {
+    foreach ($attendees as $row) {
 
         $employee_id = $row['employee_id'];
         $attendance_date = $row['date_in'];
