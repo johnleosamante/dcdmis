@@ -25,20 +25,23 @@ require_once(root() . '/includes/database/school.php');
     <tbody>
         <?php
         $i = 1;
-        $query = users();
+        $rows = users();
+        $rows = is_array($rows) ? $rows : [];
 
-        while ($row = fetchArray($query)) :
-            $employeeName = toName($row['lname'], $row['fname'], $row['mname'], $row['ext']);
-        ?>
+        foreach ($rows as $row):
+            $employeeName = toName($row['last_name'], $row['first_name'], $row['middle_name'], $row['name_extension']);
+            $pos = !empty($row['position_id']) ? positions($row['position_id']) : null;
+            $school = !empty($row['station_id']) ? schoolById($row['station_id']) : null;
+            ?>
             <tr>
                 <td><?= $i++ ?></td>
-                <td><?= strtoupper($employeeName) ?></td>
-                <td><?= strtolower($row['email']) ?></td>
-                <td><?= strtoupper(fetchAssoc(positions($row['position']))['position']) ?></td>
-                <td><?= strtoupper(fetchAssoc(schoolById($row['assignment']))['name']) ?></td>
-                <td><?= strtoupper($row['status']) ?></td>
+                <td><?= e(strtoupper($employeeName)) ?></td>
+                <td><?= e(strtolower($row['email_address'] ?? '')) ?></td>
+                <td><?= e(strtoupper($pos['official_title'] ?? 'N/A')) ?></td>
+                <td><?= e(strtoupper($school['name'] ?? 'N/A')) ?></td>
+                <td><?= e(strtoupper($row['status'] ?? '')) ?></td>
             </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
 
         <tr>
             <td colspan="6"><?= 'Data as of ' . date("F j, Y, g:i a") ?></td>

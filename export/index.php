@@ -33,6 +33,7 @@ $allowedExports = [
 	'districts',
 	'document-log',
 	'employees-position',
+	'filled-vacancies',
 	'loyalty-award',
 	'plantilla-items',
 	'positions',
