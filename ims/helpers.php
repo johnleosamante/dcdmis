@@ -7,33 +7,47 @@ function imsCanAccessAll(): bool
     if (empty($userId)) {
         return false;
     }
-    static $cached = null;
-    if ($cached !== null) {
-        return $cached;
+    static $cached = [];
+    $key = (string) $userId;
+    if (array_key_exists($key, $cached)) {
+        return $cached[$key];
     }
-    
-    $emp = find("SELECT id FROM employees WHERE id = ? LIMIT 1", [(int) $userId]);
-    if (!$emp) {
-        $emp = find("SELECT id FROM employees WHERE user_id = ? LIMIT 1", [(int) $userId]);
+
+    $employeeId = (int) $userId;
+
+    // 1. Explicit IMS role in user_permissions
+    if (userRole($employeeId, 'ims')) {
+        return $cached[$key] = true;
     }
-    if (!$emp && function_exists('accountEmployeeId')) {
-        $aid = accountEmployeeId($userId);
-        if ($aid) {
-            $emp = ['id' => $aid];
-        }
+
+    // 2. Section Head of Administrative Section (ADM / Admin AO5) or Properties & Supply Section (PSS / Supply AO)
+    $sectionHead = find(
+        "SELECT `id` FROM `sections` WHERE `id` IN ('ADM', 'PSS') AND `head_id` = ? LIMIT 1",
+        [$employeeId]
+    );
+    if ($sectionHead) {
+        return $cached[$key] = true;
     }
-    if (!$emp) {
-        $cached = false;
-        return $cached;
+
+    // 3. Position + Section permission check: Admin AO5 (ADM + ADOF5) or Supply AO5/AO4 (PSS + ADOF5/ADOF4)
+    $posRow = find(
+        "SELECT sa.`position_id` FROM `station_assignments` sa
+         WHERE sa.`employee_id` = ?
+         ORDER BY sa.`assignment_date` DESC, sa.`position_id` ASC
+         LIMIT 1",
+        [$employeeId]
+    );
+    $positionId = $posRow ? strtoupper((string) ($posRow['position_id'] ?? '')) : '';
+
+    if ($positionId === 'ADOF5' && userRole($employeeId, 'ADM')) {
+        return $cached[$key] = true;
     }
-    
-    if ((int)$emp['id'] == 221111220000 || (int)$emp['id'] == 221116000000) {
-        $cached = true;
-        return $cached;
+
+    if (in_array($positionId, ['ADOF5', 'ADOF4'], true) && userRole($employeeId, 'PSS')) {
+        return $cached[$key] = true;
     }
-    
-    $cached = false;
-    return $cached;
+
+    return $cached[$key] = false;
 }
 
 /**
@@ -173,10 +187,14 @@ function poNumberToWords(float $amount): string
     $tens = ['', '', 'TWENTY', 'THIRTY', 'FORTY', 'FIFTY', 'SIXTY', 'SEVENTY', 'EIGHTY', 'NINETY'];
     $whole = (int) floor($amount);
     $convert = static function (int $number) use (&$convert, $ones, $tens): string {
-        if ($number < 20) return $ones[$number];
-        if ($number < 100) return $tens[intdiv($number, 10)] . ($number % 10 ? '-' . $ones[$number % 10] : '');
-        if ($number < 1000) return $ones[intdiv($number, 100)] . ' HUNDRED' . ($number % 100 ? ' ' . $convert($number % 100) : '');
-        if ($number < 1000000) return $convert(intdiv($number, 1000)) . ' THOUSAND' . ($number % 1000 ? ' ' . $convert($number % 1000) : '');
+        if ($number < 20)
+            return $ones[$number];
+        if ($number < 100)
+            return $tens[intdiv($number, 10)] . ($number % 10 ? '-' . $ones[$number % 10] : '');
+        if ($number < 1000)
+            return $ones[intdiv($number, 100)] . ' HUNDRED' . ($number % 100 ? ' ' . $convert($number % 100) : '');
+        if ($number < 1000000)
+            return $convert(intdiv($number, 1000)) . ' THOUSAND' . ($number % 1000 ? ' ' . $convert($number % 1000) : '');
         return $convert(intdiv($number, 1000000)) . ' MILLION' . ($number % 1000000 ? ' ' . $convert($number % 1000000) : '');
     };
     $centavos = (int) round(($amount - $whole) * 100);
