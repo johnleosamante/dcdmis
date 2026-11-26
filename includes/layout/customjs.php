@@ -1,17 +1,11 @@
 <?php
 
 if (isset($_GET['v'])) {
-    $v = decipher($_GET['v']);
+    $v = sanitize(decode($_GET['v']));
 
-    if ($v === 'Courses') {
-        echo ' <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
-        echo '<script src="' . uri() . '/modules/courses/course.js" type="text/javascript"></script>';
-    } elseif ($v === 'Activity') {
-        echo ' <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
-        echo '<script src="' . uri() . '/modules/lnd-activity/activity.js?v=' . VERSION . '" type="text/javascript"></script>';
-        echo '<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>';
-    } elseif ($v === 'Project Detail') {
-        echo '<script src="' . uri() . '/modules/lnd-activity/activity.js?v=' . VERSION . '" type="text/javascript"></script>';
+    if ($v === 'Project Detail') {
+        echo '<script src="' . uri() . '/assets/vendor/toastr/toastr.min.js" type="text/javascript"></script>';
+        echo '<script src="' . uri() . '/modules/trainings/modules/program.js?v=' . VERSION . '" type="text/javascript"></script>';
     } elseif ($v === 'Attendance') {
         echo '<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>';
         echo '<script src="' . uri() . '/modules/trainings/modules/activity.js?v=' . VERSION . '" type="text/javascript"></script>';
@@ -38,8 +32,5 @@ if (isset($_GET['v'])) {
     } elseif ($v === 'Program Detail') {
         echo '<script src="' . uri() . '/assets/vendor/toastr/toastr.min.js" type="text/javascript"></script>';
         echo '<script src="' . uri() . '/modules/trainings/modules/program.js?v=' . VERSION . '" type="text/javascript"></script>';
-    }
-    if ($v === 'Rewards') {
-        echo '<script src="' . uri() . '/modules/rewards/reward.js" type="text/javascript"></script>';
     }
 }
